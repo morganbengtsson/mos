@@ -27,7 +27,7 @@ namespace mo {
         typedef std::pair<unsigned int, ogli::TextureBuffer> TexturePair;
 
         Renderer();
-        void render(const Model model, const glm::mat4 transform);
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection);
         void clear(const glm::vec3 color);
 
         virtual ~Renderer();
@@ -44,9 +44,6 @@ namespace mo {
         std::map<unsigned int, ogli::TextureBuffer> textures_;
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
         std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
-
-        glm::mat4 projection_;
-        glm::mat4 view_;
     };
 }
 #endif	/* OGLI_RENDERER_H */

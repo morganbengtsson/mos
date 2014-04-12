@@ -1,12 +1,12 @@
 /* 
  * File:   Model.h
- * Author: morgan
+ * Author: Morgan Bengtsson, bengtsson.morgan@gmail.com
  *
  * Created on March 5, 2014, 10:29 PM
  */
 
-#ifndef OGLI_MODEL_H
-#define	OGLI_MODEL_H
+#ifndef MO_MODEL_H
+#define	MO_MODEL_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -20,13 +20,14 @@ namespace mo {
 
     class Model {
     public:
-        Model(Mesh * mesh, Texture2D * texture, const glm::mat4 transform);
+        Model(Mesh * mesh, Texture2D * texture, const glm::mat4 transform = glm::mat4(1.0f));
         virtual ~Model();
 
         Mesh * mesh() const;
         Texture2D * texture() const;
-
+        
         const glm::mat4 transform() const;
+        void setTransform(const glm::mat4 transform);
         const bool valid() const;
         void invalidate();
     private:
@@ -37,5 +38,5 @@ namespace mo {
     };
 }
 
-#endif	/* OGLI_MODEL_H */
+#endif	/* MO_MODEL_H */
 

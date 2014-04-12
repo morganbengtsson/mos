@@ -5,13 +5,13 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
+#include <GL/glew.h>
 #include <ogli/util.h>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/transform2.hpp>
 #include <glm/gtc/random.hpp>
-
-#include <boost/format.hpp> // TODO: Remove this dependency
 
 #include "Renderer.h"
 #include "Vertex.h"
@@ -28,9 +28,9 @@ namespace mo {
         GLenum err = glewInit();
         std::stringstream ss;
         if (GLEW_OK != err) {
-            ss << boost::format("Error %s\n") % glewGetErrorString(err);
+            ss << "Error " << glewGetErrorString(err) << std::endl;
         }
-        ss << boost::format("Status: Using GLEW %s\n") % glewGetString(GLEW_VERSION);
+        ss << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
         std::cout << ss.str();
 
         glEnable(GL_DEPTH_TEST);
@@ -53,13 +53,7 @@ namespace mo {
 
         standard_mvp_uniform_ = ogli::createUniform(standard_program_, "model_view_projection");
         standard_mv_uniform_ = ogli::createUniform(standard_program_, "model_view");
-        standard_texture_uniform_ = ogli::createUniform(standard_program_, "texture");
-
-        float distance = 20;
-        //projection_ = glm::ortho(-640.0f/scale, 640.0f/scale, -400.0f/scale, 400.0f/scale);
-        projection_ = glm::perspective(45.0f, 640.0f / 400.0f, 0.1f, 100.f);
-        view_ = glm::lookAt(glm::vec3(distance, 1.5 * distance, distance), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
+        standard_texture_uniform_ = ogli::createUniform(standard_program_, "texture");       
     }
 
     Renderer::~Renderer() {
@@ -70,7 +64,7 @@ namespace mo {
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
     }
     
-    void Renderer::render(const Model model, const glm::mat4 transform) {
+    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection) {
     if (array_buffers_.find(model.mesh()->id()) == array_buffers_.end()) {
         array_buffers_.insert(ArrayPair(model.mesh()->id(),
                 ogli::createArrayBuffer(model.mesh()->verticesBegin(), model.mesh()->verticesEnd())));
@@ -85,17 +79,13 @@ namespace mo {
         textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture()->id(), texture));
     }
 
-    glm::mat4 rotation = model.transform(); // TODO, include 
-    glm::mat4 model_transform = transform * rotation;
-
-    glm::mat4 mv = projection_ * view_;
-    glm::mat4 mvp = projection_ * view_ * model_transform;
+    glm::mat4 mv = projection * view;
+    glm::mat4 mvp = projection * view * transform;
     ogli::useProgram(standard_program_);
     ogli::bindBuffer(array_buffers_.at(model.mesh()->id()));
     ogli::bindBuffer(element_array_buffers_.at(model.mesh()->id()));
 
     glActiveTexture(GL_TEXTURE0);
-
     glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture()->id()));
 
     ogli::uniform(standard_texture_uniform_);
@@ -104,7 +94,7 @@ namespace mo {
 
     ogli::attribute(position_attribute_3P3N2UV_);
     ogli::attribute(normal_attribute_3P3N2UV_);
-    ogli::attribute(uv_attribute_3P3N2UV_);
+    ogli::attribute(uv_attribute_3P3N2UV_);    
     ogli::drawElements(std::distance(model.mesh()->elementsBegin(), model.mesh()->elementsEnd()));
 }
 

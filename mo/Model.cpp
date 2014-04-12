@@ -28,5 +28,9 @@ namespace mo {
     const glm::mat4 Model::transform() const {
         return transform_;
     }
-
+    
+    void Model::setTransform(const glm::mat4 transform){
+        transform_ = transform;
+    }
+    
 }
