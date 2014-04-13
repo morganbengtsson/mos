@@ -80,7 +80,7 @@ namespace mo {
     }
 
     glm::mat4 mv = projection * view;
-    glm::mat4 mvp = projection * view * transform;
+    glm::mat4 mvp = projection * view * transform * model.transform();
     ogli::useProgram(standard_program_);
     ogli::bindBuffer(array_buffers_.at(model.mesh()->id()));
     ogli::bindBuffer(element_array_buffers_.at(model.mesh()->id()));
