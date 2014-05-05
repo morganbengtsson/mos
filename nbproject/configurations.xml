@@ -13,7 +13,7 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <itemPath>mo/Assets.cpp</itemPath>
-    <itemPath>Assets.h</itemPath>
+    <itemPath>mo/Assets.h</itemPath>
     <itemPath>mo/Mesh.cpp</itemPath>
     <itemPath>mo/Mesh.h</itemPath>
     <itemPath>mo/Model.cpp</itemPath>
@@ -49,9 +49,9 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="Assets.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="mo/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -105,9 +105,9 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="Assets.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="mo/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
