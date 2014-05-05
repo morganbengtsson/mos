@@ -19,8 +19,8 @@ namespace mo {
         typedef std::vector<int> Elements;
 
         template<class VerticesIt, class ElementsIt>
-        Mesh(VerticesIt verticesBegin,
-                VerticesIt verticesEnd,
+        Mesh(const VerticesIt verticesBegin,
+                const VerticesIt verticesEnd,
                 ElementsIt elementsBegin,
                 ElementsIt elementsEnd) {
             static unsigned int current_id = 0;
@@ -30,23 +30,23 @@ namespace mo {
         }
         virtual ~Mesh();
 
-        typename Vertices::const_iterator verticesBegin() {
+        typename Vertices::const_iterator verticesBegin() const {
             return vertices_.begin();
         };
 
-        typename Vertices::const_iterator verticesEnd() {
+        typename Vertices::const_iterator verticesEnd() const {
             return vertices_.end();
         };
 
-        typename Elements::const_iterator elementsBegin() {
+        typename Elements::const_iterator elementsBegin() const {
             return elements_.begin();
         };
 
-        typename Elements::const_iterator elementsEnd() {
+        typename Elements::const_iterator elementsEnd() const {
             return elements_.end();
         };
 
-        const unsigned int id() const;
+        unsigned int id() const;
 
     private:
         unsigned int id_;

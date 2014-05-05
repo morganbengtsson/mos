@@ -12,7 +12,7 @@ namespace mo {
     Mesh::~Mesh() {
     }
 
-    const unsigned int Mesh::id() const {
+    unsigned int Mesh::id() const {
         return id_;
     }
 

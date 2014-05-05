@@ -16,11 +16,11 @@ namespace mo{
         return id_;
     }
 
-    unsigned int Texture2D::width(){
+    unsigned int Texture2D::width() const {
         return width_;
     }
 
-    unsigned int Texture2D::height(){
+    unsigned int Texture2D::height() const {
         return height_;
     }
 }

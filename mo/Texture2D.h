@@ -24,13 +24,13 @@ public:
     }
     virtual ~Texture2D();
     
-    typename Texels::const_iterator begin(){ return texels_.begin();};
-    typename Texels::const_iterator end(){ return texels_.end();};
+    typename Texels::const_iterator begin() const { return texels_.begin();};
+    typename Texels::const_iterator end() const { return texels_.end();};
     
     const unsigned int id() const;
     
-    unsigned int width();
-    unsigned int height();
+    unsigned int width() const;
+    unsigned int height() const;
     
 private:
     unsigned int id_;

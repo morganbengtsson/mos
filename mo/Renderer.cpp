@@ -90,18 +90,18 @@ namespace mo {
     }
     
     void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name) {
-    if (array_buffers_.find(model.mesh()->id()) == array_buffers_.end()) {
-        array_buffers_.insert(ArrayPair(model.mesh()->id(),
-                ogli::createArrayBuffer(model.mesh()->verticesBegin(), model.mesh()->verticesEnd())));
+    if (array_buffers_.find(model.mesh().id()) == array_buffers_.end()) {
+        array_buffers_.insert(ArrayPair(model.mesh().id(),
+                ogli::createArrayBuffer(model.mesh().verticesBegin(), model.mesh().verticesEnd())));
     }
-    if (element_array_buffers_.find(model.mesh()->id()) == element_array_buffers_.end()) {
-        element_array_buffers_.insert(ElementPair(model.mesh()->id(),
-                ogli::createElementArrayBuffer(model.mesh()->elementsBegin(), model.mesh()->elementsEnd())));
+    if (element_array_buffers_.find(model.mesh().id()) == element_array_buffers_.end()) {
+        element_array_buffers_.insert(ElementPair(model.mesh().id(),
+                ogli::createElementArrayBuffer(model.mesh().elementsBegin(), model.mesh().elementsEnd())));
     }
 
-    if (textures_.find(model.texture()->id()) == textures_.end()) {
-        ogli::TextureBuffer texture = ogli::createTexture(model.texture()->begin(), model.texture()->end(), model.texture()->width(), model.texture()->height());
-        textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture()->id(), texture));
+    if (textures_.find(model.texture().id()) == textures_.end()) {
+        ogli::TextureBuffer texture = ogli::createTexture(model.texture().begin(), model.texture().end(), model.texture().width(), model.texture().height());
+        textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture().id(), texture));
     }
 
     glm::mat4 mv = projection * view;
@@ -112,11 +112,11 @@ namespace mo {
     ogli::useProgram(programs_.at(program_name).program);
     
     //ogli::useProgram(std::get<0>(programs_.at(program_name)));
-    ogli::bindBuffer(array_buffers_.at(model.mesh()->id()));
-    ogli::bindBuffer(element_array_buffers_.at(model.mesh()->id()));
+    ogli::bindBuffer(array_buffers_.at(model.mesh().id()));
+    ogli::bindBuffer(element_array_buffers_.at(model.mesh().id()));
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture()->id()));
+    glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture().id()));
     
     //TODO: General lighting, this is a hack.
     glm::mat3 rot_mat(view);
@@ -124,8 +124,6 @@ namespace mo {
 
     glm::vec3 camera_pos = -dir * rot_mat;    
   
-    std::cout << camera_pos.x << " " << camera_pos.y << " " << camera_pos.z << std::endl;
-    
     ogli::uniform(programs_.at(program_name).mvp, mvp);
     ogli::uniform(programs_.at(program_name).mv, mv);    
     ogli::uniform(programs_.at(program_name).texture);
@@ -135,7 +133,7 @@ namespace mo {
     ogli::attribute(position_attribute_3P3N2UV_);
     ogli::attribute(normal_attribute_3P3N2UV_);
     ogli::attribute(uv_attribute_3P3N2UV_);    
-    ogli::drawElements(std::distance(model.mesh()->elementsBegin(), model.mesh()->elementsEnd()));
+    ogli::drawElements(std::distance(model.mesh().elementsBegin(), model.mesh().elementsEnd()));
 }
 
 }

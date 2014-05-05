@@ -9,17 +9,23 @@
 
 namespace mo {
 
-    Model::Model(Mesh * mesh, Texture2D * texture,
-            const glm::mat4 transform)
-    : mesh_(mesh), texture_(texture), transform_(transform), valid_(true) {
+    Model::Model(Assets * assets,
+            const std::string mesh_path,
+            const std::string texture_path,
+            const glm::mat4 transform) :
+    mesh_path_(mesh_path),
+    texture_path_(texture_path),
+    transform_(transform),
+    valid_(true),
+    assets_(assets) {
     }
 
-    Mesh * Model::mesh() const {
-        return mesh_.get();
+    const Mesh & Model::mesh() const {
+        return assets_->mesh(mesh_path_);
     }
 
-    Texture2D * Model::texture() const {
-        return texture_.get();
+    const Texture2D & Model::texture() const{
+        return assets_->texture(texture_path_);
     }
 
     Model::~Model() {
@@ -28,9 +34,9 @@ namespace mo {
     const glm::mat4 Model::transform() const {
         return transform_;
     }
-    
-    void Model::setTransform(const glm::mat4 transform){
+
+    void Model::setTransform(const glm::mat4 transform) {
         transform_ = transform;
     }
-    
+
 }

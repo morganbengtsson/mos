@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/mo/Assets.o \
 	${OBJECTDIR}/mo/Mesh.o \
 	${OBJECTDIR}/mo/Model.o \
 	${OBJECTDIR}/mo/Renderer.o \
@@ -66,6 +67,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a: ${OBJECTFILES}
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a
+
+${OBJECTDIR}/mo/Assets.o: mo/Assets.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mo
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Assets.o mo/Assets.cpp
 
 ${OBJECTDIR}/mo/Mesh.o: mo/Mesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo

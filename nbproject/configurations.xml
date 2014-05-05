@@ -12,6 +12,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>mo/Assets.cpp</itemPath>
+    <itemPath>Assets.h</itemPath>
     <itemPath>mo/Mesh.cpp</itemPath>
     <itemPath>mo/Mesh.h</itemPath>
     <itemPath>mo/Model.cpp</itemPath>
@@ -47,6 +49,10 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="Assets.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="mo/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Mesh.h" ex="false" tool="3" flavor2="0">
@@ -80,6 +86,15 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <incDir>
+            <pElem>../glm</pElem>
+            <pElem>../lodepng</pElem>
+            <pElem>../ogli</pElem>
+            <pElem>../glew-1.9.0/include</pElem>
+            <pElem>../rapidxml-1.13</pElem>
+            <pElem>../objload</pElem>
+          </incDir>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -90,6 +105,10 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <item path="Assets.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="mo/Mesh.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Mesh.h" ex="false" tool="3" flavor2="0">
