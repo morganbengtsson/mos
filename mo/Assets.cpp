@@ -14,6 +14,7 @@
 #include <lodepng.cpp>
 #include <exception>
 #include <system_error>
+#include <memory>
 
 namespace mo {
 
@@ -23,16 +24,16 @@ namespace mo {
 
         std::vector<Vertex> vertices;
         std::vector<int> elements;
-        models_.insert(MeshPair("Empty.obj", Mesh(vertices.begin(),
+        models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
                 vertices.end(),
                 elements.begin(),
-                elements.end())));
+                elements.end()))));
     }
 
     Assets::~Assets() {
     }
 
-    const mo::Mesh & Assets::mesh(std::string path) {
+    std::shared_ptr<Mesh> Assets::mesh(std::string path) {
         using namespace std;
         using namespace mo;
 
@@ -54,17 +55,17 @@ namespace mo {
             elements.assign(obj_model.faces.find("default")->second.begin(),
                     obj_model.faces.find("default")->second.end());
 
-            models_.insert(MeshPair(path, mo::Mesh(vertices.begin(),
+            models_.insert(MeshPair(path, std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
                     vertices.end(),
                     elements.begin(),
-                    elements.end())));
+                    elements.end()))));
             return models_.at(path);
         } else {
             return models_.at(path);
         }
     }
 
-    const mo::Texture2D & Assets::texture(std::string path) {
+    std::shared_ptr<Texture2D> Assets::texture(std::string path) {
         using namespace mo;
         if (textures_.find(path) == textures_.end()) {
             std::vector<unsigned char> texels;
@@ -75,7 +76,7 @@ namespace mo {
                 std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
                 
             }
-            textures_.insert(TexturePair(path, Texture2D(texels.begin(), texels.end(), width, height)));
+            textures_.insert(TexturePair(path, std::make_shared<Texture2D>(Texture2D(texels.begin(), texels.end(), width, height))));
             return textures_.at(path);
         } else {
             return textures_.at(path);

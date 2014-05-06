@@ -17,16 +17,16 @@
 namespace mo {
     class Assets {
     public:
-        typedef std::map<std::string, mo::Mesh> MeshMap;
-        typedef std::map<std::string, mo::Texture2D> TextureMap;
-        typedef std::pair<std::string, mo::Mesh> MeshPair;
-        typedef std::pair<std::string, mo::Texture2D> TexturePair;
+        typedef std::map<std::string, std::shared_ptr<mo::Mesh>> MeshMap;
+        typedef std::map<std::string, std::shared_ptr<mo::Texture2D>> TextureMap;
+        typedef std::pair<std::string, std::shared_ptr<mo::Mesh>> MeshPair;
+        typedef std::pair<std::string, std::shared_ptr<mo::Texture2D>> TexturePair;
 
         Assets();
         virtual ~Assets();
 
-        const mo::Mesh & mesh(std::string path);
-        const mo::Texture2D & texture(std::string path);
+        std::shared_ptr<Mesh> mesh(std::string path);
+        std::shared_ptr<Texture2D> texture(std::string path);
 
     private:
         MeshMap models_;

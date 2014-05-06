@@ -9,23 +9,13 @@
 
 namespace mo {
 
-    Model::Model(std::shared_ptr<Assets> assets,
-            const std::string mesh_path,
-            const std::string texture_path,
+    Model::Model(std::shared_ptr<Mesh> mesh, 
+            std::shared_ptr<Texture2D> texture,
             const glm::mat4 transform) :
-    mesh_path_(mesh_path),
-    texture_path_(texture_path),
+    mesh(mesh),
+    texture(texture),
     transform_(transform),
-    valid_(true),
-    assets_(assets) {
-    }
-
-    const Mesh & Model::mesh() const {
-        return assets_->mesh(mesh_path_);
-    }
-
-    const Texture2D & Model::texture() const{
-        return assets_->texture(texture_path_);
+    valid_(true){
     }
 
     Model::~Model() {

@@ -21,11 +21,11 @@ namespace mo {
 
     class Model {
     public:
-        Model(std::shared_ptr<Assets> assets, const std::string mesh_path, const std::string texture_path, const glm::mat4 transform = glm::mat4(1.0f));
+        Model(std::shared_ptr<Mesh> mesh, std::shared_ptr<Texture2D> texture, const glm::mat4 transform = glm::mat4(1.0f));
         virtual ~Model();
 
-        const Mesh & mesh() const ;
-        const Texture2D & texture() const;
+        std::shared_ptr<Mesh> mesh;
+        std::shared_ptr<Texture2D> texture;
         
         const glm::mat4 transform() const;
         void setTransform(const glm::mat4 transform);
@@ -34,9 +34,7 @@ namespace mo {
     private:
         bool valid_;
         glm::mat4 transform_;
-        std::shared_ptr<Assets> assets_;
-        const std::string mesh_path_;
-        const std::string texture_path_;
+        
     };
 }
 
