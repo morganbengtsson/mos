@@ -71,27 +71,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a: ${OBJECTFILES}
 ${OBJECTDIR}/mo/Assets.o: mo/Assets.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Assets.o mo/Assets.cpp
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Assets.o mo/Assets.cpp
 
 ${OBJECTDIR}/mo/Mesh.o: mo/Mesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Mesh.o mo/Mesh.cpp
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Mesh.o mo/Mesh.cpp
 
 ${OBJECTDIR}/mo/Model.o: mo/Model.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Model.o mo/Model.cpp
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Model.o mo/Model.cpp
 
 ${OBJECTDIR}/mo/Renderer.o: mo/Renderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Renderer.o mo/Renderer.cpp
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Renderer.o mo/Renderer.cpp
 
 ${OBJECTDIR}/mo/Texture2D.o: mo/Texture2D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Texture2D.o mo/Texture2D.cpp
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Texture2D.o mo/Texture2D.cpp
 
 # Subprojects
 .build-subprojects:

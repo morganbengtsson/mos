@@ -9,7 +9,7 @@
 
 namespace mo {
 
-    Model::Model(Assets * assets,
+    Model::Model(std::shared_ptr<Assets> assets,
             const std::string mesh_path,
             const std::string texture_path,
             const glm::mat4 transform) :

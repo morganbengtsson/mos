@@ -25,9 +25,6 @@
     <itemPath>mo/Vertex.h</itemPath>
     <itemPath>mo/util.h</itemPath>
   </logicalFolder>
-  <sourceRootList>
-    <Elem>mo</Elem>
-  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="3">
@@ -44,6 +41,8 @@
             <pElem>../lodepng</pElem>
             <pElem>../ogli</pElem>
             <pElem>../glew-1.9.0/include</pElem>
+            <pElem>../rapidxml-1.13</pElem>
+            <pElem>../objload</pElem>
           </incDir>
         </ccTool>
         <archiverTool>
@@ -89,10 +88,10 @@
           <standard>8</standard>
           <incDir>
             <pElem>../glm</pElem>
+            <pElem>../rapidxml-1.13</pElem>
             <pElem>../lodepng</pElem>
             <pElem>../ogli</pElem>
             <pElem>../glew-1.9.0/include</pElem>
-            <pElem>../rapidxml-1.13</pElem>
             <pElem>../objload</pElem>
           </incDir>
         </ccTool>
