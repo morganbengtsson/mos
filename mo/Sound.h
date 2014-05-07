@@ -30,6 +30,8 @@ namespace mo {
             return samples_.end();
         }
         
+        int * data(){return samples_.data();}
+        
         unsigned int id();
         
     private:

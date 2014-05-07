@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/mo/Assets.o \
+	${OBJECTDIR}/mo/Audio.o \
 	${OBJECTDIR}/mo/Mesh.o \
 	${OBJECTDIR}/mo/Model.o \
 	${OBJECTDIR}/mo/Renderer.o \
@@ -72,32 +73,37 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmo.a: ${OBJECTFILES}
 ${OBJECTDIR}/mo/Assets.o: mo/Assets.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Assets.o mo/Assets.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Assets.o mo/Assets.cpp
+
+${OBJECTDIR}/mo/Audio.o: mo/Audio.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mo
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Audio.o mo/Audio.cpp
 
 ${OBJECTDIR}/mo/Mesh.o: mo/Mesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Mesh.o mo/Mesh.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Mesh.o mo/Mesh.cpp
 
 ${OBJECTDIR}/mo/Model.o: mo/Model.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Model.o mo/Model.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Model.o mo/Model.cpp
 
 ${OBJECTDIR}/mo/Renderer.o: mo/Renderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Renderer.o mo/Renderer.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Renderer.o mo/Renderer.cpp
 
 ${OBJECTDIR}/mo/Sound.o: mo/Sound.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Sound.o mo/Sound.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Sound.o mo/Sound.cpp
 
 ${OBJECTDIR}/mo/Texture2D.o: mo/Texture2D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Texture2D.o mo/Texture2D.cpp
+	$(COMPILE.cc) -g -I../glm -I../lodepng -I../ogli -I../glew-1.9.0/include -I../rapidxml-1.13 -I../objload -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Texture2D.o mo/Texture2D.cpp
 
 # Subprojects
 .build-subprojects:
