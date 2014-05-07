@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/mo/Mesh.o \
 	${OBJECTDIR}/mo/Model.o \
 	${OBJECTDIR}/mo/Renderer.o \
+	${OBJECTDIR}/mo/Sound.o \
 	${OBJECTDIR}/mo/Texture2D.o
 
 
@@ -87,6 +88,11 @@ ${OBJECTDIR}/mo/Renderer.o: mo/Renderer.cpp
 	${MKDIR} -p ${OBJECTDIR}/mo
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Renderer.o mo/Renderer.cpp
+
+${OBJECTDIR}/mo/Sound.o: mo/Sound.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mo
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I../glm -I../rapidxml-1.13 -I../lodepng -I../ogli -I../glew-1.9.0/include -I../objload -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/mo/Sound.o mo/Sound.cpp
 
 ${OBJECTDIR}/mo/Texture2D.o: mo/Texture2D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mo

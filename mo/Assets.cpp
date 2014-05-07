@@ -15,6 +15,9 @@
 #include <exception>
 #include <system_error>
 #include <memory>
+#include <fstream>
+#include <iostream>
+#include <iterator>
 
 namespace mo {
 
@@ -80,6 +83,25 @@ namespace mo {
             return textures_.at(path);
         } else {
             return textures_.at(path);
+        }
+    }
+
+    std::shared_ptr<Sound> Assets::sound(std::string path){
+        if (sounds_.find(path) == sounds_.end()) {
+            std::ifstream file(path, std::ios::binary);
+
+            std::vector<int> data;
+            
+            int v;
+            while(file.read(reinterpret_cast<char*>(&v), sizeof(v))){
+                data.push_back(v);
+            }
+            
+            sounds_.insert(SoundPair(path, std::make_shared<Sound>(Sound(data.begin(), data.end()))));
+            return sounds_.at(path);
+        }
+        else {
+            return sounds_.at(path);
         }
     }
 }

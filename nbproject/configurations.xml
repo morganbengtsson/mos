@@ -20,6 +20,8 @@
     <itemPath>mo/Model.h</itemPath>
     <itemPath>mo/Renderer.cpp</itemPath>
     <itemPath>mo/Renderer.h</itemPath>
+    <itemPath>mo/Sound.cpp</itemPath>
+    <itemPath>mo/Sound.h</itemPath>
     <itemPath>mo/Texture2D.cpp</itemPath>
     <itemPath>mo/Texture2D.h</itemPath>
     <itemPath>mo/Vertex.h</itemPath>
@@ -48,6 +50,21 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">
@@ -63,6 +80,10 @@
       <item path="mo/Renderer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Renderer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="mo/Sound.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mo/Sound.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="mo/Texture2D.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -104,6 +125,21 @@
         <archiverTool>
         </archiverTool>
       </compileType>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">
@@ -119,6 +155,10 @@
       <item path="mo/Renderer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Renderer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="mo/Sound.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mo/Sound.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="mo/Texture2D.cpp" ex="false" tool="1" flavor2="0">
       </item>
