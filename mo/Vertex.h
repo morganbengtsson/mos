@@ -5,8 +5,8 @@
  * Created on November 21, 2013, 8:16 PM
  */
 
-#ifndef OGLI_VERTEX_H
-#define	OGLI_VERTEX_H
+#ifndef MO_VERTEX_H
+#define	MO_VERTEX_H
 
 #include <glm/glm.hpp>
 
@@ -23,5 +23,5 @@ struct Vertex {
 
 }
 
-#endif	/* OGLI_VERTEX_H */
+#endif	/* MO_VERTEX_H */
 

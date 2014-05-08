@@ -29,9 +29,17 @@ namespace mo {
         virtual ~Assets();
 
         std::shared_ptr<Mesh> mesh(std::string path);
+        
+        /**
+         * Load a texture from file.
+         * 
+         * Loads a texture from a PNG image file.
+         * @param Path to the file
+         * @return Shared pointer to a Texture2D object
+         */
         std::shared_ptr<Texture2D> texture(std::string path);
         /**
-         * Load sound from file
+         * Load sound from file.
          * 
          * Load a sound buffer from a raw data file, containing 16 bit integer data.
          * @param The file path

@@ -5,8 +5,8 @@
  * Created on February 25, 2014, 7:26 PM
  */
 
-#ifndef OGLI_TEXTURE2D_H
-#define	OGLI_TEXTURE2D_H
+#ifndef MO_TEXTURE2D_H
+#define	MO_TEXTURE2D_H
 
 #include <vector>
 
@@ -41,5 +41,5 @@ private:
 
 }
 
-#endif	/* OGLI_TEXTURE_H */
+#endif	/* MO_TEXTURE_H */
 
