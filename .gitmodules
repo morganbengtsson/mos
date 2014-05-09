@@ -1,0 +1,12 @@
+[submodule "externals/glm"]
+	path = externals/glm
+	url = git://github.com/g-truc/glm.git
+[submodule "externals/ogli"]
+	path = externals/ogli
+	url = git://github.com/morganbengtsson/ogli.git
+[submodule "externals/glew"]
+	path = externals/glew
+	url = git://github.com/nigels-com/glew.git
+[submodule "externals/objload"]
+	path = externals/objload
+	url = https://github.com/GerhardR/objload.git
