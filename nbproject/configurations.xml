@@ -38,35 +38,25 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <ccTool>
-          <standard>8</standard>
-          <incDir>
-            <pElem>../glm</pElem>
-            <pElem>../lodepng</pElem>
-            <pElem>../ogli</pElem>
-            <pElem>../glew-1.9.0/include</pElem>
-            <pElem>../rapidxml-1.13</pElem>
-            <pElem>../objload</pElem>
-          </incDir>
-        </ccTool>
-        <archiverTool>
-        </archiverTool>
-      </compileType>
-      <folder path="TestFiles/f1">
         <cTool>
           <incDir>
             <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
+          <standard>8</standard>
           <incDir>
-            <pElem>.</pElem>
+            <pElem>externals/glew/include</pElem>
+            <pElem>externals/glm</pElem>
+            <pElem>externals/lodepng</pElem>
+            <pElem>externals/ogli</pElem>
+            <pElem>externals/rapidxml</pElem>
+            <pElem>externals/objload</pElem>
           </incDir>
         </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-        </linkerTool>
-      </folder>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">
@@ -109,6 +99,9 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -120,6 +113,7 @@
             <pElem>../ogli</pElem>
             <pElem>../glew-1.9.0/include</pElem>
             <pElem>../objload</pElem>
+            <pElem>.</pElem>
           </incDir>
         </ccTool>
         <fortranCompilerTool>
@@ -131,21 +125,6 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <folder path="TestFiles/f1">
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </cTool>
-        <ccTool>
-          <incDir>
-            <pElem>.</pElem>
-          </incDir>
-        </ccTool>
-        <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
-        </linkerTool>
-      </folder>
       <item path="mo/Assets.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="mo/Assets.h" ex="false" tool="3" flavor2="0">

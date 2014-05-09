@@ -6,7 +6,7 @@
 	url = git://github.com/morganbengtsson/ogli.git
 [submodule "externals/glew"]
 	path = externals/glew
-	url = git://github.com/nigels-com/glew.git
+	url = git://git.code.sf.net/p/glew/code
 [submodule "externals/objload"]
 	path = externals/objload
 	url = https://github.com/GerhardR/objload.git
