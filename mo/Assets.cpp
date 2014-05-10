@@ -11,7 +11,6 @@
 #include <rapidxml_utils.hpp>
 #include <objload.h>
 #include <lodepng.h>
-#include <lodepng.cpp>
 #include <exception>
 #include <system_error>
 #include <memory>
