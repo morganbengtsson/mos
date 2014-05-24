@@ -8,6 +8,11 @@
 #ifndef MO_AUDIO_H
 #define	MO_AUDIO_H
 
+
+#ifdef __ANDROID__
+
+#else
+
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
@@ -39,6 +44,7 @@ namespace mo {
         std::map<unsigned int, ALuint> buffers_;
     };
 }
+#endif
 
 #endif	/* MO_AUDIO_H */
 

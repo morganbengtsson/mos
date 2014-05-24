@@ -5,6 +5,10 @@
  * Created on May 7, 2014, 9:41 PM
  */
 
+#ifdef __ANDROID__
+
+#else
+
 #include "Audio.h"
 namespace mo {
 
@@ -60,3 +64,5 @@ namespace mo {
     }
 
 }
+
+#endif
