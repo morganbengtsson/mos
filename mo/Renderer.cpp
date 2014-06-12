@@ -5,7 +5,6 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
-#include <GL/glew.h>
 #include <ogli/util.h>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -25,13 +24,7 @@ namespace mo {
     position_attribute_3P3N2UV_(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
     normal_attribute_3P3N2UV_(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
     uv_attribute_3P3N2UV_(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)) {
-        GLenum err = glewInit();
-        std::stringstream ss;
-        if (GLEW_OK != err) {
-            ss << "Error " << glewGetErrorString(err) << std::endl;
-        }
-        ss << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-        std::cout << ss.str();
+        ogli::init(); // Should this be done int ogli or mo?
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);

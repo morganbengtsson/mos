@@ -5,29 +5,16 @@
  * Created on February 25, 2014, 6:38 PM
  */
 
-#ifndef MO_ASSETS_H
-#define	MO_ASSETS_H
+#ifndef MO_FILEASSETS_H
+#define	MO_FILEASSETS_H
 
-#include <string>
-#include <map>
-#include <memory>
-#include "Mesh.h"
-#include "Texture2D.h"
-#include "Sound.h"
+#include "Assets.h"
 
 namespace mo {
-    class Assets {
-    public:
-        typedef std::map<std::string, std::shared_ptr<mo::Mesh>> MeshMap;
-        typedef std::map<std::string, std::shared_ptr<mo::Texture2D>> TextureMap;
-        typedef std::pair<std::string, std::shared_ptr<mo::Mesh>> MeshPair;
-        typedef std::pair<std::string, std::shared_ptr<mo::Texture2D>> TexturePair;
-        typedef std::map<std::string, std::shared_ptr<mo::Sound>> SoundMap;
-        typedef std::pair<std::string, std::shared_ptr<mo::Sound>> SoundPair;
-
-        Assets();
-        virtual ~Assets();
-
+    class FileAssets : public Assets {
+    public:        
+        FileAssets();
+        virtual ~FileAssets();
         
         /**
          * Load a mesh from file
@@ -61,5 +48,5 @@ namespace mo {
         SoundMap sounds_;
     };
 }
-#endif	/* ASSETS_H */
+#endif	/* MO_FILEASSETS_H */
 

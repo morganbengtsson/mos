@@ -5,7 +5,7 @@
  * Created on February 25, 2014, 6:38 PM
  */
 
-#include "Assets.h"
+#include "FileAssets.h"
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
@@ -20,7 +20,7 @@
 
 namespace mo {
 
-    Assets::Assets() {
+    FileAssets::FileAssets() {
         using namespace mo;
         using namespace std;
 
@@ -32,10 +32,10 @@ namespace mo {
                 elements.end()))));
     }
 
-    Assets::~Assets() {
+    FileAssets::~FileAssets() {
     }
 
-    std::shared_ptr<Mesh> Assets::mesh(std::string path) {
+    std::shared_ptr<Mesh> FileAssets::mesh(std::string path) {
         using namespace std;
         using namespace mo;
 
@@ -67,7 +67,7 @@ namespace mo {
         }
     }
 
-    std::shared_ptr<Texture2D> Assets::texture(std::string path) {
+    std::shared_ptr<Texture2D> FileAssets::texture(std::string path) {
         using namespace mo;
         if (textures_.find(path) == textures_.end()) {
             std::vector<unsigned char> texels;
@@ -85,7 +85,7 @@ namespace mo {
         }
     }
 
-    std::shared_ptr<Sound> Assets::sound(std::string path){
+    std::shared_ptr<Sound> FileAssets::sound(std::string path){
         if (sounds_.find(path) == sounds_.end()) {
             std::ifstream file(path, std::ios::binary);
 

@@ -15,7 +15,7 @@
 
 #include "Mesh.h"
 #include "Texture2D.h"
-#include "Assets.h"
+#include "FileAssets.h"
 
 namespace mo {
 
