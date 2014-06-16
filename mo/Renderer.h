@@ -38,7 +38,7 @@ namespace mo {
         
         Renderer();
         void addProgram(const std::string name);
-        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name = "standard");
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name = "assets/standard");
         void clear(const glm::vec3 color);
 
         virtual ~Renderer();

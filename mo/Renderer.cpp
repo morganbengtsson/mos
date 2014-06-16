@@ -32,33 +32,16 @@ namespace mo {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
-        auto standard_vertex_shader = ogli::createShader(ogli::loadText("standard.vs"), GL_VERTEX_SHADER);
-        auto standard_fragment_shader = ogli::createShader(ogli::loadText("standard.fs"), GL_FRAGMENT_SHADER);
-        
-        standard_program_ = ogli::createProgram();
-        ogli::attachShader(standard_program_, standard_vertex_shader);
-        ogli::attachShader(standard_program_, standard_fragment_shader);
-        ogli::bindAttribute(standard_program_, position_attribute_3P3N2UV_);
-        ogli::bindAttribute(standard_program_, normal_attribute_3P3N2UV_);
-        ogli::bindAttribute(standard_program_, uv_attribute_3P3N2UV_);
-
-        ogli::linkProgram(standard_program_);
-
-        standard_mvp_uniform_ = ogli::createUniform(standard_program_, "model_view_projection");
-        standard_mv_uniform_ = ogli::createUniform(standard_program_, "model_view");
-        standard_texture_uniform_ = ogli::createUniform(standard_program_, "texture");
-        standard_camera_position_ = ogli::createUniform(standard_program_, "camera_position");
-        
-        addProgram("standard");
+        addProgram("assets/standard");
         
     }
 
     Renderer::~Renderer() {
     }
     
-    void Renderer::addProgram(const std::string name){
-        auto vertex_shader = ogli::createShader(ogli::loadText(name + ".vs"), GL_VERTEX_SHADER);
-        auto fragment_shader = ogli::createShader(ogli::loadText(name + ".fs"), GL_FRAGMENT_SHADER);
+    void Renderer::addProgram(const std::string path){
+        auto vertex_shader = ogli::createShader(ogli::loadText(path + ".vs"), GL_VERTEX_SHADER);
+        auto fragment_shader = ogli::createShader(ogli::loadText(path + ".fs"), GL_FRAGMENT_SHADER);
                
         auto program = ogli::createProgram();
         ogli::attachShader(program, vertex_shader);
@@ -69,12 +52,12 @@ namespace mo {
 
         ogli::linkProgram(program);
 
-        auto mvp_uniform = ogli::createUniform(standard_program_, "model_view_projection");
-        auto mv_uniform = ogli::createUniform(standard_program_, "model_view");
-        auto texture_uniform = ogli::createUniform(standard_program_, "texture");
-        auto camera_position_uniform = ogli::createUniform(standard_program_, "camera_position");        
+        auto mvp_uniform = ogli::createUniform(program, "model_view_projection");
+        auto mv_uniform = ogli::createUniform(program, "model_view");
+        auto texture_uniform = ogli::createUniform(program, "texture");
+        auto camera_position_uniform = ogli::createUniform(program, "camera_position");        
         
-        programs_.insert(ProgramPair(name, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, camera_position_uniform}));
+        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, camera_position_uniform}));
     }
 
     void Renderer::clear(const glm::vec3 color) {
