@@ -32,16 +32,15 @@ namespace mo {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
-        addProgram("assets/standard");
-        
+        addProgram("assets/standard", standard_vertex_source, standard_fragment_source);        
     }
 
     Renderer::~Renderer() {
     }
     
-    void Renderer::addProgram(const std::string path){
-        auto vertex_shader = ogli::createShader(ogli::loadText(path + ".vs"), GL_VERTEX_SHADER);
-        auto fragment_shader = ogli::createShader(ogli::loadText(path + ".fs"), GL_FRAGMENT_SHADER);
+    void Renderer::addProgram(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source){
+        auto vertex_shader = ogli::createShader(vertex_shader_source, GL_VERTEX_SHADER);
+        auto fragment_shader = ogli::createShader(fragment_shader_source, GL_FRAGMENT_SHADER);
                
         auto program = ogli::createProgram();
         ogli::attachShader(program, vertex_shader);
@@ -58,6 +57,10 @@ namespace mo {
         auto camera_position_uniform = ogli::createUniform(program, "camera_position");        
         
         programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, camera_position_uniform}));
+    }
+    
+    void Renderer::addProgram(const std::string path){
+        addProgram(path, ogli::loadText(path + ".vs"), ogli::loadText(path + ".fs"));
     }
 
     void Renderer::clear(const glm::vec3 color) {
