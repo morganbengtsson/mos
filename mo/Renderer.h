@@ -60,50 +60,8 @@ namespace mo {
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
         std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
 
-        const std::string standard_vertex_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#endif\n"
-                "uniform mat4 model_view_projection;\n"
-                "uniform mat4 model_view;\n"
-                "attribute vec3 position;\n"
-                "attribute vec3 normal;\n"
-                "attribute vec2 uv;\n"
-                "varying vec3 v_position;\n"
-                "varying vec3 v_normal\n;"
-                "varying vec3 v_position2;\n"
-                "varying vec2 v_uv;\n"
-                "void main()\n"
-                "{\n"
-                "    v_uv = uv;\n"
-                "    v_position2 = normalize((model_view_projection * vec4(position, 1.0)).xyz);\n"
-                "    v_position = (model_view * vec4(position, 0.0)).xyz;\n"
-                "    v_normal = normalize((model_view * vec4(normal, 0.0)).xyz);\n"
-                "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
-                "}\n";
-
-        const std::string standard_fragment_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#endif\n"
-                "uniform vec4 color;\n"
-                "uniform sampler2D texture;\n"
-                "varying vec3 v_position;\n"
-                "varying vec3 v_normal;\n"
-                "varying vec3 v_position2;\n"
-                "varying vec2 v_uv;\n"
-                "void main() {\n"
-                "vec3 ambient = vec3(0.3, 0.3, 0.3);\n"
-                "float d = (v_position.z + 100.0)/5000.0;\n"
-
-                "vec3 light = normalize(vec3(0.0, 500.0, 100.0) - v_position2);\n"
-                "float intensity = max(dot(v_normal,light), 0.0) * 0.2;\n"
-
-                "vec3 indirect = texture2D(texture, v_uv).rgb;\n"
-
-                "gl_FragColor = vec4(indirect + intensity, 1.0);\n"
-
-                "}\n";
+        std::string standard_vertex_source_;
+        std::string standard_fragment_source_;
 
     };
 }
