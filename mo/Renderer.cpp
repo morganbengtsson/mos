@@ -79,7 +79,7 @@ namespace mo {
                 "}\n";
 
 
-        addProgram("assets/standard", standard_vertex_source_, standard_fragment_source_);
+        addProgram("standard", standard_vertex_source_, standard_fragment_source_);
     }
 
     Renderer::~Renderer() {

@@ -18,14 +18,17 @@
 #include <iostream>
 #include <iterator>
 
+using namespace mo;
+using namespace std;
+using namespace glm;
+
 namespace mo {
 
-    FileAssets::FileAssets() {
-        using namespace mo;
-        using namespace std;
-
-        std::vector<Vertex> vertices;
-        std::vector<int> elements;
+    FileAssets::FileAssets() :
+    directory_("assets/")
+    {
+        vector<Vertex> vertices;
+        vector<int> elements;
         models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
                 vertices.end(),
                 elements.begin(),
@@ -35,17 +38,14 @@ namespace mo {
     FileAssets::~FileAssets() {
     }
 
-    std::shared_ptr<Mesh> FileAssets::mesh(std::string path) {
-        using namespace std;
-        using namespace mo;
+    std::shared_ptr<Mesh> FileAssets::mesh(std::string file_name) {
+        if (models_.find(file_name) == models_.end()) {
+            vector<mo::Vertex> vertices;
+            vector<int> elements;
 
-        if (models_.find(path) == models_.end()) {
-            std::vector<mo::Vertex> vertices;
-            std::vector<int> elements;
+            cout << "Opening: " << directory_ << file_name << std::endl;
 
-            std::cout << "Opening: " << path << std::endl;
-
-            obj::Model obj_model = obj::loadModelFromFile(path);
+            obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
             int j = 0;
             for (int i = 0; i < obj_model.vertex.size(); i += 3) {
                 glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
@@ -57,37 +57,37 @@ namespace mo {
             elements.assign(obj_model.faces.find("default")->second.begin(),
                     obj_model.faces.find("default")->second.end());
 
-            models_.insert(MeshPair(path, std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
+            models_.insert(MeshPair(file_name, std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
                     vertices.end(),
                     elements.begin(),
                     elements.end()))));
-            return models_.at(path);
+            return models_.at(file_name);
         } else {
-            return models_.at(path);
+            return models_.at(file_name);
         }
     }
 
-    std::shared_ptr<Texture2D> FileAssets::texture(std::string path) {
+    std::shared_ptr<Texture2D> FileAssets::texture(std::string file_name) {
         using namespace mo;
-        if (textures_.find(path) == textures_.end()) {
+        if (textures_.find(file_name) == textures_.end()) {
             std::vector<unsigned char> texels;
             unsigned width, height;
-            std::cout << "Opening: " << path << std::endl;
-            unsigned error = lodepng::decode(texels, width, height, path);
+            std::cout << "Opening: " << directory_ + file_name << std::endl;
+            unsigned error = lodepng::decode(texels, width, height, directory_ + file_name);
             if (error) {
                 std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
                 
             }
-            textures_.insert(TexturePair(path, std::make_shared<Texture2D>(Texture2D(texels.begin(), texels.end(), width, height))));
-            return textures_.at(path);
+            textures_.insert(TexturePair(file_name, std::make_shared<Texture2D>(Texture2D(texels.begin(), texels.end(), width, height))));
+            return textures_.at(file_name);
         } else {
-            return textures_.at(path);
+            return textures_.at(file_name);
         }
     }
 
-    std::shared_ptr<Sound> FileAssets::sound(std::string path){
-        if (sounds_.find(path) == sounds_.end()) {
-            std::ifstream file(path, std::ios::binary);
+    std::shared_ptr<Sound> FileAssets::sound(std::string file_name){
+        if (sounds_.find(file_name) == sounds_.end()) {
+            std::ifstream file(directory_ + file_name, std::ios::binary);
 
             std::vector<int> data;
             
@@ -96,11 +96,18 @@ namespace mo {
                 data.push_back(v);
             }
             
-            sounds_.insert(SoundPair(path, std::make_shared<Sound>(Sound(data.begin(), data.end()))));
-            return sounds_.at(path);
+            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(data.begin(), data.end()))));
+            return sounds_.at(file_name);
         }
         else {
-            return sounds_.at(path);
+            return sounds_.at(file_name);
         }
+    }
+    
+    std::string FileAssets::text(std::string file_name){
+        std::ifstream file(directory_ + file_name);
+        std::string source((std::istreambuf_iterator<char>(file)),
+                 std::istreambuf_iterator<char>());
+        return source;
     }
 }

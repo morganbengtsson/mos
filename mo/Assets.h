@@ -53,8 +53,17 @@ namespace mo {
          * @return Shared pointer to cached Sound object
          */
         virtual std::shared_ptr<Sound> sound(std::string path) = 0;
-
-    private:
+        
+        /**
+         * Loads text from file.
+         * 
+         * Loads text from a file, Not cached internally.
+         * @param The file path
+         * @return String object
+         */
+        virtual std::string text(std::string path) = 0;
+        
+    protected:
         MeshMap models_;
         TextureMap textures_;
         SoundMap sounds_;
