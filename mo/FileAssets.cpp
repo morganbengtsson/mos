@@ -25,8 +25,7 @@ using namespace glm;
 namespace mo {
 
     FileAssets::FileAssets() :
-    directory_("assets/")
-    {
+    directory_("assets/") {
         vector<Vertex> vertices;
         vector<int> elements;
         models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
@@ -76,7 +75,7 @@ namespace mo {
             unsigned error = lodepng::decode(texels, width, height, directory_ + file_name);
             if (error) {
                 std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
-                
+
             }
             textures_.insert(TexturePair(file_name, std::make_shared<Texture2D>(Texture2D(texels.begin(), texels.end(), width, height))));
             return textures_.at(file_name);
@@ -85,29 +84,75 @@ namespace mo {
         }
     }
 
-    std::shared_ptr<Sound> FileAssets::sound(std::string file_name){
+    std::shared_ptr<Sound> FileAssets::sound(std::string file_name) {
         if (sounds_.find(file_name) == sounds_.end()) {
             std::ifstream file(directory_ + file_name, std::ios::binary);
 
             std::vector<int> data;
-            
+
             int v;
-            while(file.read(reinterpret_cast<char*>(&v), sizeof(v))){
+            while (file.read(reinterpret_cast<char*> (&v), sizeof (v))) {
                 data.push_back(v);
             }
-            
+
             sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(data.begin(), data.end()))));
             return sounds_.at(file_name);
-        }
-        else {
+        } else {
             return sounds_.at(file_name);
         }
     }
-    
-    std::string FileAssets::text(std::string file_name){
+
+    std::string FileAssets::text(std::string file_name) {
         std::ifstream file(directory_ + file_name);
         std::string source((std::istreambuf_iterator<char>(file)),
-                 std::istreambuf_iterator<char>());
+                std::istreambuf_iterator<char>());
         return source;
+    }
+
+    std::map<char, Character> FileAssets::characterMap(std::string path) {
+        
+        std::map<char, Character> characters;
+        rapidxml::xml_document<> doc;
+        //doc.parse<0>((char*) text(path));
+        std::string str = text(path);
+        char* cstr = new char[str.size() + 1];  // Create char buffer to store string copy
+        strcpy (cstr, str.c_str()); 
+        doc.parse<0>(cstr);
+        
+        delete [] cstr;
+
+        std::cout << "Name of my first node is: " << doc.first_node()->name() << "\n";
+
+        //width_ = atoi(doc.first_node("font")->first_node("texture")->first_attribute("width")->value());
+        //height_ = atoi(doc.first_node("font")->first_node("texture")->first_attribute("height")->value());
+
+        rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
+
+        for (rapidxml::xml_node<> * char_node = chars_node->first_node("char");
+                char_node;
+                char_node = char_node->next_sibling()) {
+
+            Character character;
+            rapidxml::xml_attribute<> *attr = char_node->first_attribute();
+            character.offsetX = atof(attr->value());
+            attr = attr->next_attribute();
+            character.offsetY = atof(attr->value());
+            attr = attr->next_attribute();
+            character.advance = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rectW = atof(attr->value());
+            attr = attr->next_attribute();
+            character.id = *attr->value();
+            attr = attr->next_attribute();
+            character.rectX = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rectY = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rectH = atof(attr->value());
+
+            characters.insert(std::pair<char, Character>(character.id, character));
+
+        }
+        return characters;
     }
 }

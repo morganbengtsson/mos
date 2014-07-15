@@ -20,6 +20,7 @@ namespace mo {
         std::shared_ptr<Texture2D> texture(std::string file_name);
         std::shared_ptr<Sound> sound(std::string file_name);
         std::string text(std::string file_name);
+        std::map<char, Character> characterMap(std::string path);
 
     private:
         std::string directory_;

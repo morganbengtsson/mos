@@ -14,6 +14,7 @@
 #include "Mesh.h"
 #include "Texture2D.h"
 #include "Sound.h"
+#include "Character.h"
 
 namespace mo {
     class Assets {
@@ -24,7 +25,8 @@ namespace mo {
         typedef std::pair<std::string, std::shared_ptr<mo::Texture2D>> TexturePair;
         typedef std::map<std::string, std::shared_ptr<mo::Sound>> SoundMap;
         typedef std::pair<std::string, std::shared_ptr<mo::Sound>> SoundPair;
-
+                
+        
         virtual ~Assets(){};
 
         
@@ -62,6 +64,15 @@ namespace mo {
          * @return String object
          */
         virtual std::string text(std::string path) = 0;
+        
+        
+        /**
+         * Loads a charactermap from an xml definition.
+         * 
+         * @param The file path
+         * @return A map of chars, with opposed Character object.
+         */
+        virtual std::map<char, Character> characterMap(std::string path) = 0;
         
     protected:
         MeshMap models_;

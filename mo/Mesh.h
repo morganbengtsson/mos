@@ -28,6 +28,7 @@ namespace mo {
             vertices_.assign(verticesBegin, verticesEnd);
             elements_.assign(elementsBegin, elementsEnd);
         }
+        Mesh();
         virtual ~Mesh();
 
         typename Vertices::const_iterator verticesBegin() const {
@@ -47,6 +48,10 @@ namespace mo {
         };
 
         unsigned int id() const;
+        
+        void clear();
+        void add(const Vertex vertex);
+        void add(const int element);
 
     private:
         unsigned int id_;
