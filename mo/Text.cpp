@@ -18,10 +18,7 @@
 namespace mo {
 
     Text::Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform)
-    : Model::Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform) {
-
-
-
+    : Model::Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform), characters_(characters) {
         setText(text);
     }
 

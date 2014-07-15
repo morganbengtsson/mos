@@ -75,11 +75,43 @@ namespace mo {
                 "vec3 indirect = texture2D(texture, v_uv).rgb;\n"
 
                 "gl_FragColor = vec4(indirect + intensity, 1.0);\n"
+                "gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
 
                 "}\n";
 
-
         addProgram("standard", standard_vertex_source_, standard_fragment_source_);
+
+        std::string text_vertex_source = "#ifdef GL_ES\n"
+                "precision mediump float;\n"
+                "precision mediump int;\n"
+                "#endif\n"
+                "uniform mat4 model_view_projection;\n"
+                "uniform mat4 model_view;\n"
+                "attribute vec3 position;\n"
+                "attribute vec2 uv;\n"
+
+                "varying vec2 v_position;\n"
+                "varying vec2 v_uv;\n"
+
+                "void main(){\n"
+                "v_position = (model_view * vec4(position, 0.0)).xy;\n"
+                "v_uv = uv;\n"
+                "gl_Position = model_view_projection * vec4(position, 1.0);\n"
+                "}\n";
+        
+        std::string text_fragment_source = "#ifdef GL_ES\n"
+                "precision mediump float;\n"
+                "precision mediump int;\n"
+                "#endif\n"
+                "varying vec3 v_position;\n"
+                "varying vec2 v_uv;\n"
+                "uniform sampler2D texture;\n"
+
+                "void main() {\n"
+                "gl_FragColor = texture2D(texture, v_uv);\n"
+                "//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+                "}\n";
+        addProgram("text", text_vertex_source, text_fragment_source);
     }
 
     Renderer::~Renderer() {
@@ -159,7 +191,16 @@ namespace mo {
         ogli::attribute(position_attribute_3P3N2UV_);
         ogli::attribute(normal_attribute_3P3N2UV_);
         ogli::attribute(uv_attribute_3P3N2UV_);
-        ogli::drawElements(std::distance(model.mesh->elementsBegin(), model.mesh->elementsEnd()));
+        int num_elements = std::distance(model.mesh->elementsBegin(), model.mesh->elementsEnd());
+        if (num_elements > 0){
+            ogli::drawElements(num_elements);
+        }
+        else {
+            ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()));
+        }
+        if (!model.valid()) {
+            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->verticesBegin(), model.mesh->verticesEnd());
+        }
     }
 
 }

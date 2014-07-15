@@ -109,12 +109,12 @@ namespace mo {
         return source;
     }
 
-    std::map<char, Character> FileAssets::characterMap(std::string path) {
+    std::map<char, Character> FileAssets::characterMap(std::string file_name) {
         
         std::map<char, Character> characters;
         rapidxml::xml_document<> doc;
         //doc.parse<0>((char*) text(path));
-        std::string str = text(path);
+        std::string str = text(file_name);
         char* cstr = new char[str.size() + 1];  // Create char buffer to store string copy
         strcpy (cstr, str.c_str()); 
         doc.parse<0>(cstr);
