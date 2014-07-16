@@ -60,6 +60,7 @@ namespace mo {
                 "precision mediump int;\n"
                 "#endif\n"
                 "uniform vec4 color;\n"
+                "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
                 "varying vec3 v_position;\n"
                 "varying vec3 v_normal;\n"
@@ -74,8 +75,8 @@ namespace mo {
 
                 "vec3 indirect = texture2D(texture, v_uv).rgb;\n"
 
-                "gl_FragColor = vec4(indirect + intensity, 1.0);\n"
-                "gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+                "gl_FragColor = vec4(indirect + intensity, 1.0*opacity);\n"
+                "//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
 
                 "}\n";
 
@@ -106,6 +107,7 @@ namespace mo {
                 "varying vec3 v_position;\n"
                 "varying vec2 v_uv;\n"
                 "uniform sampler2D texture;\n"
+                "uniform float opacity;\n"
 
                 "void main() {\n"
                 "gl_FragColor = texture2D(texture, v_uv);\n"
@@ -133,9 +135,9 @@ namespace mo {
         auto mvp_uniform = ogli::createUniform(program, "model_view_projection");
         auto mv_uniform = ogli::createUniform(program, "model_view");
         auto texture_uniform = ogli::createUniform(program, "texture");
-        auto camera_position_uniform = ogli::createUniform(program, "camera_position");
+        auto opacity_uniform = ogli::createUniform(program, "opacity");
 
-        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, camera_position_uniform}));
+        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform}));
     }
 
     void Renderer::addProgram(const std::string path) {
@@ -147,7 +149,7 @@ namespace mo {
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
     }
 
-    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name) {
+    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity, const std::string program_name) {
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
                     ogli::createArrayBuffer(model.mesh->verticesBegin(), model.mesh->verticesEnd())));
@@ -185,8 +187,8 @@ namespace mo {
         ogli::uniform(programs_.at(program_name).mvp, mvp);
         ogli::uniform(programs_.at(program_name).mv, mv);
         ogli::uniform(programs_.at(program_name).texture);
-        ogli::uniform(programs_.at(program_name).camera_position, camera_pos);
-
+        ogli::uniform(programs_.at(program_name).opacity, opacity);
+        
 
         ogli::attribute(position_attribute_3P3N2UV_);
         ogli::attribute(normal_attribute_3P3N2UV_);

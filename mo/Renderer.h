@@ -26,7 +26,7 @@ namespace mo {
         ogli::Uniform mvp;
         ogli::Uniform mv;
         ogli::Uniform texture;
-        ogli::Uniform camera_position;
+        ogli::Uniform opacity;
     };
 
     class Renderer {
@@ -40,7 +40,7 @@ namespace mo {
         Renderer();
         void addProgram(const std::string name);
         void addProgram(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source);
-        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name = "standard");
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard");
         void clear(const glm::vec3 color);
 
         virtual ~Renderer();
