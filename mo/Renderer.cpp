@@ -111,6 +111,7 @@ namespace mo {
 
                 "void main() {\n"
                 "gl_FragColor = texture2D(texture, v_uv);\n"
+                "gl_FragColor.w = gl_FragColor.w * opacity;\n"
                 "//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
                 "}\n";
         addProgram("text", text_vertex_source, text_fragment_source);
