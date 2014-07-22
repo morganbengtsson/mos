@@ -42,16 +42,16 @@ namespace mo {
                 "attribute vec3 position;\n"
                 "attribute vec3 normal;\n"
                 "attribute vec2 uv;\n"
-                "varying vec3 v_position;\n"
-                "varying vec3 v_normal\n;"
-                "varying vec3 v_position2;\n"
-                "varying vec2 v_uv;\n"
+                "varying vec3 fragment_position;\n"
+                "varying vec3 fragment_normal\n;"                
+                "varying vec2 fragment_uv;\n"
+                "varying mat3 normal_matrix;\n"
                 "void main()\n"
                 "{\n"
-                "    v_uv = uv;\n"
-                "    v_position2 = normalize((model_view_projection * vec4(position, 1.0)).xyz);\n"
-                "    v_position = (model_view * vec4(position, 0.0)).xyz;\n"
-                "    v_normal = normalize((model_view * vec4(normal, 0.0)).xyz);\n"
+                "    fragment_uv = uv;\n"
+                "    fragment_position = (model_view * vec4(position, 0.0)).xyz;\n"
+                "    normal_matrix = transpose(inverse(mat3(model_view)));\n"
+                "    fragment_normal = normal_matrix * normal;\n"
                 "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
                 "}\n";
 
@@ -63,22 +63,18 @@ namespace mo {
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
                 "uniform vec3 light_position;\n"
-                "varying vec3 v_position;\n"
-                "varying vec3 v_normal;\n"
-                "varying vec3 v_position2;\n"
-                "varying vec2 v_uv;\n"
+                "varying vec3 fragment_position;\n"
+                "varying vec3 fragment_normal;\n"
+                "varying vec2 fragment_uv;\n"
+                
                 "void main() {\n"
-                "vec3 ambient = vec3(0.3, 0.3, 0.3);\n"
-                "float d = (v_position.z + 100.0)/5000.0;\n"
+                    "vec3 normal = normalize(fragment_normal);\n"
+                    "vec3 surface_to_light = light_position - fragment_position;\n"                  
+                    "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
+                    "intensity = clamp(intensity, 0.0, 1.0);\n"
+                    "vec3 diffuse = texture2D(texture, fragment_uv).rgb;\n"
 
-                "vec3 light = normalize(light_position - v_position2);\n"
-                "float intensity = max(dot(v_normal,light), 0.0) * 0.2;\n"
-
-                "vec3 indirect = texture2D(texture, v_uv).rgb;\n"
-
-                "gl_FragColor = vec4(indirect + intensity, 1.0*opacity);\n"
-                "//gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-
+                    "gl_FragColor = vec4(diffuse * intensity, 1.0*opacity);\n"
                 "}\n";
 
         addProgram("standard", standard_vertex_source, standard_fragment_source);
@@ -138,8 +134,9 @@ namespace mo {
         auto mv_uniform = ogli::createUniform(program, "model_view");
         auto texture_uniform = ogli::createUniform(program, "texture");
         auto opacity_uniform = ogli::createUniform(program, "opacity");
+        auto light_uniform = ogli::createUniform(program, "light_position");
 
-        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform}));
+        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform, light_uniform}));
     }
 
     void Renderer::addProgram(const std::string path) {
@@ -166,7 +163,7 @@ namespace mo {
             textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
         }
 
-        glm::mat4 mv = projection * view;
+        glm::mat4 mv = view * transform * model.transform();
         glm::mat4 mvp = projection * view * transform * model.transform();
 
         //ogli::useProgram(standard_program_);
@@ -179,13 +176,7 @@ namespace mo {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
-
-        //TODO: General lighting, this is a hack.
-        glm::mat3 rot_mat(view);
-        glm::vec3 dir(view[3]);
-
-        glm::vec3 camera_pos = -dir * rot_mat;
-
+        
         ogli::uniform(programs_.at(program_name).mvp, mvp);
         ogli::uniform(programs_.at(program_name).mv, mv);
         ogli::uniform(programs_.at(program_name).texture);
