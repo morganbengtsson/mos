@@ -42,14 +42,19 @@ namespace mo {
             vector<mo::Vertex> vertices;
             vector<int> elements;
 
-            cout << "Opening: " << directory_ << file_name << std::endl;
+            cout << "Loading: " << directory_ << file_name << std::endl;
 
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
             int j = 0;
             for (int i = 0; i < obj_model.vertex.size(); i += 3) {
                 glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
                 glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1], obj_model.normal[i + 2]);
-                glm::vec2 uv(obj_model.texCoord[j], -obj_model.texCoord[j + 1]);
+                glm::vec2 uv(0.0f, 0.0f);
+                if (obj_model.texCoord.size() > 0){
+                    uv.x = obj_model.texCoord[j];
+                    uv.y = -obj_model.texCoord[j + 1];
+                }
+                
                 j += 2;
                 vertices.push_back(Vertex(position, normal, uv));
             }
@@ -71,7 +76,7 @@ namespace mo {
         if (textures_.find(file_name) == textures_.end()) {
             std::vector<unsigned char> texels;
             unsigned width, height;
-            std::cout << "Opening: " << directory_ + file_name << std::endl;
+            std::cout << "Loading: " << directory_ + file_name << std::endl;
             unsigned error = lodepng::decode(texels, width, height, directory_ + file_name);
             if (error) {
                 std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;

@@ -33,7 +33,7 @@ namespace mo {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-        standard_vertex_source_ = "#ifdef GL_ES\n"
+        std::string standard_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
                 "#endif\n"
@@ -55,13 +55,14 @@ namespace mo {
                 "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
                 "}\n";
 
-        standard_fragment_source_ = "#ifdef GL_ES\n"
+        std::string standard_fragment_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
                 "#endif\n"
                 "uniform vec4 color;\n"
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
+                "uniform vec3 light_position;\n"
                 "varying vec3 v_position;\n"
                 "varying vec3 v_normal;\n"
                 "varying vec3 v_position2;\n"
@@ -70,7 +71,7 @@ namespace mo {
                 "vec3 ambient = vec3(0.3, 0.3, 0.3);\n"
                 "float d = (v_position.z + 100.0)/5000.0;\n"
 
-                "vec3 light = normalize(vec3(0.0, 500.0, 100.0) - v_position2);\n"
+                "vec3 light = normalize(light_position - v_position2);\n"
                 "float intensity = max(dot(v_normal,light), 0.0) * 0.2;\n"
 
                 "vec3 indirect = texture2D(texture, v_uv).rgb;\n"
@@ -80,7 +81,7 @@ namespace mo {
 
                 "}\n";
 
-        addProgram("standard", standard_vertex_source_, standard_fragment_source_);
+        addProgram("standard", standard_vertex_source, standard_fragment_source);
 
         std::string text_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
@@ -150,7 +151,7 @@ namespace mo {
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
     }
 
-    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity, const std::string program_name) {
+    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity, const std::string program_name, const glm::vec3 light_position) {
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
                     ogli::createArrayBuffer(model.mesh->verticesBegin(), model.mesh->verticesEnd())));
@@ -189,6 +190,7 @@ namespace mo {
         ogli::uniform(programs_.at(program_name).mv, mv);
         ogli::uniform(programs_.at(program_name).texture);
         ogli::uniform(programs_.at(program_name).opacity, opacity);
+        ogli::uniform(programs_.at(program_name).light_position, light_position);
         
 
         ogli::attribute(position_attribute_3P3N2UV_);

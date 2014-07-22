@@ -27,6 +27,7 @@ namespace mo {
         ogli::Uniform mv;
         ogli::Uniform texture;
         ogli::Uniform opacity;
+        ogli::Uniform light_position;
     };
 
     class Renderer {
@@ -40,7 +41,7 @@ namespace mo {
         Renderer();
         void addProgram(const std::string name);
         void addProgram(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source);
-        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard");
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard", const glm::vec3 = glm::vec3(0.0f, 0.0f, 0.0f));
         void clear(const glm::vec3 color);
 
         virtual ~Renderer();
@@ -49,19 +50,10 @@ namespace mo {
         ogli::Attribute normal_attribute_3P3N2UV_;
         ogli::Attribute uv_attribute_3P3N2UV_;
 
-        ogli::Program standard_program_;
-        ogli::Uniform standard_mvp_uniform_;
-        ogli::Uniform standard_mv_uniform_;
-        ogli::Uniform standard_texture_uniform_;
-        ogli::Uniform standard_camera_position_;
-
         std::map<std::string, ProgramData> programs_;
         std::map<unsigned int, ogli::TextureBuffer> textures_;
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
         std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
-
-        std::string standard_vertex_source_;
-        std::string standard_fragment_source_;
 
     };
 }
