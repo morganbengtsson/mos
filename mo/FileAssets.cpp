@@ -36,6 +36,18 @@ namespace mo {
 
     FileAssets::~FileAssets() {
     }
+    
+    /*
+    std::tuple<std::shared_ptr<Mesh>, std::shared_ptr<Texture2D>> FileAssets::mesh_texture(std::string path){
+        obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
+        obj_model.
+        
+        
+        auto tuple = std::make_tuple();
+        return tuple;
+    }
+     */
+        
 
     std::shared_ptr<Mesh> FileAssets::mesh(std::string file_name) {
         if (models_.find(file_name) == models_.end()) {

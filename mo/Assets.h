@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <tuple>
 #include "Mesh.h"
 #include "Texture2D.h"
 #include "Sound.h"
@@ -29,6 +30,14 @@ namespace mo {
         
         virtual ~Assets(){};
 
+        /**
+         * Load a mesh and texture from file simultaneously.
+         * 
+         * Loads a mesh from an *.obj file and corresponding texture and caches them internally.
+         * @param File path
+         * @return Tuple of shared pointer to cached Mesh object and cached Texture2D object. 
+         */
+        //virtual std::tuple<std::shared_ptr<Mesh>, std::shared_ptr<Texture2D>> mesh_texture(std::string path) = 0;
         
         /**
          * Load a mesh from file

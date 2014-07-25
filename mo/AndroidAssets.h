@@ -12,6 +12,7 @@
 
 #include <mo/Assets.h>
 #include <android/asset_manager.h>
+#include <mo/Character.h>
 
 namespace mo {
 
@@ -24,6 +25,7 @@ namespace mo {
         std::shared_ptr<Texture2D> texture(std::string path);
         std::shared_ptr<Sound> sound(std::string path);
         std::string text(std::string path);
+        std::map<char, Character> characterMap(std::string path);
     private:
         AAssetManager * manager_;
     };

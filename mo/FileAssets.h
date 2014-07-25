@@ -15,7 +15,8 @@ namespace mo {
     public:        
         FileAssets();
         virtual ~FileAssets();
-             
+        
+        //std::tuple<std::shared_ptr<Mesh>, std::shared_ptr<Texture2D>> mesh_texture(std::string path) = 0;
         std::shared_ptr<Mesh> mesh(std::string file_name);  
         std::shared_ptr<Texture2D> texture(std::string file_name);
         std::shared_ptr<Sound> sound(std::string file_name);

@@ -50,7 +50,7 @@ namespace mo {
                 "{\n"
                 "    fragment_uv = uv;\n"
                 "    fragment_position = (model_view * vec4(position, 0.0)).xyz;\n"
-                "    normal_matrix = transpose(inverse(mat3(model_view)));\n"
+                "    normal_matrix = mat3(model_view);\n"
                 "    fragment_normal = normal_matrix * normal;\n"
                 "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
                 "}\n";
@@ -71,10 +71,11 @@ namespace mo {
                     "vec3 normal = normalize(fragment_normal);\n"
                     "vec3 surface_to_light = light_position - fragment_position;\n"                  
                     "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
-                    "intensity = clamp(intensity, 0.0, 1.0);\n"
-                    "vec3 diffuse = texture2D(texture, fragment_uv).rgb;\n"
-
-                    "gl_FragColor = vec4(diffuse * intensity, 1.0*opacity);\n"
+                    "intensity = clamp(intensity, 0.0, 1.0);\n"                    
+                    "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
+                    "vec3 ambient = vec3(0.0, 0.0, 0.0) * diffuse.rgb;\n"
+                   
+                    "gl_FragColor = vec4(diffuse.rgb * intensity + ambient, diffuse.a * opacity);\n"
                 "}\n";
 
         addProgram("standard", standard_vertex_source, standard_fragment_source);
