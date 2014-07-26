@@ -27,10 +27,10 @@
 
 namespace mo {
 
-    class AudioOpenAL {
+    class Audio {
     public:
-        AudioOpenAL();
-        virtual ~AudioOpenAL();
+        Audio();
+        virtual ~Audio();
 
         void play(const std::shared_ptr<Sound> sound);
 

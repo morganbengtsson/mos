@@ -4,12 +4,12 @@
  * 
  * Created on May 7, 2014, 9:41 PM
  */
-#include "AudioOpenAL.h"
+#include "Audio.h"
 #include "logging.h"
 
 #ifdef __ANDROID__
 namespace mo {
-    AudioOpenAL::AudioOpenAL() {
+    Audio::Audio() {
         LOGI("Starting SoundService.");
 	SLresult result;
 	const SLuint32      lEngineMixIIDCount = 1;
@@ -50,7 +50,7 @@ namespace mo {
 	startPlayer();
     }
 
-    AudioOpenAL::~AudioOpenAL() {
+    Audio::~Audio() {
         if (player_obj_ != NULL) {
 		(*player_obj_)->Destroy(player_obj_);
 		player_obj_ = NULL;
@@ -69,7 +69,7 @@ namespace mo {
 		engine_ = NULL;
 	}
     }
-    void AudioOpenAL::startPlayer(){
+    void Audio::startPlayer(){
         LOGI("Starting sound player.");
 	SLresult result;
 
@@ -141,7 +141,7 @@ namespace mo {
 	}
     }
 
-    void AudioOpenAL::stop(){
+    void Audio::stop(){
         LOGI("Stopping sound engine.");
 
 	// Stops and destroys BGM player.
@@ -166,7 +166,7 @@ namespace mo {
 		engine_ = NULL;
 	}
     }
-    void AudioOpenAL::play(const std::shared_ptr<Sound> sound) {
+    void Audio::play(const std::shared_ptr<Sound> sound) {
 SLresult result;
 		SLuint32 player_state;
 
@@ -202,14 +202,14 @@ SLresult result;
        
     }
     
-    void AudioOpenAL::setListenerPosition(glm::vec3 position) {
+    void Audio::setListenerPosition(glm::vec3 position) {
         
     }
 
-    void AudioOpenAL::setListenerVelocity(glm::vec3 velocity) {
+    void Audio::setListenerVelocity(glm::vec3 velocity) {
         }
 
-    void AudioOpenAL::setListenerOrientation(glm::vec3 orientation) {
+    void Audio::setListenerOrientation(glm::vec3 orientation) {
     }
 }
 #else
@@ -217,7 +217,7 @@ SLresult result;
 
 namespace mo {
 
-    AudioOpenAL::AudioOpenAL() {
+    Audio::Audio() {
         ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
         device_ = alcOpenDevice(NULL);
         context_ = alcCreateContext(device_, contextAttr);
@@ -228,10 +228,10 @@ namespace mo {
         setListenerOrientation(glm::vec3(0.0f, 0.0f, -1.0f));
     }
 
-    AudioOpenAL::~AudioOpenAL() {
+    Audio::~Audio() {
     }
 
-    void AudioOpenAL::play(const std::shared_ptr<Sound> sound) {        
+    void Audio::play(const std::shared_ptr<Sound> sound) {        
         ALuint source;
         alGenSources( 1, &source);
         alSourcef( source, AL_PITCH, 1. );
@@ -255,15 +255,15 @@ namespace mo {
         alSourcePlay( source );
     }
     
-    void AudioOpenAL::setListenerPosition(glm::vec3 position) {
+    void Audio::setListenerPosition(glm::vec3 position) {
         alListener3f(AL_POSITION, position.x, position.y, position.z);
     }
 
-    void AudioOpenAL::setListenerVelocity(glm::vec3 velocity) {
+    void Audio::setListenerVelocity(glm::vec3 velocity) {
         alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
     }
 
-    void AudioOpenAL::setListenerOrientation(glm::vec3 orientation) {
+    void Audio::setListenerOrientation(glm::vec3 orientation) {
         float orient[6] = {/*fwd:*/ orientation.x, orientation.y, orientation.z, /*up:*/ 0., 1., 0.};
         alListenerfv(AL_ORIENTATION, orient);
     }
