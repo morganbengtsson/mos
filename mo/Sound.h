@@ -14,7 +14,7 @@ namespace mo {
 
     class Sound {
     public:
-        typedef std::vector<int> Samples;
+        typedef std::vector<char> Samples;
         template<class It>
         Sound(It begin, It end){
             static unsigned int current_id = 0;
@@ -30,7 +30,7 @@ namespace mo {
             return samples_.end();
         }
         
-        int * data(){return samples_.data();}
+        char * data(){return samples_.data();}
         
         unsigned int id();
         

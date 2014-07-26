@@ -107,8 +107,8 @@ namespace mo {
 
             std::vector<int> data;
 
-            int v;
-            while (file.read(reinterpret_cast<char*> (&v), sizeof (v))) {
+            char v;
+            while (file.read(&v, sizeof (v))) {
                 data.push_back(v);
             }
 

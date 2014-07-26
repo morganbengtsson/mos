@@ -83,7 +83,18 @@ namespace mo {
     }
 
     std::shared_ptr<Sound> AndroidAssets::sound(std::string file_name) {
-        return 0;
+        
+        if (sounds_.find(file_name) == sounds_.end()) {
+           
+            AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
+            long size = AAsset_getLength(asset);
+            const char * buffer = static_cast<const char *>(AAsset_getBuffer(asset));
+            
+            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(buffer, buffer+size))));
+            return sounds_.at(file_name);
+        } else {
+            return sounds_.at(file_name);
+        }        
     }
     
     std::string AndroidAssets::text(std::string file_name){
