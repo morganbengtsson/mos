@@ -52,6 +52,7 @@ namespace mo {
         void clear();
         void add(const Vertex vertex);
         void add(const int element);
+        Vertex back();
 
     private:
         unsigned int id_;

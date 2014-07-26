@@ -165,7 +165,7 @@ namespace mo {
         }
 
         glm::mat4 mv = view * transform * model.transform();
-        glm::mat4 mvp = projection * view * transform * model.transform();
+        glm::mat4 mvp = projection * view * model.transform() * transform;
 
         //ogli::useProgram(standard_program_);
 

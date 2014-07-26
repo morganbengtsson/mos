@@ -14,6 +14,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <iostream>
 
 namespace mo {
 
@@ -26,6 +27,8 @@ namespace mo {
     }
 
     void Text::setText(const std::string text) {
+        
+        std::cerr << "-----" << std::endl;
         text_ = text;
         float index = 0.0f;
         mesh->clear();
@@ -38,6 +41,7 @@ namespace mo {
 
             float offset_y = ((float) texture->height()) - character.offsetY;
             float offset_x = character.offsetX;
+            
             float adv = character.advance;
             mesh->add(Vertex(glm::vec3(index + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
             mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
@@ -48,6 +52,7 @@ namespace mo {
             index += character.advance;
         }
         invalidate();
+        
     }
 
 }

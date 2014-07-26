@@ -31,5 +31,9 @@ namespace mo {
     void Mesh::add(const int element){
         elements_.push_back(element);
     }
-
+    
+    Vertex Mesh::back(){
+        return vertices_.back();
+    }
+    
 }
