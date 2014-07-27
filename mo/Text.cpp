@@ -27,8 +27,7 @@ namespace mo {
     }
 
     void Text::setText(const std::string text) {
-        
-        std::cerr << "-----" << std::endl;
+                
         text_ = text;
         float index = 0.0f;
         mesh->clear();

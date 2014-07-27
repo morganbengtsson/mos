@@ -31,8 +31,7 @@ namespace mo {
         glDepthMask(true);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
+        
         std::string standard_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
