@@ -167,35 +167,35 @@ namespace mo {
         }
     }
 
-    void Audio::play(const std::shared_ptr<Sound> sound) {
+    void Audio::play(const Source & source) {
         SLresult result;
         SLuint32 player_state;
-
+        
         (*player_obj_)->GetState(player_obj_, &player_state);
         if (player_state == SL_OBJECT_STATE_REALIZED) {
+            
+            for (auto sound : source){
+                int samples = std::distance(sound->begin(), sound->end());
+                LOGI("samples %d", samples);
+                const char * buffer = sound->data();
+                
+                for (int i = 0; i < samples; i++){
+                    LOGI("%d\n", buffer[i]);
+                }
+                
+                try {
+                    // Removes any sound from the queue.
+                    result = (*player_queue_)->Clear(player_queue_);
+                    if (result != SL_RESULT_SUCCESS) throw 1;
 
-
-            LOGI("Before");
-            int samples = std::distance(sound->begin(), sound->end());
-            LOGI("Samples %d\n", samples);
-            char * buffer = sound->data();
-            LOGI("After");
-
-            //int16_t * buffer = (int16_t*) pSound->mBuffer;
-            //off_t    lLength = pSound->mLength;
-
-            try {
-                // Removes any sound from the queue.
-                result = (*player_queue_)->Clear(player_queue_);
-                if (result != SL_RESULT_SUCCESS) throw 1;
-
-                // Plays the new sound.
-                result = (*player_queue_)->Enqueue(player_queue_, buffer,
-                        samples);
-                if (result != SL_RESULT_SUCCESS) throw 1;
-            } catch (int exception) {
-                if (exception == 1) {
-                    LOGE("Error playing sound.");
+                    // Plays the new sound.
+                    result = (*player_queue_)->Enqueue(player_queue_, buffer,
+                            samples);
+                    if (result != SL_RESULT_SUCCESS) throw 1;
+                } catch (int exception) {
+                    if (exception == 1) {
+                        LOGE("Error playing sound.");
+                    }
                 }
             }
         }
@@ -254,28 +254,6 @@ namespace mo {
         alSourcePlay(sources_.at(source.id()));
     }
 
-    void Audio::play(const std::shared_ptr<Sound> sound) {
-        ALuint source;
-        alGenSources(1, &source);
-        alSourcef(source, AL_PITCH, 1.);
-        alSourcef(source, AL_GAIN, 1.);
-        alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
-        alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-        alSourcei(source, AL_LOOPING, AL_FALSE);
-
-        ALuint buffer;
-        alGenBuffers(1, &buffer);
-        {
-            long dataSize = std::distance(sound->begin(), sound->end());
-            LOGI("Samples %d\n", dataSize);
-            const ALvoid* data = sound->data();
-            alBufferData(buffer, AL_FORMAT_MONO16, data, dataSize, 44100);
-            //free( (void*)data );
-        }
-        alSourcei(source, AL_BUFFER, buffer);
-
-        alSourcePlay(source);
-    }
 }
 
 #endif

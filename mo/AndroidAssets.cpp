@@ -14,7 +14,10 @@
 #include <vector>
 #include <lodepng.h>
 #include <rapidxml.hpp>
+#include <stb_vorbis.c>
 #include "logging.h"
+
+
 
 using namespace std;
 using namespace glm;
@@ -87,10 +90,19 @@ namespace mo {
         if (sounds_.find(file_name) == sounds_.end()) {
            
             AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-            long size = AAsset_getLength(asset);
-            const char * buffer = static_cast<const char *>(AAsset_getBuffer(asset));
+            int size = (int)AAsset_getLength(asset);
+            //const char * buffer = static_cast<const char *>(AAsset_getBuffer(asset));
             
-            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(buffer, buffer+size))));
+            int channels, length;
+            short * decoded;
+            
+            length = stb_vorbis_decode_memory((unsigned char *)AAsset_getBuffer(asset), size, &channels, &decoded);
+            LOGI("LENGTH %d\n", length);
+            LOGI("CHANNELS %d\n", channels);
+            
+            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(((char *)decoded), ((char*)decoded) + length))));            
+                        
+            //sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(buffer, buffer+size))));
             return sounds_.at(file_name);
         } else {
             return sounds_.at(file_name);

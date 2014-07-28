@@ -33,11 +33,6 @@ namespace mo {
         Audio();
         virtual ~Audio();
 
-        typedef std::pair<unsigned int, ALuint> SourcePair;
-        typedef std::pair<unsigned int, ALuint> BufferPair;
-        typedef std::map<unsigned int, ALuint> Sources;
-        typedef std::map<unsigned int, ALuint> Buffers;
-        
         void play(const Source & source);
 
     private:
@@ -59,7 +54,12 @@ namespace mo {
 #else
         ALCdevice* device_;
         ALCcontext* context_;
-
+        
+        typedef std::pair<unsigned int, ALuint> SourcePair;
+        typedef std::pair<unsigned int, ALuint> BufferPair;
+        typedef std::map<unsigned int, ALuint> Sources;
+        typedef std::map<unsigned int, ALuint> Buffers;
+        
         Sources sources_;
         Buffers buffers_;
 #endif
