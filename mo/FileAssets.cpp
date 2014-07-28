@@ -17,6 +17,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <stb_vorbis.c>
 
 using namespace mo;
 using namespace std;
@@ -105,14 +106,19 @@ namespace mo {
         if (sounds_.find(file_name) == sounds_.end()) {
             std::ifstream file(directory_ + file_name, std::ios::binary);
 
-            std::vector<int> data;
+            std::vector<char> data;
 
             char v;
             while (file.read(&v, sizeof (v))) {
                 data.push_back(v);
-            }
-
-            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(data.begin(), data.end()))));
+            }            
+            
+            int channels, length;
+            short * decoded;
+            
+            length = stb_vorbis_decode_memory((unsigned char *)data.data(), data.size(), &channels, &decoded);
+            
+            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(((char *)decoded), ((char*)decoded) + length))));            
             return sounds_.at(file_name);
         } else {
             return sounds_.at(file_name);

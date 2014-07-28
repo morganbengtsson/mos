@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "Sound.h"
+#include "Source.h"
 
 namespace mo {
 
@@ -32,11 +33,12 @@ namespace mo {
         Audio();
         virtual ~Audio();
 
-        void play(const std::shared_ptr<Sound> sound);
-
-        void setListenerPosition(glm::vec3 position);
-        void setListenerVelocity(glm::vec3 velocity);
-        void setListenerOrientation(glm::vec3 orientation);
+        typedef std::pair<unsigned int, ALuint> SourcePair;
+        typedef std::pair<unsigned int, ALuint> BufferPair;
+        typedef std::map<unsigned int, ALuint> Sources;
+        typedef std::map<unsigned int, ALuint> Buffers;
+        
+        void play(const Source & source);
 
     private:
 #ifdef __ANDROID__
@@ -58,8 +60,8 @@ namespace mo {
         ALCdevice* device_;
         ALCcontext* context_;
 
-        std::map<unsigned int, ALuint> sources_;
-        std::map<unsigned int, ALuint> buffers_;
+        Sources sources_;
+        Buffers buffers_;
 #endif
     };
 }

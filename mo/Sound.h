@@ -23,19 +23,21 @@ namespace mo {
         }
         virtual ~Sound();
         
-        Samples::const_iterator begin(){
+        Samples::const_iterator begin() const {
             return samples_.begin();
         }
-        Samples::const_iterator end(){
+        Samples::const_iterator end() const {
             return samples_.end();
         }
         
-        char * data(){return samples_.data();}
-        
-        unsigned int id();
+        const char * data() const;
+        unsigned int id() const;
+        const bool valid() const;
+        void invalidate();
         
     private:
         unsigned int id_;
+        bool valid_;
         Samples samples_;
 
     };
