@@ -12,6 +12,9 @@
 
 namespace mo {
 
+/*!
+ * 2D texture.
+ */
 class Texture2D {
 public:
     typedef std::vector<unsigned char> Texels;

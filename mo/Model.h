@@ -19,6 +19,10 @@
 
 namespace mo {
 
+    /*!
+     * A class that gathers what is needed to render an object. A Mesh, a texture
+     * and a transformation (position/rotation).
+     */
     class Model {
     public:
         Model(std::shared_ptr<Mesh> mesh, std::shared_ptr<Texture2D> texture, const glm::mat4 transform = glm::mat4(1.0f));
@@ -26,15 +30,23 @@ namespace mo {
 
         std::shared_ptr<Mesh> mesh;
         std::shared_ptr<Texture2D> texture;
-        
+
+        /**
+         * 
+         * @return A mat4 object, describing the objects position/rotation.
+         */
         const glm::mat4 transform() const;
+        
+        /**
+         * 
+         * @param The transform matrix to set.
+         */
         void setTransform(const glm::mat4 transform);
-        const bool valid() const;
-        void invalidate();
+        
     private:
         bool valid_;
         glm::mat4 transform_;
-        
+
     };
 }
 

@@ -17,11 +17,18 @@
 
 namespace mo {
 
+/*!
+ * A special Model class for text rendering. 
+ */
 class Text : public Model {
 public:
     Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform = glm::mat4(1.0f));
     virtual ~Text();    
 
+    /**
+     * Update the text.
+     * @param Text.
+     */
     void setText(const std::string text);
     
 private:   

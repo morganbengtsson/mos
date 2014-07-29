@@ -30,6 +30,9 @@ namespace mo {
         ogli::Uniform light_position;
     };
 
+    /*!
+     * The class that talks to OpenGL, and renders Model objects.
+     */
     class Renderer {
     public:
 
@@ -41,7 +44,24 @@ namespace mo {
         Renderer();
         void addProgram(const std::string name);
         void addProgram(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source);
-        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard", const glm::vec3 = glm::vec3(0.0f, 0.0f, 0.0f));
+        
+        /**
+         * Renders a Model object.
+         * 
+         * @param model.
+         * @param Additional transform matrix.
+         * @param View matrix of the camera
+         * @param Projection matrix of the camera
+         * @param Custom opacity of the object.
+         * @param Program_name, either "text" or "standard"
+         * @param Position of one ortho light.
+         */
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard", const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f));
+        
+        /**
+         * Clears the screen and the depth buffer.
+         * @param color
+         */
         void clear(const glm::vec3 color);
 
         virtual ~Renderer();

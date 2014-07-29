@@ -194,8 +194,9 @@ namespace mo {
         else {
             ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()));
         }
-        if (!model.valid()) {
+        if (!model.mesh->valid) {
             ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->verticesBegin(), model.mesh->verticesEnd());
+            model.mesh->valid = true;
         }
     }
 

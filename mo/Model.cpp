@@ -29,10 +29,4 @@ namespace mo {
         transform_ = transform;
     }
 
-    const bool Model::valid() const {
-        return valid_;
-    }
-    void Model::invalidate() {
-        valid_ = false;
-    }
 }

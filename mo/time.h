@@ -13,6 +13,10 @@
 namespace mo {
 
     // New implementation, uses c++11 std. Portability?
+    /**
+     * 
+     * @return Current time in milliseconds. 
+     */
     static double now_ms() {
         double milliseconds_since_epoch =
                 std::chrono::system_clock::now().time_since_epoch() /

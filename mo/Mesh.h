@@ -13,6 +13,10 @@
 
 namespace mo {
 
+    /*!
+     * A class that describes the geometric data to be rendered. Contains vertices
+     * and elements, describing vertex order.
+     */
     class Mesh {
     public:
         typedef std::vector<Vertex> Vertices;
@@ -22,7 +26,7 @@ namespace mo {
         Mesh(const VerticesIt verticesBegin,
                 const VerticesIt verticesEnd,
                 ElementsIt elementsBegin,
-                ElementsIt elementsEnd) {
+                ElementsIt elementsEnd) : valid(true) {
             static unsigned int current_id = 0;
             id_ = current_id++;
             vertices_.assign(verticesBegin, verticesEnd);
@@ -46,8 +50,14 @@ namespace mo {
         typename Elements::const_iterator elementsEnd() const {
             return elements_.end();
         };
-
+        
+        /**
+         * 
+         * @return A unique identifier. 
+         */
         unsigned int id() const;
+
+        bool valid;
         
         void clear();
         void add(const Vertex vertex);

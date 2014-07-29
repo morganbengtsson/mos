@@ -12,11 +12,14 @@
 
 namespace mo {
 
+    /*!
+     * A sound class containing samples of 16bit integer data.
+     */
     class Sound {
     public:
         typedef std::vector<short> Samples;
         template<class It>
-        Sound(It begin, It end){
+        Sound(It begin, It end) : valid(true){
             static unsigned int current_id = 0;
             id_ = current_id++;
             samples_.assign(begin, end);
@@ -32,12 +35,10 @@ namespace mo {
         
         const short * data() const;
         unsigned int id() const;
-        const bool valid() const;
-        void invalidate();
+        bool valid;
         
     private:
-        unsigned int id_;
-        bool valid_;
+        unsigned int id_;;
         Samples samples_;
 
     };

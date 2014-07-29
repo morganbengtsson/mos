@@ -16,6 +16,10 @@
 
 namespace mo {
 
+    /*!
+     * A classed used for audio playback. Contains sounds, together with a position.
+     * That is used if 3D audio is enabled.
+     */
     class Source {
     public:
         typedef std::vector<std::shared_ptr<Sound>> Sounds;

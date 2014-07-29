@@ -12,6 +12,9 @@
 
 namespace mo {
 
+ /*!
+  * The vertex structure, supported by the renderer.
+  */
 struct Vertex {
     Vertex(const glm::vec3 & position, 
             const glm::vec3 & normal, 

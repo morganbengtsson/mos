@@ -28,11 +28,19 @@
 
 namespace mo {
 
+    /*!
+     * Audio player class. Uses OpenAL for Windows/Linux/OSX and OpenSL for Android.
+     */
     class Audio {
     public:
         Audio();
         virtual ~Audio();
 
+        /**
+         * Play audio from a source object. A source may contain many sound objects.
+         * 
+         * @param source
+         */
         void play(const Source & source);
 
     private:
@@ -40,26 +48,29 @@ namespace mo {
         void startPlayer();
         void stop();
         // OpenSL ES engine.
-	SLObjectItf engine_obj_; SLEngineItf engine_;
-	// Audio output.
-	SLObjectItf output_mix_obj_;
+        SLObjectItf engine_obj_;
+        SLEngineItf engine_;
+        // Audio output.
+        SLObjectItf output_mix_obj_;
 
-	// Background music player.
-	SLObjectItf BGM_player_obj_; SLPlayItf BGM_player_;
-	SLSeekItf BGM_player_seek_;
-        
+        // Background music player.
+        SLObjectItf BGM_player_obj_;
+        SLPlayItf BGM_player_;
+        SLSeekItf BGM_player_seek_;
+
         // Sound player.
-	SLObjectItf player_obj_; SLPlayItf player_;
-	SLBufferQueueItf player_queue_;
+        SLObjectItf player_obj_;
+        SLPlayItf player_;
+        SLBufferQueueItf player_queue_;
 #else
         ALCdevice* device_;
         ALCcontext* context_;
-        
+
         typedef std::pair<unsigned int, ALuint> SourcePair;
         typedef std::pair<unsigned int, ALuint> BufferPair;
         typedef std::map<unsigned int, ALuint> Sources;
         typedef std::map<unsigned int, ALuint> Buffers;
-        
+
         Sources sources_;
         Buffers buffers_;
 #endif

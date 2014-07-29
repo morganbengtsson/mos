@@ -10,6 +10,10 @@
 
 namespace mo {
 
+    /*
+     * Describes measurements of a character. Used by the Text object
+     * for text rendering.
+     */
     struct Character {
         float offsetX;
         float offsetY;

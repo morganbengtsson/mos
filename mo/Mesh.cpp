@@ -9,7 +9,7 @@
 
 namespace mo {
     
-    Mesh::Mesh(){        
+    Mesh::Mesh() : valid(true){        
     }
     
     Mesh::~Mesh() {
