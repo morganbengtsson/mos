@@ -21,6 +21,10 @@
 
 namespace mo {
 
+    /*!
+     * An asset class that manages heavy resources such as Textures, meshes and sounds. 
+     * Caches most things internally, so nothing is loaded twice. 
+     */
     class Assets {
     public:
         typedef std::map<std::string, std::shared_ptr<mo::Mesh>> MeshMap;
@@ -36,10 +40,44 @@ namespace mo {
 #endif
         virtual ~Assets();
 
+        /**
+         * Loads a *.obj file into a mesh object, and caches it internally.
+         * 
+         * @param file_name
+         * @return Shared pointer to Mesh object.
+         */
         std::shared_ptr<Mesh> mesh(std::string file_name);
+        
+        /**
+         * Loads a *.png file into a Texture2D object, and caches it internally.
+         * 
+         * @param file_name
+         * @return Shared pointer to Texture2D object.
+         */
         std::shared_ptr<Texture2D> texture(std::string file_name);
+        
+        /**
+         * Loads a *.ogg file into a Sound object, and caches it internally.
+         * 
+         * @param file_name
+         * @return Shared pointer to Sound object.
+         */
         std::shared_ptr<Sound> sound(std::string file_name);
+        
+        /**
+         * Load text from file. Not cached.
+         * 
+         * @param file_name
+         * @return String.
+         */
         std::string text(std::string file_name);
+        
+        /**
+         * Load a character map from an *.xml file in NGL format.
+         * 
+         * @param path
+         * @return A map of chars with corresponding Character objects.
+         */
         std::map<char, Character> characterMap(std::string path);
     private:
         MeshMap models_;
