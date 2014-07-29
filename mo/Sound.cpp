@@ -15,15 +15,7 @@ namespace mo {
     unsigned int Sound::id() const {
         return id_;
     }
-    
-    void Sound::invalidate() {
-        valid_ = false;
-    }
-
-    const bool Sound::valid() const {
-        return valid_;
-    }
-    
+       
     const short * Sound::data() const {
         return samples_.data();        
     }
