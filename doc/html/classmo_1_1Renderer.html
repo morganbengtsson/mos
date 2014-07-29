@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -92,6 +93,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">mo::Renderer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="Renderer_8h_source.html">Renderer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -117,21 +120,117 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa561ae23495623cec270cfaccf5e9a08"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa561ae23495623cec270cfaccf5e9a08"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addProgram</b> (const std::string name)</td></tr>
 <tr class="separator:aa561ae23495623cec270cfaccf5e9a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a011aed42f1bcc1a3fcba59f0bd8a90f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a011aed42f1bcc1a3fcba59f0bd8a90f2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>render</b> (const <a class="el" href="classmo_1_1Model.html">Model</a> &amp;model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name=&quot;standard&quot;)</td></tr>
-<tr class="separator:a011aed42f1bcc1a3fcba59f0bd8a90f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0588d9137b5d90d5d9ea2b429b4d0390"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0588d9137b5d90d5d9ea2b429b4d0390"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> (const glm::vec3 color)</td></tr>
+<tr class="memitem:abe708890fec721d7ad0e27dd81a492b0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abe708890fec721d7ad0e27dd81a492b0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addProgram</b> (const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source)</td></tr>
+<tr class="separator:abe708890fec721d7ad0e27dd81a492b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac106b8dc6bcc27b8062e0b83ee31cdd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Renderer.html#ac106b8dc6bcc27b8062e0b83ee31cdd8">render</a> (const <a class="el" href="classmo_1_1Model.html">Model</a> &amp;model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity=1.0f, const std::string program_name=&quot;standard&quot;, const glm::vec3 light_position=glm::vec3(0.0f, 0.0f, 0.0f))</td></tr>
+<tr class="separator:ac106b8dc6bcc27b8062e0b83ee31cdd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0588d9137b5d90d5d9ea2b429b4d0390"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Renderer.html#a0588d9137b5d90d5d9ea2b429b4d0390">clear</a> (const glm::vec3 color)</td></tr>
 <tr class="separator:a0588d9137b5d90d5d9ea2b429b4d0390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The class that talks to OpenGL, and renders <a class="el" href="classmo_1_1Model.html">Model</a> objects. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a0588d9137b5d90d5d9ea2b429b4d0390"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mo::Renderer::clear </td>
+          <td>(</td>
+          <td class="paramtype">const glm::vec3&#160;</td>
+          <td class="paramname"><em>color</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Clears the screen and the depth buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac106b8dc6bcc27b8062e0b83ee31cdd8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mo::Renderer::render </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classmo_1_1Model.html">Model</a> &amp;&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4&#160;</td>
+          <td class="paramname"><em>transform</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4&#160;</td>
+          <td class="paramname"><em>view</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::mat4&#160;</td>
+          <td class="paramname"><em>projection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>opacity</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>program_name</em> = <code>&quot;standard&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec3&#160;</td>
+          <td class="paramname"><em>light_position</em> = <code>glm::vec3(0.0f,&#160;0.0f,&#160;0.0f)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Renders a <a class="el" href="classmo_1_1Model.html">Model</a> object.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model.</td><td></td></tr>
+    <tr><td class="paramname">Additional</td><td>transform matrix. </td></tr>
+    <tr><td class="paramname">View</td><td>matrix of the camera </td></tr>
+    <tr><td class="paramname">Projection</td><td>matrix of the camera </td></tr>
+    <tr><td class="paramname">Custom</td><td>opacity of the object. </td></tr>
+    <tr><td class="paramname">Program_name,either</td><td>"text" or "standard" </td></tr>
+    <tr><td class="paramname">Position</td><td>of one ortho light. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/morgan/NetBeansProjects/mo/mo/<a class="el" href="Renderer_8h_source.html">Renderer.h</a></li>
-<li>/home/morgan/NetBeansProjects/mo/mo/Renderer.cpp</li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/<a class="el" href="Renderer_8h_source.html">Renderer.h</a></li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/Renderer.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 7 2014 21:39:50 for MO by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 29 2014 20:12:07 for MO by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

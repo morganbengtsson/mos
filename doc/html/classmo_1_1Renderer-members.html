@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -92,18 +93,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This is the complete list of members for <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>, including all inherited members.</p>
 <table class="directory">
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addProgram</b>(const std::string name) (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>ArrayPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>clear</b>(const glm::vec3 color) (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>ElementPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ProgramPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>render</b>(const Model &amp;model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const std::string program_name=&quot;standard&quot;) (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Renderer</b>() (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>TexturePair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Renderer</b>() (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>addProgram</b>(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source) (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ArrayPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classmo_1_1Renderer.html#a0588d9137b5d90d5d9ea2b429b4d0390">clear</a>(const glm::vec3 color)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ElementPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>ProgramPair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classmo_1_1Renderer.html#ac106b8dc6bcc27b8062e0b83ee31cdd8">render</a>(const Model &amp;model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity=1.0f, const std::string program_name=&quot;standard&quot;, const glm::vec3 light_position=glm::vec3(0.0f, 0.0f, 0.0f))</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Renderer</b>() (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>TexturePair</b> typedef (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~Renderer</b>() (defined in <a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a>)</td><td class="entry"><a class="el" href="classmo_1_1Renderer.html">mo::Renderer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 7 2014 21:39:50 for MO by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 29 2014 20:12:07 for MO by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -87,11 +88,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classmo_1_1Mesh-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">mo::Mesh Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="Mesh_8h_source.html">Mesh.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -120,18 +124,54 @@ Elements::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>e
 <tr class="memitem:a8f68045eede54753b80d79782ff3dc5d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f68045eede54753b80d79782ff3dc5d"></a>
 Elements::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>elementsEnd</b> () const </td></tr>
 <tr class="separator:a8f68045eede54753b80d79782ff3dc5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade15d3df742cd85e58a0383b8b44a010"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade15d3df742cd85e58a0383b8b44a010"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> () const </td></tr>
+<tr class="memitem:ade15d3df742cd85e58a0383b8b44a010"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Mesh.html#ade15d3df742cd85e58a0383b8b44a010">id</a> () const </td></tr>
 <tr class="separator:ade15d3df742cd85e58a0383b8b44a010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2f285fea380efe4f9dd07b64122d767"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae2f285fea380efe4f9dd07b64122d767"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr class="separator:ae2f285fea380efe4f9dd07b64122d767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1f5feb649b1a92a433fcb4daa213d6b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af1f5feb649b1a92a433fcb4daa213d6b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (const <a class="el" href="structmo_1_1Vertex.html">Vertex</a> vertex)</td></tr>
+<tr class="separator:af1f5feb649b1a92a433fcb4daa213d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa638e0dbfc15bc8e1d1c8159ecbb742b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa638e0dbfc15bc8e1d1c8159ecbb742b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (const int element)</td></tr>
+<tr class="separator:aa638e0dbfc15bc8e1d1c8159ecbb742b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba812e9ed7c7827be1f30c0d819501b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afba812e9ed7c7827be1f30c0d819501b"></a>
+<a class="el" href="structmo_1_1Vertex.html">Vertex</a>&#160;</td><td class="memItemRight" valign="bottom"><b>back</b> ()</td></tr>
+<tr class="separator:afba812e9ed7c7827be1f30c0d819501b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a58175c955f1bbbc2e88687f394ca6b90"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a58175c955f1bbbc2e88687f394ca6b90"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>valid</b></td></tr>
+<tr class="separator:a58175c955f1bbbc2e88687f394ca6b90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A class that describes the geometric data to be rendered. Contains vertices and elements, describing vertex order. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ade15d3df742cd85e58a0383b8b44a010"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int mo::Mesh::id </td>
+          <td>(</td>
+          <td class="paramname">)</td><td></td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>A unique identifier. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/morgan/NetBeansProjects/mo/mo/<a class="el" href="Mesh_8h_source.html">Mesh.h</a></li>
-<li>/home/morgan/NetBeansProjects/mo/mo/Mesh.cpp</li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/<a class="el" href="Mesh_8h_source.html">Mesh.h</a></li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/Mesh.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 7 2014 21:39:50 for MO by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 29 2014 20:12:07 for MO by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -87,17 +88,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classmo_1_1Sound-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">mo::Sound Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="Sound_8h_source.html">Sound.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a26c1899d1b1ad3b3e1e2521daa1e6444"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26c1899d1b1ad3b3e1e2521daa1e6444"></a>
-typedef std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Samples</b></td></tr>
-<tr class="separator:a26c1899d1b1ad3b3e1e2521daa1e6444"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fbd1963c5689c8bdee19d60dd7dd593"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fbd1963c5689c8bdee19d60dd7dd593"></a>
+typedef std::vector&lt; short &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Samples</b></td></tr>
+<tr class="separator:a7fbd1963c5689c8bdee19d60dd7dd593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -105,24 +109,35 @@ Public Member Functions</h2></td></tr>
 template&lt;class It &gt; </td></tr>
 <tr class="memitem:abde1967ee98c3d4fd854468207b46f77"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Sound</b> (It begin, It end)</td></tr>
 <tr class="separator:abde1967ee98c3d4fd854468207b46f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba191c81536e9035972aa8c0e90c501e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aba191c81536e9035972aa8c0e90c501e"></a>
-Samples::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
-<tr class="separator:aba191c81536e9035972aa8c0e90c501e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46773e1cda7613eb1c1ddf78536af9f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46773e1cda7613eb1c1ddf78536af9f2"></a>
-Samples::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
-<tr class="separator:a46773e1cda7613eb1c1ddf78536af9f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6e11f939b17557add2cd42e44f91cc6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6e11f939b17557add2cd42e44f91cc6"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> ()</td></tr>
-<tr class="separator:ae6e11f939b17557add2cd42e44f91cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25229b9ab51aa4e68cce453f30376efe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a25229b9ab51aa4e68cce453f30376efe"></a>
+Samples::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const </td></tr>
+<tr class="separator:a25229b9ab51aa4e68cce453f30376efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af62dd4c684fd694b6630909d42719fe8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af62dd4c684fd694b6630909d42719fe8"></a>
+Samples::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const </td></tr>
+<tr class="separator:af62dd4c684fd694b6630909d42719fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4758175c3e4837bb20a7c4915521f076"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4758175c3e4837bb20a7c4915521f076"></a>
+const short *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> () const </td></tr>
+<tr class="separator:a4758175c3e4837bb20a7c4915521f076"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b1b1298a088a1d24e3a5788af0fed5c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b1b1298a088a1d24e3a5788af0fed5c"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>id</b> () const </td></tr>
+<tr class="separator:a1b1b1298a088a1d24e3a5788af0fed5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab5f5265bb65c58929dc1a0d61ebc5305"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab5f5265bb65c58929dc1a0d61ebc5305"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>valid</b></td></tr>
+<tr class="separator:ab5f5265bb65c58929dc1a0d61ebc5305"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/morgan/NetBeansProjects/mo/mo/<a class="el" href="Sound_8h_source.html">Sound.h</a></li>
-<li>/home/morgan/NetBeansProjects/mo/mo/Sound.cpp</li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A sound class containing samples of 16bit integer data. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/<a class="el" href="Sound_8h_source.html">Sound.h</a></li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/Sound.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 7 2014 21:39:50 for MO by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 29 2014 20:12:07 for MO by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>

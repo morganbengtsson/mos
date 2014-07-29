@@ -61,6 +61,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -92,6 +93,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">mo::Assets Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="Assets_8h_source.html">Assets.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -122,22 +125,26 @@ std::shared_ptr&lt; <a class="el" href="classmo_1_1Sound.html">mo::Sound</a> &gt
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aafc6596172a9c33ae600fe303d23b709"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aafc6596172a9c33ae600fe303d23b709"></a>
-std::shared_ptr&lt; <a class="el" href="classmo_1_1Mesh.html">Mesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mesh</b> (std::string path)</td></tr>
-<tr class="separator:aafc6596172a9c33ae600fe303d23b709"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cfefe3e06d71e050ac36b8d1be34a19"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4cfefe3e06d71e050ac36b8d1be34a19"></a>
-std::shared_ptr&lt; <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>texture</b> (std::string path)</td></tr>
-<tr class="separator:a4cfefe3e06d71e050ac36b8d1be34a19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a018199559fdd156bef85c10f3941a5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmo_1_1Sound.html">Sound</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a6a018199559fdd156bef85c10f3941a5">sound</a> (std::string path)</td></tr>
-<tr class="separator:a6a018199559fdd156bef85c10f3941a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0569adc41a8fc0f8ceba46e281d795b6"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmo_1_1Mesh.html">Mesh</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a0569adc41a8fc0f8ceba46e281d795b6">mesh</a> (std::string file_name)</td></tr>
+<tr class="separator:a0569adc41a8fc0f8ceba46e281d795b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ef9431d78ccc2e9dbacbe4c291ae1c5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a0ef9431d78ccc2e9dbacbe4c291ae1c5">texture</a> (std::string file_name)</td></tr>
+<tr class="separator:a0ef9431d78ccc2e9dbacbe4c291ae1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c7f6eee74239d1a5bffc56ed40651a9"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classmo_1_1Sound.html">Sound</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a2c7f6eee74239d1a5bffc56ed40651a9">sound</a> (std::string file_name)</td></tr>
+<tr class="separator:a2c7f6eee74239d1a5bffc56ed40651a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e35ba1783aeb0a4b1e8b0b784d7610d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a0e35ba1783aeb0a4b1e8b0b784d7610d">text</a> (std::string file_name)</td></tr>
+<tr class="separator:a0e35ba1783aeb0a4b1e8b0b784d7610d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b9751abd1788194a0e5baf6405a2141"><td class="memItemLeft" align="right" valign="top">std::map&lt; char, <a class="el" href="structmo_1_1Character.html">Character</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmo_1_1Assets.html#a1b9751abd1788194a0e5baf6405a2141">characterMap</a> (std::string path)</td></tr>
+<tr class="separator:a1b9751abd1788194a0e5baf6405a2141"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a6a018199559fdd156bef85c10f3941a5"></a>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An asset class that manages heavy resources such as Textures, meshes and sounds. Caches most things internally, so nothing is loaded twice. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a1b9751abd1788194a0e5baf6405a2141"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; <a class="el" href="classmo_1_1Sound.html">Sound</a> &gt; mo::Assets::sound </td>
+          <td class="memname">std::map&lt; char, <a class="el" href="structmo_1_1Character.html">Character</a> &gt; mo::Assets::characterMap </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>path</em>)</td><td></td>
@@ -145,26 +152,121 @@ std::shared_ptr&lt; <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Load sound from file</p>
-<p>Load a sound buffer from a raw data file, containing 16 bit integer data. </p>
+<p>Load a character map from an *.xml file in NGL format.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">The</td><td>file path </td></tr>
+    <tr><td class="paramname">path</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Shared pointer to a <a class="el" href="classmo_1_1Sound.html">Sound</a> object </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A map of chars with corresponding <a class="el" href="structmo_1_1Character.html">Character</a> objects. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0569adc41a8fc0f8ceba46e281d795b6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classmo_1_1Mesh.html">Mesh</a> &gt; mo::Assets::mesh </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>file_name</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Loads a *.obj file into a mesh object, and caches it internally.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Shared pointer to <a class="el" href="classmo_1_1Mesh.html">Mesh</a> object. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2c7f6eee74239d1a5bffc56ed40651a9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classmo_1_1Sound.html">Sound</a> &gt; mo::Assets::sound </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>file_name</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Loads a *.ogg file into a <a class="el" href="classmo_1_1Sound.html">Sound</a> object, and caches it internally.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Shared pointer to <a class="el" href="classmo_1_1Sound.html">Sound</a> object. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0e35ba1783aeb0a4b1e8b0b784d7610d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string mo::Assets::text </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>file_name</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Load text from file. Not cached.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>String. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0ef9431d78ccc2e9dbacbe4c291ae1c5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a> &gt; mo::Assets::texture </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>file_name</em>)</td><td></td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Loads a *.png file into a <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a> object, and caches it internally.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Shared pointer to <a class="el" href="classmo_1_1Texture2D.html">Texture2D</a> object. </dd></dl>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/morgan/NetBeansProjects/mo/mo/<a class="el" href="Assets_8h_source.html">Assets.h</a></li>
-<li>/home/morgan/NetBeansProjects/mo/mo/Assets.cpp</li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/<a class="el" href="Assets_8h_source.html">Assets.h</a></li>
+<li>/home/morgan/NetBeansProjects/Sirkel/externals/mo/mo/Assets.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 7 2014 21:39:50 for MO by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 29 2014 20:12:07 for MO by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>
