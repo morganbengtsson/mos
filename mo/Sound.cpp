@@ -24,7 +24,7 @@ namespace mo {
         return valid_;
     }
     
-    const char* Sound::data() const {
+    const short * Sound::data() const {
         return samples_.data();        
     }
 

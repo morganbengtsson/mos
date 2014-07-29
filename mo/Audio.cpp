@@ -177,7 +177,7 @@ namespace mo {
             for (auto sound : source){
                 int samples = std::distance(sound->begin(), sound->end());
                 LOGI("samples %d", samples);
-                const char * buffer = sound->data();
+                const short * buffer = sound->data();
                 
                 for (int i = 0; i < samples; i++){
                     LOGI("%d\n", buffer[i]);

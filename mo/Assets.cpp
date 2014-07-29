@@ -125,16 +125,16 @@ namespace mo {
             length = stb_vorbis_decode_memory((unsigned char *) AAsset_getBuffer(asset), size, &channels, &decoded);
 #else
             std::ifstream file(directory_ + file_name, std::ios::binary);
-            std::vector<char> data;
+            std::vector<unsigned char> data;
 
-            char v;
-            while (file.read(&v, sizeof (v))) {
-                data.push_back(v);
+            unsigned char c;
+            while (file.read(reinterpret_cast<char*>(&c), sizeof (c))) {
+                data.push_back(c);
             }
-            length = stb_vorbis_decode_memory((unsigned char *) data.data(), data.size(), &channels, &decoded);
+            length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
 #endif
 
-            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(((char *) decoded), ((char*) decoded) + length))));
+            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(decoded, decoded + length))));
             return sounds_.at(file_name);
         } else {
             return sounds_.at(file_name);

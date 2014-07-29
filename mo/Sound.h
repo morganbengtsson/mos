@@ -14,7 +14,7 @@ namespace mo {
 
     class Sound {
     public:
-        typedef std::vector<char> Samples;
+        typedef std::vector<short> Samples;
         template<class It>
         Sound(It begin, It end){
             static unsigned int current_id = 0;
@@ -30,7 +30,7 @@ namespace mo {
             return samples_.end();
         }
         
-        const char * data() const;
+        const short * data() const;
         unsigned int id() const;
         const bool valid() const;
         void invalidate();
