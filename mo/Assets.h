@@ -21,6 +21,13 @@
 
 namespace mo {
 
+    // File descriptor for streamed assets.
+    struct Descriptor{
+            int32_t descriptor;
+            off_t start;
+            off_t length;
+    };
+    
     /*!
      * An asset class that manages heavy resources such as Textures, meshes and sounds. 
      * Caches most things internally, so nothing is loaded twice. 
@@ -47,7 +54,7 @@ namespace mo {
          * @return Shared pointer to Mesh object.
          */
         std::shared_ptr<Mesh> mesh(std::string file_name);
-        
+
         /**
          * Loads a *.png file into a Texture2D object, and caches it internally.
          * 
@@ -55,7 +62,7 @@ namespace mo {
          * @return Shared pointer to Texture2D object.
          */
         std::shared_ptr<Texture2D> texture(std::string file_name);
-        
+
         /**
          * Loads a *.ogg file into a Sound object, and caches it internally.
          * 
@@ -63,7 +70,7 @@ namespace mo {
          * @return Shared pointer to Sound object.
          */
         std::shared_ptr<Sound> sound(std::string file_name);
-        
+
         /**
          * Load text from file. Not cached.
          * 
@@ -71,7 +78,7 @@ namespace mo {
          * @return String.
          */
         std::string text(std::string file_name);
-        
+
         /**
          * Load a character map from an *.xml file in NGL format.
          * 
@@ -79,16 +86,25 @@ namespace mo {
          * @return A map of chars with corresponding Character objects.
          */
         std::map<char, Character> characterMap(std::string path);
+        
+        /**
+         * Descriptor for streaming of files.
+         * @param path
+         * @return 
+         */
+        Descriptor descript(std::string path) const;
+
     private:
         MeshMap models_;
         TextureMap textures_;
-        SoundMap sounds_;        
+        SoundMap sounds_;
 #ifdef __ANDROID__
         AAssetManager * manager_;
 #else
         std::string directory_;
 #endif
-        
+
+
 
     };
 }

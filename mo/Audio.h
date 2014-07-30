@@ -9,7 +9,6 @@
 #define	MO_AUDIO_H
 
 #ifdef __ANDROID__
-#include <android_native_app_glue.h>
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #include <SLES/OpenSLES_AndroidConfiguration.h>
@@ -25,6 +24,7 @@
 
 #include "Sound.h"
 #include "Source.h"
+#include "Assets.h"
 
 namespace mo {
 
@@ -42,6 +42,7 @@ namespace mo {
          * @param source
          */
         void play(const Source & source);
+        void playStream(const std::string file_name, const Assets & assets);
 
     private:
 #ifdef __ANDROID__

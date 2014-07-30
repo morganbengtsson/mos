@@ -12,7 +12,7 @@
 namespace mo {
 
     Audio::Audio() {
-        LOGI("Starting SoundService.");
+        LOGI("Initializing audio.");
         SLresult result;
         const SLuint32 lEngineMixIIDCount = 1;
         const SLInterfaceID lEngineMixIIDs[] = {SL_IID_ENGINE};
@@ -179,10 +179,6 @@ namespace mo {
                 LOGI("samples %d", samples);
                 const short * buffer = sound->data();
                 
-                for (int i = 0; i < samples; i++){
-                    LOGI("%d\n", buffer[i]);
-                }
-                
                 try {
                     // Removes any sound from the queue.
                     result = (*player_queue_)->Clear(player_queue_);
@@ -200,6 +196,70 @@ namespace mo {
             }
         }
 
+    }
+    
+    void Audio::playStream(const std::string file_name, const Assets & assets){
+        SLresult result;
+	LOGI("Opening music file %s", file_name.c_str());
+
+	Descriptor descriptor = assets.descript(file_name);
+	if (descriptor.descriptor < 0) {
+		LOGI("Could not open music file");
+		throw 1;
+	}
+
+	SLDataLocator_AndroidFD data_locator_in;
+	data_locator_in.locatorType = SL_DATALOCATOR_ANDROIDFD;
+	data_locator_in.fd          = descriptor.descriptor;
+	data_locator_in.offset      = descriptor.start;
+	data_locator_in.length      = descriptor.length;
+
+	SLDataFormat_MIME data_format;
+	data_format.formatType    = SL_DATAFORMAT_MIME;
+	data_format.mimeType      = NULL;
+	data_format.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
+
+	SLDataSource data_source;
+	data_source.pLocator = &data_locator_in;
+	data_source.pFormat  = &data_format;
+
+	SLDataLocator_OutputMix data_locator_out;
+	data_locator_out.locatorType = SL_DATALOCATOR_OUTPUTMIX;
+	data_locator_out.outputMix   = output_mix_obj_;
+
+	SLDataSink data_sink;
+	data_sink.pLocator = &data_locator_out;
+	data_sink.pFormat  = NULL;
+
+	// Creates BGM player and retrieves its interfaces.
+	const SLuint32 lBGMPlayerIIDCount = 2;
+	const SLInterfaceID lBGMPlayerIIDs[] =
+		{ SL_IID_PLAY, SL_IID_SEEK };
+	const SLboolean lBGMPlayerReqs[] =
+		{ SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
+
+	result = (*engine_)->CreateAudioPlayer(engine_,
+		&BGM_player_obj_, &data_source, &data_sink,
+		lBGMPlayerIIDCount, lBGMPlayerIIDs, lBGMPlayerReqs);
+	if (result != SL_RESULT_SUCCESS) throw 1;
+	result = (*BGM_player_obj_)->Realize(BGM_player_obj_,
+		SL_BOOLEAN_FALSE);
+	if (result != SL_RESULT_SUCCESS) throw 1;
+
+	result = (*BGM_player_obj_)->GetInterface(BGM_player_obj_,
+		SL_IID_PLAY, &BGM_player_);
+	if (result != SL_RESULT_SUCCESS) throw 1;
+	result = (*BGM_player_obj_)->GetInterface(BGM_player_obj_,
+		SL_IID_SEEK, &BGM_player_seek_);
+	if (result != SL_RESULT_SUCCESS) throw 1;
+
+	// Enables looping and starts playing.
+	result = (*BGM_player_seek_)->SetLoop(BGM_player_seek_,
+			SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
+	if (result != SL_RESULT_SUCCESS) throw 1;
+	result = (*BGM_player_)->SetPlayState(BGM_player_,
+		SL_PLAYSTATE_PLAYING);
+	if (result != SL_RESULT_SUCCESS) throw 1;
     }
 
 }
@@ -252,6 +312,9 @@ namespace mo {
             }
         }
         alSourcePlay(sources_.at(source.id()));
+    }
+    void Audio::playStream(const std::string file_name, const Assets & assets) {
+       // Not implemented
     }
 
 }

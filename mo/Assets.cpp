@@ -202,4 +202,21 @@ namespace mo {
         return characters;
     }
 
+    Descriptor Assets::descript(std::string path) const {
+#ifdef __ANDROID__
+        Descriptor descriptor = { -1, 0, 0 };
+        AAsset* asset = AAssetManager_open(manager_, path.c_str(),
+                AASSET_MODE_UNKNOWN);
+        if (asset != NULL) {
+            descriptor.descriptor = AAsset_openFileDescriptor(
+                    asset, &descriptor.start, &descriptor.length);
+            AAsset_close(asset);
+        }
+        return descriptor;
+#else
+        return Descriptor{-1,0,0};
+#endif
+    }
+
+
 }
