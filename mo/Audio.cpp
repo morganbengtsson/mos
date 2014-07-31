@@ -48,30 +48,14 @@ namespace mo {
         }
 
         // Set-up sound player.
-        startPlayer();
+        createBufferPlayer();
     }
 
     Audio::~Audio() {
-        if (player_obj_ != NULL) {
-            (*player_obj_)->Destroy(player_obj_);
-            player_obj_ = NULL;
-            player_ = NULL;
-            player_queue_ = NULL;
-        }
-
-        // Destroys audio output and engine.
-        if (output_mix_obj_ != NULL) {
-            (*output_mix_obj_)->Destroy(output_mix_obj_);
-            output_mix_obj_ = NULL;
-        }
-        if (engine_obj_ != NULL) {
-            (*engine_obj_)->Destroy(engine_obj_);
-            engine_obj_ = NULL;
-            engine_ = NULL;
-        }
+        stop();
     }
 
-    void Audio::startPlayer() {
+    void Audio::createBufferPlayer() {
         LOGI("Starting sound player.");
         SLresult result;
 
@@ -155,6 +139,13 @@ namespace mo {
             player_queue_ = NULL;
         }
 
+        if (descriptor_player_obj_ != NULL) {
+            (*descriptor_player_obj_)->Destroy(descriptor_player_obj_);
+            descriptor_player_obj_ = NULL;
+            descriptor_player_ = NULL;
+            descriptor_player_seek_ = NULL;            
+        }
+
         // Destroys audio output and engine.
         if (output_mix_obj_ != NULL) {
             (*output_mix_obj_)->Destroy(output_mix_obj_);
@@ -170,15 +161,15 @@ namespace mo {
     void Audio::play(const Source & source) {
         SLresult result;
         SLuint32 player_state;
-        
+
         (*player_obj_)->GetState(player_obj_, &player_state);
         if (player_state == SL_OBJECT_STATE_REALIZED) {
-            
-            for (auto sound : source){
+
+            for (auto sound : source) {
                 int samples = std::distance(sound->begin(), sound->end());
                 LOGI("samples %d", samples);
                 const short * buffer = sound->data();
-                
+
                 try {
                     // Removes any sound from the queue.
                     result = (*player_queue_)->Clear(player_queue_);
@@ -197,69 +188,67 @@ namespace mo {
         }
 
     }
-    
-    void Audio::playStream(const std::string file_name, const Assets & assets){
+
+    void Audio::playStream(const std::string file_name, const Assets & assets) {
         SLresult result;
-	LOGI("Opening music file %s", file_name.c_str());
+        LOGI("Opening music file %s", file_name.c_str());
 
-	Descriptor descriptor = assets.descript(file_name);
-	if (descriptor.descriptor < 0) {
-		LOGI("Could not open music file");
-		throw 1;
-	}
+        Descriptor descriptor = assets.descript(file_name);
+        if (descriptor.descriptor < 0) {
+            LOGI("Could not open music file");
+            throw 1;
+        }
 
-	SLDataLocator_AndroidFD data_locator_in;
-	data_locator_in.locatorType = SL_DATALOCATOR_ANDROIDFD;
-	data_locator_in.fd          = descriptor.descriptor;
-	data_locator_in.offset      = descriptor.start;
-	data_locator_in.length      = descriptor.length;
+        SLDataLocator_AndroidFD data_locator_in;
+        data_locator_in.locatorType = SL_DATALOCATOR_ANDROIDFD;
+        data_locator_in.fd = descriptor.descriptor;
+        data_locator_in.offset = descriptor.start;
+        data_locator_in.length = descriptor.length;
 
-	SLDataFormat_MIME data_format;
-	data_format.formatType    = SL_DATAFORMAT_MIME;
-	data_format.mimeType      = NULL;
-	data_format.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
+        SLDataFormat_MIME data_format;
+        data_format.formatType = SL_DATAFORMAT_MIME;
+        data_format.mimeType = NULL;
+        data_format.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
 
-	SLDataSource data_source;
-	data_source.pLocator = &data_locator_in;
-	data_source.pFormat  = &data_format;
+        SLDataSource data_source;
+        data_source.pLocator = &data_locator_in;
+        data_source.pFormat = &data_format;
 
-	SLDataLocator_OutputMix data_locator_out;
-	data_locator_out.locatorType = SL_DATALOCATOR_OUTPUTMIX;
-	data_locator_out.outputMix   = output_mix_obj_;
+        SLDataLocator_OutputMix data_locator_out;
+        data_locator_out.locatorType = SL_DATALOCATOR_OUTPUTMIX;
+        data_locator_out.outputMix = output_mix_obj_;
 
-	SLDataSink data_sink;
-	data_sink.pLocator = &data_locator_out;
-	data_sink.pFormat  = NULL;
+        SLDataSink data_sink;
+        data_sink.pLocator = &data_locator_out;
+        data_sink.pFormat = NULL;
 
-	// Creates BGM player and retrieves its interfaces.
-	const SLuint32 lBGMPlayerIIDCount = 2;
-	const SLInterfaceID lBGMPlayerIIDs[] =
-		{ SL_IID_PLAY, SL_IID_SEEK };
-	const SLboolean lBGMPlayerReqs[] =
-		{ SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
+        // Creates BGM player and retrieves its interfaces.
+        const SLuint32 lBGMPlayerIIDCount = 2;
+        const SLInterfaceID lBGMPlayerIIDs[] ={SL_IID_PLAY, SL_IID_SEEK};
+        const SLboolean lBGMPlayerReqs[] ={SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
-	result = (*engine_)->CreateAudioPlayer(engine_,
-		&BGM_player_obj_, &data_source, &data_sink,
-		lBGMPlayerIIDCount, lBGMPlayerIIDs, lBGMPlayerReqs);
-	if (result != SL_RESULT_SUCCESS) throw 1;
-	result = (*BGM_player_obj_)->Realize(BGM_player_obj_,
-		SL_BOOLEAN_FALSE);
-	if (result != SL_RESULT_SUCCESS) throw 1;
+        result = (*engine_)->CreateAudioPlayer(engine_,
+                &descriptor_player_obj_, &data_source, &data_sink,
+                lBGMPlayerIIDCount, lBGMPlayerIIDs, lBGMPlayerReqs);
+        if (result != SL_RESULT_SUCCESS) throw 1;
+        result = (*descriptor_player_obj_)->Realize(descriptor_player_obj_,
+                SL_BOOLEAN_FALSE);
+        if (result != SL_RESULT_SUCCESS) throw 1;
 
-	result = (*BGM_player_obj_)->GetInterface(BGM_player_obj_,
-		SL_IID_PLAY, &BGM_player_);
-	if (result != SL_RESULT_SUCCESS) throw 1;
-	result = (*BGM_player_obj_)->GetInterface(BGM_player_obj_,
-		SL_IID_SEEK, &BGM_player_seek_);
-	if (result != SL_RESULT_SUCCESS) throw 1;
+        result = (*descriptor_player_obj_)->GetInterface(descriptor_player_obj_,
+                SL_IID_PLAY, &descriptor_player_);
+        if (result != SL_RESULT_SUCCESS) throw 1;
+        result = (*descriptor_player_obj_)->GetInterface(descriptor_player_obj_,
+                SL_IID_SEEK, &descriptor_player_seek_);
+        if (result != SL_RESULT_SUCCESS) throw 1;
 
-	// Enables looping and starts playing.
-	result = (*BGM_player_seek_)->SetLoop(BGM_player_seek_,
-			SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
-	if (result != SL_RESULT_SUCCESS) throw 1;
-	result = (*BGM_player_)->SetPlayState(BGM_player_,
-		SL_PLAYSTATE_PLAYING);
-	if (result != SL_RESULT_SUCCESS) throw 1;
+        // Enables looping and starts playing.
+        result = (*descriptor_player_seek_)->SetLoop(descriptor_player_seek_,
+                SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
+        if (result != SL_RESULT_SUCCESS) throw 1;
+        result = (*descriptor_player_)->SetPlayState(descriptor_player_,
+                SL_PLAYSTATE_PLAYING);
+        if (result != SL_RESULT_SUCCESS) throw 1;
     }
 
 }
@@ -313,8 +302,9 @@ namespace mo {
         }
         alSourcePlay(sources_.at(source.id()));
     }
+
     void Audio::playStream(const std::string file_name, const Assets & assets) {
-       // Not implemented
+        // Not implemented
     }
 
 }

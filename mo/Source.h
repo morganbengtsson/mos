@@ -33,7 +33,11 @@ namespace mo {
         template<class It>
         Source(std::initializer_list<It> il, const glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f)) : Source(il.begin(), il.end(), position){
             
-        } 
+        }
+        
+        Source() : Source({}){
+            
+        }
         virtual ~Source();
         
         glm::vec3 position;

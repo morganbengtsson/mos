@@ -13,6 +13,7 @@
 
 namespace mo {
 
+    
     /*!
      * A class that describes the geometric data to be rendered. Contains vertices
      * and elements, describing vertex order.
@@ -26,8 +27,7 @@ namespace mo {
         Mesh(const VerticesIt verticesBegin,
                 const VerticesIt verticesEnd,
                 ElementsIt elementsBegin,
-                ElementsIt elementsEnd) : valid(true) {
-            static unsigned int current_id = 0;
+                ElementsIt elementsEnd) : valid(true) {            
             id_ = current_id++;
             vertices_.assign(verticesBegin, verticesEnd);
             elements_.assign(elementsBegin, elementsEnd);
@@ -65,6 +65,7 @@ namespace mo {
         Vertex back();
 
     private:
+        static unsigned int current_id;
         unsigned int id_;
         Vertices vertices_;
         Elements elements_;

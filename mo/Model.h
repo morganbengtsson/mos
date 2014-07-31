@@ -31,21 +31,11 @@ namespace mo {
         std::shared_ptr<Mesh> mesh;
         std::shared_ptr<Texture2D> texture;
 
-        /**
-         * 
-         * @return A mat4 object, describing the objects position/rotation.
-         */
-        const glm::mat4 transform() const;
-        
-        /**
-         * 
-         * @param The transform matrix to set.
-         */
-        void setTransform(const glm::mat4 transform);
+        glm::mat4 transform;
         
     private:
         bool valid_;
-        glm::mat4 transform_;
+        
 
     };
 }

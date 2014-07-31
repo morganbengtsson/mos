@@ -21,6 +21,7 @@
 #include <glm/glm.hpp>
 #include <map>
 #include <memory>
+#include <string>
 
 #include "Sound.h"
 #include "Source.h"
@@ -46,18 +47,19 @@ namespace mo {
 
     private:
 #ifdef __ANDROID__
-        void startPlayer();
+        void createBufferPlayer();        
         void stop();
         // OpenSL ES engine.
         SLObjectItf engine_obj_;
         SLEngineItf engine_;
-        // Audio output.
+        
+        // Audio outputmix.
         SLObjectItf output_mix_obj_;
 
         // Background music player.
-        SLObjectItf BGM_player_obj_;
-        SLPlayItf BGM_player_;
-        SLSeekItf BGM_player_seek_;
+        SLObjectItf descriptor_player_obj_;
+        SLPlayItf descriptor_player_;
+        SLSeekItf descriptor_player_seek_;
 
         // Sound player.
         SLObjectItf player_obj_;

@@ -14,19 +14,11 @@ namespace mo {
             const glm::mat4 transform) :
     mesh(mesh),
     texture(texture),
-    transform_(transform),
+    transform(transform),
     valid_(true){
     }
 
     Model::~Model() {
     }
-
-    const glm::mat4 Model::transform() const {
-        return transform_;
-    }
-
-    void Model::setTransform(const glm::mat4 transform) {
-        transform_ = transform;
-    }
-
+   
 }

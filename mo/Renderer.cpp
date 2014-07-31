@@ -149,6 +149,8 @@ namespace mo {
     }
 
     void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity, const std::string program_name, const glm::vec3 light_position) {
+           
+        
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
                     ogli::createArrayBuffer(model.mesh->verticesBegin(), model.mesh->verticesEnd())));
@@ -157,14 +159,19 @@ namespace mo {
             element_array_buffers_.insert(ElementPair(model.mesh->id(),
                     ogli::createElementArrayBuffer(model.mesh->elementsBegin(), model.mesh->elementsEnd())));
         }
+        
+        if (!model.mesh->valid) {
+            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->verticesBegin(), model.mesh->verticesEnd());
+            model.mesh->valid = true;
+        }     
 
         if (textures_.find(model.texture->id()) == textures_.end()) {
             ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height());
             textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
         }
 
-        glm::mat4 mv = view * transform * model.transform();
-        glm::mat4 mvp = projection * view * model.transform() * transform;
+        glm::mat4 mv = view * transform * model.transform;
+        glm::mat4 mvp = projection * view * model.transform * transform;
 
         //ogli::useProgram(standard_program_);
 
@@ -194,10 +201,7 @@ namespace mo {
         else {
             ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()));
         }
-        if (!model.mesh->valid) {
-            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->verticesBegin(), model.mesh->verticesEnd());
-            model.mesh->valid = true;
-        }
+        
     }
 
 }

@@ -9,7 +9,10 @@
 
 namespace mo {
     
-    Mesh::Mesh() : valid(true){        
+    unsigned int Mesh::current_id = 0;
+    
+    Mesh::Mesh() : valid(true){
+        id_ = current_id++;        
     }
     
     Mesh::~Mesh() {
