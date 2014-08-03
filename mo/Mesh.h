@@ -13,7 +13,23 @@
 
 namespace mo {
 
-    
+    template<typename Container>
+    class Range {
+    public:
+        Range(const Container& container) : container_(container) {
+        }
+
+        typename Container::const_iterator begin() const {
+            return container_.begin();
+        };
+
+        typename Container::const_iterator end() const {
+            return container_.end();
+        };
+    private:
+        const Container& container_;
+    };
+
     /*!
      * A class that describes the geometric data to be rendered. Contains vertices
      * and elements, describing vertex order.
@@ -27,7 +43,7 @@ namespace mo {
         Mesh(const VerticesIt verticesBegin,
                 const VerticesIt verticesEnd,
                 ElementsIt elementsBegin,
-                ElementsIt elementsEnd) : valid(true) {            
+                ElementsIt elementsEnd) : valid(true) {
             id_ = current_id++;
             vertices_.assign(verticesBegin, verticesEnd);
             elements_.assign(elementsBegin, elementsEnd);
@@ -35,6 +51,14 @@ namespace mo {
         Mesh();
         virtual ~Mesh();
 
+        Range<Vertices> vertices() const {
+            return Range<Vertices>(vertices_);
+        }
+        
+        Range<Elements> elements() const {
+            return Range<Elements>(elements_);
+        }
+        
         typename Vertices::const_iterator verticesBegin() const {
             return vertices_.begin();
         };
@@ -50,7 +74,7 @@ namespace mo {
         typename Elements::const_iterator elementsEnd() const {
             return elements_.end();
         };
-        
+
         /**
          * 
          * @return A unique identifier. 
@@ -58,7 +82,7 @@ namespace mo {
         unsigned int id() const;
 
         bool valid;
-        
+
         void clear();
         void add(const Vertex vertex);
         void add(const int element);
