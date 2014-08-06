@@ -15,6 +15,9 @@ namespace mo {
         id_ = current_id++;        
     }
     
+    Mesh::Mesh(const Mesh & mesh): Mesh(mesh.verticesBegin(), mesh.verticesEnd(), mesh.elementsBegin(), mesh.elementsEnd()){        
+    }
+    
     Mesh::~Mesh() {
     }
 

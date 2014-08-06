@@ -21,4 +21,8 @@ namespace mo {
     Model::~Model() {
     }
    
+    glm::vec3 Model::position() {
+        return (glm::vec3)(transform*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    }
+
 }

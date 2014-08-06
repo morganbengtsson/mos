@@ -14,6 +14,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/io.hpp>
 #include <iostream>
 
 namespace mo {
@@ -53,5 +54,13 @@ namespace mo {
         mesh->valid = false;
         
     }
+
+    float Text::width() {
+        std::cout << mesh->verticesBegin()->position << " " << mesh->verticesEnd()->position << std::endl;
+        glm::vec2 p1 = glm::vec2(mesh->verticesBegin()->position);
+        glm::vec2 p2 = glm::vec2((mesh->verticesEnd()-1)->position);
+        return glm::distance(p1,p2);
+    }
+
 
 }

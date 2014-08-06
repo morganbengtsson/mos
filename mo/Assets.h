@@ -53,7 +53,15 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Mesh object.
          */
-        std::shared_ptr<Mesh> mesh(std::string file_name);
+        std::shared_ptr<Mesh> meshCached(const std::string file_name);
+        
+        /**
+         * Loads a *.obj file into a mesh object. Not cached.
+         * 
+         * @param file_name
+         * @return Shared pointer to Mesh object
+         */        
+        std::shared_ptr<Mesh> mesh(const std::string file_name) const;
 
         /**
          * Loads a *.png file into a Texture2D object, and caches it internally.
@@ -61,23 +69,42 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Texture2D object.
          */
-        std::shared_ptr<Texture2D> texture(std::string file_name);
+        std::shared_ptr<Texture2D> textureCached(const std::string file_name);
 
+        
+        /**
+         * Loads a *.png file into A Texture2D object. Not cached. 
+         * 
+         * @param file_name
+         * @return Shared pointer to Texture2D object.
+         */        
+        std::shared_ptr<Texture2D> texture(const std::string file_name) const;
+        
         /**
          * Loads a *.ogg file into a Sound object, and caches it internally.
          * 
          * @param file_name
          * @return Shared pointer to Sound object.
          */
-        std::shared_ptr<Sound> sound(std::string file_name);
+        std::shared_ptr<Sound> soundCached(const std::string file_name);
 
+        
+        /**
+         * Loads an *. ogg file into a Sound object. Not cached.
+         * 
+         * @param file_name
+         * @return Shared pointer to Sound object.
+         */        
+        std::shared_ptr<Sound> sound(const std::string file_name) const;
+        
+        
         /**
          * Load text from file. Not cached.
          * 
          * @param file_name
          * @return String.
          */
-        std::string text(std::string file_name);
+        std::string text(const std::string file_name);
 
         /**
          * Load a character map from an *.xml file in NGL format.

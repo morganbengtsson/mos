@@ -32,6 +32,7 @@ namespace mo {
         std::shared_ptr<Texture2D> texture;
 
         glm::mat4 transform;
+        glm::vec3 position();
         
     private:
         bool valid_;

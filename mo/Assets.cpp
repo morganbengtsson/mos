@@ -46,102 +46,111 @@ namespace mo {
     Assets::~Assets() {
     }
 
-    std::shared_ptr<Mesh> Assets::mesh(std::string file_name) {
-
-        if (models_.find(file_name) == models_.end()) {
-            vector<mo::Vertex> vertices;
-            vector<int> elements;
+    std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
+        vector<mo::Vertex> vertices;
+        vector<int> elements;
 
 #ifdef __ANDROID__
-            LOGI("Loading: %s", file_name.c_str());
-            std::string source = text(file_name);
-            obj::Model obj_model = obj::loadModelFromString(source);
+        LOGI("Loading: %s", file_name.c_str());
+        std::string source = text(file_name);
+        obj::Model obj_model = obj::loadModelFromString(source);
 #else
-            LOGI("Loading: %s%s\n", directory_.c_str(),file_name.c_str());
-            obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
+        LOGI("Loading: %s%s\n", directory_.c_str(), file_name.c_str());
+        obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 #endif
-            int j = 0;
-            for (int i = 0; i < obj_model.vertex.size(); i += 3) {
-                glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
-                glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1], obj_model.normal[i + 2]);
-                glm::vec2 uv(0.0f, 0.0f);
-                if (obj_model.texCoord.size() > 0) {
-                    uv.x = obj_model.texCoord[j];
-                    uv.y = -obj_model.texCoord[j + 1];
-                }
-
-                j += 2;
-                vertices.push_back(Vertex(position, normal, uv));
+        int j = 0;
+        for (int i = 0; i < obj_model.vertex.size(); i += 3) {
+            glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
+            glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1], obj_model.normal[i + 2]);
+            glm::vec2 uv(0.0f, 0.0f);
+            if (obj_model.texCoord.size() > 0) {
+                uv.x = obj_model.texCoord[j];
+                uv.y = -obj_model.texCoord[j + 1];
             }
-            elements.assign(obj_model.faces.find("default")->second.begin(),
-                    obj_model.faces.find("default")->second.end());
 
-            models_.insert(MeshPair(file_name, std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
-                    vertices.end(),
-                    elements.begin(),
-                    elements.end()))));
+            j += 2;
+            vertices.push_back(Vertex(position, normal, uv));
+        }
+        elements.assign(obj_model.faces.find("default")->second.begin(),
+                obj_model.faces.find("default")->second.end());
+        return std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
+                vertices.end(),
+                elements.begin(),
+                elements.end()));
+    }
 
+    std::shared_ptr<Mesh> Assets::meshCached(const std::string file_name) {
+        if (models_.find(file_name) == models_.end()) {
+            models_.insert(MeshPair(file_name, mesh(file_name)));
         }
         return models_.at(file_name);
     }
 
-    std::shared_ptr<Texture2D> Assets::texture(std::string file_name) {
+    std::shared_ptr<Texture2D> Assets::texture(const std::string file_name) const{
         using namespace mo;
-        if (textures_.find(file_name) == textures_.end()) {
-            vector<unsigned char> texels_decoded;
-            unsigned width, height;
+
+        vector<unsigned char> texels_decoded;
+        unsigned width, height;
 #ifdef __ANDROID__
-            std::cout << "Loading: " << file_name << std::endl;
-            AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-            int size = (int) AAsset_getLength(asset);
+        std::cout << "Loading: " << file_name << std::endl;
+        AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
+        int size = (int) AAsset_getLength(asset);
 
-            const unsigned char * texels_encoded = static_cast<const unsigned char *> (AAsset_getBuffer(asset));
+        const unsigned char * texels_encoded = static_cast<const unsigned char *> (AAsset_getBuffer(asset));
 
-            unsigned error = lodepng::decode(texels_decoded, width, height, texels_encoded, size);
-            if (error) {
-                std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
-            }
+        unsigned error = lodepng::decode(texels_decoded, width, height, texels_encoded, size);
+        if (error) {
+            std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
+        }
 #else
-            std::cout << "Loading: " << directory_ + file_name << std::endl;
-            unsigned error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
-            if (error) {
-                std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
-            }
+        std::cout << "Loading: " << directory_ + file_name << std::endl;
+        unsigned error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
+        if (error) {
+            std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
+        }
 #endif
-            textures_.insert(TexturePair(file_name, std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height))));
+        return std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height));
+    }
 
+    std::shared_ptr<Texture2D> Assets::textureCached(const std::string file_name) {
+        if (textures_.find(file_name) == textures_.end()) {
+            textures_.insert(TexturePair(file_name, texture(file_name)));
         }
         return textures_.at(file_name);
     }
 
-    std::shared_ptr<Sound> Assets::sound(std::string file_name) {
-        if (sounds_.find(file_name) == sounds_.end()) {
-            int channels, length;
-            short * decoded;
+    std::shared_ptr<Sound> Assets::sound(const std::string file_name) const{
+        int channels, length;
+        short * decoded;
 #ifdef __ANDROID__
-            AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-            int size = (int) AAsset_getLength(asset);
+        AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
+        int size = (int) AAsset_getLength(asset);
 
-            length = stb_vorbis_decode_memory((unsigned char *) AAsset_getBuffer(asset), size, &channels, &decoded);
+        length = stb_vorbis_decode_memory((unsigned char *) AAsset_getBuffer(asset), size, &channels, &decoded);
 #else
-            std::ifstream file(directory_ + file_name, std::ios::binary);
-            std::vector<unsigned char> data;
+        std::ifstream file(directory_ + file_name, std::ios::binary);
+        std::vector<unsigned char> data;
 
-            unsigned char c;
-            while (file.read(reinterpret_cast<char*>(&c), sizeof (c))) {
-                data.push_back(c);
-            }
-            length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
+        unsigned char c;
+        while (file.read(reinterpret_cast<char*> (&c), sizeof (c))) {
+            data.push_back(c);
+        }
+        length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
 #endif
+        return std::make_shared<Sound>(Sound(decoded, decoded + length));
+    }
 
-            sounds_.insert(SoundPair(file_name, std::make_shared<Sound>(Sound(decoded, decoded + length))));
+    std::shared_ptr<Sound> Assets::soundCached(const std::string file_name) {
+        if (sounds_.find(file_name) == sounds_.end()) {
+
+            sounds_.insert(SoundPair(file_name, sound(file_name)));
             return sounds_.at(file_name);
         } else {
             return sounds_.at(file_name);
         }
     }
 
-    std::string Assets::text(std::string file_name) {
+    std::string Assets::text(const std::string file_name) {
 #ifdef __ANDROID__
         AAsset* text = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
         long size = AAsset_getLength(text);
@@ -204,7 +213,7 @@ namespace mo {
 
     Descriptor Assets::descript(std::string path) const {
 #ifdef __ANDROID__
-        Descriptor descriptor = { -1, 0, 0 };
+        Descriptor descriptor = {-1, 0, 0};
         AAsset* asset = AAssetManager_open(manager_, path.c_str(),
                 AASSET_MODE_UNKNOWN);
         if (asset != NULL) {
@@ -214,7 +223,7 @@ namespace mo {
         }
         return descriptor;
 #else
-        return Descriptor{-1,0,0};
+        return Descriptor{-1, 0, 0};
 #endif
     }
 

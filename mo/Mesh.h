@@ -14,9 +14,9 @@
 namespace mo {
 
     template<typename Container>
-    class Range {
+    class ConstRange {
     public:
-        Range(const Container& container) : container_(container) {
+        ConstRange(const Container& container) : container_(container) {
         }
 
         typename Container::const_iterator begin() const {
@@ -28,6 +28,23 @@ namespace mo {
         };
     private:
         const Container& container_;
+    };
+    
+    template<typename Container>
+    class Range {
+    public:
+        Range(Container& container) : container_(container) {
+        }
+
+        typename Container::iterator begin() {
+            return container_.begin();
+        };
+
+        typename Container::iterator end() {
+            return container_.end();
+        };
+    private:
+        Container& container_;
     };
 
     /*!
@@ -49,14 +66,23 @@ namespace mo {
             elements_.assign(elementsBegin, elementsEnd);
         }
         Mesh();
+        Mesh(const Mesh & mesh);
         virtual ~Mesh();
 
-        Range<Vertices> vertices() const {
+        Range<Vertices> vertices() {
             return Range<Vertices>(vertices_);
         }
         
-        Range<Elements> elements() const {
+        Range<Elements> elements() {
             return Range<Elements>(elements_);
+        }
+        
+        ConstRange<Vertices> vertices() const {
+            return ConstRange<Vertices>(vertices_);
+        }
+        
+        ConstRange<Elements> elements() const {
+            return ConstRange<Elements>(elements_);
         }
         
         typename Vertices::const_iterator verticesBegin() const {
@@ -75,6 +101,22 @@ namespace mo {
             return elements_.end();
         };
 
+        typename Vertices::iterator verticesBegin() {
+            return vertices_.begin();
+        };
+
+        typename Vertices::iterator verticesEnd() {
+            return vertices_.end();
+        };
+
+        typename Elements::iterator elementsBegin() {
+            return elements_.begin();
+        };
+
+        typename Elements::iterator elementsEnd() {
+            return elements_.end();
+        };
+        
         /**
          * 
          * @return A unique identifier. 
