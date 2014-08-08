@@ -72,7 +72,7 @@ namespace mo {
                     "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
                     "intensity = clamp(intensity, 0.0, 1.0);\n"                    
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
-                    "vec3 ambient = vec3(0.0, 0.0, 0.0) * diffuse.rgb;\n"
+                    "vec3 ambient = vec3(0.2, 0.2, 0.2);\n"
                    
                     "gl_FragColor = vec4(diffuse.rgb * intensity + ambient, diffuse.a * opacity);\n"
                 "}\n";
