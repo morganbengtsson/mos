@@ -150,7 +150,7 @@ namespace mo {
         }
     }
 
-    std::string Assets::text(const std::string file_name) {
+    std::string Assets::text(const std::string file_name) const {
 #ifdef __ANDROID__
         AAsset* text = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
         long size = AAsset_getLength(text);

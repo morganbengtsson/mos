@@ -104,7 +104,7 @@ namespace mo {
          * @param file_name
          * @return String.
          */
-        std::string text(const std::string file_name);
+        std::string text(const std::string file_name) const;
 
         /**
          * Load a character map from an *.xml file in NGL format.

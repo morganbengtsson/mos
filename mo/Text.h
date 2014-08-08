@@ -23,7 +23,11 @@ namespace mo {
  */
 class Text : public Model {
 public:
-    Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform = glm::mat4(1.0f));
+    Text(const std::string text, 
+            std::map<char, Character> characters, 
+            std::shared_ptr<Texture2D> texture, 
+            const glm::mat4 transform = glm::mat4(1.0f), 
+            const float spacing = 0.0f);
     virtual ~Text();    
 
     /**
@@ -32,7 +36,7 @@ public:
      */
     void setText(const std::string text);
     float width();
-    
+    float spacing;
 private:   
     std::string text_;
     std::map<char, Character> characters_;

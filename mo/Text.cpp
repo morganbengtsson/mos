@@ -19,8 +19,8 @@
 
 namespace mo {
 
-    Text::Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform)
-    : Model::Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform), characters_(characters) {
+    Text::Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform, const float spacing)
+    : Model::Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform), characters_(characters), spacing(spacing) {
         setText(text);
     }
 
@@ -41,15 +41,14 @@ namespace mo {
 
             float offset_y = ((float) texture->height()) - character.offsetY;
             float offset_x = character.offsetX;
-            
-            float adv = character.advance;
+                        
             mesh->add(Vertex(glm::vec3(index + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
             mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
             mesh->add(Vertex(glm::vec3(index + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
             mesh->add(Vertex(glm::vec3(index + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
             mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
             mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
-            index += character.advance;
+            index += character.advance + spacing;
         }
         mesh->valid = false;
         
@@ -58,7 +57,7 @@ namespace mo {
     float Text::width() {
         std::cout << mesh->verticesBegin()->position << " " << mesh->verticesEnd()->position << std::endl;
         glm::vec2 p1 = glm::vec2(mesh->verticesBegin()->position);
-        glm::vec2 p2 = glm::vec2((mesh->verticesEnd()-1)->position);
+        glm::vec2 p2 = glm::vec2((mesh->verticesEnd()-2)->position);
         return glm::distance(p1,p2);
     }
 
