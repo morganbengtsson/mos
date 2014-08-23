@@ -65,6 +65,7 @@ namespace mo {
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
                 "varying vec2 fragment_uv;\n"
+                               
                 
                 "void main() {\n"
                     "vec3 normal = normalize(fragment_normal);\n"
