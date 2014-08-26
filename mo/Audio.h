@@ -22,6 +22,8 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <thread>
+#include <future>
 
 #include "Sound.h"
 #include "Source.h"
@@ -76,6 +78,9 @@ namespace mo {
 
         Sources sources_;
         Buffers buffers_;
+        
+        std::thread * thread_;
+        
 #endif
     };
 }

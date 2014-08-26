@@ -18,7 +18,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-#include <stb_vorbis.c>
+#include <stb_vorbis.h>
 
 using namespace mo;
 using namespace std;
