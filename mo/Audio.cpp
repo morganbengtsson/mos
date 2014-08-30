@@ -409,8 +409,7 @@ bool AudioStreamUpdate(AudioStream* self){
 			if(shouldExit) return false;
 		}
 		alSourceQueueBuffers(self->source, 1, &buffer);
-	}
- 
+	} 
 	return true;
 }
     

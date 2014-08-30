@@ -20,7 +20,7 @@
 
 namespace mo {
 
-    Renderer::Renderer() :
+    Renderer::Renderer() :    
     position_attribute_3P3N2UV_(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
     normal_attribute_3P3N2UV_(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
     uv_attribute_3P3N2UV_(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)) {
@@ -195,12 +195,21 @@ namespace mo {
         ogli::attribute(position_attribute_3P3N2UV_);
         ogli::attribute(normal_attribute_3P3N2UV_);
         ogli::attribute(uv_attribute_3P3N2UV_);
+        
         int num_elements = std::distance(model.mesh->elementsBegin(), model.mesh->elementsEnd());
-        if (num_elements > 0){
-            ogli::drawElements(num_elements);
+        int draw_type = GL_TRIANGLES;
+        if (model.draw == Model::Draw::LINES){
+            draw_type = GL_LINES;
+        }
+        else if (model.draw == Model::Draw::POINTS){
+            draw_type = GL_POINTS;
+        }       
+                
+        if (num_elements > 0){            
+            ogli::drawElements(num_elements, draw_type);            
         }
         else {
-            ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()));
+            ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()), draw_type);
         }
         
     }

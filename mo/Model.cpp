@@ -9,9 +9,14 @@
 
 namespace mo {
 
+    Model::Model(){
+        
+    }
     Model::Model(std::shared_ptr<Mesh> mesh, 
-            std::shared_ptr<Texture2D> texture,
-            const glm::mat4 transform) :
+                 std::shared_ptr<Texture2D> texture,
+                 const glm::mat4 transform,
+                 const Draw draw) :
+    draw(draw),             
     mesh(mesh),
     texture(texture),
     transform(transform),

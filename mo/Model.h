@@ -25,13 +25,19 @@ namespace mo {
      */
     class Model {
     public:
-        Model(std::shared_ptr<Mesh> mesh, std::shared_ptr<Texture2D> texture, const glm::mat4 transform = glm::mat4(1.0f));
+        enum class Draw {TRIANGLES, LINES, POINTS};
+        Model();
+        Model(std::shared_ptr<Mesh> mesh, 
+              std::shared_ptr<Texture2D> texture, 
+              const glm::mat4 transform = glm::mat4(1.0f),
+              const Draw draw = Draw::TRIANGLES);
         virtual ~Model();
 
         std::shared_ptr<Mesh> mesh;
         std::shared_ptr<Texture2D> texture;
-
+        Draw draw;
         glm::mat4 transform;
+        
         glm::vec3 position();
         
     private:

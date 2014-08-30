@@ -69,7 +69,7 @@ namespace mo {
         ogli::Attribute position_attribute_3P3N2UV_;
         ogli::Attribute normal_attribute_3P3N2UV_;
         ogli::Attribute uv_attribute_3P3N2UV_;
-
+        
         std::map<std::string, ProgramData> programs_;
         std::map<unsigned int, ogli::TextureBuffer> textures_;
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
