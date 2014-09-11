@@ -20,7 +20,7 @@ public:
     typedef std::vector<unsigned char> Texels;
     
     template<class It>
-    Texture2D(It begin, It end, unsigned int width, unsigned int height) : width_(width), height_(height){
+    Texture2D(It begin, It end, unsigned int width, unsigned int height, const bool mipmaps = true) : width_(width), height_(height), mipmaps(mipmaps){
         static unsigned int current_id = 0;
         id_ = current_id++;
         texels_.assign(begin, end);
@@ -35,6 +35,7 @@ public:
     unsigned int width() const;
     unsigned int height() const;
     
+    bool mipmaps;
 private:
     unsigned int id_;
     Texels texels_;

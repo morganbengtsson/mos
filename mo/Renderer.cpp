@@ -27,6 +27,10 @@ namespace mo {
         ogli::init(); // Should this be done int ogli or mo?
 
         glEnable(GL_DEPTH_TEST);
+#ifdef __ANDROID__
+#else
+        glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+#endif
         glDepthFunc(GL_LEQUAL);
         glDepthMask(true);
         glEnable(GL_BLEND);
@@ -71,11 +75,13 @@ namespace mo {
                     "vec3 normal = normalize(fragment_normal);\n"
                     "vec3 surface_to_light = light_position - fragment_position;\n"                  
                     "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
+                    "float dist = length(surface_to_light);\n"
+                    //"float att = 1.0 / (1.0 + 0.1*dist + 0.01*dist*dist);\n"
                     "intensity = clamp(intensity, 0.0, 1.0);\n"                    
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
-                    "vec3 ambient = vec3(0.2, 0.2, 0.2);\n"
+                    "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
                    
-                    "gl_FragColor = vec4(diffuse.rgb * intensity + ambient, diffuse.a * opacity);\n"
+                    "gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
                 "}\n";
 
         addProgram("standard", standard_vertex_source, standard_fragment_source);
@@ -92,7 +98,7 @@ namespace mo {
                 "varying vec2 v_position;\n"
                 "varying vec2 v_uv;\n"
 
-                "void main(){\n"
+                "void main(){\n"               
                 "v_position = (model_view * vec4(position, 0.0)).xy;\n"
                 "v_uv = uv;\n"
                 "gl_Position = model_view_projection * vec4(position, 1.0);\n"
@@ -113,6 +119,44 @@ namespace mo {
                 "//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
                 "}\n";
         addProgram("text", text_vertex_source, text_fragment_source);
+        
+        
+        std::string particles_vertex_source = "#ifdef GL_ES\n"
+                "precision mediump float;\n"
+                "precision mediump int;\n"
+                "#endif\n"
+                "uniform mat4 model_view_projection;\n"
+                "uniform mat4 model_view;\n"
+                "attribute vec3 position;\n"
+                "attribute vec2 uv;\n"
+
+                "varying vec2 v_position;\n"
+                "varying vec2 v_uv;\n"
+
+                "void main(){\n"
+                "#ifdef GL_ES\n"
+                "#else\n"
+                "gl_PointSize = 3;\n"
+                "#endif\n"                
+                "v_position = (model_view * vec4(position, 0.0)).xy;\n"
+                "v_uv = uv;\n"
+                "gl_Position = model_view_projection * vec4(position, 1.0);\n"
+                "}\n";
+        
+        std::string particles_fragment_source = "#ifdef GL_ES\n"
+                "precision mediump float;\n"
+                "precision mediump int;\n"
+                "#endif\n"
+                "varying vec3 v_position;\n"
+                "varying vec2 v_uv;\n"
+                
+                "uniform float opacity;\n"
+
+                "void main() {\n"                
+                "gl_FragColor = vec4(1.0, 1.0, 1.0, opacity);\n"               
+                "}\n";
+        
+        addProgram("particles", particles_vertex_source, particles_fragment_source);
     }
 
     Renderer::~Renderer() {
@@ -167,7 +211,7 @@ namespace mo {
         }     
 
         if (textures_.find(model.texture->id()) == textures_.end()) {
-            ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height());
+            ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
             textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
         }
 

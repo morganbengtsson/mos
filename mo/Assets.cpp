@@ -86,7 +86,7 @@ namespace mo {
         return models_.at(file_name);
     }
 
-    std::shared_ptr<Texture2D> Assets::texture(const std::string file_name) const{
+    std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const{
         using namespace mo;
 
         vector<unsigned char> texels_decoded;
@@ -109,12 +109,12 @@ namespace mo {
             std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
         }
 #endif
-        return std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height));
+        return std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps));
     }
 
-    std::shared_ptr<Texture2D> Assets::textureCached(const std::string file_name) {
+    std::shared_ptr<Texture2D> Assets::textureCached(const std::string file_name, const bool mipmaps) {
         if (textures_.find(file_name) == textures_.end()) {
-            textures_.insert(TexturePair(file_name, texture(file_name)));
+            textures_.insert(TexturePair(file_name, texture(file_name, mipmaps)));
         }
         return textures_.at(file_name);
     }
@@ -177,9 +177,7 @@ namespace mo {
         strcpy(cstr, str.c_str());
         doc.parse<0>(cstr);
 
-        delete [] cstr;
-
-        std::cout << "Name of my first node is: " << doc.first_node()->name() << "\n";
+        delete [] cstr;    
 
         rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
 

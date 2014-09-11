@@ -11,7 +11,7 @@
 #ifdef __ANDROID__
 namespace mo {
 
-    Audio::Audio() {
+    Audio::Audio() : latest_player(0) {
         LOGI("Initializing audio.");
         SLresult result;
         const SLuint32 lEngineMixIIDCount = 1;
@@ -48,15 +48,18 @@ namespace mo {
         }
 
         // Set-up sound player.
-        createBufferPlayer();
+        createBufferPlayers();
     }
 
     Audio::~Audio() {
         stop();
     }
 
-    void Audio::createBufferPlayer() {
-        LOGI("Starting sound player.");
+    void Audio::createBufferPlayers() {
+        LOGI("Starting sound players.");
+        
+        const int num_players = 4;
+        
         SLresult result;
 
         // Set-up sound audio source.
@@ -66,12 +69,7 @@ namespace mo {
 
         // At most one buffer in the queue.
         data_locator_in.numBuffers = 1;
-        /*
-                SLDataFormat_MIME data_format;
-                data_format.formatType    = SL_DATAFORMAT_MIME;
-                data_format.mimeType      = NULL;
-                data_format.containerType = SL_CONTAINERTYPE_UNSPECIFIED;
-         */
+   
         SLDataFormat_PCM data_format;
         data_format.formatType = SL_DATAFORMAT_PCM;
         data_format.numChannels = 1; // Mono sound.
@@ -98,30 +96,34 @@ namespace mo {
         const SLInterfaceID lSoundPlayerIIDs[] = {SL_IID_PLAY, SL_IID_BUFFERQUEUE};
         const SLboolean lSoundPlayerReqs[] = {SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE};
 
-        try {
-            result = (*engine_)->CreateAudioPlayer(engine_, &player_obj_, &data_source,
-                    &data_sink, lSoundPlayerIIDCount,
-                    lSoundPlayerIIDs, lSoundPlayerReqs);
-            if (result != SL_RESULT_SUCCESS) throw 1;
+        for (int i = 0; i < num_players; i++) {
+            Player player;
+            try {
+                result = (*engine_)->CreateAudioPlayer(engine_, &player.player_obj_, &data_source,
+                        &data_sink, lSoundPlayerIIDCount,
+                        lSoundPlayerIIDs, lSoundPlayerReqs);
+                if (result != SL_RESULT_SUCCESS) throw 1;
 
-            result = (*player_obj_)->Realize(player_obj_, SL_BOOLEAN_FALSE);
-            if (result != SL_RESULT_SUCCESS) throw 1;
+                result = (*player.player_obj_)->Realize(player.player_obj_, SL_BOOLEAN_FALSE);
+                if (result != SL_RESULT_SUCCESS) throw 1;
 
-            result = (*player_obj_)->GetInterface(player_obj_, SL_IID_PLAY, &player_);
-            if (result != SL_RESULT_SUCCESS) throw 1;
+                result = (*player.player_obj_)->GetInterface(player.player_obj_, SL_IID_PLAY, &player.player_);
+                if (result != SL_RESULT_SUCCESS) throw 1;
 
-            result = (*player_obj_)->GetInterface(player_obj_, SL_IID_BUFFERQUEUE,
-                    &player_queue_);
-            if (result != SL_RESULT_SUCCESS) throw 1;
+                result = (*player.player_obj_)->GetInterface(player.player_obj_, SL_IID_BUFFERQUEUE,
+                        &player.player_queue_);
+                if (result != SL_RESULT_SUCCESS) throw 1;
 
-            // Starts the sound player. Nothing can be heard while the
-            // sound queue remains empty.s
-            result = (*player_)->SetPlayState(player_, SL_PLAYSTATE_PLAYING);
-            if (result != SL_RESULT_SUCCESS) throw 1;
-        } catch (int exception) {
-            if (exception == 1) {
-                LOGE("Error while creating sound player.");
+                // Starts the sound player. Nothing can be heard while the
+                // sound queue remains empty.s
+                result = (*player.player_)->SetPlayState(player.player_, SL_PLAYSTATE_PLAYING);
+                if (result != SL_RESULT_SUCCESS) throw 1;
+            } catch (int exception) {
+                if (exception == 1) {
+                    LOGE("Error while creating sound player.");
+                }
             }
+            players_.push_back(player);
         }
     }
 
@@ -132,11 +134,14 @@ namespace mo {
         //stopBGM();
 
         // Destroys sound player.
-        if (player_obj_ != NULL) {
-            (*player_obj_)->Destroy(player_obj_);
-            player_obj_ = NULL;
-            player_ = NULL;
-            player_queue_ = NULL;
+        
+        for (auto player : players_){
+        if (player.player_obj_ != NULL) {
+            (*player.player_obj_)->Destroy(player.player_obj_);
+            player.player_obj_ = NULL;
+            player.player_ = NULL;
+            player.player_queue_ = NULL;
+        }
         }
 
         if (descriptor_player_obj_ != NULL) {
@@ -161,8 +166,10 @@ namespace mo {
     void Audio::play(const Source & source) {
         SLresult result;
         SLuint32 player_state;
+        
+        Player player = players_[latest_player];
 
-        (*player_obj_)->GetState(player_obj_, &player_state);
+        (*player.player_obj_)->GetState(player.player_obj_, &player_state);
         if (player_state == SL_OBJECT_STATE_REALIZED) {
 
             for (auto sound : source) {
@@ -172,11 +179,11 @@ namespace mo {
 
                 try {
                     // Removes any sound from the queue.
-                    result = (*player_queue_)->Clear(player_queue_);
+                    result = (*player.player_queue_)->Clear(player.player_queue_);
                     if (result != SL_RESULT_SUCCESS) throw 1;
 
                     // Plays the new sound.
-                    result = (*player_queue_)->Enqueue(player_queue_, buffer,
+                    result = (*player.player_queue_)->Enqueue(player.player_queue_, buffer,
                             samples * sizeof (short));
                     if (result != SL_RESULT_SUCCESS) throw 1;
                 } catch (int exception) {
@@ -186,6 +193,10 @@ namespace mo {
                 }
             }
         }
+        latest_player ++;
+        if (latest_player > 3) {
+            latest_player = 0;
+        };
 
     }
 
@@ -281,7 +292,10 @@ namespace mo {
         thread_->join();
         delete thread_;
     }
-
+    void Audio::stop(){
+    
+    }
+    
     void Audio::play(const Source & source) {
         if (sources_.find(source.id()) == sources_.end()) {
             ALuint al_source;

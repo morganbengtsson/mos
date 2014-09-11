@@ -69,7 +69,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Texture2D object.
          */
-        std::shared_ptr<Texture2D> textureCached(const std::string file_name);
+        std::shared_ptr<Texture2D> textureCached(const std::string file_name, const bool mipmaps = true);
 
         
         /**
@@ -78,7 +78,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Texture2D object.
          */        
-        std::shared_ptr<Texture2D> texture(const std::string file_name) const;
+        std::shared_ptr<Texture2D> texture(const std::string file_name, const bool mipmaps = true) const;
         
         /**
          * Loads a *.ogg file into a Sound object, and caches it internally.

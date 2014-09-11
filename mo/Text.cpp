@@ -26,6 +26,10 @@ namespace mo {
 
     Text::~Text() {
     }
+    
+    std::string Text::text() {
+        return text_;
+    }
 
     void Text::setText(const std::string text) {
                 
@@ -54,8 +58,7 @@ namespace mo {
         
     }
 
-    float Text::width() {
-        std::cout << mesh->verticesBegin()->position << " " << mesh->verticesEnd()->position << std::endl;
+    float Text::width() {        
         glm::vec2 p1 = glm::vec2(mesh->verticesBegin()->position);
         glm::vec2 p2 = glm::vec2((mesh->verticesEnd()-2)->position);
         return glm::distance(p1,p2);

@@ -35,6 +35,7 @@ public:
      * @param Text.
      */
     void setText(const std::string text);
+    std::string text();
     float width();
     float spacing;
 private:   

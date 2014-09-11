@@ -30,6 +30,15 @@
 #include "Assets.h"
 
 namespace mo {
+    
+#ifdef __ANDROID__
+    struct Player {
+        SLObjectItf player_obj_;
+        SLPlayItf player_;
+        SLBufferQueueItf player_queue_;
+    };
+
+#endif
 
     /*!
      * Audio player class. Uses OpenAL for Windows/Linux/OSX and OpenSL for Android.
@@ -46,11 +55,11 @@ namespace mo {
          */
         void play(const Source & source);
         void playStream(const std::string file_name, const Assets & assets);
-
+        void stop();
     private:
 #ifdef __ANDROID__
-        void createBufferPlayer();        
-        void stop();
+        void createBufferPlayers();        
+        
         // OpenSL ES engine.
         SLObjectItf engine_obj_;
         SLEngineItf engine_;
@@ -63,10 +72,10 @@ namespace mo {
         SLPlayItf descriptor_player_;
         SLSeekItf descriptor_player_seek_;
 
-        // Sound player.
-        SLObjectItf player_obj_;
-        SLPlayItf player_;
-        SLBufferQueueItf player_queue_;
+        // Sound players.
+        std::vector<Player> players_;
+        int latest_player;
+        
 #else
         ALCdevice* device_;
         ALCcontext* context_;
