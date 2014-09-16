@@ -39,7 +39,9 @@ namespace mo {
         std::string standard_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
-                "#endif\n"
+                "#else\n"
+                "#version 120\n"
+                "#endif\n"                
                 "uniform mat4 model_view_projection;\n"
                 "uniform mat4 model_view;\n"
                 "attribute vec3 position;\n"
@@ -57,11 +59,13 @@ namespace mo {
                 "    fragment_normal = normal_matrix * normal;\n"
                 "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
                 "}\n";
-
+        
         std::string standard_fragment_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
-                "#endif\n"
+                "#else\n"
+                "#version 120\n"
+                "#endif\n"               
                 "uniform vec4 color;\n"
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
@@ -83,12 +87,13 @@ namespace mo {
                    
                     "gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
                 "}\n";
-
         addProgram("standard", standard_vertex_source, standard_fragment_source);
 
         std::string text_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
+                "#else\n"
+                "#version 120\n"
                 "#endif\n"
                 "uniform mat4 model_view_projection;\n"
                 "uniform mat4 model_view;\n"
@@ -107,6 +112,8 @@ namespace mo {
         std::string text_fragment_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
+                "#else\n"
+                "#version 120\n"
                 "#endif\n"
                 "varying vec3 v_position;\n"
                 "varying vec2 v_uv;\n"
@@ -119,11 +126,12 @@ namespace mo {
                 "//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
                 "}\n";
         addProgram("text", text_vertex_source, text_fragment_source);
-        
-        
+            
         std::string particles_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
+                "#else\n"
+                "#version 120\n"
                 "#endif\n"
                 "uniform mat4 model_view_projection;\n"
                 "uniform mat4 model_view;\n"
@@ -136,7 +144,7 @@ namespace mo {
                 "void main(){\n"
                 "#ifdef GL_ES\n"
                 "#else\n"
-                "gl_PointSize = 3;\n"
+                "gl_PointSize = 3.0;\n"
                 "#endif\n"                
                 "v_position = (model_view * vec4(position, 0.0)).xy;\n"
                 "v_uv = uv;\n"
@@ -146,6 +154,8 @@ namespace mo {
         std::string particles_fragment_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
                 "precision mediump int;\n"
+                "#else\n"
+                "#version 120\n"
                 "#endif\n"
                 "varying vec3 v_position;\n"
                 "varying vec2 v_uv;\n"
