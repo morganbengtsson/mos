@@ -16,6 +16,7 @@
 #include <system_error>
 #include <memory>
 #include <fstream>
+#include <cstring>
 #include <iostream>
 #include <iterator>
 #include <stb_vorbis.h>
@@ -174,10 +175,8 @@ namespace mo {
         //doc.parse<0>((char*) text(path));
         std::string str = text(file_name);
         char* cstr = new char[str.size() + 1]; // Create char buffer to store string copy
-        strcpy(cstr, str.c_str());
+        std::strcpy(cstr, str.c_str());
         doc.parse<0>(cstr);
-
-        delete [] cstr;    
 
         rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
 
@@ -206,6 +205,7 @@ namespace mo {
             characters.insert(std::pair<char, Character>(character.id, character));
 
         }
+        delete [] cstr;  
         return characters;
     }
 
