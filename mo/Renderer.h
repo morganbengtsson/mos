@@ -63,6 +63,23 @@ namespace mo {
          * @param color
          */
         void clear(const glm::vec3 color);
+        
+        void clean(){
+            for (auto & texture : textures_) {
+                glDeleteTextures(1, &texture.second.id);
+            }
+            textures_.clear();
+            
+            for (auto & ab : array_buffers_) {
+                glDeleteBuffers(1, &ab.second.id);
+            }
+            array_buffers_.clear();
+            
+            for (auto & eab : element_array_buffers_){
+                glDeleteBuffers(1, &eab.second.id);
+            }
+            element_array_buffers_.clear();                      
+        }
 
         virtual ~Renderer();
     private:
