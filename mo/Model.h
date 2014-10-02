@@ -16,6 +16,7 @@
 #include "Mesh.h"
 #include "Texture2D.h"
 #include "Assets.h"
+#include "Material.h"
 
 namespace mo {
 
@@ -30,13 +31,16 @@ namespace mo {
         Model(std::shared_ptr<Mesh> mesh, 
               std::shared_ptr<Texture2D> texture, 
               const glm::mat4 transform = glm::mat4(1.0f),
-              const Draw draw = Draw::TRIANGLES);
+              const Draw draw = Draw::TRIANGLES,
+              const glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
         virtual ~Model();
 
         std::shared_ptr<Mesh> mesh;
         std::shared_ptr<Texture2D> texture;
+        std::shared_ptr<Material> material;
         Draw draw;
         glm::mat4 transform;
+        glm::vec4 color;        
         
         glm::vec3 position();
         

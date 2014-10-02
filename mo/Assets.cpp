@@ -20,6 +20,7 @@
 #include <iostream>
 #include <iterator>
 #include <stb_vorbis.h>
+#include <tiny_obj_loader.h>
 
 using namespace mo;
 using namespace std;
@@ -150,7 +151,31 @@ namespace mo {
             return sounds_.at(file_name);
         }
     }
+    
+    std::shared_ptr<Material> Assets::material(const std::string file_name) {
+        std::vector<tinyobj::material_t> materials;
+        std::vector<tinyobj::shape_t> shapes;
+        
+        auto path = directory_ + file_name;
+        
+        std::string err = tinyobj::LoadObj(shapes, materials, path.c_str());
+        if (!err.empty()) {
+          std::cerr << err << std::endl;
+          throw std::runtime_error("Error reading obj file.");
+        }
+        auto m = materials.front();
+        Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]), 
+                          glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
+                          glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
+        return std::make_shared<Material>(material);
+    }
+    
+    std::shared_ptr<Material> Assets::material_cached(const std::string file_name) {
+        
+    }
 
+
+    
     std::string Assets::text(const std::string file_name) const {
 #ifdef __ANDROID__
         

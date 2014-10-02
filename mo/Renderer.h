@@ -13,12 +13,10 @@
 #include <iostream>
 #include <map>
 #include <tuple>
-#include <algorithm>
 
 #include "Vertex.h"
 #include "Texture2D.h"
 #include "Model.h"
-#include "Ranges.h"
 
 namespace mo {
 
@@ -29,6 +27,7 @@ namespace mo {
         ogli::Uniform texture;
         ogli::Uniform opacity;
         ogli::Uniform light_position;
+        ogli::Uniform color;
     };
 
     /*!
@@ -57,52 +56,17 @@ namespace mo {
          * @param Program_name, either "text" or "standard"
          * @param Position of one ortho light.
          */
-        void render(const Model & model, 
-                    const glm::mat4 transform, 
-                    const glm::mat4 view, 
-                    const glm::mat4 projection, 
-                    const float opacity = 1.0f, 
-                    const std::string program_name = "standard", 
-                    const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f));
+        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard", const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f));
         
-        template<class It>        
-        void render(const It begin, 
-                    const It end,
-                    const glm::mat4 transform, 
-                    const glm::mat4 view, 
-                    const glm::mat4 projection, 
-                    const float opacity = 1.0f, 
+        template<class It>
+        void render(It begin, It end, const glm::mat4 transform, const glm::mat4 view, 
+                    const glm::mat4 projection, const float opacity = 1.0f, 
                     const std::string program_name = "standard", 
                     const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f)){
             for (auto it = begin; it != end; ++it){
-                render(*it, 
-                       transform, 
-                       view, 
-                       projection, 
-                       opacity, 
-                       program_name, 
-                       light_position);
+                render(*it, transform, view, projection, opacity, program_name, light_position);
             }
-            
         }
-        
-        template<class Container>
-        void render(Range<Container> models,
-                    const glm::mat4 transform, 
-                    const glm::mat4 view, 
-                    const glm::mat4 projection, 
-                    const float opacity = 1.0f, 
-                    const std::string program_name = "standard", 
-                    const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f)){        
-            render(models.begin(), 
-                   models.end(), 
-                   transform, 
-                   view, 
-                   projection, 
-                   opacity, 
-                   program_name, 
-                   light_position);
-        };
         
         /**
          * Clears the screen and the depth buffer.

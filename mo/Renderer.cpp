@@ -41,7 +41,8 @@ namespace mo {
                 "precision mediump int;\n"
                 "#else\n"
                 "#version 120\n"
-                "#endif\n"                
+                "#endif\n"
+                "uniform mat4 model;\n"
                 "uniform mat4 model_view_projection;\n"
                 "uniform mat4 model_view;\n"
                 "attribute vec3 position;\n"
@@ -54,7 +55,7 @@ namespace mo {
                 "void main()\n"
                 "{\n"
                 "    fragment_uv = uv;\n"
-                "    fragment_position = (model_view * vec4(position, 0.0)).xyz;\n"
+                "    fragment_position = (model_view * vec4(position, 1.0)).xyz;\n"
                 "    normal_matrix = mat3(model_view);\n"
                 "    fragment_normal = normal_matrix * normal;\n"
                 "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
@@ -72,20 +73,26 @@ namespace mo {
                 "uniform vec3 light_position;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
-                "varying vec2 fragment_uv;\n"
-                               
+                "varying vec2 fragment_uv;\n"                               
                 
                 "void main() {\n"
-                    "vec3 normal = normalize(fragment_normal);\n"
-                    "vec3 surface_to_light = light_position - fragment_position;\n"                  
+                    "vec3 normal = fragment_normal;\n"
+                    "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
+                    "float diff = max(dot(normal, surface_to_light), 0.0);\n"
+                    "diff = clamp(diff, 0.0, 1.0);\n"
                     "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
                     "float dist = length(surface_to_light);\n"
                     //"float att = 1.0 / (1.0 + 0.1*dist + 0.01*dist*dist);\n"
                     "intensity = clamp(intensity, 0.0, 1.0);\n"                    
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
                     "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
-                   
-                    "gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
+                     
+                    "gl_FragColor = diffuse;\n"
+                    //"gl_FragColor = vec4((diffuse.rgb + 0.5 * diff) * color.rgb, diffuse.a * opacity);\n"
+                    
+                //"gl_FragColor = vec4(diff, diff, diff, opacity);\n"
+                    //"gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
+                
                 "}\n";
         addProgram("standard", standard_vertex_source, standard_fragment_source);
 
@@ -190,8 +197,9 @@ namespace mo {
         auto texture_uniform = ogli::createUniform(program, "texture");
         auto opacity_uniform = ogli::createUniform(program, "opacity");
         auto light_uniform = ogli::createUniform(program, "light_position");
+        auto color_uniform = ogli::createUniform(program, "color");
 
-        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform, light_uniform}));
+        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform, light_uniform, color_uniform}));
     }
 
     void Renderer::addProgram(const std::string path) {
@@ -244,6 +252,7 @@ namespace mo {
         ogli::uniform(programs_.at(program_name).texture);
         ogli::uniform(programs_.at(program_name).opacity, opacity);
         ogli::uniform(programs_.at(program_name).light_position, light_position);
+        ogli::uniform(programs_.at(program_name).color, model.color);
         
 
         ogli::attribute(position_attribute_3P3N2UV_);

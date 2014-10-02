@@ -15,12 +15,14 @@ namespace mo {
     Model::Model(std::shared_ptr<Mesh> mesh, 
                  std::shared_ptr<Texture2D> texture,
                  const glm::mat4 transform,
-                 const Draw draw) :
+                 const Draw draw,
+                 const glm::vec4 color) :
     draw(draw),             
     mesh(mesh),
     texture(texture),
     transform(transform),
-    valid_(true){
+    valid_(true),
+    color(color){
     }
 
     Model::~Model() {
