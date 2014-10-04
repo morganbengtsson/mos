@@ -70,6 +70,7 @@ namespace mo {
                 "uniform vec4 color;\n"
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
+                "uniform sampler2D lightmap;\n"
                 "uniform vec3 light_position;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
@@ -198,8 +199,9 @@ namespace mo {
         auto opacity_uniform = ogli::createUniform(program, "opacity");
         auto light_uniform = ogli::createUniform(program, "light_position");
         auto color_uniform = ogli::createUniform(program, "color");
+        auto lightmap_uniform = ogli::createUniform(program, "lightmap");
 
-        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, opacity_uniform, light_uniform, color_uniform}));
+        programs_.insert(ProgramPair(path, ProgramData{program, mvp_uniform, mv_uniform, texture_uniform, lightmap_uniform, opacity_uniform, light_uniform, color_uniform}));
     }
 
     void Renderer::addProgram(const std::string path) {
@@ -232,6 +234,13 @@ namespace mo {
             ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
             textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
         }
+        
+        if (model.lightmap){
+                if (textures_.find(model.lightmap->id()) == textures_.end()) {
+                ogli::TextureBuffer texture = ogli::createTexture(model.lightmap->begin(), model.lightmap->end(), model.lightmap->width(), model.lightmap->height(), model.lightmap->mipmaps);
+                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+            }
+        }
 
         glm::mat4 mv = view * transform * model.transform;
         glm::mat4 mvp = projection * view * model.transform * transform;
@@ -247,9 +256,15 @@ namespace mo {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
         
+        if (model.lightmap){
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, textures_.at(model.lightmap->id()));
+        }
+        
         ogli::uniform(programs_.at(program_name).mvp, mvp);
         ogli::uniform(programs_.at(program_name).mv, mv);
         ogli::uniform(programs_.at(program_name).texture);
+        ogli::uniform(programs_.at(program_name).lightmap);
         ogli::uniform(programs_.at(program_name).opacity, opacity);
         ogli::uniform(programs_.at(program_name).light_position, light_position);
         ogli::uniform(programs_.at(program_name).color, model.color);

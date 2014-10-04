@@ -16,10 +16,13 @@ namespace mo {
                  std::shared_ptr<Texture2D> texture,
                  const glm::mat4 transform,
                  const Draw draw,
-                 const glm::vec4 color) :
+                 std::shared_ptr<Material> material,
+                 std::shared_ptr<Texture2D> lightmap) :
     draw(draw),             
     mesh(mesh),
     texture(texture),
+    material(material),
+    lightmap(lightmap),
     transform(transform),
     valid_(true),
     color(color){

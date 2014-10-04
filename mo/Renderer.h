@@ -25,6 +25,7 @@ namespace mo {
         ogli::Uniform mvp;
         ogli::Uniform mv;
         ogli::Uniform texture;
+        ogli::Uniform lightmap;
         ogli::Uniform opacity;
         ogli::Uniform light_position;
         ogli::Uniform color;
