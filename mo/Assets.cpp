@@ -21,6 +21,8 @@
 #include <iterator>
 #include <stb_vorbis.h>
 #include <tiny_obj_loader.h>
+#include <algorithm>
+#include <glm/gtx/io.hpp>
 
 using namespace mo;
 using namespace std;
@@ -50,35 +52,62 @@ namespace mo {
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
         vector<mo::Vertex> vertices;
-        vector<int> elements;
+        vector<int> indices;
+
+        if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
+
+            std::ifstream is(directory_ + file_name, ios::binary);
+            int num_vertices;
+            int num_indices;
+            is.read((char*) &num_vertices, sizeof (int));
+            is.read((char*) &num_indices, sizeof (int));
+
+            vertices = vector<mo::Vertex>(num_vertices);
+            indices = vector<int>(num_indices);
+            
+            is.read((char*) &vertices[0], vertices.size() * sizeof (Vertex));
+            is.read((char*) &indices[0], indices.size() * sizeof (int));
+
+        } else {
 
 #ifdef __ANDROID__
-        LOGI("Loading: %s", file_name.c_str());
-        std::string source = text(file_name);
-        obj::Model obj_model = obj::loadModelFromString(source);
+            LOGI("Loading: %s", file_name.c_str());
+            std::string source = text(file_name);
+            obj::Model obj_model = obj::loadModelFromString(source);
 #else
-        LOGI("Loading: %s%s\n", directory_.c_str(), file_name.c_str());
-        obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
+            LOGI("Loading: %s%s\n", directory_.c_str(), file_name.c_str());
+            obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 #endif
-        int j = 0;
-        for (int i = 0; i < obj_model.vertex.size(); i += 3) {
-            glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
-            glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1], obj_model.normal[i + 2]);
-            glm::vec2 uv(0.0f, 0.0f);
-            if (obj_model.texCoord.size() > 0) {
-                uv.x = obj_model.texCoord[j];
-                uv.y = -obj_model.texCoord[j + 1];
-            }
+            int j = 0;
+            for (int i = 0; i < obj_model.vertex.size(); i += 3) {
+                glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
+                glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1], obj_model.normal[i + 2]);
+                glm::vec2 uv(0.0f, 0.0f);
+                if (obj_model.texCoord.size() > 0) {
+                    uv.x = obj_model.texCoord[j];
+                    uv.y = -obj_model.texCoord[j + 1];
+                }
 
-            j += 2;
-            vertices.push_back(Vertex(position, normal, uv));
+                j += 2;
+                vertices.push_back(Vertex(position, normal, uv));
+            }
+            indices.assign(obj_model.faces.find("default")->second.begin(),
+                    obj_model.faces.find("default")->second.end());
         }
-        elements.assign(obj_model.faces.find("default")->second.begin(),
-                obj_model.faces.find("default")->second.end());
+        std::cout << "Vertices:" << std::endl;
+        for (auto v : vertices){
+            std::cout << "(" << v.position << v.uv << ")";
+        }
+        std::cout << "\nIndices\n";
+        std::cout << std::endl;
+        for (auto i : indices) {
+            std::cout << i < " ";
+        }
+        std::cout << std::endl;
         return std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
                 vertices.end(),
-                elements.begin(),
-                elements.end()));
+                indices.begin(),
+                indices.end()));
     }
 
     std::shared_ptr<Mesh> Assets::meshCached(const std::string file_name) {
@@ -88,7 +117,7 @@ namespace mo {
         return models_.at(file_name);
     }
 
-    std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const{
+    std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const {
         using namespace mo;
 
         vector<unsigned char> texels_decoded;
@@ -121,7 +150,7 @@ namespace mo {
         return textures_.at(file_name);
     }
 
-    std::shared_ptr<Sound> Assets::sound(const std::string file_name) const{
+    std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
         int channels, length;
         short * decoded;
 #ifdef __ANDROID__
@@ -151,39 +180,37 @@ namespace mo {
             return sounds_.at(file_name);
         }
     }
-    
+
     std::shared_ptr<Material> Assets::material(const std::string file_name) {
         std::vector<tinyobj::material_t> materials;
         std::vector<tinyobj::shape_t> shapes;
-        
+
         auto path = directory_ + file_name;
-        
+
         std::string err = tinyobj::LoadObj(shapes, materials, path.c_str());
         if (!err.empty()) {
-          std::cerr << err << std::endl;
-          throw std::runtime_error("Error reading obj file.");
+            std::cerr << err << std::endl;
+            throw std::runtime_error("Error reading obj file.");
         }
         auto m = materials.front();
-        Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]), 
-                          glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
-                          glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
+        Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]),
+                glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
+                glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
         return std::make_shared<Material>(material);
     }
-    
+
     std::shared_ptr<Material> Assets::material_cached(const std::string file_name) {
-        
+
     }
 
-
-    
     std::string Assets::text(const std::string file_name) const {
 #ifdef __ANDROID__
-        
+
         AAsset* text = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
         long size = (text == nullptr) ? 0 : AAsset_getLength(text);
         char * buffer = new char[size + 1];
         buffer[size] = 0;
-        if (text != nullptr){
+        if (text != nullptr) {
             AAsset_read(text, buffer, size);
         }
 
@@ -233,7 +260,7 @@ namespace mo {
             characters.insert(std::pair<char, Character>(character.id, character));
 
         }
-        delete [] cstr;  
+        delete [] cstr;
         return characters;
     }
 

@@ -15,7 +15,9 @@ namespace mo {
  /*!
   * The vertex structure, supported by the renderer.
   */
-struct Vertex {
+class Vertex {
+public:
+    Vertex(){};
     Vertex(const glm::vec3 & position, 
             const glm::vec3 & normal, 
             const glm::vec2 & uv):position(position), normal(normal), uv(uv){}
