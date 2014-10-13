@@ -21,9 +21,10 @@
 namespace mo {
 
     Renderer::Renderer() :    
-    position_attribute_3P3N2UV_(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
-    normal_attribute_3P3N2UV_(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
-    uv_attribute_3P3N2UV_(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)) {
+    position_attribute_3P3N2UV2UV_(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
+    normal_attribute_3P3N2UV2UV_(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
+    uv_attribute_3P3N2UV2UV_(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)),
+    uv_lightmap_3P3N2UV2UV_(3, 2, "uv_lightmap", sizeof(Vertex), sizeof(glm::vec2), sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2)) {
         ogli::init(); // Should this be done int ogli or mo?
 
         glEnable(GL_DEPTH_TEST);
@@ -48,13 +49,16 @@ namespace mo {
                 "attribute vec3 position;\n"
                 "attribute vec3 normal;\n"
                 "attribute vec2 uv;\n"
+                "attribute vec2 lightmap_uv;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal\n;"                
                 "varying vec2 fragment_uv;\n"
+                "varying vec2 fragment_lightmap_uv;\n"
                 "varying mat3 normal_matrix;\n"
                 "void main()\n"
                 "{\n"
                 "    fragment_uv = uv;\n"
+                "    fragment_lightmap_uv = lightmap_uv;\n"
                 "    fragment_position = (model_view * vec4(position, 1.0)).xyz;\n"
                 "    normal_matrix = mat3(model_view);\n"
                 "    fragment_normal = normal_matrix * normal;\n"
@@ -74,7 +78,8 @@ namespace mo {
                 "uniform vec3 light_position;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
-                "varying vec2 fragment_uv;\n"                               
+                "varying vec2 fragment_uv;\n"
+                "varying vec2 fragment_lightmap_uv;\n"
                 
                 "void main() {\n"
                     "vec3 normal = fragment_normal;\n"
@@ -88,8 +93,12 @@ namespace mo {
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
                     "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
                      
-                    "gl_FragColor = diffuse;\n"
-                    //"gl_FragColor = vec4((diffuse.rgb + 0.5 * diff) * color.rgb, diffuse.a * opacity);\n"
+                    "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                    "gl_FragColor = vec4(indirect.rgb * vec3(1.0, 0.5, 0.5), 1.0);\n"
+                    //"gl_FragColor = vec4(intensity, intensity, intensity, 1.0);\n"
+                    //"gl_FragColor = vec4(diffuse.rgb * indirect.rgb, 1.0);\n"
+                    //"gl_FragColor = texture2D(lightmap, fragment_lightmap_uv).rgba;\n"
+                //"gl_FragColor = vec4((diffuse.rgb + 0.5 * diff) * color.rgb, diffuse.a * opacity);\n"
                     
                 //"gl_FragColor = vec4(diff, diff, diff, opacity);\n"
                     //"gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
@@ -187,9 +196,10 @@ namespace mo {
         auto program = ogli::createProgram();
         ogli::attachShader(program, vertex_shader);
         ogli::attachShader(program, fragment_shader);
-        ogli::bindAttribute(program, position_attribute_3P3N2UV_);
-        ogli::bindAttribute(program, normal_attribute_3P3N2UV_);
-        ogli::bindAttribute(program, uv_attribute_3P3N2UV_);
+        ogli::bindAttribute(program, position_attribute_3P3N2UV2UV_);
+        ogli::bindAttribute(program, normal_attribute_3P3N2UV2UV_);
+        ogli::bindAttribute(program, uv_attribute_3P3N2UV2UV_);
+        ogli::bindAttribute(program, uv_lightmap_3P3N2UV2UV_);
 
         ogli::linkProgram(program);
 
@@ -238,7 +248,7 @@ namespace mo {
         if (model.lightmap){
                 if (textures_.find(model.lightmap->id()) == textures_.end()) {
                 ogli::TextureBuffer texture = ogli::createTexture(model.lightmap->begin(), model.lightmap->end(), model.lightmap->width(), model.lightmap->height(), model.lightmap->mipmaps);
-                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.lightmap->id(), texture));
             }
         }
 
@@ -255,24 +265,25 @@ namespace mo {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
+        ogli::uniform(programs_.at(program_name).texture, 0u);
         
         if (model.lightmap){
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, textures_.at(model.lightmap->id()));
+            ogli::uniform(programs_.at(program_name).lightmap, 1u);
+            //glBindTexture(GL_TEXTURE_2D, 0);
         }
         
         ogli::uniform(programs_.at(program_name).mvp, mvp);
         ogli::uniform(programs_.at(program_name).mv, mv);
-        ogli::uniform(programs_.at(program_name).texture);
-        ogli::uniform(programs_.at(program_name).lightmap);
         ogli::uniform(programs_.at(program_name).opacity, opacity);
         ogli::uniform(programs_.at(program_name).light_position, light_position);
-        ogli::uniform(programs_.at(program_name).color, model.color);
-        
+        ogli::uniform(programs_.at(program_name).color, model.color);        
 
-        ogli::attribute(position_attribute_3P3N2UV_);
-        ogli::attribute(normal_attribute_3P3N2UV_);
-        ogli::attribute(uv_attribute_3P3N2UV_);
+        ogli::attribute(position_attribute_3P3N2UV2UV_);
+        ogli::attribute(normal_attribute_3P3N2UV2UV_);
+        ogli::attribute(uv_attribute_3P3N2UV2UV_);
+        ogli::attribute(uv_lightmap_3P3N2UV2UV_);
         
         int num_elements = std::distance(model.mesh->elementsBegin(), model.mesh->elementsEnd());
         int draw_type = GL_TRIANGLES;

@@ -94,9 +94,10 @@ namespace mo {
 
         virtual ~Renderer();
     private:
-        ogli::Attribute position_attribute_3P3N2UV_;
-        ogli::Attribute normal_attribute_3P3N2UV_;
-        ogli::Attribute uv_attribute_3P3N2UV_;
+        ogli::Attribute position_attribute_3P3N2UV2UV_;
+        ogli::Attribute normal_attribute_3P3N2UV2UV_;
+        ogli::Attribute uv_attribute_3P3N2UV2UV_;
+        ogli::Attribute uv_lightmap_3P3N2UV2UV_;
         
         std::map<std::string, ProgramData> programs_;
         std::map<unsigned int, ogli::TextureBuffer> textures_;

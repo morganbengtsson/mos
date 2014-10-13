@@ -64,10 +64,16 @@ namespace mo {
 
             vertices = vector<mo::Vertex>(num_vertices);
             indices = vector<int>(num_indices);
+                        
             
             is.read((char*) &vertices[0], vertices.size() * sizeof (Vertex));
             is.read((char*) &indices[0], indices.size() * sizeof (int));
 
+            for (auto v : vertices){
+                std::cout << "uv1" << v.uv << std::endl;
+                std::cout << "uv2 " << v.uv_lightmap << std::endl;
+            }
+            
         } else {
 
 #ifdef __ANDROID__
