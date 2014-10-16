@@ -115,13 +115,15 @@ namespace mo {
                 indices.begin(),
                 indices.end()));
     }
-
+    
     std::shared_ptr<Mesh> Assets::meshCached(const std::string file_name) {
         if (models_.find(file_name) == models_.end()) {
             models_.insert(MeshPair(file_name, mesh(file_name)));
         }
         return models_.at(file_name);
     }
+    
+    
 
     std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const {
         using namespace mo;

@@ -61,7 +61,12 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Mesh object.
          */
-        std::shared_ptr<Mesh> meshCached(const std::string file_name);        
+        std::shared_ptr<Mesh> meshCached(const std::string file_name);
+
+        std::shared_ptr<Mesh> mesh_cached(const std::string file_name){
+            return meshCached(file_name);
+        }
+        
         //auto mesh_cached = meshCached; // New interface
         /**
          * Loads a *.obj file into a mesh object. Not cached.

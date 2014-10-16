@@ -240,9 +240,11 @@ namespace mo {
             model.mesh->valid = true;
         }     
 
-        if (textures_.find(model.texture->id()) == textures_.end()) {
-            ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
-            textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+        if(model.texture){
+            if (textures_.find(model.texture->id()) == textures_.end()) {
+                ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
+                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+            }
         }
         
         if (model.lightmap){
@@ -255,17 +257,17 @@ namespace mo {
         glm::mat4 mv = view * transform * model.transform;
         glm::mat4 mvp = projection * view * model.transform * transform;
 
-        //ogli::useProgram(standard_program_);
-
         ogli::useProgram(programs_.at(program_name).program);
 
         //ogli::useProgram(std::get<0>(programs_.at(program_name)));
         ogli::bindBuffer(array_buffers_.at(model.mesh->id()));
         ogli::bindBuffer(element_array_buffers_.at(model.mesh->id()));
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
-        ogli::uniform(programs_.at(program_name).texture, 0u);
+        if (model.texture){
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
+            ogli::uniform(programs_.at(program_name).texture, 0u);
+        }
         
         if (model.lightmap){
             glActiveTexture(GL_TEXTURE1);

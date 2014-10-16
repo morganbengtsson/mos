@@ -57,7 +57,22 @@ namespace mo {
          * @param Program_name, either "text" or "standard"
          * @param Position of one ortho light.
          */
-        void render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity = 1.0f, const std::string program_name = "standard", const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f));
+        void render(const Model & model, 
+                    const glm::mat4 transform, 
+                    const glm::mat4 view, 
+                    const glm::mat4 projection, 
+                    const float opacity = 1.0f, 
+                    const std::string program_name = "standard", 
+                    const glm::vec3 light_position = glm::vec3(0.0f, 0.0f, 0.0f));
+        
+        void render(const Model & model, 
+                    const glm::mat4 view, 
+                    const glm::mat4 projection,
+                    const float opacity = 1.0f,
+                    const std::string program_name = "standard"){
+            render(model, glm::mat4(1.0f), view, projection, opacity, program_name);
+        }
+        
         
         template<class It>
         void render(It begin, It end, const glm::mat4 transform, const glm::mat4 view, 
