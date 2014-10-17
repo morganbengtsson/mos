@@ -17,10 +17,18 @@
 #include "Vertex.h"
 #include "Texture2D.h"
 #include "Model.h"
+#include "Particles.h"
+#include "Particle.h"
 
 namespace mo {
-
-    struct ProgramData {
+    
+    struct ParticleProgramData{
+        ogli::Program program;
+        ogli::Uniform mvp;
+        ogli::Uniform mv;       
+    };
+    
+    struct VertexProgramData {
         ogli::Program program;
         ogli::Uniform mvp;
         ogli::Uniform mv;
@@ -29,6 +37,27 @@ namespace mo {
         ogli::Uniform opacity;
         ogli::Uniform light_position;
         ogli::Uniform color;
+    };
+    
+    struct VertexAttributes{
+        VertexAttributes():
+        position(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
+        normal(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
+        uv_texture(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)),
+        uv_lightmap(3, 2, "uv_lightmap", sizeof(Vertex), sizeof(glm::vec2), sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2))
+        {
+        }
+        ogli::Attribute position;
+        ogli::Attribute normal;
+        ogli::Attribute uv_texture;
+        ogli::Attribute uv_lightmap;
+    };
+    
+    struct ParticleAttributes{
+        ParticleAttributes():
+        position(0, 3, "position", sizeof(Particle), sizeof(glm::vec3), 0){
+        }
+        ogli::Attribute position;        
     };
 
     /*!
@@ -40,12 +69,17 @@ namespace mo {
         typedef std::pair<unsigned int, ogli::ArrayBuffer> ArrayPair;
         typedef std::pair<unsigned int, ogli::ElementArrayBuffer> ElementPair;
         typedef std::pair<unsigned int, ogli::TextureBuffer> TexturePair;
-        typedef std::pair<std::string, ProgramData> ProgramPair;
+        typedef std::pair<std::string, VertexProgramData> VertexProgramPair;
+        typedef std::pair<std::string, ParticleProgramData> ParticleProgramPair;
 
         Renderer();
-        void addProgram(const std::string name);
-        void addProgram(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source);
-        
+        void add_program(const std::string name);
+        void add_vertex_program(const std::string path, 
+                                const std::string vertex_shader_source, 
+                                const std::string fragment_shader_source);
+        void add_particle_program(const std::string name, 
+                                  const std::string vs_source, 
+                                  const std::string fs_source);
         /**
          * Renders a Model object.
          * 
@@ -85,12 +119,24 @@ namespace mo {
         }
         
         /**
+         * Renders particles.
+         * 
+         * @param Particles object.      
+         * @param View matrix.
+         * @param Projection matrix.
+         * @param Custom opacity of the object.         
+         */
+        void render(Particles & particles, 
+                    const glm::mat4 view,
+                    const glm::mat4 projection);
+        
+        /**
          * Clears the screen and the depth buffer.
          * @param color
          */
         void clear(const glm::vec3 color);
         
-        void clean(){
+        void clear_buffers(){
             for (auto & texture : textures_) {
                 glDeleteTextures(1, &texture.second.id);
             }
@@ -109,12 +155,12 @@ namespace mo {
 
         virtual ~Renderer();
     private:
-        ogli::Attribute position_attribute_3P3N2UV2UV_;
-        ogli::Attribute normal_attribute_3P3N2UV2UV_;
-        ogli::Attribute uv_attribute_3P3N2UV2UV_;
-        ogli::Attribute uv_lightmap_3P3N2UV2UV_;
         
-        std::map<std::string, ProgramData> programs_;
+        VertexAttributes vertex_attributes_;
+        ParticleAttributes particle_attributes_;
+        
+        std::map<std::string, VertexProgramData> vertex_programs_;
+        std::map<std::string, ParticleProgramData> particle_programs_;
         std::map<unsigned int, ogli::TextureBuffer> textures_;
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
         std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;

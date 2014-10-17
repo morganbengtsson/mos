@@ -32,6 +32,7 @@ namespace mo {
     
     void Mesh::add(const Vertex vertex) {
         vertices_.push_back(vertex);
+        valid = false;
     }
     
     void Mesh::add(const int element){
