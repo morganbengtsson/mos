@@ -116,7 +116,7 @@ namespace mo {
                 indices.end()));
     }
     
-    std::shared_ptr<Mesh> Assets::meshCached(const std::string file_name) {
+    std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {
         if (models_.find(file_name) == models_.end()) {
             models_.insert(MeshPair(file_name, mesh(file_name)));
         }
@@ -151,7 +151,7 @@ namespace mo {
         return std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps));
     }
 
-    std::shared_ptr<Texture2D> Assets::textureCached(const std::string file_name, const bool mipmaps) {
+    std::shared_ptr<Texture2D> Assets::texture_cached(const std::string file_name, const bool mipmaps) {
         if (textures_.find(file_name) == textures_.end()) {
             textures_.insert(TexturePair(file_name, texture(file_name, mipmaps)));
         }

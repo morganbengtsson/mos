@@ -9,6 +9,7 @@
 #define	MO_TEXTURE2D_H
 
 #include <vector>
+#include <glm/glm.hpp>
 
 namespace mo {
 
@@ -37,6 +38,7 @@ public:
     
     unsigned int width() const;
     unsigned int height() const;
+    glm::vec4 sample(const unsigned int x, const unsigned int y);
     
     bool mipmaps;
 private:

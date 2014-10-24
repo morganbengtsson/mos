@@ -93,7 +93,7 @@ namespace mo {
                     "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
                      
                     "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
-                    "gl_FragColor = vec4(indirect.rgb * vec3(1.0, 0.5, 0.5), 1.0);\n"
+                    "gl_FragColor = diffuse;\n"
                     //"gl_FragColor = vec4(intensity, intensity, intensity, 1.0);\n"
                     //"gl_FragColor = vec4(diffuse.rgb * indirect.rgb, 1.0);\n"
                     //"gl_FragColor = texture2D(lightmap, fragment_lightmap_uv).rgba;\n"
@@ -153,14 +153,17 @@ namespace mo {
                 "uniform mat4 model_view_projection;\n"
                 "uniform mat4 model_view;\n"
                 "attribute vec3 position;\n"
+                "attribute vec4 color;\n"
                 
                 "varying vec3 v_position;\n"
+                "varying vec4 v_color;\n"
                
                 "void main(){\n"
                 "#ifdef GL_ES\n"
                 "#else\n"
-                "gl_PointSize = 10.0;\n"
-                "#endif\n"                
+                "gl_PointSize = 1.0;\n"
+                "#endif\n"
+                "v_color = color;\n"
                 "v_position = (model_view * vec4(position, 0.0)).xyz;\n"
                 "gl_Position = model_view_projection * vec4(position, 1.0);\n"
                 "}\n";
@@ -172,9 +175,12 @@ namespace mo {
                 "#version 120\n"
                 "#endif\n"
                 "varying vec3 v_position;\n"
+                "varying vec4 v_color;\n"
                 
                 "void main() {\n"                
-                    "gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);\n"               
+                    "gl_FragColor = vec4(v_color.xyz, 1.0);\n"
+                    
+                    //"gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
                 "}\n";
         
         add_particle_program("particles", particles_vertex_source, particles_fragment_source);
@@ -192,6 +198,7 @@ namespace mo {
         ogli::attachShader(program, vertex_shader);
         ogli::attachShader(program, fragment_shader);
         ogli::bindAttribute(program, particle_attributes_.position);
+        ogli::bindAttribute(program, particle_attributes_.color);
         ogli::linkProgram(program);
 
         auto mvp_uniform = ogli::createUniform(program, "model_view_projection");
@@ -247,7 +254,7 @@ namespace mo {
                                     particles.end());         
             particles.valid = true;
         }     
-         std::cout << "id : " << particles.id() << std::endl;
+        
 
         glm::mat4 mv = view;
         glm::mat4 mvp = projection * view;
@@ -260,8 +267,7 @@ namespace mo {
         ogli::uniform(particle_programs_.at("particles").mv, mv);       
 
         ogli::attribute(particle_attributes_.position);
-        std::cout << std::distance(particles.begin(), particles.end()) << "\n";
-        std::cout << particles.begin()->position << "\n";
+        ogli::attribute(particle_attributes_.color);
         ogli::drawArrays(std::distance(particles.begin(), particles.end()), GL_POINTS);
         
     }

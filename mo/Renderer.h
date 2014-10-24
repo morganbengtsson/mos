@@ -55,9 +55,12 @@ namespace mo {
     
     struct ParticleAttributes{
         ParticleAttributes():
-        position(0, 3, "position", sizeof(Particle), sizeof(glm::vec3), 0){
+        position(0, 3, "position", sizeof(Particle), sizeof(glm::vec3), 0),
+        color(1, 4, "color", sizeof(Particle), sizeof(glm::vec3), sizeof(glm::vec3))
+        {
         }
-        ogli::Attribute position;        
+        ogli::Attribute position;
+        ogli::Attribute color;
     };
 
     /*!

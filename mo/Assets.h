@@ -61,11 +61,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Mesh object.
          */
-        std::shared_ptr<Mesh> meshCached(const std::string file_name);
-
-        std::shared_ptr<Mesh> mesh_cached(const std::string file_name){
-            return meshCached(file_name);
-        }
+        std::shared_ptr<Mesh> mesh_cached(const std::string file_name);
         
         //auto mesh_cached = meshCached; // New interface
         /**
@@ -82,7 +78,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Texture2D object.
          */
-        std::shared_ptr<Texture2D> textureCached(const std::string file_name, const bool mipmaps = true);
+        std::shared_ptr<Texture2D> texture_cached(const std::string file_name, const bool mipmaps = true);
         //auto texture_cached = textureCached; // New interface
         /**
          * Loads a *.png file into A Texture2D object. Not cached. 
