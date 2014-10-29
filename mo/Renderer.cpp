@@ -35,6 +35,7 @@ namespace mo {
         glDepthMask(true);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_FRAMEBUFFER_SRGB);
         
         std::string standard_vertex_source = "#ifdef GL_ES\n"
                 "precision mediump float;\n"
@@ -91,11 +92,12 @@ namespace mo {
                     "intensity = clamp(intensity, 0.0, 1.0);\n"                    
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
                     "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
+                    "diffuse = color;\n"
                      
                     "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
                     "gl_FragColor = diffuse;\n"
                     //"gl_FragColor = vec4(intensity, intensity, intensity, 1.0);\n"
-                    //"gl_FragColor = vec4(diffuse.rgb * indirect.rgb, 1.0);\n"
+                    "gl_FragColor = vec4(diffuse.rgb * indirect.rgb, 1.0);\n"
                     //"gl_FragColor = texture2D(lightmap, fragment_lightmap_uv).rgba;\n"
                 //"gl_FragColor = vec4((diffuse.rgb + 0.5 * diff) * color.rgb, diffuse.a * opacity);\n"
                     
@@ -330,7 +332,7 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).mv, mv);
         ogli::uniform(vertex_programs_.at(program_name).opacity, opacity);
         ogli::uniform(vertex_programs_.at(program_name).light_position, light_position);
-        ogli::uniform(vertex_programs_.at(program_name).color, model.color);        
+        ogli::uniform(vertex_programs_.at(program_name).color, model.color());        
 
         ogli::attribute(vertex_attributes_.position);
         ogli::attribute(vertex_attributes_.normal);

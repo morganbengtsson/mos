@@ -45,9 +45,8 @@ namespace mo {
         std::shared_ptr<Material> material;        
         Draw draw;
         glm::mat4 transform;
-        glm::vec4 color;        
-        
-        glm::vec3 position();
+        glm::vec4 color() const;
+        glm::vec3 position() const;
         
     private:
         bool valid_;

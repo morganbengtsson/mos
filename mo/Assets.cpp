@@ -54,8 +54,10 @@ namespace mo {
         vector<mo::Vertex> vertices;
         vector<int> indices;
 
+        
         if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
 
+            std::cout << "Loading: " << file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
             int num_vertices;
             int num_indices;
@@ -64,16 +66,16 @@ namespace mo {
 
             vertices = vector<mo::Vertex>(num_vertices);
             indices = vector<int>(num_indices);
-                        
-            
+
+
             is.read((char*) &vertices[0], vertices.size() * sizeof (Vertex));
             is.read((char*) &indices[0], indices.size() * sizeof (int));
 
-            for (auto v : vertices){
+            for (auto v : vertices) {
                 std::cout << "uv1" << v.uv << std::endl;
                 std::cout << "uv2 " << v.uv_lightmap << std::endl;
             }
-            
+
         } else {
 
 #ifdef __ANDROID__
@@ -101,7 +103,7 @@ namespace mo {
                     obj_model.faces.find("default")->second.end());
         }
         std::cout << "Vertices:" << std::endl;
-        for (auto v : vertices){
+        for (auto v : vertices) {
             std::cout << "(" << v.position << v.uv << ")";
         }
         std::cout << "\nIndices\n";
@@ -115,15 +117,13 @@ namespace mo {
                 indices.begin(),
                 indices.end()));
     }
-    
+
     std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {
         if (models_.find(file_name) == models_.end()) {
             models_.insert(MeshPair(file_name, mesh(file_name)));
         }
         return models_.at(file_name);
     }
-    
-    
 
     std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const {
         using namespace mo;
@@ -190,25 +190,58 @@ namespace mo {
     }
 
     std::shared_ptr<Material> Assets::material(const std::string file_name) {
-        std::vector<tinyobj::material_t> materials;
-        std::vector<tinyobj::shape_t> shapes;
 
-        auto path = directory_ + file_name;
+        if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
+            std::ifstream is(directory_ + file_name, ios::binary);
+            glm::vec3 ambient;
+            glm::vec3 diffuse;
+            glm::vec3 specular;
+            float opacity;
+            float specular_exponent;
 
-        std::string err = tinyobj::LoadObj(shapes, materials, path.c_str());
-        if (!err.empty()) {
-            std::cerr << err << std::endl;
-            throw std::runtime_error("Error reading obj file.");
+            is.read((char*) &ambient, sizeof (glm::vec3));
+            is.read((char*) &diffuse, sizeof (glm::vec3));
+            is.read((char*) &specular, sizeof (glm::vec3));
+            is.read((char*) &opacity, sizeof (float));
+            is.read((char*) &specular_exponent, sizeof (float));
+
+            std::cout << ambient << std::endl;
+            std::cout << diffuse << std::endl;
+            std::cout << specular << std::endl;
+            std::cout << opacity << std::endl;
+            std::cout << specular_exponent << std::endl;
+            
+            return std::make_shared<Material>(Material(ambient, diffuse, specular, 
+                                                       opacity, specular_exponent));
+        } else {
+
+
+            std::vector<tinyobj::material_t> materials;
+            std::vector<tinyobj::shape_t> shapes;
+
+            auto path = directory_ + file_name;
+
+            std::string err = tinyobj::LoadObj(shapes, materials, path.c_str());
+            if (!err.empty()) {
+                std::cerr << err << std::endl;
+                throw std::runtime_error("Error reading obj file.");
+            }
+            auto m = materials.front();
+            Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]),
+                    glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
+                    glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
+            return std::make_shared<Material>(material);
         }
-        auto m = materials.front();
-        Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]),
-                glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
-                glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
-        return std::make_shared<Material>(material);
     }
 
     std::shared_ptr<Material> Assets::material_cached(const std::string file_name) {
+        if (materials_.find(file_name) == materials_.end()) {
 
+            materials_.insert(MaterialPair(file_name, material(file_name)));
+            return materials_.at(file_name);
+        } else {
+            return materials_.at(file_name);
+        }
     }
 
     std::string Assets::text(const std::string file_name) const {

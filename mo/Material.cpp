@@ -14,8 +14,8 @@ namespace mo {
             const glm::vec3 specular_color,
             const float opacity,
             const float specular_exponent) :
-    ambient_color(ambient_color),
-    diffuse_color(diffuse_color),
+    ambient(ambient_color),
+    diffuse(diffuse_color),
     opacity(opacity),
     specular_exponent(specular_exponent) {
     }

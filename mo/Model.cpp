@@ -24,14 +24,17 @@ namespace mo {
     material(material),
     lightmap(lightmap),
     transform(transform),
-    valid_(true),
-    color(color){
+    valid_(true){
     }
 
     Model::~Model() {
     }
-   
-    glm::vec3 Model::position() {
+    
+    glm::vec4 Model::color() const {
+        return glm::vec4(material->diffuse.r, material->diffuse.g, material->diffuse.b, material->opacity);
+    }
+
+    glm::vec3 Model::position() const {
         return (glm::vec3)(transform*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     }
 
