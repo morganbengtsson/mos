@@ -37,6 +37,9 @@ namespace mo {
         ogli::Uniform opacity;
         ogli::Uniform light_position;
         ogli::Uniform color;
+        ogli::Uniform light_diffuse_color;
+        ogli::Uniform light_specular_color;
+        ogli::Uniform light_specular_exponent;
     };
     
     struct VertexAttributes{

@@ -76,34 +76,36 @@ namespace mo {
                 "uniform sampler2D texture;\n"
                 "uniform sampler2D lightmap;\n"
                 "uniform vec3 light_position;\n"
+                "uniform vec3 light_diffuse_color;\n"
+                "uniform vec3 light_specular_color;\n"
+                "uniform float light_specular_exponent;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
                 "varying vec2 fragment_uv;\n"
                 "varying vec2 fragment_lightmap_uv;\n"
                 
                 "void main() {\n"
-                    "vec3 normal = fragment_normal;\n"
+                    "vec3 normal = normalize(fragment_normal);\n"
                     "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
-                    "float diff = max(dot(normal, surface_to_light), 0.0);\n"
+                    "float diff = max(dot(normal, surface_to_light), 0.0);\n"                    
                     "diff = clamp(diff, 0.0, 1.0);\n"
                     "float intensity = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
                     "float dist = length(surface_to_light);\n"
-                    //"float att = 1.0 / (1.0 + 0.1*dist + 0.01*dist*dist);\n"
-                    "intensity = clamp(intensity, 0.0, 1.0);\n"                    
+                    "float att = 1.0 / (1.0 + 0.1*dist + 0.01*dist*dist);\n"
+                    //"intensity = clamp(intensity, 0.0, 1.0);\n"                    
                     "vec4 diffuse = texture2D(texture, fragment_uv).rgba;\n"
                     "vec3 ambient = vec3(0.1, 0.1, 0.1);\n"
                     "diffuse = color;\n"
                      
-                    "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
-                    "gl_FragColor = diffuse;\n"
-                    //"gl_FragColor = vec4(intensity, intensity, intensity, 1.0);\n"
-                    "gl_FragColor = vec4(diffuse.rgb * indirect.rgb, 1.0);\n"
-                    //"gl_FragColor = texture2D(lightmap, fragment_lightmap_uv).rgba;\n"
-                //"gl_FragColor = vec4((diffuse.rgb + 0.5 * diff) * color.rgb, diffuse.a * opacity);\n"
+                    "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"                   
+                   
+                    "vec3 surface_to_view = normalize(fragment_position);\n"
+                    "vec3 reflection = reflect(normal, -surface_to_light);\n"
+                    "float shininess = 20.0;\n"
+                    "float scont = pow(max(0.0, dot(surface_to_view, reflection)), shininess);\n"
+                    "vec3 specular = scont * light_specular_color;\n"
+                    "gl_FragColor = vec4(specular + diffuse.rgb * (indirect.rgb + diff), 1.0);\n"
                     
-                //"gl_FragColor = vec4(diff, diff, diff, opacity);\n"
-                    //"gl_FragColor = vec4((intensity*diffuse.rgb) + ambient, diffuse.a * opacity);\n"
-                
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
 
@@ -233,8 +235,15 @@ namespace mo {
         auto light_uniform = ogli::createUniform(program, "light_position");
         auto color_uniform = ogli::createUniform(program, "color");
         auto lightmap_uniform = ogli::createUniform(program, "lightmap");
+        auto light_diffuse_color_uniform = ogli::createUniform(program, "light_diffuse_color");
+        auto light_specular_color_uniform = ogli::createUniform(program, "light_specular_color");
+        auto light_specular_exponent_uniform = ogli::createUniform(program, "light_specular_exponent");
 
-        vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{program, mvp_uniform, mv_uniform, texture_uniform, lightmap_uniform, opacity_uniform, light_uniform, color_uniform}));
+        vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{
+            program, mvp_uniform, mv_uniform, texture_uniform, 
+            lightmap_uniform, opacity_uniform, light_uniform, 
+            color_uniform, light_diffuse_color_uniform, light_specular_color_uniform,
+            light_specular_exponent_uniform}));
     }
 
     void Renderer::add_program(const std::string path) {
@@ -333,7 +342,13 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).opacity, opacity);
         ogli::uniform(vertex_programs_.at(program_name).light_position, light_position);
         ogli::uniform(vertex_programs_.at(program_name).color, model.color());        
-
+        ogli::uniform(vertex_programs_.at(program_name).light_diffuse_color, 
+                glm::vec3(1.0f, 0.0f, 0.0f));
+        ogli::uniform(vertex_programs_.at(program_name).light_specular_color, 
+                glm::vec3(1.0f, 0.0f, 0.0f));
+        ogli::uniform(vertex_programs_.at(program_name).light_specular_exponent,
+                10.0f);
+        
         ogli::attribute(vertex_attributes_.position);
         ogli::attribute(vertex_attributes_.normal);
         ogli::attribute(vertex_attributes_.uv_texture);
