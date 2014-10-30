@@ -32,6 +32,7 @@ namespace mo {
         ogli::Program program;
         ogli::Uniform mvp;
         ogli::Uniform mv;
+        ogli::Uniform normal_matrix;
         ogli::Uniform texture;
         ogli::Uniform lightmap;
         ogli::Uniform opacity;
@@ -40,6 +41,8 @@ namespace mo {
         ogli::Uniform light_diffuse_color;
         ogli::Uniform light_specular_color;
         ogli::Uniform light_specular_exponent;
+        ogli::Uniform has_texture;
+        ogli::Uniform has_lightmap;        
     };
     
     struct VertexAttributes{

@@ -54,7 +54,7 @@ namespace mo {
         vector<mo::Vertex> vertices;
         vector<int> indices;
 
-        
+
         if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
 
             std::cout << "Loading: " << file_name << std::endl;
@@ -71,10 +71,11 @@ namespace mo {
             is.read((char*) &vertices[0], vertices.size() * sizeof (Vertex));
             is.read((char*) &indices[0], indices.size() * sizeof (int));
 
+            /*
             for (auto v : vertices) {
                 std::cout << "uv1" << v.uv << std::endl;
                 std::cout << "uv2 " << v.uv_lightmap << std::endl;
-            }
+            }*/
 
         } else {
 
@@ -102,6 +103,7 @@ namespace mo {
             indices.assign(obj_model.faces.find("default")->second.begin(),
                     obj_model.faces.find("default")->second.end());
         }
+        /*
         std::cout << "Vertices:" << std::endl;
         for (auto v : vertices) {
             std::cout << "(" << v.position << v.uv << ")";
@@ -111,7 +113,7 @@ namespace mo {
         for (auto i : indices) {
             std::cout << i < " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
         return std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
                 vertices.end(),
                 indices.begin(),
@@ -152,10 +154,15 @@ namespace mo {
     }
 
     std::shared_ptr<Texture2D> Assets::texture_cached(const std::string file_name, const bool mipmaps) {
-        if (textures_.find(file_name) == textures_.end()) {
-            textures_.insert(TexturePair(file_name, texture(file_name, mipmaps)));
+        if (!file_name.empty()) {
+            if (textures_.find(file_name) == textures_.end()) {
+                textures_.insert(TexturePair(file_name, texture(file_name, mipmaps)));
+            }
+            return textures_.at(file_name);
         }
-        return textures_.at(file_name);
+        else{
+            return std::shared_ptr<Texture2D>(nullptr);
+        }
     }
 
     std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
@@ -210,9 +217,9 @@ namespace mo {
             std::cout << specular << std::endl;
             std::cout << opacity << std::endl;
             std::cout << specular_exponent << std::endl;
-            
-            return std::make_shared<Material>(Material(ambient, diffuse, specular, 
-                                                       opacity, specular_exponent));
+
+            return std::make_shared<Material>(Material(ambient, diffuse, specular,
+                    opacity, specular_exponent));
         } else {
 
 
