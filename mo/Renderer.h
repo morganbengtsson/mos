@@ -37,12 +37,12 @@ namespace mo {
         ogli::Uniform lightmap;
         ogli::Uniform material_ambient_color;
         ogli::Uniform material_diffuse_color;
-        ogli::Uniform material_specular_color;        
+        ogli::Uniform material_specular_color;
+        ogli::Uniform material_specular_exponent;
         ogli::Uniform opacity;
         ogli::Uniform light_position;        
         ogli::Uniform light_diffuse_color;
         ogli::Uniform light_specular_color;
-        ogli::Uniform light_specular_exponent;
         ogli::Uniform has_texture;
         ogli::Uniform has_lightmap;        
     };

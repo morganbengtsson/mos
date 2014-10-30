@@ -74,13 +74,13 @@ namespace mo {
                 "uniform vec3 material_ambient_color;\n"
                 "uniform vec3 material_diffuse_color;\n"
                 "uniform vec3 material_specular_color;\n"
+                "uniform float material_specular_exponent;\n"
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
                 "uniform sampler2D lightmap;\n"
                 "uniform vec3 light_position;\n"
                 "uniform vec3 light_diffuse_color;\n"
                 "uniform vec3 light_specular_color;\n"
-                "uniform float light_specular_exponent;\n"
                 "uniform bool has_texture;\n"
                 "uniform bool has_lightmap;\n"
                 "varying vec3 fragment_position;\n"
@@ -90,25 +90,25 @@ namespace mo {
 
                 "void main() {\n"
 
-                "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                    "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
 
-                "vec3 normal = normalize(fragment_normal);\n"
-                "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
-                "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
-                "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
-                "vec4 diffuse_color;"
-                "if (has_texture == true){\n"
-                "diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
-                "} else {"
-                "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
-                "}\n"
+                    "vec3 normal = normalize(fragment_normal);\n"
+                    "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
+                    "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
+                    "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
+                    "vec4 diffuse_color;"
+                    "if (has_texture == true){\n"
+                        "diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
+                    "} else {"
+                        "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
+                    "}\n"
 
-                "vec4 diffuse = diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
-               
-                "vec3 surface_to_view = normalize(fragment_position);\n"
-                "vec3 reflection = reflect(normal, -surface_to_light);\n"
-                "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), light_specular_exponent);\n"
-                "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
+                    "vec4 diffuse = diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
+
+                    "vec3 surface_to_view = normalize(fragment_position);\n"
+                    "vec3 reflection = reflect(normal, -surface_to_light);\n"
+                    "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
+                    "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
                 "gl_FragColor = indirect + diffuse + specular;\n"
 
@@ -240,11 +240,11 @@ namespace mo {
         auto material_ambient_color_uniform = ogli::createUniform(program, "material_ambient_color");
         auto material_diffuse_color_uniform = ogli::createUniform(program, "material_diffuse_color");
         auto material_specular_color_uniform = ogli::createUniform(program, "material_specular_color");
+        auto material_specular_exponent_uniform = ogli::createUniform(program, "material_specular_exponent");
         auto opacity_uniform = ogli::createUniform(program, "opacity");
         auto light_uniform = ogli::createUniform(program, "light_position");
         auto light_diffuse_color_uniform = ogli::createUniform(program, "light_diffuse_color");
         auto light_specular_color_uniform = ogli::createUniform(program, "light_specular_color");
-        auto light_specular_exponent_uniform = ogli::createUniform(program, "light_specular_exponent");
         auto has_texture = ogli::createUniform(program, "has_texture");
         auto has_lightmap = ogli::createUniform(program, "has_lightmap");
 
@@ -258,11 +258,11 @@ namespace mo {
             material_ambient_color_uniform,
             material_diffuse_color_uniform,
             material_specular_color_uniform,
+            material_specular_exponent_uniform,
             opacity_uniform,
             light_uniform,
             light_diffuse_color_uniform,
-            light_specular_color_uniform,
-            light_specular_exponent_uniform,
+            light_specular_color_uniform,        
             has_texture, 
             has_lightmap
         }));
@@ -366,12 +366,12 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).material_ambient_color, model.material->ambient);
         ogli::uniform(vertex_programs_.at(program_name).material_diffuse_color, model.material->diffuse);
         ogli::uniform(vertex_programs_.at(program_name).material_specular_color, model.material->specular);
+        ogli::uniform(vertex_programs_.at(program_name).material_specular_exponent,
+                model.material->specular_exponent);
         ogli::uniform(vertex_programs_.at(program_name).light_diffuse_color,
                 glm::vec3(1.0f, 1.0f, 1.0f));
         ogli::uniform(vertex_programs_.at(program_name).light_specular_color,
-                glm::vec3(1.0f, 1.0f, 1.0f));
-        ogli::uniform(vertex_programs_.at(program_name).light_specular_exponent,
-                10.0f);
+                glm::vec3(1.0f, 1.0f, 1.0f));        
         ogli::uniform(vertex_programs_.at(program_name).has_texture,
                 model.texture.get() == nullptr ? false : true);
         ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
