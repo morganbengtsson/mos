@@ -90,25 +90,25 @@ namespace mo {
 
                 "void main() {\n"
 
-                    "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
 
-                    "vec3 normal = normalize(fragment_normal);\n"
-                    "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
-                    "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
-                    "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
-                    "vec4 diffuse_color;"
-                    "if (has_texture == true){\n"
-                        "diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
-                    "} else {"
-                        "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
-                    "}\n"
+                "vec3 normal = normalize(fragment_normal);\n"
+                "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
+                "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
+                "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
+                "vec4 diffuse_color;"
+                "if (has_texture == true){\n"
+                "diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
+                "} else {"
+                "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
+                "}\n"
 
-                    "vec4 diffuse = diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
+                "vec4 diffuse = diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
 
-                    "vec3 surface_to_view = normalize(fragment_position);\n"
-                    "vec3 reflection = reflect(normal, -surface_to_light);\n"
-                    "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
-                    "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
+                "vec3 surface_to_view = normalize(fragment_position);\n"
+                "vec3 reflection = reflect(normal, -surface_to_light);\n"
+                "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
+                "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
                 "gl_FragColor = indirect + diffuse + specular;\n"
 
@@ -252,7 +252,7 @@ namespace mo {
             program,
             mvp_uniform,
             mv_uniform,
-            normal_matrix_uniform, 
+            normal_matrix_uniform,
             texture_uniform,
             lightmap_uniform,
             material_ambient_color_uniform,
@@ -262,8 +262,8 @@ namespace mo {
             opacity_uniform,
             light_uniform,
             light_diffuse_color_uniform,
-            light_specular_color_uniform,        
-            has_texture, 
+            light_specular_color_uniform,
+            has_texture,
             has_lightmap
         }));
     }
@@ -305,8 +305,14 @@ namespace mo {
         ogli::drawArrays(std::distance(particles.begin(), particles.end()), GL_POINTS);
 
     }
-
-    void Renderer::render(const Model & model, const glm::mat4 transform, const glm::mat4 view, const glm::mat4 projection, const float opacity, const std::string program_name, const glm::vec3 light_position) {
+ 
+    void Renderer::render(const Model & model,
+            const glm::mat4 transform,
+            const glm::mat4 view,
+            const glm::mat4 projection,
+            const float opacity,
+            const std::string program_name,
+            const Light & light) {
 
 
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
@@ -341,7 +347,7 @@ namespace mo {
         glm::mat4 mvp = projection * view * model.transform * transform;
 
         ogli::useProgram(vertex_programs_.at(program_name).program);
-     
+
         ogli::bindBuffer(array_buffers_.at(model.mesh->id()));
         ogli::bindBuffer(element_array_buffers_.at(model.mesh->id()));
 
@@ -361,17 +367,22 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).mv, mv);
         glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
         ogli::uniform(vertex_programs_.at(program_name).normal_matrix, normal_matrix);
-        ogli::uniform(vertex_programs_.at(program_name).opacity, opacity);
-        ogli::uniform(vertex_programs_.at(program_name).light_position, light_position);
+            
         ogli::uniform(vertex_programs_.at(program_name).material_ambient_color, model.material->ambient);
         ogli::uniform(vertex_programs_.at(program_name).material_diffuse_color, model.material->diffuse);
         ogli::uniform(vertex_programs_.at(program_name).material_specular_color, model.material->specular);
         ogli::uniform(vertex_programs_.at(program_name).material_specular_exponent,
                 model.material->specular_exponent);
+         ogli::uniform(vertex_programs_.at(program_name).opacity, opacity); 
+         
+        //Transform light position to eye space.
+        ogli::uniform(vertex_programs_.at(program_name).light_position, 
+                glm::vec3(view * glm::vec4(light.position.x, light.position.y, light.position.z, 1.0f)));
         ogli::uniform(vertex_programs_.at(program_name).light_diffuse_color,
-                glm::vec3(1.0f, 1.0f, 1.0f));
+                light.diffuse_color);
         ogli::uniform(vertex_programs_.at(program_name).light_specular_color,
-                glm::vec3(1.0f, 1.0f, 1.0f));        
+                light.specular_color);
+        
         ogli::uniform(vertex_programs_.at(program_name).has_texture,
                 model.texture.get() == nullptr ? false : true);
         ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
