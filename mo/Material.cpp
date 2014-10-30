@@ -9,13 +9,14 @@
 
 namespace mo {
 
-    Material::Material(const glm::vec3 ambient_color,
-            const glm::vec3 diffuse_color,
-            const glm::vec3 specular_color,
+    Material::Material(const glm::vec3 ambient,
+            const glm::vec3 diffuse,
+            const glm::vec3 specular,
             const float opacity,
             const float specular_exponent) :
-    ambient(ambient_color),
-    diffuse(diffuse_color),
+    ambient(ambient),
+    diffuse(diffuse),
+    specular(specular),
     opacity(opacity),
     specular_exponent(specular_exponent) {
     }
