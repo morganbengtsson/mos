@@ -103,15 +103,16 @@ namespace mo {
                 "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
                 "}\n"
 
-                "vec4 diffuse = diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
+                "vec4 diffuse = indirect.w * diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
 
                 "vec3 surface_to_view = normalize(fragment_position);\n"
                 "vec3 reflection = reflect(normal, -surface_to_light);\n"
                 "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
                 "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
-                "gl_FragColor = indirect + diffuse + specular;\n"
-
+                "gl_FragColor = vec4(indirect.xyz, 1.0) + diffuse + specular;\n"
+                //"gl_FragColor = vec4(indirect.xyz, 1.0);\n"
+                
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
 
