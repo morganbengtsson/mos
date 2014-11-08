@@ -5,6 +5,9 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
+#include "GL/glew.h"
+
+
 #include <ogli/util.h>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,7 +30,7 @@ namespace mo {
     Renderer::Renderer() {
         ogli::init(); // Should this be done int ogli or mo?
 
-        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);        
 #ifdef __ANDROID__
 #else
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -102,16 +105,22 @@ namespace mo {
                 "} else {"
                 "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
                 "}\n"
-
-                "vec4 diffuse = indirect.w * diffuse_contribution * vec4(light_diffuse_color, 1.0) * diffuse_color;\n"
-
+                "float dist = distance(light_position, fragment_position);\n"
+                "float a = 1.0;\n"
+                "float b = 1.0;\n"
+                "float att = 1.0 / (1.0 + a*dist + b*dist*dist);\n"
+                "vec4 diffuse = vec4(indirect.w * att * diffuse_contribution* light_diffuse_color, 1.0) * diffuse_color;\n"
+                
+                
                 "vec3 surface_to_view = normalize(fragment_position);\n"
                 "vec3 reflection = reflect(normal, -surface_to_light);\n"
                 "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
                 "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
-                "gl_FragColor = vec4(indirect.xyz, 1.0) + diffuse + specular;\n"
+                "gl_FragColor = vec4(indirect.xyz*light_diffuse_color + diffuse.xyz, 1.0);\n"
+                //"gl_FragColor = vec4(indirect.xyz + diffuse.xyz + specular.xyz, 1.0);\n"
                 //"gl_FragColor = vec4(indirect.xyz, 1.0);\n"
+               //"gl_FragColor = diffuse;\n"
                 
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
