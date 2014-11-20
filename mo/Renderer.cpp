@@ -117,10 +117,10 @@ namespace mo {
                 "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
                 "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
-                "gl_FragColor = vec4(indirect.xyz*light_diffuse_color + diffuse.xyz, 1.0);\n"
-                //"gl_FragColor = vec4(indirect.xyz + diffuse.xyz + specular.xyz, 1.0);\n"
+                //"gl_FragColor = vec4(indirect.xyz*light_diffuse_color + diffuse.xyz, 1.0);\n"
+                "gl_FragColor = vec4(indirect.xyz + diffuse.xyz + specular.xyz, 1.0);\n"
                 //"gl_FragColor = vec4(indirect.xyz, 1.0);\n"
-               //"gl_FragColor = diffuse;\n"
+                //"gl_FragColor = diffuse;\n"
                 
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
