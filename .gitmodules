@@ -12,4 +12,4 @@
 	url = https://github.com/omniavinco/glew-cmake.git
 [submodule "externals/openal-soft"]
 	path = externals/openal-soft
-	url = http://repo.or.cz/w/openal-soft.git
+	url = http://repo.or.cz/openal-soft.git
