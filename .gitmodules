@@ -3,7 +3,7 @@
 	url = git://github.com/g-truc/glm.git	
 [submodule "externals/ogli"]
 	path = externals/ogli
-	url = http://github.com/morganbengtsson/ogli.git	
+	url = https://github.com/morganbengtsson/ogli.git
 [submodule "externals/objload"]
 	path = externals/objload
 	url = https://github.com/GerhardR/objload.git
