@@ -22,19 +22,19 @@ namespace mo {
 
         using Parts = std::vector<Particle>;
 
-        typename Parts::const_iterator begin() const {
+        Parts::const_iterator begin() const {
             return particles_.begin();
         }
 
-        typename Parts::const_iterator end() const {
+        Parts::const_iterator end() const {
             return particles_.end();
         }
 
-        typename Parts::iterator begin() {
+        Parts::iterator begin() {
             return particles_.begin();
         }
 
-        typename Parts::iterator end() {
+        Parts::iterator end() {
             return particles_.end();
         }
 

@@ -53,35 +53,35 @@ namespace mo {
             return ConstRange<Elements>(elements_);
         }
         
-        typename Vertices::const_iterator verticesBegin() const {
+        Vertices::const_iterator verticesBegin() const {
             return vertices_.begin();
         };
 
-        typename Vertices::const_iterator verticesEnd() const {
+        Vertices::const_iterator verticesEnd() const {
             return vertices_.end();
         };
 
-        typename Elements::const_iterator elementsBegin() const {
+        Elements::const_iterator elementsBegin() const {
             return elements_.begin();
         };
 
-        typename Elements::const_iterator elementsEnd() const {
+        Elements::const_iterator elementsEnd() const {
             return elements_.end();
         };
 
-        typename Vertices::iterator verticesBegin() {
+        Vertices::iterator verticesBegin() {
             return vertices_.begin();
         };
 
-        typename Vertices::iterator verticesEnd() {
+        Vertices::iterator verticesEnd() {
             return vertices_.end();
         };
 
-        typename Elements::iterator elementsBegin() {
+        Elements::iterator elementsBegin() {
             return elements_.begin();
         };
 
-        typename Elements::iterator elementsEnd() {
+        Elements::iterator elementsEnd() {
             return elements_.end();
         };
         
