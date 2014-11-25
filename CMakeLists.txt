@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 add_definitions(-DGLM_FORCE_RADIANS)
+add_definitions(-DGLEW_STATIC)
 
 # No binaries in source dir
 if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)

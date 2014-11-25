@@ -18,11 +18,10 @@ namespace mo {
      * @return Current time in milliseconds. 
      */
     static double now_ms() {
-        double milliseconds_since_epoch =
-                std::chrono::system_clock::now().time_since_epoch() /
-                std::chrono::milliseconds(1);
-        return milliseconds_since_epoch;
-    }
+		auto duration = std::chrono::system_clock::now().time_since_epoch();
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+		return (double)millis;
+	}
 
     /* Old implementation (Available on POSIX systems)
     static double now_ms(void) {
