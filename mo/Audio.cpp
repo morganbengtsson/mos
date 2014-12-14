@@ -385,14 +385,14 @@ bool AudioStreamStream(AudioStream* self, ALuint buffer){
  
 bool AudioStreamOpen(AudioStream* self, const char* filename){
 	self->stream = stb_vorbis_open_filename((char*)filename, NULL, NULL);
-	if(not self->stream) return false;
+	if(!self->stream) return false;
 	// Get file info
 	self->info = stb_vorbis_get_info(self->stream);
 	if(self->info.channels == 2) self->format = AL_FORMAT_STEREO16;
 	else self->format = AL_FORMAT_MONO16;
  
-	if(not AudioStreamStream(self, self->buffers[0])) return false;
-	if(not AudioStreamStream(self, self->buffers[1])) return false;
+	if(!AudioStreamStream(self, self->buffers[0])) return false;
+	if(!AudioStreamStream(self, self->buffers[1])) return false;
 	alSourceQueueBuffers(self->source, 2, self->buffers);
 	alSourcePlay(self->source);
  
@@ -411,13 +411,13 @@ bool AudioStreamUpdate(AudioStream* self){
         
         alSourceUnqueueBuffers(self->source, 1, &buffer);
  
-		if(not AudioStreamStream(self, buffer)){
+		if(!AudioStreamStream(self, buffer)){
 			bool shouldExit=true;
  
 			if(self->shouldLoop){
 				stb_vorbis_seek_start(self->stream);
 				self->totalSamplesLeft=stb_vorbis_stream_length_in_samples(self->stream) * self->info.channels;
-				shouldExit=not AudioStreamStream(self, buffer);
+				shouldExit=!AudioStreamStream(self, buffer);
 			}
  
 			if(shouldExit) return false;
