@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
+add_definitions(-DAL_LIBTYPE_STATIC)
 
 # No binaries in source dir
 if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
@@ -48,12 +49,18 @@ include_directories(externals/tinyobjloader)
 include_directories(externals/ogli)
 
 # mo
+
 file(GLOB ROOT_SOURCE mo/*.cpp)
 file(GLOB ROOT_HEADER mo/*.h)
 add_subdirectory(mo)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE})
 
+IF(WIN32)
+    target_link_libraries(mo OpenAL32)
+ELSE()
+    target_link_libraries(mo openal)
+ENDIF()
 target_link_libraries(mo libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mo lodepng)
 target_link_libraries(mo tinyobjloader)
