@@ -302,7 +302,7 @@ namespace mo {
             alGenSources(1, &al_source);
             alSourcef(al_source, AL_PITCH, 1.);
             alSourcef(al_source, AL_GAIN, 1.);
-            alSource3f(al_source, AL_POSITION, 0.0f, 0.0f, 0.0f);
+            alSource3f(al_source, AL_POSITION, source.position.x, source.position.y, source.position.z);
             alSource3f(al_source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
             alSourcei(al_source, AL_LOOPING, AL_FALSE);
             sources_.insert(SourcePair(source.id(), al_source));
@@ -322,6 +322,7 @@ namespace mo {
             }
         }
         alSourcePlay(sources_.at(source.id()));
+        alSource3f(sources_.at(source.id()), AL_POSITION, source.position.x, source.position.y, source.position.z);
     }
 
    

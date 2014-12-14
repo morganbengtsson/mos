@@ -109,7 +109,9 @@ namespace mo {
                 "float a = 1.0;\n"
                 "float b = 1.0;\n"
                 "float att = 1.0 / (1.0 + a*dist + b*dist*dist);\n"
+
                 "vec4 diffuse = vec4(att * diffuse_contribution* light_diffuse_color, 1.0) * diffuse_color;\n"                
+
                 
                 "vec3 surface_to_view = normalize(fragment_position);\n"
                 "vec3 reflection = reflect(normal, -surface_to_light);\n"
@@ -119,6 +121,7 @@ namespace mo {
                 "vec4 diffuse_indirect = indirect * diffuse_color;"
                 
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_indirect.xyz + specular.xyz, 1.0);\n"               
+
                 
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
