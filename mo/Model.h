@@ -17,6 +17,7 @@
 #include "Texture2D.h"
 #include "Assets.h"
 #include "Material.h"
+#include "box.hpp"
 
 namespace mo {
 
@@ -42,12 +43,14 @@ namespace mo {
         std::shared_ptr<Mesh> mesh;
         std::shared_ptr<Texture2D> texture;
         std::shared_ptr<Texture2D> lightmap;
-        std::shared_ptr<Material> material;        
+        std::shared_ptr<Material> material;
+        Box box;
         Draw draw;
         glm::mat4 transform;
         glm::vec4 color() const;
         glm::vec3 position() const;
-        
+        bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);
+        bool selected;
     private:
         bool valid_;
         

@@ -412,6 +412,12 @@ namespace mo {
             draw_type = GL_POINTS;
         }
 
+        if (model.selected == true){
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        }
+        else {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        }
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {

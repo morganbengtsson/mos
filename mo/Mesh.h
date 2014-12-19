@@ -12,7 +12,7 @@
 #include <algorithm>
 #include "Vertex.h"
 #include "Range.h"
-
+#include "box.hpp"
 
 namespace mo {
 
@@ -33,28 +33,6 @@ namespace mo {
             id_ = current_id++;
             vertices_.assign(verticesBegin, verticesEnd);
             elements_.assign(elementsBegin, elementsEnd);
-
-
-
-            auto x_extremes = std::minmax_element(verticesBegin, verticesEnd,
-                                                 [](const Vertex& left, const Vertex& right) {
-                                                    return left.position.x < right.position.x;
-                                                 });
-
-            auto y_extremes = std::minmax_element(verticesBegin, verticesEnd,
-                                                 [](const Vertex& left, const Vertex& right) {
-                                                    return left.position.y < right.position.y;
-                                                 });
-
-            auto z_extremes = std::minmax_element(verticesBegin, verticesEnd,
-                                                 [](const Vertex& left, const Vertex& right) {
-                                                    return left.position.z < right.position.z;
-                                                 });
-
-
-            glm::vec3 min(x_extremes.first->position.x, y_extremes.first->position.y, z_extremes.first->position.z);
-            glm::vec3 max(x_extremes.first->position.x, y_extremes.second->position.y, z_extremes.second->position.z);
-
         }
         Mesh();
         Mesh(const Mesh & mesh);
@@ -119,13 +97,13 @@ namespace mo {
         void clear();
         void add(const Vertex vertex);
         void add(const int element);
-        Vertex back();
-
+        Vertex back(); 
     private:
         static unsigned int current_id;
         unsigned int id_;
         Vertices vertices_;
         Elements elements_;
+
 
     };
 
