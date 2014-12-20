@@ -12,7 +12,7 @@
 #include <memory>
 #include <initializer_list>
 #include <glm/glm.hpp>
-#include "Sound.h"
+#include "sound.hpp"
 
 namespace mo {
 

@@ -10,8 +10,8 @@
 
 #include <vector>
 #include <algorithm>
-#include "Vertex.h"
-#include "Range.h"
+#include "vertex.hpp"
+#include "range.hpp"
 #include "box.hpp"
 
 namespace mo {

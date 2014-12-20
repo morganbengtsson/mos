@@ -25,9 +25,9 @@
 #include <thread>
 #include <future>
 
-#include "Sound.h"
-#include "Source.h"
-#include "Assets.h"
+#include "sound.hpp"
+#include "source.hpp"
+#include "assets.hpp"
 
 namespace mo {
     

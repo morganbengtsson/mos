@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "Particle.h"
+#include "particle.hpp"
 
 namespace mo {
 

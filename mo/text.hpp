@@ -8,9 +8,9 @@
 #ifndef MO_TEXT_H
 #define	MO_TEXT_H
 
-#include "Model.h"
-#include "Mesh.h"
-#include "Character.h"
+#include "model.hpp"
+#include "mesh.hpp"
+#include "character.hpp"
 
 #include <map>
 #include <memory>

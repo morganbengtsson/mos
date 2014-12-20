@@ -2,7 +2,7 @@
 #define MO_BOX_HPP
 
 #include <glm/glm.hpp>
-#include "Ray.h"
+#include "ray.hpp"
 
 namespace mo
 {

@@ -13,10 +13,10 @@
 #include <glm/gtx/transform.hpp>
 #include <memory>
 
-#include "Mesh.h"
-#include "Texture2D.h"
-#include "Assets.h"
-#include "Material.h"
+#include "mesh.hpp"
+#include "texture2d.hpp"
+#include "assets.hpp"
+#include "material.hpp"
 #include "box.hpp"
 
 namespace mo {

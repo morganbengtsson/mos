@@ -11,11 +11,11 @@
 
 #include <map>
 #include <memory>
-#include "Sound.h"
-#include "Character.h"
-#include "Mesh.h"
-#include "Texture2D.h"
-#include "Material.h"
+#include "sound.hpp"
+#include "character.hpp"
+#include "mesh.hpp"
+#include "texture2d.hpp"
+#include "material.hpp"
 
 #ifdef __ANDROID__
 #include <android/asset_manager.h>

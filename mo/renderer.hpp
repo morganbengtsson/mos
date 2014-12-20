@@ -14,12 +14,12 @@
 #include <map>
 #include <tuple>
 
-#include "Vertex.h"
-#include "Texture2D.h"
-#include "Model.h"
-#include "Particles.h"
-#include "Particle.h"
-#include "Light.h"
+#include "vertex.hpp"
+#include "texture2d.hpp"
+#include "model.hpp"
+#include "particles.hpp"
+#include "particle.hpp"
+#include "light.hpp"
 
 namespace mo {
     
