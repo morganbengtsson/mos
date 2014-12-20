@@ -12,6 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <memory>
+#include <utility>
 
 #include "mesh.hpp"
 #include "texture2d.hpp"
@@ -50,6 +51,7 @@ namespace mo {
         glm::vec4 color() const;
         glm::vec3 position() const;
         bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);
+        std::pair<bool, glm::vec3> intersect2(const glm::vec3 & p1, const glm::vec3 & p2);
         bool selected;
     private:
         bool valid_;

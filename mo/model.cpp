@@ -67,5 +67,10 @@ bool Model::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
     Ray ray(origin, direction);
     return box.intersect(ray, 0.0f, 100.0f);
 }
+std::pair<bool, glm::vec3> Model::intersect2(const glm::vec3 & p1, const glm::vec3 & p2){
+    glm::vec3 hit;
+    bool is_hit = box.intersect(p1, p2, hit);
+    return std::pair<bool, glm::vec3>(is_hit, hit);
+}
 
 }
