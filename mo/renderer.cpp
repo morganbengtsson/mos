@@ -19,11 +19,11 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "Renderer.h"
-#include "Vertex.h"
-#include "Mesh.h"
-#include "Texture2D.h"
-#include "Model.h"
+#include "renderer.hpp"
+#include "vertex.hpp"
+#include "mesh.hpp"
+#include "texture2d.hpp"
+#include "model.hpp"
 
 namespace mo {
 

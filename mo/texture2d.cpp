@@ -5,7 +5,7 @@
  * Created on February 25, 2014, 7:26 PM
  */
 
-#include "Texture2D.h"
+#include "texture2d.hpp"
 
 namespace mo{
 

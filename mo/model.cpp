@@ -5,7 +5,7 @@
  * Created on March 5, 2014, 10:29 PM
  */
 
-#include "Model.h"
+#include "model.hpp"
 
 #include <glm/gtx/io.hpp>
 #include <iostream>

@@ -5,7 +5,7 @@
  * Created on February 25, 2014, 6:40 PM
  */
 
-#include "Mesh.h"
+#include "mesh.hpp"
 
 namespace mo {
     

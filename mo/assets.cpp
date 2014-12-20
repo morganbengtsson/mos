@@ -5,8 +5,8 @@
  * Created on February 25, 2014, 6:38 PM
  */
 
-#include "Assets.h"
-#include "logging.h"
+#include "assets.hpp"
+#include "logging.hpp"
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>

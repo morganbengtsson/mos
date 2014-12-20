@@ -5,7 +5,7 @@
  * Created on May 6, 2014, 9:38 PM
  */
 
-#include "Sound.h"
+#include "sound.hpp"
 
 namespace mo {
 

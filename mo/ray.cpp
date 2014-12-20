@@ -1,4 +1,4 @@
-#include "Ray.h"
+#include "ray.hpp"
 #include <glm/gtx/io.hpp>
 #include <iostream>
 namespace mo {

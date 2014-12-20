@@ -4,9 +4,9 @@
  * 
  * Created on May 7, 2014, 9:41 PM
  */
-#include "Audio.h"
-#include "logging.h"
-#include "Source.h"
+#include "audio.hpp"
+#include "logging.hpp"
+#include "source.hpp"
 
 #ifdef __ANDROID__
 namespace mo {

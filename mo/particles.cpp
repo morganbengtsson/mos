@@ -5,7 +5,7 @@
  * Created on October 16, 2014, 5:03 PM
  */
 
-#include "Particles.h"
+#include "particles.hpp"
 
 namespace mo {
 

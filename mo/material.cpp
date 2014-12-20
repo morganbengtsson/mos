@@ -5,7 +5,7 @@
  * Created on September 30, 2014, 9:35 PM
  */
 
-#include "Material.h"
+#include "material.hpp"
 
 namespace mo {
 

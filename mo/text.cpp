@@ -5,7 +5,7 @@
  * Created on August 28, 2013, 7:49 PM
  */
 
-#include "Text.h"
+#include "text.hpp"
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
