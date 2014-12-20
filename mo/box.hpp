@@ -1,6 +1,7 @@
 #ifndef MO_BOX_HPP
 #define MO_BOX_HPP
 
+#include <array>
 #include <glm/glm.hpp>
 #include "ray.hpp"
 
@@ -15,6 +16,7 @@ public:
     bool intersect(const Ray &, float t0, float t1) const;
     glm::vec3 parameters[2];
     glm::mat4 transform;
+    std::array<glm::vec3, 8> positions() const;
 private:
 
 

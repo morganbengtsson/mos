@@ -44,4 +44,18 @@ bool Box::intersect(const Ray &r, float t0, float t1) const {
     return ( (tmin < t1) && (tmax > t0) );
 }
 
+std::array<glm::vec3, 8> Box::positions() const{
+    std::array<glm::vec3, 8> pos;
+    pos[0] = parameters[0];
+    pos[1] = glm::vec3(parameters[1].x, parameters[0].y, parameters[0].z);
+    pos[2] = glm::vec3(parameters[0].x, parameters[0].y, parameters[1].z);
+    pos[3] = glm::vec3(parameters[1].x, parameters[0].y, parameters[1].z);
+
+    pos[4] = glm::vec3(parameters[0].x, parameters[1].y, parameters[0].z);
+    pos[5] = glm::vec3(parameters[1].x, parameters[1].y, parameters[0].z);
+    pos[6] = glm::vec3(parameters[0].x, parameters[1].y, parameters[1].z);
+    pos[7] = parameters[1];
+    return pos;
+}
+
 }
