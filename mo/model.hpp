@@ -45,9 +45,9 @@ namespace mo {
         std::shared_ptr<Texture2D> texture;
         std::shared_ptr<Texture2D> lightmap;
         std::shared_ptr<Material> material;
+        glm::mat4 transform;
         Box box;
         Draw draw;
-        glm::mat4 transform;
         glm::vec4 color() const;
         glm::vec3 position() const;
         bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);

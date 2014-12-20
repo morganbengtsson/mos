@@ -26,31 +26,9 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     material(material),
     lightmap(lightmap),
     transform(transform),
-    valid_(true), selected(false){
-
-    glm::vec3 min, max;
-
-    if (mesh->verticesBegin() != mesh->verticesEnd()){
-        auto x_extremes = std::minmax_element(mesh->verticesBegin(), mesh->verticesEnd(),
-                                              [](const Vertex& left, const Vertex& right) {
-            return left.position.x < right.position.x;
-        });
-
-        auto y_extremes = std::minmax_element(mesh->verticesBegin(), mesh->verticesEnd(),
-                                              [](const Vertex& left, const Vertex& right) {
-            return left.position.y < right.position.y;
-        });
-
-        auto z_extremes = std::minmax_element(mesh->verticesBegin(), mesh->verticesEnd(),
-                                              [](const Vertex& left, const Vertex& right) {
-            return left.position.z < right.position.z;
-        });
-
-        min = glm::vec3(x_extremes.first->position.x, y_extremes.first->position.y, z_extremes.first->position.z);
-        max = glm::vec3(x_extremes.second->position.x, y_extremes.second->position.y, z_extremes.second->position.z);
-    }
-    box = Box(min, max, transform);
-}
+    valid_(true),
+    selected(false),
+    box(mesh->verticesBegin(), mesh->verticesEnd(), transform){}
 
 Model::~Model() {
 }
@@ -64,8 +42,9 @@ glm::vec3 Model::position() const {
 }
 
 bool Model::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
-    Ray ray(origin, direction);
-    return box.intersect(ray, 0.0f, 100.0f);
+    //Ray ray(origin, direction);
+    //return box.intersect(ray, 0.0f, 100.0f);
+    return false;
 }
 std::pair<bool, glm::vec3> Model::intersect2(const glm::vec3 & p1, const glm::vec3 & p2){
     glm::vec3 hit;

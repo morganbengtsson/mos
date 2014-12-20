@@ -4,7 +4,9 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <utility>
+#include <algorithm>
 #include "ray.hpp"
+#include "vertex.hpp"
 
 namespace mo
 {
@@ -12,6 +14,33 @@ namespace mo
 class Box
 {
 public:
+    template<class VertexIt>
+    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform(transform){
+        glm::vec3 min, max;
+
+        if (begin != end){
+            auto x_extremes = std::minmax_element(begin, end,
+                                                  [](const Vertex& left, const Vertex& right) {
+                return left.position.x < right.position.x;
+            });
+
+            auto y_extremes = std::minmax_element(begin, end,
+                                                  [](const Vertex& left, const Vertex& right) {
+                return left.position.y < right.position.y;
+            });
+
+            auto z_extremes = std::minmax_element(begin, end,
+                                                  [](const Vertex& left, const Vertex& right) {
+                return left.position.z < right.position.z;
+            });
+
+            min = glm::vec3(x_extremes.first->position.x, y_extremes.first->position.y, z_extremes.first->position.z);
+            max = glm::vec3(x_extremes.second->position.x, y_extremes.second->position.y, z_extremes.second->position.z);
+        }
+        parameters[0] = (glm::vec3)(transform * glm::vec4(min, 1.0f));
+        parameters[1] = (glm::vec3)(transform * glm::vec4(max, 1.0f));
+    }
+
     Box();
     Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
     bool intersect(const Ray &, float t0, float t1) const;
