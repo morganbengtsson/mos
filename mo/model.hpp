@@ -50,8 +50,8 @@ namespace mo {
         Draw draw;
         glm::vec4 color() const;
         glm::vec3 position() const;
-        bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);
-        std::pair<bool, glm::vec3> intersect2(const glm::vec3 & p1, const glm::vec3 & p2);
+        std::pair<bool, glm::vec3> intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
+        std::pair<bool, glm::vec3> intersect(const glm::vec3 & point1, const glm::vec3 & point2);
         bool selected;
     private:
         bool valid_;
