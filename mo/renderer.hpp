@@ -45,7 +45,8 @@ namespace mo {
         ogli::Uniform light_diffuse_color;
         ogli::Uniform light_specular_color;
         ogli::Uniform has_texture;
-        ogli::Uniform has_lightmap;        
+        ogli::Uniform has_lightmap;
+        ogli::Uniform selected;
     };
     
     struct VertexAttributes{

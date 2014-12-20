@@ -74,6 +74,7 @@ namespace mo {
                 "#else\n"
                 "#version 120\n"
                 "#endif\n"
+                "uniform bool selected;\n"
                 "uniform vec3 material_ambient_color;\n"
                 "uniform vec3 material_diffuse_color;\n"
                 "uniform vec3 material_specular_color;\n"
@@ -120,6 +121,8 @@ namespace mo {
 
                 "vec4 diffuse_indirect = indirect * diffuse_color;"
                 
+                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.02);}\n"
+
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_indirect.xyz + specular.xyz, 1.0);\n"               
 
                 
@@ -258,6 +261,7 @@ namespace mo {
         auto light_specular_color_uniform = ogli::createUniform(program, "light_specular_color");
         auto has_texture = ogli::createUniform(program, "has_texture");
         auto has_lightmap = ogli::createUniform(program, "has_lightmap");
+        auto selected = ogli::createUniform(program, "selected");
 
         vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{
             program,
@@ -275,7 +279,8 @@ namespace mo {
             light_diffuse_color_uniform,
             light_specular_color_uniform,
             has_texture,
-            has_lightmap
+            has_lightmap,
+            selected
         }));
     }
 
@@ -399,6 +404,8 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
                 model.lightmap.get() == nullptr ? false : true);
 
+        ogli::uniform(vertex_programs_.at(program_name).selected, model.selected);
+
         ogli::attribute(vertex_attributes_.position);
         ogli::attribute(vertex_attributes_.normal);
         ogli::attribute(vertex_attributes_.uv_texture);
@@ -412,12 +419,6 @@ namespace mo {
             draw_type = GL_POINTS;
         }
 
-        if (model.selected == true){
-            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-        }
-        else {
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        }
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {
