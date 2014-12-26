@@ -122,7 +122,7 @@ namespace mo {
 
                 "vec4 diffuse_indirect = indirect * diffuse_color;"
                 
-                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.02);}\n"
+                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);}\n"
 
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_indirect.xyz + specular.xyz, 1.0);\n"               
 
