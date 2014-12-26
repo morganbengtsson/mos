@@ -27,7 +27,7 @@
 
 namespace mo {
 
-    Renderer::Renderer() {
+    Renderer::Renderer(){
         ogli::init(); // Should this be done int ogli or mo?
 
         glEnable(GL_DEPTH_TEST);        
@@ -75,6 +75,7 @@ namespace mo {
                 "#version 120\n"
                 "#endif\n"
                 "uniform bool selected;\n"
+                "uniform float time;\n"
                 "uniform vec3 material_ambient_color;\n"
                 "uniform vec3 material_diffuse_color;\n"
                 "uniform vec3 material_specular_color;\n"
@@ -262,6 +263,7 @@ namespace mo {
         auto has_texture = ogli::createUniform(program, "has_texture");
         auto has_lightmap = ogli::createUniform(program, "has_lightmap");
         auto selected = ogli::createUniform(program, "selected");
+        auto time = ogli::createUniform(program, "time");
 
         vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{
             program,
@@ -280,7 +282,8 @@ namespace mo {
             light_specular_color_uniform,
             has_texture,
             has_lightmap,
-            selected
+            selected,
+            time,
         }));
     }
 
@@ -323,13 +326,13 @@ namespace mo {
     }
  
     void Renderer::render(const Model & model,
-            const glm::mat4 transform,
-            const glm::mat4 view,
-            const glm::mat4 projection,
-            const float opacity,
-            const std::string program_name,
-            const Light & light) {
-
+                          const glm::mat4 transform,
+                          const glm::mat4 view,
+                          const glm::mat4 projection,
+                          const float opacity,
+                          const std::string program_name,
+                          const Light & light,
+                          const float time) {
 
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
@@ -405,6 +408,7 @@ namespace mo {
                 model.lightmap.get() == nullptr ? false : true);
 
         ogli::uniform(vertex_programs_.at(program_name).selected, model.selected);
+        ogli::uniform(vertex_programs_.at(program_name).time, time);
 
         ogli::attribute(vertex_attributes_.position);
         ogli::attribute(vertex_attributes_.normal);

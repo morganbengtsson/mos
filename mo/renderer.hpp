@@ -47,6 +47,7 @@ namespace mo {
         ogli::Uniform has_texture;
         ogli::Uniform has_lightmap;
         ogli::Uniform selected;
+        ogli::Uniform time;
     };
     
     struct VertexAttributes{
@@ -110,7 +111,8 @@ namespace mo {
                     const glm::mat4 projection, 
                     const float opacity = 1.0f, 
                     const std::string program_name = "standard", 
-                    const Light & light = Light());
+                    const Light & light = Light(),
+                    const float time = 0.0f);
         /*
         void render(const Model & model, 
                     const glm::mat4 view, 
@@ -126,9 +128,9 @@ namespace mo {
         void render(It begin, It end, const glm::mat4 transform, const glm::mat4 view, 
                     const glm::mat4 projection, const float opacity = 1.0f, 
                     const std::string program_name = "standard", 
-                    const Light & light = Light()){
+                    const Light & light = Light(), const float time = 0.0f){
             for (auto it = begin; it != end; ++it){
-                render(*it, transform, view, projection, opacity, program_name, light);
+                render(*it, transform, view, projection, opacity, program_name, light, time);
             }
         }
         
@@ -169,10 +171,10 @@ namespace mo {
 
         virtual ~Renderer();
     private:
-        
+
         VertexAttributes vertex_attributes_;
         ParticleAttributes particle_attributes_;
-        
+
         std::map<std::string, VertexProgramData> vertex_programs_;
         std::map<std::string, ParticleProgramData> particle_programs_;
         std::map<unsigned int, ogli::TextureBuffer> textures_;
