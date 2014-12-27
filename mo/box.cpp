@@ -11,51 +11,19 @@ namespace mo {
 Box::Box(){
 }
 
-Box::Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform) : transform(transform) {
-    if(glm::all(glm::lessThan(max, min))){
+Box::Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform) :
+    transform(transform), min_(min), max_(max) {
+    if(glm::all(glm::lessThan(max_, min_))){
         throw std::invalid_argument("Min must be less than max.");
     }
-    assert(min < max);
-    parameters[0] = (glm::vec3)(transform * glm::vec4(min, 1.0f));
-    parameters[1] = (glm::vec3)(transform * glm::vec4(max, 1.0f));
+    assert(min_ < max_);
 }
 
-bool Box::intersect(const Ray &r, float t0, float t1) const {
-    float tmin, tmax, tymin, tymax, tzmin, tzmax;
-
-    tmin = (parameters[r.sign[0]].x - r.origin.x) * r.inverse_direction.x;
-    tmax = (parameters[1-r.sign[0]].x - r.origin.x) * r.inverse_direction.x;
-    tymin = (parameters[r.sign[1]].y - r.origin.y) * r.inverse_direction.y;
-    tymax = (parameters[1-r.sign[1]].y - r.origin.y) * r.inverse_direction.y;
-    if ( (tmin > tymax) || (tymin > tmax) )
-        return false;
-    if (tymin > tmin)
-        tmin = tymin;
-    if (tymax < tmax)
-        tmax = tymax;
-    tzmin = (parameters[r.sign[2]].z - r.origin.z) * r.inverse_direction.z;
-    tzmax = (parameters[1-r.sign[2]].z - r.origin.z) * r.inverse_direction.z;
-    if ( (tmin > tzmax) || (tzmin > tmax) )
-        return false;
-    if (tzmin > tmin)
-        tmin = tzmin;
-    if (tzmax < tmax)
-        tmax = tzmax;
-    return ( (tmin < t1) && (tmax > t0) );
+glm::vec3 Box::min() const {
+    return (glm::vec3)(transform * glm::vec4(min_, 1.0f));
 }
-
-std::array<glm::vec3, 8> Box::positions() const{
-    std::array<glm::vec3, 8> pos;
-    pos[0] = parameters[0];
-    pos[1] = glm::vec3(parameters[1].x, parameters[0].y, parameters[0].z);
-    pos[2] = glm::vec3(parameters[0].x, parameters[0].y, parameters[1].z);
-    pos[3] = glm::vec3(parameters[1].x, parameters[0].y, parameters[1].z);
-
-    pos[4] = glm::vec3(parameters[0].x, parameters[1].y, parameters[0].z);
-    pos[5] = glm::vec3(parameters[1].x, parameters[1].y, parameters[0].z);
-    pos[6] = glm::vec3(parameters[0].x, parameters[1].y, parameters[1].z);
-    pos[7] = parameters[1];
-    return pos;
+glm::vec3 Box::max() const {
+    return (glm::vec3)(transform * glm::vec4(max_, 1.0f));
 }
 
 }
