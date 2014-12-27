@@ -53,9 +53,6 @@ namespace mo {
         bool selectable;
         bool selected() const;
         void selected(const bool selected);
-        std::pair<bool, glm::vec3> intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-        std::pair<bool, glm::vec3> intersect(const glm::vec3 & point1, const glm::vec3 & point2);
-
     private:
         bool valid_;
         bool selected_;

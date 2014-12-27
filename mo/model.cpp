@@ -50,16 +50,4 @@ void Model::selected(const bool selected) {
     selected_ = selectable == true ? selected : false;
 }
 
-std::pair<bool, glm::vec3> Model::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2){
-    glm::vec3 p1 = origin + (direction * t1);
-    glm::vec3 p2 = origin + (direction * t2);
-    return intersect(p1, p2);
-}
-
-std::pair<bool, glm::vec3> Model::intersect(const glm::vec3 & p1, const glm::vec3 & p2){
-    glm::vec3 hit;
-    bool is_hit = box.intersect(p1, p2, hit);
-    return std::pair<bool, glm::vec3>(is_hit, hit);
-}
-
 }
