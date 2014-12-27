@@ -48,38 +48,38 @@ public:
     glm::mat4 transform;
     std::array<glm::vec3, 8> positions() const;
 
-    bool intersect(glm::vec3 L1, glm::vec3 L2, glm::vec3 &Hit)
+    bool intersect(glm::vec3 point1, glm::vec3 point2, glm::vec3 &Hit)
     {
-        glm::vec3 B1 = parameters[0];
-        glm::vec3 B2 = parameters[1];
-        if (L2.x < B1.x && L1.x < B1.x) return false;
-        if (L2.x > B2.x && L1.x > B2.x) return false;
-        if (L2.y < B1.y && L1.y < B1.y) return false;
-        if (L2.y > B2.y && L1.y > B2.y) return false;
-        if (L2.z < B1.z && L1.z < B1.z) return false;
-        if (L2.z > B2.z && L1.z > B2.z) return false;
-        if (L1.x > B1.x && L1.x < B2.x &&
-                L1.y > B1.y && L1.y < B2.y &&
-                L1.z > B1.z && L1.z < B2.z)
-        {Hit = L1;
+        glm::vec3 min = parameters[0];
+        glm::vec3 max = parameters[1];
+        if (point2.x < min.x && point1.x < min.x) return false;
+        if (point2.x > max.x && point1.x > max.x) return false;
+        if (point2.y < min.y && point1.y < min.y) return false;
+        if (point2.y > max.y && point1.y > max.y) return false;
+        if (point2.z < min.z && point1.z < min.z) return false;
+        if (point2.z > max.z && point1.z > max.z) return false;
+        if (point1.x > min.x && point1.x < max.x &&
+                point1.y > min.y && point1.y < max.y &&
+                point1.z > min.z && point1.z < max.z)
+        {Hit = point1;
             return true;}
-        if ( (GetIntersection( L1.x-B1.x, L2.x-B1.x, L1, L2, Hit) && InBox( Hit, B1, B2, 1 ))
-             || (GetIntersection( L1.y-B1.y, L2.y-B1.y, L1, L2, Hit) && InBox( Hit, B1, B2, 2 ))
-             || (GetIntersection( L1.z-B1.z, L2.z-B1.z, L1, L2, Hit) && InBox( Hit, B1, B2, 3 ))
-             || (GetIntersection( L1.x-B2.x, L2.x-B2.x, L1, L2, Hit) && InBox( Hit, B1, B2, 1 ))
-             || (GetIntersection( L1.y-B2.y, L2.y-B2.y, L1, L2, Hit) && InBox( Hit, B1, B2, 2 ))
-             || (GetIntersection( L1.z-B2.z, L2.z-B2.z, L1, L2, Hit) && InBox( Hit, B1, B2, 3 )))
+        if ( (GetIntersection( point1.x-min.x, point2.x-min.x, point1, point2, Hit) && InBox( Hit, min, max, 1 ))
+             || (GetIntersection( point1.y-min.y, point2.y-min.y, point1, point2, Hit) && InBox( Hit, min, max, 2 ))
+             || (GetIntersection( point1.z-min.z, point2.z-min.z, point1, point2, Hit) && InBox( Hit, min, max, 3 ))
+             || (GetIntersection( point1.x-max.x, point2.x-max.x, point1, point2, Hit) && InBox( Hit, min, max, 1 ))
+             || (GetIntersection( point1.y-max.y, point2.y-max.y, point1, point2, Hit) && InBox( Hit, min, max, 2 ))
+             || (GetIntersection( point1.z-max.z, point2.z-max.z, point1, point2, Hit) && InBox( Hit, min, max, 3 )))
             return true;
 
         return false;
     }
 
 private:
-    int inline GetIntersection( float fDst1, float fDst2, glm::vec3 P1, glm::vec3 P2, glm::vec3 &Hit) {
-        if ( (fDst1 * fDst2) >= 0.0f) return 0;
-        if ( fDst1 == fDst2) return 0;
+    bool inline GetIntersection( float fDst1, float fDst2, glm::vec3 P1, glm::vec3 P2, glm::vec3 &Hit) {
+        if ( (fDst1 * fDst2) >= 0.0f) return false;
+        if ( fDst1 == fDst2) return false;
         Hit = P1 + (P2-P1) * ( -fDst1/(fDst2-fDst1) );
-        return 1;
+        return true;
     }
 
     int inline InBox( glm::vec3 Hit, glm::vec3 B1, glm::vec3 B2, const int Axis) {

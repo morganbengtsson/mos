@@ -28,7 +28,7 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     transform(transform),
     valid_(true),
     selected_(false),
-    selectable(false),
+    selectable(true),
     box(mesh->verticesBegin(), mesh->verticesEnd(), transform){}
 
 Model::~Model() {
