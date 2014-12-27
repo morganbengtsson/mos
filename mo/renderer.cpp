@@ -407,7 +407,7 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
                 model.lightmap.get() == nullptr ? false : true);
 
-        ogli::uniform(vertex_programs_.at(program_name).selected, model.selected);
+        ogli::uniform(vertex_programs_.at(program_name).selected, model.selected());
         ogli::uniform(vertex_programs_.at(program_name).time, time);
 
         ogli::attribute(vertex_attributes_.position);

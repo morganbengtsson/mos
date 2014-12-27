@@ -27,7 +27,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     lightmap(lightmap),
     transform(transform),
     valid_(true),
-    selected(false),
+    selected_(false),
+    selectable(false),
     box(mesh->verticesBegin(), mesh->verticesEnd(), transform){}
 
 Model::~Model() {
@@ -39,6 +40,14 @@ glm::vec4 Model::color() const {
 
 glm::vec3 Model::position() const {
     return (glm::vec3)(transform*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+bool Model::selected() const {
+    return selected_;
+}
+
+void Model::selected(const bool selected) {
+    selected_ = selectable == true ? selected : false;
 }
 
 std::pair<bool, glm::vec3> Model::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2){
