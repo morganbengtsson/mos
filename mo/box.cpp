@@ -32,6 +32,19 @@ std::pair<bool, glm::vec3> Box::intersect(const glm::vec3 & origin, const glm::v
     return intersect(p1, p2);
 }
 
+bool Box::intersects(const Box &other) {
+    glm::vec3 min = this->min();
+    glm::vec3 max = this->max();
+    glm::vec3 other_min = other.min();
+    glm::vec3 other_max = other.max();
+    return(max.x > other_min.x &&
+        min.x < other_max.x &&
+        max.y > other_min.y &&
+        min.y < other_max.y &&
+        max.z > other_min.z &&
+        min.z < other_max.z);
+}
+
 std::pair<bool, glm::vec3> Box::intersect(glm::vec3 point1, glm::vec3 point2) {
     glm::vec3 hit(0.0f);
     std::pair<bool, glm::vec3> false_pair(false, hit);

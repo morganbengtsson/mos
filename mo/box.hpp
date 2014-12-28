@@ -42,42 +42,10 @@ public:
     Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
     glm::vec3 min() const;
     glm::vec3 max() const;
-    glm::mat4 transform;
-
     std::pair<bool, glm::vec3> intersect(glm::vec3 point1, glm::vec3 point2);
     std::pair<bool, glm::vec3> intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-
-    bool intersect(glm::vec3 point1, glm::vec3 point2, glm::vec3 &Hit)
-    {
-        glm::vec3 min = this->min();
-        glm::vec3 max = this->max();
-        if (point2.x < min.x && point1.x < min.x) {return false;}
-        if (point2.x > max.x && point1.x > max.x) {return false;}
-        if (point2.y < min.y && point1.y < min.y) {return false;}
-        if (point2.y > max.y && point1.y > max.y) {return false;}
-        if (point2.z < min.z && point1.z < min.z) {return false;}
-        if (point2.z > max.z && point1.z > max.z) {return false;}
-        if (point1.x > min.x &&
-                point1.x < max.x &&
-                point1.y > min.y &&
-                point1.y < max.y &&
-                point1.z > min.z &&
-                point1.z < max.z) {
-            Hit = point1;
-            return true;
-        }
-        if ( (intersection( point1.x-min.x, point2.x-min.x, point1, point2, Hit) && in_box( Hit, min, max, 1 ))
-             || (intersection( point1.y-min.y, point2.y-min.y, point1, point2, Hit) && in_box( Hit, min, max, 2 ))
-             || (intersection( point1.z-min.z, point2.z-min.z, point1, point2, Hit) && in_box( Hit, min, max, 3 ))
-             || (intersection( point1.x-max.x, point2.x-max.x, point1, point2, Hit) && in_box( Hit, min, max, 1 ))
-             || (intersection( point1.y-max.y, point2.y-max.y, point1, point2, Hit) && in_box( Hit, min, max, 2 ))
-             || (intersection( point1.z-max.z, point2.z-max.z, point1, point2, Hit) && in_box( Hit, min, max, 3 ))){
-            return true;
-        }
-
-        return false;
-    }
-
+    bool intersects(const Box & other);
+    glm::mat4 transform;
 private:
     glm::vec3 min_;
     glm::vec3 max_;
