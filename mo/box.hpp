@@ -44,7 +44,7 @@ public:
     glm::vec3 max() const;
     std::pair<bool, glm::vec3> intersect(glm::vec3 point1, glm::vec3 point2);
     std::pair<bool, glm::vec3> intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-    bool intersects(const Box & other);
+    std::pair<bool, glm::vec3> intersects(const Box & other);
     glm::mat4 transform;
 private:
     glm::vec3 min_;

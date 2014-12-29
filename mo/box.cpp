@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
+#include <array>
 #include <glm/gtx/io.hpp>
 #include <glm/glm.hpp>
 
@@ -32,17 +33,46 @@ std::pair<bool, glm::vec3> Box::intersect(const glm::vec3 & origin, const glm::v
     return intersect(p1, p2);
 }
 
-bool Box::intersects(const Box &other) {
-    glm::vec3 min = this->min();
-    glm::vec3 max = this->max();
-    glm::vec3 other_min = other.min();
-    glm::vec3 other_max = other.max();
-    return(max.x > other_min.x &&
-        min.x < other_max.x &&
-        max.y > other_min.y &&
-        min.y < other_max.y &&
-        max.z > other_min.z &&
-        min.z < other_max.z);
+std::pair<bool, glm::vec3> Box::intersects(const Box &other) {
+    static const std::array<glm::vec3, 6> faces = {
+        glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
+        glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
+        glm::vec3( 0,-1, 0), // 'bottom' face normal (-y direction)
+        glm::vec3( 0, 1, 0), // 'top' face normal (+y direction)
+        glm::vec3( 0, 0,-1), // 'far' face normal (-z direction)
+        glm::vec3( 0, 0, 1), // 'near' face normal (+x direction)
+    };
+
+    glm::vec3 maxa = this->max();
+    glm::vec3 mina = this->min();
+    glm::vec3 maxb = other.max();
+    glm::vec3 minb = other.min();
+
+    std::array<float, 6> distances = {
+        (maxb.x - mina.x), // distance of box 'b' to face on 'left' side of 'a'.
+        (maxa.x - minb.x), // distance of box 'b' to face on 'right' side of 'a'.
+        (maxb.y - mina.y), // distance of box 'b' to face on 'bottom' side of 'a'.
+        (maxa.y - minb.y), // distance of box 'b' to face on 'top' side of 'a'.
+        (maxb.z - mina.z), // distance of box 'b' to face on 'far' side of 'a'.
+        (maxa.z - minb.z), // distance of box 'b' to face on 'near' side of 'a'.
+    };
+
+    glm::vec3 normal(0.0f);
+    float distance = 0.0f;
+    for(int i = 0; i < 6; i ++) {
+            // box does not intersect face. So boxes don't intersect at all.
+            if(distances[i] < 0.0f){
+                return std::pair<bool, glm::vec3>(false, glm::vec3(0.0f));
+            }
+            // face of least intersection depth. That's our candidate.
+            if((i == 0) || (distances[i] < distance))
+            {
+                //fcoll = i;
+                normal = faces[i];
+                distance = distances[i];
+            }
+        }
+    return std::pair<bool, glm::vec3>(true, normal);
 }
 
 std::pair<bool, glm::vec3> Box::intersect(glm::vec3 point1, glm::vec3 point2) {
