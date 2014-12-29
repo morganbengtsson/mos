@@ -33,7 +33,7 @@ std::pair<bool, glm::vec3> Box::intersect(const glm::vec3 & origin, const glm::v
     return intersect(p1, p2);
 }
 
-std::pair<bool, glm::vec3> Box::intersects(const Box &other) {
+std::tuple<bool, glm::vec3, float> Box::intersects(const Box &other) {
     static const std::array<glm::vec3, 6> faces = {
         glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
         glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
@@ -62,7 +62,7 @@ std::pair<bool, glm::vec3> Box::intersects(const Box &other) {
     for(int i = 0; i < 6; i ++) {
             // box does not intersect face. So boxes don't intersect at all.
             if(distances[i] < 0.0f){
-                return std::pair<bool, glm::vec3>(false, glm::vec3(0.0f));
+                return std::tuple<bool, glm::vec3, float>(false, glm::vec3(0.0f), distance);
             }
             // face of least intersection depth. That's our candidate.
             if((i == 0) || (distances[i] < distance))
@@ -72,7 +72,7 @@ std::pair<bool, glm::vec3> Box::intersects(const Box &other) {
                 distance = distances[i];
             }
         }
-    return std::pair<bool, glm::vec3>(true, normal);
+    return std::tuple<bool, glm::vec3, float>(true, normal, distance);
 }
 
 std::pair<bool, glm::vec3> Box::intersect(glm::vec3 point1, glm::vec3 point2) {
