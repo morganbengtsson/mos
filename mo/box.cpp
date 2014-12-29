@@ -27,13 +27,44 @@ glm::vec3 Box::max() const {
     return (glm::vec3)(transform * glm::vec4(max_, 1.0f));
 }
 
-std::pair<bool, glm::vec3> Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
+RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
     glm::vec3 p1 = origin + (direction * t1);
     glm::vec3 p2 = origin + (direction * t2);
     return intersect(p1, p2);
 }
 
-std::tuple<bool, glm::vec3, float> Box::intersects(const Box &other) {
+RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
+    glm::vec3 hit(0.0f);
+    RayIntersection false_intersection{false, hit};
+    glm::vec3 min = this->min();
+    glm::vec3 max = this->max();
+    if (point2.x < min.x && point1.x < min.x) {return false_intersection;}
+    if (point2.x > max.x && point1.x > max.x) {return false_intersection;}
+    if (point2.y < min.y && point1.y < min.y) {return false_intersection;}
+    if (point2.y > max.y && point1.y > max.y) {return false_intersection;}
+    if (point2.z < min.z && point1.z < min.z) {return false_intersection;}
+    if (point2.z > max.z && point1.z > max.z) {return false_intersection;}
+    if (point1.x > min.x &&
+            point1.x < max.x &&
+            point1.y > min.y &&
+            point1.y < max.y &&
+            point1.z > min.z &&
+            point1.z < max.z) {
+        hit = point1;
+        return RayIntersection{true, hit};
+    }
+    if ( (intersection( point1.x-min.x, point2.x-min.x, point1, point2, hit) && in_box( hit, min, max, 1 ))
+         || (intersection( point1.y-min.y, point2.y-min.y, point1, point2, hit) && in_box( hit, min, max, 2 ))
+         || (intersection( point1.z-min.z, point2.z-min.z, point1, point2, hit) && in_box( hit, min, max, 3 ))
+         || (intersection( point1.x-max.x, point2.x-max.x, point1, point2, hit) && in_box( hit, min, max, 1 ))
+         || (intersection( point1.y-max.y, point2.y-max.y, point1, point2, hit) && in_box( hit, min, max, 2 ))
+         || (intersection( point1.z-max.z, point2.z-max.z, point1, point2, hit) && in_box( hit, min, max, 3 ))) {
+        return RayIntersection{true, hit};
+    }
+    return false_intersection;
+}
+
+BoxIntersection Box::intersects(const Box &other) {
     static const std::array<glm::vec3, 6> faces = {
         glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
         glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
@@ -62,7 +93,7 @@ std::tuple<bool, glm::vec3, float> Box::intersects(const Box &other) {
     for(int i = 0; i < 6; i ++) {
             // box does not intersect face. So boxes don't intersect at all.
             if(distances[i] < 0.0f){
-                return std::tuple<bool, glm::vec3, float>(false, glm::vec3(0.0f), distance);
+                return BoxIntersection{false, glm::vec3(0.0f), distance};
             }
             // face of least intersection depth. That's our candidate.
             if((i == 0) || (distances[i] < distance))
@@ -72,38 +103,7 @@ std::tuple<bool, glm::vec3, float> Box::intersects(const Box &other) {
                 distance = distances[i];
             }
         }
-    return std::tuple<bool, glm::vec3, float>(true, normal, distance);
-}
-
-std::pair<bool, glm::vec3> Box::intersect(glm::vec3 point1, glm::vec3 point2) {
-    glm::vec3 hit(0.0f);
-    std::pair<bool, glm::vec3> false_pair(false, hit);
-    glm::vec3 min = this->min();
-    glm::vec3 max = this->max();
-    if (point2.x < min.x && point1.x < min.x) {return false_pair;}
-    if (point2.x > max.x && point1.x > max.x) {return false_pair;}
-    if (point2.y < min.y && point1.y < min.y) {return false_pair;}
-    if (point2.y > max.y && point1.y > max.y) {return false_pair;}
-    if (point2.z < min.z && point1.z < min.z) {return false_pair;}
-    if (point2.z > max.z && point1.z > max.z) {return false_pair;}
-    if (point1.x > min.x &&
-            point1.x < max.x &&
-            point1.y > min.y &&
-            point1.y < max.y &&
-            point1.z > min.z &&
-            point1.z < max.z) {
-        hit = point1;
-        return std::pair<bool, glm::vec3>(true, hit);
-    }
-    if ( (intersection( point1.x-min.x, point2.x-min.x, point1, point2, hit) && in_box( hit, min, max, 1 ))
-         || (intersection( point1.y-min.y, point2.y-min.y, point1, point2, hit) && in_box( hit, min, max, 2 ))
-         || (intersection( point1.z-min.z, point2.z-min.z, point1, point2, hit) && in_box( hit, min, max, 3 ))
-         || (intersection( point1.x-max.x, point2.x-max.x, point1, point2, hit) && in_box( hit, min, max, 1 ))
-         || (intersection( point1.y-max.y, point2.y-max.y, point1, point2, hit) && in_box( hit, min, max, 2 ))
-         || (intersection( point1.z-max.z, point2.z-max.z, point1, point2, hit) && in_box( hit, min, max, 3 ))) {
-        return std::pair<bool, glm::vec3>(true, hit);
-    }
-    return false_pair;
+    return BoxIntersection{true, normal, distance};
 }
 
 }

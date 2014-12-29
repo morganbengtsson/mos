@@ -12,6 +12,17 @@
 namespace mo
 {
 
+struct BoxIntersection {
+    bool intersects;
+    glm::vec3 normal;
+    float distance;
+};
+
+struct RayIntersection {
+    bool intersects;
+    glm::vec3 point;
+};
+
 class Box
 {
 public:
@@ -43,9 +54,9 @@ public:
     Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
     glm::vec3 min() const;
     glm::vec3 max() const;
-    std::pair<bool, glm::vec3> intersect(glm::vec3 point1, glm::vec3 point2);
-    std::pair<bool, glm::vec3> intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-    std::tuple<bool, glm::vec3, float> intersects(const Box & other);
+    RayIntersection intersect(glm::vec3 point1, glm::vec3 point2);
+    RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
+    BoxIntersection intersects(const Box & other);
     glm::mat4 transform;
 private:
     glm::vec3 min_;
@@ -64,7 +75,6 @@ private:
         if ( axis==3 && Hit.x > min.x && Hit.x < max.x && Hit.y > min.y && Hit.y < max.y) { return true; }
         return false;
     }
-
 };
 }
 #endif // MO_BOX_HPP
