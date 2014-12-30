@@ -31,8 +31,8 @@ public:
     }
     virtual ~Texture2D();
     
-    Texels::const_iterator begin() const { return texels_.begin();};
-    Texels::const_iterator end() const { return texels_.end();};
+    Texels::const_iterator begin() const { return texels_.begin();}
+    Texels::const_iterator end() const { return texels_.end();}
     
     const unsigned int id() const;
     
