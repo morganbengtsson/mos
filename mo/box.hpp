@@ -6,7 +6,6 @@
 #include <utility>
 #include <algorithm>
 #include <tuple>
-#include "ray.hpp"
 #include "vertex.hpp"
 
 namespace mo
