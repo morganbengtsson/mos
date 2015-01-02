@@ -111,8 +111,11 @@ namespace mo {
                 "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
                 "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
 
-                "vec4 tex_color = texture2D(texture, fragment_uv);\n"
-                "vec4 diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, tex_color.a), 1.0);\n"
+                "vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);\n"
+                "if (has_texture == true){\n"
+                "tex_color = texture2D(texture, fragment_uv);\n"
+                "}\n"
+                "vec4 diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, 1.0 - tex_color.a), 1.0);\n"
                 //"vec4 diffuse_color;"
                 //"if (has_texture == true){\n"
                 //"diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
