@@ -36,6 +36,7 @@ namespace mo {
         ogli::Uniform normal_matrix;
         ogli::Uniform texture;
         ogli::Uniform lightmap;
+        ogli::Uniform normalmap;
         ogli::Uniform material_ambient_color;
         ogli::Uniform material_diffuse_color;
         ogli::Uniform material_specular_color;
@@ -46,6 +47,7 @@ namespace mo {
         ogli::Uniform light_specular_color;
         ogli::Uniform has_texture;
         ogli::Uniform has_lightmap;
+        ogli::Uniform has_normalmap;
         ogli::Uniform selected;
         ogli::Uniform time;
     };

@@ -83,11 +83,13 @@ namespace mo {
                 "uniform float opacity;\n"
                 "uniform sampler2D texture;\n"
                 "uniform sampler2D lightmap;\n"
+                "uniform sampler2D normalmap;\n"
                 "uniform vec3 light_position;\n"
                 "uniform vec3 light_diffuse_color;\n"
                 "uniform vec3 light_specular_color;\n"
                 "uniform bool has_texture;\n"
                 "uniform bool has_lightmap;\n"
+                "uniform bool has_normalmap;\n"
                 "varying vec3 fragment_position;\n"
                 "varying vec3 fragment_normal;\n"
                 "varying vec2 fragment_uv;\n"
@@ -95,18 +97,28 @@ namespace mo {
 
                 "void main() {\n"
 
-                "vec4 indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                "vec4 indirect = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+                "if (has_lightmap == true){\n"
+                "indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                "}\n"
+
 
                 "vec3 normal = normalize(fragment_normal);\n"
+                "if (has_normalmap == true){\n"
+                "normal = texture2D(normalmap, fragment_uv).xyz;}\n"
+
                 "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
                 "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
                 "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
-                "vec4 diffuse_color;"
-                "if (has_texture == true){\n"
-                "diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
-                "} else {"
-                "diffuse_color = vec4(material_diffuse_color, 1.0);\n"
-                "}\n"
+
+                "vec4 tex_color = texture2D(texture, fragment_uv);\n"
+                "vec4 diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, tex_color.a), 1.0);\n"
+                //"vec4 diffuse_color;"
+                //"if (has_texture == true){\n"
+                //"diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
+                //"} else {"
+                //"diffuse_color = vec4(material_diffuse_color, 1.0);\n"
+                //"}\n"
                 "float dist = distance(light_position, fragment_position);\n"
                 "float a = 1.0;\n"
                 "float b = 1.0;\n"
@@ -252,6 +264,7 @@ namespace mo {
         auto normal_matrix_uniform = ogli::createUniform(program, "normal_matrix");
         auto texture_uniform = ogli::createUniform(program, "texture");
         auto lightmap_uniform = ogli::createUniform(program, "lightmap");
+        auto normalmap_uniform = ogli::createUniform(program, "normalmap");
         auto material_ambient_color_uniform = ogli::createUniform(program, "material_ambient_color");
         auto material_diffuse_color_uniform = ogli::createUniform(program, "material_diffuse_color");
         auto material_specular_color_uniform = ogli::createUniform(program, "material_specular_color");
@@ -262,6 +275,7 @@ namespace mo {
         auto light_specular_color_uniform = ogli::createUniform(program, "light_specular_color");
         auto has_texture = ogli::createUniform(program, "has_texture");
         auto has_lightmap = ogli::createUniform(program, "has_lightmap");
+        auto has_normalmap = ogli::createUniform(program, "has_normalmap");
         auto selected = ogli::createUniform(program, "selected");
         auto time = ogli::createUniform(program, "time");
 
@@ -272,6 +286,7 @@ namespace mo {
             normal_matrix_uniform,
             texture_uniform,
             lightmap_uniform,
+            normalmap_uniform,
             material_ambient_color_uniform,
             material_diffuse_color_uniform,
             material_specular_color_uniform,
@@ -282,6 +297,7 @@ namespace mo {
             light_specular_color_uniform,
             has_texture,
             has_lightmap,
+            has_normalmap,
             selected,
             time,
         }));
@@ -362,6 +378,15 @@ namespace mo {
             }
         }
 
+        if (model.normalmap){
+            if (textures_.find(model.normalmap->id()) == textures_.end()) {
+                ogli::TextureBuffer texture = ogli::createTexture(model.normalmap->begin(), model.normalmap->end(),
+                                                                  model.normalmap->width(), model.normalmap->height(),
+                                                                  model.normalmap->mipmaps);
+                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.normalmap->id(), texture));
+            }
+        }
+
         glm::mat4 mv = view * transform * model.transform;
         glm::mat4 mvp = projection * view * model.transform * transform;
 
@@ -381,6 +406,13 @@ namespace mo {
             glBindTexture(GL_TEXTURE_2D, textures_.at(model.lightmap->id()));
             ogli::uniform(vertex_programs_.at(program_name).lightmap, 1u);
         }
+
+        if (model.normalmap) {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, textures_.at(model.normalmap->id()));
+            ogli::uniform(vertex_programs_.at(program_name).normalmap, 1u);
+        }
+
 
         ogli::uniform(vertex_programs_.at(program_name).mvp, mvp);
         ogli::uniform(vertex_programs_.at(program_name).mv, mv);
@@ -405,6 +437,8 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).has_texture,
                 model.texture.get() == nullptr ? false : true);
         ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
+                model.lightmap.get() == nullptr ? false : true);
+        ogli::uniform(vertex_programs_.at(program_name).has_normalmap,
                 model.lightmap.get() == nullptr ? false : true);
 
         ogli::uniform(vertex_programs_.at(program_name).selected, model.selected());

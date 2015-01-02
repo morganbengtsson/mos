@@ -47,6 +47,7 @@ include_directories(externals/tinyobjloader)
 
 # ogli
 include_directories(externals/ogli)
+add_subdirectory(externals/ogli)
 
 # mo
 
