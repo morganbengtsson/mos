@@ -353,8 +353,8 @@ namespace mo {
                 alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
             }
         }
-        alSourcePlay(sources_.at(source.id()));
         alSource3f(sources_.at(source.id()), AL_POSITION, source.position.x, source.position.y, source.position.z);
+        alSourcePlay(sources_.at(source.id()));
     }
 
    
@@ -379,6 +379,13 @@ namespace mo {
 void AudioStreamInit(AudioStream* self){
 	memset(self, 0, sizeof(AudioStream));
 	alGenSources(1, & self->source);
+    /*
+    alSourcef(self->source, AL_PITCH, 1.0f);
+    alSourcef(self->source, AL_GAIN, 1.0f);
+    alSource3f(self->source, AL_POSITION, 100.0f , 100.0f, 0.0f);
+    alSource3f(self->source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+    alSourcei(self->source, AL_LOOPING, false);
+    */
 	alGenBuffers(2, self->buffers);
 	self->bufferSize=4096*8;
 	self->shouldLoop=false;//We loop by default
@@ -416,9 +423,10 @@ bool AudioStreamStream(AudioStream* self, ALuint buffer){
 	return true;
 }
  
-bool AudioStreamOpen(AudioStream* self, const char* filename){
+bool AudioStreamOpen(AudioStream* self, const char* filename, const glm::vec3 position = glm::vec3(0.0f)){
 	self->stream = stb_vorbis_open_filename((char*)filename, NULL, NULL);
 	if(!self->stream) return false;
+
 	// Get file info
 	self->info = stb_vorbis_get_info(self->stream);
 	if(self->info.channels == 2) self->format = AL_FORMAT_STEREO16;
@@ -427,8 +435,8 @@ bool AudioStreamOpen(AudioStream* self, const char* filename){
 	if(!AudioStreamStream(self, self->buffers[0])) return false;
 	if(!AudioStreamStream(self, self->buffers[1])) return false;
 	alSourceQueueBuffers(self->source, 2, self->buffers);
-	alSourcePlay(self->source);
- 
+    alSource3f(self->source, AL_POSITION, position.x, position.y, position.z);
+    alSourcePlay(self->source);
 	self->totalSamplesLeft=stb_vorbis_stream_length_in_samples(self->stream) * self->info.channels;
  
 	return true;
@@ -438,7 +446,6 @@ bool AudioStreamUpdate(AudioStream* self){
 	ALint processed=0;
  
     alGetSourcei(self->source, AL_BUFFERS_PROCESSED, &processed);
- 
     while(processed--){
         ALuint buffer=0;
         
@@ -460,20 +467,19 @@ bool AudioStreamUpdate(AudioStream* self){
 	return true;
 }
     
-    void Audio::playStream(const std::string file_name, const Assets & assets) {
+    void Audio::play_stream(const std::string file_name, const Assets & assets, const glm::vec3 position) {
         AudioStream * stream = new AudioStream();
         AudioStreamInit(stream);
         
-        
-        thread_ = new std::thread(std::thread([](std::string file_name, AudioStream * stream){
-            std::string path = "assets/" + file_name;
-            if (AudioStreamOpen(stream, path.c_str())){
+        thread_ = new std::thread(std::thread([](std::string file_name, AudioStream * stream, const::glm::vec3 position){
+            std::string path = "assets/" + file_name;                                      
+            if (AudioStreamOpen(stream, path.c_str(), position)){
                 std::cout << "Open\n";
             }
             while (AudioStreamUpdate(stream)){
                 //std::cout << "Playing\n";
             }    
-        }, file_name, stream));
+        }, file_name, stream, position));
     }
 }
 

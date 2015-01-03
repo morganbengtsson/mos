@@ -54,7 +54,7 @@ namespace mo {
          * @param source
          */
         void play(const Source & source);
-        void playStream(const std::string file_name, const Assets & assets);
+        void play_stream(const std::string file_name, const Assets & assets, const glm::vec3 position = glm::vec3(0.0f));
         void stop();
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
