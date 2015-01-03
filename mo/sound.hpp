@@ -38,7 +38,7 @@ namespace mo {
         bool valid;
         
     private:
-        unsigned int id_;;
+        unsigned int id_;
         Samples samples_;
 
     };

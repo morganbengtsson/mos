@@ -16,39 +16,45 @@
 
 namespace mo {
 
-    /*!
-     * A classed used for audio playback. Contains sounds, together with a position.
-     * That is used if 3D audio is enabled.
-     */
-    class Source {
-    public:
-        typedef std::vector<std::shared_ptr<Sound>> Sounds;
-        
-        template<class It>
-        Source(It begin, It end, const glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f)): position(position){
-            static unsigned int current_id = 0;
-            id_ = current_id++;
-            sounds_.assign(begin, end);
-        }
-        template<class It>
-        Source(std::initializer_list<It> il, const glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f)) : Source(il.begin(), il.end(), position){
-            
-        }
-        
-        Source() : Source({}){
-            
-        }
-        virtual ~Source();
-        
-        glm::vec3 position;
-        
-        const Sounds::const_iterator begin() const;
-        const Sounds::const_iterator end() const;
-        unsigned int id() const;
-    private:
-        unsigned int id_;
-        Sounds sounds_;
-    };
+/*!
+ * A classed used for audio playback. Contains sounds, together with a position.
+ * That is used if 3D audio is enabled.
+ */
+class Source {
+public:
+    typedef std::vector<std::shared_ptr<Sound>> Sounds;
+
+    template<class It>
+    Source(It begin, It end,
+           const glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+           const bool loop = false) :
+        position(position),
+        loop(loop){
+        static unsigned int current_id = 0;
+        id_ = current_id++;
+        sounds_.assign(begin, end);
+    }
+    template<class It>
+    Source(std::initializer_list<It> il,
+           const glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+           const bool loop = false):
+        Source(il.begin(), il.end(), position, loop){
+    }
+
+    Source() : Source({}){
+    }
+    virtual ~Source();
+
+    glm::vec3 position;
+    bool loop;
+
+    const Sounds::const_iterator begin() const;
+    const Sounds::const_iterator end() const;
+    unsigned int id() const;
+private:
+    unsigned int id_;
+    Sounds sounds_;
+};
 
 }
 

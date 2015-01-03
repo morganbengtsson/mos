@@ -270,6 +270,7 @@ namespace mo {
 #include <cstring>
 #include <future>
 #include <thread>
+#include <glm/gtx/io.hpp>
 
 namespace mo {
 
@@ -279,32 +280,63 @@ namespace mo {
         context_ = alcCreateContext(device_, contextAttr);
         alcMakeContextCurrent(context_);
 
-        auto position = glm::vec3(0.0f, 0.0f, 0.0f);
-        alListener3f(AL_POSITION, position.x, position.y, position.z);
-        auto velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-        alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
-        glm::vec3 orientation(0.0f, 0.0f, -1.0f);
-        float orient[6] = {/*fwd:*/ orientation.x, orientation.y, orientation.z, /*up:*/ 0., 1., 0.};
-        alListenerfv(AL_ORIENTATION, orient);
+        listener_position(glm::vec3(0.0f));
+        listener_velocity(glm::vec3(0.0f));
+        listener_orientation(glm::vec3(0.0f, 0.0f, -1.0f));
     }
 
     Audio::~Audio() {
         thread_->join();
         delete thread_;
     }
-    void Audio::stop(){
-    
+    void Audio::stop() {
+
     }
+
+    glm::vec3 Audio::listener_position() {
+        glm::vec3 position;
+        alGetListener3f(AL_POSITION, & position.x, & position.y, & position.z);
+        return position;
+    }
+
+    void Audio::listener_position(const glm::vec3 position) {
+        alListener3f(AL_POSITION, position.x, position.y, position.z);
+    }
+
+    glm::vec3 Audio::listener_orientation() {
+        glm::vec3 orientation;
+        alGetListener3f(AL_ORIENTATION, & orientation.x, & orientation.y, & orientation.z);
+        return orientation;
+    }
+
+    void Audio::listener_orientation(const glm::vec3 orientation, const glm::vec3 up)
+    {
+        float orient[6] = {/*fwd:*/ orientation.x,orientation.y, orientation.z,
+                           /*up:*/ up.x, up.y, up.z};
+        alListenerfv(AL_ORIENTATION, orient);
+    }
+
+    glm::vec3 Audio::listener_velocity() {
+        glm::vec3 velocity;
+        alGetListener3f(AL_VELOCITY, & velocity.x, & velocity.y, & velocity.z);
+        return velocity;
+    }
+
+    void Audio::listener_velocity(const glm::vec3 velocity)
+    {
+        alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
+    }
+
     
     void Audio::play(const Source & source) {
         if (sources_.find(source.id()) == sources_.end()) {
             ALuint al_source;
             alGenSources(1, &al_source);
-            alSourcef(al_source, AL_PITCH, 1.);
-            alSourcef(al_source, AL_GAIN, 1.);
+            alSourcef(al_source, AL_PITCH, 1.0f);
+            alSourcef(al_source, AL_GAIN, 1.0f);
             alSource3f(al_source, AL_POSITION, source.position.x, source.position.y, source.position.z);
             alSource3f(al_source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-            alSourcei(al_source, AL_LOOPING, AL_FALSE);
+            alSourcei(al_source, AL_LOOPING, source.loop);
             sources_.insert(SourcePair(source.id(), al_source));
         }
 

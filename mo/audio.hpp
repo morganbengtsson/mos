@@ -56,6 +56,12 @@ namespace mo {
         void play(const Source & source);
         void playStream(const std::string file_name, const Assets & assets);
         void stop();
+        glm::vec3 listener_position();
+        void listener_position(const glm::vec3 position);
+        glm::vec3 listener_orientation();
+        void listener_orientation(const glm::vec3 orientation, const glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::vec3 listener_velocity();
+        void listener_velocity(const glm::vec3 velocity);
     private:
 #ifdef __ANDROID__
         void createBufferPlayers();        
@@ -89,7 +95,6 @@ namespace mo {
         Buffers buffers_;
         
         std::thread * thread_;
-        
 #endif
     };
 }
