@@ -286,8 +286,18 @@ namespace mo {
     }
 
     Audio::~Audio() {
-        thread_->join();
+        //thread_->join();
         delete thread_;
+
+        for (auto source : sources_){
+            alDeleteSources(1, & source.second);
+        }
+        for (auto buffer : buffers_){
+            alDeleteBuffers(1, & buffer.second);
+        }
+        alcMakeContextCurrent(nullptr);
+        alcDestroyContext(context_);
+        alcCloseDevice(device_);
     }
     void Audio::stop() {
 
@@ -436,6 +446,7 @@ bool AudioStreamOpen(AudioStream* self, const char* filename, const glm::vec3 po
 	if(!AudioStreamStream(self, self->buffers[1])) return false;
 	alSourceQueueBuffers(self->source, 2, self->buffers);
     alSource3f(self->source, AL_POSITION, position.x, position.y, position.z);
+    //alSourcei(self->source, AL_LOOPING, true);
     alSourcePlay(self->source);
 	self->totalSamplesLeft=stb_vorbis_stream_length_in_samples(self->stream) * self->info.channels;
  

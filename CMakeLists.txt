@@ -52,7 +52,7 @@ add_subdirectory(externals/ogli)
 # mo
 
 file(GLOB ROOT_SOURCE mo/*.cpp)
-file(GLOB ROOT_HEADER mo/*.h)
+file(GLOB ROOT_HEADER mo/*.hpp)
 add_subdirectory(mo)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE})

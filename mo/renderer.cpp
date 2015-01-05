@@ -140,7 +140,6 @@ namespace mo {
                 "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);}\n"
 
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_indirect.xyz + specular.xyz, 1.0);\n"               
-
                 
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
