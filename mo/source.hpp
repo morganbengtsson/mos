@@ -13,6 +13,7 @@
 #include <initializer_list>
 #include <glm/glm.hpp>
 #include "sound.hpp"
+#include "stream.hpp"
 
 namespace mo {
 
@@ -22,7 +23,8 @@ namespace mo {
  */
 class Source {
 public:
-    typedef std::vector<std::shared_ptr<Sound>> Sounds;
+    using Sounds = std::vector<std::shared_ptr<Sound>>;
+    using Streams = std::vector<std::shared_ptr<Stream>>;
 
     template<class It>
     Source(It begin, It end,
@@ -51,9 +53,11 @@ public:
     const Sounds::const_iterator begin() const;
     const Sounds::const_iterator end() const;
     unsigned int id() const;
+    Streams streams;
 private:
     unsigned int id_;
     Sounds sounds_;
+
 };
 
 }

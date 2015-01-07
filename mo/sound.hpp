@@ -17,13 +17,21 @@ namespace mo {
      */
     class Sound {
     public:
-        typedef std::vector<short> Samples;
+        enum class Format {MONO, STEREO};
+        using Samples = std::vector<short>;
         template<class It>
-        Sound(It begin, It end) : valid(true){
+        Sound(It begin, It end, const Format format = Format::MONO) :
+            format_(format),
+            valid(true),
+            samples_(begin, end) {
             static unsigned int current_id = 0;
             id_ = current_id++;
-            samples_.assign(begin, end);
         }
+        Sound(const Format format = Format::MONO): format_(format){
+            static unsigned int current_id = 0;
+            id_ = current_id++;
+        }
+
         virtual ~Sound();
         
         Samples::const_iterator begin() const {
@@ -35,11 +43,13 @@ namespace mo {
         
         const short * data() const;
         unsigned int id() const;
+        Format format() const;
         bool valid;
-        
+
     private:
         unsigned int id_;
         Samples samples_;
+        Format format_;
 
     };
 }

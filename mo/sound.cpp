@@ -8,17 +8,18 @@
 #include "sound.hpp"
 
 namespace mo {
-
     Sound::~Sound() {
     }
     
     unsigned int Sound::id() const {
         return id_;
     }
+
+    Sound::Format Sound::format() const {
+        return format_;
+    }
        
     const short * Sound::data() const {
         return samples_.data();        
     }
-
-
 }

@@ -12,8 +12,10 @@ class Stream
 public:
     Stream(const std::string file_name);
     std::string file_name;
-    //Sound buffer1;
-    //Sound buffer2;
+    Sound buffer1;
+    Sound buffer2;
+    int samples_left;
+    int size;
 };
 
 }
