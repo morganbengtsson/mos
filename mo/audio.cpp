@@ -265,7 +265,6 @@ namespace mo {
 }
 #else
 
-#include <stb_vorbis.h>
 #include <iostream>
 #include <cstring>
 #include <future>
@@ -355,9 +354,9 @@ namespace mo {
                 ALuint buffer;
                 alGenBuffers(1, &buffer);
                 {
-                    long dataSize = std::distance(sound->begin(), sound->end());
+                    long data_size = std::distance(sound->begin(), sound->end());
                     const ALvoid* data = sound->data();
-                    alBufferData(buffer, AL_FORMAT_MONO16, data, dataSize * sizeof (short), 44100);
+                    alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
                     //free( (void*)data );
                 }
                 alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);

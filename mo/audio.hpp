@@ -18,6 +18,8 @@
 #include <AL/alext.h>
 #endif
 
+
+#include <stb_vorbis.h>
 #include <glm/glm.hpp>
 #include <map>
 #include <memory>
@@ -83,16 +85,32 @@ namespace mo {
         int latest_player;
         
 #else
+        struct StreamBuffer{
+            ALuint id;
+            stb_vorbis* stream;
+            stb_vorbis_info info;
+
+            ALuint buffers[2];
+            ALuint source;
+            ALenum format;
+
+            size_t size;
+            size_t samples_left;
+        };
+
         ALCdevice* device_;
         ALCcontext* context_;
 
-        typedef std::pair<unsigned int, ALuint> SourcePair;
-        typedef std::pair<unsigned int, ALuint> BufferPair;
-        typedef std::map<unsigned int, ALuint> Sources;
-        typedef std::map<unsigned int, ALuint> Buffers;
+        using SourcePair = std::pair<unsigned int, ALuint>;
+        using BufferPair = std::pair<unsigned int, ALuint>;
+        using StreamBufferPair = std::pair<unsigned int, StreamBuffer>;
+        using Sources = std::map<unsigned int, ALuint>;
+        using Buffers = std::map<unsigned int, ALuint>;
+        using StreamBuffers = std::map<unsigned int, StreamBuffer>;
 
         Sources sources_;
         Buffers buffers_;
+        StreamBuffers stream_buffers_;
         
         std::thread * thread_;
 #endif

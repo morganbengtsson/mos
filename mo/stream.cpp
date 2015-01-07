@@ -2,8 +2,9 @@
 
 namespace mo {
 
-Stream::Stream()
+Stream::Stream(const std::string file_name)
 {
+
 }
 
 }
