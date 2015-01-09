@@ -57,6 +57,7 @@ namespace mo {
          */
         void play(const Source & source);
         void play_stream(const std::string file_name, const Assets & assets, const glm::vec3 position = glm::vec3(0.0f));
+        void play(const Stream & stream);
         void stop();
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
@@ -85,17 +86,8 @@ namespace mo {
         int latest_player;
         
 #else
-        struct StreamBuffer{
-            ALuint id;
-            stb_vorbis* stream;
-            stb_vorbis_info info;
-
+        struct StreamBuffer {
             ALuint buffers[2];
-            ALuint source;
-            ALenum format;
-
-            size_t size;
-            size_t samples_left;
         };
 
         ALCdevice* device_;

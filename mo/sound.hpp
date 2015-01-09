@@ -45,11 +45,12 @@ namespace mo {
         unsigned int id() const;
         Format format() const;
         bool valid;
+        Format format_;
 
     private:
         unsigned int id_;
         Samples samples_;
-        Format format_;
+
 
     };
 }

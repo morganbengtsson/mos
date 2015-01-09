@@ -349,19 +349,19 @@ namespace mo {
             sources_.insert(SourcePair(source.id(), al_source));
         }
 
-        for (auto sound : source) {
-            if (buffers_.find(sound->id()) == buffers_.end()) {
-                ALuint buffer;
-                alGenBuffers(1, &buffer);
-                {
-                    long data_size = std::distance(sound->begin(), sound->end());
-                    const ALvoid* data = sound->data();
-                    alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
-                    //free( (void*)data );
-                }
-                alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
+        auto & sound = source.sound;
+        if (buffers_.find(sound->id()) == buffers_.end()) {
+            ALuint buffer;
+            alGenBuffers(1, &buffer);
+            {
+                long data_size = std::distance(sound->begin(), sound->end());
+                const ALvoid* data = sound->data();
+                alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
+                //free( (void*)data );
             }
+            alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
         }
+
         alSource3f(sources_.at(source.id()), AL_POSITION, source.position.x, source.position.y, source.position.z);
         alSourcePlay(sources_.at(source.id()));
     }
@@ -388,13 +388,6 @@ namespace mo {
 void AudioStreamInit(AudioStream* self){
 	memset(self, 0, sizeof(AudioStream));
 	alGenSources(1, & self->source);
-    /*
-    alSourcef(self->source, AL_PITCH, 1.0f);
-    alSourcef(self->source, AL_GAIN, 1.0f);
-    alSource3f(self->source, AL_POSITION, 100.0f , 100.0f, 0.0f);
-    alSource3f(self->source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-    alSourcei(self->source, AL_LOOPING, false);
-    */
 	alGenBuffers(2, self->buffers);
 	self->bufferSize=4096*8;
 	self->shouldLoop=false;//We loop by default
@@ -489,7 +482,37 @@ bool AudioStreamUpdate(AudioStream* self){
             while (AudioStreamUpdate(stream)){
                 //std::cout << "Playing\n";
             }    
-        }, file_name, stream, position));
+                                  }, file_name, stream, position));
+    }
+
+    void Audio::play(const Stream &stream) {
+        auto * thread = new std::thread(std::thread([](Stream stream){
+                        ALuint buffers[2];
+                        ALuint source;
+                        alGenSources(1, &source);
+                        alGenBuffers(2, buffers);
+
+                        int size = 4096 * 8;
+                        alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+                        alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+
+                        alSourceQueueBuffers(source, 2, buffers);
+                        alSource3f(source, AL_POSITION, stream.position.x, stream.position.y, stream.position.z);
+                        alSourcePlay(source);
+
+                        while(true){
+                            ALint processed = 0;
+                            alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
+                            while(processed--){
+                                ALuint buffer = 0;
+
+                                alSourceUnqueueBuffers(source, 1, &buffer);
+                                alBufferData(buffer, AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+                                alSourceQueueBuffers(source, 1, &buffer);
+                            }
+                        }
+
+                        }, stream));
     }
 }
 
