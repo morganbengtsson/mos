@@ -23,6 +23,7 @@ public:
     Stream(const std::string file_name,
            const glm::vec3 position = glm::vec3(0.0f),
            const bool loop = false);
+    ~Stream();
     std::string file_name;
     int samples_left;
     int size;

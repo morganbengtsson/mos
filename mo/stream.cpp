@@ -10,11 +10,12 @@ file_name(file_name), buffer_size(4096*8), loop(false), channels(1) {
 
 }
 
+Stream::~Stream(){
+    stb_vorbis_close(vorbis_stream);
+}
 
 StreamData Stream::read()
-{   
-    short pcm[buffer_size];
-
+{
     StreamData sd;
 
     int  size = 0;
@@ -31,7 +32,6 @@ StreamData Stream::read()
         return sd;
     };
 
-    //alBufferData(buffer, self->format, pcm, size*sizeof(ALshort), self->info.sample_rate);
     samples_left -= size;
 
     sd.done = true;

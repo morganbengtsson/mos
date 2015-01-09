@@ -85,24 +85,18 @@ namespace mo {
         std::vector<Player> players_;
         int latest_player;
         
-#else
-        struct StreamBuffer {
-            ALuint buffers[2];
-        };
+#else 
 
         ALCdevice* device_;
         ALCcontext* context_;
 
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;
-        using StreamBufferPair = std::pair<unsigned int, StreamBuffer>;
         using Sources = std::map<unsigned int, ALuint>;
-        using Buffers = std::map<unsigned int, ALuint>;
-        using StreamBuffers = std::map<unsigned int, StreamBuffer>;
+        using Buffers = std::map<unsigned int, ALuint>;     
 
         Sources sources_;
         Buffers buffers_;
-        StreamBuffers stream_buffers_;
         
         std::thread * thread_;
 #endif

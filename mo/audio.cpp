@@ -425,95 +425,39 @@ bool AudioStreamStream(AudioStream* self, ALuint buffer){
 	return true;
 }
  
-bool AudioStreamOpen(AudioStream* self, const char* filename, const glm::vec3 position = glm::vec3(0.0f)){
-	self->stream = stb_vorbis_open_filename((char*)filename, NULL, NULL);
-	if(!self->stream) return false;
 
-	// Get file info
-	self->info = stb_vorbis_get_info(self->stream);
-	if(self->info.channels == 2) self->format = AL_FORMAT_STEREO16;
-	else self->format = AL_FORMAT_MONO16;
- 
-	if(!AudioStreamStream(self, self->buffers[0])) return false;
-	if(!AudioStreamStream(self, self->buffers[1])) return false;
-	alSourceQueueBuffers(self->source, 2, self->buffers);
-    alSource3f(self->source, AL_POSITION, position.x, position.y, position.z);
-    //alSourcei(self->source, AL_LOOPING, true);
-    alSourcePlay(self->source);
-	self->totalSamplesLeft=stb_vorbis_stream_length_in_samples(self->stream) * self->info.channels;
- 
-	return true;
-}
- 
-bool AudioStreamUpdate(AudioStream* self){
-	ALint processed=0;
- 
-    alGetSourcei(self->source, AL_BUFFERS_PROCESSED, &processed);
-    while(processed--){
-        ALuint buffer=0;
-        
-        alSourceUnqueueBuffers(self->source, 1, &buffer);
- 
-		if(!AudioStreamStream(self, buffer)){
-			bool shouldExit=true;
- 
-			if(self->shouldLoop){
-				stb_vorbis_seek_start(self->stream);
-				self->totalSamplesLeft=stb_vorbis_stream_length_in_samples(self->stream) * self->info.channels;
-				shouldExit=!AudioStreamStream(self, buffer);
-			}
- 
-			if(shouldExit) return false;
-		}
-		alSourceQueueBuffers(self->source, 1, &buffer);
-	} 
-	return true;
-}
-    
-    void Audio::play_stream(const std::string file_name, const Assets & assets, const glm::vec3 position) {
-        AudioStream * stream = new AudioStream();
-        AudioStreamInit(stream);
-        
-        thread_ = new std::thread(std::thread([](std::string file_name, AudioStream * stream, const::glm::vec3 position){
-            std::string path = "assets/" + file_name;                                      
-            if (AudioStreamOpen(stream, path.c_str(), position)){
-                std::cout << "Open\n";
+
+
+void Audio::play(const Stream &stream) {
+    auto * thread = new std::thread(std::thread([](Stream stream){
+            ALuint buffers[2];
+            ALuint source;
+            alGenSources(1, &source);
+            alGenBuffers(2, buffers);
+
+            int size = 4096 * 8;
+            alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+            alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+
+            alSourceQueueBuffers(source, 2, buffers);
+            alSource3f(source, AL_POSITION, stream.position.x, stream.position.y, stream.position.z);
+            alSourcePlay(source);
+
+            while(true){
+                ALint processed = 0;
+                alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
+                while(processed--){
+                    ALuint buffer = 0;
+
+                    alSourceUnqueueBuffers(source, 1, &buffer);
+                    alBufferData(buffer, AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+                    alSourceQueueBuffers(source, 1, &buffer);
+                }
             }
-            while (AudioStreamUpdate(stream)){
-                //std::cout << "Playing\n";
-            }    
-                                  }, file_name, stream, position));
-    }
-
-    void Audio::play(const Stream &stream) {
-        auto * thread = new std::thread(std::thread([](Stream stream){
-                        ALuint buffers[2];
-                        ALuint source;
-                        alGenSources(1, &source);
-                        alGenBuffers(2, buffers);
-
-                        int size = 4096 * 8;
-                        alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
-                        alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
-
-                        alSourceQueueBuffers(source, 2, buffers);
-                        alSource3f(source, AL_POSITION, stream.position.x, stream.position.y, stream.position.z);
-                        alSourcePlay(source);
-
-                        while(true){
-                            ALint processed = 0;
-                            alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
-                            while(processed--){
-                                ALuint buffer = 0;
-
-                                alSourceUnqueueBuffers(source, 1, &buffer);
-                                alBufferData(buffer, AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
-                                alSourceQueueBuffers(source, 1, &buffer);
-                            }
-                        }
-
-                        }, stream));
-    }
+            alDeleteSources(1, & source);
+            alDeleteBuffers(2, buffers);
+        }, stream));
+}
 }
 
 #endif
