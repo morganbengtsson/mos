@@ -30,6 +30,7 @@
 #include "sound.hpp"
 #include "source.hpp"
 #include "assets.hpp"
+#include "streamsource.hpp"
 
 namespace mo {
     
@@ -56,7 +57,8 @@ namespace mo {
          * @param source
          */
         void play(const Source & source);
-        void play(std::shared_ptr<Stream> stream);
+        void play(const StreamSource & stream_source);
+        void update(const StreamSource & stream_source);
         void stop();
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);

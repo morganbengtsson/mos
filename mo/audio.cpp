@@ -365,36 +365,64 @@ namespace mo {
 
  
 
-void Audio::play(std::shared_ptr<Stream> stream) {
-     stream_threads.push_back(std::thread([](std::shared_ptr<Stream> stream){
+void Audio::play(const StreamSource & stream_source) {
+     stream_threads.push_back(std::thread([&](StreamSource stream_source){
             //Stream stream("assets/sounds/waterpipes.ogg");
             ALuint buffers[2];
             ALuint source;
-            alGenSources(1, &source);
+            if (sources_.find(stream_source.id()) == sources_.end()) {
+                alGenSources(1, &source);
+                sources_.insert(SourcePair(stream_source.id(), source));
+            } else {
+              source = sources_.at(stream_source.id());
+            }
             alGenBuffers(2, buffers);
 
-            int size = 4096 * 8;
-            alBufferData(buffers[0], AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
-            alBufferData(buffers[1], AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
+            int size = stream_source.stream->buffer_size;
+            alBufferData(buffers[0], AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
+            alBufferData(buffers[1], AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
 
             alSourceQueueBuffers(source, 2, buffers);
-            alSource3f(source, AL_POSITION, stream->position.x, stream->position.y, stream->position.z);
+            alSource3f(source, AL_POSITION, stream_source.position.x, stream_source.position.y, stream_source.position.z);
             alSourcePlay(source);
 
-            while(true && stream->playing){
+
+            while(true && stream_source.playing){
                 ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){
                     ALuint buffer = 0;
 
                     alSourceUnqueueBuffers(source, 1, &buffer);
-                    alBufferData(buffer, AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
+                    alBufferData(buffer, AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
                     alSourceQueueBuffers(source, 1, &buffer);
                 }
             }
             alDeleteSources(1, & source);
             alDeleteBuffers(2, buffers);
-        }, stream));
+                              }, stream_source));
+}
+
+void Audio::update(const StreamSource & stream_source)
+{
+    if (sources_.find(stream_source.id()) != sources_.end()) {
+        ALuint al_source = sources_.at(stream_source.id());
+        alGenSources(1, &al_source);
+        alSourcef(al_source, AL_PITCH, stream_source.pitch);
+        alSourcef(al_source, AL_GAIN, stream_source.gain);
+        alSource3f(al_source, AL_POSITION, stream_source.position.x,
+                   stream_source.position.y, stream_source.position.z);
+        alSource3f(al_source, AL_VELOCITY, stream_source.velocity.x, stream_source.velocity.y, stream_source.velocity.z);
+        alSourcei(al_source, AL_LOOPING, stream_source.loop);
+        ALint al_playing;
+        alSourceiv(al_source, AL_PLAYING, &al_playing);
+        if (stream_source.playing && al_playing){
+             alSourcePlay(al_source);
+        }
+        else{
+            alSourcePause(al_source);
+        }
+    }
 }
 }
 

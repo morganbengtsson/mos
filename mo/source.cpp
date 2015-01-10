@@ -9,10 +9,18 @@
 
 namespace mo {
 
-    Source::~Source() {
-    }
+Source::Source(const std::shared_ptr<Sound> sound, const glm::vec3 position, const bool loop) :
+    sound(sound),
+    position(position),
+    loop(loop){
+    static unsigned int current_id = 0;
+    id_ = current_id++;
+}
 
-    unsigned int Source::id() const{
-        return id_;
-    }
+Source::~Source() {
+}
+
+unsigned int Source::id() const{
+    return id_;
+}
 }

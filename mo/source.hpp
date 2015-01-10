@@ -25,13 +25,7 @@ public:
 
     Source(const std::shared_ptr<Sound> sound,
            const glm::vec3 position = glm::vec3(0.0f),
-           const bool loop = false) :
-        sound(sound),
-        position(position),
-        loop(loop){
-        static unsigned int current_id = 0;
-        id_ = current_id++;
-    }
+           const bool loop = false);
     virtual ~Source();
     glm::vec3 position;
     bool loop;

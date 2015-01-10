@@ -23,7 +23,7 @@ public:
     Stream(const std::string file_name,
            const glm::vec3 position = glm::vec3(0.0f),
            const bool loop = false);
-    //Stream(const Stream & original);
+
     ~Stream();
     std::string file_name;
     int samples_left;
@@ -32,10 +32,8 @@ public:
     int channels;
     stb_vorbis * vorbis_stream;
     stb_vorbis_info vorbis_info;
-    bool loop;
-    glm::vec3 position;
     StreamData read();
-    bool playing;
+    int sample_rate() const;
 };
 
 
