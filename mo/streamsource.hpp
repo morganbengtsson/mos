@@ -5,24 +5,16 @@
 #include <memory>
 
 #include "stream.hpp"
+#include "source.hpp"
 
 namespace mo {
 
-class StreamSource
+class StreamSource : public Source
 {
 public:
-    StreamSource(std::shared_ptr<Stream> stream,
-                 const glm::vec3 position = glm::vec3(0.0f));
-    glm::vec3 position;
-    glm::vec3 velocity;
-    float pitch;
-    float gain;
-    bool loop;
-    bool playing;
+    StreamSource(std::shared_ptr<Stream> stream);
+    virtual ~StreamSource();
     std::shared_ptr<Stream> stream;
-    unsigned int id() const;
-private:
-    unsigned int id_;
 };
 
 }

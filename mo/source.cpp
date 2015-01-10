@@ -9,7 +9,19 @@
 
 namespace mo {
 
-Source::Source(){
+Source::Source(const glm::vec3 position,
+               const glm::vec3 velocity,
+               const float pitch,
+               const float gain,
+               bool loop,
+               bool playing)
+    : position(position),
+      velocity(velocity),
+      pitch(pitch),
+      gain(gain),
+      loop(loop),
+      playing(playing)
+{
     static unsigned int current_id = 0;
     id_ = current_id++;
 }

@@ -357,6 +357,7 @@ namespace mo {
                 alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
             }
             alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
+            buffers_.insert(BufferPair(sound->id(), buffer));
         }
 
         alSource3f(sources_.at(source.id()), AL_POSITION, source.position.x, source.position.y, source.position.z);
