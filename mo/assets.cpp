@@ -36,8 +36,8 @@ namespace mo {
     }
 #else
 
-    Assets::Assets() :
-    directory_("assets/") {
+    Assets::Assets(const std::string directory) :
+    directory_(directory) {
         vector<Vertex> vertices;
         vector<int> elements;
         models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
@@ -180,7 +180,12 @@ namespace mo {
         return std::make_shared<Sound>(Sound(decoded, decoded + length));
     }
 
-    std::shared_ptr<Sound> Assets::soundCached(const std::string file_name) {
+    std::shared_ptr<Stream> Assets::stream(const string file_name) const
+    {
+        return std::make_shared<mo::Stream>(mo::Stream(directory_ + file_name));
+    }
+
+    std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {
         if (sounds_.find(file_name) == sounds_.end()) {
 
             sounds_.insert(SoundPair(file_name, sound(file_name)));

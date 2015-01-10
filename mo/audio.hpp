@@ -31,6 +31,7 @@
 #include "source.hpp"
 #include "assets.hpp"
 #include "streamsource.hpp"
+#include "soundsource.hpp"
 
 namespace mo {
     
@@ -56,7 +57,7 @@ namespace mo {
          * 
          * @param source
          */
-        void play(const Source & source);
+        void play(const SoundSource & source);
         void play(const StreamSource & stream_source);
         void update(const StreamSource & stream_source);
         void stop();

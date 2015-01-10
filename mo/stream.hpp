@@ -20,21 +20,21 @@ struct StreamData {
 class Stream
 {
 public:
-    Stream(const std::string file_name,
-           const glm::vec3 position = glm::vec3(0.0f),
-           const bool loop = false);
-
+    Stream(const std::string file_name);
     ~Stream();
-    std::string file_name;
-    int samples_left;
-    int size;
+
     int buffer_size;
-    int channels;
-    stb_vorbis * vorbis_stream;
-    stb_vorbis_info vorbis_info;
     StreamData read();
     int sample_rate() const;
+    int channels() const;
+private:
+    int samples_left;
+    int size;
+    std::string file_name;
+    stb_vorbis * vorbis_stream;
+    stb_vorbis_info vorbis_info;
 };
+
 
 
 

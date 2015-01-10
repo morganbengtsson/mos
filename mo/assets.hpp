@@ -16,6 +16,7 @@
 #include "mesh.hpp"
 #include "texture2d.hpp"
 #include "material.hpp"
+#include "stream.hpp"
 
 #ifdef __ANDROID__
 #include <android/asset_manager.h>
@@ -31,41 +32,62 @@ namespace mo {
     };
     
     /*!
-     * An asset class that manages heavy resources such as Textures, meshes and sounds. 
+     * An asset class that manages heavy resources such as Textures, meshes, sounds
+     * and sound streams.
      * Caches most things internally, so nothing is loaded twice. 
      */
     class Assets {
     public:
-        typedef std::map<std::string, std::shared_ptr<Mesh>> MeshMap;
-        typedef std::map<std::string, std::shared_ptr<Texture2D>> TextureMap;
-        typedef std::pair<std::string, std::shared_ptr<Mesh>> MeshPair;
-        typedef std::pair<std::string, std::shared_ptr<Texture2D>> TexturePair;
-        typedef std::map<std::string, std::shared_ptr<Sound>> SoundMap;
-        typedef std::pair<std::string, std::shared_ptr<Sound>> SoundPair;
+        using MeshMap = std::map<std::string, std::shared_ptr<Mesh>>;
+        using TextureMap = std::map<std::string, std::shared_ptr<Texture2D>>;
+        using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
+        using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
+        using SoundMap = std::map<std::string, std::shared_ptr<Sound>>;
+        using SoundPair = std::pair<std::string, std::shared_ptr<Sound>>;
         using MaterialPair =  std::pair<std::string, std::shared_ptr<Material>>;
         using MaterialMap = std::map<std::string, std::shared_ptr<Material>>;
 #ifdef __ANDROID__
         Assets(AAssetManager * manager);
 #else
-        Assets();
+        /**
+         * Constructor for the asset manager.
+         *
+         * @brief Assets
+         * @param directory where the assets exist, default is "assets/"
+         */
+        Assets(const std::string directory = "assets/");
 #endif
         virtual ~Assets();
 
+        /**
+         * Loads a *.material file into a Material object, and caches it internally.
+         *
+         * @param file_name
+         * @return Shared pointer to Material object.
+         */
         std::shared_ptr<Material> material_cached(const std::string file_name);  
-        
+
+
+        /**
+         *
+         * Loads  a *.material file into a Material object. Not cached.
+         *
+         * @brief material
+         * @param file_name
+         * @return Shared pointer to a Material object.
+         */
         std::shared_ptr<Material> material(const std::string file_name);
         
         /**
-         * Loads a *.obj file into a mesh object, and caches it internally.
+         * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
          * 
          * @param file_name
          * @return Shared pointer to Mesh object.
          */
         std::shared_ptr<Mesh> mesh_cached(const std::string file_name);
-        
-        //auto mesh_cached = meshCached; // New interface
+
         /**
-         * Loads a *.obj file into a mesh object. Not cached.
+         * Loads a *.obj or *.mesh file into a mesh object. Not cached.
          * 
          * @param file_name
          * @return Shared pointer to Mesh object
@@ -79,7 +101,7 @@ namespace mo {
          * @return Shared pointer to Texture2D object.
          */
         std::shared_ptr<Texture2D> texture_cached(const std::string file_name, const bool mipmaps = true);
-        //auto texture_cached = textureCached; // New interface
+
         /**
          * Loads a *.png file into A Texture2D object. Not cached. 
          * 
@@ -94,8 +116,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Sound object.
          */
-        std::shared_ptr<Sound> soundCached(const std::string file_name);
-        //auto sound_cached = soundCached; // New interface
+        std::shared_ptr<Sound> sound_cached(const std::string file_name);
         
         /**
          * Loads an *. ogg file into a Sound object. Not cached.
@@ -104,7 +125,17 @@ namespace mo {
          * @return Shared pointer to Sound object.
          */        
         std::shared_ptr<Sound> sound(const std::string file_name) const;
-                
+
+
+        /**
+         * Loads an *.ogg file into a Stream object. Not cached, since it is streamed.
+         *
+         * @brief stream
+         * @param file_name
+         * @return
+         */
+        std::shared_ptr<Stream> stream(const std::string file_name) const;
+
         /**
          * Load text from file. Not cached.
          * 
@@ -120,7 +151,6 @@ namespace mo {
          * @return A map of chars with corresponding Character objects.
          */
         std::map<char, Character> characterMap(std::string path);
-        //auto character_map = characterMap; // New interface;
         
         /**
          * Descriptor for streaming of files.

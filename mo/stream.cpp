@@ -2,12 +2,11 @@
 
 namespace mo {
 
-Stream::Stream(const std::string file_name, const glm::vec3 position, const bool loop):
-file_name(file_name), buffer_size(4096*8), channels(1){
+Stream::Stream(const std::string file_name):
+file_name(file_name), buffer_size(4096*8){
     vorbis_stream = stb_vorbis_open_filename((char*)file_name.c_str(), NULL, NULL);
     vorbis_info = stb_vorbis_get_info(vorbis_stream);
     samples_left = 	stb_vorbis_stream_length_in_samples(vorbis_stream) * vorbis_info.channels;
-
 }
 
 Stream::~Stream(){
@@ -41,6 +40,11 @@ StreamData Stream::read()
 int Stream::sample_rate() const
 {
     return vorbis_info.sample_rate;
+}
+
+int Stream::channels() const
+{
+    return vorbis_info.channels;
 }
 
 }

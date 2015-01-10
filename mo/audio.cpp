@@ -7,6 +7,7 @@
 #include "audio.hpp"
 #include "logging.hpp"
 #include "source.hpp"
+#include "soundsource.hpp"
 
 #ifdef __ANDROID__
 namespace mo {
@@ -334,7 +335,7 @@ namespace mo {
     }
 
     
-    void Audio::play(const Source & source) {
+    void Audio::play(const SoundSource & source) {
         if (sources_.find(source.id()) == sources_.end()) {
             ALuint al_source;
             alGenSources(1, &al_source);
@@ -346,7 +347,7 @@ namespace mo {
             sources_.insert(SourcePair(source.id(), al_source));
         }
 
-        auto & sound = source.sound;
+        auto sound = source.sound;
         if (buffers_.find(sound->id()) == buffers_.end()) {
             ALuint buffer;
             alGenBuffers(1, &buffer);
@@ -354,7 +355,6 @@ namespace mo {
                 long data_size = std::distance(sound->begin(), sound->end());
                 const ALvoid* data = sound->data();
                 alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
-                //free( (void*)data );
             }
             alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
         }
@@ -406,22 +406,22 @@ void Audio::play(const StreamSource & stream_source) {
 void Audio::update(const StreamSource & stream_source)
 {
     if (sources_.find(stream_source.id()) != sources_.end()) {
+
+        /*
         ALuint al_source = sources_.at(stream_source.id());
-        alGenSources(1, &al_source);
         alSourcef(al_source, AL_PITCH, stream_source.pitch);
         alSourcef(al_source, AL_GAIN, stream_source.gain);
         alSource3f(al_source, AL_POSITION, stream_source.position.x,
                    stream_source.position.y, stream_source.position.z);
         alSource3f(al_source, AL_VELOCITY, stream_source.velocity.x, stream_source.velocity.y, stream_source.velocity.z);
-        alSourcei(al_source, AL_LOOPING, stream_source.loop);
         ALint al_playing;
         alSourceiv(al_source, AL_PLAYING, &al_playing);
-        if (stream_source.playing && al_playing){
+        if (stream_source.playing && !al_playing){
              alSourcePlay(al_source);
         }
-        else{
+        if(!stream_source.playing) {
             alSourcePause(al_source);
-        }
+        }*/
     }
 }
 }
