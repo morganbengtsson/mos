@@ -285,9 +285,6 @@ namespace mo {
     }
 
     Audio::~Audio() {
-        //thread_->join();
-        delete thread_;
-
         for (auto source : sources_){
             alDeleteSources(1, & source.second);
         }
@@ -366,70 +363,10 @@ namespace mo {
         alSourcePlay(sources_.at(source.id()));
     }
 
-   
-    
-    struct AudioStream {
-	ALuint ID;
- 
-	stb_vorbis* stream;
-	stb_vorbis_info info;
- 
-	ALuint buffers[2];
-	ALuint source;
-	ALenum format;
- 
-	size_t bufferSize;
- 
-	size_t totalSamplesLeft;
- 
-	bool shouldLoop;
-};
- 
-void AudioStreamInit(AudioStream* self){
-	memset(self, 0, sizeof(AudioStream));
-	alGenSources(1, & self->source);
-	alGenBuffers(2, self->buffers);
-	self->bufferSize=4096*8;
-	self->shouldLoop=false;//We loop by default
-}
- 
-void AudioStreamDeinit(AudioStream* self){
-	alDeleteSources(1, & self->source);
-	alDeleteBuffers(2, self->buffers);
-	stb_vorbis_close(self->stream);
-	memset(self, 0, sizeof(AudioStream));
-}
- 
-bool AudioStreamStream(AudioStream* self, ALuint buffer){
-	//Uncomment this to avoid VLAs
-	#define BUFFER_SIZE 4096*32
-	#ifndef BUFFER_SIZE//VLAs ftw
-	#define BUFFER_SIZE (self->bufferSize)
-	#endif
-	ALshort pcm[BUFFER_SIZE];
-	int  size = 0;
-	int  result = 0;
- 
-	while(size < BUFFER_SIZE){
-		result = stb_vorbis_get_samples_short_interleaved(self->stream, self->info.channels, pcm+size, BUFFER_SIZE-size);
-		if(result > 0) size += result*self->info.channels;
-		else break;
-	}
- 
-	if(size == 0) return false;
- 
-	alBufferData(buffer, self->format, pcm, size*sizeof(ALshort), self->info.sample_rate);
-	self->totalSamplesLeft-=size;
-	#undef BUFFER_SIZE
- 
-	return true;
-}
  
 
-
-
-void Audio::play(Stream & stream) {
-     stream_threads.push_back(std::thread([&](Stream stream){
+void Audio::play(std::shared_ptr<Stream> stream) {
+     stream_threads.push_back(std::thread([](std::shared_ptr<Stream> stream){
             //Stream stream("assets/sounds/waterpipes.ogg");
             ALuint buffers[2];
             ALuint source;
@@ -437,21 +374,21 @@ void Audio::play(Stream & stream) {
             alGenBuffers(2, buffers);
 
             int size = 4096 * 8;
-            alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
-            alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+            alBufferData(buffers[0], AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
+            alBufferData(buffers[1], AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
 
             alSourceQueueBuffers(source, 2, buffers);
-            alSource3f(source, AL_POSITION, stream.position.x, stream.position.y, stream.position.z);
+            alSource3f(source, AL_POSITION, stream->position.x, stream->position.y, stream->position.z);
             alSourcePlay(source);
 
-            while(true && stream.playing){
+            while(true && stream->playing){
                 ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){
                     ALuint buffer = 0;
 
                     alSourceUnqueueBuffers(source, 1, &buffer);
-                    alBufferData(buffer, AL_FORMAT_MONO16, stream.read().samples, size*sizeof(ALshort), stream.vorbis_info.sample_rate);
+                    alBufferData(buffer, AL_FORMAT_MONO16, stream->read().samples, size*sizeof(ALshort), stream->vorbis_info.sample_rate);
                     alSourceQueueBuffers(source, 1, &buffer);
                 }
             }
