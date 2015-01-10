@@ -428,8 +428,9 @@ bool AudioStreamStream(AudioStream* self, ALuint buffer){
 
 
 
-void Audio::play(const Stream &stream) {
-    auto * thread = new std::thread(std::thread([](Stream stream){
+void Audio::play(Stream & stream) {
+     stream_threads.push_back(std::thread([&](Stream stream){
+            //Stream stream("assets/sounds/waterpipes.ogg");
             ALuint buffers[2];
             ALuint source;
             alGenSources(1, &source);
@@ -443,7 +444,7 @@ void Audio::play(const Stream &stream) {
             alSource3f(source, AL_POSITION, stream.position.x, stream.position.y, stream.position.z);
             alSourcePlay(source);
 
-            while(true){
+            while(true && stream.playing){
                 ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){

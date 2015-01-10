@@ -57,7 +57,7 @@ namespace mo {
          */
         void play(const Source & source);
         void play_stream(const std::string file_name, const Assets & assets, const glm::vec3 position = glm::vec3(0.0f));
-        void play(const Stream & stream);
+        void play(Stream & stream);
         void stop();
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
@@ -98,6 +98,7 @@ namespace mo {
         Sources sources_;
         Buffers buffers_;
         
+        std::vector<std::thread> stream_threads;
         std::thread * thread_;
 #endif
     };

@@ -23,6 +23,7 @@ public:
     Stream(const std::string file_name,
            const glm::vec3 position = glm::vec3(0.0f),
            const bool loop = false);
+    //Stream(const Stream & original);
     ~Stream();
     std::string file_name;
     int samples_left;
@@ -34,7 +35,10 @@ public:
     bool loop;
     glm::vec3 position;
     StreamData read();
+    bool playing;
 };
+
+
 
 }
 #endif // STREAM_HPP
