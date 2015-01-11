@@ -354,15 +354,15 @@ namespace mo {
 
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
-                    ogli::createArrayBuffer(model.mesh->verticesBegin(), model.mesh->verticesEnd())));
+                    ogli::createArrayBuffer(model.mesh->vertices_end(), model.mesh->vertices_end())));
         }
         if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
             element_array_buffers_.insert(ElementPair(model.mesh->id(),
-                    ogli::createElementArrayBuffer(model.mesh->elementsBegin(), model.mesh->elementsEnd())));
+                    ogli::createElementArrayBuffer(model.mesh->elements_begin(), model.mesh->elements_end())));
         }
 
         if (!model.mesh->valid) {
-            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->verticesBegin(), model.mesh->verticesEnd());
+            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->vertices_end(), model.mesh->vertices_end());
             model.mesh->valid = true;
         }
 
@@ -451,7 +451,7 @@ namespace mo {
         ogli::attribute(vertex_attributes_.uv_texture);
         ogli::attribute(vertex_attributes_.uv_lightmap);
 
-        int num_elements = std::distance(model.mesh->elementsBegin(), model.mesh->elementsEnd());
+        int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
         int draw_type = GL_TRIANGLES;
         if (model.draw == Model::Draw::LINES) {
             draw_type = GL_LINES;
@@ -462,7 +462,7 @@ namespace mo {
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {
-            ogli::drawArrays(std::distance(model.mesh->verticesBegin(), model.mesh->verticesEnd()), draw_type);
+            ogli::drawArrays(std::distance(model.mesh->vertices_end(), model.mesh->vertices_end()), draw_type);
         }
 
     }

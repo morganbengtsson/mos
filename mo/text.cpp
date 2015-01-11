@@ -59,8 +59,8 @@ namespace mo {
     }
 
     float Text::width() {        
-        glm::vec2 p1 = glm::vec2(mesh->verticesBegin()->position);
-        glm::vec2 p2 = glm::vec2((mesh->verticesEnd()-2)->position);
+        glm::vec2 p1 = glm::vec2(mesh->vertices_end()->position);
+        glm::vec2 p2 = glm::vec2((mesh->vertices_end()-2)->position);
         return glm::distance(p1,p2);
     }
 

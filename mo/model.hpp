@@ -23,13 +23,28 @@
 namespace mo {
 
     /*!
-     * A class that gathers what is needed to render an object. A Mesh, a texture
-     * and a transformation (position/rotation).
+     * A class that gathers what is needed to render an object. A Mesh, a Texture2D
+     * , a Texture2D lightmap, a Texture2D normalmap and a Material.
+     * Also a transformation (position/rotation).
      */
     class Model {
     public:
         enum class Draw {TRIANGLES, LINES, POINTS};
+        /*!
+         * \brief Model
+         */
         Model();
+
+        /*!
+         * \brief Model
+         * \param mesh
+         * \param texture
+         * \param transform
+         * \param draw
+         * \param material
+         * \param lightmap
+         * \param normalmap
+         */
         Model(std::shared_ptr<Mesh> mesh, 
               std::shared_ptr<Texture2D> texture,              
               const glm::mat4 transform = glm::mat4(1.0f),

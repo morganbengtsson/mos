@@ -6,8 +6,8 @@
  */
 
 
-#ifndef MO_FILEASSETS_H
-#define	MO_FILEASSETS_H
+#ifndef MO_ASSETS_H
+#define	MO_ASSETS_H
 
 #include <map>
 #include <memory>
@@ -174,5 +174,5 @@ namespace mo {
 
     };
 }
-#endif	/* MO_FILEASSETS_H */
+#endif	/* MO_ASSETS_H */
 

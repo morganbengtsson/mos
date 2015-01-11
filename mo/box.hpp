@@ -11,14 +11,43 @@
 namespace mo
 {
 
+/*!
+ * Data from a box box intersection.
+ *
+ * \brief The BoxIntersection struct
+ */
 struct BoxIntersection {
+    /*!
+     * True if the box intersect.
+     */
     bool intersects;
+    /*!
+     * Normal of the intersection.
+     */
     glm::vec3 normal;
+    /*!
+     * Distance of the intersection.
+     */
     float distance;
 };
 
+/*!
+ * Intersection data from a ray and box intersection.
+ *
+ * \brief The RayIntersection struct
+ */
 struct RayIntersection {
+    /*!
+     * \brief intersects
+     *
+     * True if ray intersects with the box.
+     */
     bool intersects;
+    /*!
+     * \brief point
+     *
+     * The point of intersection.
+     */
     glm::vec3 point;
 };
 
@@ -26,6 +55,15 @@ class Box
 {
 public:
     template<class VertexIt>
+    /*!
+     * \brief Box constructor
+     * \param begin Vertex iterator
+     * \param end Vertex iterator
+     * \param transform location of the box
+     *
+     * Constructor for an AABB box, created from vertices.
+     *
+     */
     Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform(transform) {
         glm::vec3 min, max;
 
@@ -49,13 +87,59 @@ public:
         max_ = max;
     }
 
+    /*!
+     * \brief Box default constructor.
+     */
     Box();
+
+    /*!
+     * \brief Box constructor.
+     * \param min corner.
+     * \param max corner.
+     * \param transform location.
+     */
     Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
+
+    /*!
+     * \brief min
+     * \return
+     */
     glm::vec3 min() const;
+
+    /*!
+     * \brief max
+     * \return
+     */
     glm::vec3 max() const;
+
+    /*!
+     * \brief intersect
+     * \param point1
+     * \param point2
+     * \return
+     */
     RayIntersection intersect(glm::vec3 point1, glm::vec3 point2);
+
+    /*!
+     * \brief intersect
+     * \param origin
+     * \param direction
+     * \param t1
+     * \param t2
+     * \return
+     */
     RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
+
+    /*!
+     * \brief intersects
+     * \param other
+     * \return
+     */
     BoxIntersection intersects(const Box & other);
+
+    /*!
+     * \brief transform
+     */
     glm::mat4 transform;
 private:
     glm::vec3 min_;

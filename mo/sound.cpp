@@ -15,10 +15,10 @@ namespace mo {
         return id_;
     }
 
-    Sound::Format Sound::format() const {
-        return format_;
+    unsigned int Sound::channels() const {
+        return channels_;
     }
-       
+
     const short * Sound::data() const {
         return samples_.data();        
     }

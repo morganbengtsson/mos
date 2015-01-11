@@ -16,96 +16,106 @@
 
 namespace mo {
 
+/*!
+ * A class that describes the geometric data to be rendered. Contains vertices
+ * and elements, for vertex order, when rendering.
+ */
+class Mesh {
+public:
+    typedef std::vector<Vertex> Vertices;
+    typedef std::vector<int> Elements;
+
+    template<class VerticesIt, class ElementsIt>
     /*!
-     * A class that describes the geometric data to be rendered. Contains vertices
-     * and elements, describing vertex order.
+     * \brief Mesh constructor
+     * \param verticesBegin
+     * \param verticesEnd
+     * \param elementsBegin
+     * \param elementsEnd
+     *
+     * Mesh constructor that takes Vertices and elements (vertex order for rendering).
      */
-    class Mesh {
-    public:
-        typedef std::vector<Vertex> Vertices;
-        typedef std::vector<int> Elements;
+    Mesh(const VerticesIt vertices_begin,
+         const VerticesIt vertices_end,
+         ElementsIt elements_begin,
+         ElementsIt elements_end) :
+        valid(true),
+        vertices_(vertices_begin, vertices_end),
+        elements_(elements_begin, elements_end){
+        id_ = current_id++;
+    }
+    Mesh();
+    Mesh(const Mesh & mesh);
+    virtual ~Mesh();
 
-        template<class VerticesIt, class ElementsIt>
-        Mesh(const VerticesIt verticesBegin,
-                const VerticesIt verticesEnd,
-                ElementsIt elementsBegin,
-                ElementsIt elementsEnd) : valid(true) {
-            id_ = current_id++;
-            vertices_.assign(verticesBegin, verticesEnd);
-            elements_.assign(elementsBegin, elementsEnd);
-        }
-        Mesh();
-        Mesh(const Mesh & mesh);
-        virtual ~Mesh();
+    Range<Vertices> vertices() {
+        return Range<Vertices>(vertices_);
+    }
 
-        Range<Vertices> vertices() {
-            return Range<Vertices>(vertices_);
-        }
-        
-        Range<Elements> elements() {
-            return Range<Elements>(elements_);
-        }
-        
-        ConstRange<Vertices> vertices() const {
-            return ConstRange<Vertices>(vertices_);
-        }
-        
-        ConstRange<Elements> elements() const {
-            return ConstRange<Elements>(elements_);
-        }
-        
-        Vertices::const_iterator verticesBegin() const {
-            return vertices_.begin();
-        };
+    Range<Elements> elements() {
+        return Range<Elements>(elements_);
+    }
 
-        Vertices::const_iterator verticesEnd() const {
-            return vertices_.end();
-        };
+    ConstRange<Vertices> vertices() const {
+        return ConstRange<Vertices>(vertices_);
+    }
 
-        Elements::const_iterator elementsBegin() const {
-            return elements_.begin();
-        };
+    ConstRange<Elements> elements() const {
+        return ConstRange<Elements>(elements_);
+    }
 
-        Elements::const_iterator elementsEnd() const {
-            return elements_.end();
-        };
+    Vertices::const_iterator vertices_end() const {
+        return vertices_.begin();
+    }
 
-        Vertices::iterator verticesBegin() {
-            return vertices_.begin();
-        };
+    Vertices::const_iterator vertices_end() const {
+        return vertices_.end();
+    }
 
-        Vertices::iterator verticesEnd() {
-            return vertices_.end();
-        };
+    Elements::const_iterator elements_begin() const {
+        return elements_.begin();
+    }
 
-        Elements::iterator elementsBegin() {
-            return elements_.begin();
-        };
+    Elements::const_iterator elements_end() const {
+        return elements_.end();
+    }
 
-        Elements::iterator elementsEnd() {
-            return elements_.end();
-        };
-        
-        /**
-         * 
-         * @return A unique identifier. 
-         */
-        unsigned int id() const;
+    Vertices::iterator vertices_end() {
+        return vertices_.begin();
+    }
 
-        bool valid;
+    Vertices::iterator vertices_end() {
+        return vertices_.end();
+    }
 
-        void clear();
-        void add(const Vertex vertex);
-        void add(const int element);
-        Vertex back(); 
-    private:
-        static unsigned int current_id;
-        unsigned int id_;
-        Vertices vertices_;
-        Elements elements_;
+    Elements::iterator elements_begin() {
+        return elements_.begin();
+    }
+
+    Elements::iterator elements_end() {
+        return elements_.end();
+    }
+
+    /**
+     *
+     * @return A unique identifier.
+     */
+    unsigned int id() const;
+
+    bool valid;
+
+    void clear();
+    void add(const Vertex vertex);
+    void add(const int element);
+    Vertex back();
+private:
+    static unsigned int current_id;
+    unsigned int id_;
+    Vertices vertices_;
+    Elements elements_;
 
 
-    };
+};
 
 }
 
