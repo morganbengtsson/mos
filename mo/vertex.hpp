@@ -13,28 +13,28 @@
 namespace mo {
 
 /*!
-     * The vertex structure, supported by the renderer.
-     */
-    class Vertex {
-    public:
+ * The vertex structure, supported by the renderer.
+ */
+class Vertex {
+public:
 
-        Vertex(const glm::vec3 position = glm::vec3(0.0f),
-                const glm::vec3 normal = glm::vec3(0.0f),
-                const glm::vec2 uv = glm::vec2(0.0f),
-                const glm::vec2 uv_lightmap = glm::vec2(0.0f))
+    Vertex(const glm::vec3 position = glm::vec3(0.0f),
+           const glm::vec3 normal = glm::vec3(0.0f),
+           const glm::vec2 uv = glm::vec2(0.0f),
+           const glm::vec2 uv_lightmap = glm::vec2(0.0f))
         : position(position),
-        normal(normal),
-        uv(uv),
-        uv_lightmap(uv_lightmap) {
-        }
-        ~Vertex(){
-        }
-        
-        glm::vec3 position;
-        glm::vec3 normal;
-        glm::vec2 uv;
-        glm::vec2 uv_lightmap;
-    };
+          normal(normal),
+          uv(uv),
+          uv_lightmap(uv_lightmap) {
+    }
+    ~Vertex(){
+    }
+
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 uv;
+    glm::vec2 uv_lightmap;
+};
 
 }
 
