@@ -338,13 +338,9 @@ namespace mo {
     void Audio::play(const SoundSource & source) {
         if (sources_.find(source.id()) == sources_.end()) {
             ALuint al_source;
-            alGenSources(1, &al_source);
-            alSourcef(al_source, AL_PITCH, 1.0f);
-            alSourcef(al_source, AL_GAIN, 1.0f);
-            alSource3f(al_source, AL_POSITION, source.position.x, source.position.y, source.position.z);
-            alSource3f(al_source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-            alSourcei(al_source, AL_LOOPING, source.loop);
+            alGenSources(1, &al_source);            
             sources_.insert(SourcePair(source.id(), al_source));
+            update(source);
         }
 
         auto sound = source.sound;
@@ -353,7 +349,7 @@ namespace mo {
             alGenBuffers(1, &buffer);
             {
                 long data_size = std::distance(sound->begin(), sound->end());
-                const ALvoid* data = sound->data();
+                const ALvoid * data = sound->data();
                 alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
             }
             alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
@@ -367,8 +363,7 @@ namespace mo {
  
 
 void Audio::play(const StreamSource & stream_source) {
-     stream_threads.push_back(std::thread([&](StreamSource stream_source){
-            //Stream stream("assets/sounds/waterpipes.ogg");
+     stream_threads.push_back(std::thread([&](StreamSource stream_source) {
             ALuint buffers[2];
             ALuint source;
             if (sources_.find(stream_source.id()) == sources_.end()) {
@@ -387,16 +382,21 @@ void Audio::play(const StreamSource & stream_source) {
             alSource3f(source, AL_POSITION, stream_source.position.x, stream_source.position.y, stream_source.position.z);
             alSourcePlay(source);
 
-
-            while(true && stream_source.playing){
+            bool done = false;
+            while(true && stream_source.playing && !done){
                 ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){
                     ALuint buffer = 0;
-
                     alSourceUnqueueBuffers(source, 1, &buffer);
-                    alBufferData(buffer, AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
+                    auto stream_data = stream_source.stream->read();
+                    done = stream_data.done;
+                    alBufferData(buffer, AL_FORMAT_MONO16, stream_data.samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
                     alSourceQueueBuffers(source, 1, &buffer);
+                }
+                if (done && stream_source.loop){
+                  done = false;
+                  stream_source.stream->seek_start();
                 }
             }
             alDeleteSources(1, & source);
@@ -404,25 +404,26 @@ void Audio::play(const StreamSource & stream_source) {
                               }, stream_source));
 }
 
-void Audio::update(const StreamSource & stream_source)
+void Audio::update(const Source & stream_source)
 {
     if (sources_.find(stream_source.id()) != sources_.end()) {
-
-        /*
         ALuint al_source = sources_.at(stream_source.id());
         alSourcef(al_source, AL_PITCH, stream_source.pitch);
         alSourcef(al_source, AL_GAIN, stream_source.gain);
         alSource3f(al_source, AL_POSITION, stream_source.position.x,
                    stream_source.position.y, stream_source.position.z);
         alSource3f(al_source, AL_VELOCITY, stream_source.velocity.x, stream_source.velocity.y, stream_source.velocity.z);
-        ALint al_playing;
-        alSourceiv(al_source, AL_PLAYING, &al_playing);
-        if (stream_source.playing && !al_playing){
+
+        ALenum state;
+        alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+
+
+        if (stream_source.playing && (state != AL_PLAYING)){
              alSourcePlay(al_source);
         }
-        if(!stream_source.playing) {
+        if(!stream_source.playing && (state == AL_PLAYING)) {
             alSourcePause(al_source);
-        }*/
+        }
     }
 }
 }

@@ -47,4 +47,10 @@ int Stream::channels() const
     return vorbis_info.channels;
 }
 
+void Stream::seek_start()
+{
+    stb_vorbis_seek_start(vorbis_stream);
+    samples_left = stb_vorbis_stream_length_in_samples(vorbis_stream) * channels();
+}
+
 }

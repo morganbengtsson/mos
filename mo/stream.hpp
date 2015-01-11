@@ -27,6 +27,7 @@ public:
     StreamData read();
     int sample_rate() const;
     int channels() const;
+    void seek_start();
 private:
     int samples_left;
     int size;

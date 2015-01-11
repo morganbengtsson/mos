@@ -53,13 +53,29 @@ namespace mo {
         virtual ~Audio();
 
         /**
-         * Play audio from a source object. A source may contain many sound objects.
+         * Play audio from a SoundSource object. A sound source contains one sound.
          * 
          * @param source
          */
         void play(const SoundSource & source);
+
+        /**
+         * Plays audio from a StreamSource. Which streams content from a file. This
+         * method starts a new thread for each source playing.
+         *
+         * @brief play
+         * @param stream_source
+         */
         void play(const StreamSource & stream_source);
-        void update(const StreamSource & stream_source);
+
+        /**
+         * Updates the internal source representation with data. Data
+         * such as position, velocity, pitch and gain.
+         *
+         * @brief update
+         * @param stream_source
+         */
+        void update(const Source & stream_source);
         void stop();
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
