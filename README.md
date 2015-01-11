@@ -1,5 +1,8 @@
-Small utility library for cross platform game development. 
+Lightweight utility library for cross platform game development. 
 
-Provides rendering with OpenGL, along with common data structures for vertices and textures.
+Provides a uniform interface for rendering, audio playback, text rendering
+and collision detection. [Reference documentation is available](http://morganbengtsson.github.io/mo/).
 
-Audio playback is implemented in OpenAL and OpenSL.
+OpenGL and OpenAL are used under the hood for rendering and audio. Together
+with smaller libraries for ogg decoding, png loading and math.
+
