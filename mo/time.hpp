@@ -14,8 +14,11 @@ namespace mo {
 
     // New implementation, uses c++11 std. Portability?
     /**
-     * 
+     * /brief Current time
+     *
      * @return Current time in milliseconds. 
+     *
+     * C++ 11 implementation of returning the current time in milliseconds. Might not work on all compilers.
      */
     static double now_ms() {
 		auto duration = std::chrono::system_clock::now().time_since_epoch();
@@ -23,14 +26,7 @@ namespace mo {
 		return (double)millis;
 	}
 
-    /* Old implementation (Available on POSIX systems)
-    static double now_ms(void) {
-        struct timespec res;
-        clock_gettime(CLOCK_REALTIME, &res);
-        return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
-    }
-    */
 }
 
-#endif	/* TIME_H */
+#endif	/* MO_TIME_H */
 

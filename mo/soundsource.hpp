@@ -16,6 +16,12 @@ namespace mo {
  */
 class SoundSource : public Source {
 public:
+
+    /*!
+     * \brief SoundSource constructor
+     * \param sound shared pointer
+     * \param position
+     */
     SoundSource(const std::shared_ptr<Sound> sound,
                 const glm::vec3 position = glm::vec3(0.0f));
     virtual ~SoundSource();    

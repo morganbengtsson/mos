@@ -23,6 +23,14 @@ namespace mo {
  */
 class Text : public Model {
 public:
+    /*!
+     * \brief Text constructor
+     * \param text
+     * \param characters
+     * \param texture with characters
+     * \param transform for position/rotation
+     * \param spacing between characters
+     */
     Text(const std::string text, 
             std::map<char, Character> characters, 
             std::shared_ptr<Texture2D> texture, 
@@ -30,13 +38,27 @@ public:
             const float spacing = 0.0f);
     virtual ~Text();    
 
-    /**
+    /*!
      * Update the text.
-     * @param Text.
+     * \param Text.
      */
-    void setText(const std::string text);
-    std::string text();
+    void text(const std::string text);
+
+    /*!
+     * \brief text
+     * \return current text
+     */
+    std::string text() const;
+
+    /*!
+     * \brief approximate width
+     * \return width
+     */
     float width();
+
+    /*!
+     * \brief spacing between characters
+     */
     float spacing;
 private:   
     std::string text_;

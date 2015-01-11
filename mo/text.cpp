@@ -21,17 +21,17 @@ namespace mo {
 
     Text::Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform, const float spacing)
     : Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform), characters_(characters), spacing(spacing) {
-        setText(text);
+        text(text);
     }
 
     Text::~Text() {
     }
     
-    std::string Text::text() {
+    std::string Text::text() const {
         return text_;
     }
 
-    void Text::setText(const std::string text) {
+    void Text::text(const std::string text) {
                 
         text_ = text;
         float index = 0.0f;
