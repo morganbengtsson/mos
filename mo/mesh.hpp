@@ -64,7 +64,7 @@ public:
         return ConstRange<Elements>(elements_);
     }
 
-    Vertices::const_iterator vertices_end() const {
+    Vertices::const_iterator vertices_begin() const {
         return vertices_.begin();
     }
 
@@ -80,7 +80,7 @@ public:
         return elements_.end();
     }
 
-    Vertices::iterator vertices_end() {
+    Vertices::iterator vertices_begin() {
         return vertices_.begin();
     }
 

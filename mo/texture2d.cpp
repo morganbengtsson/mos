@@ -12,11 +12,11 @@ namespace mo{
     Texture2D::~Texture2D() {
     }
 
-    std::vector::const_iterator Texture2D::begin() const {
+    Texture2D::Texels::const_iterator Texture2D::begin() const {
         return texels_.begin();
     }
 
-    std::vector::const_iterator Texture2D::end() const { return texels_.end();}
+    Texture2D::Texels::const_iterator Texture2D::end() const { return texels_.end();}
 
     const unsigned int Texture2D::id() const {
         return id_;

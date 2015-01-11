@@ -354,7 +354,7 @@ namespace mo {
 
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
-                    ogli::createArrayBuffer(model.mesh->vertices_end(), model.mesh->vertices_end())));
+                    ogli::createArrayBuffer(model.mesh->vertices_begin(), model.mesh->vertices_end())));
         }
         if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
             element_array_buffers_.insert(ElementPair(model.mesh->id(),
@@ -362,7 +362,7 @@ namespace mo {
         }
 
         if (!model.mesh->valid) {
-            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->vertices_end(), model.mesh->vertices_end());
+            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->vertices_begin(), model.mesh->vertices_end());
             model.mesh->valid = true;
         }
 
@@ -462,7 +462,7 @@ namespace mo {
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {
-            ogli::drawArrays(std::distance(model.mesh->vertices_end(), model.mesh->vertices_end()), draw_type);
+            ogli::drawArrays(std::distance(model.mesh->vertices_begin(), model.mesh->vertices_end()), draw_type);
         }
 
     }

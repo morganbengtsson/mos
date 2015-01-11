@@ -19,9 +19,9 @@
 
 namespace mo {
 
-    Text::Text(const std::string text, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform, const float spacing)
+    Text::Text(const std::string txt, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform, const float spacing)
     : Model(std::shared_ptr<Mesh>(new Mesh()), texture, transform), characters_(characters), spacing(spacing) {
-        text(text);
+        text(txt);
     }
 
     Text::~Text() {
@@ -59,7 +59,7 @@ namespace mo {
     }
 
     float Text::width() {        
-        glm::vec2 p1 = glm::vec2(mesh->vertices_end()->position);
+        glm::vec2 p1 = glm::vec2(mesh->vertices_begin()->position);
         glm::vec2 p2 = glm::vec2((mesh->vertices_end()-2)->position);
         return glm::distance(p1,p2);
     }
