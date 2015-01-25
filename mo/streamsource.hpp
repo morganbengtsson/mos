@@ -21,7 +21,7 @@ public:
      * \brief StreamSource constructor
      * \param ogg stream
      */
-    StreamSource(std::shared_ptr<Stream> stream);
+    StreamSource(std::shared_ptr<Stream> stream, const glm::vec3 position = glm::vec3(0.0f));
     virtual ~StreamSource();
     std::shared_ptr<Stream> stream;
 };

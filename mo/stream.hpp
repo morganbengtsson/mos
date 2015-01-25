@@ -13,7 +13,7 @@
 namespace mo {
 
 struct StreamData {
-    short samples[4096*32];
+    short samples[4096*8];
     bool done;
 };
 

@@ -383,7 +383,7 @@ void Audio::play(const StreamSource & stream_source) {
             alSourcePlay(source);
 
             bool done = false;
-            while(true && stream_source.playing && !done){
+            while(true && stream_source.playing){
                 ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){
@@ -394,10 +394,11 @@ void Audio::play(const StreamSource & stream_source) {
                     alBufferData(buffer, AL_FORMAT_MONO16, stream_data.samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
                     alSourceQueueBuffers(source, 1, &buffer);
                 }
-                if (done && stream_source.loop){
-                  done = false;
+                // Fix this!
+                if (!done && stream_source.loop){
                   stream_source.stream->seek_start();
                 }
+
             }
             alDeleteSources(1, & source);
             alDeleteBuffers(2, buffers);

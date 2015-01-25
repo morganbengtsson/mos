@@ -38,12 +38,13 @@ namespace mo {
 
     Assets::Assets(const std::string directory) :
     directory_(directory) {
+        /*
         vector<Vertex> vertices;
         vector<int> elements;
         models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
                 vertices.end(),
                 elements.begin(),
-                elements.end()))));
+                elements.end()))));*/
     }
 #endif
 
@@ -182,7 +183,7 @@ namespace mo {
 
     std::shared_ptr<Stream> Assets::stream(const string file_name) const
     {
-        return std::make_shared<mo::Stream>(mo::Stream(directory_ + file_name));
+        return std::shared_ptr<mo::Stream>(new mo::Stream(directory_ + file_name));
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {

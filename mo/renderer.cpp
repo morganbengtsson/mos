@@ -97,9 +97,9 @@ namespace mo {
 
                 "void main() {\n"
 
-                "vec4 indirect = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+                "vec4 static_light = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
                 "if (has_lightmap == true){\n"
-                "indirect = texture2D(lightmap, fragment_lightmap_uv);\n"
+                "static_light = texture2D(lightmap, fragment_lightmap_uv);\n"
                 "}\n"
 
 
@@ -135,11 +135,13 @@ namespace mo {
                 "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
                 "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
 
-                "vec4 diffuse_indirect = indirect * diffuse_color;"
+                "vec4 diffuse_static = static_light * diffuse_color;"
                 
-                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);}\n"
+                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.00, 0.00, 0.00);}\n"
 
-                "gl_FragColor = vec4(diffuse.xyz + diffuse_indirect.xyz + specular.xyz, 1.0);\n"               
+                "gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);\n"
+
+
                 
                 "}\n";
         add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
