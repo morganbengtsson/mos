@@ -55,12 +55,37 @@ namespace mo {
               std::shared_ptr<Texture2D> normalmap = std::shared_ptr<Texture2D>());
         virtual ~Model();
 
+        /*!
+         * \brief mesh
+         */
         std::shared_ptr<Mesh> mesh;
+        /*!
+         * \brief texture
+         */
         std::shared_ptr<Texture2D> texture;
+        /*!
+         * \brief lightmap
+         */
         std::shared_ptr<Texture2D> lightmap;
+        /*!
+         * \brief normalmap
+         */
         std::shared_ptr<Texture2D> normalmap;
+        /*!
+         * \brief material
+         */
         std::shared_ptr<Material> material;
-        glm::mat4 transform;
+        /*!
+         * \brief transform
+         * \return
+         */
+
+        glm::mat4 transform() const;
+        /*!
+         * \brief transform
+         * \param transform
+         */
+        void transform(const glm::mat4 & transform);
         Box box;
         Draw draw;
         glm::vec4 color() const;
@@ -71,6 +96,7 @@ namespace mo {
     private:
         bool valid_;
         bool selected_;
+        glm::mat4 transform_;
     };
 }
 

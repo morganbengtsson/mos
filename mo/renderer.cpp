@@ -137,7 +137,7 @@ namespace mo {
 
                 "vec4 diffuse_static = static_light * diffuse_color;"
                 
-                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.00, 0.00, 0.00);}\n"
+                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.1, 0.1, 0.2);}\n"
 
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);\n"
 
@@ -391,8 +391,9 @@ namespace mo {
             }
         }
 
-        glm::mat4 mv = view * transform * model.transform;
-        glm::mat4 mvp = projection * view * model.transform * transform;
+        auto t = model.transform();
+        glm::mat4 mv = view * transform * t;
+        glm::mat4 mvp = projection * view * t * transform;
 
         ogli::useProgram(vertex_programs_.at(program_name).program);
 

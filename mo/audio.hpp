@@ -57,7 +57,7 @@ namespace mo {
          * 
          * @param source
          */
-        void play(const SoundSource & source);
+        void init(const SoundSource & source);
 
         /**
          * Plays audio from a StreamSource. Which streams content from a file. This
@@ -66,7 +66,7 @@ namespace mo {
          * @brief play
          * @param stream_source
          */
-        void play(const StreamSource & stream_source);
+        void init(const StreamSource & stream_source);
 
         /**
          * Updates the internal source representation with data. Data
@@ -75,8 +75,8 @@ namespace mo {
          * @brief update
          * @param stream_source
          */
-        void update(const Source & stream_source);
-        void stop();
+        void update(Source & source);
+
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
         glm::vec3 listener_orientation();

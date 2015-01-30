@@ -27,7 +27,7 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     material(material),
     lightmap(lightmap),
     normalmap(normalmap),
-    transform(transform),
+    transform_(transform),
     valid_(true),
     selected_(false),
     selectable(true),
@@ -36,12 +36,21 @@ Model::Model(std::shared_ptr<Mesh> mesh,
 Model::~Model() {
 }
 
+glm::mat4 Model::transform() const{
+    return transform_;
+}
+
+void Model::transform(const glm::mat4 & transform) {
+    transform_ = transform;
+    box.transform(transform);
+}
+
 glm::vec4 Model::color() const {
     return glm::vec4(material->diffuse.r, material->diffuse.g, material->diffuse.b, material->opacity);
 }
 
 glm::vec3 Model::position() const {
-    return (glm::vec3)(transform*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    return (glm::vec3)(transform()*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 bool Model::selected() const {

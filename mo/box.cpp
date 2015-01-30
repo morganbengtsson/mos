@@ -6,7 +6,7 @@
 #include <array>
 #include <glm/gtx/io.hpp>
 #include <glm/glm.hpp>
-
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace mo {
 
@@ -14,18 +14,18 @@ Box::Box(){
 }
 
 Box::Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform) :
-    transform(transform), min_(min), max_(max) {
+    transform_(transform), min_(min), max_(max) {
+    transform_ = glm::translate(glm::mat4(1.0f), glm::vec3(transform_[3][0], transform_[3][1], transform_[3][2]));
     if(glm::all(glm::lessThan(max_, min_))){
         throw std::invalid_argument("Min must be less than max.");
     }
-    //assert(min_ < max_);
 }
 
 glm::vec3 Box::min() const {
-    return (glm::vec3)(transform * glm::vec4(min_, 1.0f));
+    return (glm::vec3)(transform() * glm::vec4(min_, 1.0f));
 }
 glm::vec3 Box::max() const {
-    return (glm::vec3)(transform * glm::vec4(max_, 1.0f));
+    return (glm::vec3)(transform() * glm::vec4(max_, 1.0f));
 }
 
 RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
@@ -105,6 +105,16 @@ BoxIntersection Box::intersects(const Box &other) {
             }
         }
     return BoxIntersection{true, normal, distance};
+}
+
+glm::mat4 Box::transform() const
+{
+    return transform_;
+}
+
+void Box::transform(const glm::mat4 &transform)
+{
+    transform_ = transform;
 }
 
 }

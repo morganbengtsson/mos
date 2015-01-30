@@ -296,9 +296,7 @@ namespace mo {
         alcDestroyContext(context_);
         alcCloseDevice(device_);
     }
-    void Audio::stop() {
 
-    }
 
     glm::vec3 Audio::listener_position() {
         glm::vec3 position;
@@ -335,12 +333,12 @@ namespace mo {
     }
 
     
-    void Audio::play(const SoundSource & source) {
+    void Audio::init(const SoundSource & source) {
         if (sources_.find(source.id()) == sources_.end()) {
             ALuint al_source;
             alGenSources(1, &al_source);            
             sources_.insert(SourcePair(source.id(), al_source));
-            update(source);
+            //update(source);
         }
 
         auto sound = source.sound;
@@ -362,7 +360,7 @@ namespace mo {
 
  
 
-void Audio::play(const StreamSource & stream_source) {
+void Audio::init(const StreamSource & stream_source) {
      stream_threads.push_back(std::thread([&](StreamSource stream_source) {
             ALuint buffers[2];
             ALuint source;
@@ -405,28 +403,36 @@ void Audio::play(const StreamSource & stream_source) {
                               }, stream_source));
 }
 
-void Audio::update(const Source & stream_source)
+void Audio::update(Source & source)
 {
-    if (sources_.find(stream_source.id()) != sources_.end()) {
-        ALuint al_source = sources_.at(stream_source.id());
-        alSourcef(al_source, AL_PITCH, stream_source.pitch);
-        alSourcef(al_source, AL_GAIN, stream_source.gain);
-        alSource3f(al_source, AL_POSITION, stream_source.position.x,
-                   stream_source.position.y, stream_source.position.z);
-        alSource3f(al_source, AL_VELOCITY, stream_source.velocity.x, stream_source.velocity.y, stream_source.velocity.z);
+    if (sources_.find(source.id()) != sources_.end()) {
+        ALuint al_source = sources_.at(source.id());
+        alSourcef(al_source, AL_PITCH, source.pitch);
+        alSourcef(al_source, AL_GAIN, source.gain);
+        alSource3f(al_source, AL_POSITION, source.position.x,
+                   source.position.y, source.position.z);
+        alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
+        if (source.playing && (state != AL_PLAYING)){
+             alSourcePlay(al_source);             
+        }
 
-        if (stream_source.playing && (state != AL_PLAYING)){
-             alSourcePlay(al_source);
+        if(!source.playing && (state == AL_PLAYING)) {
+            alSourceStop(al_source);
         }
-        if(!stream_source.playing && (state == AL_PLAYING)) {
-            alSourcePause(al_source);
+
+        if (state == AL_STOPPED){
+            alSourceRewind(al_source);
+            source.playing = false;
         }
+
     }
 }
+
+
 }
 
 #endif

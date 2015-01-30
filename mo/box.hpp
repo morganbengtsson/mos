@@ -3,6 +3,7 @@
 
 #include <array>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
 #include <tuple>
@@ -64,8 +65,9 @@ public:
      * Constructor for an AABB box, created from vertices.
      *
      */
-    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform(transform) {
+    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform_(transform) {
         glm::vec3 min, max;
+        transform_ = glm::translate(glm::mat4(1.0f), glm::vec3(transform_[3][0], transform_[3][1], transform_[3][2]));
 
         if (begin != end) {
             auto x_extremes = std::minmax_element(begin, end, [](const Vertex& left, const Vertex& right) {
@@ -140,10 +142,12 @@ public:
     /*!
      * \brief transform
      */
-    glm::mat4 transform;
+    glm::mat4 transform() const;
+    void transform(const glm::mat4 & transform);
 private:
     glm::vec3 min_;
     glm::vec3 max_;
+    glm::mat4 transform_;
 
     bool inline intersection( float fDst1, float fDst2, glm::vec3 point1, glm::vec3 point2, glm::vec3 &hit) {
         if ( (fDst1 * fDst2) >= 0.0f) return false;
