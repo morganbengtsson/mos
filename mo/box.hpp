@@ -38,6 +38,9 @@ struct BoxIntersection {
  * \brief The RayIntersection struct
  */
 struct RayIntersection {
+    RayIntersection(bool hit, glm::vec3 point): intersects(hit), point(point){
+    }
+
     /*!
      * \brief intersects
      *

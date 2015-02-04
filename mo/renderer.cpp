@@ -137,7 +137,7 @@ namespace mo {
 
                 "vec4 diffuse_static = static_light * diffuse_color;"
                 
-                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(0.1, 0.1, 0.2);}\n"
+                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(1.1, 0.1, 0.2);}\n"
 
                 "gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);\n"
 
