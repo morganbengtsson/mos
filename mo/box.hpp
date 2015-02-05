@@ -38,7 +38,7 @@ struct BoxIntersection {
  * \brief The RayIntersection struct
  */
 struct RayIntersection {
-    RayIntersection(bool hit, glm::vec3 point): intersects(hit), point(point){
+    RayIntersection(bool hit, float distance = 0.0f): intersects(hit), distance(distance){
     }
 
     /*!
@@ -47,12 +47,13 @@ struct RayIntersection {
      * True if ray intersects with the box.
      */
     bool intersects;
+
     /*!
-     * \brief point
+     * \brief distance
      *
-     * The point of intersection.
+     * Distance from
      */
-    glm::vec3 point;
+    float distance;
 };
 
 class Box
@@ -70,7 +71,6 @@ public:
      */
     Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform_(transform) {
         glm::vec3 min, max;
-        transform_ = glm::translate(glm::mat4(1.0f), glm::vec3(transform_[3][0], transform_[3][1], transform_[3][2]));
 
         if (begin != end) {
             auto x_extremes = std::minmax_element(begin, end, [](const Vertex& left, const Vertex& right) {
@@ -152,19 +152,7 @@ private:
     glm::vec3 max_;
     glm::mat4 transform_;
 
-    bool inline intersection( float fDst1, float fDst2, glm::vec3 point1, glm::vec3 point2, glm::vec3 &hit) {
-        if ( (fDst1 * fDst2) >= 0.0f) return false;
-        if ( fDst1 == fDst2) return false;
-        hit = point1 + (point2-point1) * ( -fDst1/(fDst2-fDst1) );
-        return true;
-    }
 
-    bool inline in_box( glm::vec3 Hit, glm::vec3 min, glm::vec3 max, const int axis) {
-        if ( axis==1 && Hit.z > min.z && Hit.z < max.z && Hit.y > min.y && Hit.y < max.y) { return true; }
-        if ( axis==2 && Hit.z > min.z && Hit.z < max.z && Hit.x > min.x && Hit.x < max.x) { return true; }
-        if ( axis==3 && Hit.x > min.x && Hit.x < max.x && Hit.y > min.y && Hit.y < max.y) { return true; }
-        return false;
-    }
 };
 }
 #endif // MO_BOX_HPP
