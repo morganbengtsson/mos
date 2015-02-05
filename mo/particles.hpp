@@ -18,6 +18,11 @@ namespace mo {
     class Particles {
     public:
         Particles();
+        template<class It>
+        Particles(It begin, It end){
+            particles_.assign(begin, end);
+        }
+
         virtual ~Particles();
 
         using Parts = std::vector<Particle>;
