@@ -107,7 +107,7 @@ namespace mo {
          * @param Program_name, either "text" or "standard"
          * @param Position of one ortho light.
          */        
-        void render(const Model & model, 
+        void update(const Model & model,
                     const glm::mat4 transform, 
                     const glm::mat4 view, 
                     const glm::mat4 projection, 
@@ -127,12 +127,12 @@ namespace mo {
         
         
         template<class It>
-        void render(It begin, It end, const glm::mat4 transform, const glm::mat4 view, 
+        void update(It begin, It end, const glm::mat4 transform, const glm::mat4 view,
                     const glm::mat4 projection, const float opacity = 1.0f, 
                     const std::string program_name = "standard", 
                     const Light & light = Light(), const float time = 0.0f){
             for (auto it = begin; it != end; ++it){
-                render(*it, transform, view, projection, opacity, program_name, light, time);
+                update(*it, transform, view, projection, opacity, program_name, light, time);
             }
         }
         
@@ -144,7 +144,7 @@ namespace mo {
          * @param Projection matrix.
          * @param Custom opacity of the object.         
          */
-        void render(Particles & particles, 
+        void update(Particles & particles,
                     const glm::mat4 view,
                     const glm::mat4 projection);
         

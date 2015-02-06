@@ -316,7 +316,7 @@ namespace mo {
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
     }
 
-    void Renderer::render(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
+    void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
         if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(particles.id(),
                     ogli::createArrayBuffer(particles.end(), particles.end())));
@@ -345,7 +345,7 @@ namespace mo {
 
     }
  
-    void Renderer::render(const Model & model,
+    void Renderer::update(const Model & model,
                           const glm::mat4 transform,
                           const glm::mat4 view,
                           const glm::mat4 projection,
