@@ -202,7 +202,7 @@ namespace mo {
                 "void main(){\n"
                 "#ifdef GL_ES\n"
                 "#else\n"
-                "gl_PointSize = 1.0;\n"
+                "gl_PointSize = 0.8;\n"
                 "#endif\n"
                 "v_color = color;\n"
                 "v_position = (model_view * vec4(position, 0.0)).xyz;\n"
@@ -219,7 +219,7 @@ namespace mo {
                 "varying vec4 v_color;\n"
 
                 "void main() {\n"
-                "gl_FragColor = vec4(v_color.xyz, 1.0);\n"
+                "gl_FragColor = vec4(v_color);\n"
 
                 //"gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
                 "}\n";

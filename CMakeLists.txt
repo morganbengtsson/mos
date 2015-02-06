@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 2.8)
+project(mo)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 add_definitions(-DAL_LIBTYPE_STATIC)
@@ -14,6 +15,11 @@ if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") OR ("${CMAKE_CXX_COMPILER_ID}" 
 	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 	set(CMAKE_CXX_FLAGS "-std=c++11")
 endif()
+
+#Copy HRT files for OpenAL
+file(COPY externals/openal-soft/hrtf/default-48000.mhr DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINARY_DIR})
+
 
 # GLEW
 add_subdirectory(externals/glew-cmake)

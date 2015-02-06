@@ -9,7 +9,7 @@
 
 namespace mo {
 
-    unsigned int Particles::current_id = 100;
+    unsigned int Particles::current_id = 10000;
     
     Particles::Particles() : valid(true) {
         id_ = current_id++;
