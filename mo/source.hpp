@@ -33,7 +33,7 @@ public:
            const float pitch = 1.0f,
            const float gain = 1.0f,
            bool loop = false,
-           bool playing = true);
+           bool playing = false);
     virtual ~Source();
 
     /*!

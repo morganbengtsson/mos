@@ -24,6 +24,7 @@
 #include "mesh.hpp"
 #include "texture2d.hpp"
 #include "model.hpp"
+#include "util.hpp"
 
 namespace mo {
 
@@ -41,191 +42,17 @@ namespace mo {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_FRAMEBUFFER_SRGB);
 
-        std::string standard_vertex_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "uniform mat4 model;\n"
-                "uniform mat4 model_view_projection;\n"
-                "uniform mat4 model_view;\n"
-                "uniform mat3 normal_matrix;\n"
-                "attribute vec3 position;\n"
-                "attribute vec3 normal;\n"
-                "attribute vec2 uv;\n"
-                "attribute vec2 lightmap_uv;\n"
-                "varying vec3 fragment_position;\n"
-                "varying vec3 fragment_normal\n;"
-                "varying vec2 fragment_uv;\n"
-                "varying vec2 fragment_lightmap_uv;\n"
-                "void main()\n"
-                "{\n"
-                "    fragment_uv = uv;\n"
-                "    fragment_lightmap_uv = lightmap_uv;\n"
-                "    fragment_position = (model_view * vec4(position, 1.0)).xyz;\n"
-                "    fragment_normal = normal_matrix * normal;\n"
-                "    gl_Position = model_view_projection * vec4(position, 1.0);\n"
-                "}\n";
+        std::string standard_vert_source = text("assets/shaders/standard.vert");
+        std::string standard_frag_source = text("assets/shaders/standard.frag");
+        add_vertex_program("standard", standard_vert_source, standard_frag_source);
 
-        std::string standard_fragment_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "uniform bool selected;\n"
-                "uniform float time;\n"
-                "uniform vec3 material_ambient_color;\n"
-                "uniform vec3 material_diffuse_color;\n"
-                "uniform vec3 material_specular_color;\n"
-                "uniform float material_specular_exponent;\n"
-                "uniform float opacity;\n"
-                "uniform sampler2D texture;\n"
-                "uniform sampler2D lightmap;\n"
-                "uniform sampler2D normalmap;\n"
-                "uniform vec3 light_position;\n"
-                "uniform vec3 light_diffuse_color;\n"
-                "uniform vec3 light_specular_color;\n"
-                "uniform bool has_texture;\n"
-                "uniform bool has_lightmap;\n"
-                "uniform bool has_normalmap;\n"
-                "varying vec3 fragment_position;\n"
-                "varying vec3 fragment_normal;\n"
-                "varying vec2 fragment_uv;\n"
-                "varying vec2 fragment_lightmap_uv;\n"
+        std::string text_vert_source = text("assets/shaders/text.vert");
+        std::string text_frag_source = text("assets/shaders/text.frag");
+        add_vertex_program("text", text_vert_source, text_frag_source);
 
-                "void main() {\n"
-
-                "vec4 static_light = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
-                "if (has_lightmap == true){\n"
-                "static_light = texture2D(lightmap, fragment_lightmap_uv);\n"
-                "}\n"
-
-
-                "vec3 normal = normalize(fragment_normal);\n"
-                "if (has_normalmap == true){\n"
-                "normal = texture2D(normalmap, fragment_uv).xyz;}\n"
-
-                "vec3 surface_to_light = normalize(light_position - fragment_position);\n"
-                "float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);\n"
-                "diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);\n"
-
-                "vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);\n"
-                "if (has_texture == true){\n"
-                "tex_color = texture2D(texture, fragment_uv);\n"
-                "}\n"
-                "vec4 diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, 1.0 - tex_color.a), 1.0);\n"
-                //"vec4 diffuse_color;"
-                //"if (has_texture == true){\n"
-                //"diffuse_color = texture2D(texture, fragment_uv).rgba;\n"
-                //"} else {"
-                //"diffuse_color = vec4(material_diffuse_color, 1.0);\n"
-                //"}\n"
-                "float dist = distance(light_position, fragment_position);\n"
-                "float a = 1.0;\n"
-                "float b = 1.0;\n"
-                "float att = 1.0 / (1.0 + a*dist + b*dist*dist);\n"
-
-                "vec4 diffuse = vec4(att * diffuse_contribution* light_diffuse_color, 1.0) * diffuse_color;\n"                
-
-                
-                "vec3 surface_to_view = normalize(fragment_position);\n"
-                "vec3 reflection = reflect(normal, -surface_to_light);\n"
-                "float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);\n"
-                "vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);\n"
-
-                "vec4 diffuse_static = static_light * diffuse_color;"
-                
-                "if (selected == true){ diffuse.xyz = diffuse.xyz + vec3(1.1, 0.1, 0.2);}\n"
-
-                "gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);\n"
-
-
-                
-                "}\n";
-        add_vertex_program("standard", standard_vertex_source, standard_fragment_source);
-
-        std::string text_vertex_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "uniform mat4 model_view_projection;\n"
-                "uniform mat4 model_view;\n"
-                "attribute vec3 position;\n"
-                "attribute vec2 uv;\n"
-
-                "varying vec2 v_position;\n"
-                "varying vec2 v_uv;\n"
-
-                "void main(){\n"
-                "v_position = (model_view * vec4(position, 0.0)).xy;\n"
-                "v_uv = uv;\n"
-                "gl_Position = model_view_projection * vec4(position, 1.0);\n"
-                "}\n";
-
-        std::string text_fragment_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "varying vec3 v_position;\n"
-                "varying vec2 v_uv;\n"
-                "uniform sampler2D texture;\n"
-                "uniform float opacity;\n"
-
-                "void main() {\n"
-                "gl_FragColor = texture2D(texture, v_uv);\n"
-                "gl_FragColor.w = gl_FragColor.w * opacity;\n"
-                "//gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-                "}\n";
-        add_vertex_program("text", text_vertex_source, text_fragment_source);
-
-        std::string particles_vertex_source =
-                "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "uniform mat4 model_view_projection;\n"
-                "uniform mat4 model_view;\n"
-                "attribute vec3 position;\n"
-                "attribute vec4 color;\n"
-
-                "varying vec3 v_position;\n"
-                "varying vec4 v_color;\n"
-
-                "void main(){\n"
-                "#ifdef GL_ES\n"
-                "#else\n"
-                "gl_PointSize = 0.8;\n"
-                "#endif\n"
-                "v_color = color;\n"
-                "v_position = (model_view * vec4(position, 0.0)).xyz;\n"
-                "gl_Position = model_view_projection * vec4(position, 1.0);\n"
-                "}\n";
-
-        std::string particles_fragment_source = "#ifdef GL_ES\n"
-                "precision mediump float;\n"
-                "precision mediump int;\n"
-                "#else\n"
-                "#version 120\n"
-                "#endif\n"
-                "varying vec3 v_position;\n"
-                "varying vec4 v_color;\n"
-
-                "void main() {\n"
-                "gl_FragColor = vec4(v_color);\n"
-
-                //"gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-                "}\n";
-
-        add_particle_program("particles", particles_vertex_source, particles_fragment_source);
-
+        std::string particles_vert_source = text("assets/shaders/particles.vert");
+        std::string particles_frag_source = text("assets/shaders/particles.frag");
+        add_particle_program("particles", particles_vert_source, particles_frag_source);
     }
 
     Renderer::~Renderer() {

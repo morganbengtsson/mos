@@ -8,6 +8,10 @@
 #ifndef MO_UTIL_H
 #define	MO_UTIL_H
 
+#include <string>
+#include <fstream>
+#include <exception>
+
 namespace mo {
     template <class T>
     class ClockwiseSorter {
@@ -28,6 +32,17 @@ namespace mo {
             }
         }
     };
+
+    std::string inline text(const std::string path){
+        std::ifstream file(path);
+        if (!file.is_open()){
+            throw std::runtime_error("Could not open " + path + ".");
+        }
+        std::string source((std::istreambuf_iterator<char>(file)),
+                std::istreambuf_iterator<char>());
+
+        return source;
+    }
 }
 
 #endif	/* MO_UTIL_H */

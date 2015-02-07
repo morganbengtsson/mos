@@ -20,6 +20,9 @@ endif()
 file(COPY externals/openal-soft/hrtf/default-48000.mhr DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINARY_DIR})
 
+#Copy shader files to assets
+file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
+
 
 # GLEW
 add_subdirectory(externals/glew-cmake)
@@ -59,9 +62,13 @@ add_subdirectory(externals/ogli)
 
 file(GLOB ROOT_SOURCE mo/*.cpp)
 file(GLOB ROOT_HEADER mo/*.hpp)
+file(GLOB VERTEX_SHADERS shaders/*.vert)
+file(GLOB FRAGMENT_SHADERS shaders/*.frag)
+file(GLOB GEOMETRY_SHADERS shaders/*.geom)
 add_subdirectory(mo)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE})
+add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
+${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
 IF(WIN32)
     target_link_libraries(mo OpenAL32)

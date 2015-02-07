@@ -378,11 +378,14 @@ void Audio::init(const StreamSource & stream_source) {
 
             alSourceQueueBuffers(source, 2, buffers);
             alSource3f(source, AL_POSITION, stream_source.position.x, stream_source.position.y, stream_source.position.z);
-            alSourcePlay(source);
+                                  if (stream_source.playing){
+                                      alSourcePlay(source);
+                                  }
 
             bool done = false;
-            while(true && stream_source.playing){
-                ALint processed = 0;
+            //while(true && stream_source.playing){
+            while(true){
+                                  ALint processed = 0;
                 alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                 while(processed--){
                     ALuint buffer = 0;
