@@ -42,8 +42,8 @@ namespace mo {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_FRAMEBUFFER_SRGB);
 
-        std::string standard_vert_source = text("assets/shaders/standard.vert");
-        std::string standard_frag_source = text("assets/shaders/standard.frag");
+        std::string standard_vert_source = text("assets/shaders/standard_330.vert");
+        std::string standard_frag_source = text("assets/shaders/standard_330.frag");
         add_vertex_program("standard", standard_vert_source, standard_frag_source);
 
         std::string text_vert_source = text("assets/shaders/text.vert");
@@ -53,6 +53,8 @@ namespace mo {
         std::string particles_vert_source = text("assets/shaders/particles.vert");
         std::string particles_frag_source = text("assets/shaders/particles.frag");
         add_particle_program("particles", particles_vert_source, particles_frag_source);
+
+
     }
 
     Renderer::~Renderer() {

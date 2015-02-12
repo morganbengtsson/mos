@@ -20,6 +20,7 @@
 #include "particles.hpp"
 #include "particle.hpp"
 #include "light.hpp"
+#include "render_target.hpp"
 
 namespace mo {
     
@@ -85,10 +86,12 @@ namespace mo {
         typedef std::pair<unsigned int, ogli::ArrayBuffer> ArrayPair;
         typedef std::pair<unsigned int, ogli::ElementArrayBuffer> ElementPair;
         typedef std::pair<unsigned int, ogli::TextureBuffer> TexturePair;
+        typedef std::pair<unsigned int, ogli::FrameBuffer> FrameBufferPair;
         typedef std::pair<std::string, VertexProgramData> VertexProgramPair;
         typedef std::pair<std::string, ParticleProgramData> ParticleProgramPair;
 
         Renderer();
+        virtual ~Renderer();
         void add_program(const std::string name);
         void add_vertex_program(const std::string path, 
                                 const std::string vertex_shader_source, 
@@ -171,7 +174,59 @@ namespace mo {
             element_array_buffers_.clear();                      
         }
 
-        virtual ~Renderer();
+        void render_target_reset(){
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        void render_target(RenderTarget target){
+            if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
+                auto id = ogli::create_frame_buffer();
+
+
+                glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+                // The texture we're going to render to
+                //GLuint renderedTexture;
+                //glGenTextures(1, &renderedTexture);
+                auto t = ogli::createTexture(nullptr, 1024, 768);
+
+                // "Bind" the newly created texture : all future texture functions will modify this texture
+                glBindTexture(GL_TEXTURE_2D, t);
+
+                // Give an empty image to OpenGL ( the last "0" )
+                glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+                // Poor filtering. Needed !
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+                textures_.insert(TexturePair(target.texture->id(), t));
+                // The depth buffer
+                GLuint depthrenderbuffer;
+                glGenRenderbuffers(1, &depthrenderbuffer);
+                glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
+                // Set "renderedTexture" as our colour attachement #0
+                glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, t, 0);
+
+                // Set the list of draw buffers.
+                GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+                glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+                frame_buffers_.insert(FrameBufferPair(target.id(), id));
+
+                if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+                    throw std::runtime_error("Framebuffer is incomplete.");
+                }
+
+            }
+
+            auto fb = frame_buffers_.at(target.id());
+            glBindFramebuffer(GL_FRAMEBUFFER, fb.id);
+            glViewport(0,0,1024,768);
+        }
+
     private:
 
         VertexAttributes vertex_attributes_;
@@ -182,6 +237,8 @@ namespace mo {
         std::map<unsigned int, ogli::TextureBuffer> textures_;
         std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
         std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
+        std::map<unsigned int, ogli::FrameBuffer> frame_buffers_;
+
 
     };
 }

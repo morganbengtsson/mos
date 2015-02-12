@@ -212,11 +212,11 @@ namespace mo {
             is.read((char*) &opacity, sizeof (float));
             is.read((char*) &specular_exponent, sizeof (float));
 
-            std::cout << ambient << std::endl;
-            std::cout << diffuse << std::endl;
-            std::cout << specular << std::endl;
-            std::cout << opacity << std::endl;
-            std::cout << specular_exponent << std::endl;
+            //std::cout << ambient << std::endl;
+            //std::cout << diffuse << std::endl;
+            //std::cout << specular << std::endl;
+            //std::cout << opacity << std::endl;
+            //std::cout << specular_exponent << std::endl;
 
             return std::make_shared<Material>(Material(ambient, diffuse, specular,
                     opacity, specular_exponent));

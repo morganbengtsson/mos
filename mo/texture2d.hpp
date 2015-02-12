@@ -43,6 +43,17 @@ public:
         id_ = current_id++;
         texels_.assign(begin, end);
     }
+
+    Texture2D(const unsigned int width,
+              const unsigned int height,
+              const bool mipmaps = true):
+        width_(width),
+        height_(height),
+        mipmaps(mipmaps){
+        static unsigned int current_id = 0;
+        id_ = current_id++;
+    }
+
     virtual ~Texture2D();
     
     /*!
