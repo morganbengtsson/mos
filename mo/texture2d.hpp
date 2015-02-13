@@ -21,7 +21,7 @@ namespace mo {
 class Texture2D {
 public:
     using Texels = std::vector<unsigned char>;
-    
+    static unsigned int current_id;
     template<class It>
     /*!
      * \brief Texture2D
@@ -39,7 +39,6 @@ public:
               width_(width),
               height_(height),
               mipmaps(mipmaps) {
-        static unsigned int current_id = 0;
         id_ = current_id++;
         texels_.assign(begin, end);
     }
@@ -49,8 +48,7 @@ public:
               const bool mipmaps = true):
         width_(width),
         height_(height),
-        mipmaps(mipmaps){
-        static unsigned int current_id = 0;
+        mipmaps(mipmaps){        
         id_ = current_id++;
     }
 

@@ -9,6 +9,7 @@
 
 namespace mo{
 
+    unsigned int Texture2D::current_id = 0;
     Texture2D::~Texture2D() {
     }
 

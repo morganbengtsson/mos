@@ -46,8 +46,8 @@ namespace mo {
         std::string standard_frag_source = text("assets/shaders/standard_330.frag");
         add_vertex_program("standard", standard_vert_source, standard_frag_source);
 
-        std::string text_vert_source = text("assets/shaders/text.vert");
-        std::string text_frag_source = text("assets/shaders/text.frag");
+        std::string text_vert_source = text("assets/shaders/text_330.vert");
+        std::string text_frag_source = text("assets/shaders/text_330.frag");
         add_vertex_program("text", text_vert_source, text_frag_source);
 
         std::string particles_vert_source = text("assets/shaders/particles.vert");

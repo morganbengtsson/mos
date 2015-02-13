@@ -89,7 +89,7 @@ namespace mo {
                 glm::vec2 uv(0.0f, 0.0f);
                 if (obj_model.texCoord.size() > 0) {
                     uv.x = obj_model.texCoord[j];
-                    uv.y = -obj_model.texCoord[j + 1];
+                    uv.y = obj_model.texCoord[j + 1];
                 }
 
                 j += 2;
