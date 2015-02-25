@@ -23,7 +23,10 @@ public:
      * \param position
      */
     SoundSource(const std::shared_ptr<Sound> sound,
-                const glm::vec3 position = glm::vec3(0.0f));
+                const glm::vec3 position = glm::vec3(0.0f),
+                const glm::vec3 velocity = glm::vec3(0.0f),
+                const float gain = 1.0f,
+                const float pitch = 1.0f);
     virtual ~SoundSource();    
     std::shared_ptr<Sound> sound;
 };

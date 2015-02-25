@@ -139,6 +139,7 @@ public:
         }
     }
 
+
     /**
          * Renders particles.
          *
@@ -175,66 +176,64 @@ public:
     }
 
     void render_target_reset(){
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        glBlitFramebuffer(0, 0, 1280, 800, 0, 0, 1280, 800, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    GLuint readFBO;
+    GLuint drawFBO;
+
     void render_target(RenderTarget target){
         if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
-            // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
-            GLuint FramebufferName = 0;
-            glGenFramebuffers(1, &FramebufferName);
-            glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
-            // The texture we're going to render to
+            glGenFramebuffers(1, &readFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
+
             GLuint renderedTexture;
             glGenTextures(1, &renderedTexture);
+            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderedTexture);
+            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8, target.texture->width(), target.texture->height(), GL_TRUE);
+            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, renderedTexture, 0);
 
-            // "Bind" the newly created texture : all future texture functions will modify this texture
-            glBindTexture(GL_TEXTURE_2D, renderedTexture);
-
-            // Give an empty image to OpenGL ( the last "0" means "empty" )
-            //glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, 1024, 768, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1024, 768, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-            glGenerateMipmap(GL_TEXTURE_2D);
-
-            // Poor filtering
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-
-
-            // The depth buffer
             GLuint depthrenderbuffer;
             glGenRenderbuffers(1, &depthrenderbuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, target.texture->width(), target.texture->height());
+            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
-            // Set "renderedTexture" as our colour attachement #0
-            glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
-
-            // Set the list of draw buffers.
-            GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-            glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+            GLuint screenTexture;
+            glGenTextures(1, &screenTexture);
+            glBindTexture(GL_TEXTURE_2D, screenTexture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, 1280, 800, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glGenFramebuffers(1, &drawFBO);
+            glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);
 
             // Always check that our framebuffer is ok
             if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
                 throw std::runtime_error("Framebuffer incomplete.");
             }
-            textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{renderedTexture}));
-            frame_buffers_.insert(FrameBufferPair(target.id(), ogli::FrameBuffer{FramebufferName}));
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+            //textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{renderedTexture}));
+            textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{screenTexture}));
+            frame_buffers_.insert(FrameBufferPair(target.id(), ogli::FrameBuffer{readFBO}));
+
+
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
 
         auto fb = frame_buffers_.at(target.id());
        //std::cout << fb.id << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, fb.id);
-        glViewport(0,0,1024,768);
+        //std::cout << target.texture->width() << " " << target.texture->height() << std::endl;
+        //glViewport(0,0,target.texture->width(), target.texture->height());
     }
 
 private:

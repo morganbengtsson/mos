@@ -20,7 +20,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
              const Draw draw,
              std::shared_ptr<Material> material,
              std::shared_ptr<Texture2D> lightmap,
-             std::shared_ptr<Texture2D> normalmap) :
+             std::shared_ptr<Texture2D> normalmap,
+             const bool selectable) :
     draw(draw),
     mesh(mesh),
     texture(texture),
@@ -30,7 +31,7 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     transform_(transform),
     valid_(true),
     selected_(false),
-    selectable(true),
+    selectable(selectable),
     box(mesh->vertices_begin(), mesh->vertices_end(), transform){}
 
 Model::~Model() {

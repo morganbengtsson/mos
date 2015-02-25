@@ -2,11 +2,12 @@
 
 namespace mo{
 
-RenderTarget::RenderTarget()
-    :texture(std::shared_ptr<Texture2D>(new Texture2D(1024, 768, true)))
+unsigned int RenderTarget::current_id_ = 0;
+
+RenderTarget::RenderTarget(const unsigned int width, const unsigned int height)
+    :texture(std::shared_ptr<Texture2D>(new Texture2D(width, height, true)))
 {
-    static unsigned int current_id = 0;
-    id_ = current_id++;
+    id_ = current_id_++;
 }
 unsigned int RenderTarget::id() const {
     return id_;
