@@ -9,13 +9,6 @@ varying vec2 v_uv;
 uniform sampler2D texture;
 uniform float opacity;
 
-const float blurSize = 1.0/200.0;
-const float intensity = 0.35;
-
-const float R_fxaaReduceMin  =  (1.0/ 128.0);
-const float  R_fxaaReduceMul =   (1.0 / 8.0);
-const float R_fxaaSpanMax  =   16.0;
-
 uniform float offset[3] = float[]( 0.0, 1.3846153846, 3.2307692308 );
 uniform float weight[3] = float[]( 0.2270270270, 0.3162162162, 0.0702702703 );
 

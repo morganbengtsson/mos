@@ -100,16 +100,16 @@ public:
                               const std::string vs_source,
                               const std::string fs_source);
     /**
-         * Renders a Model object.
-         *
-         * @param model.
-         * @param Additional transform matrix.
-         * @param View matrix of the camera
-         * @param Projection matrix of the camera
-         * @param Custom opacity of the object.
-         * @param Program_name, either "text" or "standard"
-         * @param Position of one ortho light.
-         */
+     * Renders a Model object.
+     *
+     * @param model.
+     * @param Additional transform matrix.
+     * @param View matrix of the camera
+     * @param Projection matrix of the camera
+     * @param Custom opacity of the object.
+     * @param Program_name, either "text" or "standard"
+     * @param Position of one ortho light.
+     */
     void update(const Model & model,
                 const glm::mat4 transform,
                 const glm::mat4 view,
