@@ -175,11 +175,10 @@ public:
         element_array_buffers_.clear();
     }
 
-    void render_target_reset(){
+    void render_target_reset(unsigned int width, unsigned int height){
         glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
-        glBlitFramebuffer(0, 0, 1280, 800, 0, 0, 1280, 800, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
+        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -209,7 +208,7 @@ public:
             GLuint screenTexture;
             glGenTextures(1, &screenTexture);
             glBindTexture(GL_TEXTURE_2D, screenTexture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, 1280, 800, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, target.texture->width(), target.texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glBindTexture(GL_TEXTURE_2D, 0);

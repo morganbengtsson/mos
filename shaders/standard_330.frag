@@ -59,7 +59,7 @@ void main() {
     vec4 diffuse_static = static_light * diffuse_color;
 
     if (selected == true){
-        diffuse.xyz = diffuse.xyz + vec3(0.2, 0.1, 0.1);
+        diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);
     }
 
     //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
