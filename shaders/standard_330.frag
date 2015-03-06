@@ -24,7 +24,7 @@ layout(location = 0) out vec4 color;
 
 void main() {
 
-    vec4 static_light = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     if (has_lightmap == true){
         static_light = texture2D(lightmap, fragment_lightmap_uv);
     }
@@ -64,4 +64,8 @@ void main() {
 
     //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
     color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
+    if (has_texture){
+        color.a = tex_color.a;
+    }
+
 };

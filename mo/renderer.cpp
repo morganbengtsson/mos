@@ -56,7 +56,6 @@ namespace mo {
         std::string particles_frag_source = text("assets/shaders/particles.frag");
         add_particle_program("particles", particles_vert_source, particles_frag_source);
 
-
     }
 
     Renderer::~Renderer() {

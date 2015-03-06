@@ -54,6 +54,14 @@ glm::vec3 Model::position() const {
     return (glm::vec3)(transform()*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
+void Model::position(const glm::vec3 position){
+    auto t = transform();
+    t[3][0] = position[0];
+    t[3][1] = position[1];
+    t[3][2] = position[2];
+    transform(t);
+}
+
 bool Model::selected() const {
     return selected_;
 }

@@ -87,10 +87,15 @@ namespace mo {
          * \param transform
          */
         void transform(const glm::mat4 & transform);
+
+        glm::vec3 position() const;
+
+        void position(const glm::vec3 position);
+
+        glm::vec4 color() const;
+
         Box box;
         Draw draw;
-        glm::vec4 color() const;
-        glm::vec3 position() const;
         bool selectable;
         bool selected() const;
         void selected(const bool selected);
