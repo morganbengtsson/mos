@@ -249,6 +249,10 @@ private:
     std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
     std::map<unsigned int, ogli::FrameBuffer> frame_buffers_;
 
+    std::map<unsigned int, unsigned int> array_buffers2_;
+    std::map<unsigned int, unsigned int> element_array_buffers2_;
+    std::map<unsigned int, unsigned int> vertex_arrays_;
+
 
 };
 }

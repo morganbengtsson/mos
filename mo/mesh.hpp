@@ -107,7 +107,10 @@ public:
     void clear();
     void add(const Vertex vertex);
     void add(const int element);
-    Vertex back();
+    const Vertex * vertices_data() const;
+    unsigned int vertices_size() const;
+    const int * elements_data() const;
+    unsigned int elements_size() const;
 private:
     static unsigned int current_id;
     unsigned int id_;

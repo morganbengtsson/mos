@@ -92,10 +92,20 @@ namespace mo {
     void Renderer::add_vertex_program(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source) {
         auto vertex_shader = ogli::createShader(vertex_shader_source, GL_VERTEX_SHADER);
         auto fragment_shader = ogli::createShader(fragment_shader_source, GL_FRAGMENT_SHADER);
+        //auto vertex_shader = create_compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
+        //auto fragment_shader = create_compile_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
 
         auto program = ogli::createProgram();
+        //auto program_id = glCreateProgram();
+
+
         ogli::attachShader(program, vertex_shader);
         ogli::attachShader(program, fragment_shader);
+
+        //glAttachShader(program_id, vertex_shader);
+        //glAttachShader(program_id, fragment_shader);
+
+
         ogli::bindAttribute(program, vertex_attributes_.position);
         ogli::bindAttribute(program, vertex_attributes_.normal);
         ogli::bindAttribute(program, vertex_attributes_.uv_texture);
@@ -222,9 +232,79 @@ namespace mo {
                           const Light & light,
                           const float time) {
 
+
+        if(vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
+            unsigned int vertex_array;
+            glGenVertexArrays(1, &vertex_array);
+            glBindVertexArray(vertex_array);
+                if (array_buffers2_.find(model.mesh->id()) == array_buffers2_.end()) {
+                    unsigned int array_buffer;
+                    glGenBuffers(1, &array_buffer);
+                    glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+                    glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
+                                 model.mesh->vertices_data(),
+                                 GL_STATIC_DRAW);
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    array_buffers2_.insert({model.mesh->id(), array_buffer});
+                }
+                if (element_array_buffers2_.find(model.mesh->id()) == element_array_buffers2_.end()) {
+                    unsigned int element_array_buffer;
+                    glGenBuffers(1, &element_array_buffer);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
+                    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                                 model.mesh->elements_size() * sizeof (unsigned int),
+                                 model.mesh->elements_data(),
+                                 GL_STATIC_DRAW);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                    element_array_buffers2_.insert({model.mesh->id(), element_array_buffer});
+                }
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(model.mesh->id()));
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+                    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
+                    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)*2));
+                    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)*2 + sizeof(glm::vec2)));
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+                                 element_array_buffers2_.at(model.mesh->id()));
+                    glEnableVertexAttribArray(0);
+                    glEnableVertexAttribArray(1);
+                    glEnableVertexAttribArray(2);
+                    glEnableVertexAttribArray(3);
+            glBindVertexArray(0);
+            vertex_arrays_.insert({model.mesh->id(), vertex_array});
+        }
+
+        /*
+        if (array_buffers2_.find(model.mesh->id()) == array_buffers2_.end()) {
+            unsigned int array_buffer;
+            glGenBuffers(1, &array_buffer);
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+            glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
+                         model.mesh->vertices_data(),
+                         GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            array_buffers2_.insert({model.mesh->id(), array_buffer});
+        }
+        if (element_array_buffers2_.find(model.mesh->id()) == element_array_buffers2_.end()) {
+            unsigned int element_array_buffer;
+            glGenBuffers(1, &element_array_buffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         model.mesh->elements_size() * sizeof (unsigned int),
+                         model.mesh->elements_data(),
+                         GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            element_array_buffers2_.insert({model.mesh->id(), element_array_buffer});
+        }
+        */
+
         if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(model.mesh->id(),
                     ogli::createArrayBuffer(model.mesh->vertices_begin(), model.mesh->vertices_end())));
+
         }
         if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
             element_array_buffers_.insert(ElementPair(model.mesh->id(),
@@ -265,8 +345,11 @@ namespace mo {
 
         ogli::useProgram(vertex_programs_.at(program_name).program);
 
-        ogli::bindBuffer(array_buffers_.at(model.mesh->id()));
-        ogli::bindBuffer(element_array_buffers_.at(model.mesh->id()));
+        //ogli::bindBuffer(array_buffers_.at(model.mesh->id()));
+        //ogli::bindBuffer(element_array_buffers_.at(model.mesh->id()));
+        glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+        //glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(model.mesh->id()));
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers2_.at(model.mesh->id()));
 
         if (model.texture) {
             glActiveTexture(GL_TEXTURE0);
@@ -317,10 +400,10 @@ namespace mo {
         ogli::uniform(vertex_programs_.at(program_name).selected, model.selected());
         ogli::uniform(vertex_programs_.at(program_name).time, time);
 
-        ogli::attribute(vertex_attributes_.position);
-        ogli::attribute(vertex_attributes_.normal);
-        ogli::attribute(vertex_attributes_.uv_texture);
-        ogli::attribute(vertex_attributes_.uv_lightmap);
+        //ogli::attribute(vertex_attributes_.position);
+        //ogli::attribute(vertex_attributes_.normal);
+        //ogli::attribute(vertex_attributes_.uv_texture);
+        //ogli::attribute(vertex_attributes_.uv_lightmap);
 
         int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
         int draw_type = GL_TRIANGLES;
@@ -329,7 +412,7 @@ namespace mo {
         } else if (model.draw == Model::Draw::POINTS) {
             draw_type = GL_POINTS;
         }
-
+        std::cout << num_elements << std::endl;
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {

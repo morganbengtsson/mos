@@ -38,9 +38,21 @@ namespace mo {
     void Mesh::add(const int element){
         elements_.push_back(element);
     }
-    
-    Vertex Mesh::back(){
-        return vertices_.back();
+
+    const Vertex * Mesh::vertices_data() const {
+        return vertices_.data();
     }
-    
+
+    unsigned int Mesh::vertices_size() const {
+        return vertices_.size();
+    }
+
+    const int * Mesh::elements_data() const {
+        return elements_.data();
+    }
+
+    unsigned int Mesh::elements_size() const {
+        return elements_.size();
+    }
+
 }
