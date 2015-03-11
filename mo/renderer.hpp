@@ -5,8 +5,8 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
-#ifndef OGLI_RENDERER_H
-#define	OGLI_RENDERER_H
+#ifndef MO_RENDERER_H
+#define	MO_RENDERER_H
 
 #include <ogli/ogli.h>
 #include <glm/glm.hpp>
@@ -237,6 +237,8 @@ public:
 
 private:
 
+    unsigned int create_compile_shader(const std::string source, const unsigned int type);
+
     VertexAttributes vertex_attributes_;
     ParticleAttributes particle_attributes_;
 
@@ -250,5 +252,5 @@ private:
 
 };
 }
-#endif	/* OGLI_RENDERER_H */
+#endif	/* MO_RENDERER_H */
 

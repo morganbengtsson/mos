@@ -64,8 +64,18 @@ namespace mo {
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {
         auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
         auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
+        //auto vertex_shader = create_compile_shader(vs_source, GL_VERTEX_SHADER);
+        //auto fragment_shader = create_compile_shader(fs_source, GL_FRAGMENT_SHADER);
 
         auto program = ogli::createProgram();
+        //auto program_id = glCreateProgram();
+
+        //glAttachShader(program_id, vertex_shader);
+        //glAttachShader(program_id, fragment_shader);
+
+
+        //glBindAttribLocation(program_id, particle_attribute.id, particle_attributes_.position.c_str());
+        //glBindAttribLocation(progarm_id, particle_attribute)
         ogli::attachShader(program, vertex_shader);
         ogli::attachShader(program, fragment_shader);
         ogli::bindAttribute(program, particle_attributes_.position);
@@ -144,6 +154,34 @@ namespace mo {
     void Renderer::clear(const glm::vec3 color) {
         ogli::clearDepth(1.0f);
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
+    }
+
+    unsigned int Renderer::create_compile_shader(const std::string source, const unsigned int type) {
+        auto const * chars = source.c_str();
+        auto id = glCreateShader(type);
+
+        std::map<unsigned int, std::string> types{{GL_VERTEX_SHADER, "vertex shader"},
+                                                  {GL_FRAGMENT_SHADER, "fragment shader"},
+                                                  {GL_GEOMETRY_SHADER, "geometry shader"}};
+
+        std::cout << "Compiling " << types[type] << std::endl;
+        glShaderSource(id, 1, &chars, NULL);
+        glCompileShader(id);
+
+        GLint status;
+        glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+
+        if (status == GL_FALSE) {
+            int length;
+            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+            if(length > 0) {
+                std::vector<char> buffer(length);
+                glGetShaderInfoLog(id, length, NULL, &buffer[0]);
+                std::cerr << "Compile failure in " << types[type] << " shader" << std::endl;
+                std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+            }
+        }
+        return id;
     }
 
     void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
