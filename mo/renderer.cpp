@@ -64,24 +64,24 @@ namespace mo {
     }
 
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {
+        /*
         auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
         auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
-        /*
+        */
+
         auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
         check_shader(vertex_shader);
         auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
         check_shader(fragment_shader);
-        */
 
-        auto program = ogli::createProgram();
-        //auto program = glCreateProgram();
+        //auto program = ogli::createProgram();
+        auto program = glCreateProgram();
 
-        /*
         glAttachShader(program, vertex_shader);
         glAttachShader(program, fragment_shader);
         glBindAttribLocation(program, 0, "position");
         glBindAttribLocation(program, 1, "color");
-        */
+        /*
         ogli::attachShader(program, vertex_shader);
         ogli::attachShader(program, fragment_shader);
         ogli::bindAttribute(program, particle_attributes_.position);
@@ -89,13 +89,15 @@ namespace mo {
         ogli::linkProgram(program);
 
 
+
         particle_programs_.insert(ParticleProgramPair(name, ParticleProgramData{
                                                           program,
                                                           ogli::createUniform(program, "model_view_projection"),
                                                           ogli::createUniform(program, "model_view")
                                                       }));
+                                                      */
 
-        /*
+
         glLinkProgram(program);
         check_program(program);
 
@@ -104,7 +106,7 @@ namespace mo {
                                                           glGetUniformLocation(program, "model_view_projection"),
                                                           glGetUniformLocation(program, "model_view")
                                                       }));
-        */
+
 
     }
 
@@ -280,15 +282,15 @@ namespace mo {
 
         auto & uniforms = particle_programs_.at("particles");
 
-        ogli::useProgram(particle_programs_.at("particles").program);
-        //glUseProgram(uniforms.program);
+        //ogli::useProgram(particle_programs_.at("particles").program);
+        glUseProgram(uniforms.program);
 
         glBindVertexArray(vertex_arrays_[particles.id()]);
         //ogli::bindBuffer(array_buffers_.at(particles.id()));
 
 
-        glUniformMatrix4fv(uniforms.mvp.id, 1, GL_FALSE, &mvp[0][0]);
-        glUniformMatrix4fv(uniforms.mv.id, 1, GL_FALSE, &mv[0][0]);
+        glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
         //ogli::uniform(particle_programs_.at("particles").mvp, mvp);
         //ogli::uniform(particle_programs_.at("particles").mv, mv);
 
