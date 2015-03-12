@@ -52,7 +52,8 @@ namespace mo {
         void clear();
         void add(const Particle particle);
         Particle back();
-        
+        const Particle * data() const;
+        unsigned int size() const;
         /**          
          * @return A unique identifier. 
          */

@@ -25,32 +25,32 @@
 namespace mo {
 
 struct ParticleProgramData{
-    ogli::Program program;
-    ogli::Uniform mvp;
-    ogli::Uniform mv;
+    unsigned int program;
+    int mvp;
+    int mv;
 };
 
 struct VertexProgramData {
-    ogli::Program program;
-    ogli::Uniform mvp;
-    ogli::Uniform mv;
-    ogli::Uniform normal_matrix;
-    ogli::Uniform texture;
-    ogli::Uniform lightmap;
-    ogli::Uniform normalmap;
-    ogli::Uniform material_ambient_color;
-    ogli::Uniform material_diffuse_color;
-    ogli::Uniform material_specular_color;
-    ogli::Uniform material_specular_exponent;
-    ogli::Uniform opacity;
-    ogli::Uniform light_position;
-    ogli::Uniform light_diffuse_color;
-    ogli::Uniform light_specular_color;
-    ogli::Uniform has_texture;
-    ogli::Uniform has_lightmap;
-    ogli::Uniform has_normalmap;
-    ogli::Uniform selected;
-    ogli::Uniform time;
+    unsigned int program;
+    int mvp;
+    int mv;
+    int normal_matrix;
+    int texture;
+    int lightmap;
+    int normalmap;
+    int material_ambient_color;
+    int material_diffuse_color;
+    int material_specular_color;
+    int material_specular_exponent;
+    int opacity;
+    int light_position;
+    int light_diffuse_color;
+    int light_specular_color;
+    int has_texture;
+    int has_lightmap;
+    int has_normalmap;
+    int selected;
+    int time;
 };
 
 struct VertexAttributes{
@@ -237,7 +237,9 @@ public:
 
 private:
 
-    unsigned int create_compile_shader(const std::string source, const unsigned int type);
+    unsigned int create_shader(const std::string source, const unsigned int type);
+    bool check_shader(const unsigned int shader);
+    bool check_program(const unsigned int program);
 
     VertexAttributes vertex_attributes_;
     ParticleAttributes particle_attributes_;

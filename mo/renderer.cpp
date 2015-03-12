@@ -7,7 +7,6 @@
 
 #include "GL/glew.h"
 
-
 #include <ogli/util.h>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -28,8 +27,12 @@
 
 namespace mo {
 
-    Renderer::Renderer(){
-        ogli::init(); // Should this be done int ogli or mo?
+    Renderer::Renderer() {
+        GLenum err = glewInit();
+        if (GLEW_OK != err) {
+            fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+        }
+        fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
         glEnable(GL_DEPTH_TEST);        
 #ifdef __ANDROID__
@@ -55,105 +58,83 @@ namespace mo {
         std::string particles_vert_source = text("assets/shaders/particles.vert");
         std::string particles_frag_source = text("assets/shaders/particles.frag");
         add_particle_program("particles", particles_vert_source, particles_frag_source);
-
     }
 
     Renderer::~Renderer() {
     }
 
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {
-        auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
-        auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
-        //auto vertex_shader = create_compile_shader(vs_source, GL_VERTEX_SHADER);
-        //auto fragment_shader = create_compile_shader(fs_source, GL_FRAGMENT_SHADER);
+        //auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
+        //auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
+        auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
+        check_shader(vertex_shader);
+        auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
+        check_shader(fragment_shader);
 
-        auto program = ogli::createProgram();
-        //auto program_id = glCreateProgram();
+        //auto program = ogli::createProgram();
+        auto program = glCreateProgram();
 
-        //glAttachShader(program_id, vertex_shader);
-        //glAttachShader(program_id, fragment_shader);
+        glAttachShader(program, vertex_shader);
+        glAttachShader(program, fragment_shader);
+        glBindAttribLocation(program, 0, "position");
+        glBindAttribLocation(program, 1, "color");
+        //ogli::attachShader(program, vertex_shader);
+        //ogli::attachShader(program, fragment_shader);
+        //ogli::bindAttribute(program, particle_attributes_.position);
+        //ogli::bindAttribute(program, particle_attributes_.color);
+        //ogli::linkProgram(program);
+        glLinkProgram(program);
+        check_program(program);
 
-
-        //glBindAttribLocation(program_id, particle_attribute.id, particle_attributes_.position.c_str());
-        //glBindAttribLocation(progarm_id, particle_attribute)
-        ogli::attachShader(program, vertex_shader);
-        ogli::attachShader(program, fragment_shader);
-        ogli::bindAttribute(program, particle_attributes_.position);
-        ogli::bindAttribute(program, particle_attributes_.color);
-        ogli::linkProgram(program);
-
-        auto mvp_uniform = ogli::createUniform(program, "model_view_projection");
-        auto mv_uniform = ogli::createUniform(program, "model_view");
-
-        particle_programs_.insert(ParticleProgramPair(name, ParticleProgramData{program, mvp_uniform, mv_uniform}));
+        particle_programs_.insert(ParticleProgramPair(name, ParticleProgramData{
+                                                          program,
+                                                          glGetUniformLocation(program, "model_view_projection"),
+                                                          glGetUniformLocation(program, "model_view")
+                                                      }));
 
     }
 
-    void Renderer::add_vertex_program(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source) {
-        auto vertex_shader = ogli::createShader(vertex_shader_source, GL_VERTEX_SHADER);
-        auto fragment_shader = ogli::createShader(fragment_shader_source, GL_FRAGMENT_SHADER);
-        //auto vertex_shader = create_compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
-        //auto fragment_shader = create_compile_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
+    void Renderer::add_vertex_program(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source) {  
+        auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
+        check_shader(vertex_shader);
 
-        auto program = ogli::createProgram();
-        //auto program_id = glCreateProgram();
+        auto fragment_shader = create_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
+        check_shader(fragment_shader);
 
+        auto program = glCreateProgram();
+        glAttachShader(program, vertex_shader);
+        glAttachShader(program, fragment_shader);
 
-        ogli::attachShader(program, vertex_shader);
-        ogli::attachShader(program, fragment_shader);
+        glBindAttribLocation(program, 0, "position");
+        glBindAttribLocation(program, 1, "normal");
+        glBindAttribLocation(program, 2, "uv");
+        glBindAttribLocation(program, 3, "uv_lightmap");
 
-        //glAttachShader(program_id, vertex_shader);
-        //glAttachShader(program_id, fragment_shader);
-
-
-        ogli::bindAttribute(program, vertex_attributes_.position);
-        ogli::bindAttribute(program, vertex_attributes_.normal);
-        ogli::bindAttribute(program, vertex_attributes_.uv_texture);
-        ogli::bindAttribute(program, vertex_attributes_.uv_lightmap);
-
-        ogli::linkProgram(program);
-
-        auto mvp_uniform = ogli::createUniform(program, "model_view_projection");
-        auto mv_uniform = ogli::createUniform(program, "model_view");
-        auto normal_matrix_uniform = ogli::createUniform(program, "normal_matrix");
-        auto texture_uniform = ogli::createUniform(program, "texture");
-        auto lightmap_uniform = ogli::createUniform(program, "lightmap");
-        auto normalmap_uniform = ogli::createUniform(program, "normalmap");
-        auto material_ambient_color_uniform = ogli::createUniform(program, "material_ambient_color");
-        auto material_diffuse_color_uniform = ogli::createUniform(program, "material_diffuse_color");
-        auto material_specular_color_uniform = ogli::createUniform(program, "material_specular_color");
-        auto material_specular_exponent_uniform = ogli::createUniform(program, "material_specular_exponent");
-        auto opacity_uniform = ogli::createUniform(program, "opacity");
-        auto light_uniform = ogli::createUniform(program, "light_position");
-        auto light_diffuse_color_uniform = ogli::createUniform(program, "light_diffuse_color");
-        auto light_specular_color_uniform = ogli::createUniform(program, "light_specular_color");
-        auto has_texture = ogli::createUniform(program, "has_texture");
-        auto has_lightmap = ogli::createUniform(program, "has_lightmap");
-        auto has_normalmap = ogli::createUniform(program, "has_normalmap");
-        auto selected = ogli::createUniform(program, "selected");
-        auto time = ogli::createUniform(program, "time");
+        std::cout << "Linking program" << std::endl;
+        glLinkProgram(program);
+        check_program(program);
 
         vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{
             program,
-            mvp_uniform,
-            mv_uniform,
-            normal_matrix_uniform,
-            texture_uniform,
-            lightmap_uniform,
-            normalmap_uniform,
-            material_ambient_color_uniform,
-            material_diffuse_color_uniform,
-            material_specular_color_uniform,
-            material_specular_exponent_uniform,
-            opacity_uniform,
-            light_uniform,
-            light_diffuse_color_uniform,
-            light_specular_color_uniform,
-            has_texture,
-            has_lightmap,
-            has_normalmap,
-            selected,
-            time,
+            glGetUniformLocation(program, "model_view_projection"),
+            glGetUniformLocation(program, "model_view"),
+            glGetUniformLocation(program, "normal_matrix"),
+            glGetUniformLocation(program, "texture"),
+            glGetUniformLocation(program, "lightmap"),
+            glGetUniformLocation(program, "normalmap"),
+            glGetUniformLocation(program, "material_ambient_color"),
+            glGetUniformLocation(program, "material_diffuse_color"),
+            glGetUniformLocation(program, "material_specular_color"),
+            glGetUniformLocation(program, "material_specular_exponent"),
+            glGetUniformLocation(program, "opacity"),
+            glGetUniformLocation(program, "light_position"),
+            glGetUniformLocation(program, "light_diffuse_color"),
+            glGetUniformLocation(program, "light_specular_color"),
+            glGetUniformLocation(program, "has_texture"),
+            glGetUniformLocation(program, "has_lightmap"),
+            glGetUniformLocation(program, "has_normalmap"),
+            glGetUniformLocation(program, "selected"),
+            glGetUniformLocation(program, "time")
         }));
     }
 
@@ -166,7 +147,7 @@ namespace mo {
         ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
     }
 
-    unsigned int Renderer::create_compile_shader(const std::string source, const unsigned int type) {
+    unsigned int Renderer::create_shader(const std::string source, const unsigned int type) {
         auto const * chars = source.c_str();
         auto id = glCreateShader(type);
 
@@ -177,32 +158,104 @@ namespace mo {
         std::cout << "Compiling " << types[type] << std::endl;
         glShaderSource(id, 1, &chars, NULL);
         glCompileShader(id);
-
-        GLint status;
-        glGetShaderiv(id, GL_COMPILE_STATUS, &status);
-
-        if (status == GL_FALSE) {
-            int length;
-            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-            if(length > 0) {
-                std::vector<char> buffer(length);
-                glGetShaderInfoLog(id, length, NULL, &buffer[0]);
-                std::cerr << "Compile failure in " << types[type] << " shader" << std::endl;
-                std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
-            }
-        }
         return id;
     }
 
+    bool Renderer::check_shader(const unsigned int shader) {
+        if (!shader){
+            return false;
+        }
+        GLint status;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+
+        std::map<unsigned int, std::string> types{{GL_VERTEX_SHADER, "vertex shader"},
+                                                  {GL_FRAGMENT_SHADER, "fragment shader"},
+                                                  {GL_GEOMETRY_SHADER, "geometry shader"}};
+        GLint type;
+        glGetShaderiv(shader, GL_SHADER_TYPE, &type);
+
+        if (status == GL_FALSE) {
+            int length;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+            if(length > 0) {
+                std::vector<char> buffer(length);
+                glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
+                std::cerr << "Compile failure in " << types[type] << " shader" << std::endl;
+                std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    bool Renderer::check_program(const unsigned int program) {
+        if (!program){
+            return false;
+        }
+
+        GLint status;
+        glGetShaderiv(program, GL_LINK_STATUS, &status);
+
+        if (status == GL_FALSE) {
+            int length;
+            glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
+            if(length > 0) {
+                std::vector<char> buffer(length);
+                glGetShaderInfoLog(program, length, NULL, &buffer[0]);
+                std::cerr << "Link failure in program" << std::endl;
+                std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+            }
+            return false;
+        }
+        return true;
+    }
+
     void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
+
+        /*
         if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(particles.id(),
                     ogli::createArrayBuffer(particles.end(), particles.end())));
+        }*/
+        if(vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
+            unsigned int vertex_array;
+            glGenVertexArrays(1, &vertex_array);
+            glBindVertexArray(vertex_array);
+                if (array_buffers2_.find(particles.id()) == array_buffers2_.end()) {
+                    unsigned int array_buffer;
+                    glGenBuffers(1, &array_buffer);
+                    glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+                    glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
+                                 particles.data(),
+                                 GL_STATIC_DRAW);
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    array_buffers2_.insert({particles.id(), array_buffer});
+                }
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(particles.id()));
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
+                    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
+
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    glEnableVertexAttribArray(0);
+                    glEnableVertexAttribArray(1);
+            glBindVertexArray(0);
+            vertex_arrays_.insert({particles.id(), vertex_array});
         }
         if (!particles.valid) {
+            /*
             ogli::updateArrayBuffer(array_buffers_.at(particles.id()),
                     particles.begin(),
                     particles.end());
+                    */
+
+            /*
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
+            glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
+                         particles.data(),
+                         GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            */
             particles.valid = true;
         }
 
@@ -210,16 +263,23 @@ namespace mo {
         glm::mat4 mv = view;
         glm::mat4 mvp = projection * view;
 
-        ogli::useProgram(particle_programs_.at("particles").program);
+        auto & uniforms = particle_programs_.at("particles");
 
-        ogli::bindBuffer(array_buffers_.at(particles.id()));
+        //ogli::useProgram(particle_programs_.at("particles").program);
+        glUseProgram(uniforms.program);
 
-        ogli::uniform(particle_programs_.at("particles").mvp, mvp);
-        ogli::uniform(particle_programs_.at("particles").mv, mv);
+        glBindVertexArray(vertex_arrays_[particles.id()]);
+        //ogli::bindBuffer(array_buffers_.at(particles.id()));
 
-        ogli::attribute(particle_attributes_.position);
-        ogli::attribute(particle_attributes_.color);
-        ogli::drawArrays(std::distance(particles.begin(), particles.end()), GL_POINTS);
+
+        glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mv[0][0]);
+        //ogli::uniform(particle_programs_.at("particles").mvp, mvp);
+        //ogli::uniform(particle_programs_.at("particles").mv, mv);
+
+        //ogli::attribute(particle_attributes_.position);
+        //ogli::attribute(particle_attributes_.color);
+        ogli::drawArrays(particles.size(), GL_POINTS);
 
     }
  
@@ -277,42 +337,21 @@ namespace mo {
             vertex_arrays_.insert({model.mesh->id(), vertex_array});
         }
 
-        /*
-        if (array_buffers2_.find(model.mesh->id()) == array_buffers2_.end()) {
-            unsigned int array_buffer;
-            glGenBuffers(1, &array_buffer);
-            glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+        if (!model.mesh->valid) {       
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[model.mesh->id()]);
             glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
                          model.mesh->vertices_data(),
                          GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            array_buffers2_.insert({model.mesh->id(), array_buffer});
-        }
-        if (element_array_buffers2_.find(model.mesh->id()) == element_array_buffers2_.end()) {
-            unsigned int element_array_buffer;
-            glGenBuffers(1, &element_array_buffer);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
+
+            /*
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers2_[model.mesh->id()]);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                          model.mesh->elements_size() * sizeof (unsigned int),
                          model.mesh->elements_data(),
                          GL_STATIC_DRAW);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            element_array_buffers2_.insert({model.mesh->id(), element_array_buffer});
-        }
-        */
-
-        if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
-            array_buffers_.insert(ArrayPair(model.mesh->id(),
-                    ogli::createArrayBuffer(model.mesh->vertices_begin(), model.mesh->vertices_end())));
-
-        }
-        if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
-            element_array_buffers_.insert(ElementPair(model.mesh->id(),
-                    ogli::createElementArrayBuffer(model.mesh->elements_begin(), model.mesh->elements_end())));
-        }
-
-        if (!model.mesh->valid) {
-            ogli::updateArrayBuffer(array_buffers_.at(model.mesh->id()), model.mesh->vertices_begin(), model.mesh->vertices_end());
+            */
             model.mesh->valid = true;
         }
 
@@ -343,67 +382,54 @@ namespace mo {
         glm::mat4 mv = view * transform * t;
         glm::mat4 mvp = projection * view * t * transform;
 
-        ogli::useProgram(vertex_programs_.at(program_name).program);
+        //ogli::useProgram(vertex_programs_.at(program_name).program);
+        glUseProgram(vertex_programs_[program_name].program);
 
-        //ogli::bindBuffer(array_buffers_.at(model.mesh->id()));
-        //ogli::bindBuffer(element_array_buffers_.at(model.mesh->id()));
         glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
-        //glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(model.mesh->id()));
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers2_.at(model.mesh->id()));
+
+        auto & uniforms = vertex_programs_.at(program_name);
 
         if (model.texture) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
-            ogli::uniform(vertex_programs_.at(program_name).texture, 0u);
+            glUniform1i(uniforms.texture, 0u);
         }
 
         if (model.lightmap) {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, textures_.at(model.lightmap->id()));
-            ogli::uniform(vertex_programs_.at(program_name).lightmap, 1u);
+            glUniform1i(uniforms.lightmap, 1u);
         }
 
         if (model.normalmap) {
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, textures_.at(model.normalmap->id()));
-            ogli::uniform(vertex_programs_.at(program_name).normalmap, 1u);
+            glUniform1i(uniforms.normalmap, 1u);
         }
 
+        glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-        ogli::uniform(vertex_programs_.at(program_name).mvp, mvp);
-        ogli::uniform(vertex_programs_.at(program_name).mv, mv);
         glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
-        ogli::uniform(vertex_programs_.at(program_name).normal_matrix, normal_matrix);
-            
-        ogli::uniform(vertex_programs_.at(program_name).material_ambient_color, model.material->ambient);
-        ogli::uniform(vertex_programs_.at(program_name).material_diffuse_color, model.material->diffuse);
-        ogli::uniform(vertex_programs_.at(program_name).material_specular_color, model.material->specular);
-        ogli::uniform(vertex_programs_.at(program_name).material_specular_exponent,
-                model.material->specular_exponent);
-         ogli::uniform(vertex_programs_.at(program_name).opacity, opacity); 
-         
+        glUniformMatrix3fv(uniforms.normal_matrix,1 , GL_FALSE, &normal_matrix[0][0]);
+
+        glUniform3fv(uniforms.material_ambient_color,1 , glm::value_ptr(model.material->ambient));
+        glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
+        glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
+        glUniform1fv(uniforms.material_specular_exponent, 1, &model.material->specular_exponent);
+        glUniform1fv(uniforms.opacity, 1, &opacity);
+
         //Transform light position to eye space.
-        ogli::uniform(vertex_programs_.at(program_name).light_position, 
-                glm::vec3(view * glm::vec4(light.position.x, light.position.y, light.position.z, 1.0f)));
-        ogli::uniform(vertex_programs_.at(program_name).light_diffuse_color,
-                light.diffuse_color);
-        ogli::uniform(vertex_programs_.at(program_name).light_specular_color,
-                light.specular_color);
-        
-        ogli::uniform(vertex_programs_.at(program_name).has_texture,
-                model.texture.get() == nullptr ? false : true);
-        ogli::uniform(vertex_programs_.at(program_name).has_lightmap,
-                model.lightmap.get() == nullptr ? false : true);
-        ogli::uniform(vertex_programs_.at(program_name).has_normalmap,
-                model.lightmap.get() == nullptr ? false : true);
+        glUniform3fv(uniforms.light_position,1 , glm::value_ptr(glm::vec3(view * glm::vec4(light.position.x, light.position.y, light.position.z, 1.0f))));
+        glUniform3fv(uniforms.light_diffuse_color,1 ,glm::value_ptr(light.diffuse_color));
+        glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
-        ogli::uniform(vertex_programs_.at(program_name).selected, model.selected());
-        ogli::uniform(vertex_programs_.at(program_name).time, time);
+        glUniform1i(uniforms.has_texture, model.texture.get() == nullptr ? false : true);
+        glUniform1i(uniforms.has_lightmap, model.lightmap.get() == nullptr ? false : true);
+        glUniform1i(uniforms.has_normalmap, model.lightmap.get() == nullptr ? false : true);
 
-        //ogli::attribute(vertex_attributes_.position);
-        //ogli::attribute(vertex_attributes_.normal);
-        //ogli::attribute(vertex_attributes_.uv_texture);
-        //ogli::attribute(vertex_attributes_.uv_lightmap);
+        glUniform1i(uniforms.selected, model.selected());
+        glUniform1f(uniforms.time, time);
 
         int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
         int draw_type = GL_TRIANGLES;

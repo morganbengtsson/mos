@@ -31,6 +31,14 @@ namespace mo {
         return particles_.back();
     }
 
+    const Particle * Particles::data() const {
+        return particles_.data();
+    }
+
+    unsigned int Particles::size() const {
+        return particles_.size();
+    }
+
     void Particles::clear() {
         particles_.clear();
     }

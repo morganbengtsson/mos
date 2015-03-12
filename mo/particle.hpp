@@ -23,7 +23,7 @@ struct Particle {
      * \param color
      */
     Particle(const glm::vec3 & position = glm::vec3(0.0f),
-             const glm::vec4 & color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+             const glm::vec4 & color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
              const float size = 1.0f) :
     position(position),
     color(color),
