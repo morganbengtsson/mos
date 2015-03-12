@@ -92,6 +92,9 @@ public:
      */
     glm::vec4 sample(const unsigned int x, const unsigned int y);
     
+
+    const unsigned char * data() const;
+
     /*!
      * \brief if mipmaps should be used
      */

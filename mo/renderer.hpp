@@ -53,29 +53,6 @@ struct VertexProgramData {
     int time;
 };
 
-struct VertexAttributes{
-    VertexAttributes():
-        position(0, 3, "position", sizeof (Vertex), sizeof (glm::vec3), 0),
-        normal(1, 3, "normal", sizeof (Vertex), sizeof (glm::vec3), sizeof (glm::vec3)),
-        uv_texture(2, 2, "uv", sizeof (Vertex), sizeof (glm::vec2), sizeof (glm::vec3) + sizeof (glm::vec3)),
-        uv_lightmap(3, 2, "uv_lightmap", sizeof(Vertex), sizeof(glm::vec2), sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2))
-    {
-    }
-    ogli::Attribute position;
-    ogli::Attribute normal;
-    ogli::Attribute uv_texture;
-    ogli::Attribute uv_lightmap;
-};
-
-struct ParticleAttributes{
-    ParticleAttributes():
-        position(0, 3, "position", sizeof(Particle), sizeof(glm::vec3), 0),
-        color(1, 4, "color", sizeof(Particle), sizeof(glm::vec3), sizeof(glm::vec3))
-    {
-    }
-    ogli::Attribute position;
-    ogli::Attribute color;
-};
 
 /*!
      * The class that talks to OpenGL, and renders Model objects.
@@ -241,9 +218,6 @@ private:
     bool check_shader(const unsigned int shader);
     bool check_program(const unsigned int program);
 
-    VertexAttributes vertex_attributes_;
-    ParticleAttributes particle_attributes_;
-
     std::map<std::string, VertexProgramData> vertex_programs_;
     std::map<std::string, ParticleProgramData> particle_programs_;
     std::map<unsigned int, ogli::TextureBuffer> textures_;
@@ -254,8 +228,8 @@ private:
     std::map<unsigned int, unsigned int> array_buffers2_;
     std::map<unsigned int, unsigned int> element_array_buffers2_;
     std::map<unsigned int, unsigned int> vertex_arrays_;
-
-
+    std::map<unsigned int, unsigned int> textures2_;
+    std::map<unsigned int, unsigned int> frame_buffers2_;
 };
 }
 #endif	/* MO_RENDERER_H */

@@ -42,5 +42,9 @@ namespace mo{
                          (float)b / 255.0f, 
                          (float)a / 255.0f);
     }
+
+    const unsigned char *Texture2D::data() const {
+        return texels_.data();
+    }
         
 }

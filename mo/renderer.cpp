@@ -64,39 +64,17 @@ namespace mo {
     }
 
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {
-        /*
-        auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
-        auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
-        */
-
         auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
         check_shader(vertex_shader);
         auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
         check_shader(fragment_shader);
 
-        //auto program = ogli::createProgram();
         auto program = glCreateProgram();
 
         glAttachShader(program, vertex_shader);
         glAttachShader(program, fragment_shader);
         glBindAttribLocation(program, 0, "position");
         glBindAttribLocation(program, 1, "color");
-        /*
-        ogli::attachShader(program, vertex_shader);
-        ogli::attachShader(program, fragment_shader);
-        ogli::bindAttribute(program, particle_attributes_.position);
-        ogli::bindAttribute(program, particle_attributes_.color);
-        ogli::linkProgram(program);
-
-
-
-        particle_programs_.insert(ParticleProgramPair(name, ParticleProgramData{
-                                                          program,
-                                                          ogli::createUniform(program, "model_view_projection"),
-                                                          ogli::createUniform(program, "model_view")
-                                                      }));
-                                                      */
-
 
         glLinkProgram(program);
         check_program(program);
@@ -244,7 +222,7 @@ namespace mo {
                     glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
                     glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                                  particles.data(),
-                                 GL_STATIC_DRAW);
+                                 GL_STREAM_DRAW);
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     array_buffers2_.insert({particles.id(), array_buffer});
                 }
@@ -270,34 +248,25 @@ namespace mo {
             glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
             glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                          particles.data(),
-                         GL_STATIC_DRAW);
+                         GL_STREAM_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             particles.valid = true;
         }
-
 
         glm::mat4 mv = view;
         glm::mat4 mvp = projection * view;
 
         auto & uniforms = particle_programs_.at("particles");
 
-        //ogli::useProgram(particle_programs_.at("particles").program);
         glUseProgram(uniforms.program);
 
         glBindVertexArray(vertex_arrays_[particles.id()]);
-        //ogli::bindBuffer(array_buffers_.at(particles.id()));
-
 
         glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
         glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
-        //ogli::uniform(particle_programs_.at("particles").mvp, mvp);
-        //ogli::uniform(particle_programs_.at("particles").mv, mv);
 
-        //ogli::attribute(particle_attributes_.position);
-        //ogli::attribute(particle_attributes_.color);
-        ogli::drawArrays(particles.size(), GL_POINTS);
-
+        glDrawArrays(GL_POINTS, 0, particles.size());
     }
  
     void Renderer::update(const Model & model,
@@ -374,8 +343,26 @@ namespace mo {
 
         if (model.texture) {
             if (textures_.find(model.texture->id()) == textures_.end()) {
-                ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
-                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+
+                GLuint id;
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+                glGenTextures(1, &id);
+                glBindTexture(GL_TEXTURE_2D, id);
+
+                GLfloat sampling = model.texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+
+                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
+                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, model.texture->width(), model.texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, model.texture->data());
+
+                if (model.texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};
+                 glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+                 textures_.insert({model.texture->id(), ogli::TextureBuffer{id, 0, 0}});
+                 //textures2_.insert({model.texture->id(), id});
+                //ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
+                //textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
             }
         }
 
@@ -399,7 +386,6 @@ namespace mo {
         glm::mat4 mv = view * transform * t;
         glm::mat4 mvp = projection * view * t * transform;
 
-        //ogli::useProgram(vertex_programs_.at(program_name).program);
         glUseProgram(vertex_programs_[program_name].program);
 
         glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -408,7 +394,7 @@ namespace mo {
 
         if (model.texture) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textures_.at(model.texture->id()));
+            glBindTexture(GL_TEXTURE_2D, textures_[model.texture->id()]);
             glUniform1i(uniforms.texture, 0u);
         }
 
@@ -456,10 +442,9 @@ namespace mo {
             draw_type = GL_POINTS;
         }
         if (num_elements > 0) {
-            ogli::drawElements(num_elements, draw_type);
+            glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
         } else {
-            ogli::drawArrays(std::distance(model.mesh->vertices_begin(), model.mesh->vertices_end()), draw_type);
+            glDrawArrays(draw_type, 0, model.mesh->vertices_size());
         }
-
     }
 }
