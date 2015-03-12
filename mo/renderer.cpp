@@ -231,7 +231,7 @@ namespace mo {
             array_buffers_.insert(ArrayPair(particles.id(),
                     ogli::createArrayBuffer(particles.end(), particles.end())));
         }
-        /*
+
         if(vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
             unsigned int vertex_array;
             glGenVertexArrays(1, &vertex_array);
@@ -257,20 +257,20 @@ namespace mo {
             glBindVertexArray(0);
             vertex_arrays_.insert({particles.id(), vertex_array});
         }
-        */
+
         if (!particles.valid) {
             ogli::updateArrayBuffer(array_buffers_.at(particles.id()),
                     particles.begin(),
                     particles.end());
 
 
-            /*
+
             glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
             glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                          particles.data(),
                          GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            */
+
             particles.valid = true;
         }
 
@@ -283,8 +283,8 @@ namespace mo {
         ogli::useProgram(particle_programs_.at("particles").program);
         //glUseProgram(uniforms.program);
 
-        //glBindVertexArray(vertex_arrays_[particles.id()]);
-        ogli::bindBuffer(array_buffers_.at(particles.id()));
+        glBindVertexArray(vertex_arrays_[particles.id()]);
+        //ogli::bindBuffer(array_buffers_.at(particles.id()));
 
 
         //glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mvp[0][0]);
@@ -292,8 +292,8 @@ namespace mo {
         ogli::uniform(particle_programs_.at("particles").mvp, mvp);
         ogli::uniform(particle_programs_.at("particles").mv, mv);
 
-        ogli::attribute(particle_attributes_.position);
-        ogli::attribute(particle_attributes_.color);
+        //ogli::attribute(particle_attributes_.position);
+        //ogli::attribute(particle_attributes_.color);
         ogli::drawArrays(particles.size(), GL_POINTS);
 
     }
