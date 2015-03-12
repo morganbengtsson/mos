@@ -278,7 +278,7 @@ namespace mo {
         glm::mat4 mv = view;
         glm::mat4 mvp = projection * view;
 
-        //auto & uniforms = particle_programs_.at("particles");
+        auto & uniforms = particle_programs_.at("particles");
 
         ogli::useProgram(particle_programs_.at("particles").program);
         //glUseProgram(uniforms.program);
@@ -287,10 +287,10 @@ namespace mo {
         //ogli::bindBuffer(array_buffers_.at(particles.id()));
 
 
-        //glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mvp[0][0]);
-        //glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mv[0][0]);
-        ogli::uniform(particle_programs_.at("particles").mvp, mvp);
-        ogli::uniform(particle_programs_.at("particles").mv, mv);
+        glUniformMatrix4fv(uniforms.mvp.id, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(uniforms.mv.id, 1, GL_FALSE, &mv[0][0]);
+        //ogli::uniform(particle_programs_.at("particles").mvp, mvp);
+        //ogli::uniform(particle_programs_.at("particles").mv, mv);
 
         //ogli::attribute(particle_attributes_.position);
         //ogli::attribute(particle_attributes_.color);
