@@ -412,7 +412,6 @@ namespace mo {
         } else if (model.draw == Model::Draw::POINTS) {
             draw_type = GL_POINTS;
         }
-        std::cout << num_elements << std::endl;
         if (num_elements > 0) {
             ogli::drawElements(num_elements, draw_type);
         } else {
