@@ -25,9 +25,9 @@
 namespace mo {
 
 struct ParticleProgramData{
-    unsigned int program;
-    int mvp;
-    int mv;
+    ogli::Program program;
+    ogli::Uniform mvp;
+    ogli::Uniform mv;
 };
 
 struct VertexProgramData {

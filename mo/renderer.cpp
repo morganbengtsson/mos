@@ -64,25 +64,38 @@ namespace mo {
     }
 
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {
-        //auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
-        //auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
+        auto vertex_shader = ogli::createShader(vs_source, GL_VERTEX_SHADER);
+        auto fragment_shader = ogli::createShader(fs_source, GL_FRAGMENT_SHADER);
+        /*
         auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
         check_shader(vertex_shader);
         auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
         check_shader(fragment_shader);
+        */
 
-        //auto program = ogli::createProgram();
-        auto program = glCreateProgram();
+        auto program = ogli::createProgram();
+        //auto program = glCreateProgram();
 
+        /*
         glAttachShader(program, vertex_shader);
         glAttachShader(program, fragment_shader);
         glBindAttribLocation(program, 0, "position");
         glBindAttribLocation(program, 1, "color");
-        //ogli::attachShader(program, vertex_shader);
-        //ogli::attachShader(program, fragment_shader);
-        //ogli::bindAttribute(program, particle_attributes_.position);
-        //ogli::bindAttribute(program, particle_attributes_.color);
-        //ogli::linkProgram(program);
+        */
+        ogli::attachShader(program, vertex_shader);
+        ogli::attachShader(program, fragment_shader);
+        ogli::bindAttribute(program, particle_attributes_.position);
+        ogli::bindAttribute(program, particle_attributes_.color);
+        ogli::linkProgram(program);
+
+
+        particle_programs_.insert(ParticleProgramPair(name, ParticleProgramData{
+                                                          program,
+                                                          ogli::createUniform(program, "model_view_projection"),
+                                                          ogli::createUniform(program, "model_view")
+                                                      }));
+
+        /*
         glLinkProgram(program);
         check_program(program);
 
@@ -91,6 +104,7 @@ namespace mo {
                                                           glGetUniformLocation(program, "model_view_projection"),
                                                           glGetUniformLocation(program, "model_view")
                                                       }));
+        */
 
     }
 
@@ -212,11 +226,12 @@ namespace mo {
 
     void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
 
-        /*
+
         if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(particles.id(),
                     ogli::createArrayBuffer(particles.end(), particles.end())));
-        }*/
+        }
+        /*
         if(vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
             unsigned int vertex_array;
             glGenVertexArrays(1, &vertex_array);
@@ -242,12 +257,12 @@ namespace mo {
             glBindVertexArray(0);
             vertex_arrays_.insert({particles.id(), vertex_array});
         }
+        */
         if (!particles.valid) {
-            /*
             ogli::updateArrayBuffer(array_buffers_.at(particles.id()),
                     particles.begin(),
                     particles.end());
-                    */
+
 
             /*
             glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
@@ -263,22 +278,22 @@ namespace mo {
         glm::mat4 mv = view;
         glm::mat4 mvp = projection * view;
 
-        auto & uniforms = particle_programs_.at("particles");
+        //auto & uniforms = particle_programs_.at("particles");
 
-        //ogli::useProgram(particle_programs_.at("particles").program);
-        glUseProgram(uniforms.program);
+        ogli::useProgram(particle_programs_.at("particles").program);
+        //glUseProgram(uniforms.program);
 
-        glBindVertexArray(vertex_arrays_[particles.id()]);
-        //ogli::bindBuffer(array_buffers_.at(particles.id()));
+        //glBindVertexArray(vertex_arrays_[particles.id()]);
+        ogli::bindBuffer(array_buffers_.at(particles.id()));
 
 
-        glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mvp[0][0]);
-        glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mv[0][0]);
-        //ogli::uniform(particle_programs_.at("particles").mvp, mvp);
-        //ogli::uniform(particle_programs_.at("particles").mv, mv);
+        //glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mvp[0][0]);
+        //glUniformMatrix4fv(uniforms.program, 1, GL_FALSE, &mv[0][0]);
+        ogli::uniform(particle_programs_.at("particles").mvp, mvp);
+        ogli::uniform(particle_programs_.at("particles").mv, mv);
 
-        //ogli::attribute(particle_attributes_.position);
-        //ogli::attribute(particle_attributes_.color);
+        ogli::attribute(particle_attributes_.position);
+        ogli::attribute(particle_attributes_.color);
         ogli::drawArrays(particles.size(), GL_POINTS);
 
     }
