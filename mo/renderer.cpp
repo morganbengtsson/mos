@@ -360,26 +360,8 @@ namespace mo {
 
         if (model.texture) {
             if (textures_.find(model.texture->id()) == textures_.end()) {
-                /*
-                GLuint id;
-                glGenTextures(1, &id);
-                glBindTexture(GL_TEXTURE_2D, id);
-
-                GLfloat sampling = model.texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-
-                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
-                glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, model.texture->width(), model.texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, model.texture->data());
-
-                if (model.texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};*/
                 GLuint id = create_texture(model.texture);
-
-                 textures_.insert({model.texture->id(), ogli::TextureBuffer{id, 0, 0}});
-                 //textures2_.insert({model.texture->id(), id});
-                //ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
-                //textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.texture->id(), texture));
+                textures_.insert({model.texture->id(), ogli::TextureBuffer{id, 0, 0}});
             }
         }
 
@@ -387,9 +369,6 @@ namespace mo {
             if (textures_.find(model.lightmap->id()) == textures_.end()) {
                 auto id = create_texture(model.lightmap);
                 textures_.insert({model.lightmap->id(), ogli::TextureBuffer{id}});
-
-                //ogli::TextureBuffer texture = ogli::createTexture(model.lightmap->begin(), model.lightmap->end(), model.lightmap->width(), model.lightmap->height(), model.lightmap->mipmaps);
-                //textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.lightmap->id(), texture));
             }
         }
 
@@ -397,12 +376,6 @@ namespace mo {
             if (textures_.find(model.normalmap->id()) == textures_.end()) {
                 auto id = create_texture(model.normalmap);
                 textures_.insert({model.normalmap->id(), ogli::TextureBuffer{id}});
-                /*
-                ogli::TextureBuffer texture = ogli::createTexture(model.normalmap->begin(), model.normalmap->end(),
-                                                                  model.normalmap->width(), model.normalmap->height(),
-                                                                  model.normalmap->mipmaps);
-                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.normalmap->id(), texture));
-                */
             }
         }
 
