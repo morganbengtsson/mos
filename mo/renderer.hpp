@@ -198,15 +198,14 @@ public:
             }
             //textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{renderedTexture}));
             textures_.insert({target.texture->id(), screenTexture});
-            frame_buffers_.insert(FrameBufferPair(target.id(), ogli::FrameBuffer{readFBO}));
-
+            frame_buffers_.insert({target.id(), readFBO});
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
 
-        auto fb = frame_buffers_.at(target.id());
+        auto fb = frame_buffers_[target.id()];
        //std::cout << fb.id << std::endl;
-        glBindFramebuffer(GL_FRAMEBUFFER, fb.id);
+        glBindFramebuffer(GL_FRAMEBUFFER, fb);
         //std::cout << target.texture->width() << " " << target.texture->height() << std::endl;
         //glViewport(0,0,target.texture->width(), target.texture->height());
     }
@@ -223,8 +222,8 @@ private:
 
     std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
     std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
-    std::map<unsigned int, ogli::FrameBuffer> frame_buffers_;
 
+    std::map<unsigned int, unsigned int> frame_buffers_;
     std::map<unsigned int, unsigned int> textures_;
     std::map<unsigned int, unsigned int> array_buffers2_;
     std::map<unsigned int, unsigned int> element_array_buffers2_;
