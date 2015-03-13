@@ -204,13 +204,31 @@ namespace mo {
         return true;
     }
 
+    unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture){
+        GLuint id;
+        glGenTextures(1, &id);
+        glBindTexture(GL_TEXTURE_2D, id);
+
+        GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(), texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+
+        if (texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};
+        glBindTexture(GL_TEXTURE_2D, 0);
+        return id;
+    }
+
     void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
 
-
+        /*
         if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
             array_buffers_.insert(ArrayPair(particles.id(),
                     ogli::createArrayBuffer(particles.end(), particles.end())));
-        }
+        }*/
 
         if(vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
             unsigned int vertex_array;
@@ -239,11 +257,10 @@ namespace mo {
         }
 
         if (!particles.valid) {
+            /*
             ogli::updateArrayBuffer(array_buffers_.at(particles.id()),
                     particles.begin(),
-                    particles.end());
-
-
+                    particles.end());*/
 
             glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
             glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
@@ -343,9 +360,8 @@ namespace mo {
 
         if (model.texture) {
             if (textures_.find(model.texture->id()) == textures_.end()) {
-
+                /*
                 GLuint id;
-                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
                 glGenTextures(1, &id);
                 glBindTexture(GL_TEXTURE_2D, id);
 
@@ -357,8 +373,9 @@ namespace mo {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, model.texture->width(), model.texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, model.texture->data());
 
-                if (model.texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};
-                 glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+                if (model.texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};*/
+                GLuint id = create_texture(model.texture);
+
                  textures_.insert({model.texture->id(), ogli::TextureBuffer{id, 0, 0}});
                  //textures2_.insert({model.texture->id(), id});
                 //ogli::TextureBuffer texture = ogli::createTexture(model.texture->begin(), model.texture->end(), model.texture->width(), model.texture->height(), model.texture->mipmaps);
@@ -368,8 +385,11 @@ namespace mo {
 
         if (model.lightmap) {
             if (textures_.find(model.lightmap->id()) == textures_.end()) {
-                ogli::TextureBuffer texture = ogli::createTexture(model.lightmap->begin(), model.lightmap->end(), model.lightmap->width(), model.lightmap->height(), model.lightmap->mipmaps);
-                textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.lightmap->id(), texture));
+                auto id = create_texture(model.lightmap);
+                textures_.insert({model.lightmap->id(), ogli::TextureBuffer{id}});
+
+                //ogli::TextureBuffer texture = ogli::createTexture(model.lightmap->begin(), model.lightmap->end(), model.lightmap->width(), model.lightmap->height(), model.lightmap->mipmaps);
+                //textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.lightmap->id(), texture));
             }
         }
 

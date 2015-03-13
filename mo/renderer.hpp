@@ -116,7 +116,6 @@ public:
         }
     }
 
-
     /**
          * Renders particles.
          *
@@ -217,6 +216,7 @@ private:
     unsigned int create_shader(const std::string source, const unsigned int type);
     bool check_shader(const unsigned int shader);
     bool check_program(const unsigned int program);
+    unsigned int create_texture(std::shared_ptr<mo::Texture2D> texture);
 
     std::map<std::string, VertexProgramData> vertex_programs_;
     std::map<std::string, ParticleProgramData> particle_programs_;
