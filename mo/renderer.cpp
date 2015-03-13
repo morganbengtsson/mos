@@ -229,7 +229,7 @@ namespace mo {
             unsigned int vertex_array;
             glGenVertexArrays(1, &vertex_array);
             glBindVertexArray(vertex_array);
-                if (array_buffers2_.find(particles.id()) == array_buffers2_.end()) {
+                if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
                     unsigned int array_buffer;
                     glGenBuffers(1, &array_buffer);
                     glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
@@ -237,9 +237,9 @@ namespace mo {
                                  particles.data(),
                                  GL_STREAM_DRAW);
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
-                    array_buffers2_.insert({particles.id(), array_buffer});
+                    array_buffers_.insert({particles.id(), array_buffer});
                 }
-                glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(particles.id()));
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()));
                     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
                     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -257,7 +257,7 @@ namespace mo {
                     particles.begin(),
                     particles.end());*/
 
-            glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[particles.id()]);
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
             glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                          particles.data(),
                          GL_STREAM_DRAW);
@@ -295,7 +295,7 @@ namespace mo {
             unsigned int vertex_array;
             glGenVertexArrays(1, &vertex_array);
             glBindVertexArray(vertex_array);
-                if (array_buffers2_.find(model.mesh->id()) == array_buffers2_.end()) {
+                if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
                     unsigned int array_buffer;
                     glGenBuffers(1, &array_buffer);
                     glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
@@ -303,9 +303,9 @@ namespace mo {
                                  model.mesh->vertices_data(),
                                  GL_STATIC_DRAW);
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
-                    array_buffers2_.insert({model.mesh->id(), array_buffer});
+                    array_buffers_.insert({model.mesh->id(), array_buffer});
                 }
-                if (element_array_buffers2_.find(model.mesh->id()) == element_array_buffers2_.end()) {
+                if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
                     unsigned int element_array_buffer;
                     glGenBuffers(1, &element_array_buffer);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
@@ -314,9 +314,9 @@ namespace mo {
                                  model.mesh->elements_data(),
                                  GL_STATIC_DRAW);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-                    element_array_buffers2_.insert({model.mesh->id(), element_array_buffer});
+                    element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
                 }
-                glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_.at(model.mesh->id()));
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()));
                     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
                     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -326,7 +326,7 @@ namespace mo {
                                           reinterpret_cast<const void *>(sizeof(glm::vec3)*2 + sizeof(glm::vec2)));
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                                 element_array_buffers2_.at(model.mesh->id()));
+                                 element_array_buffers_.at(model.mesh->id()));
                     glEnableVertexAttribArray(0);
                     glEnableVertexAttribArray(1);
                     glEnableVertexAttribArray(2);
@@ -336,14 +336,14 @@ namespace mo {
         }
 
         if (!model.mesh->valid) {       
-            glBindBuffer(GL_ARRAY_BUFFER, array_buffers2_[model.mesh->id()]);
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
             glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
                          model.mesh->vertices_data(),
                          GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             /*
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers2_[model.mesh->id()]);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[model.mesh->id()]);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                          model.mesh->elements_size() * sizeof (unsigned int),
                          model.mesh->elements_data(),

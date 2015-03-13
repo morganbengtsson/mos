@@ -210,8 +210,7 @@ private:
     std::map<unsigned int, unsigned int> array_buffers_;
     std::map<unsigned int, unsigned int> element_array_buffers_;
     std::map<unsigned int, unsigned int> vertex_arrays_;
-    std::map<unsigned int, unsigned int> textures_;
-    std::map<unsigned int, unsigned int> frame_buffers_;
+
 };
 }
 #endif	/* MO_RENDERER_H */
