@@ -1,6 +1,5 @@
 #version 330
 uniform bool selected;
-uniform float time;
 uniform vec3 material_ambient_color;
 uniform vec3 material_diffuse_color;
 uniform vec3 material_specular_color;

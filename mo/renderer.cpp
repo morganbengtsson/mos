@@ -125,8 +125,7 @@ namespace mo {
             glGetUniformLocation(program, "has_texture"),
             glGetUniformLocation(program, "has_lightmap"),
             glGetUniformLocation(program, "has_normalmap"),
-            glGetUniformLocation(program, "selected"),
-            glGetUniformLocation(program, "time")
+            glGetUniformLocation(program, "selected")
         }));
     }
 
@@ -287,8 +286,7 @@ namespace mo {
                           const glm::mat4 projection,
                           const float opacity,
                           const std::string program_name,
-                          const Light & light,
-                          const float time) {
+                          const Light & light) {
 
 
         if(vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
@@ -424,7 +422,6 @@ namespace mo {
         glUniform1i(uniforms.has_normalmap, model.lightmap.get() == nullptr ? false : true);
 
         glUniform1i(uniforms.selected, model.selected());
-        glUniform1f(uniforms.time, time);
 
         int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
         int draw_type = GL_TRIANGLES;
