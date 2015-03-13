@@ -395,10 +395,14 @@ namespace mo {
 
         if (model.normalmap){
             if (textures_.find(model.normalmap->id()) == textures_.end()) {
+                auto id = create_texture(model.normalmap);
+                textures_.insert({model.normalmap->id(), ogli::TextureBuffer{id}});
+                /*
                 ogli::TextureBuffer texture = ogli::createTexture(model.normalmap->begin(), model.normalmap->end(),
                                                                   model.normalmap->width(), model.normalmap->height(),
                                                                   model.normalmap->mipmaps);
                 textures_.insert(std::pair<unsigned int, ogli::TextureBuffer>(model.normalmap->id(), texture));
+                */
             }
         }
 
