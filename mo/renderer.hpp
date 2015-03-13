@@ -8,7 +8,7 @@
 #ifndef MO_RENDERER_H
 #define	MO_RENDERER_H
 
-#include <ogli/ogli.h>
+#include "GL/glew.h"
 #include <glm/glm.hpp>
 #include <iostream>
 #include <map>
@@ -59,17 +59,11 @@ struct VertexProgramData {
      */
 class Renderer {
 public:
-
-    typedef std::pair<unsigned int, ogli::ArrayBuffer> ArrayPair;
-    typedef std::pair<unsigned int, ogli::ElementArrayBuffer> ElementPair;
-    typedef std::pair<unsigned int, ogli::TextureBuffer> TexturePair;
-    typedef std::pair<unsigned int, ogli::FrameBuffer> FrameBufferPair;
-    typedef std::pair<std::string, VertexProgramData> VertexProgramPair;
-    typedef std::pair<std::string, ParticleProgramData> ParticleProgramPair;
+    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
+    using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
 
     Renderer();
-    virtual ~Renderer();
-    void add_program(const std::string name);
+    virtual ~Renderer();   
     void add_vertex_program(const std::string path,
                             const std::string vertex_shader_source,
                             const std::string fragment_shader_source);
@@ -95,15 +89,6 @@ public:
                 const std::string program_name = "standard",
                 const Light & light = Light(),
                 const float time = 0.0f);
-    /*
-        void render(const Model & model,
-                    const glm::mat4 view,
-                    const glm::mat4 projection,
-                    const float opacity = 1.0f,
-                    const std::string program_name = "standard"){
-            render(model, glm::mat4(1.0f), view, projection, opacity, program_name);
-        }
-         * */
 
 
     template<class It>
@@ -140,15 +125,15 @@ public:
         }
         textures_.clear();
 
-        for (auto & ab : array_buffers_) {
-            glDeleteBuffers(1, &ab.second.id);
+        for (auto & ab : array_buffers2_) {
+            glDeleteBuffers(1, &ab.second);
         }
-        array_buffers_.clear();
+        array_buffers2_.clear();
 
-        for (auto & eab : element_array_buffers_){
-            glDeleteBuffers(1, &eab.second.id);
+        for (auto & eab : element_array_buffers2_){
+            glDeleteBuffers(1, &eab.second);
         }
-        element_array_buffers_.clear();
+        element_array_buffers2_.clear();
     }
 
     void render_target_reset(unsigned int width, unsigned int height){
@@ -219,9 +204,6 @@ private:
 
     std::map<std::string, VertexProgramData> vertex_programs_;
     std::map<std::string, ParticleProgramData> particle_programs_;
-
-    std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
-    std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
 
     std::map<unsigned int, unsigned int> frame_buffers_;
     std::map<unsigned int, unsigned int> textures_;

@@ -5,9 +5,7 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
-#include "GL/glew.h"
-
-#include <ogli/util.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -132,13 +130,10 @@ namespace mo {
         }));
     }
 
-    void Renderer::add_program(const std::string path) {
-        add_vertex_program(path, ogli::loadText(path + ".vs"), ogli::loadText(path + ".fs"));
-    }
-
     void Renderer::clear(const glm::vec3 color) {
-        ogli::clearDepth(1.0f);
-        ogli::clearColor(glm::vec4(color.r, color.g, color.b, 0.0f));
+        glClearDepthf(1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(color.r, color.g, color.b, 1.0f);
     }
 
     unsigned int Renderer::create_shader(const std::string source, const unsigned int type) {
