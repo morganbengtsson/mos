@@ -361,21 +361,21 @@ namespace mo {
         if (model.texture) {
             if (textures_.find(model.texture->id()) == textures_.end()) {
                 GLuint id = create_texture(model.texture);
-                textures_.insert({model.texture->id(), ogli::TextureBuffer{id, 0, 0}});
+                textures_.insert({model.texture->id(), id});
             }
         }
 
         if (model.lightmap) {
             if (textures_.find(model.lightmap->id()) == textures_.end()) {
                 auto id = create_texture(model.lightmap);
-                textures_.insert({model.lightmap->id(), ogli::TextureBuffer{id}});
+                textures_.insert({model.lightmap->id(), id});
             }
         }
 
         if (model.normalmap){
             if (textures_.find(model.normalmap->id()) == textures_.end()) {
                 auto id = create_texture(model.normalmap);
-                textures_.insert({model.normalmap->id(), ogli::TextureBuffer{id}});
+                textures_.insert({model.normalmap->id(), id});
             }
         }
 
@@ -397,13 +397,13 @@ namespace mo {
 
         if (model.lightmap) {
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, textures_.at(model.lightmap->id()));
+            glBindTexture(GL_TEXTURE_2D, textures_[model.lightmap->id()]);
             glUniform1i(uniforms.lightmap, 1u);
         }
 
         if (model.normalmap) {
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, textures_.at(model.normalmap->id()));
+            glBindTexture(GL_TEXTURE_2D, textures_[model.normalmap->id()]);
             glUniform1i(uniforms.normalmap, 1u);
         }
 

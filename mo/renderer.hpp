@@ -136,7 +136,7 @@ public:
 
     void clear_buffers(){
         for (auto & texture : textures_) {
-            glDeleteTextures(1, &texture.second.id);
+            glDeleteTextures(1, &texture.second);
         }
         textures_.clear();
 
@@ -197,7 +197,7 @@ public:
                 throw std::runtime_error("Framebuffer incomplete.");
             }
             //textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{renderedTexture}));
-            textures_.insert(TexturePair(target.texture->id(), ogli::TextureBuffer{screenTexture}));
+            textures_.insert({target.texture->id(), screenTexture});
             frame_buffers_.insert(FrameBufferPair(target.id(), ogli::FrameBuffer{readFBO}));
 
 
@@ -220,11 +220,12 @@ private:
 
     std::map<std::string, VertexProgramData> vertex_programs_;
     std::map<std::string, ParticleProgramData> particle_programs_;
-    std::map<unsigned int, ogli::TextureBuffer> textures_;
+
     std::map<unsigned int, ogli::ArrayBuffer> array_buffers_;
     std::map<unsigned int, ogli::ElementArrayBuffer> element_array_buffers_;
     std::map<unsigned int, ogli::FrameBuffer> frame_buffers_;
 
+    std::map<unsigned int, unsigned int> textures_;
     std::map<unsigned int, unsigned int> array_buffers2_;
     std::map<unsigned int, unsigned int> element_array_buffers2_;
     std::map<unsigned int, unsigned int> vertex_arrays_;
