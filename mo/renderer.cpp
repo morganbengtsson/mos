@@ -410,7 +410,7 @@ namespace mo {
         glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
         glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
         glUniform1fv(uniforms.material_specular_exponent, 1, &model.material->specular_exponent);
-        glUniform1fv(uniforms.opacity, 1, &opacity);
+        glUniform1fv(uniforms.opacity, 1, &model.material->opacity);
 
         //Transform light position to eye space.
         glUniform3fv(uniforms.light_position,1 , glm::value_ptr(glm::vec3(view * glm::vec4(light.position.x, light.position.y, light.position.z, 1.0f))));

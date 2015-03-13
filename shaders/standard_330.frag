@@ -64,7 +64,7 @@ void main() {
     //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
     color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
     if (has_texture){
-        color.a = tex_color.a;
+        color.a = tex_color.a + opacity;
     }
 
 };

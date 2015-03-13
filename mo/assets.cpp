@@ -198,7 +198,8 @@ namespace mo {
 
     std::shared_ptr<Material> Assets::material(const std::string file_name) {
 
-        if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
+         if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
+             std::cout << "Loading: " << directory_ + file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
             glm::vec3 ambient;
             glm::vec3 diffuse;
