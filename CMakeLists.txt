@@ -54,12 +54,7 @@ include_directories(externals/stb)
 add_subdirectory(externals/tinyobjloader)
 include_directories(externals/tinyobjloader)
 
-# ogli
-include_directories(externals/ogli)
-add_subdirectory(externals/ogli)
-
 # mo
-
 file(GLOB ROOT_SOURCE mo/*.cpp)
 file(GLOB ROOT_HEADER mo/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)

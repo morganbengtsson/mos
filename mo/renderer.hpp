@@ -125,15 +125,15 @@ public:
         }
         textures_.clear();
 
-        for (auto & ab : array_buffers2_) {
+        for (auto & ab : array_buffers_) {
             glDeleteBuffers(1, &ab.second);
         }
-        array_buffers2_.clear();
+        array_buffers_.clear();
 
-        for (auto & eab : element_array_buffers2_){
+        for (auto & eab : element_array_buffers_){
             glDeleteBuffers(1, &eab.second);
         }
-        element_array_buffers2_.clear();
+        element_array_buffers_.clear();
     }
 
     void render_target_reset(unsigned int width, unsigned int height){
@@ -207,11 +207,11 @@ private:
 
     std::map<unsigned int, unsigned int> frame_buffers_;
     std::map<unsigned int, unsigned int> textures_;
-    std::map<unsigned int, unsigned int> array_buffers2_;
-    std::map<unsigned int, unsigned int> element_array_buffers2_;
+    std::map<unsigned int, unsigned int> array_buffers_;
+    std::map<unsigned int, unsigned int> element_array_buffers_;
     std::map<unsigned int, unsigned int> vertex_arrays_;
-    std::map<unsigned int, unsigned int> textures2_;
-    std::map<unsigned int, unsigned int> frame_buffers2_;
+    std::map<unsigned int, unsigned int> textures_;
+    std::map<unsigned int, unsigned int> frame_buffers_;
 };
 }
 #endif	/* MO_RENDERER_H */
