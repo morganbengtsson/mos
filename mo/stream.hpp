@@ -2,6 +2,7 @@
 #define STREAM_HPP
 
 #include <iostream>
+#include <array>
 #include <memory>
 #include <array>
 #include <tuple>
@@ -36,7 +37,7 @@ public:
      * \brief read chunk of data from the stream.
      * \return
      */
-    StreamData read();
+    std::array<short, 4096*8> read();
 
     /*!
      * \brief sample_rate

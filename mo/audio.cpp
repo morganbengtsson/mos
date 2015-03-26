@@ -371,33 +371,31 @@ void Audio::init(const StreamSource & stream_source) {
                                  alGenBuffers(2, buffers);
 
                                  int size = stream_source.stream->buffer_size;
-                                 alBufferData(buffers[0], AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
-                                 alBufferData(buffers[1], AL_FORMAT_MONO16, stream_source.stream->read().samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
+                                 alBufferData(buffers[0], AL_FORMAT_MONO16, stream_source.stream->read().data(), size*sizeof(ALshort), stream_source.stream->sample_rate());
+                                 alBufferData(buffers[1], AL_FORMAT_MONO16, stream_source.stream->read().data(), size*sizeof(ALshort), stream_source.stream->sample_rate());
 
                                  alSourceQueueBuffers(source, 2, buffers);
                                  alSource3f(source, AL_POSITION, stream_source.position.x, stream_source.position.y, stream_source.position.z);
                                  if (stream_source.playing){
                                      alSourcePlay(source);
                                  }
-
-                                 bool done = false;
-                                 //while(true && stream_source.playing){
-                                 while(true){
+                                 while(true) {
                                      ALint processed = 0;
                                      alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
                                      while(processed--){
                                          ALuint buffer = 0;
                                          alSourceUnqueueBuffers(source, 1, &buffer);
-                                         auto stream_data = stream_source.stream->read();
-                                         done = stream_data.done;
-                                         alBufferData(buffer, AL_FORMAT_MONO16, stream_data.samples, size*sizeof(ALshort), stream_source.stream->sample_rate());
+                                         auto samples = stream_source.stream->read();
+                                         alBufferData(buffer, AL_FORMAT_MONO16, samples.data(), size*sizeof(ALshort), stream_source.stream->sample_rate());
                                          alSourceQueueBuffers(source, 1, &buffer);
                                      }
-                                     // Fix this!
-                                     if (!done && stream_source.loop){
+                                     if (stream_source.loop){
                                          stream_source.stream->seek_start();
+                                         stream_source.playing = true;
                                      }
-
+                                     else{
+                                         stream_source.playing = false;
+                                     }
                                  }
                                  alDeleteSources(1, & source);
                                  alDeleteBuffers(2, buffers);

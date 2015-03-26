@@ -13,28 +13,19 @@ Stream::~Stream(){
     stb_vorbis_close(vorbis_stream_);
 }
 
-StreamData Stream::read()
-{
-    StreamData sd;
+std::array<short, 4096*8> Stream::read(){
+    auto samples = std::array<short, 4096*8>();
 
     int  size = 0;
     int  result = 0;
 
     while(size < buffer_size){
-        result = stb_vorbis_get_samples_short_interleaved(vorbis_stream_, vorbis_info_.channels, sd.samples+size, buffer_size-size);
+        result = stb_vorbis_get_samples_short_interleaved(vorbis_stream_, vorbis_info_.channels, samples.data()+size, buffer_size-size);
         if(result > 0) size += result*vorbis_info_.channels;
         else break;
     }
-
-    if(size == 0) {
-        sd.done = false;
-        return sd;
-    };
-
     samples_left_ -= size;
-
-    sd.done = true;
-    return sd;
+    return samples;
 }
 
 int Stream::sample_rate() const
