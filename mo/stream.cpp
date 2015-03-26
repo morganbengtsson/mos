@@ -28,6 +28,10 @@ std::array<short, 4096*8> Stream::read(){
     return samples;
 }
 
+bool Stream::done() const{
+    return samples_left_ <= 0 ? true : false;
+}
+
 int Stream::sample_rate() const
 {
     return vorbis_info_.sample_rate;

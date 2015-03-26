@@ -376,7 +376,7 @@ void Audio::init(const StreamSource & stream_source) {
 
                                  alSourceQueueBuffers(source, 2, buffers);
                                  alSource3f(source, AL_POSITION, stream_source.position.x, stream_source.position.y, stream_source.position.z);
-                                 if (stream_source.playing){
+                                 if (stream_source.playing) {
                                      alSourcePlay(source);
                                  }
                                  while(true) {
@@ -389,7 +389,7 @@ void Audio::init(const StreamSource & stream_source) {
                                          alBufferData(buffer, AL_FORMAT_MONO16, samples.data(), size*sizeof(ALshort), stream_source.stream->sample_rate());
                                          alSourceQueueBuffers(source, 1, &buffer);
                                      }
-                                     if (stream_source.loop){
+                                     if (stream_source.loop && stream_source.stream->done()){
                                          stream_source.stream->seek_start();
                                          stream_source.playing = true;
                                      }

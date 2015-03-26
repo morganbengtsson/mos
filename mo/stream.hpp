@@ -39,6 +39,8 @@ public:
      */
     std::array<short, 4096*8> read();
 
+    bool done() const;
+
     /*!
      * \brief sample_rate
      * \return
