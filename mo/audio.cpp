@@ -327,8 +327,7 @@ glm::vec3 Audio::listener_velocity() {
     return velocity;
 }
 
-void Audio::listener_velocity(const glm::vec3 velocity)
-{
+void Audio::listener_velocity(const glm::vec3 velocity) {
     alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
 }
 

@@ -66,5 +66,4 @@ void main() {
     if (has_texture){
         color.a = tex_color.a + opacity;
     }
-
 };
