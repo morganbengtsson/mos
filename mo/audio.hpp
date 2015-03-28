@@ -114,8 +114,9 @@ namespace mo {
         using Buffers = std::map<unsigned int, ALuint>;     
 
         Sources sources_;
-        Buffers buffers_;        
-        std::vector<std::thread> stream_threads;
+        Buffers buffers_;
+        std::map<unsigned int, std::thread> stream_threads;
+        //std::vector<std::thread> stream_threads;
 
 #endif
     };
