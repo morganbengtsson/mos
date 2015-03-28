@@ -192,8 +192,11 @@ public:
         //std::cout << target.texture->width() << " " << target.texture->height() << std::endl;
         //glViewport(0,0,target.texture->width(), target.texture->height());
     }
+    void lightmaps(const bool lightmaps);
+    bool lightmaps();
 
 private:
+    bool lightmaps_;
 
     unsigned int create_shader(const std::string source, const unsigned int type);
     bool check_shader(const unsigned int shader);

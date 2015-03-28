@@ -26,6 +26,7 @@ namespace mo {
 		return (double)millis;
 	}
 
+
 }
 
 #endif	/* MO_TIME_H */

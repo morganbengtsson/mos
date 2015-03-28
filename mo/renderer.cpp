@@ -25,7 +25,7 @@
 
 namespace mo {
 
-    Renderer::Renderer() {
+    Renderer::Renderer() : lightmaps_(true){
         GLenum err = glewInit();
         if (GLEW_OK != err) {
             fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
@@ -133,6 +133,14 @@ namespace mo {
         glClearDepthf(1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(color.r, color.g, color.b, 1.0f);
+    }
+
+    void Renderer::lightmaps(const bool lightmaps){
+        lightmaps_ = lightmaps;
+    }
+
+    bool Renderer::lightmaps() {
+        return lightmaps_;
     }
 
     unsigned int Renderer::create_shader(const std::string source, const unsigned int type) {
@@ -418,7 +426,7 @@ namespace mo {
         glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
         glUniform1i(uniforms.has_texture, model.texture.get() == nullptr ? false : true);
-        glUniform1i(uniforms.has_lightmap, model.lightmap.get() == nullptr ? false : true);
+        glUniform1i(uniforms.has_lightmap, model.lightmap.get() == nullptr ? false : lightmaps_ ? true : false);
         glUniform1i(uniforms.has_normalmap, model.lightmap.get() == nullptr ? false : true);
 
         glUniform1i(uniforms.selected, model.selected());
