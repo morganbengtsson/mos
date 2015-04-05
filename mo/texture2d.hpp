@@ -35,10 +35,10 @@ public:
      */
     Texture2D(It begin, It end, 
               unsigned int width, unsigned int height, 
-              const bool mipmaps = true) : 
+              const bool mipmaps = true) :
+              mipmaps(mipmaps),
               width_(width),
-              height_(height),
-              mipmaps(mipmaps) {
+              height_(height) {
         id_ = current_id++;
         texels_.assign(begin, end);
     }
@@ -46,9 +46,9 @@ public:
     Texture2D(const unsigned int width,
               const unsigned int height,
               const bool mipmaps = true):
+        mipmaps(mipmaps),
         width_(width),
-        height_(height),
-        mipmaps(mipmaps){        
+        height_(height) {
         id_ = current_id++;
     }
 
@@ -101,9 +101,9 @@ public:
     bool mipmaps;
 private:
     unsigned int id_;
-    Texels texels_;
     unsigned int width_;
     unsigned int height_;
+    Texels texels_;
 };
 
 }
