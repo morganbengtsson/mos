@@ -6,7 +6,6 @@
  */
 
 #include "assets.hpp"
-#include "logging.hpp"
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
@@ -79,7 +78,7 @@ namespace mo {
             std::string source = text(file_name);
             obj::Model obj_model = obj::loadModelFromString(source);
 #else
-            LOGI("Loading: %s%s\n", directory_.c_str(), file_name.c_str());
+            std::cout << "Loading: " << directory_ << file_name;
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 #endif
             int j = 0;

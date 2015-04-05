@@ -5,7 +5,6 @@
  * Created on May 7, 2014, 9:41 PM
  */
 #include "audio.hpp"
-#include "logging.hpp"
 #include "source.hpp"
 #include "soundsource.hpp"
 
