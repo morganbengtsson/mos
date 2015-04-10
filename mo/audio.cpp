@@ -380,6 +380,7 @@ void Audio::init(const StreamSource & stream_source) {
                                                                    alSourcePlay(source);
                                                                    ALenum state;
                                                                    alGetSourcei(source, AL_SOURCE_STATE, &state);
+                                                                   alSourcei(source, AL_STREAMING, AL_TRUE);
                                                                    while(state == AL_PLAYING) {
                                                                        alGetSourcei(source, AL_SOURCE_STATE, &state);
                                                                        ALint processed = 0;
@@ -401,10 +402,11 @@ void Audio::init(const StreamSource & stream_source) {
                                                                }, sources_.at(stream_source.id()), stream_source.stream, stream_source.loop)));
 }
 
-void Audio::update(Source & source)
+void Audio::update(Source &source)
 {
     if (sources_.find(source.id()) != sources_.end()) {
         ALuint al_source = sources_.at(source.id());
+        alSourcei(al_source, AL_LOOPING, source.loop);
         alSourcef(al_source, AL_PITCH, source.pitch);
         alSourcef(al_source, AL_GAIN, source.gain);
         alSource3f(al_source, AL_POSITION, source.position.x,
@@ -414,11 +416,13 @@ void Audio::update(Source & source)
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-        if (source.playing && (state != AL_PLAYING)){
+        if (source.playing && (state != AL_PLAYING)) {
             alSourcePlay(al_source);
         }
 
-        if(!source.playing && (state == AL_PLAYING)) {
+        ALint type;
+        alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
+        if(!source.playing && (state == AL_PLAYING) && type == AL_STREAMING) {
             alSourceStop(al_source);
         }
 
@@ -426,10 +430,8 @@ void Audio::update(Source & source)
             alSourceRewind(al_source);
             source.playing = false;
         }
-
     }
 }
-
 
 }
 
