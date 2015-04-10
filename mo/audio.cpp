@@ -287,9 +287,9 @@ Audio::Audio() {
 Audio::~Audio() {
     for (auto source : sources_){
         alSourceStop(source.second);
-        if (stream_threads[source.first].joinable()){
-            stream_threads[source.first].join();
-        }
+        //if (stream_threads[source.first].joinable()){
+        //    stream_threads[source.first].join();
+        //}
         alDeleteSources(1, & source.second);
     }
     for (auto buffer : buffers_){
@@ -376,16 +376,15 @@ void Audio::init(const StreamSource & stream_source) {
 
                                                                    alSourceQueueBuffers(source, 2, buffers);
 
-
                                                                    alSourcePlay(source);
                                                                    ALenum state;
                                                                    alGetSourcei(source, AL_SOURCE_STATE, &state);
                                                                    alSourcei(source, AL_STREAMING, AL_TRUE);
-                                                                   while(state == AL_PLAYING) {
+                                                                   while(true) {
                                                                        alGetSourcei(source, AL_SOURCE_STATE, &state);
                                                                        ALint processed = 0;
                                                                        alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
-                                                                       while(processed-- && (state == AL_PLAYING)){
+                                                                       while(processed-- && (state == AL_PLAYING)) {
                                                                            ALuint buffer = 0;
                                                                            alSourceUnqueueBuffers(source, 1, &buffer);
                                                                            auto samples = stream->read();
@@ -394,7 +393,7 @@ void Audio::init(const StreamSource & stream_source) {
                                                                        }
                                                                        alGetSourcei(source, AL_SOURCE_STATE, &state);
 
-                                                                       if (loop && stream->done()){
+                                                                       if (loop && stream->done()) {
                                                                            stream->seek_start();
                                                                        }
                                                                    }
