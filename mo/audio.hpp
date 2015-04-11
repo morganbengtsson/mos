@@ -116,8 +116,12 @@ namespace mo {
 
         Sources sources_;
         Buffers buffers_;
-        std::map<unsigned int, std::thread> stream_threads;
-        std::map<unsigned int, std::future<void>> streams;
+        struct StreamThread{
+            std::thread thread;
+            bool running;
+        };
+
+        std::map<unsigned int, StreamThread> stream_threads;
         //std::vector<std::thread> stream_threads;
 
 #endif
