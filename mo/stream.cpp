@@ -9,7 +9,10 @@ file_name_(file_name), buffer_size(4096*8){
     samples_left_ = 	stb_vorbis_stream_length_in_samples(vorbis_stream_) * vorbis_info_.channels;
 }
 
-Stream::~Stream(){
+Stream::Stream(const Stream &stream) : Stream(stream.file_name_) {
+}
+
+Stream::~Stream() {
     stb_vorbis_close(vorbis_stream_);
 }
 

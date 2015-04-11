@@ -29,6 +29,7 @@ public:
      * \param file_name
      */
     Stream(const std::string file_name_);
+    Stream(const mo::Stream & stream);
     ~Stream();
 
     int buffer_size;
@@ -57,6 +58,8 @@ public:
      * \brief seek_start starts the stream from the beginning.
      */
     void seek_start();
+
+
 private:
     int samples_left_;
     int size_;

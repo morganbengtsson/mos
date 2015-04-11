@@ -75,7 +75,8 @@ namespace mo {
          * @brief update
          * @param stream_source
          */
-        void update(Source & source);
+        void update(SoundSource & source);
+        void update(StreamSource & source);
 
         glm::vec3 listener_position();
         void listener_position(const glm::vec3 position);
@@ -116,6 +117,7 @@ namespace mo {
         Sources sources_;
         Buffers buffers_;
         std::map<unsigned int, std::thread> stream_threads;
+        std::map<unsigned int, std::future<void>> streams;
         //std::vector<std::thread> stream_threads;
 
 #endif
