@@ -285,10 +285,12 @@ Audio::Audio() {
 }
 
 Audio::~Audio() {
+    for (auto & thread : stream_threads){
+        thread.second.running = false;
+        thread.second.thread.join();
+    }
     for (auto source : sources_){
-        alSourceStop(source.second);
-        stream_threads[source.first].running = false;
-        stream_threads[source.first].thread.join();
+        alSourceStop(source.second);        
         alDeleteSources(1, & source.second);
     }
     for (auto buffer : buffers_){
