@@ -29,6 +29,8 @@ add_subdirectory(externals/glew-cmake)
 include_directories(externals/glew-cmake/include)
 
 #openal soft
+set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
+set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
 add_subdirectory(externals/openal-soft)
 include_directories(externals/openal-soft/include)
 
@@ -39,9 +41,6 @@ add_subdirectory(externals/glm)
 # rapidxml
 include_directories(externals/rapidxml)
 
-# objload
-include_directories(externals/objload)
-
 # lodepng
 add_subdirectory(externals/lodepng)
 include_directories(externals/lodepng)
@@ -49,10 +48,6 @@ include_directories(externals/lodepng)
 # stb
 add_subdirectory(externals/stb)
 include_directories(externals/stb)
-
-# tiny_obj_loader
-add_subdirectory(externals/tinyobjloader)
-include_directories(externals/tinyobjloader)
 
 # mo
 file(GLOB ROOT_SOURCE mo/*.cpp)
@@ -72,5 +67,4 @@ ELSE()
 ENDIF()
 target_link_libraries(mo libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mo lodepng)
-target_link_libraries(mo tinyobjloader)
 target_link_libraries(mo stb)
