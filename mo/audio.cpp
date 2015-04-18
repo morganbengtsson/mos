@@ -287,7 +287,7 @@ Audio::Audio() {
 Audio::~Audio() {
     for (auto & thread : stream_threads){
         thread.second.running = false;
-        thread.second.thread.join();
+        thread.second.thread->join();
     }
     for (auto source : sources_){
         alSourceStop(source.second);        
@@ -387,10 +387,10 @@ void Audio::update(StreamSource & source) {
         //streams.insert()
         if (stream_threads.count(source.id())) {
             stream_threads[source.id()].running = false;
-            stream_threads[source.id()].thread.join();
+            stream_threads[source.id()].thread->join();
             stream_threads.erase(source.id());
         }
-        stream_threads.insert(std::pair<unsigned int, StreamThread>(source.id(), StreamThread{std::thread([&](ALuint al_source, std::shared_ptr<mo::Stream> stream_ptr, const bool loop) {
+        stream_threads.insert(std::pair<unsigned int, StreamThread>(source.id(), StreamThread{std::shared_ptr<std::thread>(new std::thread([&](ALuint al_source, std::shared_ptr<mo::Stream> stream_ptr, const bool loop) {
                                                                            mo::Stream stream(*stream_ptr);
                                                                            ALuint buffers[2];
                                                                            alGenBuffers(2, buffers);
@@ -424,7 +424,7 @@ void Audio::update(StreamSource & source) {
                                                                            }
                                                                            stream.seek_start();
                                                                            alDeleteBuffers(2, buffers);
-                                                                       }, al_source, source.stream, source.loop), true}));
+                                                                       }, al_source, source.stream, source.loop)), true}));
         std::cout << stream_threads.size() << std::endl;
     }
 

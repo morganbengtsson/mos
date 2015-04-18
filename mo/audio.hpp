@@ -117,7 +117,7 @@ namespace mo {
         Sources sources_;
         Buffers buffers_;
         struct StreamThread{
-            std::thread thread;
+            std::shared_ptr<std::thread> thread;
             bool running;
         };
 

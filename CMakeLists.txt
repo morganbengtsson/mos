@@ -41,6 +41,9 @@ add_subdirectory(externals/glm)
 # rapidxml
 include_directories(externals/rapidxml)
 
+# objload
+include_directories(externals/objload)
+
 # lodepng
 add_subdirectory(externals/lodepng)
 include_directories(externals/lodepng)

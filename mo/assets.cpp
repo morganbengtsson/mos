@@ -220,8 +220,8 @@ namespace mo {
             return std::make_shared<Material>(Material(ambient, diffuse, specular,
                     opacity, specular_exponent));
         } else {
-
-
+			 //TODO: parse obj material
+			/*
             std::vector<tinyobj::material_t> materials;
             std::vector<tinyobj::shape_t> shapes;
 
@@ -237,6 +237,7 @@ namespace mo {
                     glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
                     glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
             return std::make_shared<Material>(material);
+			*/
         }
     }
 
