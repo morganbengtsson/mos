@@ -9,8 +9,8 @@
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
-#include <objload.h>
 #include <lodepng.h>
+#include <objload.h>
 #include <exception>
 #include <system_error>
 #include <memory>
@@ -19,7 +19,6 @@
 #include <iostream>
 #include <iterator>
 #include <stb_vorbis.h>
-#include <tiny_obj_loader.h>
 #include <algorithm>
 #include <glm/gtx/io.hpp>
 
