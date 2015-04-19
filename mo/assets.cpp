@@ -60,15 +60,19 @@ namespace mo {
             std::ifstream is(directory_ + file_name, ios::binary);
             int num_vertices;
             int num_indices;
-            is.read((char*) &num_vertices, sizeof (int));
+		    is.read((char*) &num_vertices, sizeof (int));
             is.read((char*) &num_indices, sizeof (int));
-
-            vertices = vector<mo::Vertex>(num_vertices);
+		
+			vertices = vector<mo::Vertex>(num_vertices);
             indices = vector<int>(num_indices);
-
-
-            is.read((char*) &vertices[0], vertices.size() * sizeof (Vertex));
-            is.read((char*) &indices[0], indices.size() * sizeof (int));
+			
+			if (vertices.size() > 0){
+				is.read((char*)&vertices[0], vertices.size() * sizeof(Vertex));
+			}
+            
+			if (indices.size() > 0) {
+				is.read((char*)&indices[0], indices.size() * sizeof(int));
+			}
 
         } else {
 
