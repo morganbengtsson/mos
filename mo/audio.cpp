@@ -383,10 +383,10 @@ void Audio::update(StreamSource & source) {
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
+	/*
     if (source.playing && (state != AL_PLAYING)) {
-        //alSourcePlay(al_source);
-        //streams.insert()
-        if (stream_threads.count(source.id())) {
+        
+		if (stream_threads.count(source.id())) {
             stream_threads[source.id()].running = false;
             stream_threads[source.id()].thread->join();
             stream_threads.erase(source.id());
@@ -427,8 +427,11 @@ void Audio::update(StreamSource & source) {
                                                                            }
                                                                            stream.seek_start();
                                                                            alDeleteBuffers(2, buffers);
-                                                                       }, al_source, source.stream, source.loop)), true}));       
+                                                                       }, al_source, source.stream, source.loop)), true}));    
+																	   
+																	   
     }
+	*/
 
     ALint type;
     alGetSourcei(al_source, AL_SOURCE_TYPE, &type);

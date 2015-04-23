@@ -59,6 +59,7 @@ namespace mo {
     }
 
     Renderer::~Renderer() {
+		//TODO: Delete all buffers, textures and shaders.
     }
 
     void Renderer::add_particle_program(const std::string name, const std::string vs_source, const std::string fs_source) {

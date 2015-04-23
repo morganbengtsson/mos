@@ -122,6 +122,7 @@ namespace mo {
         };
 
         std::map<unsigned int, StreamThread> stream_threads;
+		std::map<unsigned int, std::future<void>> stream_futures;
         //std::vector<std::thread> stream_threads;
 
 #endif
