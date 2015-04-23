@@ -46,7 +46,7 @@ namespace mo {
     }
 #endif
 
-    Assets::~Assets() {
+    Assets::~Assets() {		
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
@@ -118,7 +118,8 @@ namespace mo {
     }
 
     std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {
-        if (models_.find(file_name) == models_.end()) {
+		/**/
+		if (models_.find(file_name) == models_.end()) {
             models_.insert(MeshPair(file_name, mesh(file_name)));
         }
         return models_.at(file_name);
@@ -183,9 +184,8 @@ namespace mo {
         return std::make_shared<Sound>(Sound(decoded, decoded + length));
     }
 
-    std::shared_ptr<Stream> Assets::stream(const string file_name) const
-    {
-        return std::shared_ptr<mo::Stream>(new mo::Stream(directory_ + file_name));
+    std::shared_ptr<Stream> Assets::stream(const string file_name) const {
+		return std::make_shared<mo::Stream>(Stream(directory_ + file_name));
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {

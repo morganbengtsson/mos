@@ -160,18 +160,14 @@ namespace mo {
         Descriptor descript(std::string path) const;
 
     private:
+		std::string directory_;
         MeshMap models_;
         TextureMap textures_;
         SoundMap sounds_;
         MaterialMap materials_;
 #ifdef __ANDROID__
         AAssetManager * manager_;
-#else
-        std::string directory_;
 #endif
-
-
-
     };
 }
 #endif	/* MO_ASSETS_H */
