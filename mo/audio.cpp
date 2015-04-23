@@ -269,6 +269,7 @@ void Audio::playStream(const std::string file_name, const Assets & assets) {
 #include <cstring>
 #include <future>
 #include <thread>
+#include <chrono>
 #include <glm/gtx/io.hpp>
 
 namespace mo {
@@ -416,6 +417,8 @@ void Audio::update(StreamSource & source) {
                                                                                    alBufferData(buffer, AL_FORMAT_MONO16, samples.data(), size*sizeof(ALshort), stream.sample_rate());
                                                                                    alSourceQueueBuffers(al_source, 1, &buffer);
                                                                                }
+																			   
+																			   std::this_thread::sleep_for(std::chrono::milliseconds(100));
                                                                                alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
                                                                                if (loop && stream.done()) {
@@ -424,8 +427,7 @@ void Audio::update(StreamSource & source) {
                                                                            }
                                                                            stream.seek_start();
                                                                            alDeleteBuffers(2, buffers);
-                                                                       }, al_source, source.stream, source.loop)), true}));
-        std::cout << stream_threads.size() << std::endl;
+                                                                       }, al_source, source.stream, source.loop)), true}));       
     }
 
     ALint type;
