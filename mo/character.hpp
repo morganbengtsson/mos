@@ -15,14 +15,14 @@ namespace mo {
      * for text rendering.
      */
     struct Character {
-        float offsetX;
-        float offsetY;
+        float offset_x;
+        float offset_y;
         float advance;
-        float rectW;
+        float rect_w;
         char id;
-        float rectX;
-        float rectY;
-        float rectH;
+        float rect_x;
+        float rect_y;
+        float rect_h;
     };
 }
 

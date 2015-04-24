@@ -8,44 +8,19 @@
 #ifndef MO_AUDIO_H
 #define	MO_AUDIO_H
 
-#ifdef __ANDROID__
-#include <SLES/OpenSLES.h>
-#include <SLES/OpenSLES_Android.h>
-#include <SLES/OpenSLES_AndroidConfiguration.h>
-#else
 #include <AL/al.h>
 #include <AL/alc.h>
-#include <AL/alext.h>
-#endif
-
-
-#include <stb_vorbis.h>
-#include <glm/glm.hpp>
-#include <map>
+#include <unordered_map>
 #include <memory>
-#include <string>
 #include <thread>
-#include <future>
 
-#include "sound.hpp"
-#include "source.hpp"
-#include "assets.hpp"
 #include "streamsource.hpp"
 #include "soundsource.hpp"
 
-namespace mo {
-    
-#ifdef __ANDROID__
-    struct Player {
-        SLObjectItf player_obj_;
-        SLPlayItf player_;
-        SLBufferQueueItf player_queue_;
-    };
-
-#endif
+namespace mo {    
 
     /*!
-     * Audio player class. Uses OpenAL for Windows/Linux/OSX and OpenSL for Android.
+     * Audio player class. Uses OpenAL for Windows/Linux/OSX.
      */
     class Audio {
     public:
@@ -76,56 +51,80 @@ namespace mo {
          * @param stream_source
          */
         void update(SoundSource & source);
+
+		/**
+		* Updates the internal source representation with data. Data
+		* such as position, velocity, pitch and gain.
+		*
+		* @brief update
+		* @param stream_source
+		*/
         void update(StreamSource & source);
 
+		/**
+		* Updates the internal source representation with data. Data
+		* such as position, velocity, pitch and gain.
+		*
+		* @brief update
+		* @param stream_source
+		*/
         glm::vec3 listener_position();
+
+		/**
+		* Set the listener position. 
+		*
+		* @brief listener_position
+		* @param position
+		*/
         void listener_position(const glm::vec3 position);
+
+		/**
+		* Get the listener position
+		*
+		* @brief listener_position	
+		*/
         glm::vec3 listener_orientation();
+
+		/**
+		* Set the listener orientation.
+		*
+		* @brief listener_orientation
+		* @param orientation, up
+		*/
         void listener_orientation(const glm::vec3 orientation, const glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f));
-        glm::vec3 listener_velocity();
+        
+		/**
+		* Get the listener velocity.
+		*
+		* @brief listener_velocity
+		*/
+		glm::vec3 listener_velocity();
+
+		/**
+		* Set the listener velocity.
+		*
+		* @brief listener_velocity
+		* @param velocity
+		*/
         void listener_velocity(const glm::vec3 velocity);
     private:
-#ifdef __ANDROID__
-        void createBufferPlayers();        
-        
-        // OpenSL ES engine.
-        SLObjectItf engine_obj_;
-        SLEngineItf engine_;
-        
-        // Audio outputmix.
-        SLObjectItf output_mix_obj_;
+		struct StreamThread {
+			std::shared_ptr<std::thread> thread;
+			bool running;
+		};
 
-        // Background music player.
-        SLObjectItf descriptor_player_obj_;
-        SLPlayItf descriptor_player_;
-        SLSeekItf descriptor_player_seek_;
-
-        // Sound players.
-        std::vector<Player> players_;
-        int latest_player;
-        
-#else 
-
-        ALCdevice* device_;
-        ALCcontext* context_;
+        ALCdevice * device_;
+        ALCcontext * context_;
 
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;
-        using Sources = std::map<unsigned int, ALuint>;
-        using Buffers = std::map<unsigned int, ALuint>;     
+        using Sources = std::unordered_map<unsigned int, ALuint>;
+        using Buffers = std::unordered_map<unsigned int, ALuint>;     
 
         Sources sources_;
-        Buffers buffers_;
-        struct StreamThread{
-            std::shared_ptr<std::thread> thread;
-            bool running;
-        };
+        Buffers buffers_;       
 
-        std::map<unsigned int, StreamThread> stream_threads;
-		std::map<unsigned int, std::future<void>> stream_futures;
-        //std::vector<std::thread> stream_threads;
-
-#endif
+        std::unordered_map<unsigned int, StreamThread> stream_threads;		
     };
 }
 

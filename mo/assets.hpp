@@ -5,10 +5,10 @@
  * Created on February 25, 2014, 6:38 PM
  */
 
-
 #ifndef MO_ASSETS_H
 #define	MO_ASSETS_H
 
+#include <unordered_map>
 #include <map>
 #include <memory>
 #include "sound.hpp"
@@ -18,18 +18,7 @@
 #include "material.hpp"
 #include "stream.hpp"
 
-#ifdef __ANDROID__
-#include <android/asset_manager.h>
-#endif
-
 namespace mo {
-
-    // File descriptor for streamed assets.
-    struct Descriptor{
-            int32_t descriptor;
-            off_t start;
-            off_t length;
-    };
     
     /*!
      * An asset class that manages heavy resources such as Textures, meshes, sounds
@@ -38,25 +27,23 @@ namespace mo {
      */
     class Assets {
     public:
-        using MeshMap = std::map<std::string, std::shared_ptr<Mesh>>;
-        using TextureMap = std::map<std::string, std::shared_ptr<Texture2D>>;
-        using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
-        using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
-        using SoundMap = std::map<std::string, std::shared_ptr<Sound>>;
+        using MeshMap = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
+		using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
+		using SoundMap = std::unordered_map<std::string, std::shared_ptr<Sound>>;
+		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
+
+		using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
+        using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;		
         using SoundPair = std::pair<std::string, std::shared_ptr<Sound>>;
-        using MaterialPair =  std::pair<std::string, std::shared_ptr<Material>>;
-        using MaterialMap = std::map<std::string, std::shared_ptr<Material>>;
-#ifdef __ANDROID__
-        Assets(AAssetManager * manager);
-#else
+        using MaterialPair =  std::pair<std::string, std::shared_ptr<Material>>;		
+
         /**
          * Constructor for the asset manager.
          *
          * @brief Assets
-         * @param directory where the assets exist, default is "assets/"
+         * @param The directory where the assets exist, relative to the run directory, default is "assets/"
          */
         Assets(const std::string directory = "assets/");
-#endif
         virtual ~Assets();
 
         /**
@@ -65,8 +52,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to Material object.
          */
-        std::shared_ptr<Material> material_cached(const std::string file_name);  
-
+        std::shared_ptr<Material> material_cached(const std::string file_name); 
 
         /**
          *
@@ -76,7 +62,7 @@ namespace mo {
          * @param file_name
          * @return Shared pointer to a Material object.
          */
-        std::shared_ptr<Material> material(const std::string file_name);
+        std::shared_ptr<Material> material(const std::string file_name) const;
         
         /**
          * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
@@ -150,24 +136,14 @@ namespace mo {
          * @param path
          * @return A map of chars with corresponding Character objects.
          */
-        std::map<char, Character> characterMap(std::string path);
-        
-        /**
-         * Descriptor for streaming of files.
-         * @param path
-         * @return 
-         */
-        Descriptor descript(std::string path) const;
-
+        std::map<char, Character> character_map(std::string path);
+     
     private:
 		std::string directory_;
         MeshMap meshes_;
         TextureMap textures_;
         SoundMap sounds_;
         MaterialMap materials_;
-#ifdef __ANDROID__
-        AAssetManager * manager_;
-#endif
     };
 }
 #endif	/* MO_ASSETS_H */

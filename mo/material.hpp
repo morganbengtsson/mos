@@ -22,14 +22,14 @@ namespace mo {
     class Material {
     public:
         /*!
-         * \brief Material
-         * \param ambient
-         * \param diffuse
-         * \param specular
-         * \param opacity
-         * \param specular_exponent
+         * @brief Material
+         * @param ambient
+         * @param diffuse
+         * @param specular
+         * @param opacity
+         * @param specular_exponent
          */
-        Material(const glm::vec3 ambient = glm::vec3(1.0f),
+        explicit Material(const glm::vec3 ambient = glm::vec3(1.0f),
                 const glm::vec3 diffuse = glm::vec3(1.0f),
                 const glm::vec3 specular = glm::vec3(1.0f),
                 const float opacity = 1.0f,
@@ -37,33 +37,31 @@ namespace mo {
         virtual ~Material();
 
         /*!
-         * \brief ambient color.
+         * @brief ambient color.
          */
         glm::vec3 ambient;
 
         /*!
-         * \brief diffuse color.
+         * @brief diffuse color.
          */
         glm::vec3 diffuse;
 
         /*!
-         * \brief specular color.
+         * @brief specular color.
          */
         glm::vec3 specular;
 
         /*!
-         * \brief opacity
+         * @brief opacity
          */
         float opacity;
 
         /*!
-         * \brief specular_exponent
+         * @brief specular_exponent
          *
          * In some equations also calld Ns.
          */
         float specular_exponent;
-
-    private:
     };
 }
 

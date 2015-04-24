@@ -5,14 +5,12 @@
  * Created on February 25, 2014, 6:40 PM
  */
 
-#ifndef OGLI_MESH_H
-#define	OGLI_MESH_H
+#ifndef MO_MESH_H
+#define	MO_MESH_H
 
 #include <vector>
-#include <algorithm>
 #include "vertex.hpp"
 #include "range.hpp"
-#include "box.hpp"
 
 namespace mo {
 
@@ -116,11 +114,9 @@ private:
     unsigned int id_;
     Vertices vertices_;
     Elements elements_;
-
-
 };
 
 }
 
-#endif	/* MESH_H */
+#endif	/* MO_MESH_H */
 

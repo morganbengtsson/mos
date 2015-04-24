@@ -383,8 +383,7 @@ void Audio::update(StreamSource & source) {
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 		
-    if (source.playing && (state != AL_PLAYING)) {
-        
+    if (source.playing && (state != AL_PLAYING)) {		
 		if (stream_threads.count(source.id())) {
             stream_threads[source.id()].running = false;
             stream_threads[source.id()].thread->join();
@@ -428,8 +427,9 @@ void Audio::update(StreamSource & source) {
                                                                            alDeleteBuffers(2, buffers);
                                                                        }, al_source, source.stream, source.loop)), true}));    
 																	   
-																	   
+														   
     }
+	
 	
 
     ALint type;

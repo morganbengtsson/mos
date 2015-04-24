@@ -22,24 +22,10 @@
 namespace mo {
 	using namespace std;
 	using namespace glm;
-
-#ifdef __ANDROID__
-
-    Assets::Assets(AAssetManager * manager) : manager_(manager) {
+	
+	Assets::Assets(const std::string directory) :
+    directory_(directory) {    
     }
-#else
-
-    Assets::Assets(const std::string directory) :
-    directory_(directory) {
-        /*
-        vector<Vertex> vertices;
-        vector<int> elements;
-        meshes_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
-                vertices.end(),
-                elements.begin(),
-                elements.end()))));*/
-    }
-#endif
 
     Assets::~Assets() {		
     }
@@ -47,7 +33,6 @@ namespace mo {
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
         vector<mo::Vertex> vertices;
         vector<int> indices;
-
 
         if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
 
@@ -71,14 +56,9 @@ namespace mo {
 
         } else {
 
-#ifdef __ANDROID__
-            LOGI("Loading: %s", file_name.c_str());
-            std::string source = text(file_name);
-            obj::Model obj_model = obj::loadModelFromString(source);
-#else
             std::cout << "Loading: " << directory_ << file_name;
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
-#endif
+
             int j = 0;
             for (int i = 0; i < obj_model.vertex.size(); i += 3) {
                 glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1], obj_model.vertex[i + 2]);
@@ -94,18 +74,7 @@ namespace mo {
             }
             indices.assign(obj_model.faces.find("default")->second.begin(),
                     obj_model.faces.find("default")->second.end());
-        }
-        /*
-        std::cout << "Vertices:" << std::endl;
-        for (auto v : vertices) {
-            std::cout << "(" << v.position << v.uv << ")";
-        }
-        std::cout << "\nIndices\n";
-        std::cout << std::endl;
-        for (auto i : indices) {
-            std::cout << i < " ";
-        }
-        std::cout << std::endl;*/
+        }      
         return std::make_shared<Mesh>(vertices.begin(),
                 vertices.end(),
                 indices.begin(),
@@ -124,24 +93,12 @@ namespace mo {
 
         vector<unsigned char> texels_decoded;
         unsigned width, height;
-#ifdef __ANDROID__
-        std::cout << "Loading: " << file_name << std::endl;
-        AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-        int size = (int) AAsset_getLength(asset);
 
-        const unsigned char * texels_encoded = static_cast<const unsigned char *> (AAsset_getBuffer(asset));
-
-        unsigned error = lodepng::decode(texels_decoded, width, height, texels_encoded, size);
-        if (error) {
-            std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
-        }
-#else
         std::cout << "Loading: " << directory_ + file_name << std::endl;
-        unsigned error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
+        auto error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
         if (error) {
             std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
         }
-#endif
         return std::make_shared<Texture2D>(texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps);
     }
 
@@ -160,12 +117,7 @@ namespace mo {
     std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
         int channels, length;
         short * decoded;
-#ifdef __ANDROID__
-        AAsset* asset = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-        int size = (int) AAsset_getLength(asset);
 
-        length = stb_vorbis_decode_memory((unsigned char *) AAsset_getBuffer(asset), size, &channels, &decoded);
-#else
         std::ifstream file(directory_ + file_name, std::ios::binary);
         std::vector<unsigned char> data;
 
@@ -174,7 +126,7 @@ namespace mo {
             data.push_back(c);
         }
         length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
-#endif
+
         return std::make_shared<Sound>(decoded, decoded + length);
     }
 
@@ -192,7 +144,7 @@ namespace mo {
         }
     }
 
-    std::shared_ptr<Material> Assets::material(const std::string file_name) {
+    std::shared_ptr<Material> Assets::material(const std::string file_name) const{
 
          if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
              std::cout << "Loading: " << directory_ + file_name << std::endl;
@@ -208,12 +160,7 @@ namespace mo {
             is.read((char*) &specular, sizeof (glm::vec3));
             is.read((char*) &opacity, sizeof (float));
             is.read((char*) &specular_exponent, sizeof (float));
-
-            //std::cout << ambient << std::endl;
-            //std::cout << diffuse << std::endl;
-            //std::cout << specular << std::endl;
-            //std::cout << opacity << std::endl;
-            //std::cout << specular_exponent << std::endl;
+			 
 
             return std::make_shared<Material>(ambient, diffuse, specular,
                     opacity, specular_exponent);
@@ -250,31 +197,18 @@ namespace mo {
     }
 
     std::string Assets::text(const std::string file_name) const {
-#ifdef __ANDROID__
 
-        AAsset* text = AAssetManager_open(manager_, file_name.c_str(), AASSET_MODE_UNKNOWN);
-        long size = (text == nullptr) ? 0 : AAsset_getLength(text);
-        char * buffer = new char[size + 1];
-        buffer[size] = 0;
-        if (text != nullptr) {
-            AAsset_read(text, buffer, size);
-        }
-
-        return std::string(buffer, buffer + size);
-#else  
         std::ifstream file(directory_ + file_name);
         std::string source((std::istreambuf_iterator<char>(file)),
                 std::istreambuf_iterator<char>());
         return source;
-#endif
     }
 
-    std::map<char, Character> Assets::characterMap(std::string file_name) {
+    std::map<char, Character> Assets::character_map(std::string file_name) {
 
         std::map<char, Character> characters;
         rapidxml::xml_document<> doc;
-        //doc.parse<0>((char*) text(path));
-        std::string str = text(file_name);
+        auto str = text(file_name);
         char* cstr = new char[str.size() + 1]; // Create char buffer to store string copy
         std::strcpy(cstr, str.c_str());
         doc.parse<0>(cstr);
@@ -287,21 +221,21 @@ namespace mo {
 
             Character character;
             rapidxml::xml_attribute<> *attr = char_node->first_attribute();
-            character.offsetX = atof(attr->value());
+            character.offset_x = atof(attr->value());
             attr = attr->next_attribute();
-            character.offsetY = atof(attr->value());
+            character.offset_y = atof(attr->value());
             attr = attr->next_attribute();
             character.advance = atof(attr->value());
             attr = attr->next_attribute();
-            character.rectW = atof(attr->value());
+            character.rect_w = atof(attr->value());
             attr = attr->next_attribute();
             character.id = *attr->value();
             attr = attr->next_attribute();
-            character.rectX = atof(attr->value());
+            character.rect_x = atof(attr->value());
             attr = attr->next_attribute();
-            character.rectY = atof(attr->value());
+            character.rect_y = atof(attr->value());
             attr = attr->next_attribute();
-            character.rectH = atof(attr->value());
+            character.rect_h = atof(attr->value());
 
             characters.insert(std::pair<char, Character>(character.id, character));
 
@@ -309,22 +243,4 @@ namespace mo {
         delete [] cstr;
         return characters;
     }
-
-    Descriptor Assets::descript(std::string path) const {
-#ifdef __ANDROID__
-        Descriptor descriptor = {-1, 0, 0};
-        AAsset* asset = AAssetManager_open(manager_, path.c_str(),
-                AASSET_MODE_UNKNOWN);
-        if (asset != NULL) {
-            descriptor.descriptor = AAsset_openFileDescriptor(
-                    asset, &descriptor.start, &descriptor.length);
-            AAsset_close(asset);
-        }
-        return descriptor;
-#else
-        return Descriptor{-1, 0, 0};
-#endif
-    }
-
-
 }

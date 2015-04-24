@@ -13,39 +13,37 @@
 namespace mo {
 
      /*!
-     * \brief The Light class
+     * @brief The Light class
      *
      * A class describing different aspects of a light source. Used together with the renderer.
      */
     class Light {
     public:
         /*!
-         * \brief Light
-         * \param position
-         * \param diffuse_color
-         * \param specular_color
+         * @brief Light
+         * @param position
+         * @param diffuse_color
+         * @param specular_color
          */
-        Light(const glm::vec3 position = glm::vec3(0.0f), 
+        explicit Light(const glm::vec3 position = glm::vec3(0.0f), 
               const glm::vec3 diffuse_color = glm::vec3(0.0f),
               const glm::vec3 specular_color = glm::vec3(0.0f));
         virtual ~Light();
 
         /*!
-         * \brief position
+         * @brief position
          */
         glm::vec3 position;
 
         /*!
-         * \brief diffuse_color
+         * @brief diffuse_color
          */
         glm::vec3 diffuse_color;
 
         /*!
-         * \brief specular_color
+         * @brief specular_color
          */
         glm::vec3 specular_color;        
-    private:
-
     };
 }
 

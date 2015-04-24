@@ -38,20 +38,20 @@ namespace mo {
         mesh->clear();
         for (const char & c : text_) {
             auto character = characters_.at(c);
-            float u1 = character.rectX / ((float) texture->width());
-            float u2 = (character.rectX + character.rectW) / (float) texture->width();
-            float v1 = character.rectY / ((float) texture->height());
-            float v2 = ((character.rectY + character.rectH) / ((float) texture->height()));
+            float u1 = character.rect_x / ((float) texture->width());
+            float u2 = (character.rect_x + character.rect_w) / (float) texture->width();
+            float v1 = character.rect_y / ((float) texture->height());
+            float v2 = ((character.rect_y + character.rect_h) / ((float) texture->height()));
 
-            float offset_y = ((float) texture->height()) - character.offsetY;
-            float offset_x = character.offsetX;
+            float offset_y = ((float) texture->height()) - character.offset_y;
+            float offset_x = character.offset_x;
                         
-            mesh->add(Vertex(glm::vec3(index + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
-            mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+            mesh->add(Vertex(glm::vec3(index + offset_x, -character.rect_h - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
+            mesh->add(Vertex(glm::vec3(index + character.rect_w + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
             mesh->add(Vertex(glm::vec3(index + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
-            mesh->add(Vertex(glm::vec3(index + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
-            mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -character.rectH - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
-            mesh->add(Vertex(glm::vec3(index + character.rectW + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+            mesh->add(Vertex(glm::vec3(index + offset_x, -character.rect_h - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
+            mesh->add(Vertex(glm::vec3(index + character.rect_w + offset_x, -character.rect_h - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
+            mesh->add(Vertex(glm::vec3(index + character.rect_w + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
             index += character.advance + spacing;
         }
         mesh->valid = false;
