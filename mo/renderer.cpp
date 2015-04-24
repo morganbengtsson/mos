@@ -29,7 +29,7 @@
 
 namespace mo {
 
-    Renderer::Renderer() : lightmaps_(true){
+    Renderer::Renderer() : lightmaps_(true) {
         GLenum err = glewInit();
         if (GLEW_OK != err) {
             fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
