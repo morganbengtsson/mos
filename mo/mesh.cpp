@@ -18,6 +18,7 @@ namespace mo {
     Mesh::Mesh(const Mesh & mesh): Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(), mesh.elements_end()){		
 	}
 	
+	
     
     Mesh::~Mesh() {
     }

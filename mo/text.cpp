@@ -7,16 +7,6 @@
 
 #include "text.hpp"
 
-#include <rapidxml.hpp>
-#include <rapidxml_utils.hpp>
-#include <fstream>
-#include <streambuf>
-#include <string>
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtx/io.hpp>
-#include <iostream>
-
 namespace mo {
 
     Text::Text(const std::string txt, std::map<char, Character> characters, std::shared_ptr<Texture2D> texture, const glm::mat4 transform, const float spacing)

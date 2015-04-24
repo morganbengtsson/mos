@@ -9,18 +9,13 @@
 #define	MO_RENDERER_H
 
 #include "GL/glew.h"
-#include <glm/glm.hpp>
-#include <iostream>
-#include <map>
-#include <tuple>
-
-#include "vertex.hpp"
 #include "texture2d.hpp"
 #include "model.hpp"
 #include "particles.hpp"
-#include "particle.hpp"
 #include "light.hpp"
 #include "render_target.hpp"
+
+#include <unordered_map>
 
 namespace mo {
 
@@ -187,12 +182,17 @@ public:
         }
 
         auto fb = frame_buffers_[target.id()];
-       //std::cout << fb.id << std::endl;
         glBindFramebuffer(GL_FRAMEBUFFER, fb);
-        //std::cout << target.texture->width() << " " << target.texture->height() << std::endl;
-        //glViewport(0,0,target.texture->width(), target.texture->height());
-    }
+        }
+
+	/*
+	* Set lightmap use.
+	*/
     void lightmaps(const bool lightmaps);
+
+	/*
+	* Check if lightmaps are in use.
+	*/
     bool lightmaps();
 
 private:
@@ -203,14 +203,14 @@ private:
     bool check_program(const unsigned int program);
     unsigned int create_texture(std::shared_ptr<mo::Texture2D> texture);
 
-    std::map<std::string, VertexProgramData> vertex_programs_;
-    std::map<std::string, ParticleProgramData> particle_programs_;
+	std::unordered_map<std::string, VertexProgramData> vertex_programs_;
+	std::unordered_map<std::string, ParticleProgramData> particle_programs_;
 
-    std::map<unsigned int, unsigned int> frame_buffers_;
-    std::map<unsigned int, unsigned int> textures_;
-    std::map<unsigned int, unsigned int> array_buffers_;
-    std::map<unsigned int, unsigned int> element_array_buffers_;
-    std::map<unsigned int, unsigned int> vertex_arrays_;
+    std::unordered_map<unsigned int, unsigned int> frame_buffers_;
+	std::unordered_map<unsigned int, unsigned int> textures_;
+	std::unordered_map<unsigned int, unsigned int> array_buffers_;
+	std::unordered_map<unsigned int, unsigned int> element_array_buffers_;
+	std::unordered_map<unsigned int, unsigned int> vertex_arrays_;
 
 };
 }

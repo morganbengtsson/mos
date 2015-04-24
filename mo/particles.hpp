@@ -8,18 +8,17 @@
 #ifndef MO_PARTICLES_H
 #define	MO_PARTICLES_H
 
-#include <glm/glm.hpp>
 #include <vector>
-
 #include "particle.hpp"
 
 namespace mo {
 
     class Particles {
-    public:
-        Particles();
-        template<class It>
-        Particles(It begin, It end){
+    public:        
+		Particles();
+        
+		template<class It>
+		Particles(It begin, It end){
             particles_.assign(begin, end);
         }
 
@@ -54,6 +53,7 @@ namespace mo {
         Particle back();
         const Particle * data() const;
         unsigned int size() const;
+
         /**          
          * @return A unique identifier. 
          */

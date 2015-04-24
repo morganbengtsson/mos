@@ -5,6 +5,7 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
+#include "gl/glew.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,6 +16,9 @@
 #include <glm/gtx/io.hpp>
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <map>
 
 #include "renderer.hpp"
 #include "vertex.hpp"

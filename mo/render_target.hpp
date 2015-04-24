@@ -7,9 +7,10 @@
 namespace mo {
 class RenderTarget {
 public:
-    RenderTarget(const unsigned int width = 256,  const unsigned int height = 256);
+    explicit RenderTarget(const unsigned int width = 256,  const unsigned int height = 256);
     std::shared_ptr<mo::Texture2D> texture;
-    /*!
+    
+	/*!
      * \brief unique id
      * \return id
      */

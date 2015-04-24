@@ -8,15 +8,9 @@
 #ifndef MO_MODEL_H
 #define	MO_MODEL_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
 #include <memory>
-#include <utility>
-
 #include "mesh.hpp"
 #include "texture2d.hpp"
-#include "assets.hpp"
 #include "material.hpp"
 #include "box.hpp"
 
@@ -31,19 +25,19 @@ namespace mo {
     public:
         enum class Draw {TRIANGLES, LINES, POINTS};
         /*!
-         * \brief Model
+         * @brief Model
          */
         Model();
 
         /*!
-         * \brief Model
-         * \param mesh
-         * \param texture
-         * \param transform
-         * \param draw
-         * \param material
-         * \param lightmap
-         * \param normalmap
+         * @brief Model
+         * @param mesh
+         * @param texture
+         * @param transform
+         * @param draw
+         * @param material
+         * @param lightmap
+         * @param normalmap
          */
         Model(std::shared_ptr<Mesh> mesh, 
               std::shared_ptr<Texture2D> texture,              
@@ -57,47 +51,88 @@ namespace mo {
         virtual ~Model();
 
         /*!
-         * \brief mesh
+         * @brief mesh
          */
         std::shared_ptr<Mesh> mesh;
-        /*!
-         * \brief texture
+        
+		/*!
+         * @brief texture
          */
         std::shared_ptr<Texture2D> texture;
-        /*!
-         * \brief lightmap
+        
+		/*!
+         * @brief lightmap
          */
         std::shared_ptr<Texture2D> lightmap;
-        /*!
-         * \brief normalmap
+        
+		/*!
+         * @brief normalmap
          */
         std::shared_ptr<Texture2D> normalmap;
-        /*!
-         * \brief material
+        
+		/*!
+         * @brief material
          */
         std::shared_ptr<Material> material;
-        /*!
-         * \brief transform
-         * \return
+        
+		/*!
+		 * Get the transform matrix.
+		 *
+         * @brief transform
+         * @return transform mat4
          */
-
         glm::mat4 transform() const;
-        /*!
-         * \brief transform
-         * \param transform
+        
+		/*!
+		 * Set the transform matrix.
+		 *
+         * @brief transform
+         * @param transform
          */
         void transform(const glm::mat4 & transform);
 
+		/*!
+		* Get the position
+		* @brief position
+		*/
         glm::vec3 position() const;
 
+		/*!
+		* Set the position.
+		* @brief position
+		* @param position
+		*/
         void position(const glm::vec3 position);
 
+		/*!
+		* Get the color, (to be deprecated).
+		*/
         glm::vec4 color() const;
 
+		/*!
+		* The bounding box
+		*/
         Box box;
+
+		/*!
+		* Drap method.
+		*/
         Draw draw;
+
+		/*
+		* Is the model selectable;
+		*/
         bool selectable;
+
+		/*
+		* Checks if the model is selected.
+		*/
         bool selected() const;
+
+		/*
+		* Set if the model is selected.
+		* @param selected
+		*/
         void selected(const bool selected);
     private:
         bool valid_;

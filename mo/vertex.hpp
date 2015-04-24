@@ -19,16 +19,16 @@ class Vertex {
 public:
 
     /*!
-     * \brief Vertex constructor
-     * \param position
-     * \param normal
-     * \param uv
-     * \param uv_lightmap
+     * @brief Vertex constructor
+     * @param position
+     * @param normal
+     * @param uv
+     * @param uv_lightmap
      *
      * Constructs a vertex. Probably the smallest primitive in this context.
      *
      */
-    Vertex(const glm::vec3 position = glm::vec3(0.0f),
+    explicit Vertex(const glm::vec3 position = glm::vec3(0.0f),
            const glm::vec3 normal = glm::vec3(0.0f),
            const glm::vec2 uv = glm::vec2(0.0f),
            const glm::vec2 uv_lightmap = glm::vec2(0.0f))

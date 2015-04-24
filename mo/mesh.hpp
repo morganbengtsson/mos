@@ -20,8 +20,8 @@ namespace mo {
  */
 class Mesh {
 public:
-    typedef std::vector<Vertex> Vertices;
-    typedef std::vector<int> Elements;
+    using Vertices = std::vector<Vertex>;
+    using Elements = std::vector<int>;
 
     template<class VerticesIt, class ElementsIt>
     /*!
@@ -44,23 +44,7 @@ public:
     }
     Mesh();
     Mesh(const Mesh & mesh);
-    virtual ~Mesh();
-
-    Range<Vertices> vertices() {
-        return Range<Vertices>(vertices_);
-    }
-
-    Range<Elements> elements() {
-        return Range<Elements>(elements_);
-    }
-
-    ConstRange<Vertices> vertices() const {
-        return ConstRange<Vertices>(vertices_);
-    }
-
-    ConstRange<Elements> elements() const {
-        return ConstRange<Elements>(elements_);
-    }
+    virtual ~Mesh();	
 
     Vertices::const_iterator vertices_begin() const {
         return vertices_.begin();

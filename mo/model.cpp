@@ -7,8 +7,6 @@
 
 #include "model.hpp"
 
-#include <glm/gtx/io.hpp>
-#include <iostream>
 namespace mo {
 
 Model::Model(){

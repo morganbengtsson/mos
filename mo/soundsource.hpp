@@ -5,7 +5,6 @@
 #include <memory>
 #include <glm/glm.hpp>
 #include "sound.hpp"
-#include "stream.hpp"
 #include "source.hpp"
 
 namespace mo {
@@ -22,7 +21,7 @@ public:
      * \param sound shared pointer
      * \param position
      */
-    SoundSource(const std::shared_ptr<Sound> sound,
+    explicit SoundSource(const std::shared_ptr<Sound> sound,
                 const glm::vec3 position = glm::vec3(0.0f),
                 const glm::vec3 velocity = glm::vec3(0.0f),
                 const float gain = 1.0f,

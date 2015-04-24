@@ -13,29 +13,29 @@
 namespace mo {
     
 /*!
- * \brief The Particle struct
+ * @brief The Particle struct
  */
 struct Particle {
 
     /*!
-     * \brief Particle constructor
-     * \param position
-     * \param color
+     * @brief Particle constructor
+     * @param position
+     * @param color
      */
-    Particle(const glm::vec3 & position = glm::vec3(0.0f),
+    explicit Particle(const glm::vec3 & position = glm::vec3(0.0f),
              const glm::vec4 & color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
              const float size = 1.0f) :
     position(position),
     color(color),
     size(size){
     }
-    ~Particle(){
+
+    virtual ~Particle(){
     }
 
     glm::vec3 position;
     glm::vec4 color;
     float size;
-
 };
 }
 #endif	/* MO_PARTICLE_H */

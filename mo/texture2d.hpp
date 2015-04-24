@@ -14,7 +14,7 @@
 namespace mo {
 
 /*!
- * \brief The Texture2D class
+ * @brief The Texture2D class
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
@@ -24,12 +24,12 @@ public:
     static unsigned int current_id;
     template<class It>
     /*!
-     * \brief Texture2D
-     * \param begin
-     * \param end
-     * \param width
-     * \param height
-     * \param mipmaps should be used for rendering
+     * @brief Texture2D
+     * @param begin
+     * @param end
+     * @param width
+     * @param height
+     * @param mipmaps should be used for rendering
      *
      * Constructor for a texture, that takes char valus from a container as input. Along with width and height.
      */
@@ -55,48 +55,47 @@ public:
     virtual ~Texture2D();
     
     /*!
-     * \brief begin iterator
-     * \return constand begin iterator
+     * @brief begin iterator
+     * @return constand begin iterator
      */
     Texels::const_iterator begin() const;
 
     /*!
-     * \brief end iterator
-     * \return constant end iterator
+     * @brief end iterator
+     * @return constant end iterator
      */
     Texels::const_iterator end() const;
     
     /*!
-     * \brief unique id
-     * \return id
+     * @brief unique id
+     * @return id
      */
-    const unsigned int id() const;
+    unsigned int id() const;
     
     /*!
-     * \brief width in pixels
-     * \return
+     * @brief width in pixels
+     * @return
      */
     unsigned int width() const;
 
     /*!
-     * \brief height in pixels
-     * \return
+     * @brief height in pixels
+     * @return
      */
     unsigned int height() const;
 
     /*!
-     * \brief sample the texture
-     * \param x less than width
-     * \param y less than height
-     * \return
+     * @brief sample the texture
+     * @param x less than width
+     * @param y less than height
+     * @return
      */
     glm::vec4 sample(const unsigned int x, const unsigned int y);
     
-
     const unsigned char * data() const;
 
     /*!
-     * \brief if mipmaps should be used
+     * @brief if mipmaps should be used
      */
     bool mipmaps;
 private:

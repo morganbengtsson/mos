@@ -8,9 +8,8 @@
 #ifndef MO_UTIL_H
 #define	MO_UTIL_H
 
-#include <string>
 #include <fstream>
-#include <exception>
+
 
 namespace mo {
     template <class T>
@@ -18,7 +17,7 @@ namespace mo {
     private:
         T center;
     public:
-        ClockwiseSorter(const T center) : center(center) {
+        explicit ClockwiseSorter(const T center) : center(center) {
         }
 
         bool operator()(const T a, const T b) const {
