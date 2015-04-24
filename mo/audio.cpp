@@ -382,8 +382,7 @@ void Audio::update(StreamSource & source) {
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
-
-	/*
+		
     if (source.playing && (state != AL_PLAYING)) {
         
 		if (stream_threads.count(source.id())) {
@@ -431,7 +430,7 @@ void Audio::update(StreamSource & source) {
 																	   
 																	   
     }
-	*/
+	
 
     ALint type;
     alGetSourcei(al_source, AL_SOURCE_TYPE, &type);

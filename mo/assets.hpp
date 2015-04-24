@@ -161,7 +161,7 @@ namespace mo {
 
     private:
 		std::string directory_;
-        MeshMap models_;
+        MeshMap meshes_;
         TextureMap textures_;
         SoundMap sounds_;
         MaterialMap materials_;

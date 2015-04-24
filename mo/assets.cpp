@@ -12,21 +12,16 @@
 #include <lodepng.h>
 #include <objload.h>
 #include <exception>
-#include <system_error>
 #include <memory>
 #include <fstream>
-#include <cstring>
 #include <iostream>
 #include <iterator>
 #include <stb_vorbis.h>
-#include <algorithm>
 #include <glm/gtx/io.hpp>
 
-using namespace mo;
-using namespace std;
-using namespace glm;
-
 namespace mo {
+	using namespace std;
+	using namespace glm;
 
 #ifdef __ANDROID__
 
@@ -39,7 +34,7 @@ namespace mo {
         /*
         vector<Vertex> vertices;
         vector<int> elements;
-        models_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
+        meshes_.insert(MeshPair("Empty.obj", std::make_shared<Mesh>(Mesh(vertices.begin(),
                 vertices.end(),
                 elements.begin(),
                 elements.end()))));*/
@@ -111,18 +106,17 @@ namespace mo {
             std::cout << i < " ";
         }
         std::cout << std::endl;*/
-        return std::make_shared<Mesh>(mo::Mesh(vertices.begin(),
+        return std::make_shared<Mesh>(vertices.begin(),
                 vertices.end(),
                 indices.begin(),
-                indices.end()));
+                indices.end());
     }
 
-    std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {
-		/**/
-		if (models_.find(file_name) == models_.end()) {
-            models_.insert(MeshPair(file_name, mesh(file_name)));
+    std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {		
+		if (meshes_.find(file_name) == meshes_.end()) {
+            meshes_.insert(MeshPair(file_name, mesh(file_name)));
         }
-        return models_.at(file_name);
+        return meshes_.at(file_name);
     }
 
     std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const {
@@ -148,7 +142,7 @@ namespace mo {
             std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
         }
 #endif
-        return std::make_shared<Texture2D>(Texture2D(texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps));
+        return std::make_shared<Texture2D>(texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps);
     }
 
     std::shared_ptr<Texture2D> Assets::texture_cached(const std::string file_name, const bool mipmaps) {
@@ -181,11 +175,11 @@ namespace mo {
         }
         length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
 #endif
-        return std::make_shared<Sound>(Sound(decoded, decoded + length));
+        return std::make_shared<Sound>(decoded, decoded + length);
     }
 
     std::shared_ptr<Stream> Assets::stream(const string file_name) const {
-		return std::make_shared<mo::Stream>(Stream(directory_ + file_name));
+		return std::make_shared<mo::Stream>(directory_ + file_name);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {
@@ -221,8 +215,8 @@ namespace mo {
             //std::cout << opacity << std::endl;
             //std::cout << specular_exponent << std::endl;
 
-            return std::make_shared<Material>(Material(ambient, diffuse, specular,
-                    opacity, specular_exponent));
+            return std::make_shared<Material>(ambient, diffuse, specular,
+                    opacity, specular_exponent);
         } else {
 			 //TODO: parse obj material
 			/*
