@@ -23,7 +23,6 @@ file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINAR
 #Copy shader files to assets
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
 
-
 # GLEW
 add_subdirectory(externals/glew-cmake)
 include_directories(externals/glew-cmake/include)

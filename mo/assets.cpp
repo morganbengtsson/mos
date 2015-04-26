@@ -13,6 +13,7 @@
 #include <objload.h>
 #include <exception>
 #include <memory>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <iterator>
