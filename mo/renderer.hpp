@@ -129,15 +129,17 @@ public:
         element_array_buffers_.clear();
     }
 
-    void render_target_reset(unsigned int width, unsigned int height){
+    GLuint readFBO;
+    GLuint drawFBO;
+    GLuint readFBO2;
+    GLuint drawFBO2;
+
+    void render_target_reset(unsigned int width, unsigned int height) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
         glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-
-    GLuint readFBO;
-    GLuint drawFBO;
 
     void render_target(RenderTarget target){
         if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
@@ -146,10 +148,12 @@ public:
             glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
 
             GLuint renderedTexture;
-            glGenTextures(1, &renderedTexture);
+            glGenTextures(1, &renderedTexture);            
+
             glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderedTexture);
             glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8, target.texture->width(), target.texture->height(), GL_TRUE);
             glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, renderedTexture, 0);
 
             GLuint depthrenderbuffer;

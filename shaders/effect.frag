@@ -22,6 +22,7 @@ void main() {
         sum += texture2D( texture, v_uv - vec2(0.0, offset[i] * offset2/ 800.0)) * weight[i];
     }
     //gl_FragColor = sum * pow(length(sum.xyz), 2) + color;
-    gl_FragColor = color;
+    gl_FragColor = vec4(color.rgb, opacity);
+    //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 };
 
