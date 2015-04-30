@@ -27,6 +27,20 @@ namespace mo {
         Audio();
         virtual ~Audio();
 
+        template<class It>
+        /*!
+         * A generalized init method
+         *
+         * @brief init
+         * @param begin
+         * @param end
+         */
+        void init(It begin, It end) {
+            for (auto it = begin; it != end; it++){
+                init(*it);
+            }
+        }
+
         /**
          * Play audio from a SoundSource object. A sound source contains one sound.
          * 
@@ -42,6 +56,21 @@ namespace mo {
          * @param stream_source
          */
         void init(const StreamSource & stream_source);
+
+        template<class It>
+        /*!
+         * A generalized update method
+         *
+         * @brief init
+         * @param begin iterator
+         * @param end iterator
+         */
+        void update(It begin, It end) {
+            for (auto it = begin; it != end; it++){
+                update(*it);
+            }
+        }
+
 
         /**
          * Updates the internal source representation with data. Data
