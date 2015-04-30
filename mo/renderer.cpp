@@ -134,6 +134,91 @@ namespace mo {
         }));
     }
 
+    void Renderer::init(const Model & model) {
+        if(vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
+            unsigned int vertex_array;
+            glGenVertexArrays(1, &vertex_array);
+            glBindVertexArray(vertex_array);
+                if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
+                    unsigned int array_buffer;
+                    glGenBuffers(1, &array_buffer);
+                    glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+                    glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
+                                 model.mesh->vertices_data(),
+                                 GL_STATIC_DRAW);
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    array_buffers_.insert({model.mesh->id(), array_buffer});
+                }
+                if (element_array_buffers_.find(model.mesh->id()) == element_array_buffers_.end()) {
+                    unsigned int element_array_buffer;
+                    glGenBuffers(1, &element_array_buffer);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
+                    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                                 model.mesh->elements_size() * sizeof (unsigned int),
+                                 model.mesh->elements_data(),
+                                 GL_STATIC_DRAW);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                    element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
+                }
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()));
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+                    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
+                    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)*2));
+                    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3)*2 + sizeof(glm::vec2)));
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+                                 element_array_buffers_.at(model.mesh->id()));
+                    glEnableVertexAttribArray(0);
+                    glEnableVertexAttribArray(1);
+                    glEnableVertexAttribArray(2);
+                    glEnableVertexAttribArray(3);
+            glBindVertexArray(0);
+            vertex_arrays_.insert({model.mesh->id(), vertex_array});
+        }
+
+        if (!model.mesh->valid) {
+            glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
+            glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
+                         model.mesh->vertices_data(),
+                         GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            /*
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[model.mesh->id()]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         model.mesh->elements_size() * sizeof (unsigned int),
+                         model.mesh->elements_data(),
+                         GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            */
+            model.mesh->valid = true;
+        }
+
+        if (model.texture) {
+            if (textures_.find(model.texture->id()) == textures_.end()) {
+                GLuint id = create_texture(model.texture);
+                textures_.insert({model.texture->id(), id});
+            }
+        }
+
+        if (model.lightmap) {
+            if (textures_.find(model.lightmap->id()) == textures_.end()) {
+                auto id = create_texture(model.lightmap);
+                textures_.insert({model.lightmap->id(), id});
+            }
+        }
+
+        if (model.normalmap) {
+            if (textures_.find(model.normalmap->id()) == textures_.end()) {
+                auto id = create_texture(model.normalmap);
+                textures_.insert({model.normalmap->id(), id});
+            }
+        }
+    }
+
     void Renderer::clear(const glm::vec3 color) {
         glClearDepthf(1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

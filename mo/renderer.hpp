@@ -61,9 +61,21 @@ public:
     void add_vertex_program(const std::string path,
                             const std::string vertex_shader_source,
                             const std::string fragment_shader_source);
+
     void add_particle_program(const std::string name,
                               const std::string vs_source,
                               const std::string fs_source);
+
+    void init(const Model & model);
+
+    template<class It>
+    void init(It begin, It end) {
+        for (auto it = begin; it != end; it++){
+            init(*it);
+        }
+    }
+
+
     /**
      * Renders a Model object.
      *
