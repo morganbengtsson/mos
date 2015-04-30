@@ -110,7 +110,7 @@ namespace mo {
             }
             return textures_.at(file_name);
         }
-        else{
+        else {
             return std::shared_ptr<Texture2D>(nullptr);
         }
     }
@@ -148,7 +148,7 @@ namespace mo {
     std::shared_ptr<Material> Assets::material(const std::string file_name) const{
 
          if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
-             std::cout << "Loading: " << directory_ + file_name << std::endl;
+            std::cout << "Loading: " << directory_ + file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
             glm::vec3 ambient;
             glm::vec3 diffuse;

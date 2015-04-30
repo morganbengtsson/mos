@@ -230,13 +230,6 @@ namespace mo {
     }
 
     void Renderer::update(Particles & particles, const glm::mat4 view, const glm::mat4 projection) {
-
-        /*
-        if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
-            array_buffers_.insert(ArrayPair(particles.id(),
-                    ogli::createArrayBuffer(particles.end(), particles.end())));
-        }*/
-
         if(vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
             unsigned int vertex_array;
             glGenVertexArrays(1, &vertex_array);
@@ -251,24 +244,21 @@ namespace mo {
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     array_buffers_.insert({particles.id(), array_buffer});
                 }
-                glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()));
+                glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
                     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
                     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
-
+                    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                                          reinterpret_cast<const void *>(sizeof(glm::vec3) + sizeof(glm::vec4)));
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                     glEnableVertexAttribArray(0);
                     glEnableVertexAttribArray(1);
+                    glEnableVertexAttribArray(2);
             glBindVertexArray(0);
             vertex_arrays_.insert({particles.id(), vertex_array});
         }
 
         if (!particles.valid) {
-            /*
-            ogli::updateArrayBuffer(array_buffers_.at(particles.id()),
-                    particles.begin(),
-                    particles.end());*/
-
             glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
             glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                          particles.data(),
