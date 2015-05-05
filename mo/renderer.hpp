@@ -14,6 +14,7 @@
 #include "particles.hpp"
 #include "light.hpp"
 #include "render_target.hpp"
+#include "camera.hpp"
 
 #include <unordered_map>
 
@@ -91,6 +92,24 @@ public:
                 const Light & light = Light()){
         for (auto it = begin; it != end; ++it){
             update(*it, transform, view, projection, opacity, program_name, light);
+        }
+    }
+
+    void update(const Model & model,
+                const Camera & camera,
+                const float opacity = 1.0f,
+                const std::string program_name = "standard",
+                const Light & light = Light());
+
+    template<class It>
+    void update(It begin,
+                It end,
+                const Camera & camera,
+                const float opacity = 1.0f,
+                const std::string program_name = "standard",
+                const Light & light = Light()){
+        for (auto it = begin; it != end; ++it) {
+            update(*it, camera, opacity, program_name, light);
         }
     }
 
