@@ -52,8 +52,8 @@ add_subdirectory(externals/stb)
 include_directories(externals/stb)
 
 # mo
-file(GLOB ROOT_SOURCE mo/*.cpp)
-file(GLOB ROOT_HEADER mo/*.hpp)
+file(GLOB_RECURSE ROOT_SOURCE mo/*.cpp)
+file(GLOB_RECURSE ROOT_HEADER mo/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
