@@ -60,7 +60,7 @@ file(GLOB GEOMETRY_SHADERS shaders/*.geom)
 add_subdirectory(mo)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
-${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
+${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} mo/camera.cpp mo/camera.hpp)
 
 IF(WIN32)
     target_link_libraries(mo OpenAL32)
