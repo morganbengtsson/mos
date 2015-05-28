@@ -75,6 +75,7 @@ public:
         }
     }
 
+    void init(std::shared_ptr<Texture2D> texture);
 
     /**
      * Renders a Model object.
