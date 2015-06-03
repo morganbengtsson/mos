@@ -52,15 +52,15 @@ add_subdirectory(externals/stb)
 include_directories(externals/stb)
 
 # mo
-file(GLOB ROOT_SOURCE mo/*.cpp)
-file(GLOB ROOT_HEADER mo/*.hpp)
+file(GLOB ROOT_SOURCE src/mo/*.cpp)
+file(GLOB ROOT_HEADER include/mo/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
-add_subdirectory(mo)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(src/mo)
+include_directories(include/mo)
 add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
-${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} mo/camera.cpp mo/camera.hpp)
+${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
 IF(WIN32)
     target_link_libraries(mo OpenAL32)
