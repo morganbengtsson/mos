@@ -39,6 +39,9 @@ namespace mo {
 
             std::cout << "Loading: " << file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
+            if (!is.good()){
+                throw std::runtime_error(directory_ + file_name + " does not exist.");
+            }
             int num_vertices;
             int num_indices;
 		    is.read((char*) &num_vertices, sizeof (int));
