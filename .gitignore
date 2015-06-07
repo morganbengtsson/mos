@@ -2,3 +2,5 @@
 /build/
 /doc/html/
 /doc/latex/
+*.autosave
+*.bak
