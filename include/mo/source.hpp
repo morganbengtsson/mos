@@ -34,6 +34,7 @@ public:
            const float gain = 1.0f,
            bool loop = false,
            bool playing = false);
+    Source(const Source & source);
     virtual ~Source();
 
     /*!

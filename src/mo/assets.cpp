@@ -123,6 +123,9 @@ namespace mo {
         short * decoded;
 
         std::ifstream file(directory_ + file_name, std::ios::binary);
+        if (!file.good()){
+            throw std::runtime_error(directory_ + file_name + " does not exist.");
+        }
         std::vector<unsigned char> data;
 
         unsigned char c;

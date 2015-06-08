@@ -26,7 +26,8 @@ public:
                 const glm::vec3 velocity = glm::vec3(0.0f),
                 const float gain = 1.0f,
                 const float pitch = 1.0f);
-    virtual ~SoundSource();    
+    SoundSource(const SoundSource & sound_source);
+    virtual ~SoundSource();
     std::shared_ptr<Sound> sound;
 };
 }

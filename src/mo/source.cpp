@@ -26,6 +26,16 @@ Source::Source(const glm::vec3 position,
     id_ = current_id++;
 }
 
+Source::Source(const Source &source){
+    id_ = source.id();
+    position = source.position;
+    velocity = source.velocity;
+    pitch = source.pitch;
+    gain = source.gain;
+    loop = source.loop;
+    playing = source.playing;
+}
+
 Source::~Source() {
 }
 
