@@ -11,10 +11,6 @@ SoundSource::SoundSource(const std::shared_ptr<Sound> sound,
     sound(sound){
 }
 
-SoundSource::SoundSource(const SoundSource &sound_source) : Source(sound_source){
-    sound = sound_source.sound;
-}
-
 SoundSource::~SoundSource() {
 }
 

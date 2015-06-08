@@ -93,7 +93,7 @@ public:
     }
 
     /*!
-     * \brief Box default constructor.
+     * @brief Box default constructor.
      */
     Box();
 

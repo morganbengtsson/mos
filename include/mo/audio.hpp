@@ -25,6 +25,7 @@ namespace mo {
     class Audio {
     public:
         Audio();
+        Audio(const Audio & audio) = delete; //Do not copy
         virtual ~Audio();
 
         template<class It>
