@@ -7,10 +7,73 @@
 #include <thread>
 #include <chrono>
 #include <glm/gtx/io.hpp>
+#include <iostream>
+
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "AL/alext.h"
+#include "AL/efx-presets.h"
 
 #include "audio.hpp"
 #include "source.hpp"
 #include "soundsource.hpp"
+
+
+/* Effect object functions */
+static LPALGENEFFECTS alGenEffects;
+static LPALDELETEEFFECTS alDeleteEffects;
+static LPALISEFFECT alIsEffect;
+static LPALEFFECTI alEffecti;
+static LPALEFFECTIV alEffectiv;
+static LPALEFFECTF alEffectf;
+static LPALEFFECTFV alEffectfv;
+static LPALGETEFFECTI alGetEffecti;
+static LPALGETEFFECTIV alGetEffectiv;
+static LPALGETEFFECTF alGetEffectf;
+static LPALGETEFFECTFV alGetEffectfv;
+
+/* Auxiliary Effect Slot object functions */
+static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
+static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
+static LPALISAUXILIARYEFFECTSLOT alIsAuxiliaryEffectSlot;
+static LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
+static LPALAUXILIARYEFFECTSLOTIV alAuxiliaryEffectSlotiv;
+static LPALAUXILIARYEFFECTSLOTF alAuxiliaryEffectSlotf;
+static LPALAUXILIARYEFFECTSLOTFV alAuxiliaryEffectSlotfv;
+static LPALGETAUXILIARYEFFECTSLOTI alGetAuxiliaryEffectSloti;
+static LPALGETAUXILIARYEFFECTSLOTIV alGetAuxiliaryEffectSlotiv;
+static LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
+static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
+
+void init_efx(){
+
+    alGenEffects=(LPALGENEFFECTS)alGetProcAddress("alGenEffects");
+    alDeleteEffects=(LPALDELETEEFFECTS)alGetProcAddress("alDeleteEffects");
+    alIsEffect=(LPALISEFFECT)alGetProcAddress("alIsEffect");
+    alEffecti=(LPALEFFECTI)alGetProcAddress("alEffecti");
+    alEffectiv=(LPALEFFECTIV)alGetProcAddress("alEffectiv");
+    alEffectf=(LPALEFFECTF)alGetProcAddress("alEffectf");
+    alEffectfv=(LPALEFFECTFV)alGetProcAddress("alEffectfv");
+    alGetEffecti=(LPALGETEFFECTI)alGetProcAddress("alGetEffecti");
+    alGetEffectiv=(LPALGETEFFECTIV)alGetProcAddress("alGetEffectiv");
+    alGetEffectf=(LPALGETEFFECTF)alGetProcAddress("alGetEffectf");
+    alGetEffectfv=(LPALGETEFFECTFV)alGetProcAddress("alGetEffectfv");
+
+    /* Auxiliary Effect Slot object functions */
+    alGenAuxiliaryEffectSlots=(LPALGENAUXILIARYEFFECTSLOTS)alGetProcAddress("alGenAuxiliaryEffectSlots");
+    alDeleteAuxiliaryEffectSlots=(LPALDELETEAUXILIARYEFFECTSLOTS)alGetProcAddress("alDeleteAuxiliaryEffectSlots");
+    alIsAuxiliaryEffectSlot=(LPALISAUXILIARYEFFECTSLOT)alGetProcAddress("alIsAuxiliaryEffectSlot");
+    alAuxiliaryEffectSloti=(LPALAUXILIARYEFFECTSLOTI)alGetProcAddress("alAuxiliaryEffectSloti");
+    alAuxiliaryEffectSlotiv=(LPALAUXILIARYEFFECTSLOTIV)alGetProcAddress("alAuxiliaryEffectSlotiv");
+    alAuxiliaryEffectSlotf=(LPALAUXILIARYEFFECTSLOTF)alGetProcAddress("alAuxiliaryEffectSlotf");
+    alAuxiliaryEffectSlotfv=(LPALAUXILIARYEFFECTSLOTFV)alGetProcAddress("alAuxiliaryEffectSlotfv");
+    alGetAuxiliaryEffectSloti=(LPALGETAUXILIARYEFFECTSLOTI)alGetProcAddress("alGetAuxiliaryEffectSloti");
+    alGetAuxiliaryEffectSlotiv=(LPALGETAUXILIARYEFFECTSLOTIV)alGetProcAddress("alGetAuxiliaryEffectSlotiv");
+    alGetAuxiliaryEffectSlotf=(LPALGETAUXILIARYEFFECTSLOTF)alGetProcAddress("alGetAuxiliaryEffectSlotf");
+    alGetAuxiliaryEffectSlotfv=(LPALGETAUXILIARYEFFECTSLOTFV)alGetProcAddress("alGetAuxiliaryEffectSlotfv");
+}
+
+
 namespace mo {
 
 Audio::Audio() {
@@ -18,6 +81,12 @@ Audio::Audio() {
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
     alcMakeContextCurrent(context_);
+
+    if(!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX")){
+        std::cerr << "Error: EFX not supported.\n";
+    }
+
+    init_efx();
 
     listener_position(glm::vec3(0.0f));
     listener_velocity(glm::vec3(0.0f));
@@ -81,6 +150,7 @@ void Audio::init(const SoundSource & source) {
         ALuint al_source;
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
+
         //update(source);
     }
 
@@ -109,6 +179,34 @@ void Audio::update(StreamSource & source) {
         ALuint al_source;
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
+
+        EFXEAXREVERBPROPERTIES reverb = EFX_REVERB_PRESET_GENERIC;
+        ALuint effect = 0;
+        alGenEffects(1, &effect);
+        alEffecti(effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
+        alEffectf(effect, AL_REVERB_DENSITY, reverb.flDensity);
+        alEffectf(effect, AL_REVERB_DIFFUSION, reverb.flDiffusion);
+        alEffectf(effect, AL_REVERB_GAIN, reverb.flGain);
+        alEffectf(effect, AL_REVERB_GAINHF, reverb.flGainHF);
+        alEffectf(effect, AL_REVERB_DECAY_TIME, reverb.flDecayTime);
+        alEffectf(effect, AL_REVERB_DECAY_HFRATIO, reverb.flDecayHFRatio);
+        alEffectf(effect, AL_REVERB_REFLECTIONS_GAIN, reverb.flReflectionsGain);
+        alEffectf(effect, AL_REVERB_REFLECTIONS_DELAY, reverb.flReflectionsDelay);
+        alEffectf(effect, AL_REVERB_LATE_REVERB_GAIN, reverb.flLateReverbGain);
+        alEffectf(effect, AL_REVERB_LATE_REVERB_DELAY, reverb.flLateReverbDelay);
+        alEffectf(effect, AL_REVERB_AIR_ABSORPTION_GAINHF, reverb.flAirAbsorptionGainHF);
+        alEffectf(effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, reverb.flRoomRolloffFactor);
+        alEffecti(effect, AL_REVERB_DECAY_HFLIMIT, reverb.iDecayHFLimit);
+
+        if (!effect){
+            std::cerr << "Error: Could not load effect.\n";
+        }
+
+        ALuint slot = 0;
+        alGenAuxiliaryEffectSlots(1, &slot);
+        alAuxiliaryEffectSloti(slot, AL_EFFECTSLOT_EFFECT, effect);
+        alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, slot, 0, AL_FILTER_NULL);
+
     };
 
     ALuint al_source = sources_.at(source.id());
