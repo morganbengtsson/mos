@@ -26,8 +26,9 @@ public:
                  const glm::vec3 velocity = glm::vec3(0.0f),
                  const float gain = 1.0f,
                  const float pitch = 1.0f,
-                 bool loop = false,
-                 bool playing = false);
+                 const bool loop = false,
+                 const bool playing = false,
+                 const bool occluded = false);
     virtual ~StreamSource();
 
     std::shared_ptr<Stream> stream;
