@@ -34,7 +34,8 @@ public:
            const float gain = 1.0f,
            const bool loop = false,
            const bool playing = false,
-           const bool occluded = false);
+           const bool occluded = false,
+           const bool outside = false);
     virtual ~Source();
 
     /*!
@@ -78,6 +79,12 @@ public:
      * Describes if the source is occluded by geometry.
      */
     bool occluded;
+
+    /*!
+     * @brief Sound otside or not.
+     * Describes if the source is outside or inside. This affects the reverb effect.
+     */
+    bool outside;
 private:
     unsigned int id_;
 

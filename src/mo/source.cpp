@@ -13,16 +13,18 @@ Source::Source(const glm::vec3 position,
                const glm::vec3 velocity,
                const float pitch,
                const float gain,
-               bool loop,
-               bool playing,
-               bool occluded)
+               const bool loop,
+               const bool playing,
+               const bool occluded,
+               const bool outside)
     : position(position),
       velocity(velocity),
       pitch(pitch),
       gain(gain),
       loop(loop),
       playing(playing),
-      occluded(occluded) {
+      occluded(occluded),
+      outside(outside) {
     static unsigned int current_id = 0;
     id_ = current_id++;
 }

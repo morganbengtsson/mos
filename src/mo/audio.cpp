@@ -73,7 +73,7 @@ void init_efx(){
 
 namespace mo {
 
-Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_GENERIC), reverb_effect(0), reverb_slot(0){
+Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0), reverb_slot(0){
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
@@ -105,6 +105,13 @@ Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_GENERIC), reverb_effect(0), 
     if (!reverb_effect) {
         throw std::runtime_error("Could not create reverb effect.");
     }
+
+    alGenAuxiliaryEffectSlots(1, &reverb_slot);
+    if(!reverb_slot){
+        throw std::runtime_error("Could not create reverb slot.");
+    }
+
+    alAuxiliaryEffectSloti(reverb_slot, AL_EFFECTSLOT_EFFECT, reverb_effect);
 
     listener_position(glm::vec3(0.0f));
     listener_velocity(glm::vec3(0.0f));
@@ -169,6 +176,9 @@ void Audio::init(const SoundSource & source) {
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
 
+        //Reverb optional.
+        alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
+
         //update(source);
     }
 
@@ -198,11 +208,7 @@ void Audio::update(StreamSource & source) {
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
 
-        ALuint slot = 0;
-        alGenAuxiliaryEffectSlots(1, &slot);
-        alAuxiliaryEffectSloti(slot, AL_EFFECTSLOT_EFFECT, effect);
-        alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, slot, 0, AL_FILTER_NULL);
-
+        alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
     };
 
     ALuint al_source = sources_.at(source.id());
