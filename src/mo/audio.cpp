@@ -29,6 +29,11 @@ static LPALGETEFFECTIV alGetEffectiv;
 static LPALGETEFFECTF alGetEffectf;
 static LPALGETEFFECTFV alGetEffectfv;
 
+// Filter object functions
+static LPALGENFILTERS alGenFilters;
+static LPALFILTERI alFilteri;
+static LPALFILTERF alFilterf;
+
 /* Auxiliary Effect Slot object functions */
 static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
 static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
@@ -56,6 +61,10 @@ void init_efx(){
     alGetEffectf=(LPALGETEFFECTF)alGetProcAddress("alGetEffectf");
     alGetEffectfv=(LPALGETEFFECTFV)alGetProcAddress("alGetEffectfv");
 
+    alGenFilters = (LPALGENFILTERS)alGetProcAddress("alGenFilters");
+    alFilteri = (LPALFILTERI)alGetProcAddress("alFilteri");
+    alFilterf = (LPALFILTERF)alGetProcAddress("alFilterf");
+
     /* Auxiliary Effect Slot object functions */
     alGenAuxiliaryEffectSlots=(LPALGENAUXILIARYEFFECTSLOTS)alGetProcAddress("alGenAuxiliaryEffectSlots");
     alDeleteAuxiliaryEffectSlots=(LPALDELETEAUXILIARYEFFECTSLOTS)alGetProcAddress("alDeleteAuxiliaryEffectSlots");
@@ -67,13 +76,16 @@ void init_efx(){
     alGetAuxiliaryEffectSloti=(LPALGETAUXILIARYEFFECTSLOTI)alGetProcAddress("alGetAuxiliaryEffectSloti");
     alGetAuxiliaryEffectSlotiv=(LPALGETAUXILIARYEFFECTSLOTIV)alGetProcAddress("alGetAuxiliaryEffectSlotiv");
     alGetAuxiliaryEffectSlotf=(LPALGETAUXILIARYEFFECTSLOTF)alGetProcAddress("alGetAuxiliaryEffectSlotf");
-    alGetAuxiliaryEffectSlotfv=(LPALGETAUXILIARYEFFECTSLOTFV)alGetProcAddress("alGetAuxiliaryEffectSlotfv");
+    alGetAuxiliaryEffectSlotfv=(LPALGETAUXILIARYEFFECTSLOTFV)alGetProcAddress("alGetAuxiliaryEffectSlotfv");   
 }
 
 
 namespace mo {
 
-Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0), reverb_slot(0){
+Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
+    reverb_effect(0),
+    reverb_slot(0),
+    lowpass_filter(0) {
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
@@ -107,11 +119,19 @@ Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0
     }
 
     alGenAuxiliaryEffectSlots(1, &reverb_slot);
-    if(!reverb_slot){
-        throw std::runtime_error("Could not create reverb slot.");
+    if(!reverb_slot) {
+        throw std::runtime_error("Could not create reverb effect slot.");
     }
 
     alAuxiliaryEffectSloti(reverb_slot, AL_EFFECTSLOT_EFFECT, reverb_effect);
+
+    alGenFilters(1, &lowpass_filter);
+    if (!lowpass_filter){
+        std::runtime_error("Could not create lowpass filter.");
+    }
+    alFilteri(lowpass_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+    alFilterf(lowpass_filter,AL_LOWPASS_GAIN, 0.5f); // 0.5f
+    alFilterf(lowpass_filter,AL_LOWPASS_GAINHF, 0.05f); // 0.01f
 
     listener_position(glm::vec3(0.0f));
     listener_velocity(glm::vec3(0.0f));
@@ -179,6 +199,8 @@ void Audio::init(const SoundSource & source) {
         //Reverb optional.
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
 
+        //alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter);
+
         //update(source);
     }
 
@@ -209,6 +231,7 @@ void Audio::update(StreamSource & source) {
         sources_.insert(SourcePair(source.id(), al_source));
 
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
+        //alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter);
     };
 
     ALuint al_source = sources_.at(source.id());
@@ -218,6 +241,9 @@ void Audio::update(StreamSource & source) {
     alSource3f(al_source, AL_POSITION, source.position.x,
                source.position.y, source.position.z);
     alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
+
+    // Occlusion filter
+    alSourcei(al_source, AL_DIRECT_FILTER, source.occluded ? lowpass_filter : 0);
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -294,6 +320,8 @@ void Audio::update(SoundSource &source)
         alSource3f(al_source, AL_POSITION, source.position.x,
                    source.position.y, source.position.z);
         alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
+
+        alSourcei(al_source, AL_DIRECT_FILTER, source.occluded ? lowpass_filter : 0);
 
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);
