@@ -9,10 +9,7 @@
 #include <glm/gtx/io.hpp>
 #include <iostream>
 
-#include "AL/al.h"
-#include "AL/alc.h"
-#include "AL/alext.h"
-#include "AL/efx-presets.h"
+
 
 #include "audio.hpp"
 #include "source.hpp"
@@ -76,14 +73,14 @@ void init_efx(){
 
 namespace mo {
 
-Audio::Audio() {
+Audio::Audio(): reverb(EFX_REVERB_PRESET_GENERIC) {
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
     alcMakeContextCurrent(context_);
 
     if(!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX")){
-        std::cerr << "Error: EFX not supported.\n";
+        throw std::runtime_error("OpenAL EFX not supported.");
     }
 
     init_efx();
@@ -180,7 +177,6 @@ void Audio::update(StreamSource & source) {
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
 
-        EFXEAXREVERBPROPERTIES reverb = EFX_REVERB_PRESET_GENERIC;
         ALuint effect = 0;
         alGenEffects(1, &effect);
         alEffecti(effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);

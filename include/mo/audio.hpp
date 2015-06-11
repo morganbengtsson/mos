@@ -8,11 +8,14 @@
 #ifndef MO_AUDIO_H
 #define	MO_AUDIO_H
 
-#include <AL/al.h>
-#include <AL/alc.h>
 #include <unordered_map>
 #include <memory>
 #include <thread>
+
+#include "AL/al.h"
+#include "AL/alc.h"
+#include "AL/alext.h"
+#include "AL/efx-presets.h"
 
 #include "streamsource.hpp"
 #include "soundsource.hpp"
@@ -145,6 +148,8 @@ namespace mo {
 
         ALCdevice * device_;
         ALCcontext * context_;
+
+        EFXEAXREVERBPROPERTIES reverb;
 
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;
