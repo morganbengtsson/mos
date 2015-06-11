@@ -149,7 +149,9 @@ namespace mo {
         ALCdevice * device_;
         ALCcontext * context_;
 
-        EFXEAXREVERBPROPERTIES reverb;
+        EFXEAXREVERBPROPERTIES reverb_properties;
+        ALuint reverb_effect;
+        ALuint reverb_slot;
 
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;

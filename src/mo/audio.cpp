@@ -73,7 +73,7 @@ void init_efx(){
 
 namespace mo {
 
-Audio::Audio(): reverb(EFX_REVERB_PRESET_GENERIC) {
+Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_GENERIC), reverb_effect(0), reverb_slot(0){
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
@@ -84,6 +84,27 @@ Audio::Audio(): reverb(EFX_REVERB_PRESET_GENERIC) {
     }
 
     init_efx();
+
+    ALuint reverb_effect = 0;
+    alGenEffects(1, &reverb_effect);
+    alEffecti(reverb_effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
+    alEffectf(reverb_effect, AL_REVERB_DENSITY, reverb_properties.flDensity);
+    alEffectf(reverb_effect, AL_REVERB_DIFFUSION, reverb_properties.flDiffusion);
+    alEffectf(reverb_effect, AL_REVERB_GAIN, reverb_properties.flGain);
+    alEffectf(reverb_effect, AL_REVERB_GAINHF, reverb_properties.flGainHF);
+    alEffectf(reverb_effect, AL_REVERB_DECAY_TIME, reverb_properties.flDecayTime);
+    alEffectf(reverb_effect, AL_REVERB_DECAY_HFRATIO, reverb_properties.flDecayHFRatio);
+    alEffectf(reverb_effect, AL_REVERB_REFLECTIONS_GAIN, reverb_properties.flReflectionsGain);
+    alEffectf(reverb_effect, AL_REVERB_REFLECTIONS_DELAY, reverb_properties.flReflectionsDelay);
+    alEffectf(reverb_effect, AL_REVERB_LATE_REVERB_GAIN, reverb_properties.flLateReverbGain);
+    alEffectf(reverb_effect, AL_REVERB_LATE_REVERB_DELAY, reverb_properties.flLateReverbDelay);
+    alEffectf(reverb_effect, AL_REVERB_AIR_ABSORPTION_GAINHF, reverb_properties.flAirAbsorptionGainHF);
+    alEffectf(reverb_effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, reverb_properties.flRoomRolloffFactor);
+    alEffecti(reverb_effect, AL_REVERB_DECAY_HFLIMIT, reverb_properties.iDecayHFLimit);
+
+    if (!reverb_effect) {
+        throw std::runtime_error("Could not create reverb effect.");
+    }
 
     listener_position(glm::vec3(0.0f));
     listener_velocity(glm::vec3(0.0f));
@@ -176,27 +197,6 @@ void Audio::update(StreamSource & source) {
         ALuint al_source;
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
-
-        ALuint effect = 0;
-        alGenEffects(1, &effect);
-        alEffecti(effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
-        alEffectf(effect, AL_REVERB_DENSITY, reverb.flDensity);
-        alEffectf(effect, AL_REVERB_DIFFUSION, reverb.flDiffusion);
-        alEffectf(effect, AL_REVERB_GAIN, reverb.flGain);
-        alEffectf(effect, AL_REVERB_GAINHF, reverb.flGainHF);
-        alEffectf(effect, AL_REVERB_DECAY_TIME, reverb.flDecayTime);
-        alEffectf(effect, AL_REVERB_DECAY_HFRATIO, reverb.flDecayHFRatio);
-        alEffectf(effect, AL_REVERB_REFLECTIONS_GAIN, reverb.flReflectionsGain);
-        alEffectf(effect, AL_REVERB_REFLECTIONS_DELAY, reverb.flReflectionsDelay);
-        alEffectf(effect, AL_REVERB_LATE_REVERB_GAIN, reverb.flLateReverbGain);
-        alEffectf(effect, AL_REVERB_LATE_REVERB_DELAY, reverb.flLateReverbDelay);
-        alEffectf(effect, AL_REVERB_AIR_ABSORPTION_GAINHF, reverb.flAirAbsorptionGainHF);
-        alEffectf(effect, AL_REVERB_ROOM_ROLLOFF_FACTOR, reverb.flRoomRolloffFactor);
-        alEffecti(effect, AL_REVERB_DECAY_HFLIMIT, reverb.iDecayHFLimit);
-
-        if (!effect){
-            std::cerr << "Error: Could not load effect.\n";
-        }
 
         ALuint slot = 0;
         alGenAuxiliaryEffectSlots(1, &slot);
