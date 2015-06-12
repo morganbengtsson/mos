@@ -7,6 +7,7 @@
 #include <glm/gtx/io.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/component_wise.hpp>
 
 namespace mo {
 
@@ -202,14 +203,16 @@ BoxIntersection Box::intersects(const Box &other) {
     return BoxIntersection{true, normal, distance};
 }
 
-glm::mat4 Box::transform() const
-{
+glm::mat4 Box::transform() const {
     return transform_;
 }
 
-void Box::transform(const glm::mat4 &transform)
-{
+void Box::transform(const glm::mat4 &transform){
     transform_ = transform;
+}
+
+float Box::volume() const {
+    return glm::abs(glm::compMul(max() - min()));
 }
 
 }

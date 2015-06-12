@@ -34,7 +34,7 @@ public:
            const float gain = 1.0f,
            const bool loop = false,
            const bool playing = false,
-           const bool occluded = false,
+           const float occlusion_factor = 0.0f,
            const bool outside = false);
     virtual ~Source();
 
@@ -78,7 +78,7 @@ public:
      * @brief Occluded by geometry.
      * Describes if the source is occluded by geometry.
      */
-    bool occluded;
+    float occlusion_factor;
 
     /*!
      * @brief Sound otside or not.

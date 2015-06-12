@@ -153,7 +153,8 @@ namespace mo {
         ALuint reverb_effect;
         ALuint reverb_slot;
 
-        ALuint lowpass_filter;
+        ALuint lowpass_filter1;
+        ALuint lowpass_filter2;
 
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;

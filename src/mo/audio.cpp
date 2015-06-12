@@ -85,7 +85,10 @@ namespace mo {
 Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
     reverb_effect(0),
     reverb_slot(0),
-    lowpass_filter(0) {
+    lowpass_filter1(0),
+    lowpass_filter2(0),
+    lowpass_filter3(0),
+    lowpass_filter4(0) {
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
@@ -125,13 +128,21 @@ Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
 
     alAuxiliaryEffectSloti(reverb_slot, AL_EFFECTSLOT_EFFECT, reverb_effect);
 
-    alGenFilters(1, &lowpass_filter);
-    if (!lowpass_filter){
+    alGenFilters(1, &lowpass_filter1);
+    if (!lowpass_filter1){
         std::runtime_error("Could not create lowpass filter.");
     }
-    alFilteri(lowpass_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alFilterf(lowpass_filter,AL_LOWPASS_GAIN, 0.5f); // 0.5f
-    alFilterf(lowpass_filter,AL_LOWPASS_GAINHF, 0.05f); // 0.01f
+    alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+    alFilterf(lowpass_filter1,AL_LOWPASS_GAIN, 0.5f); // 0.5f
+    alFilterf(lowpass_filter1,AL_LOWPASS_GAINHF, 0.05f); // 0.01f
+
+    alGenFilters(1, &lowpass_filter2);
+    if (!lowpass_filter2){
+        std::runtime_error("Could not create lowpass filter.");
+    }
+    alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+    alFilterf(lowpass_filter2,AL_LOWPASS_GAIN, 0.3f); // 0.5f
+    alFilterf(lowpass_filter2,AL_LOWPASS_GAINHF, 0.01f); // 0.01f
 
     listener_position(glm::vec3(0.0f));
     listener_velocity(glm::vec3(0.0f));
@@ -243,7 +254,25 @@ void Audio::update(StreamSource & source) {
     alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
     // Occlusion filter
-    alSourcei(al_source, AL_DIRECT_FILTER, source.occluded ? lowpass_filter : 0);
+    if (source.occlusion_factor > 0.0f && source.occlusion_factor < 0.5f){
+        alSourcei(al_source, AL_DIRECT_FILTER, 0);
+    }
+    else if (source.occlusion_factor > 0.5 && source.occlusion_factor < 2.0f) {
+         alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter1);
+    }
+
+    else if (source.occlusion_factor > 5.0f) {
+        alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter2);
+    }
+    /*
+    else if(source.occlusion_factor == 3) {
+        alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter3);
+    }
+    else if (source.occlusion_factor >=4) {
+        alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter4);
+    }
+    */
+    source.occlusion_factor = 0;
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -321,7 +350,24 @@ void Audio::update(SoundSource &source)
                    source.position.y, source.position.z);
         alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
-        alSourcei(al_source, AL_DIRECT_FILTER, source.occluded ? lowpass_filter : 0);
+        // Occlusion filter TODO
+        if (source.occlusion_factor == 0){
+        alSourcei(al_source, AL_DIRECT_FILTER, 0);
+        }
+        else if (source.occlusion_factor == 1) {
+             alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter1);
+        }
+        else if (source.occlusion_factor == 2) {
+            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter2);
+        }
+        else if(source.occlusion_factor == 3) {
+            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter3);
+        }
+        else if (source.occlusion_factor >=4) {
+            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter4);
+        }
+        source.occlusion_factor = 0;
+
 
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);
