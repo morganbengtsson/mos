@@ -159,10 +159,13 @@ namespace mo {
         using SourcePair = std::pair<unsigned int, ALuint>;
         using BufferPair = std::pair<unsigned int, ALuint>;
         using Sources = std::unordered_map<unsigned int, ALuint>;
-        using Buffers = std::unordered_map<unsigned int, ALuint>;     
+        using Buffers = std::unordered_map<unsigned int, ALuint>;
+        using Filters = std::unordered_map<unsigned int, ALuint>;
+
 
         Sources sources_;
-        Buffers buffers_;       
+        Buffers buffers_;
+        Filters filters_;
 
         std::unordered_map<unsigned int, StreamThread> stream_threads;		
     };

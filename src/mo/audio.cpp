@@ -86,9 +86,8 @@ Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
     reverb_effect(0),
     reverb_slot(0),
     lowpass_filter1(0),
-    lowpass_filter2(0),
-    lowpass_filter3(0),
-    lowpass_filter4(0) {
+    lowpass_filter2(0)
+ {
     ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
     device_ = alcOpenDevice(NULL);
     context_ = alcCreateContext(device_, contextAttr);
@@ -242,7 +241,15 @@ void Audio::update(StreamSource & source) {
         sources_.insert(SourcePair(source.id(), al_source));
 
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
-        //alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter);
+
+
+        ALuint al_filter;
+        alGenFilters(1, &al_filter);
+        filters_.insert(SourcePair(source.id(), al_filter));
+        alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        alFilterf(al_filter,AL_LOWPASS_GAIN, 0.5f); // 0.5f
+        alFilterf(al_filter,AL_LOWPASS_GAINHF, 0.01f); // 0.01f
+        alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
     };
 
     ALuint al_source = sources_.at(source.id());
@@ -253,7 +260,15 @@ void Audio::update(StreamSource & source) {
                source.position.y, source.position.z);
     alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
+    ALuint al_filter = filters_.at(source.id());
+    alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+    alFilterf(al_filter,AL_LOWPASS_GAIN, 4.0f - source.occlusion_factor); // 0.5f
+    std::cout << "f: "<< 4.0f - source.occlusion_factor << std::endl;
+    alFilterf(al_filter,AL_LOWPASS_GAINHF, 2.0 - source.occlusion_factor); // 0.01f
+    alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+
     // Occlusion filter
+    /*
     if (source.occlusion_factor > 0.0f && source.occlusion_factor < 0.5f){
         alSourcei(al_source, AL_DIRECT_FILTER, 0);
     }
@@ -264,6 +279,7 @@ void Audio::update(StreamSource & source) {
     else if (source.occlusion_factor > 5.0f) {
         alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter2);
     }
+    */
     /*
     else if(source.occlusion_factor == 3) {
         alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter3);
@@ -360,12 +376,7 @@ void Audio::update(SoundSource &source)
         else if (source.occlusion_factor == 2) {
             alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter2);
         }
-        else if(source.occlusion_factor == 3) {
-            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter3);
-        }
-        else if (source.occlusion_factor >=4) {
-            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter4);
-        }
+
         source.occlusion_factor = 0;
 
 
