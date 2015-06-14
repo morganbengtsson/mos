@@ -34,6 +34,7 @@ public:
            const float gain = 1.0f,
            const bool loop = false,
            const bool playing = false,
+           const float max_distance = 10.0f,
            const float occlusion_factor = 0.0f,
            const bool outside = false);
     virtual ~Source();
@@ -85,6 +86,11 @@ public:
      * Describes if the source is outside or inside. This affects the reverb effect.
      */
     bool outside;
+
+    /*!
+     * @brief Max distance where the sound is heared.
+     */
+    float max_distance;
 private:
     unsigned int id_;
 
