@@ -15,8 +15,7 @@ Source::Source(const glm::vec3 position,
                const float gain,
                const bool loop,
                const bool playing,
-               const float max_distance,
-               const float occlusion_factor,
+               const float obstructed,
                const bool outside)
     : position(position),
       velocity(velocity),
@@ -24,8 +23,7 @@ Source::Source(const glm::vec3 position,
       gain(gain),
       loop(loop),
       playing(playing),
-      max_distance(max_distance),
-      occlusion_factor(occlusion_factor),
+      obstructed(obstructed),
       outside(outside) {
     static unsigned int current_id = 0;
     id_ = current_id++;

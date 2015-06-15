@@ -31,8 +31,11 @@ static LPALGETEFFECTFV alGetEffectfv;
 
 // Filter object functions
 static LPALGENFILTERS alGenFilters;
+static LPALDELETEFILTERS alDeleteFilters;
 static LPALFILTERI alFilteri;
 static LPALFILTERF alFilterf;
+static LPALGETFILTERI alGetFilteri;
+static LPALGETFILTERF alGetFilterf;
 
 /* Auxiliary Effect Slot object functions */
 static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
@@ -62,8 +65,11 @@ void init_efx(){
     alGetEffectfv=(LPALGETEFFECTFV)alGetProcAddress("alGetEffectfv");
 
     alGenFilters = (LPALGENFILTERS)alGetProcAddress("alGenFilters");
+    alDeleteFilters = (LPALDELETEFILTERS)alGetProcAddress("alDeleteFilters");
     alFilteri = (LPALFILTERI)alGetProcAddress("alFilteri");
     alFilterf = (LPALFILTERF)alGetProcAddress("alFilterf");
+    alGetFilteri = (LPALGETFILTERI)alGetProcAddress("alGetFilteri");
+    alGetFilterf = (LPALGETFILTERF)alGetProcAddress("alGetFilterf");
 
     /* Auxiliary Effect Slot object functions */
     alGenAuxiliaryEffectSlots=(LPALGENAUXILIARYEFFECTSLOTS)alGetProcAddress("alGenAuxiliaryEffectSlots");
@@ -132,11 +138,11 @@ Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
         std::runtime_error("Could not create lowpass filter.");
     }
     alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alFilterf(lowpass_filter1,AL_LOWPASS_GAIN, 0.5f); // 0.5f
+    alFilterf(lowpass_filter1,AL_LOWPASS_GAIN, 0.6f); // 0.5f
     alFilterf(lowpass_filter1,AL_LOWPASS_GAINHF, 0.05f); // 0.01f
 
     alGenFilters(1, &lowpass_filter2);
-    if (!lowpass_filter2){
+    if (!lowpass_filter2) {
         std::runtime_error("Could not create lowpass filter.");
     }
     alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -168,6 +174,7 @@ Audio::~Audio() {
 
 glm::vec3 Audio::listener_position() {
     glm::vec3 position;
+
     alGetListener3f(AL_POSITION, & position.x, & position.y, & position.z);
     return position;
 }
@@ -209,9 +216,11 @@ void Audio::init(const SoundSource & source) {
         //Reverb optional.
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
 
-        //alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter);
-
-        //update(source);
+        ALuint al_filter;
+        alGenFilters(1, &al_filter);
+        filters_.insert(SourcePair(source.id(), al_filter));
+        alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
     }
 
     auto sound = source.sound;
@@ -234,12 +243,18 @@ void Audio::init(const StreamSource & stream_source) {
 
 }
 
-void Audio::update(StreamSource & source) {
+void Audio::update(StreamSource & source, const float dt) {
     if (sources_.find(source.id()) == sources_.end()) {
         ALuint al_source;
         alGenSources(1, &al_source);
         sources_.insert(SourcePair(source.id(), al_source));
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
+
+        ALuint al_filter;
+        alGenFilters(1, &al_filter);
+        filters_.insert(SourcePair(source.id(), al_filter));
+        alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
     };
 
     ALuint al_source = sources_.at(source.id());
@@ -250,8 +265,22 @@ void Audio::update(StreamSource & source) {
                source.position.y, source.position.z);
     alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
-    //alSourcei(al_source, AL_MAX_DISTANCE)
+    auto al_filter = filters_[source.id()];
+    float ob = source.obstructed >= 1.0f ? -1.0f : 1.0f;
+    ALfloat al_gain;
+    alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
+    float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
 
+    ALfloat al_gain_hf;
+    alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
+    float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
+
+    alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);    
+    alFilterf(al_filter,AL_LOWPASS_GAIN, gain); // 0.5f
+    alFilterf(al_filter,AL_LOWPASS_GAINHF, gain_hf); // 0.01f
+    alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+
+    source.obstructed = 0.0f;
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -298,9 +327,7 @@ void Audio::update(StreamSource & source) {
                                                                            }
                                                                            stream.seek_start();
                                                                            alDeleteBuffers(2, buffers);
-                                                                       }, al_source, source.stream, source.loop)), true}));    
-																	   
-														   
+                                                                       }, al_source, source.stream, source.loop)), true}));
     }
 	
 	
@@ -318,7 +345,7 @@ void Audio::update(StreamSource & source) {
     }*/
 }
 
-void Audio::update(SoundSource &source)
+void Audio::update(SoundSource &source, const float dt)
 {
     if (sources_.find(source.id()) != sources_.end()) {
         ALuint al_source = sources_.at(source.id());
@@ -329,19 +356,22 @@ void Audio::update(SoundSource &source)
                    source.position.y, source.position.z);
         alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
 
-        // Occlusion filter TODO
-        if (source.occlusion_factor == 0){
-        alSourcei(al_source, AL_DIRECT_FILTER, 0);
-        }
-        else if (source.occlusion_factor == 1) {
-             alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter1);
-        }
-        else if (source.occlusion_factor == 2) {
-            alSourcei(al_source, AL_DIRECT_FILTER, lowpass_filter2);
-        }
+        auto al_filter = filters_[source.id()];
+        float ob = source.obstructed >= 1.0f ? -1.0f : 1.0f;
+        ALfloat al_gain;
+        alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
+        float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
 
-        source.occlusion_factor = 0;
+        ALfloat al_gain_hf;
+        alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
+        float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
 
+        alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        alFilterf(al_filter,AL_LOWPASS_GAIN, gain); // 0.5f
+        alFilterf(al_filter,AL_LOWPASS_GAINHF, gain_hf); // 0.01f
+        alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+
+        source.obstructed = 0.0f;
 
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);

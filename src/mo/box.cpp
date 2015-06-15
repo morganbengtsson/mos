@@ -14,11 +14,17 @@ namespace mo {
 Box::Box(){
 }
 
-Box::Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform) :
-    transform_(transform), min_(min), max_(max) {
-    if(glm::all(glm::lessThan(max_, min_))){
-        throw std::invalid_argument("Min must be less than max.");
-    }
+Box::Box(const glm::vec3 & min,
+         const glm::vec3 & max,
+         const glm::mat4 & transform,
+         const float obstruction) :
+    transform_(transform),
+    min_(min),
+    max_(max),
+    obstruction_(obstruction) {
+        if(glm::all(glm::lessThan(max_, min_))){
+            throw std::invalid_argument("Min must be less than max.");
+        }
 }
 
 glm::vec3 Box::min() const {
@@ -213,6 +219,10 @@ void Box::transform(const glm::mat4 &transform){
 
 float Box::volume() const {
     return glm::abs(glm::compMul(max() - min()));
+}
+
+float Box::obstruction() const {
+    return obstruction_;
 }
 
 }

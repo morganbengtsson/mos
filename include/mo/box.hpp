@@ -69,7 +69,8 @@ public:
      * Constructor for an AABB box, created from vertices.
      *
      */
-    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform_(transform) {
+    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform, const float obstruction = 0.0f) :
+        transform_(transform), obstruction_(obstruction) {
         glm::vec3 min, max;
 
         if (begin != end) {
@@ -103,7 +104,10 @@ public:
      * \param max corner.
      * \param transform location.
      */
-    Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
+    Box(const glm::vec3 & min,
+        const glm::vec3 & max,
+        const glm::mat4 & transform,
+        const float obstruction = 0.0f);
 
     /*!
      * \brief min
@@ -157,10 +161,18 @@ public:
      * @brief Get box volume.
      */
     float volume() const;
+
+    /*!
+     * @brief Obstruction factor
+     *
+     * Between 0.0 - 1.0
+     */
+    float obstruction() const;
 private:
     glm::vec3 min_;
     glm::vec3 max_;
     glm::mat4 transform_;
+    float obstruction_;
 
 
 };

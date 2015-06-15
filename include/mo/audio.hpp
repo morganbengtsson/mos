@@ -69,9 +69,9 @@ namespace mo {
          * @param begin iterator
          * @param end iterator
          */
-        void update(It begin, It end) {
+        void update(It begin, It end, const float dt) {
             for (auto it = begin; it != end; it++){
-                update(*it);
+                update(*it, dt);
             }
         }
 
@@ -83,7 +83,7 @@ namespace mo {
          * @brief update
          * @param stream_source
          */
-        void update(SoundSource & source);
+        void update(SoundSource & source, const float dt);
 
 		/**
 		* Updates the internal source representation with data. Data
@@ -92,7 +92,7 @@ namespace mo {
 		* @brief update
 		* @param stream_source
 		*/
-        void update(StreamSource & source);
+        void update(StreamSource & source, const float dt);
 
 		/**
 		* Updates the internal source representation with data. Data
@@ -160,9 +160,11 @@ namespace mo {
         using BufferPair = std::pair<unsigned int, ALuint>;
         using Sources = std::unordered_map<unsigned int, ALuint>;
         using Buffers = std::unordered_map<unsigned int, ALuint>;
+        using Filters = std::unordered_map<unsigned int, ALuint>;
 
         Sources sources_;
         Buffers buffers_;
+        Filters filters_;
 
         std::unordered_map<unsigned int, StreamThread> stream_threads;		
     };
