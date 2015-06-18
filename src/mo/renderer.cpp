@@ -419,7 +419,7 @@ namespace mo {
         glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
         glUniformMatrix3fv(uniforms.normal_matrix,1 , GL_FALSE, &normal_matrix[0][0]);
 
-        if (model.material.get() != nullptr) {
+        if (model.material != nullptr) {
             glUniform3fv(uniforms.material_ambient_color,1 , glm::value_ptr(model.material->ambient));
             glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
             glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
