@@ -433,10 +433,10 @@ namespace mo {
         glUniform3fv(uniforms.light_diffuse_color,1 ,glm::value_ptr(light.diffuse_color));
         glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
-        glUniform1i(uniforms.has_texture, model.texture.get() == nullptr ? false : true);
-        glUniform1i(uniforms.has_lightmap, model.lightmap.get() == nullptr ? false : lightmaps_ ? true : false);
-        glUniform1i(uniforms.has_normalmap, model.lightmap.get() == nullptr ? false : true);
-        glUniform1i(uniforms.has_material, model.material.get() == nullptr ? false : true);
+        glUniform1i(uniforms.has_texture, model.texture == nullptr ? false : true);
+        glUniform1i(uniforms.has_lightmap, model.lightmap == nullptr ? false : lightmaps_ ? true : false);
+        glUniform1i(uniforms.has_normalmap, model.lightmap == nullptr ? false : true);
+        glUniform1i(uniforms.has_material, model.material == nullptr ? false : true);
 
         glUniform1i(uniforms.selected, model.selected());
 
