@@ -45,6 +45,7 @@ struct VertexProgramData {
     int has_texture;
     int has_lightmap;
     int has_normalmap;
+    int has_material;
     int selected;
 };
 

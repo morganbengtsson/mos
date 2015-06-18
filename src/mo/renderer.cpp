@@ -130,6 +130,7 @@ namespace mo {
             glGetUniformLocation(program, "has_texture"),
             glGetUniformLocation(program, "has_lightmap"),
             glGetUniformLocation(program, "has_normalmap"),
+            glGetUniformLocation(program, "has_material"),
             glGetUniformLocation(program, "selected")
         }));
     }
@@ -418,10 +419,12 @@ namespace mo {
         glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
         glUniformMatrix3fv(uniforms.normal_matrix,1 , GL_FALSE, &normal_matrix[0][0]);
 
-        glUniform3fv(uniforms.material_ambient_color,1 , glm::value_ptr(model.material->ambient));
-        glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
-        glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
-        glUniform1fv(uniforms.material_specular_exponent, 1, &model.material->specular_exponent);
+        if (model.material.get() != nullptr) {
+            glUniform3fv(uniforms.material_ambient_color,1 , glm::value_ptr(model.material->ambient));
+            glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
+            glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
+            glUniform1fv(uniforms.material_specular_exponent, 1, &model.material->specular_exponent);
+        }
         //glUniform1fv(uniforms.opacity, 1, &model.material->opacity);
         glUniform1fv(uniforms.opacity, 1, &opacity);
 
@@ -433,6 +436,7 @@ namespace mo {
         glUniform1i(uniforms.has_texture, model.texture.get() == nullptr ? false : true);
         glUniform1i(uniforms.has_lightmap, model.lightmap.get() == nullptr ? false : lightmaps_ ? true : false);
         glUniform1i(uniforms.has_normalmap, model.lightmap.get() == nullptr ? false : true);
+        glUniform1i(uniforms.has_material, model.material.get() == nullptr ? false : true);
 
         glUniform1i(uniforms.selected, model.selected());
 
