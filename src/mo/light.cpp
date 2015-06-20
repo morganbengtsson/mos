@@ -9,9 +9,9 @@
 
 namespace mo {
 
-    Light::Light(const glm::vec3 position, 
-              const glm::vec3 diffuse_color, 
-              const glm::vec3 specular_color):
+    Light::Light(const glm::vec3 & position,
+              const glm::vec3 & diffuse_color,
+              const glm::vec3 & specular_color):
     position(position), 
     diffuse_color(diffuse_color), 
     specular_color(specular_color)

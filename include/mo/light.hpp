@@ -25,9 +25,9 @@ namespace mo {
          * @param diffuse_color
          * @param specular_color
          */
-        explicit Light(const glm::vec3 position = glm::vec3(0.0f), 
-              const glm::vec3 diffuse_color = glm::vec3(0.0f),
-              const glm::vec3 specular_color = glm::vec3(0.0f));
+        explicit Light(const glm::vec3 & position = glm::vec3(0.0f),
+              const glm::vec3 & diffuse_color = glm::vec3(0.0f),
+              const glm::vec3 & specular_color = glm::vec3(0.0f));
         virtual ~Light();
 
         /*!
