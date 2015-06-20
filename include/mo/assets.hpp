@@ -44,6 +44,7 @@ namespace mo {
          * @param The directory where the assets exist, relative to the run directory, default is "assets/"
          */
         Assets(const std::string directory = "assets/");
+        Assets(const Assets & assets) = delete; // Not copyable.
         virtual ~Assets();
 
         /**

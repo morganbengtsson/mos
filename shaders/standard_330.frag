@@ -14,6 +14,7 @@ uniform vec3 light_specular_color;
 uniform bool has_texture;
 uniform bool has_lightmap;
 uniform bool has_normalmap;
+uniform bool has_material;
 in vec3 fragment_position;
 in vec3 fragment_normal;
 in vec2 fragment_uv;
@@ -41,7 +42,11 @@ void main() {
     if (has_texture == true){
         tex_color = texture2D(texture, fragment_uv);
     }
-    vec4 diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, 1.0 - tex_color.a), 1.0);
+
+    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
+    if (has_material == true) {
+        diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, 1.0 - tex_color.a), 1.0);
+    }
 
     float dist = distance(light_position, fragment_position);
     float a = 1.0;
@@ -50,10 +55,13 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution* light_diffuse_color, 1.0) * diffuse_color;
 
-    vec3 surface_to_view = normalize(fragment_position);
-    vec3 reflection = reflect(normal, -surface_to_light);
-    float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);
-    vec4 specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);
+    vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
+    if (has_material){
+        vec3 surface_to_view = normalize(fragment_position);
+        vec3 reflection = reflect(normal, -surface_to_light);
+        float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);
+        specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);
+    }
 
     vec4 diffuse_static = static_light * diffuse_color;
 

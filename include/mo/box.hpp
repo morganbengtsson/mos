@@ -69,7 +69,8 @@ public:
      * Constructor for an AABB box, created from vertices.
      *
      */
-    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform) : transform_(transform) {
+    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform, const float obstruction = 0.0f) :
+        transform_(transform), obstruction_(obstruction) {
         glm::vec3 min, max;
 
         if (begin != end) {
@@ -93,7 +94,7 @@ public:
     }
 
     /*!
-     * \brief Box default constructor.
+     * @brief Box default constructor.
      */
     Box();
 
@@ -103,7 +104,10 @@ public:
      * \param max corner.
      * \param transform location.
      */
-    Box(const glm::vec3 & min, const glm::vec3 & max, const glm::mat4 & transform);
+    Box(const glm::vec3 & min,
+        const glm::vec3 & max,
+        const glm::mat4 & transform,
+        const float obstruction = 0.0f);
 
     /*!
      * \brief min
@@ -118,39 +122,57 @@ public:
     glm::vec3 max() const;
 
     /*!
-     * \brief intersect
-     * \param point1
-     * \param point2
-     * \return
+     * @brief Intersection with ray between points.
+     * @param point1
+     * @param point2
+     * @return
      */
     RayIntersection intersect(glm::vec3 point1, glm::vec3 point2);
 
     /*!
-     * \brief intersect
-     * \param origin
-     * \param direction
-     * \param t1
-     * \param t2
-     * \return
+     * @brief Intersection with ray
+     * @param origin
+     * @param direction
+     * @param t1
+     * @param t2
+     * @return
      */
     RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
 
     /*!
-     * \brief intersects
-     * \param other
-     * \return
+     * @brief intersects
+     * @param other
+     * @return
      */
     BoxIntersection intersects(const Box & other);
 
     /*!
-     * \brief transform
+     * \brief Get the transform.
      */
     glm::mat4 transform() const;
+
+    /*!
+     * @brief Set the box transform.
+     * @param transform
+     */
     void transform(const glm::mat4 & transform);
+
+    /*!
+     * @brief Get box volume.
+     */
+    float volume() const;
+
+    /*!
+     * @brief Obstruction factor
+     *
+     * Between 0.0 - 1.0
+     */
+    float obstruction() const;
 private:
     glm::vec3 min_;
     glm::vec3 max_;
     glm::mat4 transform_;
+    float obstruction_;
 
 
 };

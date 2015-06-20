@@ -39,6 +39,9 @@ namespace mo {
 
             std::cout << "Loading: " << file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
+            if (!is.good()){
+                throw std::runtime_error(directory_ + file_name + " does not exist.");
+            }
             int num_vertices;
             int num_indices;
 		    is.read((char*) &num_vertices, sizeof (int));
@@ -120,6 +123,9 @@ namespace mo {
         short * decoded;
 
         std::ifstream file(directory_ + file_name, std::ios::binary);
+        if (!file.good()){
+            throw std::runtime_error(directory_ + file_name + " does not exist.");
+        }
         std::vector<unsigned char> data;
 
         unsigned char c;
@@ -166,24 +172,8 @@ namespace mo {
             return std::make_shared<Material>(ambient, diffuse, specular,
                     opacity, specular_exponent);
         } else {
-			 //TODO: parse obj material
-			/*
-            std::vector<tinyobj::material_t> materials;
-            std::vector<tinyobj::shape_t> shapes;
-
-            auto path = directory_ + file_name;
-
-            std::string err = tinyobj::LoadObj(shapes, materials, path.c_str());
-            if (!err.empty()) {
-                std::cerr << err << std::endl;
-                throw std::runtime_error("Error reading obj file.");
-            }
-            auto m = materials.front();
-            Material material(glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]),
-                    glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]),
-                    glm::vec3(m.specular[0], m.specular[1], m.specular[2]));
-            return std::make_shared<Material>(material);
-			*/
+            //throw std::runtime_error(file_name.substr(file_name.find_last_of(".")) + " file format is not supported.");
+            return std::shared_ptr<Material>(nullptr);
         }
     }
 

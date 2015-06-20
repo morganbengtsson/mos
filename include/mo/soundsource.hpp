@@ -17,16 +17,19 @@ class SoundSource : public Source {
 public:
 
     /*!
-     * \brief SoundSource constructor
-     * \param sound shared pointer
-     * \param position
+     * @brief SoundSource constructor
+     * @param sound shared pointer
+     * @param position
      */
     explicit SoundSource(const std::shared_ptr<Sound> sound,
                 const glm::vec3 position = glm::vec3(0.0f),
                 const glm::vec3 velocity = glm::vec3(0.0f),
                 const float gain = 1.0f,
-                const float pitch = 1.0f);
-    virtual ~SoundSource();    
+                const float pitch = 1.0f,
+                const bool loop = false,
+                const bool playing = false,
+                const bool occluded = false);
+    virtual ~SoundSource();
     std::shared_ptr<Sound> sound;
 };
 }
