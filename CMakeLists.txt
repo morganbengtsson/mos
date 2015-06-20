@@ -53,7 +53,7 @@ include_directories(externals/stb)
 
 # mo
 file(GLOB ROOT_SOURCE src/mo/*.cpp)
-file(GLOB ROOT_HEADER include/mo/*.hpp)
+file(GLOB ROOT_HEADER include/mo/*.hpp include/mo/exp/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)

@@ -8,6 +8,7 @@
 #include <mo/soundsource.hpp>
 #include <mo/streamsource.hpp>
 
+namespace mo {
 class Entity
 {
 public:
@@ -35,10 +36,10 @@ public:
 
     virtual void update(const float dt) = 0;
 
-private:
     Models models;
     Sounds sounds;
     Streams streams;
 };
+}
 
 #endif // ENTITY_HPP
