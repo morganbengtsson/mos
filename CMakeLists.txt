@@ -52,14 +52,15 @@ add_subdirectory(externals/stb)
 include_directories(externals/stb)
 
 # mo
-file(GLOB ROOT_SOURCE src/mo/*.cpp)
-file(GLOB ROOT_HEADER include/mo/*.hpp include/mo/exp/*.hpp)
+file(GLOB_RECURSE ROOT_SOURCE src/mo/*.cpp)
+file(GLOB_RECURSE ROOT_HEADER include/mo/*.hpp)
+file(GLOB_RECURSE EXP_HEADER include/mo/exp/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
 add_subdirectory(src/mo)
 include_directories(include/mo)
-add_library(mo STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
+add_library(mo STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
 IF(WIN32)

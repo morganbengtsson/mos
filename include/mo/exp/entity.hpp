@@ -1,12 +1,12 @@
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#ifndef MO_ENTITY_HPP
+#define MO_ENTITY_HPP
 
 #include <vector>
 #include <memory>
 #include <initializer_list>
-#include <mo/model.hpp>
-#include <mo/soundsource.hpp>
-#include <mo/streamsource.hpp>
+#include "../model.hpp"
+#include "../soundsource.hpp"
+#include "../streamsource.hpp"
 
 namespace mo {
 class Entity
@@ -42,4 +42,4 @@ public:
 };
 }
 
-#endif // ENTITY_HPP
+#endif // MO_ENTITY_HPP
