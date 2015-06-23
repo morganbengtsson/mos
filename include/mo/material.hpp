@@ -31,7 +31,7 @@ namespace mo {
          */
         explicit Material(const glm::vec3 ambient = glm::vec3(1.0f),
                 const glm::vec3 diffuse = glm::vec3(1.0f),
-                const glm::vec3 specular = glm::vec3(0.0f),
+                const glm::vec3 specular = glm::vec3(1.0f),
                 const float opacity = 1.0f,
                 const float specular_exponent = 0.0f);
         virtual ~Material();

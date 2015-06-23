@@ -59,7 +59,7 @@ namespace mo {
 			}
 
         } else {
-            /*
+
             std::cout << "Loading: " << directory_ << file_name;
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 
@@ -77,7 +77,7 @@ namespace mo {
                 vertices.push_back(Vertex(position, normal, uv));
             }
             indices.assign(obj_model.faces.find("default")->second.begin(),
-                    obj_model.faces.find("default")->second.end());*/
+                    obj_model.faces.find("default")->second.end());
         }      
         return std::make_shared<Mesh>(vertices.begin(),
                 vertices.end(),
