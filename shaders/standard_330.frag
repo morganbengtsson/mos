@@ -31,7 +31,7 @@ void main() {
 
     vec3 normal = normalize(fragment_normal);
     if (has_normalmap == true){
-        normal = texture2D(normalmap, fragment_uv).xyz;
+        normal = normalize(texture2D(normalmap, fragment_uv).xyz);
     }
 
     vec3 surface_to_light = normalize(light_position - fragment_position);
@@ -39,7 +39,7 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);
-    if (has_texture == true){
+    if (has_texture == true) {
         tex_color = texture2D(texture, fragment_uv);
     }
 
@@ -56,7 +56,7 @@ void main() {
     vec4 diffuse = vec4(att * diffuse_contribution* light_diffuse_color, 1.0) * diffuse_color;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
-    if (has_material){
+    if (has_material) {
         vec3 surface_to_view = normalize(fragment_position);
         vec3 reflection = reflect(normal, -surface_to_light);
         float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);
