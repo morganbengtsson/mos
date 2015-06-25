@@ -9,6 +9,7 @@
 #define	MO_MESH_H
 
 #include <vector>
+#include <initializer_list>
 #include "vertex.hpp"
 #include "range.hpp"
 
@@ -42,6 +43,8 @@ public:
         elements_(elements_begin, elements_end){
         id_ = current_id++;
     }
+
+    Mesh(std::initializer_list<Vertex> vertices, std::initializer_list<int> elements);
     Mesh();
     Mesh(const Mesh & mesh);
     virtual ~Mesh();	

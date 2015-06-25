@@ -11,6 +11,9 @@ namespace mo {
     
     unsigned int Mesh::current_id = 0;
     
+    Mesh::Mesh(std::initializer_list<Vertex> vertices, std::initializer_list<int> elements) : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
+    }
+
     Mesh::Mesh() : valid(true){
         id_ = current_id++;        
     }

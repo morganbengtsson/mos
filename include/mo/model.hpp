@@ -40,7 +40,7 @@ namespace mo {
          * @param normalmap
          */
         Model(std::shared_ptr<Mesh> mesh, 
-              std::shared_ptr<Texture2D> texture,              
+              std::shared_ptr<Texture2D> texture = std::shared_ptr<Texture2D>(),
               const glm::mat4 transform = glm::mat4(1.0f),
               const Draw draw = Draw::TRIANGLES,
               std::shared_ptr<Material> material = 

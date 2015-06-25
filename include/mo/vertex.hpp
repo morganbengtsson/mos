@@ -35,8 +35,16 @@ public:
         : position(position),
           normal(normal),
           uv(uv),
-          uv_lightmap(uv_lightmap) {
-    }
+          uv_lightmap(uv_lightmap) {}
+    explicit Vertex(const float p1, const float p2, const float p3,
+                    const float n1 = 0.0f, const float n2 = 0.0f, const float n3 = 0.0f,
+                    const float u1 = 0.0f, const float u2 = 0.0f,
+                    const float ul1 = 0.0f, const float ul2 = 0.0f)
+        : Vertex(glm::vec3(p1, p2, p3),
+                 glm::vec3(n1, n2, n3),
+                 glm::vec2(u1, u2),
+                 glm::vec2(ul1, ul2)) {}
+
     ~Vertex(){
     }
 
