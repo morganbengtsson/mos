@@ -225,4 +225,10 @@ float Box::obstruction() const {
     return obstruction_;
 }
 
+glm::vec3 Box::size() const {
+    return glm::vec3(glm::abs(max_.x-min_.x),
+                     glm::abs(max_.y-min_.y),
+                     glm::abs(max_.z-min_.z));
+}
+
 }

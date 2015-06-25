@@ -541,6 +541,13 @@ void Renderer::update(const Model & model,
 
         glBindVertexArray(box_va);
 
+        glm::vec3 size = model.box.size();
+
+        std::cout << model.box.max() << model.box.min() << size;
+
+        glm::mat4 mv = view * transform * t * glm::scale(glm::mat4(1.0f), size);
+        glm::mat4 mvp = projection * view * t * transform * glm::scale(glm::mat4(1.0f), size);
+
         glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
         glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 

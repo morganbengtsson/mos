@@ -168,6 +168,8 @@ public:
      * Between 0.0 - 1.0
      */
     float obstruction() const;
+
+    glm::vec3 size() const;
 private:
     glm::vec3 min_;
     glm::vec3 max_;
