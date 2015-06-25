@@ -543,8 +543,6 @@ void Renderer::update(const Model & model,
 
         glm::vec3 size = model.box.size();
 
-        std::cout << model.box.max() << model.box.min() << size;
-
         glm::mat4 mv = view * transform * t * glm::scale(glm::mat4(1.0f), size);
         glm::mat4 mvp = projection * view * t * transform * glm::scale(glm::mat4(1.0f), size);
 
