@@ -181,6 +181,7 @@ BoxIntersection Box::intersects(const Box &other) {
     glm::vec3 maxa = this->max();      
     glm::vec3 mina = this->min();
 
+    //TODO: This swapping is kind of nasty. Look throgh the whol BB thing.
     if (maxa.x < mina.x){std::swap(maxa.x, mina.x);}
     if (maxa.y < mina.y){std::swap(maxa.y, mina.y);}
     if (maxa.z < mina.z){std::swap(maxa.z, mina.z);}
