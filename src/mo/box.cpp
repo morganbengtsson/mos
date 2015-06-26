@@ -1,5 +1,6 @@
 #include "box.hpp"
 
+#include <utility>
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
@@ -177,10 +178,20 @@ BoxIntersection Box::intersects(const Box &other) {
         glm::vec3( 0, 0, 1), // 'near' face normal (+x direction)
     };
 
-    glm::vec3 maxa = this->max();
+    glm::vec3 maxa = this->max();      
     glm::vec3 mina = this->min();
+
+    if (maxa.x < mina.x){std::swap(maxa.x, mina.x);}
+    if (maxa.y < mina.y){std::swap(maxa.y, mina.y);}
+    if (maxa.z < mina.z){std::swap(maxa.z, mina.z);}
+
     glm::vec3 maxb = other.max();
     glm::vec3 minb = other.min();
+
+
+    if (maxb.x < minb.x){std::swap(maxb.x, minb.x);}
+    if (maxb.y < minb.y){std::swap(maxb.y, minb.y);}
+    if (maxb.z < minb.z){std::swap(maxb.z, minb.z);}
 
     std::array<float, 6> distances = {
         (maxb.x - mina.x), // distance of box 'b' to face on 'left' side of 'a'.
@@ -213,8 +224,14 @@ glm::mat4 Box::transform() const {
     return transform_;
 }
 
-void Box::transform(const glm::mat4 &transform){
-    transform_ = transform;
+void Box::transform(const glm::mat4 &transform) {
+    glm::vec3 position;
+
+    position.x = transform[3][0];
+    position.y = transform[3][1];
+    position.z = transform[3][2];
+
+    transform_ = glm::translate(glm::mat4(1.0f), position);
 }
 
 float Box::volume() const {
