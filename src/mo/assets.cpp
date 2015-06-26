@@ -32,6 +32,7 @@ namespace mo {
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
+        //TODO: allow Null mesh? As of now it becomes empty.
         vector<mo::Vertex> vertices;
         vector<int> indices;
 
@@ -58,8 +59,8 @@ namespace mo {
 				is.read((char*)&indices[0], indices.size() * sizeof(int));
 			}
 
-        } else {
-            /*
+        } else if (file_name.substr(file_name.find_last_of(".") + 1) == "obj"){
+
             std::cout << "Loading: " << directory_ << file_name;
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 
@@ -77,7 +78,7 @@ namespace mo {
                 vertices.push_back(Vertex(position, normal, uv));
             }
             indices.assign(obj_model.faces.find("default")->second.begin(),
-                    obj_model.faces.find("default")->second.end());*/
+                    obj_model.faces.find("default")->second.end());
         }      
         return std::make_shared<Mesh>(vertices.begin(),
                 vertices.end(),
