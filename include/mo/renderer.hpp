@@ -103,24 +103,24 @@ public:
                 const glm::mat4 transform,
                 const glm::mat4 view,
                 const glm::mat4 projection,
-                const float opacity = 1.0f,
                 const std::string program_name = "standard",
                 const Light & light = Light());
 
 
     template<class It>
-    void update(It begin, It end, const glm::mat4 transform, const glm::mat4 view,
-                const glm::mat4 projection, const float opacity = 1.0f,
+    void update(It begin, It end,
+                const glm::mat4 transform,
+                const glm::mat4 view,
+                const glm::mat4 projection,
                 const std::string program_name = "standard",
                 const Light & light = Light()){
         for (auto it = begin; it != end; ++it){
-            update(*it, transform, view, projection, opacity, program_name, light);
+            update(*it, transform, view, projection, program_name, light);
         }
     }
 
     void update(const Model & model,
                 const Camera & camera,
-                const float opacity = 1.0f,
                 const std::string program_name = "standard",
                 const Light & light = Light());
 
@@ -128,11 +128,10 @@ public:
     void update(It begin,
                 It end,
                 const Camera & camera,
-                const float opacity = 1.0f,
                 const std::string program_name = "standard",
                 const Light & light = Light()){
         for (auto it = begin; it != end; ++it) {
-            update(*it, camera, opacity, program_name, light);
+            update(*it, camera, program_name, light);
         }
     }
 
@@ -142,7 +141,6 @@ public:
          * @param Particles object.
          * @param View matrix.
          * @param Projection matrix.
-         * @param Custom opacity of the object.
          */
     void update(Particles & particles,
                 const glm::mat4 view,

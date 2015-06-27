@@ -462,7 +462,6 @@ void Renderer::update(const Model & model,
                       const glm::mat4 transform,
                       const glm::mat4 view,
                       const glm::mat4 projection,
-                      const float opacity,
                       const std::string program_name,
                       const Light & light) {
     init(model);
@@ -507,8 +506,7 @@ void Renderer::update(const Model & model,
         glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));
         glUniform1fv(uniforms.material_specular_exponent, 1, &model.material->specular_exponent);
     }
-    //glUniform1fv(uniforms.opacity, 1, &model.material->opacity);
-    glUniform1fv(uniforms.opacity, 1, &opacity);
+    glUniform1fv(uniforms.opacity, 1, &model.opacity);
 
     //Transform light position to eye space.
     glUniform3fv(uniforms.light_position,1 , glm::value_ptr(glm::vec3(view * glm::vec4(light.position.x, light.position.y, light.position.z, 1.0f))));
@@ -558,9 +556,8 @@ void Renderer::update(const Model & model,
 
 void Renderer::update(const Model &model,
                       const Camera &camera,
-                      const float opacity,
                       const std::string program_name,
                       const Light &light) {
-    update(model, glm::mat4(1.0f), camera.view, camera.projection, opacity, program_name, light);
+    update(model, glm::mat4(1.0f), camera.view, camera.projection, program_name, light);
 }
 }

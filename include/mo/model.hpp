@@ -48,7 +48,8 @@ namespace mo {
               std::shared_ptr<Texture2D> lightmap = std::shared_ptr<Texture2D>(),
               std::shared_ptr<Texture2D> normalmap = std::shared_ptr<Texture2D>(),
               const bool selectable = false,
-              const float obstruction = 0.0f);
+              const float obstruction = 0.0f,
+              const float opacity = 1.0f);
         virtual ~Model();
 
         /*!
@@ -109,6 +110,12 @@ namespace mo {
 		* Get the color, (to be deprecated).
 		*/
         glm::vec4 color() const;
+
+
+        /*!
+         * @brief Opacity of the model.
+         */
+        float opacity;
 
 		/*!
 		* The bounding box

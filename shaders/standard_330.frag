@@ -30,7 +30,7 @@ void main() {
     }
 
     vec3 normal = normalize(fragment_normal);
-    if (has_normalmap == true){
+    if (has_normalmap == true) {
         normal = normalize(texture2D(normalmap, fragment_uv).xyz);
     }
 
@@ -70,7 +70,7 @@ void main() {
     }
 
     //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
-    color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
+    color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
     if (has_texture){
         color.a = tex_color.a + opacity;
     }

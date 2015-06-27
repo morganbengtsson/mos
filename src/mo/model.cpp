@@ -20,7 +20,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
              std::shared_ptr<Texture2D> lightmap,
              std::shared_ptr<Texture2D> normalmap,
              const bool selectable,
-             const float obstruction) :
+             const float obstruction,
+             const float opacity) :
     draw(draw),
     mesh(mesh),
     texture(texture),
@@ -31,7 +32,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     valid_(true),
     selected_(false),
     selectable(selectable),
-    box(mesh->vertices_begin(), mesh->vertices_end(), transform, obstruction){}
+    box(mesh->vertices_begin(), mesh->vertices_end(), transform, obstruction),
+    opacity(opacity){}
 
 Model::~Model() {
 }
