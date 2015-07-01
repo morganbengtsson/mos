@@ -11,7 +11,7 @@
 namespace mo {
 class Entity
 {
-public:
+public:   
     using Models = std::vector<mo::Model>;
     using Sounds = std::vector<mo::SoundSource>;
     using Streams = std::vector<mo::StreamSource>;
