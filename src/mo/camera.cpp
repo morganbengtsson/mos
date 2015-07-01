@@ -18,8 +18,17 @@ namespace mo {
         return position_;
     }
 
-    void Camera::position(glm::vec3 position) {
+    void Camera::position(const glm::vec3 & position) {
         position_ = position;
+        view = glm::lookAt(position_, center_, up_);
+    }
+
+    glm::vec3 Camera::center() const {
+        return center_;
+    }
+
+    void Camera::center(const glm::vec3 & center) {
+        center_ = center;
         view = glm::lookAt(position_, center_, up_);
     }
 }

@@ -13,7 +13,10 @@ namespace mo {
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
         glm::vec3 position() const;
-        void position(glm::vec3 position);
+        void position(const glm::vec3 & position);
+
+        glm::vec3 center() const;
+        void center(const glm::vec3 & center);
 
         glm::mat4 projection;
         glm::mat4 view;
