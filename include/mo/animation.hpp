@@ -12,7 +12,6 @@ namespace mo {
 class Animation
 {
 public:
-    Animation(std::map<unsigned int, std::shared_ptr<Mesh>> keyframes);
     Animation(std::initializer_list<std::pair<unsigned int,std::shared_ptr<Mesh>>> keyframes);
     ~Animation();
     void update(const float dt);
@@ -21,6 +20,7 @@ private:
     float time_;
     std::map<unsigned int, std::shared_ptr<Mesh>> keyframes_;
     std::shared_ptr<Mesh> mesh_;
+    int frames_per_second_;
 };
 }
 
