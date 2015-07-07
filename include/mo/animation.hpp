@@ -15,6 +15,8 @@ public:
     Animation(std::initializer_list<std::pair<unsigned int,std::shared_ptr<Mesh>>> keyframes);
     ~Animation();
     void update(const float dt);
+    int frame() const;
+    void key(int frame, std::shared_ptr<Mesh> mesh);
     std::shared_ptr<Mesh> mesh();
 private:
     float time_;

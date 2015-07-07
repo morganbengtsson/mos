@@ -13,24 +13,29 @@ time_(0.0f), frames_per_second_(30){
 Animation::~Animation() {
 }
 
+int Animation::frame() const {
+    return glm::floor(time_ * frames_per_second_);
+}
+
+void Animation::key(int frame, std::shared_ptr<Mesh> mesh){
+    keyframes_.insert({frame, mesh});
+}
+
 void Animation::update(const float dt) {
     time_ += dt;
 
-    int frame =  glm::floor(time_ * frames_per_second_);
-
-    auto next_frame = keyframes_.upper_bound(frame);
+    auto next_frame = keyframes_.upper_bound(frame());
     auto previous_frame = next_frame;
     previous_frame--;
-    std::cout << "---" << std::endl;
-    std::cout << "l: " << previous_frame->first << std::endl;
-    std::cout << frame << std::endl;
-    std::cout << "h: "  << next_frame->first << std::endl;
-    auto a =  (float)(frame - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
+    //std::cout << "---" << std::endl;
+    //std::cout << "l: " << previous_frame->first << std::endl;
+    //std::cout << frame << std::endl;
+    //std::cout << "h: "  << next_frame->first << std::endl;
+    auto a =  (float)(frame() - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
 
-    if (frame >= keyframes_.rbegin()->first){
-        time_ = 0;
+    if (frame() >= keyframes_.rbegin()->first){
+        time_ = 0;        
     }
-
     auto vertices1_it = previous_frame->second->vertices_begin();
     auto vertices2_it = next_frame->second->vertices_begin();
     for (auto vertex_it = mesh_->vertices_begin(); vertex_it != mesh_->vertices_end(); vertex_it++) {
