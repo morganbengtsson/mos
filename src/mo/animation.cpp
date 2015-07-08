@@ -4,7 +4,7 @@
 
 namespace mo {
 
-Animation::Animation(std::initializer_list<std::pair<unsigned int, std::shared_ptr<Mesh>>> keyframes):
+Animation::Animation(std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>> keyframes):
 keyframes_(keyframes.begin(), keyframes.end()),
 mesh_(std::make_shared<mo::Mesh>(*keyframes_.begin()->second)),
 time_(0.0f), frames_per_second_(30){
@@ -17,7 +17,7 @@ int Animation::frame() const {
     return glm::floor(time_ * frames_per_second_);
 }
 
-void Animation::key(int frame, std::shared_ptr<Mesh> mesh){
+void Animation::key(int frame, std::shared_ptr<const Mesh> mesh){
     keyframes_.insert({frame, mesh});
 }
 
