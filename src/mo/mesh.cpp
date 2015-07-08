@@ -44,11 +44,19 @@ namespace mo {
         elements_.push_back(element);
     }
 
+    const Mesh::Vertices & Mesh::vertices() {
+        return vertices_;
+    }
+
+    const Mesh::Elements & Mesh::elements() {
+        return elements_;
+    }
+
     const Vertex * Mesh::vertices_data() const {
         return vertices_.data();
     }
 
-    unsigned int Mesh::vertices_size() const {
+    Mesh::Vertices::size_type Mesh::vertices_size() const {
         return vertices_.size();
     }
 
@@ -56,7 +64,7 @@ namespace mo {
         return elements_.data();
     }
 
-    unsigned int Mesh::elements_size() const {
+    Mesh::Vertices::size_type Mesh::elements_size() const {
         return elements_.size();
     }
 

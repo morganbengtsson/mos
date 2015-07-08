@@ -92,10 +92,12 @@ public:
     void clear();
     void add(const Vertex vertex);
     void add(const int element);
+    const Vertices & vertices();
+    const Elements & elements();
     const Vertex * vertices_data() const;
-    unsigned int vertices_size() const;
+    Vertices::size_type vertices_size() const;
     const int * elements_data() const;
-    unsigned int elements_size() const;
+    Elements::size_type elements_size() const;
 private:
     static unsigned int current_id;
     unsigned int id_;
