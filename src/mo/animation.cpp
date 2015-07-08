@@ -7,7 +7,7 @@ namespace mo {
 Animation::Animation(std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>> keyframes):
 keyframes_(keyframes.begin(), keyframes.end()),
 mesh_(std::make_shared<mo::Mesh>(*keyframes_.begin()->second)),
-time_(0.0f), frames_per_second_(30){
+time_(0.0f), frames_per_second_(30), transition_index_(-1){
 }
 
 Animation::~Animation() {
@@ -17,8 +17,8 @@ int Animation::frame() const {
     return glm::floor(time_ * frames_per_second_);
 }
 
-void Animation::key(int frame, std::shared_ptr<const Mesh> mesh){
-    keyframes_.insert({frame, mesh});
+void Animation::reset() {
+    time_ = 0;
 }
 
 void Animation::update(const float dt) {
@@ -34,9 +34,15 @@ void Animation::update(const float dt) {
     auto a =  (float)(frame() - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
 
     if (frame() >= keyframes_.rbegin()->first){
-        time_ = 0;        
+            time_ = 0;
     }
     auto vertices1_it = previous_frame->second->vertices_begin();
+    if (previous_frame->first == 0 && transition != nullptr){
+        vertices1_it = transition->vertices_begin();
+    }
+    else {
+        transition = nullptr;
+    }
     auto vertices2_it = next_frame->second->vertices_begin();
     for (auto vertex_it = mesh_->vertices_begin(); vertex_it != mesh_->vertices_end(); vertex_it++) {
 
