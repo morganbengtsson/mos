@@ -6,6 +6,7 @@
  */
 
 #include "mesh.hpp"
+#include "util.hpp"
 
 namespace mo {
     
@@ -20,8 +21,7 @@ namespace mo {
 	
     Mesh::Mesh(const Mesh & mesh): Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(), mesh.elements_end()){		
 	}
-	
-	
+		
     
     Mesh::~Mesh() {
     }
@@ -66,6 +66,43 @@ namespace mo {
 
     Mesh::Vertices::size_type Mesh::elements_size() const {
         return elements_.size();
+    }
+
+    Mesh Mesh::operator+(const Mesh & mesh) {
+        auto vertices = vertices_ + mesh.vertices_;
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+    }
+
+    Mesh Mesh::operator-(const Mesh & mesh) {
+        auto vertices = vertices_ - mesh.vertices_;
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+    }
+
+    Mesh Mesh::operator*(const Mesh & mesh) {
+        auto vertices = vertices_ * mesh.vertices_;
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+    }
+
+    Mesh Mesh::operator *(const float number){
+        auto vertices = vertices_;
+        for (auto & vertex : vertices){
+            vertex = vertex * number;
+        }
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+    }
+
+    Mesh Mesh::operator /(const float number){
+        auto vertices = vertices_;
+        for (auto & vertex : vertices){
+            vertex = vertex / number;
+        }
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+    }
+
+
+    Mesh Mesh::operator/(const Mesh & mesh) {
+        auto vertices = vertices_ / mesh.vertices_;
+        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
     }
 
 }

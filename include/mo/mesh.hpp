@@ -81,6 +81,8 @@ public:
         return elements_.end();
     }
 
+
+
     /**
      *
      * @return A unique identifier.
@@ -98,6 +100,13 @@ public:
     Vertices::size_type vertices_size() const;
     const int * elements_data() const;
     Elements::size_type elements_size() const;
+
+    Mesh operator+(const Mesh & mesh);
+    Mesh operator-(const Mesh & mesh);
+    Mesh operator*(const Mesh & mesh);
+    Mesh operator*(const float number);
+    Mesh operator/(const float number);
+    Mesh operator/(const Mesh & mesh);
 private:
     static unsigned int current_id;
     unsigned int id_;

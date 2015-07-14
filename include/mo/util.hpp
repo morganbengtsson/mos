@@ -9,7 +9,8 @@
 #define	MO_UTIL_H
 
 #include <fstream>
-
+#include <functional>
+#include <algorithm>
 
 namespace mo {
     template <class T>
@@ -41,6 +42,72 @@ namespace mo {
                 std::istreambuf_iterator<char>());
 
         return source;
+    }
+
+    template <typename T>
+    std::vector<T>& operator+=(std::vector<T>& a, const std::vector<T>& b)
+    {
+        a.insert(a.end(), b.begin(), b.end());
+        return a;
+    }
+
+    template <typename T>
+    std::vector<T>& operator+=(std::vector<T>& aVector, const T& aObject)
+    {
+        aVector.push_back(aObject);
+        return aVector;
+    }
+
+    template <typename T>
+    std::vector<T> operator+(const std::vector<T>& a, const std::vector<T>& b)
+    {
+        assert(a.size() == b.size());
+
+        std::vector<T> result;
+        result.reserve(a.size());
+
+        std::transform(a.begin(), a.end(), b.begin(),
+                       std::back_inserter(result), std::plus<T>());
+        return result;
+    }
+
+    template <typename T>
+    std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b)
+    {
+        assert(a.size() == b.size());
+
+        std::vector<T> result;
+        result.reserve(a.size());
+
+        std::transform(a.begin(), a.end(), b.begin(),
+                       std::back_inserter(result), std::minus<T>());
+        return result;
+    }
+
+    template <typename T>
+    std::vector<T> operator*(const std::vector<T>& a, const std::vector<T>& b)
+    {
+        assert(a.size() == b.size());
+
+        std::vector<T> result;
+        result.reserve(a.size());
+
+        std::transform(a.begin(), a.end(), b.begin(),
+                       std::back_inserter(result), std::multiplies<T>());
+        return result;
+    }
+
+    template <typename T>
+    std::vector<T> operator/(const std::vector<T>& a, const std::vector<T>& b)
+    {
+        assert(a.size() == b.size());
+
+        std::vector<T> result;
+        result.reserve(a.size());
+
+        std::transform(a.begin(), a.end(), b.begin(),
+                       std::back_inserter(result), std::divides<T>());
+        return result;
     }
 }
 
