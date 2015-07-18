@@ -4,9 +4,6 @@
 [submodule "externals/objload"]
 	path = externals/objload
 	url = https://github.com/GerhardR/objload.git
-[submodule "externals/glew-cmake"]
-	path = externals/glew-cmake
-	url = https://github.com/omniavinco/glew-cmake.git
 [submodule "externals/openal-soft"]
 	path = externals/openal-soft
 	url = http://repo.or.cz/openal-soft.git
