@@ -10,6 +10,3 @@
 [submodule "externals/Optional"]
 	path = externals/Optional
 	url = https://github.com/akrzemi1/Optional.git
-[submodule "externals/glew-cmake"]
-	path = externals/glew-cmake
-	url = https://github.com/Perlmint/glew-cmake.git
