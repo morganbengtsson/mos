@@ -20,7 +20,7 @@
 #include "streamsource.hpp"
 #include "soundsource.hpp"
 
-namespace mo {    
+namespace mos {    
 
     /*!
      * Audio player class. Uses OpenAL for Windows/Linux/OSX.

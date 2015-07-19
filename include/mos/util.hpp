@@ -12,7 +12,7 @@
 #include <functional>
 #include <algorithm>
 
-namespace mo {
+namespace mos {
     template <class T>
     class ClockwiseSorter {
     private:

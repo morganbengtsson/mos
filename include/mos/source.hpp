@@ -10,7 +10,7 @@
 
 #include <glm/vec3.hpp>
 
-namespace mo {
+namespace mos {
 
 /*!
  * \brief The Source class

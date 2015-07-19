@@ -10,7 +10,7 @@
 
 #include <glm/glm.hpp>
 
-namespace mo {
+namespace mos {
 
      /*!
      * @brief The Light class

@@ -4,7 +4,7 @@
 #include <array>
 #include "stb_vorbis.h"
 
-namespace mo {
+namespace mos {
 
 struct StreamData {
     short samples[4096*8];
@@ -22,7 +22,7 @@ public:
      * @param file_name
      */
     explicit Stream(const std::string file_name_);
-    Stream(const mo::Stream & stream);
+    Stream(const mos::Stream & stream);
     ~Stream();
 
     int buffer_size;

@@ -1,7 +1,7 @@
 #include "camera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace mo {
+namespace mos {
     Camera::Camera(const glm::vec3 &position,
                    const glm::vec3 &center,
                    const glm::mat4 &projection,

@@ -1,8 +1,6 @@
-/* 
- * File:   Assets.h
- * Author: morgan
- *
- * Created on February 25, 2014, 6:38 PM
+/**
+ * @file assets.hpp
+ * @author: Morgan Bengtsson <bengtsson.morgan@gmail.com>
  */
 
 #ifndef MO_ASSETS_H
@@ -18,24 +16,48 @@
 #include "material.hpp"
 #include "stream.hpp"
 
-namespace mo {
+namespace mos {
     
-    /*!
+    /**
      * An asset class that manages heavy resources such as Textures, meshes, sounds
      * and sound streams.
      * Caches most things internally, so nothing is loaded twice. 
      */
     class Assets {
     public:
+        /**
+         * @brief Container for meshes.
+         */
         using MeshMap = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
-		using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
-		using SoundMap = std::unordered_map<std::string, std::shared_ptr<Sound>>;
-		using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
+        /**
+         * @brief Container for textures.
+         */
+        using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
+        /**
+         * @brief Container for sounds.
+         */
+        using SoundMap = std::unordered_map<std::string, std::shared_ptr<Sound>>;
+        /**
+         * @brief Container for materials.
+         */
+        using MaterialMap = std::unordered_map<std::string, std::shared_ptr<Material>>;
 
+        /**
+         * @breif Pair for MeshMap.
+         */
 		using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
-        using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;		
+        /**
+         * @brief Pair for TextureMap
+         */
+        using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
+        /**
+         * @brief Pair for SoundMap
+         */
         using SoundPair = std::pair<std::string, std::shared_ptr<Sound>>;
-        using MaterialPair =  std::pair<std::string, std::shared_ptr<Material>>;		
+        /**
+         * @brief Pair for MaterialMap.
+         */
+        using MaterialPair =  std::pair<std::string, std::shared_ptr<Material>>;
 
         /**
          * Constructor for the asset manager.

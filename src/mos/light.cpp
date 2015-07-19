@@ -7,7 +7,7 @@
 
 #include "light.hpp"
 
-namespace mo {
+namespace mos {
 
     Light::Light(const glm::vec3 & position,
               const glm::vec3 & diffuse_color,

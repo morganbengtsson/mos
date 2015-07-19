@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-namespace mo {
+namespace mos {
 
     class Camera {
     public:

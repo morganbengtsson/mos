@@ -19,7 +19,7 @@
 #include <unordered_map>
 #include <array>
 
-namespace mo {
+namespace mos {
 
 struct ParticleProgramData{
     unsigned int program;
@@ -256,7 +256,7 @@ private:
     unsigned int create_shader(const std::string source, const unsigned int type);
     bool check_shader(const unsigned int shader);
     bool check_program(const unsigned int program);
-    unsigned int create_texture(std::shared_ptr<mo::Texture2D> texture);
+    unsigned int create_texture(std::shared_ptr<mos::Texture2D> texture);
     void add_box_program(const std::string & name,
                          const std::string & vs_source,
                          const std::string & fs_source);

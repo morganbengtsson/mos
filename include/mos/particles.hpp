@@ -11,7 +11,7 @@
 #include <vector>
 #include "particle.hpp"
 
-namespace mo {
+namespace mos {
 
     class Particles {
     public:        

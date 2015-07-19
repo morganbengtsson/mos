@@ -8,7 +8,7 @@
 #include "mesh.hpp"
 #include "util.hpp"
 
-namespace mo {
+namespace mos {
     
     unsigned int Mesh::current_id = 0;
     
@@ -99,10 +99,10 @@ namespace mo {
         return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
     }
 
-
+    /*
     Mesh Mesh::operator/(const Mesh & mesh) {
         auto vertices = vertices_ / mesh.vertices_;
         return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }
+    }*/
 
 }

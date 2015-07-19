@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/component_wise.hpp>
 
-namespace mo {
+namespace mos {
 
 Box::Box(){
 }

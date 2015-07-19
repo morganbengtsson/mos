@@ -8,17 +8,17 @@
 #include "../soundsource.hpp"
 #include "../streamsource.hpp"
 
-namespace mo {
+namespace mos {
 class Entity
 {
 public:   
-    using Models = std::vector<mo::Model>;
-    using Sounds = std::vector<mo::SoundSource>;
-    using Streams = std::vector<mo::StreamSource>;
+    using Models = std::vector<mos::Model>;
+    using Sounds = std::vector<mos::SoundSource>;
+    using Streams = std::vector<mos::StreamSource>;
 
-    Entity(std::initializer_list<mo::Model> models,
-           std::initializer_list<mo::SoundSource> sounds,
-           std::initializer_list<mo::StreamSource> streams):
+    Entity(std::initializer_list<mos::Model> models,
+           std::initializer_list<mos::SoundSource> sounds,
+           std::initializer_list<mos::StreamSource> streams):
        models(models),
        sounds(sounds),
        streams(streams){

@@ -1,6 +1,6 @@
 #include "stream.hpp"
 
-namespace mo {
+namespace mos {
 
 Stream::Stream(const std::string file_name):
 file_name_(file_name), buffer_size(4096*8){

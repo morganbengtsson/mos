@@ -1,6 +1,6 @@
 #include "render_target.hpp"
 
-namespace mo{
+namespace mos{
 
 unsigned int RenderTarget::current_id_ = 0;
 

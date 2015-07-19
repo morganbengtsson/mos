@@ -7,7 +7,7 @@
 
 #include "material.hpp"
 
-namespace mo {
+namespace mos {
 
     Material::Material(const glm::vec3 ambient,
             const glm::vec3 diffuse,

@@ -11,7 +11,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-namespace mo {
+namespace mos {
 
 /*!
  * @brief The Texture2D class

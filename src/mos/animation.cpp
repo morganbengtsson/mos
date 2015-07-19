@@ -2,11 +2,11 @@
 #include <iostream>
 #include "animation.hpp"
 
-namespace mo {
+namespace mos {
 
 Animation::Animation(std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>> keyframes):
 keyframes_(keyframes.begin(), keyframes.end()),
-mesh_(std::make_shared<mo::Mesh>(*keyframes_.begin()->second)),
+mesh_(std::make_shared<mos::Mesh>(*keyframes_.begin()->second)),
 time_(0.0f), frames_per_second_(30), transition_index_(-1){
 }
 

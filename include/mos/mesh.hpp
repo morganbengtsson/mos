@@ -13,7 +13,7 @@
 #include "vertex.hpp"
 #include "range.hpp"
 
-namespace mo {
+namespace mos {
 
 /*!
  * A class that describes the geometric data to be rendered. Contains vertices

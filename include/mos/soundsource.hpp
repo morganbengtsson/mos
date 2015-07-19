@@ -7,7 +7,7 @@
 #include "sound.hpp"
 #include "source.hpp"
 
-namespace mo {
+namespace mos {
 
 /*!
  * A classed used for audio playback. Contains sounds, together with a position.

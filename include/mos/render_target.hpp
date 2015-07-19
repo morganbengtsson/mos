@@ -4,11 +4,11 @@
 #include <memory>
 #include "texture2d.hpp"
 
-namespace mo {
+namespace mos {
 class RenderTarget {
 public:
     explicit RenderTarget(const unsigned int width = 256,  const unsigned int height = 256);
-    std::shared_ptr<mo::Texture2D> texture;
+    std::shared_ptr<mos::Texture2D> texture;
     
 	/*!
      * \brief unique id

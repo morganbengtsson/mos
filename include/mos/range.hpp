@@ -8,7 +8,7 @@
 #ifndef MO_RANGE_H
 #define	MO_RANGE_H
 
-namespace mo {
+namespace mos {
 
     template<typename Container>
     class ConstRange {

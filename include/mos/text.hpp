@@ -16,7 +16,7 @@
 #include <memory>
 #include <string>
 
-namespace mo {
+namespace mos {
 
 /*!
  * A special Model class for text rendering. 

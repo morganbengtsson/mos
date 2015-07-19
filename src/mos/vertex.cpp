@@ -1,6 +1,6 @@
 #include "vertex.hpp"
 
-namespace mo{
+namespace mos{
 
 Vertex::Vertex(const glm::vec3 position,
        const glm::vec3 normal,

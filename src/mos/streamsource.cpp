@@ -1,8 +1,8 @@
 #include "streamsource.hpp"
 
-namespace mo {
+namespace mos {
 
-StreamSource::StreamSource(std::shared_ptr<mo::Stream> stream,
+StreamSource::StreamSource(std::shared_ptr<mos::Stream> stream,
                            const glm::vec3 position,
                            const glm::vec3 velocity,
                            const float gain,

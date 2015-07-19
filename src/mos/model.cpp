@@ -7,7 +7,7 @@
 
 #include "model.hpp"
 
-namespace mo {
+namespace mos {
 
 Model::Model(){
 

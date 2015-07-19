@@ -28,7 +28,7 @@
 #include "model.hpp"
 #include "util.hpp"
 
-namespace mo {
+namespace mos {
 
 Renderer::Renderer() :
     lightmaps_(true),

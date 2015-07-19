@@ -8,7 +8,7 @@
 #ifndef MO_CHARACTER_H
 #define	MO_CHARACTER_H
 
-namespace mo {
+namespace mos {
 
     /*!
      * Describes measurements of a character. Used by the Text object

@@ -7,7 +7,7 @@
 
 #include "sound.hpp"
 
-namespace mo {
+namespace mos {
     Sound::~Sound() {
     }
     

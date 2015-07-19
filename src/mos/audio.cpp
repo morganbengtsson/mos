@@ -86,7 +86,7 @@ void init_efx(){
 }
 
 
-namespace mo {
+namespace mos {
 
 Audio::Audio(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
     reverb_effect(0),
@@ -291,8 +291,8 @@ void Audio::update(StreamSource & source, const float dt) {
             stream_threads[source.id()].thread->join();
             stream_threads.erase(source.id());
         }
-        stream_threads.insert(std::pair<unsigned int, StreamThread>(source.id(), StreamThread{std::shared_ptr<std::thread>(new std::thread([&](ALuint al_source, std::shared_ptr<mo::Stream> stream_ptr, const bool loop) {
-                                                                           mo::Stream stream(*stream_ptr);
+        stream_threads.insert(std::pair<unsigned int, StreamThread>(source.id(), StreamThread{std::shared_ptr<std::thread>(new std::thread([&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr, const bool loop) {
+                                                                           mos::Stream stream(*stream_ptr);
                                                                            ALuint buffers[2];
                                                                            alGenBuffers(2, buffers);
 

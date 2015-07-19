@@ -7,7 +7,7 @@
 #include "stream.hpp"
 #include "source.hpp"
 
-namespace mo {
+namespace mos {
 
 /*!
  * @brief The StreamSource class, for audio streaming

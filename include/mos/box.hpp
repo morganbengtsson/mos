@@ -1,5 +1,5 @@
-#ifndef MO_BOX_HPP
-#define MO_BOX_HPP
+#ifndef MOS_BOX_HPP
+#define MOS_BOX_HPP
 
 #include <array>
 #include <glm/glm.hpp>
@@ -9,7 +9,7 @@
 #include <tuple>
 #include "vertex.hpp"
 
-namespace mo
+namespace mos
 {
 
 /*!
@@ -179,4 +179,4 @@ private:
 
 };
 }
-#endif // MO_BOX_HPP
+#endif // MOS_BOX_HPP

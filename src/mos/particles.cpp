@@ -7,7 +7,7 @@
 
 #include "particles.hpp"
 
-namespace mo {
+namespace mos {
 
     unsigned int Particles::current_id = 10000;
     

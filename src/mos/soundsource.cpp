@@ -1,6 +1,6 @@
 #include "soundsource.hpp"
 
-namespace mo {
+namespace mos {
 
 SoundSource::SoundSource(const std::shared_ptr<Sound> sound,
                          const glm::vec3 position,

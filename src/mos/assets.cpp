@@ -20,7 +20,7 @@
 #include <stb_vorbis.h>
 #include <glm/gtx/io.hpp>
 
-namespace mo {
+namespace mos {
 	using namespace std;
 	using namespace glm;
 	
@@ -33,7 +33,7 @@ namespace mo {
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
         //TODO: allow Null mesh? As of now it becomes empty.
-        vector<mo::Vertex> vertices;
+        vector<mos::Vertex> vertices;
         vector<int> indices;
 
         if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
@@ -48,7 +48,7 @@ namespace mo {
 		    is.read((char*) &num_vertices, sizeof (int));
             is.read((char*) &num_indices, sizeof (int));
 		
-			vertices = vector<mo::Vertex>(num_vertices);
+			vertices = vector<mos::Vertex>(num_vertices);
             indices = vector<int>(num_indices);
 			
 			if (vertices.size() > 0){
@@ -94,7 +94,7 @@ namespace mo {
     }
 
     std::shared_ptr<Texture2D> Assets::texture(const std::string file_name, const bool mipmaps) const {
-        using namespace mo;
+        using namespace mos;
 
         vector<unsigned char> texels_decoded;
         unsigned width, height;
@@ -139,7 +139,7 @@ namespace mo {
     }
 
     std::shared_ptr<Stream> Assets::stream(const string file_name) const {
-		return std::make_shared<mo::Stream>(directory_ + file_name);
+		return std::make_shared<mos::Stream>(directory_ + file_name);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {

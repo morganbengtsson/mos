@@ -10,7 +10,7 @@
 
 #include <vector>
 
-namespace mo {
+namespace mos {
 
     /*!
      * A sound class containing samples of 16bit integer data. In memory.

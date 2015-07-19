@@ -14,7 +14,7 @@
 #include "material.hpp"
 #include "box.hpp"
 
-namespace mo {
+namespace mos {
 
     /*!
      * A class that gathers what is needed to render an object. A Mesh, a Texture2D

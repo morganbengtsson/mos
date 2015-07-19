@@ -7,7 +7,7 @@
 
 #include "source.hpp"
 
-namespace mo {
+namespace mos {
 
 Source::Source(const glm::vec3 position,
                const glm::vec3 velocity,
