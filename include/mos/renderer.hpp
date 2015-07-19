@@ -21,18 +21,27 @@
 
 namespace mos {
 
+/**
+ * @brief The ParticleProgramData struct, uniforms for the particle shader program.
+ */
 struct ParticleProgramData{
     unsigned int program;
     int mvp;
     int mv;
 };
 
+/**
+ * @brief The BoxProgramData struct, uniforms for the bounding box shader program.
+ */
 struct BoxProgramData{
     unsigned int program;
     int mvp;
     int mv;
 };
 
+/**
+ * @brief The VertexProgramData struct, uniforms for the standard shader.
+ */
 struct VertexProgramData {
     unsigned int program;
     int mvp;

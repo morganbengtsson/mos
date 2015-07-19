@@ -12,59 +12,64 @@
 namespace mos
 {
 
-/*!
+/**
+ * @brief The BoxIntersection struct
  * Data from a box box intersection.
  *
- * \brief The BoxIntersection struct
  */
 struct BoxIntersection {
-    /*!
-     * True if the box intersect.
+    /**
+     * @brief True if the box intersects with another box.
      */
     bool intersects;
-    /*!
-     * Normal of the intersection.
+    /**
+     * @brief Normal of the intersection.
      */
     glm::vec3 normal;
-    /*!
-     * Distance of the intersection.
+    /**
+     * @brief Distance of the intersection.
      */
     float distance;
 };
 
-/*!
+/**
+ * @brief The RayIntersection struct
  * Intersection data from a ray and box intersection.
- *
- * \brief The RayIntersection struct
+ * 
  */
 struct RayIntersection {
     RayIntersection(bool hit, float distance = 0.0f): intersects(hit), distance(distance){
     }
 
-    /*!
-     * \brief intersects
+    /**
+     * @brief intersects
      *
      * True if ray intersects with the box.
      */
     bool intersects;
 
-    /*!
-     * \brief distance
+    /**
+     * @brief distance
      *
      * Distance from
      */
     float distance;
 };
 
+/**
+ * @brief The Box class
+ *
+ * Axis aligned bounding box class. Used for colission detection and sound obstruction.
+ */
 class Box
 {
 public:
     template<class VertexIt>
-    /*!
-     * \brief Box constructor
-     * \param begin Vertex iterator
-     * \param end Vertex iterator
-     * \param transform location of the box
+    /**
+     * @brief Box constructor.
+     * @param begin Vertex iterator.
+     * @param end Vertex iterator.
+     * @param transform location of the box.
      *
      * Constructor for an AABB box, created from vertices.
      *
@@ -93,35 +98,35 @@ public:
         max_ = max;
     }
 
-    /*!
+    /**
      * @brief Box default constructor.
      */
     Box();
 
-    /*!
-     * \brief Box constructor.
-     * \param min corner.
-     * \param max corner.
-     * \param transform location.
+    /**
+     * @brief Box constructor.
+     * @param min corner.
+     * @param max corner.
+     * @param transform location.
      */
     Box(const glm::vec3 & min,
         const glm::vec3 & max,
         const glm::mat4 & transform,
         const float obstruction = 0.0f);
 
-    /*!
-     * \brief min
-     * \return
+    /**
+     * @brief min
+     * @return
      */
     glm::vec3 min() const;
 
-    /*!
-     * \brief max
-     * \return
+    /**
+     * @brief max
+     * @return
      */
     glm::vec3 max() const;
 
-    /*!
+    /**
      * @brief Intersection with ray between points.
      * @param point1
      * @param point2
@@ -129,7 +134,7 @@ public:
      */
     RayIntersection intersect(glm::vec3 point1, glm::vec3 point2);
 
-    /*!
+    /**
      * @brief Intersection with ray
      * @param origin
      * @param direction
@@ -139,36 +144,40 @@ public:
      */
     RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
 
-    /*!
+    /**
      * @brief intersects
      * @param other
      * @return
      */
     BoxIntersection intersects(const Box & other);
 
-    /*!
-     * \brief Get the transform.
+    /**
+     * @brief Get the transform.
      */
     glm::mat4 transform() const;
 
-    /*!
+    /**
      * @brief Set the box transform.
      * @param transform
      */
     void transform(const glm::mat4 & transform);
 
-    /*!
+    /**
      * @brief Get box volume.
      */
     float volume() const;
 
-    /*!
-     * @brief Obstruction factor
+    /**
+     * @brief Obstruction factor for sound.
      *
      * Between 0.0 - 1.0
      */
     float obstruction() const;
 
+    /**
+     * @brief Size of box.
+     * @return size in x, y and z directions.
+     */
     glm::vec3 size() const;
 private:
     glm::vec3 min_;
