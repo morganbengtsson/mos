@@ -1,5 +1,5 @@
-#ifndef STREAM_HPP
-#define STREAM_HPP
+#ifndef MOS_STREAM_HPP
+#define MOS_STREAM_HPP
 
 #include <array>
 #include "stb_vorbis.h"
@@ -11,13 +11,13 @@ struct StreamData {
     bool done;
 };
 
-/*!
+/**
  * @brief The Stream class, for audio streaming from file.
  */
 class Stream
 {
 public:
-    /*!
+    /**
      * @brief Stream constructor.
      * @param file_name
      */
@@ -27,27 +27,27 @@ public:
 
     int buffer_size;
 
-    /*!
+    /**
      * @brief read chunk of data from the stream.
-     * @return
+     * @return Chunk of shorts.
      */
     std::array<short, 4096*8> read();
 
     bool done() const;
 
-    /*!
+    /**
      * @brief sample_rate
      * @return
      */
     int sample_rate() const;
 
-    /*!
+    /**
      * @brief Number of channels, usually one or two.
      * @return channels (1 or 2)
      */
     int channels() const;
 
-    /*!
+    /**
      * @brief seek_start starts the stream from the beginning.
      */
     void seek_start();
@@ -63,4 +63,4 @@ private:
 
 
 }
-#endif // STREAM_HPP
+#endif // MOS_STREAM_HPP
