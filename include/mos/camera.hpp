@@ -1,30 +1,65 @@
-#ifndef MO_CAMERA_H
-#define MO_CAMERA_H
+#ifndef MOS_CAMERA_H
+#define MOS_CAMERA_H
 
 #include <glm/glm.hpp>
 
 namespace mos {
 
-    class Camera {
-    public:
-        Camera(const glm::vec3 &eye,
-               const glm::vec3 &center,
-               const glm::mat4 &projection,
-               const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+/**
+ * @brief The Camera class
+ */
+class Camera {
+public:
+    /**
+     * @brief Camera
+     * @param eye Where the camera is located.
+     * @param center Where the camera is centered.
+     * @param projection Projection matrix (ortho/perspective).
+     * @param up Up direction.
+     */
+    Camera(const glm::vec3 &eye,
+           const glm::vec3 &center,
+           const glm::mat4 &projection,
+           const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
-        glm::vec3 position() const;
-        void position(const glm::vec3 & position);
+    /**
+     * @brief position
+     * @return Position of camera.
+     */
+    glm::vec3 position() const;
 
-        glm::vec3 center() const;
-        void center(const glm::vec3 & center);
+    /**
+     * @brief Set position.
+     * @param position
+     */
+    void position(const glm::vec3 & position);
 
-        glm::mat4 projection;
-        glm::mat4 view;
-    private:
-        glm::vec3 up_;
-        glm::vec3 center_;
-        glm::vec3 position_;
-    };
+    /**
+     * @brief Get center point.
+     * @return
+     */
+    glm::vec3 center() const;
+
+    /**
+     * @brief Get center point.
+     * @param center
+     */
+    void center(const glm::vec3 & center);
+
+    /**
+     * @brief Projection matrix.
+     */
+    glm::mat4 projection;
+
+    /**
+     * @brief View matrix.
+     */
+    glm::mat4 view;
+private:
+    glm::vec3 up_;
+    glm::vec3 center_;
+    glm::vec3 position_;
+};
 }
 
-#endif //MO_CAMERA_H
+#endif //MOS_CAMERA_H

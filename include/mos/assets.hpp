@@ -3,8 +3,8 @@
  * @author: Morgan Bengtsson <bengtsson.morgan@gmail.com>
  */
 
-#ifndef MO_ASSETS_H
-#define	MO_ASSETS_H
+#ifndef MOS_ASSETS_H
+#define	MOS_ASSETS_H
 
 #include <unordered_map>
 #include <map>
@@ -66,6 +66,11 @@ namespace mos {
          * @param The directory where the assets exist, relative to the run directory, default is "assets/"
          */
         Assets(const std::string directory = "assets/");
+
+        /**
+         * @brief Assets non copyable.
+         * @param assets
+         */
         Assets(const Assets & assets) = delete; // Not copyable.
         virtual ~Assets();
 

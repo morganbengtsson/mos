@@ -16,7 +16,7 @@
 
 namespace mos {
 
-    /*!
+    /**
      * A class that gathers what is needed to render an object. A Mesh, a Texture2D
      * , a Texture2D lightmap, a Texture2D normalmap and a Material.
      * Also a transformation (position/rotation).
@@ -24,12 +24,12 @@ namespace mos {
     class Model {
     public:
         enum class Draw {TRIANGLES, LINES, POINTS};
-        /*!
+        /**
          * @brief Model
          */
         Model();
 
-        /*!
+        /**
          * @brief Model
          * @param mesh
          * @param texture
@@ -52,32 +52,32 @@ namespace mos {
               const float opacity = 1.0f);
         virtual ~Model();
 
-        /*!
+        /**
          * @brief mesh
          */
         std::shared_ptr<Mesh> mesh;
         
-		/*!
+        /**
          * @brief texture
          */
         std::shared_ptr<Texture2D> texture;
         
-		/*!
+        /**
          * @brief lightmap
          */
         std::shared_ptr<Texture2D> lightmap;
         
-		/*!
+        /**
          * @brief normalmap
          */
         std::shared_ptr<Texture2D> normalmap;
         
-		/*!
+        /**
          * @brief material
          */
         std::shared_ptr<Material> material;
         
-		/*!
+        /**
 		 * Get the transform matrix.
 		 *
          * @brief transform
@@ -85,7 +85,7 @@ namespace mos {
          */
         glm::mat4 transform() const;
         
-		/*!
+        /**
 		 * Set the transform matrix.
 		 *
          * @brief transform
@@ -93,52 +93,53 @@ namespace mos {
          */
         void transform(const glm::mat4 & transform);
 
-		/*!
+        /**
 		* Get the position
 		* @brief position
 		*/
         glm::vec3 position() const;
 
-		/*!
+        /**
 		* Set the position.
 		* @brief position
 		* @param position
 		*/
         void position(const glm::vec3 position);
 
-		/*!
-		* Get the color, (to be deprecated).
+        /**
+        * @brief Get the color, (to be deprecated).
 		*/
         glm::vec4 color() const;
 
 
-        /*!
+        /**
          * @brief Opacity of the model.
          */
         float opacity;
 
-		/*!
-		* The bounding box
+        /**
+        * @brief The bounding box
 		*/
         Box box;
 
-		/*!
-		* Drap method.
+        /**
+        * @brief How to draw the model.
 		*/
         Draw draw;
 
-		/*
-		* Is the model selectable;
+        /**
+        * @brief Is the model selectable;
 		*/
         bool selectable;
 
-		/*
-		* Checks if the model is selected.
+        /**
+        * @brief Checks if the model is selected.
+        * @return True if selected.
 		*/
         bool selected() const;
 
-		/*
-		* Set if the model is selected.
+        /**
+        * @brief Set if the model is selected.
 		* @param selected
 		*/
         void selected(const bool selected);

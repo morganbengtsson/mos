@@ -28,6 +28,11 @@ namespace mos {
     class Audio {
     public:
         Audio();
+
+        /**
+         * @brief Audio class is non copyable.
+         * @param audio
+         */
         Audio(const Audio & audio) = delete; //Do not copy
         virtual ~Audio();
 

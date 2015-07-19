@@ -18,15 +18,15 @@ class Entity
 {
 public:
     /**
-     *
+     * @brief Models container.
      */
     using Models = std::vector<mos::Model>;
     /**
-     *
+     * @brief Sounds container.
      */
     using Sounds = std::vector<mos::SoundSource>;
     /**
-     *
+     * @brief Streams container.
      */
     using Streams = std::vector<mos::StreamSource>;
     /**
@@ -86,8 +86,19 @@ public:
      */
     virtual void update(const float dt) = 0;
 
+    /**
+     * @brief models
+     */
     Models models;
+
+    /**
+     * @brief sounds
+     */
     Sounds sounds;
+
+    /**
+     * @brief streams
+     */
     Streams streams;
 };
 }

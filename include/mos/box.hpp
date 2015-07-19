@@ -38,6 +38,11 @@ struct BoxIntersection {
  * 
  */
 struct RayIntersection {
+    /**
+     * @brief RayIntersection constructor.
+     * @param hit
+     * @param distance
+     */
     RayIntersection(bool hit, float distance = 0.0f): intersects(hit), distance(distance){
     }
 
