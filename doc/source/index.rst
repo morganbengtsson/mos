@@ -6,20 +6,6 @@
 Welcome to MOS's documentation!
 ===============================
 
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
-.. doxygennamespace:: mo
+.. doxygennamespace:: mos
    :project: MOS
+   :members:

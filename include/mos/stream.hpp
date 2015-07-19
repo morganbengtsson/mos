@@ -6,11 +6,6 @@
 
 namespace mos {
 
-struct StreamData {
-    short samples[4096*8];
-    bool done;
-};
-
 /**
  * @brief The Stream class, for audio streaming from file.
  */
