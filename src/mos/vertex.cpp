@@ -13,9 +13,9 @@ Vertex::Vertex(const glm::vec3 position,
 
 }
 Vertex::Vertex(const float position_x, const float position_y, const float position_z,
-                const float normal_x = 0.0f, const float normal_y = 0.0f, const float normal_z = 0.0f,
-                const float uv_x = 0.0f, const float uv_y = 0.0f,
-                const float uv_lightmap_x = 0.0f, const float uv_lightmap_y = 0.0f)
+                const float normal_x, const float normal_y, const float normal_z,
+                const float uv_x, const float uv_y,
+                const float uv_lightmap_x, const float uv_lightmap_y)
     : Vertex(glm::vec3(position_x, position_y, position_z),
              glm::vec3(normal_x, normal_y, normal_z),
              glm::vec2(uv_x, uv_y),
