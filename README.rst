@@ -1,3 +1,4 @@
+|docs|
 
 MOS is a lightweight utility library for cross platform game development. 
 
