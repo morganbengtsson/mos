@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 MOS's documentation
-===============================
+===================
 
 .. doxygennamespace:: mos
    :project: MOS
