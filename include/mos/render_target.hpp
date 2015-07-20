@@ -1,5 +1,5 @@
-#ifndef RENDER_TARGET_HPP
-#define RENDER_TARGET_HPP
+#ifndef MOS_RENDER_TARGET_HPP
+#define MOS_RENDER_TARGET_HPP
 
 #include <memory>
 #include "texture2d.hpp"
@@ -36,4 +36,4 @@ private:
 };
 
 }
-#endif // RENDER_TARGET_HPP
+#endif // MOS_RENDER_TARGET_HPP

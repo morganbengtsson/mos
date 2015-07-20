@@ -1,12 +1,5 @@
-/* 
- * File:   Audio.h
- * Author: morgan
- *
- * Created on May 7, 2014, 9:41 PM
- */
-
-#ifndef MO_AUDIO_H
-#define	MO_AUDIO_H
+#ifndef MOS_AUDIO_H
+#define	MOS_AUDIO_H
 
 #include <unordered_map>
 #include <memory>
@@ -22,7 +15,7 @@
 
 namespace mos {    
 
-    /*!
+    /**
      * Audio player class. Uses OpenAL for Windows/Linux/OSX.
      */
     class Audio {
@@ -37,7 +30,7 @@ namespace mos {
         virtual ~Audio();
 
         template<class It>
-        /*!
+        /**
          * A generalized init method
          *
          * @brief init
@@ -67,12 +60,11 @@ namespace mos {
         void init(const StreamSource & stream_source);
 
         template<class It>
-        /*!
-         * A generalized update method
-         *
-         * @brief init
-         * @param begin iterator
-         * @param end iterator
+        /**
+         * @brief A generalized update method
+         * @param begin Begin iterator.
+         * @param end End iterator.
+         * @param dt Time step.
          */
         void update(It begin, It end, const float dt) {
             for (auto it = begin; it != end; it++){
@@ -86,9 +78,10 @@ namespace mos {
          * such as position, velocity, pitch and gain.
          *
          * @brief update
-         * @param stream_source
+         * @param sound_source
+         * @param dt Time step.
          */
-        void update(SoundSource & source, const float dt);
+        void update(SoundSource & sound_source, const float dt);
 
 		/**
 		* Updates the internal source representation with data. Data
@@ -96,16 +89,14 @@ namespace mos {
 		*
 		* @brief update
 		* @param stream_source
+        * @param dt Time step.
 		*/
-        void update(StreamSource & source, const float dt);
+        void update(StreamSource & stream_source, const float dt);
 
-		/**
-		* Updates the internal source representation with data. Data
-		* such as position, velocity, pitch and gain.
-		*
-		* @brief update
-		* @param stream_source
-		*/
+        /**
+         * @brief listener_position
+         * @return Position of the listener.
+         */
         glm::vec3 listener_position();
 
 		/**
@@ -175,5 +166,5 @@ namespace mos {
     };
 }
 
-#endif	/* MO_AUDIO_H */
+#endif	/* MOS_AUDIO_H */
 

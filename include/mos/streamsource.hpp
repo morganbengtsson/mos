@@ -1,5 +1,5 @@
-#ifndef STREAMSOURCE_HPP
-#define STREAMSOURCE_HPP
+#ifndef MOS_STREAMSOURCE_HPP
+#define MOS_STREAMSOURCE_HPP
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -9,7 +9,7 @@
 
 namespace mos {
 
-/*!
+/**
  * @brief The StreamSource class, for audio streaming
  *
  * Stream audio from an *ogg audio resource. Used with the Audio class for playback.
@@ -17,9 +17,17 @@ namespace mos {
 class StreamSource : public Source
 {
 public:
-    /*!
-     * @brief StreamSource constructor
-     * @param stream, position, velocity, gain, pitch, loop, playing
+
+    /**
+     * @brief StreamSource constructor.
+     * @param stream
+     * @param position
+     * @param velocity
+     * @param gain
+     * @param pitch
+     * @param loop
+     * @param playing
+     * @param occluded
      */
     explicit StreamSource(std::shared_ptr<Stream> stream,
                  const glm::vec3 position = glm::vec3(0.0f),
@@ -31,9 +39,13 @@ public:
                  const bool occluded = false);
     virtual ~StreamSource();
 
+    /**
+     * @brief Stream used for the source.
+     * @todo Should it be shared?
+     */
     std::shared_ptr<Stream> stream;
 };
 
 }
 
-#endif // STREAMSOURCE_HPP
+#endif // MOS_STREAMSOURCE_HPP

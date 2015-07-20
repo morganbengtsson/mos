@@ -17,9 +17,15 @@ class SoundSource : public Source {
 public:
 
     /**
-     * @brief SoundSource constructor
-     * @param sound shared pointer
+     * @brief SoundSource constructor.
+     * @param sound
      * @param position
+     * @param velocity
+     * @param gain
+     * @param pitch
+     * @param loop
+     * @param playing
+     * @param occluded If occluded by geometry.
      */
     explicit SoundSource(const std::shared_ptr<Sound> sound,
                 const glm::vec3 position = glm::vec3(0.0f),

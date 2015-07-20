@@ -4,6 +4,13 @@
 namespace mos {
 
 template<class It>
+/**
+ * @brief Calculate selections from models and a ray.
+ * @param begin
+ * @param end
+ * @param position
+ * @param direction
+ */
 void selections(It begin, It end, const glm::vec3 & position, glm::vec3 & direction){
     mos::Model * closest = nullptr;
     float distance = 10000.0f;

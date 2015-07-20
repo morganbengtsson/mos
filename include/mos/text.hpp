@@ -1,12 +1,5 @@
-/* 
- * File:   Text.h
- * Author: morgan
- *
- * Created on August 28, 2013, 7:49 PM
- */
-
-#ifndef MO_TEXT_H
-#define	MO_TEXT_H
+#ifndef MOS_TEXT_H
+#define	MOS_TEXT_H
 
 #include "model.hpp"
 #include "mesh.hpp"
@@ -18,12 +11,12 @@
 
 namespace mos {
 
-/*!
+/**
  * A special Model class for text rendering. 
  */
 class Text : public Model {
 public:
-    /*!
+    /**
      * @brief Text constructor
      * @param text
      * @param characters
@@ -38,25 +31,25 @@ public:
             const float spacing = 0.0f);
     virtual ~Text();    
 
-    /*!
+    /**
      * Update the text.
-     * @param Text.
+     * @param text String to use.
      */
     void text(const std::string text);
 
-    /*!
+    /**
      * @brief text
-     * @return current text
+     * @return Current text
      */
     std::string text() const;
 
-    /*!
+    /**
      * @brief approximate width
      * @return width
      */
     float width();
 
-    /*!
+    /**
      * @brief spacing between characters
      */
     float spacing;
@@ -67,5 +60,5 @@ private:
 };
 }
 
-#endif	/* TEXT_H */
+#endif	/* MOS_TEXT_H */
 

@@ -1,35 +1,36 @@
-/* 
- * File:   Texture.h
- * Author: morgan
- *
- * Created on February 25, 2014, 7:26 PM
- */
-
-#ifndef MO_TEXTURE2D_H
-#define	MO_TEXTURE2D_H
+#ifndef MOS_TEXTURE2D_H
+#define	MOS_TEXTURE2D_H
 
 #include <vector>
 #include <glm/glm.hpp>
 
 namespace mos {
 
-/*!
+/**
  * @brief The Texture2D class
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
 class Texture2D {
 public:
+
+    /**
+     * @brief Container for pixel data. RGB(A)
+     */
     using Texels = std::vector<unsigned char>;
+
+    /**
+     * @brief Used to create next unique id.
+     */
     static unsigned int current_id;
     template<class It>
-    /*!
+    /**
      * @brief Texture2D
      * @param begin
      * @param end
      * @param width
      * @param height
-     * @param mipmaps should be used for rendering
+     * @param mipmaps Generate mipmaps or not.
      *
      * Constructor for a texture, that takes char valus from a container as input. Along with width and height.
      */
@@ -43,6 +44,12 @@ public:
         texels_.assign(begin, end);
     }
 
+    /**
+     * @brief Texture2D constructor.
+     * @param width
+     * @param height
+     * @param mipmaps Generate mipmaps or not.
+     */
     Texture2D(const unsigned int width,
               const unsigned int height,
               const bool mipmaps = true):
@@ -52,39 +59,42 @@ public:
         id_ = current_id++;
     }
 
+    /**
+     * @brief Destructor.
+     */
     virtual ~Texture2D();
     
-    /*!
+    /**
      * @brief begin iterator
      * @return constand begin iterator
      */
     Texels::const_iterator begin() const;
 
-    /*!
+    /**
      * @brief end iterator
      * @return constant end iterator
      */
     Texels::const_iterator end() const;
     
-    /*!
+    /**
      * @brief unique id
      * @return id
      */
     unsigned int id() const;
     
-    /*!
+    /**
      * @brief width in pixels
      * @return
      */
     unsigned int width() const;
 
-    /*!
+    /**
      * @brief height in pixels
      * @return
      */
     unsigned int height() const;
 
-    /*!
+    /**
      * @brief sample the texture
      * @param x less than width
      * @param y less than height
@@ -92,9 +102,13 @@ public:
      */
     glm::vec4 sample(const unsigned int x, const unsigned int y);
     
+    /**
+     * @brief data
+     * @return Raw bytes.
+     */
     const unsigned char * data() const;
 
-    /*!
+    /**
      * @brief if mipmaps should be used
      */
     bool mipmaps;
@@ -107,5 +121,5 @@ private:
 
 }
 
-#endif	/* MO_TEXTURE_H */
+#endif	/* MOS_TEXTURE_H */
 

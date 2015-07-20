@@ -1,10 +1,3 @@
-/* 
- * File:   util.h
- * Author: morgan
- *
- * Created on April 13, 2014, 8:43 PM
- */
-
 #ifndef MOS_UTIL_H
 #define	MOS_UTIL_H
 
@@ -21,9 +14,19 @@ class ClockwiseSorter {
 private:
     T center;
 public:
+    /**
+     * @brief ClockwiseSorter
+     * @param center
+     */
     explicit ClockwiseSorter(const T center) : center(center) {
     }
 
+    /**
+     * @brief operator ()
+     * @param a
+     * @param b
+     * @return
+     */
     bool operator()(const T a, const T b) const {
 
         float det = (a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (a.y - center.y);
@@ -36,6 +39,11 @@ public:
     }
 };
 
+/**
+ * @brief Load text from file.
+ * @param path Full path to the file.
+ * @return String with all content.
+ */
 std::string inline text(const std::string path){
     std::ifstream file(path);
     if (!file.is_open()){
@@ -48,6 +56,12 @@ std::string inline text(const std::string path){
 }
 
 template <typename T>
+/**
+ * @brief operator +=
+ * @param a
+ * @param b
+ * @return
+ */
 std::vector<T>& operator+=(std::vector<T>& a, const std::vector<T>& b)
 {
     a.insert(a.end(), b.begin(), b.end());
@@ -55,6 +69,12 @@ std::vector<T>& operator+=(std::vector<T>& a, const std::vector<T>& b)
 }
 
 template <typename T>
+/**
+ * @brief operator +=
+ * @param aVector
+ * @param aObject
+ * @return
+ */
 std::vector<T>& operator+=(std::vector<T>& aVector, const T& aObject)
 {
     aVector.push_back(aObject);
@@ -62,6 +82,12 @@ std::vector<T>& operator+=(std::vector<T>& aVector, const T& aObject)
 }
 
 template <typename T>
+/**
+ * @brief operator +
+ * @param a
+ * @param b
+ * @return
+ */
 std::vector<T> operator+(const std::vector<T>& a, const std::vector<T>& b)
 {
     assert(a.size() == b.size());
@@ -75,6 +101,12 @@ std::vector<T> operator+(const std::vector<T>& a, const std::vector<T>& b)
 }
 
 template <typename T>
+/**
+ * @brief operator -
+ * @param a
+ * @param b
+ * @return
+ */
 std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b)
 {
     assert(a.size() == b.size());
@@ -88,6 +120,12 @@ std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b)
 }
 
 template <typename T>
+/**
+ * @brief operator *
+ * @param a
+ * @param b
+ * @return
+ */
 std::vector<T> operator*(const std::vector<T>& a, const std::vector<T>& b)
 {
     assert(a.size() == b.size());
@@ -101,6 +139,12 @@ std::vector<T> operator*(const std::vector<T>& a, const std::vector<T>& b)
 }
 
 template <typename T>
+/**
+ * @brief operator /
+ * @param a
+ * @param b
+ * @return
+ */
 std::vector<T> operator/(const std::vector<T>& a, const std::vector<T>& b)
 {
     assert(a.size() == b.size());

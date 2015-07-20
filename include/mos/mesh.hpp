@@ -1,12 +1,5 @@
-/* 
- * File:   Model.h
- * Author: morgan
- *
- * Created on February 25, 2014, 6:40 PM
- */
-
-#ifndef MO_MESH_H
-#define	MO_MESH_H
+#ifndef MOS_MESH_H
+#define	MOS_MESH_H
 
 #include <vector>
 #include <initializer_list>
@@ -256,5 +249,5 @@ private:
 
 }
 
-#endif	/* MO_MESH_H */
+#endif	/* MOS_MESH_H */
 

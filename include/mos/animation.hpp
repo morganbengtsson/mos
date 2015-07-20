@@ -28,27 +28,33 @@ public:
     Animation(std::initializer_list<std::pair<unsigned int, std::shared_ptr<Mesh const>>> keyframes);
 
     /**
-    */
+     *@brief Destructor.
+     */
     ~Animation();
+
     /**
      * @brief update, move the animation forward.
-     * @param dt, how much time to progress.
+     * @param dt How much time to progress.
      */
     void update(const float dt);
+
     /**
      * @brief frame
      * @return
      */
     int frame() const;
+
     /**
      * @brief reset, restart the animation.
      */
     void reset();
+
     /**
      * @brief The mesh, which is animated.
      * @return shared_ptr to mesh.
      */
     std::shared_ptr<Mesh> mesh();
+
     /**
      * @brief Special transition mesh.
      *

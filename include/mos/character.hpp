@@ -1,16 +1,9 @@
-/* 
- * File:   Character.h
- * Author: morgan
- *
- * Created on July 15, 2014, 1:43 PM
- */
-
-#ifndef MO_CHARACTER_H
-#define	MO_CHARACTER_H
+#ifndef MOS_CHARACTER_H
+#define	MOS_CHARACTER_H
 
 namespace mos {
 
-/*!
+/**
  * Describes measurements of a character. Used by the Text object
  * for text rendering.
  */
@@ -57,5 +50,5 @@ struct Character {
 };
 }
 
-#endif	/* MO_CHARACTER_H */
+#endif	/* MOS_CHARACTER_H */
 

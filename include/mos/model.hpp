@@ -26,7 +26,7 @@ namespace mos {
         Model();
 
         /**
-         * @brief Model
+         * @brief Model constructor.
          * @param mesh
          * @param texture
          * @param transform
@@ -34,6 +34,9 @@ namespace mos {
          * @param material
          * @param lightmap
          * @param normalmap
+         * @param selectable
+         * @param obstruction
+         * @param opacity
          */
         Model(std::shared_ptr<Mesh> mesh, 
               std::shared_ptr<Texture2D> texture = std::shared_ptr<Texture2D>(),

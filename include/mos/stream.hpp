@@ -12,11 +12,17 @@ namespace mos {
 class Stream
 {
 public:
+
     /**
      * @brief Stream constructor.
      * @param file_name
      */
-    explicit Stream(const std::string file_name_);
+    explicit Stream(const std::string file_name);
+
+    /**
+     * @brief Copy constructor.
+     * @param stream
+     */
     Stream(const mos::Stream & stream);
     ~Stream();
 

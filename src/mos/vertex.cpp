@@ -12,14 +12,14 @@ Vertex::Vertex(const glm::vec3 position,
       uv_lightmap(uv_lightmap) {
 
 }
-Vertex::Vertex(const float p1, const float p2, const float p3,
-                const float n1, const float n2, const float n3,
-                const float u1, const float u2,
-                const float ul1, const float ul2)
-    : Vertex(glm::vec3(p1, p2, p3),
-             glm::vec3(n1, n2, n3),
-             glm::vec2(u1, u2),
-             glm::vec2(ul1, ul2)) {}
+Vertex::Vertex(const float position_x, const float position_y, const float position_z,
+                const float normal_x = 0.0f, const float normal_y = 0.0f, const float normal_z = 0.0f,
+                const float uv_x = 0.0f, const float uv_y = 0.0f,
+                const float uv_lightmap_x = 0.0f, const float uv_lightmap_y = 0.0f)
+    : Vertex(glm::vec3(position_x, position_y, position_z),
+             glm::vec3(normal_x, normal_y, normal_z),
+             glm::vec2(uv_x, uv_y),
+             glm::vec2(uv_lightmap_x, uv_lightmap_y)) {}
 
 Vertex::~Vertex(){
 }

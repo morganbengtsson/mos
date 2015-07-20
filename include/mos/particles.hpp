@@ -1,10 +1,3 @@
-/* 
- * File:   Particles.h
- * Author: morgan
- *
- * Created on October 16, 2014, 5:03 PM
- */
-
 #ifndef MOS_PARTICLES_H
 #define	MOS_PARTICLES_H
 
@@ -78,7 +71,7 @@ public:
 
     template<class It>
     /**
-     * @breif Assign new particles
+     * @brief Assign new particles.
      * @param begin Iterator to first particle.
      * @param end Iterator to last particle.
      */

@@ -1,18 +1,11 @@
-/* 
- * File:   Material.h
- * Author: morgan
- *
- * Created on September 30, 2014, 9:35 PM
- */
-
-#ifndef MO_MATERIAL_H
-#define	MO_MATERIAL_H
+#ifndef MOS_MATERIAL_H
+#define	MOS_MATERIAL_H
 
 #include <glm/glm.hpp>
 
 namespace mos {
 
-    /*!
+    /**
      * \brief The Material class
      *
      * Aspects of a material supported by the renderer. Different from
@@ -21,7 +14,7 @@ namespace mos {
      */
     class Material {
     public:
-        /*!
+        /**
          * @brief Material
          * @param ambient
          * @param diffuse
@@ -36,27 +29,27 @@ namespace mos {
                 const float specular_exponent = 0.0f);
         virtual ~Material();
 
-        /*!
+        /**
          * @brief ambient color.
          */
         glm::vec3 ambient;
 
-        /*!
+        /**
          * @brief diffuse color.
          */
         glm::vec3 diffuse;
 
-        /*!
+        /**
          * @brief specular color.
          */
         glm::vec3 specular;
 
-        /*!
+        /**
          * @brief opacity
          */
         float opacity;
 
-        /*!
+        /**
          * @brief specular_exponent
          *
          * In some equations also calld Ns.
@@ -65,5 +58,5 @@ namespace mos {
     };
 }
 
-#endif	/* MATERIAL_H */
+#endif	/* MOS_MATERIAL_H */
 

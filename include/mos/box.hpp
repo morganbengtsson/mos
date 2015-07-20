@@ -74,12 +74,16 @@ public:
      * @brief Box constructor.
      * @param begin Vertex iterator.
      * @param end Vertex iterator.
-     * @param transform location of the box.
+     * @param transform Location of the box.
+     * @param obstruction Obstruction factor for sound.
      *
      * Constructor for an AABB box, created from vertices.
      *
      */
-    Box(VertexIt begin, VertexIt end, const glm::mat4 & transform, const float obstruction = 0.0f) :
+    Box(VertexIt begin,
+        VertexIt end,
+        const glm::mat4 & transform,
+        const float obstruction = 0.0f) :
         transform_(transform), obstruction_(obstruction) {
         glm::vec3 min, max;
 
@@ -110,9 +114,10 @@ public:
 
     /**
      * @brief Box constructor.
-     * @param min corner.
-     * @param max corner.
-     * @param transform location.
+     * @param min Min corner.
+     * @param max Max corner.
+     * @param transform Location transform.
+     * @param obstruction Sound obstruction factor.
      */
     Box(const glm::vec3 & min,
         const glm::vec3 & max,
@@ -121,13 +126,13 @@ public:
 
     /**
      * @brief min
-     * @return
+     * @return Min corner.
      */
     glm::vec3 min() const;
 
     /**
      * @brief max
-     * @return
+     * @return Max corner.
      */
     glm::vec3 max() const;
 

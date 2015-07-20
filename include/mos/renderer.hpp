@@ -1,10 +1,3 @@
-/* 
- * File:   Renderer.h
- * Author: morgan
- *
- * Created on February 15, 2014, 2:37 PM
- */
-
 #ifndef MOS_RENDERER_H
 #define	MOS_RENDERER_H
 
@@ -153,9 +146,9 @@ public:
 
     /**
      * @brief Renders particles.
-     * @param Particles object.
-     * @param View matrix.
-     * @param Projection matrix.
+     * @param particles Particles object.
+     * @param view View matrix.
+     * @param projection Projection matrix.
      */
     void update(Particles & particles,
                 const glm::mat4 view,
