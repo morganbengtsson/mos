@@ -11,7 +11,6 @@
 #include <vector>
 #include <initializer_list>
 #include "vertex.hpp"
-#include "range.hpp"
 
 namespace mos {
 

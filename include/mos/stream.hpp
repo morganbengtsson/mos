@@ -23,13 +23,13 @@ public:
     /**
      * @brief buffer_size
      */
-    int buffer_size;
+    static const int buffer_size = 4096*8;
 
     /**
      * @brief read chunk of data from the stream.
      * @return Chunk of shorts.
      */
-    std::array<short, 4096*8> read();
+    std::array<short, buffer_size> read();
 
     /**
      * @brief done

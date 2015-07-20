@@ -292,10 +292,6 @@ public:
 
 private:
 
-    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
-    using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
-    using BoxProgramPair = std::pair<std::string, BoxProgramData>;
-
     /**
      * @brief The ParticleProgramData struct, uniforms for the particle shader program.
      */
@@ -339,6 +335,11 @@ private:
         int has_material;
         int selected;
     };
+
+    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
+    using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
+    using BoxProgramPair = std::pair<std::string, BoxProgramData>;
+
     bool lightmaps_;
     bool boxes_;
 
