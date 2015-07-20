@@ -20,6 +20,9 @@ public:
     Stream(const mos::Stream & stream);
     ~Stream();
 
+    /**
+     * @brief buffer_size
+     */
     int buffer_size;
 
     /**
@@ -28,6 +31,10 @@ public:
      */
     std::array<short, 4096*8> read();
 
+    /**
+     * @brief done
+     * @return True if the stream has no more data.
+     */
     bool done() const;
 
     /**
@@ -43,7 +50,7 @@ public:
     int channels() const;
 
     /**
-     * @brief seek_start starts the stream from the beginning.
+     * @brief seek_start Starts the stream from the beginning.
      */
     void seek_start();
 private:

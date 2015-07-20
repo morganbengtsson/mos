@@ -17,6 +17,9 @@ namespace mos {
      */
     class Sound {
     public:
+        /**
+         * @breif Container for 16bit samples (short).
+         */
         using Samples = std::vector<short>;
         template<class It>
 

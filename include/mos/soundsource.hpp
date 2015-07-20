@@ -1,5 +1,5 @@
-#ifndef SOUNDSOURCE_HPP
-#define SOUNDSOURCE_HPP
+#ifndef MOS_SOUNDSOURCE_HPP
+#define MOS_SOUNDSOURCE_HPP
 
 #include <vector>
 #include <memory>
@@ -9,14 +9,14 @@
 
 namespace mos {
 
-/*!
+/**
  * A classed used for audio playback. Contains sounds, together with a position.
  * That is used if 3D audio is enabled.
  */
 class SoundSource : public Source {
 public:
 
-    /*!
+    /**
      * @brief SoundSource constructor
      * @param sound shared pointer
      * @param position
@@ -30,8 +30,12 @@ public:
                 const bool playing = false,
                 const bool occluded = false);
     virtual ~SoundSource();
+
+    /**
+     * @brief The sound that is played from the source.
+     */
     std::shared_ptr<Sound> sound;
 };
 }
 
-#endif // SOUNDSOURCE_HPP
+#endif // MOS_SOUNDSOURCE_HPP

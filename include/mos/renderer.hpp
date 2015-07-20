@@ -5,8 +5,8 @@
  * Created on February 15, 2014, 2:37 PM
  */
 
-#ifndef MO_RENDERER_H
-#define	MO_RENDERER_H
+#ifndef MOS_RENDERER_H
+#define	MOS_RENDERER_H
 
 #include "GL/glew.h"
 #include "texture2d.hpp"
@@ -22,91 +22,73 @@
 namespace mos {
 
 /**
- * @brief The ParticleProgramData struct, uniforms for the particle shader program.
+ * @brief
+ * The class that talks to OpenGL, and renders Model objects.
  */
-struct ParticleProgramData{
-    unsigned int program;
-    int mvp;
-    int mv;
-};
-
-/**
- * @brief The BoxProgramData struct, uniforms for the bounding box shader program.
- */
-struct BoxProgramData{
-    unsigned int program;
-    int mvp;
-    int mv;
-};
-
-/**
- * @brief The VertexProgramData struct, uniforms for the standard shader.
- */
-struct VertexProgramData {
-    unsigned int program;
-    int mvp;
-    int mv;
-    int normal_matrix;
-    int texture;
-    int lightmap;
-    int normalmap;
-    int material_ambient_color;
-    int material_diffuse_color;
-    int material_specular_color;
-    int material_specular_exponent;
-    int opacity;
-    int light_position;
-    int light_diffuse_color;
-    int light_specular_color;
-    int has_texture;
-    int has_lightmap;
-    int has_normalmap;
-    int has_material;
-    int selected;
-};
-
-
-/*!
-     * The class that talks to OpenGL, and renders Model objects.
-     */
 class Renderer {
 public:
-    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
-    using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
-    using BoxProgramPair = std::pair<std::string, BoxProgramData>;
-
+    /**
+     * @brief Renderer
+     */
     Renderer();
-    virtual ~Renderer();   
+    /**
+     * @brief ~Renderer
+     */
+    virtual ~Renderer();
+
+    /**
+     * @brief Add a shader program for ordinary vertex rendering.
+     * @param path
+     * @param vertex_shader_source
+     * @param fragment_shader_source
+     */
     void add_vertex_program(const std::string path,
                             const std::string vertex_shader_source,
                             const std::string fragment_shader_source);
 
+    /**
+     * @brief Add a shader program for particle rendering.
+     * @param name
+     * @param vs_source Vertex shader source (glsl).
+     * @param fs_source Fragment shader source (glsl).
+     */
     void add_particle_program(const std::string name,
                               const std::string vs_source,
                               const std::string fs_source);
 
 
+    /**
+     * @brief Init a model in renderers own memory.
+     * @param model
+     */
     void init(const Model & model);
 
     template<class It>
+    /**
+     * @brief Init multiple models.
+     * @param begin Iterator to first model.
+     * @param end Iterator to last model.
+     */
     void init(It begin, It end) {
         for (auto it = begin; it != end; it++){
             init(*it);
         }
     }
 
+    /**
+     * @brief Init a texture.
+     * @param texture The texture.
+     */
     void init(std::shared_ptr<Texture2D> texture);
 
     /**
-     * Renders a Model object.
-     *
-     * @param model.
-     * @param Additional transform matrix.
-     * @param View matrix of the camera
-     * @param Projection matrix of the camera
-     * @param Custom opacity of the object.
-     * @param Program_name, either "text" or "standard"
-     * @param Position of one ortho light.
+     * @brief Updates render state of model.
+     * @param model
+     * @param transform Additional transform matrix.
+     * @param view View matrix of the camera
+     * @param projection Projection matrix of the camera
+     * @param program_name Either "text" or "standard"
+     * @param light One dynamic light to use.
      */
     void update(const Model & model,
                 const glm::mat4 transform,
@@ -117,6 +99,16 @@ public:
 
 
     template<class It>
+    /**
+     * @brief Update render state with multiple models
+     * @param begin Iterator to fist model.
+     * @param end Iterator to last model
+     * @param transform Additional transform matrix.
+     * @param view View matrix.
+     * @param projection Projection matrix.
+     * @param program_name Program to use.
+     * @param light Dynamic light.
+     */
     void update(It begin, It end,
                 const glm::mat4 transform,
                 const glm::mat4 view,
@@ -128,12 +120,27 @@ public:
         }
     }
 
+    /**
+     * @brief Update render state.
+     * @param model Model to update.
+     * @param camera Camera to render from (view, projection)
+     * @param program_name Program to use.
+     * @param light Dynamic light.
+     */
     void update(const Model & model,
                 const Camera & camera,
                 const std::string program_name = "standard",
                 const Light & light = Light());
 
     template<class It>
+    /**
+     * @brief Update render state for multiple models.
+     * @param begin Iterator to fist model.
+     * @param end Iterator to last model.
+     * @param camera Camera to render from.
+     * @param program_name Program to use.
+     * @param light Dynamic light.
+     */
     void update(It begin,
                 It end,
                 const Camera & camera,
@@ -145,22 +152,24 @@ public:
     }
 
     /**
-         * Renders particles.
-         *
-         * @param Particles object.
-         * @param View matrix.
-         * @param Projection matrix.
-         */
+     * @brief Renders particles.
+     * @param Particles object.
+     * @param View matrix.
+     * @param Projection matrix.
+     */
     void update(Particles & particles,
                 const glm::mat4 view,
                 const glm::mat4 projection);
 
     /**
-         * Clears the screen and the depth buffer.
-         * @param color
-         */
+     * @brief Clears the screen and the depth buffer.
+     * @param color
+     */
     void clear(const glm::vec3 color);
 
+    /**
+     * @brief Clear all internal buffers.
+     */
     void clear_buffers(){
         for (auto & texture : textures_) {
             glDeleteTextures(1, &texture.second);
@@ -178,11 +187,29 @@ public:
         element_array_buffers_.clear();
     }
 
+    //TODO: Remove all these from public api!
+    /**
+     * @brief readFBO
+     */
     GLuint readFBO;
+    /**
+     * @brief drawFBO
+     */
     GLuint drawFBO;
+    /**
+     * @brief readFBO2
+     */
     GLuint readFBO2;
+    /**
+     * @brief drawFBO2
+     */
     GLuint drawFBO2;
 
+    /**
+     * @brief render_target_reset
+     * @param width
+     * @param height
+     */
     void render_target_reset(unsigned int width, unsigned int height) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
@@ -190,6 +217,10 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    /**
+     * @brief render_target
+     * @param target
+     */
     void render_target(RenderTarget target){
         if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
 
@@ -197,7 +228,7 @@ public:
             glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
 
             GLuint renderedTexture;
-            glGenTextures(1, &renderedTexture);            
+            glGenTextures(1, &renderedTexture);
 
             glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderedTexture);
             glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8, target.texture->width(), target.texture->height(), GL_TRUE);
@@ -236,29 +267,78 @@ public:
 
         auto fb = frame_buffers_[target.id()];
         glBindFramebuffer(GL_FRAMEBUFFER, fb);
-        }
+    }
 
-    /*!
+    /**
      * Set lightmap use.
      */
     void lightmaps(const bool lightmaps);
 
-    /*!
+    /**
      * Check if lightmaps are in use.
      */
     bool lightmaps() const;
 
-    /*!
+    /**
      * @brief set bounding box rendering.
      */
     void boxes(const bool boxes);
 
-    /*!
+    /**
      * @brief if bounding_boxes are shown.
      * @return bool describing if bounding boxes are rendered.
      */
     bool boxes() const;
+
 private:
+
+    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
+    using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
+    using BoxProgramPair = std::pair<std::string, BoxProgramData>;
+
+    /**
+     * @brief The ParticleProgramData struct, uniforms for the particle shader program.
+     */
+    struct ParticleProgramData {
+        unsigned int program;
+        int mvp;
+        int mv;
+    };
+
+    /**
+     * @brief The BoxProgramData struct, uniforms for the bounding box shader program.
+     */
+    struct BoxProgramData {
+        unsigned int program;
+        int mvp;
+        int mv;
+    };
+
+    /**
+     * @brief The VertexProgramData struct, uniforms for the standard shader.
+     */
+    struct VertexProgramData {
+        unsigned int program;
+        int mvp;
+        int mv;
+        int normal_matrix;
+        int texture;
+        int lightmap;
+        int normalmap;
+        int material_ambient_color;
+        int material_diffuse_color;
+        int material_specular_color;
+        int material_specular_exponent;
+        int opacity;
+        int light_position;
+        int light_diffuse_color;
+        int light_specular_color;
+        int has_texture;
+        int has_lightmap;
+        int has_normalmap;
+        int has_material;
+        int selected;
+    };
     bool lightmaps_;
     bool boxes_;
 
@@ -270,19 +350,19 @@ private:
                          const std::string & vs_source,
                          const std::string & fs_source);
 
-	std::unordered_map<std::string, VertexProgramData> vertex_programs_;
-	std::unordered_map<std::string, ParticleProgramData> particle_programs_;
+    std::unordered_map<std::string, VertexProgramData> vertex_programs_;
+    std::unordered_map<std::string, ParticleProgramData> particle_programs_;
     std::unordered_map<std::string, BoxProgramData> box_programs_;
 
     std::unordered_map<unsigned int, unsigned int> frame_buffers_;
-	std::unordered_map<unsigned int, unsigned int> textures_;
-	std::unordered_map<unsigned int, unsigned int> array_buffers_;
-	std::unordered_map<unsigned int, unsigned int> element_array_buffers_;
-	std::unordered_map<unsigned int, unsigned int> vertex_arrays_;
+    std::unordered_map<unsigned int, unsigned int> textures_;
+    std::unordered_map<unsigned int, unsigned int> array_buffers_;
+    std::unordered_map<unsigned int, unsigned int> element_array_buffers_;
+    std::unordered_map<unsigned int, unsigned int> vertex_arrays_;
     unsigned int box_vbo;
     unsigned int box_ebo;
     unsigned int box_va;
 };
 }
-#endif	/* MO_RENDERER_H */
+#endif	/* MOS_RENDERER_H */
 

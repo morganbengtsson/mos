@@ -18,6 +18,11 @@ public:
      * @param height
      */
     explicit RenderTarget(const unsigned int width = 256,  const unsigned int height = 256);
+
+    /**
+     * @brief The texture that is rendered to.
+     * @todo Should probably not be shared.
+     */
     std::shared_ptr<mos::Texture2D> texture;
     
     /**

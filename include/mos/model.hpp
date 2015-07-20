@@ -1,12 +1,5 @@
-/* 
- * File:   Model.h
- * Author: Morgan Bengtsson, bengtsson.morgan@gmail.com
- *
- * Created on March 5, 2014, 10:29 PM
- */
-
-#ifndef MO_MODEL_H
-#define	MO_MODEL_H
+#ifndef MOS_MODEL_H
+#define	MOS_MODEL_H
 
 #include <memory>
 #include "mesh.hpp"
@@ -23,6 +16,9 @@ namespace mos {
      */
     class Model {
     public:
+        /**
+         * @brief How to draw the model.
+         */
         enum class Draw {TRIANGLES, LINES, POINTS};
         /**
          * @brief Model
