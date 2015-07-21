@@ -15,7 +15,7 @@
 namespace mos {
 
 /**
- * @brief
+ * @brief Render geometry.
  * The class that talks to OpenGL, and renders Model objects.
  */
 class Renderer {
@@ -263,23 +263,24 @@ public:
     }
 
     /**
-     * Set lightmap use.
+     * @brief Set lightmap use.
      */
     void lightmaps(const bool lightmaps);
 
     /**
-     * Check if lightmaps are in use.
+     * @brief Check if lightmaps is enabled.
+     * @return True if lightmaps are enabled.
      */
     bool lightmaps() const;
 
     /**
-     * @brief set bounding box rendering.
+     * @brief Set bounding box rendering.
      */
     void boxes(const bool boxes);
 
     /**
-     * @brief if bounding_boxes are shown.
-     * @return bool describing if bounding boxes are rendered.
+     * @brief Check If bounding_boxes are shown.
+     * @return True if bounding boxes are rendered.
      */
     bool boxes() const;
 
