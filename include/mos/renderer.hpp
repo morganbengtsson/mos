@@ -21,33 +21,18 @@ namespace mos {
 class Renderer {
 public:
     /**
-     * @brief Renderer
+     * @brief Renderer constructor.
+     * Inits the renderer, in this implementation also creates a
+     * valid OpenGL context with GLEW.
      */
     Renderer();
     /**
-     * @brief ~Renderer
+     * @brief Renderer destructor.
+     * Deletes all allocated GPU memory. Textures, Shaders, Buffers.
      */
     virtual ~Renderer();
 
-    /**
-     * @brief Add a shader program for ordinary vertex rendering.
-     * @param path
-     * @param vertex_shader_source
-     * @param fragment_shader_source
-     */
-    void add_vertex_program(const std::string path,
-                            const std::string vertex_shader_source,
-                            const std::string fragment_shader_source);
 
-    /**
-     * @brief Add a shader program for particle rendering.
-     * @param name
-     * @param vs_source Vertex shader source (glsl).
-     * @param fs_source Fragment shader source (glsl).
-     */
-    void add_particle_program(const std::string name,
-                              const std::string vs_source,
-                              const std::string fs_source);
 
 
     /**
@@ -336,6 +321,15 @@ private:
 
     bool lightmaps_;
     bool boxes_;
+
+
+    void add_vertex_program(const std::string path,
+                            const std::string vertex_shader_source,
+                            const std::string fragment_shader_source);
+
+    void add_particle_program(const std::string name,
+                              const std::string vs_source,
+                              const std::string fs_source);
 
     unsigned int create_shader(const std::string source, const unsigned int type);
     bool check_shader(const unsigned int shader);
