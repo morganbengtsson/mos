@@ -2,9 +2,7 @@
 API reference
 =============
 
-Renderer
-========
-
-.. doxygenclass:: mos::Renderer
+.. doxygennamespace:: mos
   :project: MOS
   :members:
+  :undoc-members:
