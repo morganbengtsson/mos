@@ -4,6 +4,7 @@
 #include "GL/glew.h"
 #include "texture2d.hpp"
 #include "model.hpp"
+#include "quad.hpp"
 #include "particles.hpp"
 #include "light.hpp"
 #include "render_target.hpp"
@@ -128,6 +129,15 @@ public:
             update(*it, camera, program_name, light);
         }
     }
+
+    void update(const Quad & model,
+                const glm::mat4 & view,
+                const glm::mat4 & projection,
+                const Light & light = Light());
+
+    void update(const Quad & model,
+                const Camera & camera,
+                const Light & light = Light());
 
     /**
      * @brief Renders particles.

@@ -562,4 +562,12 @@ void Renderer::update(const Model &model,
                       const Light &light) {
     update(model, glm::mat4(1.0f), camera.view, camera.projection, program_name, light);
 }
+
+void Renderer::update(const Quad & quad, const glm::mat4 & view, const glm::mat4 & projection, const Light & light) {
+    update(quad, glm::mat4(1.0f), view, projection, "effect", light);
+}
+
+void Renderer::update(const Quad & quad, const Camera & camera, const Light & light) {
+    update(quad, glm::mat4(1.0f), camera.view, camera.projection, "effect", light);
+}
 }
