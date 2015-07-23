@@ -37,7 +37,8 @@ if read_the_docs_build:
 # ones.
 extensions = ["breathe"]
 breathe_projects = {"MOS": "../xml/"}
-breate_default_project = "MOS"
+breathe_default_project = "MOS"
+breathe_default_members = ('members', 'undoc-members')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
