@@ -301,6 +301,13 @@ void Renderer::init(std::shared_ptr<Texture2D> texture){
     }
 }
 
+void Renderer::update(const Model &model,
+                      const glm::mat4 & view,
+                      const glm::mat4 & projection,
+                      const Light & light) {
+    update(model, glm::mat4(1.0f), view, projection, "standard", light);
+}
+
 void Renderer::clear(const glm::vec3 color) {
     glClearDepthf(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -556,18 +563,28 @@ void Renderer::update(const Model & model,
     }
 }
 
-void Renderer::update(const Model &model,
-                      const Camera &camera,
+void Renderer::update(const Model & model,
+                      const Camera & camera,
                       const std::string program_name,
-                      const Light &light) {
+                      const Light & light) {
     update(model, glm::mat4(1.0f), camera.view, camera.projection, program_name, light);
 }
 
-void Renderer::update(const Quad & quad, const glm::mat4 & view, const glm::mat4 & projection, const Light & light) {
-    update(quad, glm::mat4(1.0f), view, projection, "effect", light);
+void Renderer::update(const Quad & quad,
+                      const glm::mat4 view,
+                      const glm::mat4 projection) {
+    update(quad, glm::mat4(1.0f), view, projection, "effect", Light());
 }
 
-void Renderer::update(const Quad & quad, const Camera & camera, const Light & light) {
-    update(quad, glm::mat4(1.0f), camera.view, camera.projection, "effect", light);
+void Renderer::update(const Quad & quad,
+                      const Camera & camera) {
+    update(quad, glm::mat4(1.0f), camera.view, camera.projection, "effect", Light());
+}
+
+void Renderer::update(const Text & text,
+                      const glm::mat4 view,
+                      const glm::mat4 projection) {
+    update(text, glm::mat4(1.0f), view, projection, "text", Light());
+
 }
 }

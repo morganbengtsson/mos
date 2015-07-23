@@ -5,6 +5,7 @@
 #include "texture2d.hpp"
 #include "model.hpp"
 #include "quad.hpp"
+#include "text.hpp"
 #include "particles.hpp"
 #include "light.hpp"
 #include "render_target.hpp"
@@ -60,22 +61,11 @@ public:
      */
     void init(std::shared_ptr<Texture2D> texture);
 
-    /**
-     * @brief Updates render state of model.
-     * @param model
-     * @param transform Additional transform matrix.
-     * @param view View matrix of the camera
-     * @param projection Projection matrix of the camera
-     * @param program_name Either "text" or "standard"
-     * @param light One dynamic light to use.
-     */
-    void update(const Model & model,
-                const glm::mat4 transform,
-                const glm::mat4 view,
-                const glm::mat4 projection,
-                const std::string program_name = "standard",
-                const Light & light = Light());
 
+    void update(const Model & model,
+                const glm::mat4 & view,
+                const glm::mat4 & projection,
+                const Light & light = Light());
 
     template<class It>
     /**
@@ -131,13 +121,15 @@ public:
     }
 
     void update(const Quad & model,
-                const glm::mat4 & view,
-                const glm::mat4 & projection,
-                const Light & light = Light());
+                const glm::mat4 view,
+                const glm::mat4 projection);
 
     void update(const Quad & model,
-                const Camera & camera,
-                const Light & light = Light());
+                const Camera & camera);
+
+    void update(const Text & text,
+                const glm::mat4 view,
+                const glm::mat4 projection);
 
     /**
      * @brief Renders particles.
@@ -333,6 +325,21 @@ private:
     bool lightmaps_;
     bool boxes_;
 
+    /**
+     * @brief Updates render state of model.
+     * @param model
+     * @param transform Additional transform matrix.
+     * @param view View matrix of the camera
+     * @param projection Projection matrix of the camera
+     * @param program_name Either "text" or "standard"
+     * @param light One dynamic light to use.
+     */
+    void update(const Model & model,
+                const glm::mat4 transform,
+                const glm::mat4 view,
+                const glm::mat4 projection,
+                const std::string program_name,
+                const Light & light = Light());
 
     void add_vertex_program(const std::string path,
                             const std::string vertex_shader_source,
