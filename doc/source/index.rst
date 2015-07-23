@@ -7,13 +7,6 @@
 MOS documentation
 =================
 
-.. doxygenfile:: renderer.hpp
-
-
-.. doxygenclass:: mos::renderer
-
-
-
 .. toctree::
    :maxdepth: 2
    
