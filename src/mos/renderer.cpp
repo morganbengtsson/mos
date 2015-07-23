@@ -204,7 +204,8 @@ void Renderer::add_vertex_program(const std::string path, const std::string vert
                                                   glGetUniformLocation(program, "has_lightmap"),
                                                   glGetUniformLocation(program, "has_normalmap"),
                                                   glGetUniformLocation(program, "has_material"),
-                                                  glGetUniformLocation(program, "selected")
+                                                  glGetUniformLocation(program, "selected"),
+                                                  glGetUniformLocation(program, "receives_light")
                                               }));
 }
 
@@ -519,6 +520,7 @@ void Renderer::update(const Model & model,
     glUniform1i(uniforms.has_material, model.material == nullptr ? false : true);
 
     glUniform1i(uniforms.selected, model.selected());
+    glUniform1i(uniforms.receives_light, model.receives_light);
 
     int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
     int draw_type = GL_TRIANGLES;

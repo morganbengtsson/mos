@@ -48,7 +48,8 @@ namespace mos {
               std::shared_ptr<Texture2D> normalmap = std::shared_ptr<Texture2D>(),
               const bool selectable = false,
               const float obstruction = 0.0f,
-              const float opacity = 1.0f);
+              const float opacity = 1.0f,
+              const float receives_light = true);
         virtual ~Model();
 
         /**
@@ -130,6 +131,11 @@ namespace mos {
         * @brief Is the model selectable;
 		*/
         bool selectable;
+
+        /**
+         * @brief If the model is affected by light model (lightmap and dynamic).
+         */
+        bool receives_light;
 
         /**
         * @brief Checks if the model is selected.

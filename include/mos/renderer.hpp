@@ -313,6 +313,7 @@ private:
         int has_normalmap;
         int has_material;
         int selected;
+        int receives_light;
     };
 
     using VertexProgramPair = std::pair<std::string, VertexProgramData>;

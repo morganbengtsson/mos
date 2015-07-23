@@ -21,7 +21,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
              std::shared_ptr<Texture2D> normalmap,
              const bool selectable,
              const float obstruction,
-             const float opacity) :
+             const float opacity,
+             const float affected_by_light) :
     draw(draw),
     mesh(mesh),
     texture(texture),
@@ -33,7 +34,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     selected_(false),
     selectable(selectable),
     box(mesh->vertices_begin(), mesh->vertices_end(), transform, obstruction),
-    opacity(opacity){}
+    opacity(opacity),
+    receives_light(affected_by_light){}
 
 Model::~Model() {
 }

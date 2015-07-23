@@ -1,4 +1,5 @@
 #version 330
+uniform bool receives_light;
 uniform bool selected;
 uniform vec3 material_ambient_color;
 uniform vec3 material_diffuse_color;
@@ -70,7 +71,12 @@ void main() {
     }
 
     //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
-    color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
+    if(receives_light == true){
+        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
+    }
+    else{
+        color = vec4(diffuse_color.rgb, opacity);
+    }
     if (has_texture){
         color.a = tex_color.a * opacity;
     }
