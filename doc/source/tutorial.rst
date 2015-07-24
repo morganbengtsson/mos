@@ -7,7 +7,8 @@ Assets
 
 Rendering
 ---------
-The renderer is the class that takes care of all the rendering, and
+
+The :cpp:class:`mos::Renderer` is the class that takes care of all the rendering, and
 what is shown on the screen. The renderer is simply created by constructing
 it somwhere as follows. It should probably be stored somewhere, so its lifetime
 is as long as the application:
@@ -20,8 +21,8 @@ That is it. The renderer is initialized, hopefully with a valid OpenGL context.
 This ofcourse makes it possible to make OpenGL calls directly, though It is 
 incouraged. Everything should be done via the Renderer API.
 
-For each frame it is most often desirable to clear the render state. The clear() method
-takes a vec3 of rgb colors:
+For each frame it is most often desirable to clear the render state. 
+The :cpp:func:`mos::Renderer::clear()` method takes a vec3 of rgb colors:
 
  .. code-block:: c++
 	
