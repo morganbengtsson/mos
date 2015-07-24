@@ -48,8 +48,9 @@ add_subdirectory(externals/lodepng)
 include_directories(externals/lodepng)
 
 # stb
-add_subdirectory(externals/stb)
 include_directories(externals/stb)
+add_subdirectory(externals/stb)
+
 
 # mo
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
@@ -71,3 +72,10 @@ ENDIF()
 target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mos lodepng)
 target_link_libraries(mos stb)
+target_include_directories(mos PUBLIC
+externals/stb
+externals/lodepng
+externals/objload
+externals/rapidxml
+externals/glm)
+
