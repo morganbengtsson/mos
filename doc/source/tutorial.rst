@@ -5,6 +5,17 @@ Tutorial
 Assets
 ------
 
+Asset management is an important part of rendering. Without the management of heavy data
+There is nothing to render or hear. The following assets are available in MOS:
+
+* :cpp:class`mos::Mesh` - A collection of vertices.
+* :cpp:class`mos::Texture2D` - A collection of texels.
+* :cpp:class`mos::Sound` - Sound samples.
+* :cpp:class`mos::Stream` - Streamed sound samples.
+
+All theese can be created manually, though for convenience the class
+:cpp:class`mos:Assets` is provided. 
+
 Rendering
 ---------
 
