@@ -2,7 +2,7 @@
 Build
 =====
 
-The only method documented here is how to include MOS in a CMAKE environment. 
+The only method documented here is how to include MOS in a CMake environment. 
 Other means of using the MOS library are possible, though not documented.
 
 Source code
@@ -44,4 +44,5 @@ To use MOS within a CMake project, put the following in the CMakeLists.txt:
 	
 	target_link_libraries(project_name mos)
 
-Where project_name is the name of the parent CMake project.
+Where *project_name* is the name of the parent CMake project and *externals*
+is the name of the directory with external libraries in this case.
