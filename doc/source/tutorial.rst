@@ -40,7 +40,11 @@ Colission detection
 Animation
 ---------
 
+Mos supports keyframe animation.
+
 Audio
 -----
+
+3D audio through OpenAL.
 
 
