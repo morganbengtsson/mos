@@ -1,16 +1,10 @@
-#ifdef GL_ES
-precision mediump float;
-precision mediump int;
-#else
-#version 120
-#endif
-varying vec3 v_position;
-varying vec2 v_uv;
+#version 330
 uniform sampler2D texture;
 uniform float opacity;
-
 uniform float offset[3] = float[]( 0.0, 1.3846153846, 3.2307692308 );
 uniform float weight[3] = float[]( 0.2270270270, 0.3162162162, 0.0702702703 );
+in vec3 v_position;
+in vec2 v_uv;
 
 void main() {
     float offset2 = 2.0;
