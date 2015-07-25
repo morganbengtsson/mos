@@ -61,8 +61,8 @@ Renderer::Renderer() :
     add_vertex_program("effect", text("assets/shaders/effect_330.vert"),
                        text("assets/shaders/effect_330.frag"));
 
-    std::string particles_vert_source = text("assets/shaders/particles.vert");
-    std::string particles_frag_source = text("assets/shaders/particles.frag");
+    std::string particles_vert_source = text("assets/shaders/particles_330.vert");
+    std::string particles_frag_source = text("assets/shaders/particles_330.frag");
     add_particle_program("particles", particles_vert_source, particles_frag_source);
 
     std::string box_vert_source = text("assets/shaders/box_330.vert");
