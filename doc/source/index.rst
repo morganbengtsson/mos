@@ -7,10 +7,17 @@
 MOS documentation
 =================
 
+MOS is a lightweight library for game development. The design principle
+is to keep things simple, and not include to much cruft. MOS provides
+functionality for 3D/2D rendering, 3D audio and asset management. Along
+with scripts for Blender 3D to create 3D assets. Audio assets are stored
+in the ogg format.
+
 .. toctree::
    :maxdepth: 2
    
-   build
-   tutorial
+   install
+   coding
+   modeling
    api
    
