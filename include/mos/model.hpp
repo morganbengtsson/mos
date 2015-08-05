@@ -20,6 +20,8 @@ namespace mos {
          * @brief How to draw the model.
          */
         enum class Draw {TRIANGLES, LINES, POINTS};
+
+        using Models = std::vector<Model>;
         /**
          * @brief Model
          */
@@ -148,6 +150,11 @@ namespace mos {
 		* @param selected
 		*/
         void selected(const bool selected);
+
+        /**
+         * @brief Children.
+         */
+        Models models;
     private:
         bool valid_;
         bool selected_;

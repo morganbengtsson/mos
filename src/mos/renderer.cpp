@@ -562,6 +562,10 @@ void Renderer::update(const Model & model,
         glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, (GLvoid*)(4*sizeof(GLuint)));
         glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid*)(8*sizeof(GLuint)));
     }
+
+    for (auto & child : model.models){
+        update(child, model.transform(), view, projection, program_name, light);
+    }
 }
 
 void Renderer::update(const Model & model,
