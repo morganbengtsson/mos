@@ -34,9 +34,6 @@ public:
      */
     virtual ~Renderer();
 
-
-
-
     /**
      * @brief Init a model in renderers own memory.
      * @param model

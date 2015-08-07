@@ -9,12 +9,15 @@
 #include <unordered_map>
 #include <map>
 #include <memory>
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
 #include "sound.hpp"
 #include "character.hpp"
 #include "mesh.hpp"
 #include "texture2d.hpp"
 #include "material.hpp"
 #include "stream.hpp"
+#include "model.hpp"
 
 namespace mos {
     
@@ -79,6 +82,13 @@ namespace mos {
          */
         Assets(const Assets & assets) = delete; // Not copyable.
         virtual ~Assets();
+
+        /**
+         * @brief Loads a full Model from a *.model file.
+         * @param file_name
+         * @return Model object including associated meshes/textures/etc.
+         */
+        Model model(const std::string file_name);
 
         /**
          * Loads a *.material file into a Material object, and caches it internally.
@@ -180,6 +190,8 @@ namespace mos {
         TextureMap textures_;
         SoundMap sounds_;
         MaterialMap materials_;
+
+        Model model(rapidjson::Value & value);
     };
 }
 #endif	/* MO_ASSETS_H */

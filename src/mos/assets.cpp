@@ -28,7 +28,58 @@ namespace mos {
     directory_(directory) {    
     }
 
-    Assets::~Assets() {		
+    Assets::~Assets() {
+    }
+
+    Model Assets::model(rapidjson::Value &value ) {
+        std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull() ? "": value["mesh"].GetString();
+
+        bool selectable = !value.HasMember("selectable") || value["selectable"].IsNull() ? false: value["selectable"].GetBool();
+
+        std::string texture = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
+        std::string lightmap = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
+        std::string material = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
+
+        float x = value["position"][0].GetDouble();
+        float y = value["position"][1].GetDouble();
+        float z = value["position"][2].GetDouble();
+
+        glm::vec3 axis(value["axis"][0].GetDouble(), value["axis"][1].GetDouble(), value["axis"][2].GetDouble());
+        float angle = value["angle"].GetDouble();
+
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), angle, axis);
+
+        float obstruction = !value.HasMember("obstruction") || value["obstruction"].IsNull() ? 0.0f : value["obstruction"].GetDouble();
+
+        auto m =  mos::Model(mesh_cached(mesh),
+                         texture_cached(texture),
+                         transform,
+                         mos::Model::Draw::TRIANGLES,
+                         material_cached(material),
+                         texture_cached(lightmap),
+                         nullptr,
+                         selectable,
+                         obstruction);
+
+        for (auto it = value["models"].Begin(); it != value["models"].End(); it++){
+            m.models.push_back(model(*it));
+        }
+        return m;
+    }
+
+    Model Assets::model(const std::string file_name){
+        std::cout << "Loading: " << file_name << std::endl;
+        std::ifstream is(directory_ + file_name);
+        if (!is.good()){
+            throw std::runtime_error(directory_ + file_name + " does not exist.");
+        }
+        std::ifstream file(directory_ + file_name);
+        std::string source((std::istreambuf_iterator<char>(file)),
+                         std::istreambuf_iterator<char>());
+        rapidjson::Document doc;
+        doc.Parse(source.c_str());
+
+        return model(doc);
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
@@ -235,4 +286,6 @@ namespace mos {
         delete [] cstr;
         return characters;
     }
+
+
 }

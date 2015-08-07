@@ -476,7 +476,7 @@ void Renderer::update(const Model & model,
     init(model);
 
     auto t = model.transform();
-    glm::mat4 mv = view * transform * t;
+    glm::mat4 mv = view * t *  transform;
     glm::mat4 mvp = projection * view * t * transform;
 
     glUseProgram(vertex_programs_[program_name].program);
@@ -551,7 +551,7 @@ void Renderer::update(const Model & model,
 
         glm::vec3 size = model.box.size();
 
-        glm::mat4 mv = view * model.box.transform() * glm::scale(glm::mat4(1.0f), size);
+        glm::mat4 mv = view * model.box.transform() *  glm::scale(glm::mat4(1.0f), size);
         glm::mat4 mvp = projection * view * model.box.transform() * glm::scale(glm::mat4(1.0f), size);
 
         glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
