@@ -175,7 +175,7 @@ BoxIntersection Box::intersects(const Box &other) {
         glm::vec3( 0,-1, 0), // 'bottom' face normal (-y direction)
         glm::vec3( 0, 1, 0), // 'top' face normal (+y direction)
         glm::vec3( 0, 0,-1), // 'far' face normal (-z direction)
-        glm::vec3( 0, 0, 1), // 'near' face normal (+x direction)
+        glm::vec3( 0, 0, 1), // 'near' face normal (+z direction)
     };
 
     glm::vec3 maxa = this->max();      
@@ -207,7 +207,7 @@ BoxIntersection Box::intersects(const Box &other) {
     float distance = 0.0f;
     for(int i = 0; i < 6; i ++) {
             // box does not intersect face. So boxes don't intersect at all.
-            if(distances[i] < 0.0f){
+            if(distances[i] < 0.0f) {
                 return BoxIntersection{false, glm::vec3(0.0f), distance};
             }
             // face of least intersection depth. That's our candidate.
