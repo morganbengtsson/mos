@@ -18,11 +18,13 @@ Box::Box(){
 Box::Box(const glm::vec3 & min,
          const glm::vec3 & max,
          const glm::mat4 & transform,
-         const float obstruction) :
+         const float obstruction,
+         const bool step) :
     transform_(transform),
     min_(min),
     max_(max),
-    obstruction_(obstruction) {
+    obstruction_(obstruction),
+    step_(step) {
         if(glm::all(glm::lessThan(max_, min_))){
             throw std::invalid_argument("Min must be less than max.");
         }
@@ -219,11 +221,16 @@ BoxIntersection Box::intersects(const Box &other) {
             }
         }
 
-    if (normal == faces[0] || normal == faces[1] || normal == faces[2] || normal == faces[3]) {
+    if (step() == true && (normal == faces[0] || normal == faces[1] || normal == faces[2] || normal == faces[3])) {
         std::cout << "n: "<< normal << "d: " << distance << std::endl;
-        return BoxIntersection{true, glm::vec3(0.0f, 0.0f, 1.0f), distance};
+        return BoxIntersection{true, glm::vec3(0.0f, 0.0f, 1.0), distance};
     }
     return BoxIntersection{true, normal, distance};
+}
+
+glm::vec3 Box::intersects_simple(const Box & other) {
+    auto inters = intersects(other);
+    return inters.normal * inters.distance;
 }
 
 glm::mat4 Box::transform() const {
@@ -252,6 +259,14 @@ glm::vec3 Box::size() const {
     return glm::vec3(glm::abs(max_.x-min_.x),
                      glm::abs(max_.y-min_.y),
                      glm::abs(max_.z-min_.z));
+}
+
+void Box::step(const bool step){
+    step_ = step;
+}
+
+bool Box::step() const{
+    return step_;
 }
 
 }

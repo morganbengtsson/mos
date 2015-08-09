@@ -36,6 +36,8 @@ namespace mos {
 
         bool selectable = !value.HasMember("selectable") || value["selectable"].IsNull() ? false: value["selectable"].GetBool();
 
+        bool step = !value.HasMember("step") || value["step"].IsNull() ? false: value["step"].GetBool();
+
         std::string texture = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
         std::string lightmap = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
         std::string material = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
@@ -59,6 +61,7 @@ namespace mos {
                          texture_cached(lightmap),
                          nullptr,
                          selectable,
+                         step,
                          obstruction);
 
         for (auto it = value["models"].Begin(); it != value["models"].End(); it++){

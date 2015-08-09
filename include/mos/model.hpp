@@ -49,6 +49,7 @@ namespace mos {
               std::shared_ptr<Texture2D> lightmap = std::shared_ptr<Texture2D>(),
               std::shared_ptr<Texture2D> normalmap = std::shared_ptr<Texture2D>(),
               const bool selectable = false,
+              const bool step = false,
               const float obstruction = 0.0f,
               const float opacity = 1.0f,
               const float receives_light = true);

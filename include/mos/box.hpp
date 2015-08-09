@@ -59,6 +59,11 @@ struct RayIntersection {
      * Distance from
      */
     float distance;
+
+    /**
+     * @brief If the box should behave as a stair step.
+     */
+    bool step;
 };
 
 /**
@@ -83,8 +88,11 @@ public:
     Box(VertexIt begin,
         VertexIt end,
         const glm::mat4 & transform,
-        const float obstruction = 0.0f) :
-        transform_(transform), obstruction_(obstruction) {
+        const float obstruction = 0.0f,
+        const bool step = false) :
+        transform_(transform),
+        obstruction_(obstruction),
+        step_(step){
         glm::vec3 min, max;
 
         if (begin != end) {
@@ -122,7 +130,8 @@ public:
     Box(const glm::vec3 & min,
         const glm::vec3 & max,
         const glm::mat4 & transform,
-        const float obstruction = 0.0f);
+        const float obstruction = 0.0f,
+        const bool step = false);
 
     /**
      * @brief min
@@ -161,6 +170,14 @@ public:
      */
     BoxIntersection intersects(const Box & other);
 
+
+    /**
+     * @brief Simple intersect method.
+     * @param other
+     * @return
+     */
+    glm::vec3 intersects_simple(const Box & other);
+
     /**
      * @brief Get the transform.
      */
@@ -189,11 +206,19 @@ public:
      * @return size in x, y and z directions.
      */
     glm::vec3 size() const;
+
+    /**
+     * @brief step
+     * @param step
+     */
+    void step(const bool step);
+    bool step() const;
 private:
     glm::vec3 min_;
     glm::vec3 max_;
     glm::mat4 transform_;
     float obstruction_;
+    bool step_;
 
 
 };
