@@ -172,10 +172,10 @@ BoxIntersection Box::intersects(const Box &other) {
     static const std::array<glm::vec3, 6> faces = {
         glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
         glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
-        glm::vec3( 0,-1, 0), // 'bottom' face normal (-y direction)
-        glm::vec3( 0, 1, 0), // 'top' face normal (+y direction)
-        glm::vec3( 0, 0,-1), // 'far' face normal (-z direction)
-        glm::vec3( 0, 0, 1), // 'near' face normal (+z direction)
+        glm::vec3( 0,-1, 0), // 'far' face normal (-y direction)
+        glm::vec3( 0, 1, 0), // 'near' face normal (+y direction)
+        glm::vec3( 0, 0,-1), // 'bottom' face normal (-z direction)
+        glm::vec3( 0, 0, 1), // 'top' face normal (+z direction)
     };
 
     glm::vec3 maxa = this->max();      
@@ -218,6 +218,11 @@ BoxIntersection Box::intersects(const Box &other) {
                 distance = distances[i];
             }
         }
+
+    if (normal == faces[0] || normal == faces[1] || normal == faces[2] || normal == faces[3]) {
+        std::cout << "n: "<< normal << "d: " << distance << std::endl;
+        return BoxIntersection{true, glm::vec3(0.0f, 0.0f, 1.0f), distance};
+    }
     return BoxIntersection{true, normal, distance};
 }
 
