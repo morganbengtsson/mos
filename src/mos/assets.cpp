@@ -55,6 +55,7 @@ namespace mos {
 
         auto m =  mos::Model(mesh_cached(mesh),
                          texture_cached(texture),
+                         nullptr,
                          transform,
                          mos::Model::Draw::TRIANGLES,
                          material_cached(material),

@@ -42,6 +42,7 @@ namespace mos {
          */
         Model(std::shared_ptr<Mesh> mesh, 
               std::shared_ptr<Texture2D> texture = std::shared_ptr<Texture2D>(),
+              std::shared_ptr<Texture2D> texture2 = std::shared_ptr<Texture2D>(),
               const glm::mat4 transform = glm::mat4(1.0f),
               const Draw draw = Draw::TRIANGLES,
               std::shared_ptr<Material> material = 
@@ -53,6 +54,10 @@ namespace mos {
               const float obstruction = 0.0f,
               const float opacity = 1.0f,
               const float receives_light = true);
+
+        /**
+         * @brief ~Model destructor
+         */
         virtual ~Model();
 
         /**
@@ -64,6 +69,11 @@ namespace mos {
          * @brief texture
          */
         std::shared_ptr<Texture2D> texture;
+
+        /**
+         * @brief texture2
+         */
+        std::shared_ptr<Texture2D> texture2;
         
         /**
          * @brief lightmap

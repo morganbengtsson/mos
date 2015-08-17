@@ -281,6 +281,13 @@ void Renderer::init(const Model & model) {
         }
     }
 
+    if (model.texture2){
+        if (textures_.find(model.texture2->id()) == textures_.end()) {
+            GLuint id = create_texture(model.texture2);
+            textures_.insert({model.texture2->id(), id});
+        }
+    }
+
     if (model.lightmap) {
         if (textures_.find(model.lightmap->id()) == textures_.end()) {
             auto id = create_texture(model.lightmap);
