@@ -7,12 +7,14 @@ uniform vec3 material_specular_color;
 uniform float material_specular_exponent;
 uniform float opacity;
 uniform sampler2D texture;
+uniform sampler2D texture2;
 uniform sampler2D lightmap;
 uniform sampler2D normalmap;
 uniform vec3 light_position;
 uniform vec3 light_diffuse_color;
 uniform vec3 light_specular_color;
 uniform bool has_texture;
+uniform bool has_texture2;
 uniform bool has_lightmap;
 uniform bool has_normalmap;
 uniform bool has_material;
@@ -42,6 +44,10 @@ void main() {
     vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);
     if (has_texture == true) {
         tex_color = texture2D(texture, fragment_uv);
+    }
+
+    if (has_texture2 == true){
+        tex_color += texture2D(texture2, fragment_uv);
     }
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);

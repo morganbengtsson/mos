@@ -191,6 +191,7 @@ void Renderer::add_vertex_program(const std::string path, const std::string vert
                                                   glGetUniformLocation(program, "model_view"),
                                                   glGetUniformLocation(program, "normal_matrix"),
                                                   glGetUniformLocation(program, "texture"),
+                                                  glGetUniformLocation(program, "texture2"),
                                                   glGetUniformLocation(program, "lightmap"),
                                                   glGetUniformLocation(program, "normalmap"),
                                                   glGetUniformLocation(program, "material_ambient_color"),

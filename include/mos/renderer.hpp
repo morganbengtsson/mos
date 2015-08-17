@@ -274,45 +274,46 @@ private:
      * @brief The ParticleProgramData struct, uniforms for the particle shader program.
      */
     struct ParticleProgramData {
-        unsigned int program;
-        int mvp;
-        int mv;
+        GLuint program;
+        GLint mvp;
+        GLint mv;
     };
 
     /**
      * @brief The BoxProgramData struct, uniforms for the bounding box shader program.
      */
     struct BoxProgramData {
-        unsigned int program;
-        int mvp;
-        int mv;
+        GLuint program;
+        GLint mvp;
+        GLint mv;
     };
 
     /**
      * @brief The VertexProgramData struct, uniforms for the standard shader.
      */
     struct VertexProgramData {
-        unsigned int program;
-        int mvp;
-        int mv;
-        int normal_matrix;
-        int texture;
-        int lightmap;
-        int normalmap;
-        int material_ambient_color;
-        int material_diffuse_color;
-        int material_specular_color;
-        int material_specular_exponent;
-        int opacity;
-        int light_position;
-        int light_diffuse_color;
-        int light_specular_color;
-        int has_texture;
-        int has_lightmap;
-        int has_normalmap;
-        int has_material;
-        int selected;
-        int receives_light;
+        GLuint program;
+        GLint mvp;
+        GLint mv;
+        GLint normal_matrix;
+        GLint texture;
+        GLint texture2;
+        GLint lightmap;
+        GLint normalmap;
+        GLint material_ambient_color;
+        GLint material_diffuse_color;
+        GLint material_specular_color;
+        GLint material_specular_exponent;
+        GLint opacity;
+        GLint light_position;
+        GLint light_diffuse_color;
+        GLint light_specular_color;
+        GLint has_texture;
+        GLint has_lightmap;
+        GLint has_normalmap;
+        GLint has_material;
+        GLint selected;
+        GLint receives_light;
     };
 
     using VertexProgramPair = std::pair<std::string, VertexProgramData>;
