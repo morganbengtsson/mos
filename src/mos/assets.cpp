@@ -39,6 +39,7 @@ namespace mos {
         bool step = !value.HasMember("step") || value["step"].IsNull() ? false: value["step"].GetBool();
 
         std::string texture = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
+        std::string texture2 = !value.HasMember("texture2") || value["texture2"].IsNull() ? "" : value["texture2"].GetString();
         std::string lightmap = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
         std::string material = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
 
@@ -55,7 +56,7 @@ namespace mos {
 
         auto m =  mos::Model(mesh_cached(mesh),
                          texture_cached(texture),
-                         nullptr,
+                         texture_cached(texture2),
                          transform,
                          mos::Model::Draw::TRIANGLES,
                          material_cached(material),
