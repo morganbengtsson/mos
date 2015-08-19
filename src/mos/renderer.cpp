@@ -203,6 +203,7 @@ void Renderer::add_vertex_program(const std::string path, const std::string vert
                                                   glGetUniformLocation(program, "light_diffuse_color"),
                                                   glGetUniformLocation(program, "light_specular_color"),
                                                   glGetUniformLocation(program, "has_texture"),
+                                                  glGetUniformLocation(program, "has_texture2"),
                                                   glGetUniformLocation(program, "has_lightmap"),
                                                   glGetUniformLocation(program, "has_normalmap"),
                                                   glGetUniformLocation(program, "has_material"),
@@ -493,23 +494,34 @@ void Renderer::update(const Model & model,
 
     auto & uniforms = vertex_programs_.at(program_name);
 
-    if (model.texture) {
-        glActiveTexture(GL_TEXTURE0);
+    int texture_unit = 0;
+    if (model.texture != nullptr) {
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, textures_[model.texture->id()]);
-        glUniform1i(uniforms.texture, 0u);
+        glUniform1i(uniforms.texture, texture_unit);
+        texture_unit ++;
+    }
+
+    if (model.texture2 != nullptr) {
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glBindTexture(GL_TEXTURE_2D, textures_[model.texture2->id()]);
+        glUniform1i(uniforms.texture2, texture_unit);
+        texture_unit ++;
     }
 
     if (model.lightmap) {
-        glActiveTexture(GL_TEXTURE1);
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, textures_[model.lightmap->id()]);
-        glUniform1i(uniforms.lightmap, 1u);
+        glUniform1i(uniforms.lightmap, texture_unit);
+        texture_unit ++;
     }
 
     if (model.normalmap) {
-        glActiveTexture(GL_TEXTURE2);
+        glActiveTexture(GL_TEXTURE0 + texture_unit);
         glBindTexture(GL_TEXTURE_2D, textures_[model.normalmap->id()]);
-        glUniform1i(uniforms.normalmap, 1u);
-    }
+        glUniform1i(uniforms.normalmap, texture_unit);
+        texture_unit ++;
+    }    
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -531,6 +543,7 @@ void Renderer::update(const Model & model,
     glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
     glUniform1i(uniforms.has_texture, model.texture == nullptr ? false : true);
+    glUniform1i(uniforms.has_texture2, model.texture2 == nullptr ? false: true);
     glUniform1i(uniforms.has_lightmap, model.lightmap == nullptr ? false : lightmaps_ ? true : false);
     glUniform1i(uniforms.has_normalmap, model.lightmap == nullptr ? false : true);
     glUniform1i(uniforms.has_material, model.material == nullptr ? false : true);

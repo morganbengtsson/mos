@@ -28,7 +28,7 @@ layout(location = 0) out vec4 color;
 void main() {
 
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    if (has_lightmap == true){
+    if (has_lightmap == true) {
         static_light = texture2D(lightmap, fragment_lightmap_uv);
     }
 
@@ -46,8 +46,9 @@ void main() {
         tex_color = texture2D(texture, fragment_uv);
     }
 
-    if (has_texture2 == true){
-        tex_color += texture2D(texture2, fragment_uv);
+    if (has_texture2 == true) {
+        vec4 tex2_color = texture2D(texture2, fragment_uv);
+        tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
     }
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
@@ -72,18 +73,17 @@ void main() {
 
     vec4 diffuse_static = static_light * diffuse_color;
 
-    if (selected == true){
+    if (selected == true) {
         diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);
     }
 
-    //gl_FragColor = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, 1.0);
-    if(receives_light == true){
+    if(receives_light == true) {
         color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
     }
-    else{
+    else {
         color = vec4(diffuse_color.rgb, opacity);
     }
-    if (has_texture){
+    if (has_texture) {
         color.a = tex_color.a * opacity;
-    }
+    }    
 }

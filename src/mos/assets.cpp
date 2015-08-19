@@ -66,7 +66,7 @@ namespace mos {
                          step,
                          obstruction);
 
-        for (auto it = value["models"].Begin(); it != value["models"].End(); it++){
+        for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
             m.models.push_back(model(*it));
         }
         return m;
