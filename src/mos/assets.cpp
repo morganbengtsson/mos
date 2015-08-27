@@ -19,6 +19,8 @@
 #include <iterator>
 #include <stb_vorbis.h>
 #include <glm/gtx/io.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace mos {
 	using namespace std;
@@ -43,16 +45,31 @@ namespace mos {
         std::string lightmap = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
         std::string material = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
 
-        float x = value["position"][0].GetDouble();
-        float y = value["position"][1].GetDouble();
-        float z = value["position"][2].GetDouble();
 
-        glm::vec3 axis(value["axis"][0].GetDouble(), value["axis"][1].GetDouble(), value["axis"][2].GetDouble());
-        float angle = value["angle"].GetDouble();
-
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), angle, axis);
 
         float obstruction = !value.HasMember("obstruction") || value["obstruction"].IsNull() ? 0.0f : value["obstruction"].GetDouble();
+
+        glm::mat4 transform;
+
+        if (value.HasMember("transform")){
+            std::vector<float> nums;
+            for (auto it = value["transform"].Begin(); it != value["transform"].End(); it++){
+                nums.push_back(it->GetDouble());
+            }
+            transform = glm::make_mat4x4(nums.data());
+            std::cout << transform;
+        }
+
+            float x = value["position"][0].GetDouble();
+            float y = value["position"][1].GetDouble();
+            float z = value["position"][2].GetDouble();
+
+            glm::vec3 axis(value["axis"][0].GetDouble(), value["axis"][1].GetDouble(), value["axis"][2].GetDouble());
+            float angle = value["angle"].GetDouble();
+
+            glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), angle, axis);
+
+
 
         auto m =  mos::Model(mesh_cached(mesh),
                          texture_cached(texture),

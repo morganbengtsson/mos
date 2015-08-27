@@ -38,8 +38,8 @@ Model::Model(std::shared_ptr<Mesh> mesh,
     selectable(selectable),
     box(mesh->vertices_begin(), mesh->vertices_end(), transform, obstruction),
     opacity(opacity),
-    receives_light(affected_by_light){
-    box.step(step);
+    receives_light(affected_by_light) {
+        box.step(step);
 }
 
 Model::~Model() {
@@ -52,8 +52,8 @@ glm::mat4 Model::transform() const{
 void Model::transform(const glm::mat4 & transform) {
     transform_ = transform;
     box.transform(transform);
-    for (auto & model : models){
-        model.box.transform(model.transform() * transform);
+    for (auto & model : models) {
+        model.box.transform(model.transform() * transform);       
     }
 }
 

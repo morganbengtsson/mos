@@ -485,8 +485,8 @@ void Renderer::update(const Model & model,
     init(model);
 
     auto t = model.transform();
-    glm::mat4 mv = view * t *  transform;
-    glm::mat4 mvp = projection * view * t * transform;
+    glm::mat4 mv = view * transform * t;
+    glm::mat4 mvp = projection * view  * transform * t;
 
     glUseProgram(vertex_programs_[program_name].program);
 
@@ -584,7 +584,7 @@ void Renderer::update(const Model & model,
         glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid*)(8*sizeof(GLuint)));
     }
 
-    for (auto & child : model.models){
+    for (auto & child : model.models) {
         update(child, model.transform(), view, projection, program_name, light);
     }
 }
