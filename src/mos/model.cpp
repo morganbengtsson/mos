@@ -6,6 +6,7 @@
  */
 
 #include "model.hpp"
+#include <glm/gtx/decomposition.hpp>
 
 namespace mos {
 
@@ -53,7 +54,8 @@ void Model::transform(const glm::mat4 & transform) {
     transform_ = transform;
     box.transform(transform);
     for (auto & model : models) {
-        model.box.transform(model.transform() * transform);       
+        model.box.transform(model.transform() * transform);
+        //model.box.transform(transform * model.transform());
     }
 }
 

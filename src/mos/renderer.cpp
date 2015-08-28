@@ -477,16 +477,16 @@ void Renderer::update(Particles & particles, const glm::mat4 view, const glm::ma
 }
 
 void Renderer::update(const Model & model,
-                      const glm::mat4 transform,
+                      const glm::mat4 parent_transform,
                       const glm::mat4 view,
                       const glm::mat4 projection,
                       const std::string program_name,
                       const Light & light) {
     init(model);
 
-    auto t = model.transform();
-    glm::mat4 mv = view * transform * t;
-    glm::mat4 mvp = projection * view  * transform * t;
+    auto transform = model.transform();
+    glm::mat4 mv = view * parent_transform * transform;
+    glm::mat4 mvp = projection * view  * parent_transform * transform;
 
     glUseProgram(vertex_programs_[program_name].program);
 
