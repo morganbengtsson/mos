@@ -6,7 +6,6 @@
  */
 
 #include "model.hpp"
-#include <glm/gtx/decomposition.hpp>
 
 namespace mos {
 
@@ -54,8 +53,8 @@ void Model::transform(const glm::mat4 & transform) {
     transform_ = transform;
     box.transform(transform);
     for (auto & model : models) {
-        model.box.transform(model.transform() * transform);
-        //model.box.transform(transform * model.transform());
+        //model.box.transform(model.transform() * transform);
+        model.box.transform(transform * model.transform());
     }
 }
 
@@ -81,6 +80,19 @@ bool Model::selected() const {
 
 void Model::selected(const bool selected) {
     selected_ = selectable == true ? selected : false;
+}
+
+BoxIntersection Model::intersects(const Model &model) {
+    auto parent_intersection = box.intersects(model.box);
+    if (parent_intersection.intersects == false){
+        for (auto & child : models){
+            auto child_intersection = child.box.intersects(model.box);
+            if (child_intersection.intersects){
+                return child_intersection;
+            }
+        }
+    }
+    return parent_intersection;
 }
 
 }

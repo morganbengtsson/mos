@@ -163,6 +163,13 @@ namespace mos {
         void selected(const bool selected);
 
         /**
+         * @brief intersects
+         * @param model
+         * @return
+         */
+        BoxIntersection intersects(const Model & model);
+
+        /**
          * @brief Children.
          */
         Models models;

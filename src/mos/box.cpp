@@ -244,7 +244,8 @@ void Box::transform(const glm::mat4 &transform) {
     position.y = transform[3][1];
     position.z = transform[3][2];
 
-    transform_ = glm::translate(glm::mat4(1.0f), position);
+    //transform_ = glm::translate(glm::mat4(1.0f), position);
+    transform_ = transform;
 }
 
 float Box::volume() const {
