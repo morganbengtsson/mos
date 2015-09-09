@@ -585,7 +585,7 @@ void Renderer::update(const Model & model,
     }
 
     for (auto & child : model.models) {
-        update(child, model.transform(), view, projection, program_name, light);
+        update(child, parent_transform * model.transform(), view, projection, program_name, light);
     }
 }
 
