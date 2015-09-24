@@ -49,13 +49,16 @@ glm::mat4 Model::transform() const{
     return transform_;
 }
 
+void Model::transform_box(const glm::mat4 & transform){
+    box.transform(transform);
+    for (auto & model : models){
+        model.transform_box(transform * model.transform());
+    }
+}
+
 void Model::transform(const glm::mat4 & transform) {
     transform_ = transform;
-    box.transform(transform);
-    for (auto & model : models) {
-        //model.box.transform(model.transform() * transform);
-        model.box.transform(transform * model.transform());
-    }
+    transform_box(transform);
 }
 
 glm::vec4 Model::color() const {

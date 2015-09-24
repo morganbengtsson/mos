@@ -174,6 +174,7 @@ namespace mos {
          */
         Models models;
     private:
+        void transform_box(const glm::mat4 & transform);
         bool valid_;
         bool selected_;
         glm::mat4 transform_;
