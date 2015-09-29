@@ -36,7 +36,8 @@ namespace mos {
     Model Assets::model(rapidjson::Value &value ) {
         std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull() ? "": value["mesh"].GetString();
 
-        bool selectable = !value.HasMember("selectable") || value["selectable"].IsNull() ? false: value["selectable"].GetBool();
+        bool selectable =
+                !(!value.HasMember("selectable") || value["selectable"].IsNull()) && value["selectable"].GetBool();
 
         bool step = !value.HasMember("step") || value["step"].IsNull() ? false: value["step"].GetBool();
 

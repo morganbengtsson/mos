@@ -45,7 +45,7 @@ Renderer::Renderer() :
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 #endif
     glDepthFunc(GL_LEQUAL);
-    glDepthMask(true);
+    glDepthMask(GL_TRUE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_FRAMEBUFFER_SRGB);
@@ -496,28 +496,28 @@ void Renderer::update(const Model & model,
 
     int texture_unit = 0;
     if (model.texture != nullptr) {
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
         glBindTexture(GL_TEXTURE_2D, textures_[model.texture->id()]);
         glUniform1i(uniforms.texture, texture_unit);
         texture_unit ++;
     }
 
     if (model.texture2 != nullptr) {
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
         glBindTexture(GL_TEXTURE_2D, textures_[model.texture2->id()]);
         glUniform1i(uniforms.texture2, texture_unit);
         texture_unit ++;
     }
 
     if (model.lightmap) {
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
         glBindTexture(GL_TEXTURE_2D, textures_[model.lightmap->id()]);
         glUniform1i(uniforms.lightmap, texture_unit);
         texture_unit ++;
     }
 
     if (model.normalmap) {
-        glActiveTexture(GL_TEXTURE0 + texture_unit);
+        glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
         glBindTexture(GL_TEXTURE_2D, textures_[model.normalmap->id()]);
         glUniform1i(uniforms.normalmap, texture_unit);
         texture_unit ++;
@@ -542,7 +542,7 @@ void Renderer::update(const Model & model,
     glUniform3fv(uniforms.light_diffuse_color,1 ,glm::value_ptr(light.diffuse_color));
     glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
-    glUniform1i(uniforms.has_texture, model.texture == nullptr ? false : true);
+    glUniform1i(uniforms.has_texture, !(model.texture == nullptr));
     glUniform1i(uniforms.has_texture2, model.texture2 == nullptr ? false: true);
     glUniform1i(uniforms.has_lightmap, model.lightmap == nullptr ? false : lightmaps_ ? true : false);
     glUniform1i(uniforms.has_normalmap, model.lightmap == nullptr ? false : true);

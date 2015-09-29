@@ -32,7 +32,7 @@ std::array<short, Stream::buffer_size> Stream::read(){
 }
 
 bool Stream::done() const{
-    return samples_left_ <= 0 ? true : false;
+    return samples_left_ <= 0;
 }
 
 int Stream::sample_rate() const

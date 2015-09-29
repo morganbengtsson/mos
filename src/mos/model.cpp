@@ -82,12 +82,12 @@ bool Model::selected() const {
 }
 
 void Model::selected(const bool selected) {
-    selected_ = selectable == true ? selected : false;
+    selected_ = selectable ? selected : false;
 }
 
 BoxIntersection Model::intersects(const Model &model) {
     auto parent_intersection = box.intersects(model.box);
-    if (parent_intersection.intersects == false){
+    if (!parent_intersection.intersects){
         for (auto & child : models){
             auto child_intersection = child.box.intersects(model.box);
             if (child_intersection.intersects){
