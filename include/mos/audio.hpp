@@ -72,7 +72,6 @@ namespace mos {
             }
         }
 
-
         /**
          * Updates the internal source representation with data. Data
          * such as position, velocity, pitch and gain.

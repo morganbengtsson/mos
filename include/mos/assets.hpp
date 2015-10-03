@@ -4,7 +4,7 @@
  */
 
 #ifndef MOS_ASSETS_H
-#define	MOS_ASSETS_H
+#define MOS_ASSETS_H
 
 #include <unordered_map>
 #include <map>
@@ -20,13 +20,13 @@
 #include "model.hpp"
 
 namespace mos {
-    
-    /**
-     * An asset class that manages heavy resources such as Textures, meshes, sounds
-     * and sound streams.
-     * Caches most things internally, so nothing is loaded twice. 
-     */
-    class Assets {
+
+/**
+ * An asset class that manages heavy resources such as Textures, meshes, sounds
+ * and sound streams.
+ * Caches most things internally, so nothing is loaded twice.
+ */
+class Assets {
     public:
         /**
          * @brief Container for meshes.
@@ -51,7 +51,7 @@ namespace mos {
         /**
          * @brief Pair for MeshMap.
          */
-		using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
+        using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
 
         /**
          * @brief Pair for TextureMap
@@ -80,7 +80,7 @@ namespace mos {
          * @brief Assets non copyable.
          * @param assets
          */
-        Assets(const Assets & assets) = delete; // Not copyable.
+        Assets(const Assets &assets) = delete; // Not copyable.
         virtual ~Assets();
 
         /**
@@ -96,7 +96,7 @@ namespace mos {
          * @param file_name
          * @return fShared pointer to Material object.
          */
-        std::shared_ptr<Material> material_cached(const std::string file_name); 
+        std::shared_ptr<Material> material_cached(const std::string file_name);
 
         /**
          *
@@ -107,7 +107,7 @@ namespace mos {
          * @return Shared pointer to a Material object.
          */
         std::shared_ptr<Material> material(const std::string file_name) const;
-        
+
         /**
          * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
          * 
@@ -121,9 +121,9 @@ namespace mos {
          * 
          * @param file_name
          * @return Shared pointer to Mesh object
-         */        
+         */
         std::shared_ptr<Mesh> mesh(const std::string file_name) const;
-        
+
         /**
          * Loads a *.png file into a Texture2D object, and caches it internally.
          * 
@@ -139,9 +139,9 @@ namespace mos {
          * @param file_name
          * @param mipmaps Use mipmaps or not.
          * @return Shared pointer to Texture2D object.
-         */        
+         */
         std::shared_ptr<Texture2D> texture(const std::string file_name, const bool mipmaps = true) const;
-        
+
         /**
          * Loads a *.ogg file into a Sound object, and caches it internally.
          * 
@@ -149,13 +149,13 @@ namespace mos {
          * @return Shared pointer to Sound object.
          */
         std::shared_ptr<Sound> sound_cached(const std::string file_name);
-        
+
         /**
          * Loads an *. ogg file into a Sound object. Not cached.
          * 
          * @param file_name
          * @return Shared pointer to Sound object.
-         */        
+         */
         std::shared_ptr<Sound> sound(const std::string file_name) const;
 
 
@@ -185,17 +185,15 @@ namespace mos {
         std::map<char, Character> character_map(std::string path);
 
         //TODO Make private.
-        Model model(rapidjson::Value & value);
-     
+        Model model(rapidjson::Value &value);
+
     private:
-		std::string directory_;
+        std::string directory_;
         MeshMap meshes_;
         TextureMap textures_;
         SoundMap sounds_;
         MaterialMap materials_;
-
-
     };
 }
-#endif	/* MO_ASSETS_H */
+#endif	/* MOS_ASSETS_H */
 
