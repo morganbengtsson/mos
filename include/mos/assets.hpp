@@ -183,6 +183,9 @@ namespace mos {
          * @return A map of chars with corresponding Character objects.
          */
         std::map<char, Character> character_map(std::string path);
+
+        //TODO Make private.
+        Model model(rapidjson::Value & value);
      
     private:
 		std::string directory_;
@@ -191,7 +194,7 @@ namespace mos {
         SoundMap sounds_;
         MaterialMap materials_;
 
-        Model model(rapidjson::Value & value);
+
     };
 }
 #endif	/* MO_ASSETS_H */
