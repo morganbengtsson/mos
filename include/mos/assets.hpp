@@ -11,13 +11,13 @@
 #include <memory>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
-#include "sound.hpp"
-#include "character.hpp"
-#include "mesh.hpp"
-#include "texture2d.hpp"
-#include "material.hpp"
-#include "stream.hpp"
-#include "model.hpp"
+#include "audio/sound.hpp"
+#include "audio/stream.hpp"
+#include "graphics/character.hpp"
+#include "graphics/mesh.hpp"
+#include "graphics/texture2d.hpp"
+#include "graphics/material.hpp"
+#include "graphics/model.hpp"
 
 namespace mos {
 
