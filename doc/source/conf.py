@@ -7,8 +7,8 @@ import subprocess
 
 #Read the docs
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
-#if read_the_docs_build:
-#    subprocess.call('cd ../; make html', shell=True)
+if read_the_docs_build:
+    subprocess.call('cd ../; make xml', shell=True)
 
 
 # -- General configuration ------------------------------------------------
