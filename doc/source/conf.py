@@ -36,7 +36,7 @@ if read_the_docs_build:
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ["breathe"]
-breathe_projects = {"MOS": "../xml/"}
+breathe_projects = {"MOS": "../build/xml/"}
 breate_default_project = "MOS"
 
 # Add any paths that contain templates here, relative to this directory.
