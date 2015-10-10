@@ -352,6 +352,7 @@ private:
     bool check_shader(const unsigned int shader);
     bool check_program(const unsigned int program);
     unsigned int create_texture(std::shared_ptr<mos::Texture2D> texture);
+    unsigned int create_texture_and_pbo(const std::shared_ptr<mos::Texture2D> & texture);
     void add_box_program(const std::string & name,
                          const std::string & vs_source,
                          const std::string & fs_source);
@@ -360,11 +361,12 @@ private:
     std::unordered_map<std::string, ParticleProgramData> particle_programs_;
     std::unordered_map<std::string, BoxProgramData> box_programs_;
 
-    std::unordered_map<unsigned int, unsigned int> frame_buffers_;
-    std::unordered_map<unsigned int, unsigned int> textures_;
-    std::unordered_map<unsigned int, unsigned int> array_buffers_;
-    std::unordered_map<unsigned int, unsigned int> element_array_buffers_;
-    std::unordered_map<unsigned int, unsigned int> vertex_arrays_;
+    std::unordered_map<unsigned int, GLuint> frame_buffers_;
+    std::unordered_map<unsigned int, GLuint> pixel_buffers_;
+    std::unordered_map<unsigned int, GLuint> textures_;
+    std::unordered_map<unsigned int, GLuint> array_buffers_;
+    std::unordered_map<unsigned int, GLuint> element_array_buffers_;
+    std::unordered_map<unsigned int, GLuint> vertex_arrays_;
     unsigned int box_vbo;
     unsigned int box_ebo;
     unsigned int box_va;

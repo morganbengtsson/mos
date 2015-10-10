@@ -277,14 +277,14 @@ void Renderer::init(const Model & model) {
 
     if (model.texture) {
         if (textures_.find(model.texture->id()) == textures_.end()) {
-            GLuint id = create_texture(model.texture);
+            GLuint id = create_texture_and_pbo(model.texture);
             textures_.insert({model.texture->id(), id});
         }
     }
 
     if (model.texture2){
         if (textures_.find(model.texture2->id()) == textures_.end()) {
-            GLuint id = create_texture(model.texture2);
+            GLuint id = create_texture_and_pbo(model.texture2);
             textures_.insert({model.texture2->id(), id});
         }
     }
@@ -419,6 +419,39 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture){
     if (texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};
     glBindTexture(GL_TEXTURE_2D, 0);
     return id;
+}
+
+unsigned int Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> & texture) {
+    GLuint pbo_id;
+    glGenBuffers(1, &pbo_id);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_id);
+
+
+    GLuint id;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    if (texture->mipmaps) {glGenerateMipmap(GL_TEXTURE_2D);};
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(), texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(), texture->height(),
+                    GL_SRGB8_ALPHA8, GL_UNSIGNED_BYTE, 0);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(unsigned char) * texture->size(), 0, GL_STREAM_DRAW);
+
+    GLubyte * ptr = (GLubyte*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+    ptr = (GLubyte*)texture->data();
+
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 

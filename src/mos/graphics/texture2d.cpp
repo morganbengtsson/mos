@@ -30,6 +30,10 @@ namespace mos{
     unsigned int Texture2D::height() const {
         return height_;
     }
+
+    unsigned int Texture2D::size() const {
+        return texels_.size();
+    }
     
     glm::vec4 Texture2D::sample(const unsigned int x, const unsigned int y){
         unsigned int index = x*4 * height() + y*4;
