@@ -56,7 +56,7 @@ public:
      * @brief Init a texture.
      * @param texture The texture.
      */
-    void init(std::shared_ptr<Texture2D> texture);
+    void init(const std::shared_ptr<Texture2D> & texture);
 
 
     void update(const Model & model,
