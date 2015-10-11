@@ -163,7 +163,6 @@ public:
         }
         element_array_buffers_.clear();
     }
-
     //TODO: Remove all these from public api!
     /**
      * @brief readFBO

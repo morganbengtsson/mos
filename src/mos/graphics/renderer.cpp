@@ -113,7 +113,6 @@ Renderer::Renderer() :
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
     glBindVertexArray(0);
-
 }
 
 Renderer::~Renderer() {
@@ -303,6 +302,7 @@ void Renderer::init(const Model & model) {
 void Renderer::init(const std::shared_ptr<Texture2D> & texture){
     if (textures_.find(texture->id()) == textures_.end()) {
         GLuint id = create_texture_and_pbo(texture);
+        //auto id = create_texture(texture);
         textures_.insert({texture->id(), id});
     }
 }
@@ -435,7 +435,9 @@ unsigned int Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> &
     glGenBuffers(1, &buffer_id);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
     glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->size(), nullptr, GL_STREAM_DRAW);
-    void * ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->size(), GL_MAP_WRITE_BIT);
+
+    void * ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->size(),
+                                  (GL_MAP_WRITE_BIT|GL_MAP_UNSYNCHRONIZED_BIT));
 
     memcpy(ptr, texture->data(), texture->size());
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
@@ -444,6 +446,7 @@ unsigned int Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> &
         0, 0, GLsizei(texture->width()), GLsizei(texture->height()),
         GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glDeleteBuffers(1, &buffer_id);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
