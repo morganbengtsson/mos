@@ -227,7 +227,7 @@ void Player::init(const SoundSource & sound_source) {
         {
             long data_size = std::distance(sound->begin(), sound->end());
             const ALvoid * data = sound->data();
-            alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
+            alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), sound->sample_rate());
         }
         alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER, buffer);
         buffers_.insert(BufferPair(sound->id(), buffer));

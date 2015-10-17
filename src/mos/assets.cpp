@@ -196,7 +196,7 @@ namespace mos {
     }
 
     std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
-        int channels, length;
+        int channels, length, sample_rate;
         short * decoded;
 
         std::ifstream file(directory_ + file_name, std::ios::binary);
@@ -209,7 +209,7 @@ namespace mos {
         while (file.read(reinterpret_cast<char*> (&c), sizeof (c))) {
             data.push_back(c);
         }
-        length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
+        length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &sample_rate, &decoded);
 
         return std::make_shared<Sound>(decoded, decoded + length);
     }

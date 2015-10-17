@@ -19,6 +19,10 @@ namespace mos {
         return channels_;
     }
 
+    unsigned int Sound::sample_rate() const {
+        return sample_rate_;
+    }
+
     const short * Sound::data() const {
         return samples_.data();        
     }
