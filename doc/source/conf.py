@@ -13,7 +13,7 @@ if read_the_docs_build:
 
 # -- General configuration ------------------------------------------------
 
-extensions = ["breathe"]
+extensions = ["breathe","sphinx_scruffy"]
 breathe_projects = {"MOS": "../build/xml/"}
 breate_default_project = "MOS"
 
