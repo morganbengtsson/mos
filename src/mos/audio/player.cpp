@@ -275,12 +275,12 @@ void Player::update(StreamSource & sound_source, const float dt) {
     ALfloat al_gain_hf;
     alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
     float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
-
+/*
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);    
     alFilterf(al_filter,AL_LOWPASS_GAIN, gain); // 0.5f
     alFilterf(al_filter,AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
-
+*/
     sound_source.source.obstructed = 0.0f;
 
     ALenum state;
@@ -310,7 +310,7 @@ void Player::update(StreamSource & sound_source, const float dt) {
             ALenum state;
             alGetSourcei(al_source, AL_SOURCE_STATE, &state);
             alSourcei(al_source, AL_STREAMING, AL_TRUE);
-            while(stream_threads[sound_source.source.id()].running) {
+            while(stream_threads[sound_source.stream->id()].running) {
                alGetSourcei(al_source, AL_SOURCE_STATE, &state);
                ALint processed = 0;
                alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
