@@ -204,23 +204,23 @@ void Player::listener_velocity(const glm::vec3 velocity) {
 }
 
 
-void Player::init(const SoundSource & source) {
-    if (sources_.find(source.id()) == sources_.end()) {
+void Player::init(const SoundSource & sound_source) {
+    if (sources_.find(sound_source.source.id()) == sources_.end()) {
         ALuint al_source;
         alGenSources(1, &al_source);
-        sources_.insert(SourcePair(source.id(), al_source));
+        sources_.insert(SourcePair(sound_source.source.id(), al_source));
 
         //Reverb optional.
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
 
         ALuint al_filter;
         alGenFilters(1, &al_filter);
-        filters_.insert(SourcePair(source.id(), al_filter));
+        filters_.insert(SourcePair(sound_source.source.id(), al_filter));
         alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
         alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
     }
 
-    auto sound = source.sound;
+    auto sound = sound_source.sound;
     if (buffers_.find(sound->id()) == buffers_.end()) {
         ALuint buffer;
         alGenBuffers(1, &buffer);
@@ -229,10 +229,13 @@ void Player::init(const SoundSource & source) {
             const ALvoid * data = sound->data();
             alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof (short), 44100);
         }
-        alSourcei(sources_.at(source.id()), AL_BUFFER, buffer);
+        alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER, buffer);
         buffers_.insert(BufferPair(sound->id(), buffer));
     }
-    alSource3f(sources_.at(source.id()), AL_POSITION, source.position.x, source.position.y, source.position.z);
+    alSource3f(sources_.at(sound_source.source.id()),
+               AL_POSITION, sound_source.source.position.x,
+               sound_source.source.position.y,
+               sound_source.source.position.z);
     //alSourcePlay(sources_.at(source.id()));
 }
 
@@ -240,30 +243,31 @@ void Player::init(const StreamSource & stream_source) {
 
 }
 
-void Player::update(StreamSource & source, const float dt) {
-    if (sources_.find(source.id()) == sources_.end()) {
+void Player::update(StreamSource & sound_source, const float dt) {
+    if (sources_.find(sound_source.source.id()) == sources_.end()) {
         ALuint al_source;
         alGenSources(1, &al_source);
-        sources_.insert(SourcePair(source.id(), al_source));
+        sources_.insert(SourcePair(sound_source.source.id(), al_source));
         alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0, AL_FILTER_NULL);
 
         ALuint al_filter;
         alGenFilters(1, &al_filter);
-        filters_.insert(SourcePair(source.id(), al_filter));
+        filters_.insert(SourcePair(sound_source.source.id(), al_filter));
         alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
         alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
     };
 
-    ALuint al_source = sources_.at(source.id());
-    alSourcei(al_source, AL_LOOPING, source.loop);
-    alSourcef(al_source, AL_PITCH, source.pitch);
-    alSourcef(al_source, AL_GAIN, source.gain);
-    alSource3f(al_source, AL_POSITION, source.position.x,
-               source.position.y, source.position.z);
-    alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
+    ALuint al_source = sources_.at(sound_source.source.id());
+    alSourcei(al_source, AL_LOOPING, sound_source.source.loop);
+    alSourcef(al_source, AL_PITCH, sound_source.source.pitch);
+    alSourcef(al_source, AL_GAIN, sound_source.source.gain);
+    alSource3f(al_source, AL_POSITION, sound_source.source.position.x,
+               sound_source.source.position.y, sound_source.source.position.z);
+    alSource3f(al_source, AL_VELOCITY, sound_source.source.velocity.x,
+               sound_source.source.velocity.y, sound_source.source.velocity.z);
 
-    auto al_filter = filters_[source.id()];
-    float ob = source.obstructed >= 1.0f ? -1.0f : 1.0f;
+    auto al_filter = filters_[sound_source.source.id()];
+    float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
     ALfloat al_gain;
     alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
     float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
@@ -277,61 +281,64 @@ void Player::update(StreamSource & source, const float dt) {
     alFilterf(al_filter,AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 
-    source.obstructed = 0.0f;
+    sound_source.source.obstructed = 0.0f;
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 		
-    if (source.playing && (state != AL_PLAYING)) {		
-		if (stream_threads.count(source.id())) {
-            stream_threads[source.id()].running = false;
-            stream_threads[source.id()].thread->join();
-            stream_threads.erase(source.id());
+    if (sound_source.source.playing && (state != AL_PLAYING)) {
+        if (stream_threads.count(sound_source.source.id())) {
+            stream_threads[sound_source.source.id()].running = false;
+            stream_threads[sound_source.source.id()].thread->join();
+            stream_threads.erase(sound_source.source.id());
         }
-        stream_threads.insert(std::pair<unsigned int, StreamThread>(source.id(), StreamThread{std::shared_ptr<std::thread>(new std::thread([&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr, const bool loop) {
-                                                                           mos::Stream stream(*stream_ptr);
-                                                                           ALuint buffers[2];
-                                                                           alGenBuffers(2, buffers);
+        stream_threads.insert(std::pair<unsigned int, StreamThread>(sound_source.stream->id(),
+            StreamThread{std::shared_ptr<std::thread>(new std::thread([&](ALuint al_source,
+                         std::shared_ptr<mos::Stream> stream_ptr,
+                         const bool loop) {
+            mos::Stream stream(*stream_ptr);
+            ALuint buffers[2];
+            alGenBuffers(2, buffers);
 
-                                                                           int size = stream.buffer_size;
-                                                                           alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().data(), size*sizeof(ALshort), stream.sample_rate());
-                                                                           alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().data(), size*sizeof(ALshort), stream.sample_rate());
+            int size = stream.buffer_size;
+            alBufferData(buffers[0], AL_FORMAT_MONO16, stream.read().data(), size*sizeof(ALshort), stream.sample_rate());
+            alBufferData(buffers[1], AL_FORMAT_MONO16, stream.read().data(), size*sizeof(ALshort), stream.sample_rate());
 
-                                                                           alSourceQueueBuffers(al_source, 2, buffers);
+            alSourceQueueBuffers(al_source, 2, buffers);
 
-                                                                           alSourcePlay(al_source);
-                                                                           ALenum state;
-                                                                           alGetSourcei(al_source, AL_SOURCE_STATE, &state);
-                                                                           alSourcei(al_source, AL_STREAMING, AL_TRUE);
-                                                                           while(stream_threads[source.id()].running) {
-                                                                               alGetSourcei(al_source, AL_SOURCE_STATE, &state);
-                                                                               ALint processed = 0;
-                                                                               alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
-                                                                               while(processed-- && (stream_threads[source.id()].running)) {
-                                                                                   ALuint buffer = 0;
-                                                                                   alSourceUnqueueBuffers(al_source, 1, &buffer);
-                                                                                   auto samples = stream.read();
-                                                                                   alBufferData(buffer, AL_FORMAT_MONO16, samples.data(), size*sizeof(ALshort), stream.sample_rate());
-                                                                                   alSourceQueueBuffers(al_source, 1, &buffer);
-                                                                               }
-																			   
-																			   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                                                                               alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+            alSourcePlay(al_source);
+            ALenum state;
+            alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+            alSourcei(al_source, AL_STREAMING, AL_TRUE);
+            while(stream_threads[sound_source.source.id()].running) {
+               alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+               ALint processed = 0;
+               alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
+               while(processed-- && (stream_threads[sound_source.stream->id()].running)) {
+                   ALuint buffer = 0;
+                   alSourceUnqueueBuffers(al_source, 1, &buffer);
+                   auto samples = stream.read();
+                   alBufferData(buffer, AL_FORMAT_MONO16, samples.data(), size*sizeof(ALshort), stream.sample_rate());
+                   alSourceQueueBuffers(al_source, 1, &buffer);
+               }
 
-                                                                               if (loop && stream.done()) {
-                                                                                   stream.seek_start();
-                                                                               }
-                                                                           }
-                                                                           stream.seek_start();
-                                                                           alDeleteBuffers(2, buffers);
-                                                                       }, al_source, source.stream, source.loop)), true}));
+               std::this_thread::sleep_for(std::chrono::milliseconds(100));
+               alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+
+               if (loop && stream.done()) {
+                   stream.seek_start();
+               }
+            }
+            stream.seek_start();
+            alDeleteBuffers(2, buffers);
+            }, al_source, sound_source.stream, sound_source.source.loop)), true}));
     }
 	
 	
 
     ALint type;
     alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
-    if(!source.playing && (state == AL_PLAYING)) {
+    if(!sound_source.source.playing && (state == AL_PLAYING)) {
         alSourceStop(al_source);
     }
 
@@ -342,19 +349,21 @@ void Player::update(StreamSource & source, const float dt) {
     }*/
 }
 
-void Player::update(SoundSource &source, const float dt)
+void Player::update(SoundSource & sound_source, const float dt)
 {
-    if (sources_.find(source.id()) != sources_.end()) {
-        ALuint al_source = sources_.at(source.id());
-        alSourcei(al_source, AL_LOOPING, source.loop);
-        alSourcef(al_source, AL_PITCH, source.pitch);
-        alSourcef(al_source, AL_GAIN, source.gain);
-        alSource3f(al_source, AL_POSITION, source.position.x,
-                   source.position.y, source.position.z);
-        alSource3f(al_source, AL_VELOCITY, source.velocity.x, source.velocity.y, source.velocity.z);
+    if (sources_.find(sound_source.source.id()) != sources_.end()) {
+        ALuint al_source = sources_.at(sound_source.source.id());
+        alSourcei(al_source, AL_LOOPING, sound_source.source.loop);
+        alSourcef(al_source, AL_PITCH, sound_source.source.pitch);
+        alSourcef(al_source, AL_GAIN, sound_source.source.gain);
+        alSource3f(al_source, AL_POSITION, sound_source.source.position.x,
+                   sound_source.source.position.y, sound_source.source.position.z);
+        alSource3f(al_source, AL_VELOCITY, sound_source.source.velocity.x,
+                   sound_source.source.velocity.y,
+                   sound_source.source.velocity.z);
 
-        auto al_filter = filters_[source.id()];
-        float ob = source.obstructed >= 1.0f ? -1.0f : 1.0f;
+        auto al_filter = filters_[sound_source.source.id()];
+        float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
         ALfloat al_gain;
         alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
         float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
@@ -368,24 +377,24 @@ void Player::update(SoundSource &source, const float dt)
         alFilterf(al_filter,AL_LOWPASS_GAINHF, gain_hf); // 0.01f
         alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 
-        source.obstructed = 0.0f;
+        sound_source.source.obstructed = 0.0f;
 
         ALenum state;
         alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-        if (source.playing && (state != AL_PLAYING)) {
+        if (sound_source.source.playing && (state != AL_PLAYING)) {
             alSourcePlay(al_source);
         }
 
         ALint type;
         alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
-        if(!source.playing && (state == AL_PLAYING) && type == AL_STREAMING) {
+        if(!sound_source.source.playing && (state == AL_PLAYING) && type == AL_STREAMING) {
             alSourceStop(al_source);
         }
 
         if (state == AL_STOPPED){
             alSourceRewind(al_source);
-            source.playing = false;
+            sound_source.source.playing = false;
         }
     }
 }

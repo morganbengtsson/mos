@@ -14,29 +14,17 @@ namespace mos {
  *
  * Stream audio from an *ogg audio resource. Used with the Audio class for playback.
  */
-class StreamSource : public Source
+class StreamSource
 {
 public:
 
     /**
      * @brief StreamSource constructor.
      * @param stream
-     * @param position
-     * @param velocity
-     * @param gain
-     * @param pitch
-     * @param loop
-     * @param playing
-     * @param occluded
+     * @param source
      */
-    explicit StreamSource(std::shared_ptr<Stream> stream,
-                 const glm::vec3 position = glm::vec3(0.0f),
-                 const glm::vec3 velocity = glm::vec3(0.0f),
-                 const float gain = 1.0f,
-                 const float pitch = 1.0f,
-                 const bool loop = false,
-                 const bool playing = false,
-                 const bool occluded = false);
+    explicit StreamSource(const std::shared_ptr<Stream> & stream,
+                          const Source & source);
     virtual ~StreamSource();
 
     /**
@@ -44,6 +32,7 @@ public:
      * @todo Should it be shared?
      */
     std::shared_ptr<Stream> stream;
+    Source source;
 };
 
 }
