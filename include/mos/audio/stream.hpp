@@ -2,6 +2,7 @@
 #define MOS_STREAM_HPP
 
 #include <array>
+
 #include "stb_vorbis.h"
 
 namespace mos {

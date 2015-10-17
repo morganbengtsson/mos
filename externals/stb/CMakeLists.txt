@@ -4,4 +4,3 @@ file(GLOB ROOT_SOURCE *.c)
 file(GLOB ROOT_HEADER *.h)
 
 add_library(stb STATIC ${ROOT_HEADER} ${ROOT_SOURCE})
-
