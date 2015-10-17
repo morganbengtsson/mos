@@ -22,7 +22,7 @@ public:
      * @param source
      */
     explicit SoundSource(const std::shared_ptr<Sound> & sound,
-                const Source & source);
+                const Source & source = Source());
     virtual ~SoundSource();
 
     /**

@@ -24,7 +24,7 @@ public:
      * @param source
      */
     explicit StreamSource(const std::shared_ptr<Stream> & stream,
-                          const Source & source);
+                          const Source & source = Source());
     virtual ~StreamSource();
 
     /**
