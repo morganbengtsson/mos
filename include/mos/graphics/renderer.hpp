@@ -35,10 +35,16 @@ public:
     virtual ~Renderer();
 
     /**
-     * @brief Init a model in renderers own memory.
+     * @brief load a model into renderers own memory.
      * @param model
      */
     void load(const Model & model);
+
+    /**
+     * @brief unload a model from renderers own memory.
+     * @param model
+     */
+    void unload(const Model & model);
 
     template<class It>
     /**
@@ -53,11 +59,16 @@ public:
     }
 
     /**
-     * @brief Init a texture.
+     * @brief Load a texture into renderer memory.
      * @param texture The texture.
      */
     void load(const std::shared_ptr<Texture2D> & texture);
 
+    /**
+     * @brief unload a texture from renderer memory.
+     * @param texture The texture.
+     */
+    void unload(const std::shared_ptr<Texture2D> & texture);
 
     void update(const Model & model,
                 const glm::mat4 & view,

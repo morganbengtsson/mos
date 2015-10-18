@@ -299,11 +299,65 @@ void Renderer::load(const Model & model) {
     }
 }
 
+void Renderer::unload(const Model &model) {
+    if(vertex_arrays_.find(model.mesh->id()) != vertex_arrays_.end()) {
+        auto va_id = vertex_arrays_[model.mesh->id()];
+        glDeleteVertexArrays(1, &va_id);
+        vertex_arrays_.erase(model.mesh->id());
+
+        if (array_buffers_.find(model.mesh->id()) != array_buffers_.end()) {
+            auto abo_id = array_buffers_[model.mesh->id()];
+            glDeleteBuffers(1, &abo_id);
+            array_buffers_.erase(model.mesh->id());
+        }
+        if (element_array_buffers_.find(model.mesh->id()) != element_array_buffers_.end()) {
+            auto ebo_id = element_array_buffers_[model.mesh->id()];
+            glDeleteBuffers(1, &ebo_id);
+            element_array_buffers_.erase(model.mesh->id());
+        }
+    }
+
+
+    if (model.texture) {
+        if (textures_.find(model.texture->id()) != textures_.end()) {
+            unload(model.texture);
+        }
+    }
+
+    if (model.texture2){
+        if (textures_.find(model.texture2->id()) != textures_.end()) {
+            unload(model.texture2);
+        }
+    }
+
+    if (model.lightmap) {
+        if (textures_.find(model.lightmap->id()) != textures_.end()) {
+            unload(model.lightmap);
+        }
+    }
+
+    if (model.normalmap) {
+        if (textures_.find(model.normalmap->id()) != textures_.end()) {
+            unload(model.normalmap);
+        }
+    }
+}
+
 void Renderer::load(const std::shared_ptr<Texture2D> & texture){
     if (textures_.find(texture->id()) == textures_.end()) {
-        GLuint id = create_texture_and_pbo(texture);
-        //auto id = create_texture(texture);
-        textures_.insert({texture->id(), id});
+        GLuint gl_id = create_texture_and_pbo(texture);
+        textures_.insert({texture->id(), gl_id});
+    }
+}
+
+void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
+    if (textures_.find(texture->id()) == textures_.end()) {
+
+    }
+    else {
+        auto gl_id = textures_[texture->id()];
+        glDeleteTextures(1, &gl_id);
+        textures_.erase(texture->id());
     }
 }
 
