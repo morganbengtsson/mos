@@ -38,9 +38,9 @@ namespace mos {
          * @param begin
          * @param end
          */
-        void init(It begin, It end) {
+        void load(It begin, It end) {
             for (auto it = begin; it != end; it++){
-                init(*it);
+                load(*it);
             }
         }
 
@@ -49,7 +49,7 @@ namespace mos {
          * 
          * @param source
          */
-        void init(const SoundSource & source);
+        void load(const SoundSource & source);
 
         /**
          * Plays audio from a StreamSource. Which streams content from a file. This
@@ -58,7 +58,7 @@ namespace mos {
          * @brief play
          * @param stream_source
          */
-        void init(const StreamSource & stream_source);
+        void load(const StreamSource & stream_source);
 
         template<class It>
         /**

@@ -166,7 +166,7 @@ Player::~Player() {
     alcCloseDevice(device_);
 }
 
-void Player::init(const SoundSource & sound_source) {
+void Player::load(const SoundSource & sound_source) {
     if (sources_.find(sound_source.source.id()) == sources_.end()) {
         ALuint al_source;
         alGenSources(1, &al_source);
@@ -201,7 +201,7 @@ void Player::init(const SoundSource & sound_source) {
     //alSourcePlay(sources_.at(source.id()));
 }
 
-void Player::init(const StreamSource & stream_source) {
+void Player::load(const StreamSource & stream_source) {
 
 }
 

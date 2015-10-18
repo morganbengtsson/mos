@@ -211,7 +211,7 @@ void Renderer::add_vertex_program(const std::string path, const std::string vert
                                               }));
 }
 
-void Renderer::init(const Model & model) {
+void Renderer::load(const Model & model) {
     if(vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
         unsigned int vertex_array;
         glGenVertexArrays(1, &vertex_array);
@@ -276,30 +276,30 @@ void Renderer::init(const Model & model) {
 
     if (model.texture) {
         if (textures_.find(model.texture->id()) == textures_.end()) {
-            init(model.texture);
+            load(model.texture);
         }
     }
 
     if (model.texture2){
         if (textures_.find(model.texture2->id()) == textures_.end()) {
-            init(model.texture2);
+            load(model.texture2);
         }
     }
 
     if (model.lightmap) {
         if (textures_.find(model.lightmap->id()) == textures_.end()) {
-            init(model.lightmap);
+            load(model.lightmap);
         }
     }
 
     if (model.normalmap) {
         if (textures_.find(model.normalmap->id()) == textures_.end()) {
-            init(model.normalmap);
+            load(model.normalmap);
         }
     }
 }
 
-void Renderer::init(const std::shared_ptr<Texture2D> & texture){
+void Renderer::load(const std::shared_ptr<Texture2D> & texture){
     if (textures_.find(texture->id()) == textures_.end()) {
         GLuint id = create_texture_and_pbo(texture);
         //auto id = create_texture(texture);
@@ -514,7 +514,7 @@ void Renderer::update(const Model & model,
                       const glm::mat4 projection,
                       const std::string program_name,
                       const Light & light) {
-    init(model);
+    load(model);
 
     auto transform = model.transform();
     glm::mat4 mv = view * parent_transform * transform;

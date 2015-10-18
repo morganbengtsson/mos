@@ -38,7 +38,7 @@ public:
      * @brief Init a model in renderers own memory.
      * @param model
      */
-    void init(const Model & model);
+    void load(const Model & model);
 
     template<class It>
     /**
@@ -46,9 +46,9 @@ public:
      * @param begin Iterator to first model.
      * @param end Iterator to last model.
      */
-    void init(It begin, It end) {
+    void load(It begin, It end) {
         for (auto it = begin; it != end; it++){
-            init(*it);
+            load(*it);
         }
     }
 
@@ -56,7 +56,7 @@ public:
      * @brief Init a texture.
      * @param texture The texture.
      */
-    void init(const std::shared_ptr<Texture2D> & texture);
+    void load(const std::shared_ptr<Texture2D> & texture);
 
 
     void update(const Model & model,
