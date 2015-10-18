@@ -146,9 +146,7 @@ Player::Player(): reverb_properties(EFX_REVERB_PRESET_LIVINGROOM),
     alFilterf(lowpass_filter2,AL_LOWPASS_GAIN, 0.3f); // 0.5f
     alFilterf(lowpass_filter2,AL_LOWPASS_GAINHF, 0.01f); // 0.01f
 
-    listener_position(glm::vec3(0.0f));
-    listener_velocity(glm::vec3(0.0f));
-    listener_orientation(glm::vec3(0.0f, 0.0f, -1.0f));
+    listener(Listener());
 }
 
 Player::~Player() {
@@ -167,42 +165,6 @@ Player::~Player() {
     alcDestroyContext(context_);
     alcCloseDevice(device_);
 }
-
-
-glm::vec3 Player::listener_position() {
-    glm::vec3 position;
-
-    alGetListener3f(AL_POSITION, & position.x, & position.y, & position.z);
-    return position;
-}
-
-void Player::listener_position(const glm::vec3 position) {
-    alListener3f(AL_POSITION, position.x, position.y, position.z);
-}
-
-glm::vec3 Player::listener_orientation() {
-    glm::vec3 orientation;
-    alGetListener3f(AL_ORIENTATION, & orientation.x, & orientation.y, & orientation.z);
-    return orientation;
-}
-
-void Player::listener_orientation(const glm::vec3 orientation, const glm::vec3 up)
-{
-    float orient[6] = {/*fwd:*/ orientation.x,orientation.y, orientation.z,
-                       /*up:*/ up.x, up.y, up.z};
-    alListenerfv(AL_ORIENTATION, orient);
-}
-
-glm::vec3 Player::listener_velocity() {
-    glm::vec3 velocity;
-    alGetListener3f(AL_VELOCITY, & velocity.x, & velocity.y, & velocity.z);
-    return velocity;
-}
-
-void Player::listener_velocity(const glm::vec3 velocity) {
-    alListener3f(AL_VELOCITY, velocity.x, velocity.y, velocity.z);
-}
-
 
 void Player::init(const SoundSource & sound_source) {
     if (sources_.find(sound_source.source.id()) == sources_.end()) {
@@ -347,6 +309,37 @@ void Player::update(StreamSource & sound_source, const float dt) {
         alSourceRewind(al_source);
         source.playing = false;
     }*/
+}
+
+Listener Player::listener() {
+    Listener listener;
+    alGetListener3f(AL_POSITION,
+                    &listener.position.x,
+                    &listener.position.y,
+                    &listener.position.z);
+
+    alGetListener3f(AL_ORIENTATION,
+                    &listener.orientation.x,
+                    &listener.orientation.y,
+                    &listener.orientation.z);
+
+    alGetListener3f(AL_VELOCITY,
+                    &listener.velocity.x,
+                    &listener.velocity.y,
+                    &listener.velocity.z);
+
+    return listener;
+}
+
+void Player::listener(const Listener &listener) {
+    alListener3f(AL_POSITION, listener.position.x, listener.position.y, listener.position.z);
+
+    alListener3f(AL_VELOCITY, listener.velocity.x, listener.velocity.y, listener.velocity.z);
+
+    auto up = glm::vec3(0.0f, 0.0f, 1.0f);
+    float orient[6] = {listener.orientation.x, listener.orientation.y, listener.orientation.z,
+                       up.x, up.y, up.z};
+    alListenerfv(AL_ORIENTATION, orient);
 }
 
 void Player::update(SoundSource & sound_source, const float dt)
