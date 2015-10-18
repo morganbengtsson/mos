@@ -24,8 +24,10 @@ namespace mos {
          *
          * Constructor that takes iterators from a container of shorts.
          */
-        Sound(It begin, It end, const unsigned int channels = 1u) :
-            channels_(channels),
+        Sound(It begin, It end,
+              const unsigned int channels = 1u,
+              const unsigned int sample_rate = 44100u) :
+            channels_(channels), sample_rate_(sample_rate),
             valid(true),
             samples_(begin, end) {
             static unsigned int current_id = 0;
@@ -36,7 +38,7 @@ namespace mos {
          * @brief Sound constructor empty
          * @param channels
          */
-        Sound(const unsigned int channels = 1u): channels_(channels){
+        Sound(const unsigned int channels = 1u): channels_(channels) {
             static unsigned int current_id = 0;
             id_ = current_id++;
         }
@@ -84,11 +86,17 @@ namespace mos {
          */
         unsigned int channels() const;
 
+        /**
+         * @brief Sample rate
+         * @return sample rate
+         */
+        unsigned int sample_rate() const;
+
     private:
         unsigned int id_;
-        Samples samples_;
+        Samples samples_;        
         unsigned int channels_;
-
+        unsigned int sample_rate_;
 
     };
 }

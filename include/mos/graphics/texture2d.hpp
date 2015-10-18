@@ -95,6 +95,12 @@ public:
     unsigned int height() const;
 
     /**
+     * @brief size of buffer
+     * @return
+     */
+    unsigned int size() const;
+
+    /**
      * @brief sample the texture
      * @param x less than width
      * @param y less than height

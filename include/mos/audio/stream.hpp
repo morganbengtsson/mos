@@ -2,6 +2,7 @@
 #define MOS_STREAM_HPP
 
 #include <array>
+
 #include "stb_vorbis.h"
 
 namespace mos {
@@ -59,7 +60,14 @@ public:
      * @brief seek_start Starts the stream from the beginning.
      */
     void seek_start();
+
+    /**
+     * @brief unique id
+     * @return id
+     */
+    unsigned int id() const;
 private:
+    unsigned int id_;
     int samples_left_;
     int size_;
     std::string file_name_;

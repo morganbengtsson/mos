@@ -58,7 +58,7 @@ namespace mos {
                 nums.push_back(it->GetDouble());
             }
             transform = glm::make_mat4x4(nums.data());
-            std::cout << transform;
+            //std::cout << transform;
         }
 
             float x = value["position"][0].GetDouble();
@@ -93,7 +93,7 @@ namespace mos {
     }
 
     Model Assets::model(const std::string file_name){
-        std::cout << "Loading: " << file_name << std::endl;
+        //std::cout << "Loading: " << file_name << std::endl;
         std::ifstream is(directory_ + file_name);
         if (!is.good()){
             throw std::runtime_error(directory_ + file_name + " does not exist.");
@@ -114,7 +114,7 @@ namespace mos {
 
         if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
 
-            std::cout << "Loading: " << file_name << std::endl;
+            //std::cout << "Loading: " << file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
             if (!is.good()){
                 throw std::runtime_error(directory_ + file_name + " does not exist.");
@@ -137,7 +137,7 @@ namespace mos {
 
         } else if (file_name.substr(file_name.find_last_of(".") + 1) == "obj"){
 
-            std::cout << "Loading: " << directory_ << file_name;
+            //std::cout << "Loading: " << directory_ << file_name;
             obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
 
             int j = 0;
@@ -175,7 +175,7 @@ namespace mos {
         vector<unsigned char> texels_decoded;
         unsigned width, height;
 
-        std::cout << "Loading: " << directory_ + file_name << std::endl;
+        //std::cout << "Loading: " << directory_ + file_name << std::endl;
         auto error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
         if (error) {
             std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error) << std::endl;
@@ -196,7 +196,7 @@ namespace mos {
     }
 
     std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
-        int channels, length;
+        int channels, length, sample_rate;
         short * decoded;
 
         std::ifstream file(directory_ + file_name, std::ios::binary);
@@ -209,7 +209,7 @@ namespace mos {
         while (file.read(reinterpret_cast<char*> (&c), sizeof (c))) {
             data.push_back(c);
         }
-        length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &decoded);
+        length = stb_vorbis_decode_memory(data.data(), data.size(), &channels, &sample_rate, &decoded);
 
         return std::make_shared<Sound>(decoded, decoded + length);
     }
@@ -231,7 +231,7 @@ namespace mos {
     std::shared_ptr<Material> Assets::material(const std::string file_name) const{
 
          if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
-            std::cout << "Loading: " << directory_ + file_name << std::endl;
+           // std::cout << "Loading: " << directory_ + file_name << std::endl;
             std::ifstream is(directory_ + file_name, ios::binary);
             glm::vec3 ambient;
             glm::vec3 diffuse;

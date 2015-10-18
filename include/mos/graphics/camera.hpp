@@ -17,10 +17,10 @@ public:
      * @param projection Projection matrix (ortho/perspective).
      * @param up Up direction.
      */
-    Camera(const glm::vec3 &eye,
-           const glm::vec3 &center,
-           const glm::mat4 &projection,
-           const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+    Camera(const glm::vec3 & position,
+           const glm::vec3 & center,
+           const glm::mat4 & projection,
+           const glm::vec3 & up = glm::vec3(0.0f, 0.0f, 1.0f));
 
     /**
      * @brief position

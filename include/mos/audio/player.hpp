@@ -12,6 +12,7 @@
 
 #include "streamsource.hpp"
 #include "soundsource.hpp"
+#include "listener.hpp"
 
 namespace mos {    
 
@@ -93,48 +94,17 @@ namespace mos {
         void update(StreamSource & stream_source, const float dt);
 
         /**
-         * @brief listener_position
-         * @return Position of the listener.
+         * @brief Get listener data.
+         * @return listener
          */
-        glm::vec3 listener_position();
+        Listener listener();
 
-		/**
-		* Set the listener position. 
-		*
-		* @brief listener_position
-		* @param position
-		*/
-        void listener_position(const glm::vec3 position);
+        /**
+         * @brief Set listener data
+         * @param listener
+         */
+        void listener(const Listener & listener);
 
-		/**
-		* Get the listener position
-		*
-		* @brief listener_position	
-		*/
-        glm::vec3 listener_orientation();
-
-		/**
-		* Set the listener orientation.
-		*
-		* @brief listener_orientation
-		* @param orientation, up
-		*/
-        void listener_orientation(const glm::vec3 orientation, const glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f));
-        
-		/**
-		* Get the listener velocity.
-		*
-		* @brief listener_velocity
-		*/
-		glm::vec3 listener_velocity();
-
-		/**
-		* Set the listener velocity.
-		*
-		* @brief listener_velocity
-		* @param velocity
-		*/
-        void listener_velocity(const glm::vec3 velocity);
     private:
 		struct StreamThread {
 			std::shared_ptr<std::thread> thread;
