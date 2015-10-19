@@ -106,6 +106,23 @@ namespace mos {
         return doc;
     }
 
+    vec3 Assets::position(const string & file_name) {
+        return (glm::vec3)(transform(file_name)*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    }
+
+    mat4 Assets::transform(const string &file_name) {
+        auto doc = document(file_name);
+        glm::mat4 transform;
+        if (doc.HasMember("transform")){
+            std::vector<float> nums;
+            for (auto it = doc["transform"].Begin(); it != doc["transform"].End(); it++){
+                nums.push_back(it->GetDouble());
+            }
+            transform = glm::make_mat4x4(nums.data());
+        }
+        return transform;
+    }
+
     Model Assets::model(const std::string file_name) {
         auto doc = document(file_name);
         return model(doc);

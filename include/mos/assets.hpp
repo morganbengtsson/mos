@@ -187,6 +187,8 @@ class Assets {
         //TODO Make private.
         Model model(rapidjson::Value &value);
         rapidjson::Document document(const std::string &file_name);
+        glm::vec3 position(const std::string & file_name);
+        glm::mat4 transform(const std::string & file_name);
 
     private:
         std::string directory_;
