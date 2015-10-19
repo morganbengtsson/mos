@@ -92,7 +92,7 @@ namespace mos {
         return m;
     }
 
-    Model Assets::model(const std::string file_name){
+    rapidjson::Document Assets::document(const std::string & file_name) {
         //std::cout << "Loading: " << file_name << std::endl;
         std::ifstream is(directory_ + file_name);
         if (!is.good()){
@@ -103,7 +103,11 @@ namespace mos {
                          std::istreambuf_iterator<char>());
         rapidjson::Document doc;
         doc.Parse(source.c_str());
+        return doc;
+    }
 
+    Model Assets::model(const std::string file_name) {
+        auto doc = document(file_name);
         return model(doc);
     }
 

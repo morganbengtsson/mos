@@ -186,6 +186,7 @@ class Assets {
 
         //TODO Make private.
         Model model(rapidjson::Value &value);
+        rapidjson::Document document(const std::string &file_name);
 
     private:
         std::string directory_;
