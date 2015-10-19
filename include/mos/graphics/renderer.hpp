@@ -40,15 +40,9 @@ public:
      */
     void load(const Model & model);
 
-    /**
-     * @brief unload a model from renderers own memory.
-     * @param model
-     */
-    void unload(const Model & model);
-
     template<class It>
     /**
-     * @brief Init multiple models.
+     * @brief Load multiple models.
      * @param begin Iterator to first model.
      * @param end Iterator to last model.
      */
@@ -57,6 +51,25 @@ public:
             load(*it);
         }
     }
+
+    /**
+     * @brief unload a model from renderers own memory.
+     * @param model
+     */
+    void unload(const Model & model);
+
+    template<class It>
+    /**
+     * @brief unload multiple models.
+     * @param begin Iterator.
+     * @param end Iterator.
+     */
+    void unload(It begin, It end) {
+        for (auto it = begin; it != end; it++) {
+            unload(*it);
+        }
+    }
+
 
     /**
      * @brief Load a texture into renderer memory.
