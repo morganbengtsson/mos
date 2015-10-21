@@ -12,14 +12,14 @@ namespace mos {
 Model::Model(){
 
 }
-Model::Model(std::shared_ptr<Mesh> mesh,
-             std::shared_ptr<Texture2D> texture,
-             std::shared_ptr<Texture2D> texture2,
-             const glm::mat4 transform,
+Model::Model(const std::shared_ptr<Mesh> & mesh,
+             const std::shared_ptr<Texture2D> & texture,
+             const std::shared_ptr<Texture2D> & texture2,
+             const glm::mat4 & transform,
              const Draw draw,
-             std::shared_ptr<Material> material,
-             std::shared_ptr<Texture2D> lightmap,
-             std::shared_ptr<Texture2D> normalmap,
+             const std::shared_ptr<Material> &  material,
+             const std::shared_ptr<Texture2D> & lightmap,
+             const std::shared_ptr<Texture2D> & normalmap,
              const bool selectable,
              const bool step,
              const float obstruction,
