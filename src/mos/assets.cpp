@@ -41,12 +41,10 @@ namespace mos {
 
         bool step = !value.HasMember("step") || value["step"].IsNull() ? false: value["step"].GetBool();
 
-        std::string texture = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
-        std::string texture2 = !value.HasMember("texture2") || value["texture2"].IsNull() ? "" : value["texture2"].GetString();
-        std::string lightmap = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
-        std::string material = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
-
-
+        std::string texture_name = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
+        std::string texture2_name = !value.HasMember("texture2") || value["texture2"].IsNull() ? "" : value["texture2"].GetString();
+        std::string lightmap_name = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
+        std::string material_name = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
 
         float obstruction = !value.HasMember("obstruction") || value["obstruction"].IsNull() ? 0.0f : value["obstruction"].GetDouble();
 
@@ -70,15 +68,13 @@ namespace mos {
 
             glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), angle, axis);
 
-
-
         auto m =  mos::Model(mesh_cached(mesh),
-                         texture_cached(texture),
-                         texture_cached(texture2),
+                         texture_cached(texture_name),
+                         texture_cached(texture2_name),
                          transform,
                          mos::Model::Draw::TRIANGLES,
-                         material_cached(material),
-                         texture_cached(lightmap),
+                         material_cached(material_name),
+                         texture_cached(lightmap_name),
                          nullptr,
                          selectable,
                          step,
