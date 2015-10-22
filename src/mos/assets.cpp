@@ -192,6 +192,10 @@ namespace mos {
         vector<unsigned char> texels_decoded;
         unsigned width, height;
 
+        if (file_name.empty()) {
+            return std::shared_ptr<Texture2D>(nullptr);
+        }
+
         //std::cout << "Loading: " << directory_ + file_name << std::endl;
         auto error = lodepng::decode(texels_decoded, width, height, directory_ + file_name);
         if (error) {
@@ -287,6 +291,41 @@ namespace mos {
         std::string source((std::istreambuf_iterator<char>(file)),
                 std::istreambuf_iterator<char>());
         return source;
+    }
+
+
+    void Assets::clear_unused() {
+        for (auto it = textures_.begin(); it != textures_.end();) {
+            if(it->second.use_count() <= 1) {
+                textures_.erase(it++);
+            }
+            else {
+                ++it;
+            }
+        }
+        for (auto it = meshes_.begin(); it != meshes_.end();) {
+            if(it->second.use_count() <= 1) {
+                meshes_.erase(it++);
+            }
+            else{
+                ++it;
+            }
+        }
+        for (auto it = sounds_.begin(); it != sounds_.end();) {
+            if(it->second.use_count() <= 1) {
+                sounds_.erase(it++);
+            }
+            else {
+                ++it;
+            }
+        }
+        for (auto it = materials_.begin(); it != materials_.end();) {
+            if(it->second.use_count() <= 1) {
+                materials_.erase(it++);
+            } else {
+                ++it;
+            }
+        }
     }
 
     std::map<char, Character> Assets::character_map(std::string file_name) {

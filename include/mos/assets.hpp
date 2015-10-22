@@ -176,6 +176,12 @@ class Assets {
          */
         std::string text(const std::string file_name) const;
 
+
+        /**
+         * @brief Remove all unused assets
+         */
+        void clear_unused();
+
         /**
          * Load a character map from an *.xml file in NGL format.
          * 
@@ -190,7 +196,7 @@ class Assets {
         glm::vec3 position(const std::string & file_name);
         glm::mat4 transform(const std::string & file_name);
 
-    private:
+    private:        
         std::string directory_;
         MeshMap meshes_;
         TextureMap textures_;
