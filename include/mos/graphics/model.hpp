@@ -170,7 +170,7 @@ namespace mos {
          * @param model
          * @return
          */
-        BoxIntersection intersects(const Model & model);
+        BoxIntersection intersects(const Model & model) const;
 
         /**
          * @brief Children.

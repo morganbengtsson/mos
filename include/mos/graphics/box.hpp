@@ -168,7 +168,7 @@ public:
      * @param other
      * @return
      */
-    BoxIntersection intersects(const Box & other);
+    BoxIntersection intersects(const Box & other) const;
 
 
     /**

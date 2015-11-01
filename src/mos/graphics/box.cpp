@@ -170,7 +170,7 @@ RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
     return intersect(point1, glm::normalize(point2 - point1), 0.0f, glm::distance(point1, point2));
 }
 
-BoxIntersection Box::intersects(const Box &other) {
+BoxIntersection Box::intersects(const Box & other) const {
     static const std::array<glm::vec3, 6> faces = {
         glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
         glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)

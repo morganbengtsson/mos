@@ -11,7 +11,6 @@ namespace mos {
             up_(up),
             position_(position),
             center_(center) {
-
     }
 
     glm::vec3 Camera::position() const {
