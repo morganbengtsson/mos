@@ -32,9 +32,9 @@ namespace mos {
 
         template<class It>
         /**
-         * A generalized init method
+         * A generalized load method.
          *
-         * @brief init
+         * @brief load
          * @param begin
          * @param end
          */
@@ -45,11 +45,11 @@ namespace mos {
         }
 
         /**
-         * Play audio from a SoundSource object. A sound source contains one sound.
+         * Load a SoundSource object. A sound source contains one sound.
          * 
          * @param source
          */
-        void load(const SoundSource & source);
+        void load(const SoundSource & sound_source);
 
         /**
          * Plays audio from a StreamSource. Which streams content from a file. This
@@ -59,6 +59,11 @@ namespace mos {
          * @param stream_source
          */
         void load(const StreamSource & stream_source);
+
+
+        void unload(const SoundSource & sound_source);
+
+        void unload(const StreamSource & stream_source);
 
         template<class It>
         /**
@@ -131,7 +136,7 @@ namespace mos {
         Buffers buffers_;
         Filters filters_;
 
-        std::unordered_map<unsigned int, StreamThread> stream_threads;		
+        std::unordered_map<unsigned int, StreamThread> stream_threads;
     };
 }
 

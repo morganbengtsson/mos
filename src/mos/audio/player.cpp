@@ -205,6 +205,14 @@ void Player::load(const StreamSource & stream_source) {
 
 }
 
+void Player::unload(const SoundSource & sound_source) {
+
+}
+
+void Player::unload(const StreamSource & stream_source) {
+
+}
+
 void Player::update(StreamSource & sound_source, const float dt) {
     if (sources_.find(sound_source.source.id()) == sources_.end()) {
         ALuint al_source;
