@@ -94,9 +94,9 @@ std::vector<T> operator+(const std::vector<T>& a, const std::vector<T>& b)
 
     std::vector<T> result;
     result.reserve(a.size());
-
+	/*
     std::transform(a.begin(), a.end(), b.begin(),
-                   std::back_inserter(result), std::plus<T>());
+                   std::back_inserter(result), std::plus<T>());*/
     return result;
 }
 
@@ -113,9 +113,9 @@ std::vector<T> operator-(const std::vector<T>& a, const std::vector<T>& b)
 
     std::vector<T> result;
     result.reserve(a.size());
-
+	/*
     std::transform(a.begin(), a.end(), b.begin(),
-                   std::back_inserter(result), std::minus<T>());
+                   std::back_inserter(result), std::minus<T>());*/
     return result;
 }
 
@@ -132,9 +132,9 @@ std::vector<T> operator*(const std::vector<T>& a, const std::vector<T>& b)
 
     std::vector<T> result;
     result.reserve(a.size());
-
+	/*
     std::transform(a.begin(), a.end(), b.begin(),
-                   std::back_inserter(result), std::multiplies<T>());
+                   std::back_inserter(result), std::multiplies<T>());*/
     return result;
 }
 
@@ -151,9 +151,9 @@ std::vector<T> operator/(const std::vector<T>& a, const std::vector<T>& b)
 
     std::vector<T> result;
     result.reserve(a.size());
-
+	/*
     std::transform(a.begin(), a.end(), b.begin(),
-                   std::back_inserter(result), std::divides<T>());
+                   std::back_inserter(result), std::divides<T>());*/
     return result;
 }
 }

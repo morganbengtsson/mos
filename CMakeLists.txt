@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.11)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
@@ -25,41 +25,29 @@ file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
 
 # GLEW
 add_subdirectory(externals/glew-cmake)
-include_directories(externals/glew-cmake/include)
 
 #openal soft
 set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
 set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
 add_subdirectory(externals/openal-soft)
-include_directories(externals/openal-soft/include)
 
 #glm
-include_directories(externals/glm)
 add_subdirectory(externals/glm)
-
-# rapidxml
-include_directories(externals/rapidxml)
-
-# objload
-include_directories(externals/objload)
 
 # lodepng
 add_subdirectory(externals/lodepng)
-include_directories(externals/lodepng)
 
 # stb
-include_directories(externals/stb)
 add_subdirectory(externals/stb)
 
-
-# mo
+# mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
 file(GLOB_RECURSE EXP_HEADER include/mos/exp/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
-add_subdirectory(src/mos)
+#add_subdirectory(src/mos)
 include_directories(include/mos)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
@@ -73,6 +61,8 @@ target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRA
 target_link_libraries(mos lodepng)
 target_link_libraries(mos stb)
 target_include_directories(mos PUBLIC
+externals/glew-cmake/include
+externals/openal-soft/include
 externals/stb
 externals/lodepng
 externals/objload
