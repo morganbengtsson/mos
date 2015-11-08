@@ -86,6 +86,19 @@ void Model::selected(const bool selected) {
 }
 
 BoxIntersection Model::intersects(const Model &model) const{
+    auto intersection = box.intersects(model.box);
+    if (!intersection.intersects){
+        for (auto & child_model : models){
+            auto child_intersection = child_model.intersects(model);
+            if (child_intersection.intersects){
+                return child_intersection;
+            } else {
+                return child_model.intersects(model);
+            }
+        }
+    }
+    return intersection;
+    /*
     auto parent_intersection = box.intersects(model.box);
     if (!parent_intersection.intersects){
         for (auto & child : models){
@@ -96,6 +109,7 @@ BoxIntersection Model::intersects(const Model &model) const{
         }
     }
     return parent_intersection;
+    */
 }
 
 }
