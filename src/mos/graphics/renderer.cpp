@@ -500,6 +500,13 @@ unsigned int Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> &
         0, 0, GLsizei(texture->width()), GLsizei(texture->height()),
         GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glDeleteBuffers(1, &buffer_id);
+
+    /*
+    if(texture->mipmaps) {
+        glGenerateMipmap(GL_TEXTURE_2D);
+    };
+    */
+
     glBindTexture(GL_TEXTURE_2D, 0);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
