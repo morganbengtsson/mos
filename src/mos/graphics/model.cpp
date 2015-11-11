@@ -56,9 +56,10 @@ void Model::transform_box(const glm::mat4 & transform){
     }
 }
 
-void Model::transform(const glm::mat4 & transform) {
+void Model::transform(const glm::mat4 & transform,
+                      const glm::mat4 & parent_transform) {
     transform_ = transform;
-    transform_box(transform);
+    transform_box(transform * parent_transform);
 }
 
 glm::vec4 Model::color() const {

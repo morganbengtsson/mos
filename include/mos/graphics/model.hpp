@@ -107,7 +107,8 @@ namespace mos {
          * @brief transform
          * @param transform
          */
-        void transform(const glm::mat4 & transform);
+        void transform(const glm::mat4 & transform,
+                       const glm::mat4 & parent_transform = glm::mat4(1.0f));
 
         /**
 		* Get the position
