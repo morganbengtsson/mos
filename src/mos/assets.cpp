@@ -33,7 +33,7 @@ namespace mos {
     Assets::~Assets() {
     }
 
-    Model Assets::model(rapidjson::Value &value ) {
+    Model Assets::model(rapidjson::Value &value , const glm::mat4 & parent_transform) {
         std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull() ? "": value["mesh"].GetString();
 
         bool selectable =
@@ -72,6 +72,7 @@ namespace mos {
                          texture_cached(texture_name),
                          texture_cached(texture2_name),
                          transform,
+                         parent_transform,
                          mos::Model::Draw::TRIANGLES,
                          material_cached(material_name),
                          texture_cached(lightmap_name),

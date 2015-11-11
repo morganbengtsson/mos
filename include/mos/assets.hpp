@@ -191,7 +191,8 @@ class Assets {
         std::map<char, Character> character_map(std::string path);
 
         //TODO Make private.
-        Model model(rapidjson::Value &value);
+        Model model(rapidjson::Value &value,
+                    const glm::mat4 & parent_transform = glm::mat4(1.0f));
         rapidjson::Document document(const std::string &file_name);
         glm::vec3 position(const std::string & file_name);
         glm::mat4 transform(const std::string & file_name);

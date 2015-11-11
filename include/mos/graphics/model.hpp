@@ -47,6 +47,7 @@ namespace mos {
               const TexPtr & texture = TexPtr(),
               const TexPtr & texture2 = TexPtr(),
               const glm::mat4 & transform = glm::mat4(1.0f),
+              const glm::mat4 & parent_transform = glm::mat4(1.0f),
               const Draw draw = Draw::TRIANGLES,
               const MatPtr & material =
                     std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
