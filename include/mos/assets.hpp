@@ -88,7 +88,7 @@ class Assets {
          * @param file_name
          * @return Model object including associated meshes/textures/etc.
          */
-        Model model(const std::string file_name);
+        Model model(const std::string & file_name, const glm::mat4 & parent_transform = glm::mat4(1.0f));
 
         /**
          * Loads a *.material file into a Material object, and caches it internally.

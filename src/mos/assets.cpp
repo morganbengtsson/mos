@@ -120,9 +120,9 @@ namespace mos {
         return transform;
     }
 
-    Model Assets::model(const std::string file_name) {
+    Model Assets::model(const std::string & file_name, const glm::mat4 & parent_transform) {
         auto doc = document(file_name);
-        return model(doc);
+        return model(doc, parent_transform);
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {

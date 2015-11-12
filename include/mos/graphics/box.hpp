@@ -178,6 +178,8 @@ public:
      */
     glm::vec3 intersects_simple(const Box & other);
 
+    glm::vec3 position() const;
+
     /**
      * @brief Get the transform.
      */
@@ -222,5 +224,6 @@ private:
 
 
 };
+
 }
 #endif // MOS_BOX_HPP

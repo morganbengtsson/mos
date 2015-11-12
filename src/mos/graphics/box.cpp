@@ -233,6 +233,10 @@ glm::vec3 Box::intersects_simple(const Box & other) {
     return inters.normal * inters.distance;
 }
 
+glm::vec3 Box::position() const {
+     return (glm::vec3)(transform()*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
 glm::mat4 Box::transform() const {
     return transform_;
 }
