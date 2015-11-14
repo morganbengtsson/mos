@@ -176,7 +176,6 @@ class Assets {
          */
         std::string text(const std::string file_name) const;
 
-
         /**
          * @brief Remove all unused assets
          */

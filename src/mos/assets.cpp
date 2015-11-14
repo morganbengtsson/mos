@@ -85,7 +85,7 @@ namespace mos {
             m.models.push_back(model(*it));
 
         }
-        m.transform(transform);
+        m.transform(transform, parent_transform);
         return m;
     }
 

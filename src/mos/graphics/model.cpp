@@ -41,6 +41,7 @@ Model::Model(const std::shared_ptr<Mesh> & mesh,
     opacity(opacity),
     receives_light(affected_by_light) {
         box.step(step);
+        transform_box(transform * parent_transform);
 }
 
 Model::~Model() {
@@ -50,17 +51,17 @@ glm::mat4 Model::transform() const{
     return transform_;
 }
 
+void Model::transform(const glm::mat4 & transform,
+                      const glm::mat4 & parent_transform) {
+    transform_ = transform;
+    transform_box(parent_transform * transform);
+}
+
 void Model::transform_box(const glm::mat4 & transform){
     box.transform(transform);
     for (auto & model : models){
         model.transform_box(transform * model.transform());
     }
-}
-
-void Model::transform(const glm::mat4 & transform,
-                      const glm::mat4 & parent_transform) {
-    transform_ = transform;
-    transform_box(transform * parent_transform);
 }
 
 glm::vec4 Model::color() const {
