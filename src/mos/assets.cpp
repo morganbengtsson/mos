@@ -34,6 +34,8 @@ namespace mos {
     }
 
     Model Assets::model(rapidjson::Value &value , const glm::mat4 & parent_transform) {
+        auto name = !value.HasMember("name") || value["name"].IsNull() ? "" : value["name"].GetString();
+
         std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull() ? "": value["mesh"].GetString();
 
         bool selectable =
@@ -56,19 +58,10 @@ namespace mos {
                 nums.push_back(it->GetDouble());
             }
             transform = glm::make_mat4x4(nums.data());
-            //std::cout << transform;
         }
 
-            float x = value["position"][0].GetDouble();
-            float y = value["position"][1].GetDouble();
-            float z = value["position"][2].GetDouble();
-
-            glm::vec3 axis(value["axis"][0].GetDouble(), value["axis"][1].GetDouble(), value["axis"][2].GetDouble());
-            float angle = value["angle"].GetDouble();
-
-            glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), angle, axis);
-
-        auto m =  mos::Model(mesh_cached(mesh),
+        auto m =  mos::Model(name,
+                             mesh_cached(mesh),
                          texture_cached(texture_name),
                          texture_cached(texture2_name),
                          transform,

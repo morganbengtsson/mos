@@ -25,6 +25,7 @@ namespace mos {
         using MeshPtr = std::shared_ptr<Mesh>;
         using TexPtr = std::shared_ptr<Texture2D>;
         using MatPtr = std::shared_ptr<Material>;
+
         /**
          * @brief Model
          */
@@ -43,7 +44,8 @@ namespace mos {
          * @param obstruction
          * @param opacity
          */
-        Model(const MeshPtr & mesh,
+        Model(const std::string & name,
+              const MeshPtr & mesh,
               const TexPtr & texture = TexPtr(),
               const TexPtr & texture2 = TexPtr(),
               const glm::mat4 & transform = glm::mat4(1.0f),
@@ -63,6 +65,12 @@ namespace mos {
          * @brief ~Model destructor
          */
         virtual ~Model();
+
+        /**
+         * @brief name
+         * @return
+         */
+        std::string name() const;
 
         /**
          * @brief mesh
@@ -181,6 +189,7 @@ namespace mos {
          */
         Models models;
     private:
+        std::string name_;
         bool valid_;
         bool selected_;
         glm::mat4 transform_;

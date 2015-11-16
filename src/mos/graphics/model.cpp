@@ -12,7 +12,8 @@ namespace mos {
 Model::Model(){
 
 }
-Model::Model(const std::shared_ptr<Mesh> & mesh,
+Model::Model(const std::string & name,
+             const std::shared_ptr<Mesh> & mesh,
              const std::shared_ptr<Texture2D> & texture,
              const std::shared_ptr<Texture2D> & texture2,
              const glm::mat4 & transform,
@@ -26,6 +27,7 @@ Model::Model(const std::shared_ptr<Mesh> & mesh,
              const float obstruction,
              const float opacity,
              const float affected_by_light) :
+
     draw(draw),
     mesh(mesh),
     texture(texture),
@@ -33,6 +35,7 @@ Model::Model(const std::shared_ptr<Mesh> & mesh,
     material(material),
     lightmap(lightmap),
     normalmap(normalmap),
+    name_(name),
     transform_(transform),
     valid_(true),
     selected_(false),
