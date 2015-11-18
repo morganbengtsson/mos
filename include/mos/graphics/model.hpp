@@ -184,6 +184,11 @@ namespace mos {
 
         void transform_box(const glm::mat4 & transform);
 
+        Models::const_iterator begin() const;
+        Models::const_iterator end() const;
+        Models::iterator begin();
+        Models::iterator end();
+
         /**
          * @brief Children.
          */

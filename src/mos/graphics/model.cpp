@@ -50,6 +50,10 @@ Model::Model(const std::string & name,
 Model::~Model() {
 }
 
+std::string Model::name() const {
+    return name_;
+}
+
 glm::mat4 Model::transform() const{
     return transform_;
 }
@@ -65,6 +69,22 @@ void Model::transform_box(const glm::mat4 & transform){
     for (auto & model : models){
         model.transform_box(transform * model.transform());
     }
+}
+
+Model::Models::const_iterator Model::begin() const {
+    return models.begin();
+}
+
+Model::Models::const_iterator Model::end() const {
+    return models.end();
+}
+
+Model::Models::iterator Model::begin() {
+    return models.begin();
+}
+
+Model::Models::iterator Model::end() {
+    return models.end();
 }
 
 glm::vec4 Model::color() const {
