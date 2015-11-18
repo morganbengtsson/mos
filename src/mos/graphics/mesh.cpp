@@ -12,18 +12,53 @@ namespace mos {
     
     unsigned int Mesh::current_id = 0;
     
-    Mesh::Mesh(std::initializer_list<Vertex> vertices, std::initializer_list<int> elements) : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
+    Mesh::Mesh(std::initializer_list<Vertex> vertices, std::initializer_list<int> elements) :
+        Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
     }
 
     Mesh::Mesh() : valid(true){
         id_ = current_id++;        
     }
 	
-    Mesh::Mesh(const Mesh & mesh): Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(), mesh.elements_end()){		
-	}
-		
+    Mesh::Mesh(const Mesh & mesh): Mesh(mesh.vertices_begin(),
+                                        mesh.vertices_end(),
+                                        mesh.elements_begin(),
+                                        mesh.elements_end()){
+	}		
     
     Mesh::~Mesh() {
+    }
+
+    Mesh::Vertices::const_iterator Mesh::vertices_begin() const {
+        return vertices_.begin();
+    }
+
+    Mesh::Vertices::const_iterator Mesh::vertices_end() const {
+        return vertices_.end();
+    }
+
+    Mesh::Elements::const_iterator Mesh::elements_begin() const {
+        return elements_.begin();
+    }
+
+    Mesh::Elements::const_iterator Mesh::elements_end() const {
+        return elements_.end();
+    }
+
+    Mesh::Vertices::iterator Mesh::vertices_begin() {
+        return vertices_.begin();
+    }
+
+    Mesh::Vertices::iterator Mesh::vertices_end() {
+        return vertices_.end();
+    }
+
+    Mesh::Elements::iterator Mesh::elements_begin() {
+        return elements_.begin();
+    }
+
+    Mesh::Elements::iterator Mesh::elements_end() {
+        return elements_.end();
     }
 
     unsigned int Mesh::id() const {

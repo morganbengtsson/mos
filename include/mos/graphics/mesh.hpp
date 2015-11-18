@@ -70,65 +70,49 @@ public:
      * @brief vertices_begin
      * @return Iterator to first Vertex.
      */
-    Vertices::const_iterator vertices_begin() const {
-        return vertices_.begin();
-    }
+    Vertices::const_iterator vertices_begin() const;
 
     /**
      * @brief vertices_end
      * @return Iteartor to last vertex.
      */
-    Vertices::const_iterator vertices_end() const {
-        return vertices_.end();
-    }
+    Vertices::const_iterator vertices_end() const;
 
     /**
      * @brief elements_begin
      * @return Iterator to first element.
      */
-    Elements::const_iterator elements_begin() const {
-        return elements_.begin();
-    }
+    Elements::const_iterator elements_begin() const;
 
     /**
      * @brief elements_end
      * @return Iterator to last element.
      */
-    Elements::const_iterator elements_end() const {
-        return elements_.end();
-    }
+    Elements::const_iterator elements_end() const;
 
     /**
      * @brief vertices_begin
      * @return Iterator to first vertex.
      */
-    Vertices::iterator vertices_begin() {
-        return vertices_.begin();
-    }
+    Vertices::iterator vertices_begin();
 
     /**
      * @brief vertices_end
      * @return Iterator to last vertex.
      */
-    Vertices::iterator vertices_end() {
-        return vertices_.end();
-    }
+    Vertices::iterator vertices_end();
 
     /**
      * @brief elements_begin
      * @return Iterator to first element.
      */
-    Elements::iterator elements_begin() {
-        return elements_.begin();
-    }
+    Elements::iterator elements_begin();
 
     /**
      * @brief elements_end
      * @return Iterator to last element.
      */
-    Elements::iterator elements_end() {
-        return elements_.end();
-    }
+    Elements::iterator elements_end();
 
     /**
      * @return A unique identifier.
