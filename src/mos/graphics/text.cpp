@@ -67,4 +67,12 @@ namespace mos {
     Model Text::model() const {
         return model_;
     }
+
+    Text & Text::operator=(const std::string & input) {
+        text(input);
+    }
+
+    Text & Text::operator+=(const std::string & input) {
+        text(text() + input);
+    }
 }

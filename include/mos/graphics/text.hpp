@@ -62,6 +62,21 @@ public:
      * @brief spacing between characters
      */
     float spacing;
+
+    /**
+     * @brief operator =
+     * @param text
+     * @return
+     */
+    mos::Text & operator=(const std::string & text);
+
+    /**
+     * @brief operator +=
+     * @param text
+     * @return
+     */
+    mos::Text & operator+=(const std::string & text);
+
 private:
     mos::Model model_;
     std::string text_;
