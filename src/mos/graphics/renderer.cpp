@@ -703,7 +703,7 @@ void Renderer::update(const Quad & quad,
 void Renderer::update(const Text & text,
                       const glm::mat4 view,
                       const glm::mat4 projection) {
-    update(text, glm::mat4(1.0f), view, projection, "text", Light());
+    update(text.model(), glm::mat4(1.0f), view, projection, "text", Light());
 
 }
 }

@@ -14,8 +14,11 @@ namespace mos {
 /**
  * A special Model class for text rendering. 
  */
-class Text : public Model {
+class Text {
 public:
+    using CharMap = std::map<char, Character>;
+    using TexPtr = std::shared_ptr<Texture2D>;
+
     /**
      * @brief Text constructor
      * @param text
@@ -24,10 +27,10 @@ public:
      * @param transform for position/rotation
      * @param spacing between characters
      */
-    Text(const std::string text, 
-            std::map<char, Character> characters, 
-            std::shared_ptr<Texture2D> texture, 
-            const glm::mat4 transform = glm::mat4(1.0f), 
+    Text(const std::string & text,
+            const CharMap & characters,
+            const TexPtr & texture,
+            const glm::mat4 & transform = glm::mat4(1.0f),
             const float spacing = 0.0f);
     virtual ~Text();    
 
@@ -35,7 +38,7 @@ public:
      * Update the text.
      * @param text String to use.
      */
-    void text(const std::string text);
+    void text(const std::string & text);
 
     /**
      * @brief text
@@ -50,14 +53,22 @@ public:
     float width();
 
     /**
+     * @brief model
+     * @return
+     */
+    mos::Model model() const;
+
+    /**
      * @brief spacing between characters
      */
     float spacing;
-private:   
+private:
+    mos::Model model_;
     std::string text_;
     std::map<char, Character> characters_;
-   
+
 };
+
 }
 
 #endif	/* MOS_TEXT_H */
