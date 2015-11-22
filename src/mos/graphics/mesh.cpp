@@ -16,7 +16,7 @@ namespace mos {
         Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
     }
 
-    Mesh::Mesh() : valid(true){
+    Mesh::Mesh() : valid_(false){
         id_ = current_id++;        
     }
 	
@@ -64,6 +64,14 @@ namespace mos {
     unsigned int Mesh::id() const {
         return id_;
     }
+
+    bool Mesh::valid() const {
+        return valid_;
+    }
+
+    void Mesh::invalidate() {
+        valid_ = false;
+    }
     
     void Mesh::clear() {
         vertices_.clear();
@@ -72,7 +80,7 @@ namespace mos {
     
     void Mesh::add(const Vertex vertex) {
         vertices_.push_back(vertex);
-        valid = false;
+        valid_ = false;
     }
     
     void Mesh::add(const int element){

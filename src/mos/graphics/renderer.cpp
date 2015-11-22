@@ -256,7 +256,7 @@ void Renderer::load(const Model & model) {
         vertex_arrays_.insert({model.mesh->id(), vertex_array});
     }
 
-    if (!model.mesh->valid) {
+    if (!model.mesh->valid()) {
         glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
         glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
                      model.mesh->vertices_data(),
@@ -271,7 +271,7 @@ void Renderer::load(const Model & model) {
                          GL_STATIC_DRAW);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             */
-        model.mesh->valid = true;
+        model.mesh->valid_ = true;
     }
 
     if (model.texture) {

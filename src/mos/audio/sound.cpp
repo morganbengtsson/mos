@@ -15,6 +15,10 @@ namespace mos {
         return id_;
     }
 
+    bool Sound::valid() const {
+        return valid_;
+    }
+
     unsigned int Sound::channels() const {
         return channels_;
     }

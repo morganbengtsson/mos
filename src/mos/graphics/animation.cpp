@@ -51,7 +51,7 @@ void Animation::update(const float dt) {
         vertices1_it++;
         vertices2_it++;
     }
-    mesh_->valid = false;
+    mesh_->invalidate();
 }
 
 std::shared_ptr<Mesh> Animation::mesh() {

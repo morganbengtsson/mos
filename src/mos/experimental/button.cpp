@@ -10,7 +10,7 @@ Button::Button(const Text & text) :text_(text) {
 
     mos::Mesh mesh({v1, v2, v3, v4}, {0, 2, 1, 0, 3, 2});
     rectangle_.mesh = std::make_shared<Mesh>(mesh);
-    rectangle_.mesh->valid = false;
+    rectangle_.mesh->invalidate();
     rectangle_.transform(glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f)));
     mos::Material material(glm::vec3(1.0f), glm::vec3(1.0f));
     material.opacity = 0.5f;

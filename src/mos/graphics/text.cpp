@@ -54,7 +54,7 @@ namespace mos {
             model_.mesh->add(Vertex(glm::vec3(index + character.rect_w + offset_x, -offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
             index += character.advance + spacing;
         }
-        model_.mesh->valid = false;
+        model_.mesh->invalidate();
         
     }
 

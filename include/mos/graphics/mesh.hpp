@@ -12,6 +12,7 @@ namespace mos {
  * and elements, for vertex order, when rendering.
  */
 class Mesh {
+    friend class Renderer;
 public:
     /**
      * @brief Vertices container.
@@ -37,7 +38,7 @@ public:
          const VerticesIt vertices_end,
          ElementsIt elements_begin,
          ElementsIt elements_end) :
-        valid(true),
+        valid_(false),
         vertices_(vertices_begin, vertices_end),
         elements_(elements_begin, elements_end){
         id_ = current_id++;
@@ -122,7 +123,13 @@ public:
     /**
      * @brief Tells the renderer if the mesh has been updated.
      */
-    bool valid;
+    bool valid() const;
+
+    /**
+     * @brief invalidates the mesh, hence the data is updated.
+     *
+     */
+    void invalidate();
 
     /**
      * @brief Clear the whole mesh.
@@ -229,6 +236,7 @@ private:
     unsigned int id_;
     Vertices vertices_;
     Elements elements_;
+    bool valid_;
 };
 
 }
