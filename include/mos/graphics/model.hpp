@@ -195,7 +195,6 @@ namespace mos {
         Models models;
     private:
         std::string name_;
-        bool valid_;
         bool selected_;
         glm::mat4 transform_;
     };

@@ -72,7 +72,7 @@ namespace mos {
     void Mesh::invalidate() {
         valid_ = false;
     }
-    
+
     void Mesh::clear() {
         vertices_.clear();
         elements_.clear();
