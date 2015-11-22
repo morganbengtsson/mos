@@ -11,7 +11,7 @@ namespace mos {
 
     unsigned int Particles::current_id = 10000;
     
-    Particles::Particles() : valid(true) {
+    Particles::Particles() : valid_(false) {
         id_ = current_id++;
     }
 
@@ -22,9 +22,17 @@ namespace mos {
         return id_;
     }
 
+    bool Particles::valid() const {
+        return valid_;
+    }
+
+    void Particles::invalidate() {
+        valid_ = false;
+    }
+
     void Particles::add(const Particle particle) {
         particles_.push_back(particle);
-        valid = false;
+        valid_ = false;
     }
 
     Particle Particles::back() {

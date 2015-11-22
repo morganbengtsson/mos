@@ -85,6 +85,7 @@ namespace mos {
     
     void Mesh::add(const int element){
         elements_.push_back(element);
+        valid_ = false;
     }
 
     const Mesh::Vertices & Mesh::vertices() {

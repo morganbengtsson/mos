@@ -11,6 +11,7 @@ namespace mos {
  */
 class Particles {
 public:
+    friend class Renderer;
     /**
      * @brief Particles constructor.
      */
@@ -22,7 +23,7 @@ public:
      * @param begin First particle iterator.
      * @param end Last particle iterator.
      */
-    Particles(It begin, It end){
+    Particles(It begin, It end): Particle(), valid_(false){
         particles_.assign(begin, end);
     }
 
@@ -118,12 +119,18 @@ public:
     /**
      * @brief valid
      */
-    bool valid;
+    bool valid() const;
+
+    /**
+     * @brief invalidate
+     */
+    void invalidate();
 
 private:
     Parts particles_;
     static unsigned int current_id;
     unsigned int id_;
+    bool valid_;
 };
 
 }

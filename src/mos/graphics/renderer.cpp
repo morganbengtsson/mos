@@ -544,14 +544,14 @@ void Renderer::update(Particles & particles, const glm::mat4 view, const glm::ma
         vertex_arrays_.insert({particles.id(), vertex_array});
     }
 
-    if (!particles.valid) {
+    if (!particles.valid()) {
         glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
         glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof (Particle),
                      particles.data(),
                      GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        particles.valid = true;
+        particles.valid_ = true;
     }
 
     glm::mat4 mv = view;
