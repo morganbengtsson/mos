@@ -28,7 +28,7 @@ namespace mos {
               const unsigned int channels = 1u,
               const unsigned int sample_rate = 44100u) :
             channels_(channels), sample_rate_(sample_rate),
-            valid(true),
+            valid_(true),
             samples_(begin, end) {
             static unsigned int current_id = 0;
             id_ = current_id++;
@@ -78,7 +78,14 @@ namespace mos {
          *
          * A sound becomes invalid, if its data has changed. For subsystems to know, when to update.
          */
-        bool valid;
+        bool valid() const;
+
+        /**
+         * @brief invalidate
+         *
+         * The sound has to be invalidated if data is changed. For subsystems to update.
+         */
+        void invalidate();
 
         /**
          * @brief Number of channels
@@ -97,6 +104,7 @@ namespace mos {
         Samples samples_;        
         unsigned int channels_;
         unsigned int sample_rate_;
+        bool valid_;
 
     };
 }
