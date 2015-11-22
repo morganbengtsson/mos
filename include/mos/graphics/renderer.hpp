@@ -152,6 +152,9 @@ public:
                 const glm::mat4 view,
                 const glm::mat4 projection);
 
+    //TEMP
+    void update2(const Model & model, const glm::mat4 & view, const glm::mat4 & projection);
+
     /**
      * @brief Renders particles.
      * @param particles Particles object.

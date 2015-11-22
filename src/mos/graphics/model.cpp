@@ -5,7 +5,7 @@
  * Created on March 5, 2014, 10:29 PM
  */
 
-#include "graphics/model.hpp"
+#include <graphics/model.hpp>
 
 namespace mos {
 

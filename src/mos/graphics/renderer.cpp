@@ -706,4 +706,8 @@ void Renderer::update(const Text & text,
     update(text.model(), glm::mat4(1.0f), view, projection, "text", Light());
 
 }
+
+void Renderer::update2(const Model &model, const glm::mat4 &view, const glm::mat4 &projection) {
+    update(model, glm::mat4(1.0f), view, projection, "standard", Light());
+}
 }
