@@ -212,7 +212,7 @@ void Renderer::add_vertex_program(const Model::Shader shader, const std::string 
 }
 
 void Renderer::load(const Model & model) {
-    if(vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
+    if(model.mesh && vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
         unsigned int vertex_array;
         glGenVertexArrays(1, &vertex_array);
         glBindVertexArray(vertex_array);
@@ -256,7 +256,7 @@ void Renderer::load(const Model & model) {
         vertex_arrays_.insert({model.mesh->id(), vertex_array});
     }
 
-    if (!model.mesh->valid()) {
+    if (model.mesh && !model.mesh->valid()) {
         glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
         glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof (Vertex),
                      model.mesh->vertices_data(),
@@ -583,7 +583,9 @@ void Renderer::update(const Model & model,
 
     glUseProgram(vertex_programs_[model.shader].program);
 
-    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+    if (model.mesh) {
+        glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+    };
 
     auto & uniforms = vertex_programs_.at(model.shader);
 
@@ -644,17 +646,19 @@ void Renderer::update(const Model & model,
     glUniform1i(uniforms.selected, model.selected());
     glUniform1i(uniforms.receives_light, model.receives_light);
 
-    int num_elements = std::distance(model.mesh->elements_begin(), model.mesh->elements_end());
+    int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(), model.mesh->elements_end()) : 0;
     int draw_type = GL_TRIANGLES;
     if (model.draw == Model::Draw::LINES) {
         draw_type = GL_LINES;
     } else if (model.draw == Model::Draw::POINTS) {
         draw_type = GL_POINTS;
     }
-    if (num_elements > 0) {
-        glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
-    } else {
-        glDrawArrays(draw_type, 0, model.mesh->vertices_size());
+    if (model.mesh) {
+        if (num_elements > 0) {
+            glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
+        } else {
+            glDrawArrays(draw_type, 0, model.mesh->vertices_size());
+        }
     }
     if (boxes_ == true){
         auto & uniforms = box_programs_.at("box");
