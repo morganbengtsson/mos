@@ -52,13 +52,13 @@ Renderer::Renderer() :
 
     std::string standard_vert_source = text("assets/shaders/standard_330.vert");
     std::string standard_frag_source = text("assets/shaders/standard_330.frag");
-    add_vertex_program("standard", standard_vert_source, standard_frag_source);
+    add_vertex_program(Model::Shader::STANDARD, standard_vert_source, standard_frag_source);
 
     std::string text_vert_source = text("assets/shaders/text_330.vert");
     std::string text_frag_source = text("assets/shaders/text_330.frag");
-    add_vertex_program("text", text_vert_source, text_frag_source);
+    add_vertex_program(Model::Shader::TEXT, text_vert_source, text_frag_source);
 
-    add_vertex_program("effect", text("assets/shaders/effect_330.vert"),
+    add_vertex_program(Model::Shader::EFFECT, text("assets/shaders/effect_330.vert"),
                        text("assets/shaders/effect_330.frag"));
 
     std::string particles_vert_source = text("assets/shaders/particles_330.vert");
@@ -164,7 +164,7 @@ void Renderer::add_particle_program(const std::string name, const std::string vs
 
 }
 
-void Renderer::add_vertex_program(const std::string path, const std::string vertex_shader_source, const std::string fragment_shader_source) {
+void Renderer::add_vertex_program(const Model::Shader shader, const std::string vertex_shader_source, const std::string fragment_shader_source) {
     auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
     check_shader(vertex_shader);
 
@@ -184,7 +184,7 @@ void Renderer::add_vertex_program(const std::string path, const std::string vert
     glLinkProgram(program);
     check_program(program);
 
-    vertex_programs_.insert(VertexProgramPair(path, VertexProgramData{
+    vertex_programs_.insert(VertexProgramPair(shader, VertexProgramData{
                                                   program,
                                                   glGetUniformLocation(program, "model_view_projection"),
                                                   glGetUniformLocation(program, "model_view"),
@@ -581,11 +581,11 @@ void Renderer::update(const Model & model,
     glm::mat4 mv = view * parent_transform * transform;
     glm::mat4 mvp = projection * view  * parent_transform * transform;
 
-    glUseProgram(vertex_programs_[program_name].program);
+    glUseProgram(vertex_programs_[model.shader].program);
 
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
 
-    auto & uniforms = vertex_programs_.at(program_name);
+    auto & uniforms = vertex_programs_.at(model.shader);
 
     int texture_unit = 0;
     if (model.texture != nullptr) {

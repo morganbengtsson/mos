@@ -21,6 +21,11 @@ namespace mos {
          */
         enum class Draw {TRIANGLES, LINES, POINTS};
 
+        /**
+         * @brief What shader to use
+         */
+        enum class Shader {TEXT, STANDARD, EFFECT};
+
         using Models = std::vector<Model>;
         using MeshPtr = std::shared_ptr<Mesh>;
         using TexPtr = std::shared_ptr<Texture2D>;
@@ -59,7 +64,8 @@ namespace mos {
               const bool step = false,
               const float obstruction = 0.0f,
               const float opacity = 1.0f,
-              const float receives_light = true);
+              const float receives_light = true,
+              const Shader shader = Shader::STANDARD);
 
         /**
          * @brief ~Model destructor
@@ -152,6 +158,11 @@ namespace mos {
         * @brief How to draw the model.
 		*/
         Draw draw;
+
+        /**
+         * @brief What shader to use.
+         */
+        Shader shader;
 
         /**
         * @brief Is the model selectable;

@@ -343,7 +343,7 @@ private:
         GLint receives_light;
     };
 
-    using VertexProgramPair = std::pair<std::string, VertexProgramData>;
+    using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
     using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
     using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
@@ -366,7 +366,7 @@ private:
                 const std::string program_name,
                 const Light & light = Light());
 
-    void add_vertex_program(const std::string path,
+    void add_vertex_program(const Model::Shader shader,
                             const std::string vertex_shader_source,
                             const std::string fragment_shader_source);
 
@@ -383,7 +383,7 @@ private:
                          const std::string & vs_source,
                          const std::string & fs_source);
 
-    std::unordered_map<std::string, VertexProgramData> vertex_programs_;
+    std::map<Model::Shader, VertexProgramData> vertex_programs_;
     std::unordered_map<std::string, ParticleProgramData> particle_programs_;
     std::unordered_map<std::string, BoxProgramData> box_programs_;
 

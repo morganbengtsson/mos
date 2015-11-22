@@ -17,6 +17,7 @@ Button::Button(const Text & text) :text_(text) {
     rectangle_.opacity = 1.0f;
     rectangle_.material = std::make_shared<Material>(material);
     rectangle_.receives_light = false;
+    rectangle_.shader = Model::Shader::TEXT;
 }
 
 Button::~Button() {

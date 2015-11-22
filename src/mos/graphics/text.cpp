@@ -21,6 +21,7 @@ namespace mos {
              transform),
       characters_(characters),
       spacing(spacing) {
+        model_.shader = Model::Shader::TEXT;
         text(txt);
     }
 
