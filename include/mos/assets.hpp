@@ -171,12 +171,11 @@ class Assets {
 
         /**
          * @brief font
-         * @param charmap_file_name
-         * @param texture_file_name
+         * @param ngl_file_name
+
          * @return
          */
-        Font font(const std::string & charmap_file_name,
-                  const std::string & texture_file_name);
+        Font font(const std::string & ngl_file_name);
 
         /**
          * Load text from file. Not cached.

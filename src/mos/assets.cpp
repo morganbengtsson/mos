@@ -233,51 +233,43 @@ namespace mos {
         return std::make_shared<mos::Stream>(directory_ + file_name);
     }
 
-    Font Assets::font(const string &charmap_file_name,
-                      const string &texture_file_name) {
-
-
+    Font Assets::font(const string & ngl_file_name) {
         std::map<char, Character> characters;
         rapidxml::xml_document<> doc;
-        auto xml_string = text(charmap_file_name);
+        auto xml_string = text(ngl_file_name);
         doc.parse<0>(&xml_string[0]);
 
-        rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
+        auto * chars_node = doc.first_node("font")->first_node("chars");
         auto * description_node = doc.first_node("font")->first_node("description");
         std::string name = description_node->first_attribute("family")->value();
+        float size = atof(description_node->first_attribute("family")->value());
+
         auto * metrics_node = doc.first_node("font")->first_node("metrics");
         float height = atof(metrics_node->first_attribute("height")->value());
 
-        for (rapidxml::xml_node<> * char_node = chars_node->first_node("char");
+        auto * texture_node = doc.first_node("font")->first_node("texture");
+        std::string texture_file_name = texture_node->first_attribute("file")->value();
+
+        for (auto * char_node = chars_node->first_node("char");
                 char_node;
                 char_node = char_node->next_sibling()) {
 
             Character character;
-            rapidxml::xml_attribute<> *attr = char_node->first_attribute();
-            character.offset_x = atof(attr->value());
-            attr = attr->next_attribute();
-            character.offset_y = atof(attr->value());
-            attr = attr->next_attribute();
-            character.advance = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_w = atof(attr->value());
-            attr = attr->next_attribute();
-            character.id = *attr->value();
-            attr = attr->next_attribute();
-            character.rect_x = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_y = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_h = atof(attr->value());
 
+            character.offset_x = atof(char_node->first_attribute("offset_x")->value());
+            character.offset_y = atof(char_node->first_attribute("offset_y")->value());
+            character.advance = atof(char_node->first_attribute("advance")->value());
+            character.rect_w = atof(char_node->first_attribute("rect_w")->value());
+            character.id = *char_node->first_attribute("id")->value();
+            character.rect_x = atof(char_node->first_attribute("rect_x")->value());
+            character.rect_y = atof(char_node->first_attribute("rect_y")->value());
+            character.rect_h = atof(char_node->first_attribute("rect_h")->value());
             characters.insert(std::pair<char, Character>(character.id, character));
-
         }
-        delete [] cstr;
 
         auto char_map = characters;
         auto texture = texture_cached(texture_file_name);
-        return Font(char_map, texture, height);
+        return Font(char_map, texture, size);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {

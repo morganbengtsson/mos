@@ -45,7 +45,7 @@ namespace mos {
             float v2 = ((character.rect_y + character.rect_h) / ((float) model_.texture->height()));
 
             //float offset_y = ((float) model_.texture->height()) - character.offset_y;
-            float offset_y = character.offset_y - 14.0;
+            float offset_y = character.offset_y - font_.size();
             float offset_x = character.offset_x;
             float rect_h = -character.rect_h;
 

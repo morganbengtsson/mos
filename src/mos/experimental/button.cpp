@@ -2,7 +2,7 @@
 
 namespace mos {
 
-Button::Button(const Text & text) :text_(text), padding_(10.0f) {
+Button::Button(const Text & text) :text_(text), padding_(text.height() / 2.0f) {
     mos::Vertex v1(0.0f, -1.0f, 0.0f);
     mos::Vertex v2(0.0f, 0.0f, 0.0f);
     mos::Vertex v3(1.0f, 0.0f, 0.0f);
