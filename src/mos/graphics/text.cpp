@@ -44,7 +44,8 @@ namespace mos {
             float v1 = character.rect_y / ((float) model_.texture->height());
             float v2 = ((character.rect_y + character.rect_h) / ((float) model_.texture->height()));
 
-            float offset_y = ((float) model_.texture->height()) - character.offset_y;
+            //float offset_y = ((float) model_.texture->height()) - character.offset_y;
+            float offset_y = -character.offset_y;
             float offset_x = character.offset_x;
                         
             model_.mesh->add(Vertex(glm::vec3(index + offset_x, -character.rect_h - offset_y, 0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
@@ -63,6 +64,10 @@ namespace mos {
         glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
         glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end()-2)->position);
         return glm::distance(p1,p2);
+    }
+
+    void Text::scale(const float scale) {
+        model_.transform(glm::scale(model_.transform(), glm::vec3(scale, scale, scale)));
     }
 
     Model Text::model() const {

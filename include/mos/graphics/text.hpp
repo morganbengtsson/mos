@@ -52,6 +52,8 @@ public:
      */
     float width();
 
+    void scale(const float scale);
+
     /**
      * @brief model
      * @return
