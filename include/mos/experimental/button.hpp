@@ -9,8 +9,12 @@ public:
     Button(const Text & text);
     ~Button();
     Model model();
+    float height() const;
+    float width() const;
+private:
     Text text_;
     Model rectangle_;
+    float padding_;
 };
 }
 #endif // BUTTON_HPP

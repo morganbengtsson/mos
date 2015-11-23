@@ -13,10 +13,13 @@ class Font
 public:
     using CharMap = std::map<char, Character>;
     using TexPtr = std::shared_ptr<Texture2D>;
-    Font(const CharMap & characters, const TexPtr & texture);
+    Font(const CharMap & characters, const TexPtr & texture, const float size);
     ~Font();
     TexPtr texture;
     CharMap characters;
+    float size() const;
+private:
+    float size_;
 };
 
 }

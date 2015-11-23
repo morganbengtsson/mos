@@ -235,9 +235,51 @@ namespace mos {
 
     Font Assets::font(const string &charmap_file_name,
                       const string &texture_file_name) {
-        auto char_map = character_map(charmap_file_name);
+
+
+        std::map<char, Character> characters;
+        rapidxml::xml_document<> doc;
+        auto str = text(charmap_file_name);
+        char* cstr = new char[str.size() + 1]; // Create char buffer to store string copy
+        std::strcpy(cstr, str.c_str());
+        doc.parse<0>(cstr);
+
+        rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
+        auto * description_node = doc.first_node("font")->first_node("description");
+        std::string name = description_node->first_attribute("family")->value();
+        auto * metrics_node = doc.first_node("font")->first_node("metrics");
+        float height = atof(metrics_node->first_attribute("height")->value());
+
+        for (rapidxml::xml_node<> * char_node = chars_node->first_node("char");
+                char_node;
+                char_node = char_node->next_sibling()) {
+
+            Character character;
+            rapidxml::xml_attribute<> *attr = char_node->first_attribute();
+            character.offset_x = atof(attr->value());
+            attr = attr->next_attribute();
+            character.offset_y = atof(attr->value());
+            attr = attr->next_attribute();
+            character.advance = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rect_w = atof(attr->value());
+            attr = attr->next_attribute();
+            character.id = *attr->value();
+            attr = attr->next_attribute();
+            character.rect_x = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rect_y = atof(attr->value());
+            attr = attr->next_attribute();
+            character.rect_h = atof(attr->value());
+
+            characters.insert(std::pair<char, Character>(character.id, character));
+
+        }
+        delete [] cstr;
+
+        auto char_map = characters;
         auto texture = texture_cached(texture_file_name);
-        return Font(char_map, texture);
+        return Font(char_map, texture, height);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {
@@ -331,42 +373,7 @@ namespace mos {
 
     std::map<char, Character> Assets::character_map(std::string file_name) {
 
-        std::map<char, Character> characters;
-        rapidxml::xml_document<> doc;
-        auto str = text(file_name);
-        char* cstr = new char[str.size() + 1]; // Create char buffer to store string copy
-        std::strcpy(cstr, str.c_str());
-        doc.parse<0>(cstr);
 
-        rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
-
-        for (rapidxml::xml_node<> * char_node = chars_node->first_node("char");
-                char_node;
-                char_node = char_node->next_sibling()) {
-
-            Character character;
-            rapidxml::xml_attribute<> *attr = char_node->first_attribute();
-            character.offset_x = atof(attr->value());
-            attr = attr->next_attribute();
-            character.offset_y = atof(attr->value());
-            attr = attr->next_attribute();
-            character.advance = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_w = atof(attr->value());
-            attr = attr->next_attribute();
-            character.id = *attr->value();
-            attr = attr->next_attribute();
-            character.rect_x = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_y = atof(attr->value());
-            attr = attr->next_attribute();
-            character.rect_h = atof(attr->value());
-
-            characters.insert(std::pair<char, Character>(character.id, character));
-
-        }
-        delete [] cstr;
-        return characters;
     }
 
 
