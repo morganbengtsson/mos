@@ -47,7 +47,6 @@ namespace mos {
          * @param normalmap
          * @param selectable
          * @param obstruction
-         * @param opacity
          */
         Model(const std::string & name,
               const MeshPtr & mesh,
@@ -63,7 +62,6 @@ namespace mos {
               const bool selectable = false,
               const bool step = false,
               const float obstruction = 0.0f,
-              const float opacity = 1.0f,
               const float receives_light = true,
               const Shader shader = Shader::STANDARD);
 
@@ -142,12 +140,6 @@ namespace mos {
         * @brief Get the color, (to be deprecated).
 		*/
         glm::vec4 color() const;
-
-
-        /**
-         * @brief Opacity of the model.
-         */
-        float opacity;
 
         /**
         * @brief The bounding box

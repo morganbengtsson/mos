@@ -25,7 +25,6 @@ Model::Model(const std::string & name,
              const bool selectable,
              const bool step,
              const float obstruction,
-             const float opacity,
              const float affected_by_light,
              const Shader shader) :
 
@@ -41,7 +40,6 @@ Model::Model(const std::string & name,
     selected_(false),
     selectable(selectable),
     box(mesh->vertices_begin(), mesh->vertices_end(), transform * parent_transform, obstruction),
-    opacity(opacity),
     receives_light(affected_by_light), shader(shader) {
         box.step(step);
         transform_box(transform * parent_transform);
