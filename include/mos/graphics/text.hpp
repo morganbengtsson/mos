@@ -4,6 +4,7 @@
 #include "model.hpp"
 #include "mesh.hpp"
 #include "character.hpp"
+#include "font.hpp"
 
 #include <map>
 #include <memory>
@@ -28,8 +29,7 @@ public:
      * @param spacing between characters
      */
     Text(const std::string & text,
-            const CharMap & characters,
-            const TexPtr & texture,
+            const Font & font,
             const glm::mat4 & transform = glm::mat4(1.0f),
             const float spacing = 0.0f);
     virtual ~Text();    
@@ -92,7 +92,7 @@ public:
 private:
     mos::Model model_;
     std::string text_;
-    std::map<char, Character> characters_;
+    Font font_;
 
 };
 

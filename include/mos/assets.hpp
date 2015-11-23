@@ -18,6 +18,7 @@
 #include "graphics/texture2d.hpp"
 #include "graphics/material.hpp"
 #include "graphics/model.hpp"
+#include "graphics/font.hpp"
 
 namespace mos {
 
@@ -167,6 +168,15 @@ class Assets {
          * @return
          */
         std::shared_ptr<Stream> stream(const std::string file_name) const;
+
+        /**
+         * @brief font
+         * @param charmap_file_name
+         * @param texture_file_name
+         * @return
+         */
+        Font font(const std::string & charmap_file_name,
+                  const std::string & texture_file_name);
 
         /**
          * Load text from file. Not cached.

@@ -230,7 +230,14 @@ namespace mos {
     }
 
     std::shared_ptr<Stream> Assets::stream(const string file_name) const {
-		return std::make_shared<mos::Stream>(directory_ + file_name);
+        return std::make_shared<mos::Stream>(directory_ + file_name);
+    }
+
+    Font Assets::font(const string &charmap_file_name,
+                      const string &texture_file_name) {
+        auto char_map = character_map(charmap_file_name);
+        auto texture = texture_cached(texture_file_name);
+        return Font(char_map, texture);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {

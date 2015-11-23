@@ -10,16 +10,15 @@
 namespace mos {
 
     Text::Text(const std::string & txt,
-               const CharMap & characters,
-               const TexPtr & texture,
+               const Font & font,
                const glm::mat4 & transform,
                const float spacing)
     : model_("Text",
              std::make_shared<Mesh>(Mesh()),
-             texture,
+             font.texture,
              nullptr,
              transform),
-      characters_(characters),
+      font_(font),
       spacing(spacing) {
         model_.shader = Model::Shader::TEXT;
         text(txt);
@@ -39,7 +38,7 @@ namespace mos {
         float index = 0.0f;
         model_.mesh->clear();
         for (const char & c : text_) {
-            auto character = characters_.at(c);
+            auto character = font_.characters.at(c);
             float u1 = character.rect_x / ((float) model_.texture->width());
             float u2 = (character.rect_x + character.rect_w) / (float) model_.texture->width();
             float v1 = character.rect_y / ((float) model_.texture->height());
