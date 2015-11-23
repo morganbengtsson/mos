@@ -50,7 +50,17 @@ public:
      * @brief approximate width
      * @return width
      */
-    float width();
+    float width() const;
+
+    /**
+     * @brief height
+     * @return
+     */
+    float height() const;
+
+
+    void position(const glm::vec2 & position);
+    glm::vec2 position();
 
     void scale(const float scale);
 
