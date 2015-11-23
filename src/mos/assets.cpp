@@ -239,10 +239,8 @@ namespace mos {
 
         std::map<char, Character> characters;
         rapidxml::xml_document<> doc;
-        auto str = text(charmap_file_name);
-        char* cstr = new char[str.size() + 1]; // Create char buffer to store string copy
-        std::strcpy(cstr, str.c_str());
-        doc.parse<0>(cstr);
+        auto xml_string = text(charmap_file_name);
+        doc.parse<0>(&xml_string[0]);
 
         rapidxml::xml_node<> * chars_node = doc.first_node("font")->first_node("chars");
         auto * description_node = doc.first_node("font")->first_node("description");
