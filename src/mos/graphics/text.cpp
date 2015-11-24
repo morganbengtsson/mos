@@ -45,7 +45,7 @@ namespace mos {
             float v2 = ((character.rect_y + character.rect_h) / ((float) model_.texture->height()));
 
             //float offset_y = ((float) model_.texture->height()) - character.offset_y;
-            float offset_y = character.offset_y - font_.size();
+            float offset_y = character.offset_y - font_.ascender();
             float offset_x = character.offset_x;
             float rect_h = -character.rect_h;
 
@@ -74,16 +74,14 @@ namespace mos {
         
     }
 
-    float Text::width() const{
+    float Text::width() const {
         glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
         glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end()-2)->position);
         return glm::distance(p1,p2);
     }
 
     float Text::height() const {
-        glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
-        glm::vec2 p2 = glm::vec2((model_.mesh->vertices_begin() + 2)->position);
-        return glm::distance(p1,p2);
+        font_.height();
     }
 
     void Text::position(const glm::vec2 &position) {

@@ -246,6 +246,8 @@ namespace mos {
 
         auto * metrics_node = doc.first_node("font")->first_node("metrics");
         float height = atof(metrics_node->first_attribute("height")->value());
+        float ascender = atof(metrics_node->first_attribute("ascender")->value());
+        float descender = atof(metrics_node->first_attribute("descender")->value());
 
         auto * texture_node = doc.first_node("font")->first_node("texture");
         std::string texture_file_name = texture_node->first_attribute("file")->value();
@@ -269,7 +271,7 @@ namespace mos {
 
         auto char_map = characters;
         auto texture = texture_cached(texture_file_name);
-        return Font(char_map, texture, size);
+        return Font(char_map, texture, height, ascender, descender);
     }
 
     std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {
