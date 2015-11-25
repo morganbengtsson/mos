@@ -141,20 +141,6 @@ public:
         }
     }
 
-    void update(const Quad & model,
-                const glm::mat4 view,
-                const glm::mat4 projection);
-
-    void update(const Quad & model,
-                const Camera & camera);
-
-    void update(const Text & text,
-                const glm::mat4 view,
-                const glm::mat4 projection);
-
-    //TEMP
-    void update2(const Model & model, const glm::mat4 & view, const glm::mat4 & projection);
-
     /**
      * @brief Renders particles.
      * @param particles Particles object.
