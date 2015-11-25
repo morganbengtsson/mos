@@ -14,6 +14,8 @@ public:
     Menu(const std::initializer_list<Button> & buttons);
     void add(const Button & button);
     mos::Model model();
+    void select_next();
+    void select_previos();
     ~Menu();
 private:
     Buttons buttons_;

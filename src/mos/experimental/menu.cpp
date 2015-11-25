@@ -1,4 +1,5 @@
 #include <experimental/menu.hpp>
+#include <iostream>
 
 namespace mos {
 
@@ -25,5 +26,25 @@ Model Menu::model() {
         out.models.push_back(model);
     }
     return out;
+}
+
+void Menu::select_next() {
+    auto it = std::find_if(buttons_.begin(), buttons_.end(), [](mos::Button & button){
+            return button.selected();});
+    if ((it != buttons_.end()) && (std::next(it) == buttons_.end())) {
+        for (auto & button : buttons_) {
+            button.state(Button::State::IDLE);
+        }
+        buttons_.front().state(Button::State::SELECTED);
+    } else {
+        it->state(Button::State::IDLE);
+        it++;
+        it->state(Button::State::SELECTED);
+
+    }
+}
+
+void Menu::select_previos() {
+
 }
 }

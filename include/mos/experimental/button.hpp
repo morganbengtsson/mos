@@ -13,6 +13,7 @@ public:
     Button(const Text & text, const State & state = State::IDLE);
     ~Button();
     Model model();
+    bool selected();
     void state(const State & state);
     float height() const;
     float width() const;

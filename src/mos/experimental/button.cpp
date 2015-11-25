@@ -4,8 +4,14 @@ namespace mos {
 
 Button::Button(const Text & text, const State & s) :text_(text),
     padding_(text_.height()/4.0f),
-    light_material_(std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 0.8f))),
-    dark_material_(std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(0.01f), glm::vec3(0.0f), 0.8f))) {
+    light_material_(std::make_shared<Material>(glm::vec3(0.0f),
+                                               glm::vec3(1.0f),
+                                               glm::vec3(0.0f),
+                                               0.8f)),
+    dark_material_(std::make_shared<Material>(glm::vec3(0.0f),
+                                              glm::vec3(0.01f),
+                                              glm::vec3(0.0f),
+                                              0.8f)) {
     mos::Vertex v1(0.0f, -1.0f, 0.0f);
     mos::Vertex v2(0.0f, 0.0f, 0.0f);
     mos::Vertex v3(1.0f, 0.0f, 0.0f);
@@ -31,6 +37,10 @@ Model Button::model() {
     out.models.push_back(rectangle_);
     out.models.push_back(text_.model());
     return out;
+}
+
+bool Button::selected() {
+    return (state_ == State::SELECTED);
 }
 
 void Button::state(const Button::State & state) {
