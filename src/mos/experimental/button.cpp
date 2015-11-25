@@ -2,9 +2,10 @@
 
 namespace mos {
 
-Button::Button(const Text & text) :text_(text),
+Button::Button(const Text & text, const State & s) :text_(text),
     padding_(text_.height()/4.0f),
-    state_(State::IDLE) {
+    light_material_(std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 0.8f))),
+    dark_material_(std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(0.01f), glm::vec3(0.0f), 0.8f))) {
     mos::Vertex v1(0.0f, -1.0f, 0.0f);
     mos::Vertex v2(0.0f, 0.0f, 0.0f);
     mos::Vertex v3(1.0f, 0.0f, 0.0f);
@@ -14,14 +15,12 @@ Button::Button(const Text & text) :text_(text),
     rectangle_.mesh = std::make_shared<Mesh>(mesh);
     rectangle_.transform(glm::scale(glm::mat4(1.0f), glm::vec3(text_.width() + padding_* 2.0f, text_.height() + padding_ * 2.0f, 1.0f)));
     rectangle_.transform(glm::translate(rectangle_.transform(), glm::vec3(0.0f, 0.0f, -0.0f)));
-    mos::Material material(glm::vec3(1.0f), glm::vec3(0.01f));
-    material.opacity = 0.8f;
-    rectangle_.material = std::make_shared<Material>(material);
     rectangle_.receives_light = false;
     rectangle_.shader = Model::Shader::STANDARD;
     rectangle_.draw = Model::Draw::TRIANGLES;
     rectangle_.mesh->invalidate();
     text_.position(glm::vec2(padding_, -padding_));
+    state(s);
 }
 
 Button::~Button() {
@@ -32,6 +31,22 @@ Model Button::model() {
     out.models.push_back(rectangle_);
     out.models.push_back(text_.model());
     return out;
+}
+
+void Button::state(const Button::State & state) {
+    state_ = state;
+    if (state_ == State::IDLE) {
+        rectangle_.material = dark_material_;
+        text_.material(light_material_);
+    }
+    else if( state_ == State::CLICKED) {
+        rectangle_.material = light_material_;
+        text_.material(dark_material_);
+    }
+    else if (state_ == State::SELECTED) {
+        rectangle_.material = light_material_;
+        text_.material(dark_material_);
+    }
 }
 
 float Button::height() const {

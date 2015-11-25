@@ -6,7 +6,7 @@ Menu::Menu() {
 
 }
 
-Menu::Menu(const std::initializer_list<Button> &buttons) : buttons_(buttons.begin(), buttons.end()){
+Menu::Menu(const std::initializer_list<Button> &buttons) : buttons_(buttons.begin(), buttons.end()) {
 
 }
 
@@ -17,7 +17,7 @@ void Menu::add(const Button &button) {
     buttons_.push_back(button);
 }
 
-Model Menu::model(){
+Model Menu::model() {
     mos::Model out;
     for (int i = 0; i < buttons_.size(); i++) {
         auto model = buttons_[i].model();
@@ -26,6 +26,4 @@ Model Menu::model(){
     }
     return out;
 }
-
-
 }

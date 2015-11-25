@@ -624,6 +624,8 @@ void Renderer::update(const Model & model,
     glUniformMatrix3fv(uniforms.normal_matrix,1 , GL_FALSE, &normal_matrix[0][0]);
 
     if (model.material) {
+        std::cout << model.name() << std::endl;
+        std::cout << model.material->diffuse << std::endl;
         glUniform3fv(uniforms.material_ambient_color,1 , glm::value_ptr(model.material->ambient));
         glUniform3fv(uniforms.material_diffuse_color,1 , glm::value_ptr(model.material->diffuse));
         glUniform3fv(uniforms.material_specular_color,1, glm::value_ptr(model.material->specular));

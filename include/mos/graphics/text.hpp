@@ -62,7 +62,17 @@ public:
     void position(const glm::vec2 & position);
     glm::vec2 position();
 
+    /**
+     * @brief scale
+     * @param scale
+     */
     void scale(const float scale);
+
+    /**
+     * @brief material
+     * @param material
+     */
+    void material(const std::shared_ptr<Material> & material);
 
     /**
      * @brief model

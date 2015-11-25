@@ -96,6 +96,10 @@ namespace mos {
         model_.transform(glm::scale(model_.transform(), glm::vec3(scale, scale, scale)));
     }
 
+    void Text::material(const std::shared_ptr<Material> & material) {
+        model_.material = material;
+    }
+
     Model Text::model() const {
         return model_;
     }
