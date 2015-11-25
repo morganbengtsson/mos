@@ -365,7 +365,7 @@ void Renderer::update(const Model &model,
                       const glm::mat4 & view,
                       const glm::mat4 & projection,
                       const Light & light) {
-    update(model, glm::mat4(1.0f), view, projection, "standard", light);
+    update(model, glm::mat4(1.0f), view, projection, light);
 }
 
 void Renderer::clear(const glm::vec3 color) {
@@ -573,7 +573,6 @@ void Renderer::update(const Model & model,
                       const glm::mat4 parent_transform,
                       const glm::mat4 view,
                       const glm::mat4 projection,
-                      const std::string program_name,
                       const Light & light) {
     load(model);
 
@@ -685,15 +684,14 @@ void Renderer::update(const Model & model,
     }
 
     for (auto & child : model.models) {
-        update(child, parent_transform * model.transform(), view, projection, program_name, light);
+        update(child, parent_transform * model.transform(), view, projection, light);
     }
 }
 
 void Renderer::update(const Model & model,
                       const Camera & camera,
-                      const std::string program_name,
                       const Light & light) {
-    update(model, glm::mat4(1.0f), camera.view, camera.projection, program_name, light);
+    update(model, glm::mat4(1.0f), camera.view, camera.projection, light);
 }
 
 }

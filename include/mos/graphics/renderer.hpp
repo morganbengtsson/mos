@@ -70,7 +70,6 @@ public:
         }
     }
 
-
     /**
      * @brief Load a texture into renderer memory.
      * @param texture The texture.
@@ -96,17 +95,15 @@ public:
      * @param transform Additional transform matrix.
      * @param view View matrix.
      * @param projection Projection matrix.
-     * @param program_name Program to use.
      * @param light Dynamic light.
      */
     void update(It begin, It end,
                 const glm::mat4 parent_transform,
                 const glm::mat4 view,
                 const glm::mat4 projection,
-                const std::string program_name = "standard",
-                const Light & light = Light()){
+                const Light & light = Light()) {
         for (auto it = begin; it != end; ++it){
-            update(*it, parent_transform, view, projection, program_name, light);
+            update(*it, parent_transform, view, projection, light);
         }
     }
 
@@ -114,12 +111,10 @@ public:
      * @brief Update render state.
      * @param model Model to update.
      * @param camera Camera to render from (view, projection)
-     * @param program_name Program to use.
      * @param light Dynamic light.
      */
     void update(const Model & model,
                 const Camera & camera,
-                const std::string program_name = "standard",
                 const Light & light = Light());
 
     template<class It>
@@ -128,16 +123,14 @@ public:
      * @param begin Iterator to fist model.
      * @param end Iterator to last model.
      * @param camera Camera to render from.
-     * @param program_name Program to use.
      * @param light Dynamic light.
      */
     void update(It begin,
                 It end,
                 const Camera & camera,
-                const std::string program_name = "standard",
-                const Light & light = Light()){
+                const Light & light = Light()) {
         for (auto it = begin; it != end; ++it) {
-            update(*it, camera, program_name, light);
+            update(*it, camera, light);
         }
     }
 
@@ -349,7 +342,6 @@ private:
                 const glm::mat4 transform,
                 const glm::mat4 view,
                 const glm::mat4 projection,
-                const std::string program_name,
                 const Light & light = Light());
 
     void add_vertex_program(const Model::Shader shader,
