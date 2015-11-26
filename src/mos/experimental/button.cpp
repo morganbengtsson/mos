@@ -71,8 +71,12 @@ Button::State Button::state() const {
     return state_;
 }
 
-void Button::click_callback(const Button::Callback & callback) {
+void Button::click_callback(const Callback & callback) {
     click_callback_ = callback;
+}
+
+void Button::click() {
+    click_callback_();
 }
 
 }

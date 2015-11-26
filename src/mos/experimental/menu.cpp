@@ -28,23 +28,17 @@ Model Menu::model() {
     return out;
 }
 
-void Menu::select_next() {
+Button & Menu::selected() {
     auto it = std::find_if(buttons_.begin(), buttons_.end(), [](mos::Button & button){
             return button.selected();});
-    if ((it != buttons_.end()) && (std::next(it) == buttons_.end())) {
-        for (auto & button : buttons_) {
-            button.state(Button::State::IDLE);
-        }
-        buttons_.front().state(Button::State::SELECTED);
-    } else {
-        it->state(Button::State::IDLE);
-        it++;
-        it->state(Button::State::SELECTED);
+    return *it;
+}
 
-    }
+void Menu::select_next() {
+    select_next(buttons_.begin(), buttons_.end());
 }
 
 void Menu::select_previos() {
-
+    select_next(buttons_.rbegin(), buttons_.rend());
 }
 }

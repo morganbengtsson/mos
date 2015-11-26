@@ -19,6 +19,7 @@ public:
     float width() const;
     State state() const;
     void click_callback(const Callback & callback);
+    void click();
 private:
     Text text_;
     Model rectangle_;
