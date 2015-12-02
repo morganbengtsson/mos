@@ -13,3 +13,6 @@
 [submodule "externals/glew-cmake"]
 	path = externals/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "externals/rapidjson"]
+	path = externals/rapidjson
+	url = https://github.com/miloyip/rapidjson.git

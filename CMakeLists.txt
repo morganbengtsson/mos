@@ -40,6 +40,16 @@ add_subdirectory(externals/lodepng)
 # stb
 add_subdirectory(externals/stb)
 
+#Rapidjson
+set(RAPIDJSON_BUILD_DOC OFF)
+set(RAPIDJSON_BUILD_EXAMPLES OFF)
+set(RAPIDJSON_BUILD_TESTS OFF)
+include_directories(externals/rapidjson/include)
+add_subdirectory(externals/rapidjson)
+
+#Rapidxml
+include_directories(externals/rapidxml)
+
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
