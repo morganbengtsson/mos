@@ -3,6 +3,9 @@ project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 add_definitions(-DAL_LIBTYPE_STATIC)
+#Needed?
+add_definitions(-DRAPIDJSON_HAS_CXX11_RVALUE_REFS=1)
+add_definitions(-DRAPIDJSON_HAS_STDSTRING=1)
 
 # No binaries in source dir
 if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
@@ -41,7 +44,9 @@ add_subdirectory(externals/lodepng)
 add_subdirectory(externals/stb)
 
 #Rapidjson
-set(RAPIDJSON_BUILD_DOC OFF)
+set(RAPIDJSON_HAS_CXX11_RVALUE_REFS ON)
+set(RAPIDJSON_HAS_STDSTRING ON)
+set(RAPIDJSON_BUILD_DOC ON)
 set(RAPIDJSON_BUILD_EXAMPLES OFF)
 set(RAPIDJSON_BUILD_TESTS OFF)
 include_directories(externals/rapidjson/include)
@@ -76,6 +81,7 @@ externals/openal-soft/include
 externals/stb
 externals/lodepng
 externals/objload
+externals/rapidjson/include
 externals/rapidxml
 externals/glm)
 
