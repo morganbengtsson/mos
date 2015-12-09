@@ -34,6 +34,10 @@ set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
 set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
 add_subdirectory(externals/openal-soft)
 
+#Optional
+add_subdirectory(externals/Optional)
+include_directories(externals/Optional)
+
 #glm
 add_subdirectory(externals/glm)
 
@@ -83,5 +87,6 @@ externals/lodepng
 externals/objload
 externals/rapidjson/include
 externals/rapidxml
-externals/glm)
+externals/glm,
+externals/Optional)
 
