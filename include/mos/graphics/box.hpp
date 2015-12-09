@@ -10,6 +10,7 @@
 #include <tuple>
 #include <iostream>
 #include "vertex.hpp"
+#include <optional.hpp>
 
 namespace mos
 {
@@ -20,10 +21,11 @@ namespace mos
  *
  */
 struct BoxIntersection {
-    /**
-     * @brief True if the box intersects with another box.
-     */
-    bool intersects;
+    BoxIntersection(const glm::vec3 & normal,
+                    const float distance): normal(normal),
+        distance(distance){
+    }
+
     /**
      * @brief Normal of the intersection.
      */
@@ -45,15 +47,8 @@ struct RayIntersection {
      * @param hit
      * @param distance
      */
-    RayIntersection(bool hit, float distance = 0.0f): intersects(hit), distance(distance){
+    RayIntersection(float distance = 0.0f): distance(distance){
     }
-
-    /**
-     * @brief intersects
-     *
-     * True if ray intersects with the box.
-     */
-    bool intersects;
 
     /**
      * @brief distance
@@ -61,11 +56,6 @@ struct RayIntersection {
      * Distance from
      */
     float distance;
-
-    /**
-     * @brief If the box should behave as a stair step.
-     */
-    bool step;
 };
 
 /**
@@ -172,7 +162,7 @@ public:
      * @param other
      * @return
      */
-    BoxIntersection intersects(const Box & other) const;
+    std::experimental::optional<BoxIntersection> intersects(const Box & other) const;
 
 
     /**

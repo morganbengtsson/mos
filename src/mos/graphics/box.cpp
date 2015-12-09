@@ -157,7 +157,7 @@ RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
 }
 #endif
 
-BoxIntersection Box::intersects(const Box & other) const {
+std::experimental::optional<BoxIntersection> Box::intersects(const Box & other) const {
     static const std::array<glm::vec3, 6> faces = {
         glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
         glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
@@ -197,7 +197,7 @@ BoxIntersection Box::intersects(const Box & other) const {
     for(int i = 0; i < 6; i ++) {
             // box does not intersect face. So boxes don't intersect at all.
             if(distances[i] < 0.0f) {
-                return BoxIntersection{false, glm::vec3(0.0f), distance};
+                return std::experimental::optional<BoxIntersection>();
             }
             // face of least intersection depth. That's our candidate.
             if((i == 0) || (distances[i] < distance))
@@ -210,14 +210,19 @@ BoxIntersection Box::intersects(const Box & other) const {
 
     if (step() == true && (normal == faces[0] || normal == faces[1] || normal == faces[2] || normal == faces[3])) {
         std::cout << "n: "<< normal << "d: " << distance << std::endl;
-        return BoxIntersection{true, glm::vec3(0.0f, 0.0f, 1.0), distance};
+        return BoxIntersection(glm::vec3(0.0f, 0.0f, 1.0), distance);
     }
-    return BoxIntersection{true, normal, distance};
+    return BoxIntersection(normal, distance);
 }
 
 glm::vec3 Box::intersects_simple(const Box & other) {
-    auto inters = intersects(other);
-    return inters.normal * inters.distance;
+    auto intersection = intersects(other);
+    if (intersection) {
+        return intersection->normal * intersection->distance;
+    }
+    else{
+        return glm::vec3(0.0f);
+    }
 }
 
 glm::vec3 Box::position() const {
