@@ -3,11 +3,14 @@
 
 #include <array>
 #include <glm/glm.hpp>
+#include <glm/gtx/io.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
 #include <tuple>
+#include <iostream>
 #include "vertex.hpp"
+#include <optional.hpp>
 
 namespace mos
 {
@@ -18,10 +21,11 @@ namespace mos
  *
  */
 struct BoxIntersection {
-    /**
-     * @brief True if the box intersects with another box.
-     */
-    bool intersects;
+    BoxIntersection(const glm::vec3 & normal,
+                    const float distance): normal(normal),
+        distance(distance){
+    }
+
     /**
      * @brief Normal of the intersection.
      */
@@ -43,15 +47,8 @@ struct RayIntersection {
      * @param hit
      * @param distance
      */
-    RayIntersection(bool hit, float distance = 0.0f): intersects(hit), distance(distance){
+    RayIntersection(float distance = 0.0f): distance(distance){
     }
-
-    /**
-     * @brief intersects
-     *
-     * True if ray intersects with the box.
-     */
-    bool intersects;
 
     /**
      * @brief distance
@@ -59,11 +56,6 @@ struct RayIntersection {
      * Distance from
      */
     float distance;
-
-    /**
-     * @brief If the box should behave as a stair step.
-     */
-    bool step;
 };
 
 /**
@@ -90,48 +82,49 @@ public:
         const glm::mat4 & transform,
         const float obstruction = 0.0f,
         const bool step = false) :
-        transform_(transform),
         obstruction_(obstruction),
-        step_(step){
+        step_(step) {
         glm::vec3 min, max;
 
-        if (begin != end) {
-            auto x_extremes = std::minmax_element(begin, end, [](const Vertex& left, const Vertex& right) {
-                return left.position.x < right.position.x;
+        glm::vec3 position(transform[3][0], transform[3][1], transform[3][2]);
+
+        std::vector<glm::vec3> positions;
+        std::transform(begin, end, std::back_inserter(positions),
+                       [&](const Vertex & vertex) {
+            //return vertex.position + position;
+            return (glm::vec3)(transform * glm::vec4(vertex.position, 1.0f));
+        });
+
+        if (positions.begin() != positions.end()) {
+            auto x_extremes = std::minmax_element(positions.begin(),
+                                                  positions.end(),
+                                                  [](const glm::vec3 & left, const glm::vec3& right) {
+                return left.x < right.x;
             });
 
-            auto y_extremes = std::minmax_element(begin, end, [](const Vertex& left, const Vertex& right) {
-                return left.position.y < right.position.y;
+            auto y_extremes = std::minmax_element(positions.begin(),
+                                                  positions.end(),
+                                                  [](const glm::vec3 & left, const glm::vec3& right) {
+                return left.y < right.y;
             });
 
-            auto z_extremes = std::minmax_element(begin, end, [](const Vertex& left, const Vertex& right) {
-                return left.position.z < right.position.z;
+            auto z_extremes = std::minmax_element(positions.begin(),
+                                                  positions.end(),
+                                                  [](const glm::vec3 & left, const glm::vec3& right) {
+                return left.z < right.z;
             });
 
-            min = glm::vec3(x_extremes.first->position.x, y_extremes.first->position.y, z_extremes.first->position.z);
-            max = glm::vec3(x_extremes.second->position.x, y_extremes.second->position.y, z_extremes.second->position.z);
+            min = glm::vec3(x_extremes.first->x, y_extremes.first->y, z_extremes.first->z);
+            max = glm::vec3(x_extremes.second->x, y_extremes.second->y, z_extremes.second->z);
         }
-        min_ = min;
-        max_ = max;
-    }
+        extent_ = (max - min) / 2.0f;
+        position_ = position;
+     }
 
     /**
      * @brief Box default constructor.
      */
     Box();
-
-    /**
-     * @brief Box constructor.
-     * @param min Min corner.
-     * @param max Max corner.
-     * @param transform Location transform.
-     * @param obstruction Sound obstruction factor.
-     */
-    Box(const glm::vec3 & min,
-        const glm::vec3 & max,
-        const glm::mat4 & transform,
-        const float obstruction = 0.0f,
-        const bool step = false);
 
     /**
      * @brief min
@@ -145,6 +138,7 @@ public:
      */
     glm::vec3 max() const;
 
+#if 0
     /**
      * @brief Intersection with ray between points.
      * @param point1
@@ -162,13 +156,13 @@ public:
      * @return
      */
     RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-
+#endif
     /**
      * @brief intersects
      * @param other
      * @return
      */
-    BoxIntersection intersects(const Box & other) const;
+    std::experimental::optional<BoxIntersection> intersects(const Box & other) const;
 
 
     /**
@@ -181,12 +175,7 @@ public:
     glm::vec3 position() const;
 
     /**
-     * @brief Get the transform.
-     */
-    glm::mat4 transform() const;
-
-    /**
-     * @brief Set the box transform.
+     * @brief Set the box transform, only uses position elements.
      * @param transform
      */
     void transform(const glm::mat4 & transform);
@@ -215,10 +204,9 @@ public:
      */
     void step(const bool step);
     bool step() const;
-private:
-    glm::vec3 min_;
-    glm::vec3 max_;
-    glm::mat4 transform_;
+private:    
+    glm::vec3 extent_;
+    glm::vec3 position_;
     float obstruction_;
     bool step_;
 

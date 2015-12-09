@@ -2,6 +2,7 @@
 #define	MOS_MODEL_H
 
 #include <memory>
+#include <optional.hpp>
 #include "mesh.hpp"
 #include "texture2d.hpp"
 #include "material.hpp"
@@ -183,7 +184,7 @@ namespace mos {
          * @param model
          * @return
          */
-        BoxIntersection intersects(const Model & model) const;
+        std::experimental::optional<BoxIntersection> intersects(const Model & model) const;
 
         void transform_box(const glm::mat4 & transform);
 

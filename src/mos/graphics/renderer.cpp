@@ -671,8 +671,10 @@ void Renderer::update(const Model & model,
 
         glm::vec3 size = model.box.size();
 
-        glm::mat4 mv = view * model.box.transform() *  glm::scale(glm::mat4(1.0f), size);
-        glm::mat4 mvp = projection * view * model.box.transform() * glm::scale(glm::mat4(1.0f), size);
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), model.box.position());
+
+        glm::mat4 mv = view  *  transform * glm::scale(glm::mat4(1.0f), size);
+        glm::mat4 mvp = projection * view * transform * glm::scale(glm::mat4(1.0f), size);
 
         glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
         glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);

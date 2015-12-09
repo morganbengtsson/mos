@@ -109,7 +109,7 @@ void Model::selected(const bool selected) {
     selected_ = selectable ? selected : false;
 }
 
-BoxIntersection Model::intersects(const Model &model) const {
+std::experimental::optional<BoxIntersection> Model::intersects(const Model & model) const {
 
     // Non working recursive version.
     /*
@@ -129,22 +129,22 @@ BoxIntersection Model::intersects(const Model &model) const {
 
     //TODO: Make recursive.
     auto parent_intersection = box.intersects(model.box);
-    if (!parent_intersection.intersects){
+    if (!parent_intersection){
         for (auto & child : models){
             auto child_intersection = child.box.intersects(model.box);
-            if (child_intersection.intersects){
+            if (child_intersection){
                 return child_intersection;
             }
             else {
                 for (auto & child2 : child.models) {
                     auto child2_intersection = child2.box.intersects(model.box);
-                    if (child2_intersection.intersects) {
+                    if (child2_intersection) {
                         return child2_intersection;
                     }
                     else {
                         for (auto & child3 : child2.models) {
                             auto child3_intersection = child3.box.intersects(model.box);
-                            if (child3_intersection.intersects) {
+                            if (child3_intersection) {
                                 return child3_intersection;
                             }
                         }
