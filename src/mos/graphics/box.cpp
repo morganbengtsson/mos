@@ -15,28 +15,14 @@ namespace mos {
 Box::Box(){
 }
 
-Box::Box(const glm::vec3 & min,
-         const glm::vec3 & max,
-         const glm::mat4 & transform,
-         const float obstruction,
-         const bool step) :
-    transform_(transform),
-    min_(min),
-    max_(max),
-    obstruction_(obstruction),
-    step_(step) {
-        if(glm::all(glm::lessThan(max_, min_))){
-            throw std::invalid_argument("Min must be less than max.");
-        }
-}
-
 glm::vec3 Box::min() const {
-    return (glm::vec3)(transform() * glm::vec4(min_, 1.0f));
+    return position_ + extent_;
 }
 glm::vec3 Box::max() const {
-    return (glm::vec3)(transform() * glm::vec4(max_, 1.0f));
+    return position_ - extent_;
 }
 
+#if 0
 RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
     // Intersection method from Real-Time Rendering and Essential Mathematics for Games
     glm::mat4 model_matrix = transform();
@@ -169,6 +155,7 @@ RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 directi
 RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
     return intersect(point1, glm::normalize(point2 - point1), 0.0f, glm::distance(point1, point2));
 }
+#endif
 
 BoxIntersection Box::intersects(const Box & other) const {
     static const std::array<glm::vec3, 6> faces = {
@@ -234,11 +221,7 @@ glm::vec3 Box::intersects_simple(const Box & other) {
 }
 
 glm::vec3 Box::position() const {
-     return (glm::vec3)(transform()*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-}
-
-glm::mat4 Box::transform() const {
-    return transform_;
+     return position_;
 }
 
 void Box::transform(const glm::mat4 &transform) {
@@ -248,8 +231,7 @@ void Box::transform(const glm::mat4 &transform) {
     position.y = transform[3][1];
     position.z = transform[3][2];
 
-    //transform_ = glm::translate(glm::mat4(1.0f), position);
-    transform_ = transform;
+    position_ = position;
 }
 
 float Box::volume() const {
@@ -261,9 +243,9 @@ float Box::obstruction() const {
 }
 
 glm::vec3 Box::size() const {
-    return glm::vec3(glm::abs(max_.x-min_.x),
-                     glm::abs(max_.y-min_.y),
-                     glm::abs(max_.z-min_.z));
+    return glm::vec3(glm::abs(max().x - min().x),
+                     glm::abs(max().y - min().y),
+                     glm::abs(max().z - min().z));
 }
 
 void Box::step(const bool step){
