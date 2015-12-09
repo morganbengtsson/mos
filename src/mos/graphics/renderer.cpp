@@ -639,11 +639,11 @@ void Renderer::update(const Model & model,
     glUniform3fv(uniforms.light_diffuse_color,1 ,glm::value_ptr(light.diffuse_color));
     glUniform3fv(uniforms.light_specular_color,1 , glm::value_ptr(light.specular_color));
 
-    glUniform1i(uniforms.has_texture, !(model.texture == nullptr));
-    glUniform1i(uniforms.has_texture2, model.texture2 == nullptr ? false: true);
-    glUniform1i(uniforms.has_lightmap, model.lightmap == nullptr ? false : lightmaps_ ? true : false);
-    glUniform1i(uniforms.has_normalmap, model.lightmap == nullptr ? false : true);
-    glUniform1i(uniforms.has_material, model.material == nullptr ? false : true);
+    glUniform1i(uniforms.has_texture, model.texture ? true :false);
+    glUniform1i(uniforms.has_texture2, model.texture2 ? true : false);
+    glUniform1i(uniforms.has_lightmap, model.lightmap ? true : lightmaps_ ? true : false);
+    glUniform1i(uniforms.has_normalmap, model.normalmap ? true : false);
+    glUniform1i(uniforms.has_material, model.material ? true : false);
 
     glUniform1i(uniforms.selected, model.selected());
     glUniform1i(uniforms.receives_light, model.receives_light);
