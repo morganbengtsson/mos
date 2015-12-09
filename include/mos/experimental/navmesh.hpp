@@ -16,7 +16,8 @@ public:
     Face(const glm::vec3 & v0,
          const glm::vec3 & v1,
          const glm::vec3 & v2);
-    bool intersects(const Box & box);
+    bool intersects(const glm::vec3 & origin,
+                   const glm::vec3 & direction);
 private:
     const glm::vec3 & v0_, v1_, v2_;
 };
@@ -58,7 +59,8 @@ public:
             }
         }
     }
-    bool intersects(const Box & box);
+    bool intersects(const glm::vec3 & origin,
+                   const glm::vec3 & direction);
 
     ~Navmesh();
 private:
