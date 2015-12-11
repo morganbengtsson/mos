@@ -5,6 +5,7 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <algorithm>
+#include <optional.hpp>
 #include "../graphics/mesh.hpp"
 #include "../graphics/box.hpp"
 
@@ -16,10 +17,12 @@ public:
     Face(const glm::vec3 & v0,
          const glm::vec3 & v1,
          const glm::vec3 & v2);
-    bool intersects(const glm::vec3 & origin,
+    std::experimental::optional<glm::vec3> intersects(const glm::vec3 & origin,
                    const glm::vec3 & direction);
 private:
-    const glm::vec3 & v0_, v1_, v2_;
+    glm::vec3 v0_;
+    glm::vec3 v1_;
+    glm::vec3 v2_;
 };
 
 class Navmesh
@@ -38,28 +41,28 @@ public:
 
         if (elements_.empty()) {
             for (auto it = vertices_.begin(); it != vertices_.end();) {
+                auto & v0 = *it;
+                it++;
                 auto & v1 = *it;
                 it++;
                 auto & v2 = *it;
                 it++;
-                auto & v3 = *it;
-                it++;
-                faces_.push_back(Face(v1, v2, v3));
+                faces_.push_back(Face(v0, v1, v2));
             }
 
         } else {
             for (auto it = elements_.begin(); it != elements_.end();) {
+                auto & v0 = vertices_[*it];
+                it++;
                 auto & v1 = vertices_[*it];
                 it++;
                 auto & v2 = vertices_[*it];
                 it++;
-                auto & v3 = vertices_[*it];
-                it++;
-                faces_.push_back(Face(v1, v2, v3));
+                faces_.push_back(Face(v0, v1, v2));
             }
         }
     }
-    bool intersects(const glm::vec3 & origin,
+    std::experimental::optional<glm::vec3> intersects(const glm::vec3 & origin,
                    const glm::vec3 & direction);
 
     ~Navmesh();

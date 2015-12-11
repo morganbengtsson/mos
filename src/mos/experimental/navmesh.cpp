@@ -10,14 +10,15 @@ Navmesh::Navmesh(const Mesh & mesh) : Navmesh(mesh.vertices_begin(),
 
 }
 
-bool Navmesh::intersects(const glm::vec3 & origin,
-                         const glm::vec3 & direction) {
+std::experimental::optional<glm::vec3> Navmesh::intersects(const glm::vec3 & origin,
+               const glm::vec3 & direction){
     for (auto & face : faces_){
-        if (face.intersects(origin, direction)){
-            return true;
+        auto intersection = face.intersects(origin, direction);
+        if (intersection){
+            return intersection;
         }
     }
-    return false;
+    return std::experimental::optional<glm::vec3>();
 }
 
 Navmesh::~Navmesh() {
@@ -31,10 +32,17 @@ Face::Face(const glm::vec3 & v0,
 }
 
 
-bool Face::intersects(const glm::vec3 & origin,
+std::experimental::optional<glm::vec3> Face::intersects(const glm::vec3 & origin,
                       const glm::vec3 & direction) {
-    glm::vec3 barry;
-    return glm::intersectRayTriangle(origin, direction, v0_, v1_, v2_, barry);
+    glm::vec3 bary;
+    auto intersects = glm::intersectRayTriangle(origin, direction, v0_, v1_, v2_, bary);
+
+    if (intersects) {
+        return std::experimental::optional<glm::vec3>(origin + direction * bary.z);
+    }
+    else {
+        return std::experimental::optional<glm::vec3>();
+    }
 }
 
 }

@@ -236,7 +236,7 @@ void Box::transform(const glm::mat4 &transform) {
     position.y = transform[3][1];
     position.z = transform[3][2];
 
-    position_ = position;
+    //position_ = position;
 }
 
 float Box::volume() const {

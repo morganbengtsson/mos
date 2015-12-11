@@ -118,7 +118,8 @@ public:
             max = glm::vec3(x_extremes.second->x, y_extremes.second->y, z_extremes.second->z);
         }
         extent_ = (max - min) / 2.0f;
-        position_ = position;
+        //position_ = position;
+        position_ = min + extent_;
      }
 
     /**
