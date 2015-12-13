@@ -39,6 +39,7 @@ add_subdirectory(externals/Optional)
 include_directories(externals/Optional)
 
 #glm
+include_directories(externals/glm)
 add_subdirectory(externals/glm)
 
 # lodepng

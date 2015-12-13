@@ -47,6 +47,12 @@ public:
     void center(const glm::vec3 & center);
 
     /**
+     * @brief direction
+     * @return
+     */
+    glm::vec3 direction() const;
+
+    /**
      * @brief Projection matrix.
      */
     glm::mat4 projection;

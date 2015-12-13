@@ -30,4 +30,8 @@ namespace mos {
         center_ = center;
         view = glm::lookAt(position_, center_, up_);
     }
+
+    glm::vec3 Camera::direction() const {
+        return glm::normalize(center_ - position_);
+    }
 }
