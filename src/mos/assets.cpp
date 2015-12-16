@@ -76,9 +76,8 @@ namespace mos {
 
         for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
             m.models.push_back(model(*it));
-
         }
-        m.transform(transform, parent_transform);
+
         return m;
     }
 

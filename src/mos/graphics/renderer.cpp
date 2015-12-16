@@ -569,6 +569,37 @@ void Renderer::update(Particles & particles, const glm::mat4 view, const glm::ma
     glDrawArrays(GL_POINTS, 0, particles.size());
 }
 
+void Renderer::update(Box & box,
+                      const glm::mat4 & view,
+                      const glm::mat4 & projection) {
+    auto & uniforms = box_programs_.at("box");
+
+    glUseProgram(uniforms.program);
+
+    glBindVertexArray(box_va);
+
+    glm::vec3 size = box.size();
+
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position());
+
+    glm::mat4 mv = view  *  transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = projection * view * transform * glm::scale(glm::mat4(1.0f), size);
+
+    glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+
+    //glDrawArrays(GL_POINTS, 0, 16);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, (GLvoid*)(4*sizeof(GLuint)));
+    glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid*)(8*sizeof(GLuint)));
+
+
+}
+
+void Renderer::update(Box & box, Camera & camera) {
+    update(box, camera.view, camera.projection);
+}
+
 void Renderer::update(const Model & model,
                       const glm::mat4 parent_transform,
                       const glm::mat4 view,
@@ -662,29 +693,6 @@ void Renderer::update(const Model & model,
             glDrawArrays(draw_type, 0, model.mesh->vertices_size());
         }
     }
-    if (boxes_ == true){
-        auto & uniforms = box_programs_.at("box");
-
-        glUseProgram(uniforms.program);
-
-        glBindVertexArray(box_va);
-
-        glm::vec3 size = model.box.size();
-
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), model.box.position());
-
-        glm::mat4 mv = view  *  transform * glm::scale(glm::mat4(1.0f), size);
-        glm::mat4 mvp = projection * view * transform * glm::scale(glm::mat4(1.0f), size);
-
-        glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-        glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
-
-        //glDrawArrays(GL_POINTS, 0, 16);
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
-        glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, (GLvoid*)(4*sizeof(GLuint)));
-        glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid*)(8*sizeof(GLuint)));
-    }
-
     for (auto & child : model.models) {
         update(child, parent_transform * model.transform(), view, projection, light);
     }

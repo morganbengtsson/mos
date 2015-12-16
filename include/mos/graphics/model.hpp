@@ -121,8 +121,7 @@ namespace mos {
          * @brief transform
          * @param transform
          */
-        void transform(const glm::mat4 & transform,
-                       const glm::mat4 & parent_transform = glm::mat4(1.0f));
+        void transform(const glm::mat4 & transform);
 
         /**
 		* Get the position
@@ -141,11 +140,6 @@ namespace mos {
         * @brief Get the color, (to be deprecated).
 		*/
         glm::vec4 color() const;
-
-        /**
-        * @brief The bounding box
-		*/
-        Box box;
 
         /**
         * @brief How to draw the model.

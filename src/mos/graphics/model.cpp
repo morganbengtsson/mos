@@ -39,10 +39,8 @@ Model::Model(const std::string & name,
     transform_(transform),
     selected_(false),
     selectable(selectable),
-    box(mesh->vertices_begin(), mesh->vertices_end(), transform * parent_transform, obstruction),
     receives_light(affected_by_light), shader(shader) {
-        box.step(step);
-        //move_box(transform * parent_transform);
+
 }
 
 Model::~Model() {
@@ -56,22 +54,8 @@ glm::mat4 Model::transform() const{
     return transform_;
 }
 
-void Model::transform(const glm::mat4 & transform,
-                      const glm::mat4 & parent_transform) {
+void Model::transform(const glm::mat4 & transform) {
     transform_ = transform;
-
-    glm::vec3 previous_position(transform_[3][0], transform_[3][1], transform_[3][2]);
-    glm::vec3 new_position(transform[3][0], transform[3][1], transform[3][2]);
-
-    auto move = new_position - previous_position;
-    move_box(move);
-}
-
-void Model::move_box(const glm::vec3 & offset) {
-    box.position(box.position() + offset);
-    for (auto & model : models) {
-        model.move_box(offset);
-    }
 }
 
 Model::Models::const_iterator Model::begin() const {
@@ -104,7 +88,6 @@ void Model::position(const glm::vec3 position){
     t[3][1] = position[1];
     t[3][2] = position[2];
     transform(t);
-    box.position(position);
 }
 
 bool Model::selected() const {
@@ -134,6 +117,7 @@ std::experimental::optional<BoxIntersection> Model::intersects(const Model & mod
     */
 
     //TODO: Make recursive.
+    /*
     auto parent_intersection = box.intersects(model.box);
     if (!parent_intersection){
         for (auto & child : models){
@@ -160,6 +144,8 @@ std::experimental::optional<BoxIntersection> Model::intersects(const Model & mod
         }
     }
     return parent_intersection;
+    */
+    return std::experimental::optional<BoxIntersection>();
 }
 
 }

@@ -144,6 +144,12 @@ public:
                 const glm::mat4 view,
                 const glm::mat4 projection);
 
+
+    void update(Box & box,
+                const glm::mat4 & view,
+                const glm::mat4 & projection);
+    void update(Box & box, Camera & camera);
+
     /**
      * @brief Clears the screen and the depth buffer.
      * @param color
