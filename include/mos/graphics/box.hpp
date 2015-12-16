@@ -173,7 +173,17 @@ public:
      */
     glm::vec3 intersects_simple(const Box & other);
 
+    /**
+     * @brief position
+     * @return
+     */
     glm::vec3 position() const;
+
+    /**
+     * @brief position
+     * @param position
+     */
+    void position(const glm::vec3 & position);
 
     /**
      * @brief Set the box transform, only uses position elements.

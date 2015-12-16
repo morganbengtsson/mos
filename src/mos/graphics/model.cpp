@@ -62,7 +62,7 @@ void Model::transform(const glm::mat4 & transform,
     transform_box(parent_transform * transform);
 }
 
-void Model::transform_box(const glm::mat4 & transform){
+void Model::transform_box(const glm::mat4 & transform) {
     box.transform(transform);
     for (auto & model : models){
         model.transform_box(transform * model.transform());
@@ -99,6 +99,7 @@ void Model::position(const glm::vec3 position){
     t[3][1] = position[1];
     t[3][2] = position[2];
     transform(t);
+    box.position(position);
 }
 
 bool Model::selected() const {
