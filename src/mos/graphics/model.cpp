@@ -42,7 +42,7 @@ Model::Model(const std::string & name,
     box(mesh->vertices_begin(), mesh->vertices_end(), transform * parent_transform, obstruction),
     receives_light(affected_by_light), shader(shader) {
         box.step(step);
-        transform_box(transform * parent_transform);
+        //move_box(transform * parent_transform);
 }
 
 Model::~Model() {
@@ -59,13 +59,18 @@ glm::mat4 Model::transform() const{
 void Model::transform(const glm::mat4 & transform,
                       const glm::mat4 & parent_transform) {
     transform_ = transform;
-    transform_box(parent_transform * transform);
+
+    glm::vec3 previous_position(transform_[3][0], transform_[3][1], transform_[3][2]);
+    glm::vec3 new_position(transform[3][0], transform[3][1], transform[3][2]);
+
+    auto move = new_position - previous_position;
+    move_box(move);
 }
 
-void Model::transform_box(const glm::mat4 & transform) {
-    box.transform(transform);
-    for (auto & model : models){
-        model.transform_box(transform * model.transform());
+void Model::move_box(const glm::vec3 & offset) {
+    box.position(box.position() + offset);
+    for (auto & model : models) {
+        model.move_box(offset);
     }
 }
 

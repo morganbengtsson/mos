@@ -186,7 +186,7 @@ namespace mos {
          */
         std::experimental::optional<BoxIntersection> intersects(const Model & model) const;
 
-        void transform_box(const glm::mat4 & transform);
+        void move_box(const glm::vec3 & offset);
 
         Models::const_iterator begin() const;
         Models::const_iterator end() const;
