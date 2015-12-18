@@ -37,11 +37,13 @@ void Animation::update(const float dt) {
     previous_frame--;
     //auto a =  (float)(frame() - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
     auto a = (float)((time_ * frames_per_second_) - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
+    /*
     std::cout << "---" << std::endl;
     std::cout << "l: " << previous_frame->first << std::endl;
     std::cout << frame() << std::endl;
     std::cout << "h: "  << next_frame->first << std::endl;
     std::cout << "a: " << a << std::endl;
+    */
 
     if (frame() >= keyframes_.rbegin()->first){
             time_ = 0;

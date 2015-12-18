@@ -156,6 +156,7 @@ std::vector<T> operator/(const std::vector<T>& a, const std::vector<T>& b)
                    std::back_inserter(result), std::divides<T>());*/
     return result;
 }
+
 }
 
 #endif	/* MOS_UTIL_H */

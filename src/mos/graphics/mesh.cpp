@@ -112,41 +112,26 @@ namespace mos {
         return elements_.size();
     }
 
-    Mesh Mesh::operator+(const Mesh & mesh) {
-        auto vertices = vertices_ + mesh.vertices_;
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }
+    void Mesh::mix(const Mesh & mesh1,
+                   const Mesh & mesh2,
+                   const float amount) {
+        auto it = vertices_begin();
+        auto it1 = mesh1.vertices_begin();
+        auto it2 = mesh2.vertices_begin();
 
-    Mesh Mesh::operator-(const Mesh & mesh) {
-        auto vertices = vertices_ - mesh.vertices_;
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }
+        while(it != vertices_end()) {
+            it->position = glm::mix(it1->position, it2->position, amount);
+            it->normal = glm::mix(it1->normal, it2->normal, amount);
+            it->uv = glm::mix(it1->uv, it2->uv, amount);
+            it->uv_lightmap = glm::mix(it1->uv_lightmap, it2->uv_lightmap, amount);
 
-    Mesh Mesh::operator*(const Mesh & mesh) {
-        auto vertices = vertices_ * mesh.vertices_;
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }
-
-    Mesh Mesh::operator *(const float number){
-        auto vertices = vertices_;
-        for (auto & vertex : vertices){
-            vertex = vertex * number;
+            it++;
+            it1++;
+            it2++;
         }
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
+        invalidate();
     }
 
-    Mesh Mesh::operator /(const float number){
-        auto vertices = vertices_;
-        for (auto & vertex : vertices){
-            vertex = vertex / number;
-        }
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }
 
-    /*
-    Mesh Mesh::operator/(const Mesh & mesh) {
-        auto vertices = vertices_ / mesh.vertices_;
-        return Mesh(vertices.begin(), vertices.end(), elements_.begin(), elements_.end());
-    }*/
 
 }

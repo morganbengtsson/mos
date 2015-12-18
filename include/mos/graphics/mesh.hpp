@@ -185,52 +185,14 @@ public:
     Elements::size_type elements_size() const;
 
     /**
-     * @brief operator +
-     * Meshes has to be same size.
-     * @param mesh
-     * @return New Mesh.
+     * @brief mix
+     * @param mesh1
+     * @param mesh2
+     * @param amount
      */
-    Mesh operator+(const Mesh & mesh);
-
-    /**
-     * @brief operator -
-     * Meshes has to be same size.
-     * @param mesh
-     * @return New Mesh.
-     */
-    Mesh operator-(const Mesh & mesh);
-
-    /**
-     * @brief operator *
-     * Meshes has to be same size.
-     * @param mesh
-     * @return New Mesh.
-     */
-    Mesh operator*(const Mesh & mesh);
-
-    /**
-     * @brief operator *
-     * Meshes has to be same size.
-     * @param number
-     * @return New Mesh.
-     */
-    Mesh operator*(const float number);
-
-    /**
-     * @brief operator /
-     * Meshes has to be same size
-     * @param number
-     * @return New Mesh.
-     */
-    Mesh operator/(const float number);
-
-    /**
-     * @brief operator /
-     * Meshes has to be same size.
-     * @param mesh
-     * @return New Mesh.
-     */
-    Mesh operator/(const Mesh & mesh);
+    void mix(const Mesh & mesh1,
+             const Mesh & mesh2,
+             const float amount);
 private:
     static unsigned int current_id;
     unsigned int id_;
