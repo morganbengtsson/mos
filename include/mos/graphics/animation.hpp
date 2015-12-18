@@ -49,6 +49,17 @@ class Animation {
         void reset();
 
         /**
+         * @brief frames_per_second
+         */
+        void frames_per_second(const int frames_per_second);
+
+        /**
+         * @brief frames_per_second
+         * @return
+         */
+        int frames_per_second() const;
+
+        /**
          * @brief The mesh, which is animated.
          * @return shared_ptr to mesh.
          */

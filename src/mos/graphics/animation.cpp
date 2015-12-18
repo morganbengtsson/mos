@@ -21,6 +21,14 @@ void Animation::reset() {
     time_ = 0;
 }
 
+void Animation::frames_per_second(const int frames_per_second) {
+    frames_per_second_  = frames_per_second;
+}
+
+int Animation::frames_per_second() const {
+    return frames_per_second_;
+}
+
 void Animation::update(const float dt) {
     time_ += dt;
 
