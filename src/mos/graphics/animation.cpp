@@ -36,34 +36,12 @@ void Animation::update(const float dt) {
     auto previous_frame = next_frame;
     previous_frame--;
     //auto a =  (float)(frame() - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
-    auto a = (float)((time_ * frames_per_second_) - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
-    /*
-    std::cout << "---" << std::endl;
-    std::cout << "l: " << previous_frame->first << std::endl;
-    std::cout << frame() << std::endl;
-    std::cout << "h: "  << next_frame->first << std::endl;
-    std::cout << "a: " << a << std::endl;
-    */
+    auto amount = (float)((time_ * frames_per_second_) - previous_frame->first) / (float)(next_frame->first - previous_frame->first);
 
+    mesh_->mix(*previous_frame->second, *next_frame->second, amount);
     if (frame() >= keyframes_.rbegin()->first){
             time_ = 0;
     }
-    auto vertices1_it = previous_frame->second->vertices_begin();
-    if (previous_frame->first == 0 && transition != nullptr){
-        vertices1_it = transition->vertices_begin();
-    }
-    else {
-        transition = nullptr;
-    }
-    auto vertices2_it = next_frame->second->vertices_begin();
-    for (auto vertex_it = mesh_->vertices_begin(); vertex_it != mesh_->vertices_end(); vertex_it++) {
-
-        vertex_it->position = glm::mix(vertices1_it->position, vertices2_it->position, a);
-
-        vertices1_it++;
-        vertices2_it++;
-    }
-    mesh_->invalidate();
 }
 
 std::shared_ptr<Mesh> Animation::mesh() {
