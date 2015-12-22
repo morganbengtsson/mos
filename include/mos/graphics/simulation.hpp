@@ -11,6 +11,11 @@ template<class It>
  * @param position
  * @param direction
  */
+
+/** Select is not part of model any more. Create a general method instead.
+  *
+  */
+#if 0
 void selections(It begin, It end, const glm::vec3 & position, glm::vec3 & direction){
     mos::Model * closest = nullptr;
     float distance = 10000.0f;
@@ -31,3 +36,4 @@ void selections(It begin, It end, const glm::vec3 & position, glm::vec3 & direct
 }
 
 }
+#endif

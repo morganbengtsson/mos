@@ -33,26 +33,19 @@ namespace mos {
     Assets::~Assets() {
     }
 
-    Model Assets::model(rapidjson::Value &value , const glm::mat4 & parent_transform) {
+    Model Assets::model(rapidjson::Value &value) {
         auto name = !value.HasMember("name") || value["name"].IsNull() ? "" : value["name"].GetString();
 
         std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull() ? "": value["mesh"].GetString();
-
-        bool selectable =
-                !(!value.HasMember("selectable") || value["selectable"].IsNull()) && value["selectable"].GetBool();
-
-        bool step = !value.HasMember("step") || value["step"].IsNull() ? false: value["step"].GetBool();
 
         std::string texture_name = !value.HasMember("texture") || value["texture"].IsNull() ? "" : value["texture"].GetString();
         std::string texture2_name = !value.HasMember("texture2") || value["texture2"].IsNull() ? "" : value["texture2"].GetString();
         std::string lightmap_name = !value.HasMember("lightmap") || value["lightmap"].IsNull() ? "" : value["lightmap"].GetString();
         std::string material_name = !value.HasMember("material") || value["material"].IsNull() ? "" : value["material"].GetString();
 
-        float obstruction = !value.HasMember("obstruction") || value["obstruction"].IsNull() ? 0.0f : value["obstruction"].GetDouble();
-
         glm::mat4 transform;
 
-        if (value.HasMember("transform")){
+        if (value.HasMember("transform")) {
             std::vector<float> nums;
             for (auto it = value["transform"].Begin(); it != value["transform"].End(); it++){
                 nums.push_back(it->GetDouble());
@@ -65,14 +58,10 @@ namespace mos {
                          texture_cached(texture_name),
                          texture_cached(texture2_name),
                          transform,
-                         parent_transform,
                          mos::Model::Draw::TRIANGLES,
                          material_cached(material_name),
                          texture_cached(lightmap_name),
-                         nullptr,
-                         selectable,
-                         step,
-                         obstruction);
+                         nullptr);
 
         for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
             m.models.push_back(model(*it));
@@ -112,9 +101,9 @@ namespace mos {
         return transform;
     }
 
-    Model Assets::model(const std::string & file_name, const glm::mat4 & parent_transform) {
+    Model Assets::model(const std::string & file_name) {
         auto doc = document(file_name);
-        return model(doc, parent_transform);
+        return model(doc);
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {

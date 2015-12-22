@@ -324,7 +324,6 @@ private:
         GLint has_lightmap;
         GLint has_normalmap;
         GLint has_material;
-        GLint selected;
         GLint receives_light;
     };
 

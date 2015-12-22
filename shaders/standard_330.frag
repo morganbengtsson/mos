@@ -1,6 +1,5 @@
 #version 330
 uniform bool receives_light;
-uniform bool selected;
 uniform vec3 material_ambient_color;
 uniform vec3 material_diffuse_color;
 uniform vec3 material_specular_color;
@@ -72,10 +71,6 @@ void main() {
     }
 
     vec4 diffuse_static = static_light * diffuse_color;
-
-    if (selected == true) {
-        diffuse.xyz = diffuse.xyz + vec3(0.01, 0.01, 0.01);
-    }
 
     if(receives_light == true) {
         color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
