@@ -1,5 +1,6 @@
 #include "experimental/navmesh.hpp"
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtx/normal.hpp>
 
 namespace mos {
 
@@ -10,15 +11,15 @@ Navmesh::Navmesh(const Mesh & mesh) : Navmesh(mesh.vertices_begin(),
 
 }
 
-std::experimental::optional<glm::vec3> Navmesh::intersects(const glm::vec3 & origin,
-               const glm::vec3 & direction){
+std::experimental::optional<Intersection> Navmesh::intersects(const glm::vec3 & origin,
+               const glm::vec3 & direction) {
     for (auto & face : faces_){
         auto intersection = face.intersects(origin, direction);
         if (intersection){
             return intersection;
         }
     }
-    return std::experimental::optional<glm::vec3>();
+    return std::experimental::optional<Intersection>();
 }
 
 Navmesh::~Navmesh() {
@@ -32,16 +33,16 @@ Face::Face(const glm::vec3 & v0,
 }
 
 
-std::experimental::optional<glm::vec3> Face::intersects(const glm::vec3 & origin,
+std::experimental::optional<Intersection> Face::intersects(const glm::vec3 & origin,
                       const glm::vec3 & direction) {
     glm::vec3 bary;
     auto intersects = glm::intersectRayTriangle(origin, direction, v0_, v1_, v2_, bary);
 
     if (intersects) {
-        return std::experimental::optional<glm::vec3>(origin + direction * bary.z);
+        return std::experimental::optional<Intersection>(Intersection(origin + direction * bary.z, glm::triangleNormal(v0_, v1_, v2_)));
     }
     else {
-        return std::experimental::optional<glm::vec3>();
+        return std::experimental::optional<Intersection>();
     }
 }
 

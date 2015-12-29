@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <algorithm>
 #include <optional.hpp>
+#include "intersection.hpp"
 #include "../graphics/mesh.hpp"
 #include "../graphics/box.hpp"
 
@@ -17,7 +18,7 @@ public:
     Face(const glm::vec3 & v0,
          const glm::vec3 & v1,
          const glm::vec3 & v2);
-    std::experimental::optional<glm::vec3> intersects(const glm::vec3 & origin,
+    std::experimental::optional<Intersection> intersects(const glm::vec3 & origin,
                    const glm::vec3 & direction);
 private:
     glm::vec3 v0_;
@@ -62,7 +63,7 @@ public:
             }
         }
     }
-    std::experimental::optional<glm::vec3> intersects(const glm::vec3 & origin,
+    std::experimental::optional<Intersection> intersects(const glm::vec3 & origin,
                    const glm::vec3 & direction);
 
     ~Navmesh();
