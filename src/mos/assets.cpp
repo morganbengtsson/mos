@@ -47,7 +47,7 @@ namespace mos {
 
         if (value.HasMember("transform")) {
             std::vector<float> nums;
-            for (auto it = value["transform"].Begin(); it != value["transform"].End(); it++){
+            for (auto it = value["transform"].Begin(); it != value["transform"].End(); it++) {
                 nums.push_back(it->GetDouble());
             }
             transform = glm::make_mat4x4(nums.data());
@@ -104,6 +104,18 @@ namespace mos {
     Model Assets::model(const std::string & file_name) {
         auto doc = document(file_name);
         return model(doc);
+    }
+
+    Animation Assets::animation(const string & file_name) {
+        auto doc = document(file_name);
+        auto fps = doc["frames_per_second"].GetInt();
+        Animation animation(fps);
+
+        for (auto it = doc.Begin(); it != doc.End(); it++) {
+            auto key = (*it)["key"].GetInt();
+            auto mesh_file_name =(*it)["mesh"].GetString();
+            animation.keyframe(key, mesh_cached(mesh_file_name));
+        }
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {

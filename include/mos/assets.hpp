@@ -19,6 +19,7 @@
 #include "graphics/material.hpp"
 #include "graphics/model.hpp"
 #include "graphics/font.hpp"
+#include "graphics/animation.hpp"
 
 namespace mos {
 
@@ -90,6 +91,13 @@ class Assets {
          * @return Model object including associated meshes/textures/etc.
          */
         Model model(const std::string & file_name);
+
+        /**
+         * @brief Loads an animation from meshes specified in *.animation file.
+         * @param file_name
+         * @return Animation object
+         */
+        Animation animation(const std::string & file_name);
 
         /**
          * Loads a *.material file into a Material object, and caches it internally.
@@ -198,12 +206,12 @@ class Assets {
          */
         std::map<char, Character> character_map(std::string path);
 
-        //TODO Make private.
-        rapidjson::Document document(const std::string &file_name);
+        //TODO: Deprecate
         glm::vec3 position(const std::string & file_name);
         glm::mat4 transform(const std::string & file_name);
 
     private:
+        rapidjson::Document document(const std::string &file_name);
         Model model(rapidjson::Value &value);
         std::string directory_;
         MeshMap meshes_;
