@@ -108,14 +108,16 @@ namespace mos {
 
     Animation Assets::animation(const string & file_name) {
         auto doc = document(file_name);
-        auto fps = doc["frames_per_second"].GetInt();
-        Animation animation(fps);
+        auto frame_rate = doc["frame_rate"].GetInt();
+        std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
 
-        for (auto it = doc.Begin(); it != doc.End(); it++) {
+        for (auto it = doc["keyframes"].Begin(); it != doc["keyframes"].End(); it++) {
             auto key = (*it)["key"].GetInt();
             auto mesh_file_name =(*it)["mesh"].GetString();
-            animation.keyframe(key, mesh_cached(mesh_file_name));
+            keyframes.insert({key, mesh_cached(mesh_file_name)});
         }
+        Animation animation(keyframes, frame_rate);
+        return animation;
     }
 
     std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {

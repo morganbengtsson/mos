@@ -23,13 +23,15 @@ public:
   /**
    * @brief Animation default contructor
    */
-  Animation(const unsigned int frames_per_second = 30);
+  Animation(const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
+            const unsigned int frame_rate = 30);
   /**
    * @brief Animation constructor.
    * @param keyframes Map of keys and shared Meshes
    */
   Animation(std::initializer_list<
-      std::pair<unsigned int, std::shared_ptr<Mesh const>>> keyframes);
+      std::pair<unsigned int, std::shared_ptr<Mesh const>>> keyframes,
+            const unsigned int frame_rate = 30);
 
   /**
    *@brief Destructor.
@@ -49,13 +51,6 @@ public:
   unsigned int frame() const;
 
   /**
-   * @brief Add a keyframe
-   * @param key
-   * @param mesh shared_ptr
-   */
-  void keyframe(const unsigned int key, const std::shared_ptr<Mesh> mesh);
-
-  /**
    * @brief reset, restart the animation.
    */
   void reset();
@@ -63,13 +58,13 @@ public:
   /**
    * @brief frames_per_second
    */
-  void frames_per_second(const unsigned int frames_per_second);
+  void frame_rate(const unsigned int frame_rate);
 
   /**
    * @brief frames_per_second
    * @return
    */
-  unsigned int frames_per_second() const;
+  unsigned int frame_rate() const;
 
   /**
    * @brief The mesh, which is animated.
@@ -81,7 +76,7 @@ private:
   float time_;
   std::map<unsigned int, std::shared_ptr<const Mesh>> keyframes_;
   std::shared_ptr<Mesh> mesh_;
-  unsigned int frames_per_second_;
+  unsigned int frame_rate_;
 };
 }
 
