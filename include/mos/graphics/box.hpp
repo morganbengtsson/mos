@@ -23,7 +23,7 @@ namespace mos
 struct BoxIntersection {
     BoxIntersection(const glm::vec3 & normal,
                     const float distance): normal(normal),
-        distance(distance){
+        distance(distance) {
     }
 
     /**
