@@ -198,14 +198,6 @@ class Assets {
          */
         void clear_unused();
 
-        /**
-         * Load a character map from an *.xml file in NGL format.
-         * 
-         * @param path
-         * @return A map of chars with corresponding Character objects.
-         */
-        std::map<char, Character> character_map(std::string path);
-
         //TODO: Deprecate
         glm::vec3 position(const std::string & file_name);
         glm::mat4 transform(const std::string & file_name);

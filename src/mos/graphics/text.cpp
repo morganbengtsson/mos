@@ -83,7 +83,7 @@ namespace mos {
     }
 
     float Text::height() const {
-        font_.height();
+        return font_.height();
     }
 
     void Text::position(const glm::vec2 &position) {
@@ -107,10 +107,12 @@ namespace mos {
     }
 
     Text & Text::operator=(const std::string & input) {
-        text(input);
+      text(input);
+      return *this;
     }
 
     Text & Text::operator+=(const std::string & input) {
-        text(text() + input);
+      text(text() + input);
+      return *this;
     }
 }

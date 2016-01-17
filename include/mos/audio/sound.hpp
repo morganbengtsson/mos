@@ -44,7 +44,7 @@ namespace mos {
         }
 
         virtual ~Sound();
-        
+
         /**
          * @brief begin iterator for samples
          * @return
@@ -60,7 +60,7 @@ namespace mos {
         Samples::const_iterator end() const {
             return samples_.end();
         }
-        
+
         /**
          * @brief Raw data
          * @return array of shorts
@@ -101,7 +101,7 @@ namespace mos {
 
     private:
         unsigned int id_;
-        Samples samples_;        
+        Samples samples_;
         unsigned int channels_;
         unsigned int sample_rate_;
         bool valid_;

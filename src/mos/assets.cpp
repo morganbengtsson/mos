@@ -364,11 +364,4 @@ namespace mos {
             }
         }
     }
-
-    std::map<char, Character> Assets::character_map(std::string file_name) {
-
-
-    }
-
-
 }
