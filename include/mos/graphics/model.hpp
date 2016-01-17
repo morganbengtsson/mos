@@ -1,5 +1,5 @@
 #ifndef MOS_MODEL_H
-#define	MOS_MODEL_H
+#define MOS_MODEL_H
 
 #include <memory>
 #include <optional.hpp>
@@ -9,160 +9,157 @@
 
 namespace mos {
 
-    /**
-     * A class that gathers what is needed to render an object. A Mesh, a Texture2D
-     * , a Texture2D lightmap, a Texture2D normalmap and a Material.
-     * Also a transformation (position/rotation).
-     */
-    class Model {
-    public:
-        /**
-         * @brief How to draw the model.
-         */
-        enum class Draw {TRIANGLES, LINES, POINTS};
+/**
+ * A class that gathers what is needed to render an object. A Mesh, a Texture2D
+ * , a Texture2D lightmap, a Texture2D normalmap and a Material.
+ * Also a transformation (position/rotation).
+ */
+class Model {
+public:
+  /**
+   * @brief How to draw the model.
+   */
+  enum class Draw { TRIANGLES, LINES, POINTS };
 
-        /**
-         * @brief What shader to use
-         */
-        enum class Shader {TEXT, STANDARD, EFFECT};
+  /**
+   * @brief What shader to use
+   */
+  enum class Shader { TEXT, STANDARD, EFFECT };
 
-        using Models = std::vector<Model>;
-        using MeshPtr = std::shared_ptr<Mesh>;
-        using TexPtr = std::shared_ptr<Texture2D>;
-        using MatPtr = std::shared_ptr<Material>;
+  using Models = std::vector<Model>;
+  using MeshPtr = std::shared_ptr<Mesh>;
+  using TexPtr = std::shared_ptr<Texture2D>;
+  using MatPtr = std::shared_ptr<Material>;
 
-        /**
-         * @brief Model
-         */
-        Model();
+  /**
+   * @brief Model
+   */
+  Model();
 
-        /**
-         * @brief Model constructor.
-         * @param mesh
-         * @param texture
-         * @param transform
-         * @param draw
-         * @param material
-         * @param lightmap
-         * @param normalmap
-         */
-        Model(const std::string & name,
-              const MeshPtr & mesh,
-              const TexPtr & texture = TexPtr(),
-              const TexPtr & texture2 = TexPtr(),
-              const glm::mat4 & transform = glm::mat4(1.0f),
-              const Draw draw = Draw::TRIANGLES,
-              const MatPtr & material =
-                    std::make_shared<Material>(Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
-              const TexPtr & lightmap = TexPtr(),
-              const TexPtr & normalmap = TexPtr(),
-              const float receives_light = true,
-              const Shader shader = Shader::STANDARD);
+  /**
+   * @brief Model constructor.
+   * @param mesh
+   * @param texture
+   * @param transform
+   * @param draw
+   * @param material
+   * @param lightmap
+   * @param normalmap
+   */
+  Model(const std::string &name, const MeshPtr &mesh,
+        const TexPtr &texture = TexPtr(), const TexPtr &texture2 = TexPtr(),
+        const glm::mat4 &transform = glm::mat4(1.0f),
+        const Draw draw = Draw::TRIANGLES,
+        const MatPtr &material = std::make_shared<Material>(
+            Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
+        const TexPtr &lightmap = TexPtr(), const TexPtr &normalmap = TexPtr(),
+        const float receives_light = true,
+        const Shader shader = Shader::STANDARD);
 
-        /**
-         * @brief ~Model destructor
-         */
-        virtual ~Model();
+  /**
+   * @brief ~Model destructor
+   */
+  virtual ~Model();
 
-        /**
-         * @brief name
-         * @return
-         */
-        std::string name() const;
+  /**
+   * @brief name
+   * @return
+   */
+  std::string name() const;
 
-        /**
-         * @brief mesh
-         */
-        std::shared_ptr<Mesh> mesh;
-        
-        /**
-         * @brief texture
-         */
-        std::shared_ptr<Texture2D> texture;
+  /**
+   * @brief mesh
+   */
+  std::shared_ptr<Mesh> mesh;
 
-        /**
-         * @brief texture2
-         */
-        std::shared_ptr<Texture2D> texture2;
-        
-        /**
-         * @brief lightmap
-         */
-        std::shared_ptr<Texture2D> lightmap;
-        
-        /**
-         * @brief normalmap
-         */
-        std::shared_ptr<Texture2D> normalmap;
-        
-        /**
-         * @brief material
-         */
-        std::shared_ptr<Material> material;
-        
-        /**
-		 * Get the transform matrix.
-		 *
-         * @brief transform
-         * @return transform mat4
-         */
-        glm::mat4 transform() const;
-        
-        /**
-		 * Set the transform matrix.
-		 *
-         * @brief transform
-         * @param transform
-         */
-        void transform(const glm::mat4 & transform);
+  /**
+   * @brief texture
+   */
+  std::shared_ptr<Texture2D> texture;
 
-        /**
-		* Get the position
-		* @brief position
-		*/
-        glm::vec3 position() const;
+  /**
+   * @brief texture2
+   */
+  std::shared_ptr<Texture2D> texture2;
 
-        /**
-		* Set the position.
-		* @brief position
-		* @param position
-		*/
-        void position(const glm::vec3 & position);
+  /**
+   * @brief lightmap
+   */
+  std::shared_ptr<Texture2D> lightmap;
 
-        /**
-        * @brief Get the color, (to be deprecated).
-		*/
-        glm::vec4 color() const;
+  /**
+   * @brief normalmap
+   */
+  std::shared_ptr<Texture2D> normalmap;
 
-        /**
-        * @brief How to draw the model.
-		*/
-        Draw draw;
+  /**
+   * @brief material
+   */
+  std::shared_ptr<Material> material;
 
-        /**
-         * @brief What shader to use.
-         */
-        Shader shader;
+  /**
+           * Get the transform matrix.
+           *
+   * @brief transform
+   * @return transform mat4
+   */
+  glm::mat4 transform() const;
 
-        /**
-         * @brief If the model is affected by light model (lightmap and dynamic).
-         */
-        bool receives_light;
+  /**
+           * Set the transform matrix.
+           *
+   * @brief transform
+   * @param transform
+   */
+  void transform(const glm::mat4 &transform);
 
-        Models::const_iterator begin() const;
-        Models::const_iterator end() const;
-        Models::iterator begin();
-        Models::iterator end();
+  /**
+          * Get the position
+          * @brief position
+          */
+  glm::vec3 position() const;
 
-        /**
-         * @brief Children.
-         */
-        Models models;
-    private:
-        std::string name_;
-        glm::mat4 transform_;
-    };
+  /**
+          * Set the position.
+          * @brief position
+          * @param position
+          */
+  void position(const glm::vec3 &position);
+
+  /**
+  * @brief Get the color, (to be deprecated).
+          */
+  glm::vec4 color() const;
+
+  /**
+  * @brief How to draw the model.
+          */
+  Draw draw;
+
+  /**
+   * @brief What shader to use.
+   */
+  Shader shader;
+
+  /**
+   * @brief If the model is affected by light model (lightmap and dynamic).
+   */
+  bool receives_light;
+
+  Models::const_iterator begin() const;
+  Models::const_iterator end() const;
+  Models::iterator begin();
+  Models::iterator end();
+
+  /**
+   * @brief Children.
+   */
+  Models models;
+
+private:
+  std::string name_;
+  glm::mat4 transform_;
+};
 }
 
-#endif	/* MO_MODEL_H */
-
+#endif /* MO_MODEL_H */

@@ -8,26 +8,27 @@
 namespace mos {
 class Button {
 public:
-    using Callback = std::function<void()>;
-    enum class State {IDLE, SELECTED, CLICKED};
-    Button(const Text & text, const State & state = State::IDLE);
-    ~Button();
-    Model model();
-    bool selected();
-    void state(const State & state);
-    float height() const;
-    float width() const;
-    State state() const;
-    void click_callback(const Callback & callback);
-    void click();
+  using Callback = std::function<void()>;
+  enum class State { IDLE, SELECTED, CLICKED };
+  Button(const Text &text, const State &state = State::IDLE);
+  ~Button();
+  Model model();
+  bool selected();
+  void state(const State &state);
+  float height() const;
+  float width() const;
+  State state() const;
+  void click_callback(const Callback &callback);
+  void click();
+
 private:
-    Text text_;
-    Model rectangle_;
-    float padding_;
-    State state_;
-    std::shared_ptr<mos::Material> light_material_;
-    std::shared_ptr<mos::Material> dark_material_;
-    std::function<void()> click_callback_;
+  Text text_;
+  Model rectangle_;
+  float padding_;
+  State state_;
+  std::shared_ptr<mos::Material> light_material_;
+  std::shared_ptr<mos::Material> dark_material_;
+  std::function<void()> click_callback_;
 };
 }
 #endif // BUTTON_HPP

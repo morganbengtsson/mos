@@ -9,15 +9,12 @@
 
 namespace mos {
 
-class Quad : public mos::Model
-{
+class Quad : public mos::Model {
 public:
-    Quad(const std::string & name,
-         const std::shared_ptr<Mesh> mesh,
-         const std::shared_ptr<Texture2D> texture);
-    virtual ~Quad();
+  Quad(const std::string &name, const std::shared_ptr<Mesh> mesh,
+       const std::shared_ptr<Texture2D> texture);
+  virtual ~Quad();
 };
-
 }
 
 #endif // MOS_QUAD_HPP

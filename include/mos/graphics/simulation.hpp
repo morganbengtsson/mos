@@ -3,7 +3,7 @@
 
 namespace mos {
 
-template<class It>
+template <class It>
 /**
  * @brief Calculate selections from models and a ray.
  * @param begin

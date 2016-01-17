@@ -2,12 +2,9 @@
 
 namespace mos {
 
-SoundSource::SoundSource(const std::shared_ptr<Sound> & sound,
-                         const Source & source):
-    sound(sound), source(source) {
-}
+SoundSource::SoundSource(const std::shared_ptr<Sound> &sound,
+                         const Source &source)
+    : sound(sound), source(source) {}
 
-SoundSource::~SoundSource() {
-}
-
+SoundSource::~SoundSource() {}
 }

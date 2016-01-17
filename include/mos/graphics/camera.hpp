@@ -10,62 +10,62 @@ namespace mos {
  */
 class Camera {
 public:
-    /**
-     * @brief Camera
-     * @param eye Where the camera is located.
-     * @param center Where the camera is centered.
-     * @param projection Projection matrix (ortho/perspective).
-     * @param up Up direction.
-     */
-    Camera(const glm::vec3 & position,
-           const glm::vec3 & center,
-           const glm::mat4 & projection,
-           const glm::vec3 & up = glm::vec3(0.0f, 0.0f, 1.0f));
+  /**
+   * @brief Camera
+   * @param eye Where the camera is located.
+   * @param center Where the camera is centered.
+   * @param projection Projection matrix (ortho/perspective).
+   * @param up Up direction.
+   */
+  Camera(const glm::vec3 &position, const glm::vec3 &center,
+         const glm::mat4 &projection,
+         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
-    /**
-     * @brief position
-     * @return Position of camera.
-     */
-    glm::vec3 position() const;
+  /**
+   * @brief position
+   * @return Position of camera.
+   */
+  glm::vec3 position() const;
 
-    /**
-     * @brief Set position.
-     * @param position
-     */
-    void position(const glm::vec3 & position);
+  /**
+   * @brief Set position.
+   * @param position
+   */
+  void position(const glm::vec3 &position);
 
-    /**
-     * @brief Get center point.
-     * @return
-     */
-    glm::vec3 center() const;
+  /**
+   * @brief Get center point.
+   * @return
+   */
+  glm::vec3 center() const;
 
-    /**
-     * @brief Get center point.
-     * @param center
-     */
-    void center(const glm::vec3 & center);
+  /**
+   * @brief Get center point.
+   * @param center
+   */
+  void center(const glm::vec3 &center);
 
-    /**
-     * @brief direction
-     * @return
-     */
-    glm::vec3 direction() const;
+  /**
+   * @brief direction
+   * @return
+   */
+  glm::vec3 direction() const;
 
-    /**
-     * @brief Projection matrix.
-     */
-    glm::mat4 projection;
+  /**
+   * @brief Projection matrix.
+   */
+  glm::mat4 projection;
 
-    /**
-     * @brief View matrix.
-     */
-    glm::mat4 view;
+  /**
+   * @brief View matrix.
+   */
+  glm::mat4 view;
+
 private:
-    glm::vec3 up_;
-    glm::vec3 center_;
-    glm::vec3 position_;
+  glm::vec3 up_;
+  glm::vec3 center_;
+  glm::vec3 position_;
 };
 }
 
-#endif //MOS_CAMERA_H
+#endif // MOS_CAMERA_H

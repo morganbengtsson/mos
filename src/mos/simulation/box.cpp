@@ -12,15 +12,10 @@
 
 namespace mos {
 
-Box::Box(){
-}
+Box::Box() {}
 
-glm::vec3 Box::min() const {
-    return position_ + extent_;
-}
-glm::vec3 Box::max() const {
-    return position_ - extent_;
-}
+glm::vec3 Box::min() const { return position_ + extent_; }
+glm::vec3 Box::max() const { return position_ - extent_; }
 
 #if 0
 RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
@@ -157,108 +152,105 @@ RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
 }
 #endif
 
-std::experimental::optional<BoxIntersection> Box::intersects(const Box & other) const {
-    static const std::array<glm::vec3, 6> faces = {
-        glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
-        glm::vec3( 1, 0, 0), // 'right' face normal (+x direction)
-        glm::vec3( 0,-1, 0), // 'far' face normal (-y direction)
-        glm::vec3( 0, 1, 0), // 'near' face normal (+y direction)
-        glm::vec3( 0, 0,-1), // 'bottom' face normal (-z direction)
-        glm::vec3( 0, 0, 1), // 'top' face normal (+z direction)
-    };
+std::experimental::optional<BoxIntersection>
+Box::intersects(const Box &other) const {
+  static const std::array<glm::vec3, 6> faces = {
+      glm::vec3(-1, 0, 0), // 'left' face normal (-x direction)
+      glm::vec3(1, 0, 0),  // 'right' face normal (+x direction)
+      glm::vec3(0, -1, 0), // 'far' face normal (-y direction)
+      glm::vec3(0, 1, 0),  // 'near' face normal (+y direction)
+      glm::vec3(0, 0, -1), // 'bottom' face normal (-z direction)
+      glm::vec3(0, 0, 1),  // 'top' face normal (+z direction)
+  };
 
-    glm::vec3 maxa = this->max();      
-    glm::vec3 mina = this->min();
+  glm::vec3 maxa = this->max();
+  glm::vec3 mina = this->min();
 
-    //TODO: This swapping is kind of nasty. Look throgh the whol BB thing.
-    if (maxa.x < mina.x){std::swap(maxa.x, mina.x);}
-    if (maxa.y < mina.y){std::swap(maxa.y, mina.y);}
-    if (maxa.z < mina.z){std::swap(maxa.z, mina.z);}
+  // TODO: This swapping is kind of nasty. Look throgh the whol BB thing.
+  if (maxa.x < mina.x) {
+    std::swap(maxa.x, mina.x);
+  }
+  if (maxa.y < mina.y) {
+    std::swap(maxa.y, mina.y);
+  }
+  if (maxa.z < mina.z) {
+    std::swap(maxa.z, mina.z);
+  }
 
-    glm::vec3 maxb = other.max();
-    glm::vec3 minb = other.min();
+  glm::vec3 maxb = other.max();
+  glm::vec3 minb = other.min();
 
+  if (maxb.x < minb.x) {
+    std::swap(maxb.x, minb.x);
+  }
+  if (maxb.y < minb.y) {
+    std::swap(maxb.y, minb.y);
+  }
+  if (maxb.z < minb.z) {
+    std::swap(maxb.z, minb.z);
+  }
 
-    if (maxb.x < minb.x){std::swap(maxb.x, minb.x);}
-    if (maxb.y < minb.y){std::swap(maxb.y, minb.y);}
-    if (maxb.z < minb.z){std::swap(maxb.z, minb.z);}
+  std::array<float, 6> distances = {
+      (maxb.x - mina.x), // distance of box 'b' to face on 'left' side of 'a'.
+      (maxa.x - minb.x), // distance of box 'b' to face on 'right' side of 'a'.
+      (maxb.y - mina.y), // distance of box 'b' to face on 'bottom' side of 'a'.
+      (maxa.y - minb.y), // distance of box 'b' to face on 'top' side of 'a'.
+      (maxb.z - mina.z), // distance of box 'b' to face on 'far' side of 'a'.
+      (maxa.z - minb.z), // distance of box 'b' to face on 'near' side of 'a'.
+  };
 
-    std::array<float, 6> distances = {
-        (maxb.x - mina.x), // distance of box 'b' to face on 'left' side of 'a'.
-        (maxa.x - minb.x), // distance of box 'b' to face on 'right' side of 'a'.
-        (maxb.y - mina.y), // distance of box 'b' to face on 'bottom' side of 'a'.
-        (maxa.y - minb.y), // distance of box 'b' to face on 'top' side of 'a'.
-        (maxb.z - mina.z), // distance of box 'b' to face on 'far' side of 'a'.
-        (maxa.z - minb.z), // distance of box 'b' to face on 'near' side of 'a'.
-    };
-
-    glm::vec3 normal(0.0f);
-    float distance = 0.0f;
-    for(int i = 0; i < 6; i ++) {
-            // box does not intersect face. So boxes don't intersect at all.
-            if(distances[i] < 0.0f) {
-                return std::experimental::optional<BoxIntersection>();
-            }
-            // face of least intersection depth. That's our candidate.
-            if((i == 0) || (distances[i] < distance))
-            {
-                //fcoll = i;
-                normal = faces[i];
-                distance = distances[i];
-            }
-        }
-
-    if (step() == true && (normal == faces[0] || normal == faces[1] || normal == faces[2] || normal == faces[3])) {
-        std::cout << "n: "<< normal << "d: " << distance << std::endl;
-        return BoxIntersection(glm::vec3(0.0f, 0.0f, 1.0), distance);
+  glm::vec3 normal(0.0f);
+  float distance = 0.0f;
+  for (int i = 0; i < 6; i++) {
+    // box does not intersect face. So boxes don't intersect at all.
+    if (distances[i] < 0.0f) {
+      return std::experimental::optional<BoxIntersection>();
     }
-    return BoxIntersection(normal, distance);
-}
-
-glm::vec3 Box::intersects_simple(const Box & other) {
-    auto intersection = intersects(other);
-    if (intersection) {
-        return intersection->normal * intersection->distance;
+    // face of least intersection depth. That's our candidate.
+    if ((i == 0) || (distances[i] < distance)) {
+      // fcoll = i;
+      normal = faces[i];
+      distance = distances[i];
     }
-    else{
-        return glm::vec3(0.0f);
-    }
+  }
+
+  if (step() == true && (normal == faces[0] || normal == faces[1] ||
+                         normal == faces[2] || normal == faces[3])) {
+    std::cout << "n: " << normal << "d: " << distance << std::endl;
+    return BoxIntersection(glm::vec3(0.0f, 0.0f, 1.0), distance);
+  }
+  return BoxIntersection(normal, distance);
 }
 
-glm::vec3 Box::position() const {
-    return position_;
+glm::vec3 Box::intersects_simple(const Box &other) {
+  auto intersection = intersects(other);
+  if (intersection) {
+    return intersection->normal * intersection->distance;
+  } else {
+    return glm::vec3(0.0f);
+  }
 }
 
-void Box::position(const glm::vec3 & position) {
-    position_ = position;
-}
+glm::vec3 Box::position() const { return position_; }
+
+void Box::position(const glm::vec3 &position) { position_ = position; }
 
 void Box::transform(const glm::mat4 &transform) {
-    position_.x = transform[3][0];
-    position_.y = transform[3][1];
-    position_.z = transform[3][2];
+  position_.x = transform[3][0];
+  position_.y = transform[3][1];
+  position_.z = transform[3][2];
 }
 
-float Box::volume() const {
-    return glm::abs(glm::compMul(max() - min()));
-}
+float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
 
-float Box::obstruction() const {
-    return obstruction_;
-}
+float Box::obstruction() const { return obstruction_; }
 
 glm::vec3 Box::size() const {
-    return glm::vec3(glm::abs(max().x - min().x),
-                     glm::abs(max().y - min().y),
-                     glm::abs(max().z - min().z));
+  return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
+                   glm::abs(max().z - min().z));
 }
 
-void Box::step(const bool step){
-    step_ = step;
-}
+void Box::step(const bool step) { step_ = step; }
 
-bool Box::step() const{
-    return step_;
-}
-
+bool Box::step() const { return step_; }
 }

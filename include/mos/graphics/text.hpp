@@ -1,5 +1,5 @@
 #ifndef MOS_TEXT_H
-#define	MOS_TEXT_H
+#define MOS_TEXT_H
 
 #include "model.hpp"
 #include "mesh.hpp"
@@ -13,100 +13,95 @@
 namespace mos {
 
 /**
- * A special Model class for text rendering. 
+ * A special Model class for text rendering.
  */
 class Text {
 public:
-    using CharMap = std::map<char, Character>;
-    using TexPtr = std::shared_ptr<Texture2D>;
+  using CharMap = std::map<char, Character>;
+  using TexPtr = std::shared_ptr<Texture2D>;
 
-    /**
-     * @brief Text constructor
-     * @param text
-     * @param characters
-     * @param texture with characters
-     * @param transform for position/rotation
-     * @param spacing between characters
-     */
-    Text(const std::string & text,
-            const Font & font,
-            const glm::mat4 & transform = glm::mat4(1.0f),
-            const float spacing = 0.0f);
-    virtual ~Text();    
+  /**
+   * @brief Text constructor
+   * @param text
+   * @param characters
+   * @param texture with characters
+   * @param transform for position/rotation
+   * @param spacing between characters
+   */
+  Text(const std::string &text, const Font &font,
+       const glm::mat4 &transform = glm::mat4(1.0f),
+       const float spacing = 0.0f);
+  virtual ~Text();
 
-    /**
-     * Update the text.
-     * @param text String to use.
-     */
-    void text(const std::string & text);
+  /**
+   * Update the text.
+   * @param text String to use.
+   */
+  void text(const std::string &text);
 
-    /**
-     * @brief text
-     * @return Current text
-     */
-    std::string text() const;
+  /**
+   * @brief text
+   * @return Current text
+   */
+  std::string text() const;
 
-    /**
-     * @brief approximate width
-     * @return width
-     */
-    float width() const;
+  /**
+   * @brief approximate width
+   * @return width
+   */
+  float width() const;
 
-    /**
-     * @brief height
-     * @return
-     */
-    float height() const;
+  /**
+   * @brief height
+   * @return
+   */
+  float height() const;
 
+  void position(const glm::vec2 &position);
+  glm::vec2 position();
 
-    void position(const glm::vec2 & position);
-    glm::vec2 position();
+  /**
+   * @brief scale
+   * @param scale
+   */
+  void scale(const float scale);
 
-    /**
-     * @brief scale
-     * @param scale
-     */
-    void scale(const float scale);
+  /**
+   * @brief material
+   * @param material
+   */
+  void material(const std::shared_ptr<Material> &material);
 
-    /**
-     * @brief material
-     * @param material
-     */
-    void material(const std::shared_ptr<Material> & material);
+  /**
+   * @brief model
+   * @return
+   */
+  mos::Model model() const;
 
-    /**
-     * @brief model
-     * @return
-     */
-    mos::Model model() const;
+  /**
+   * @brief spacing between characters
+   */
+  float spacing;
 
-    /**
-     * @brief spacing between characters
-     */
-    float spacing;
+  /**
+   * @brief operator =
+   * @param text
+   * @return
+   */
+  mos::Text &operator=(const std::string &text);
 
-    /**
-     * @brief operator =
-     * @param text
-     * @return
-     */
-    mos::Text & operator=(const std::string & text);
-
-    /**
-     * @brief operator +=
-     * @param text
-     * @return
-     */
-    mos::Text & operator+=(const std::string & text);
+  /**
+   * @brief operator +=
+   * @param text
+   * @return
+   */
+  mos::Text &operator+=(const std::string &text);
 
 private:
-    mos::Model model_;
-    std::string text_;
-    Font font_;
-
+  mos::Model model_;
+  std::string text_;
+  Font font_;
 };
-
 }
 
-#endif	/* MOS_TEXT_H */
-
+#endif /* MOS_TEXT_H */

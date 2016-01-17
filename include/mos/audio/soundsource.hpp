@@ -15,21 +15,20 @@ namespace mos {
  */
 class SoundSource {
 public:
+  /**
+   * @brief SoundSource constructor.
+   * @param sound
+   * @param source
+   */
+  explicit SoundSource(const std::shared_ptr<Sound> &sound,
+                       const Source &source = Source());
+  virtual ~SoundSource();
 
-    /**
-     * @brief SoundSource constructor.
-     * @param sound
-     * @param source
-     */
-    explicit SoundSource(const std::shared_ptr<Sound> & sound,
-                const Source & source = Source());
-    virtual ~SoundSource();
-
-    /**
-     * @brief The sound that is played from the source.
-     */
-    std::shared_ptr<Sound> sound;
-    Source source;
+  /**
+   * @brief The sound that is played from the source.
+   */
+  std::shared_ptr<Sound> sound;
+  Source source;
 };
 }
 
