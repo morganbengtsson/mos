@@ -1,4 +1,4 @@
-#include "graphics/quad.hpp"
+#include <mos/graphics/quad.hpp>
 
 namespace mos{
 

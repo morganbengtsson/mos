@@ -1,4 +1,4 @@
-#include "graphics/box.hpp"
+#include <mos/simulation/box.hpp>
 
 #include <utility>
 #include <stdexcept>

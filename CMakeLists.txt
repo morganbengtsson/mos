@@ -68,7 +68,7 @@ file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
 #add_subdirectory(src/mos)
-include_directories(include/mos)
+include_directories(include)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 

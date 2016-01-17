@@ -4,6 +4,7 @@
 #include "button.hpp"
 #include <initializer_list>
 #include <vector>
+#include <algorithm>
 
 namespace   mos {
 class Menu

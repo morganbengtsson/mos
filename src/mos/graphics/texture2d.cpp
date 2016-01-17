@@ -5,7 +5,7 @@
  * Created on February 25, 2014, 7:26 PM
  */
 
-#include "graphics/texture2d.hpp"
+#include <mos/graphics/texture2d.hpp>
 
 namespace mos{
 

@@ -5,7 +5,7 @@
  * Created on October 29, 2014, 10:10 PM
  */
 
-#include "graphics/light.hpp"
+#include <mos/graphics/light.hpp>
 
 namespace mos {
 

@@ -1,4 +1,4 @@
-#include "audio/listener.hpp"
+#include <mos/audio/listener.hpp>
 
 mos::Listener::Listener(const glm::vec3 &position,
                         const glm::vec3 &orientation,

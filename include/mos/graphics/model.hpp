@@ -6,7 +6,6 @@
 #include "mesh.hpp"
 #include "texture2d.hpp"
 #include "material.hpp"
-#include "box.hpp"
 
 namespace mos {
 

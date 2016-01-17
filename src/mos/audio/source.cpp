@@ -5,7 +5,7 @@
  * Created on July 28, 2014, 3:47 PM
  */
 
-#include "audio/source.hpp"
+#include <mos/audio/source.hpp>
 
 namespace mos {
 

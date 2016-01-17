@@ -1,13 +1,17 @@
-#include "experimental/navmesh.hpp"
+#include <mos/experimental/navmesh.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/normal.hpp>
 
 namespace mos {
 
-Navmesh::Navmesh(const Mesh & mesh) : Navmesh(mesh.vertices_begin(),
+Navmesh::Navmesh() {
+}
+
+Navmesh::Navmesh(const Mesh & mesh, const glm::mat4 & transform) : Navmesh(mesh.vertices_begin(),
                                               mesh.vertices_end(),
                                               mesh.elements_begin(),
-                                              mesh.elements_end()) {
+                                              mesh.elements_end(),
+                                              transform) {
 
 }
 
@@ -23,7 +27,6 @@ std::experimental::optional<Intersection> Navmesh::intersects(const glm::vec3 & 
 }
 
 Navmesh::~Navmesh() {
-
 }
 
 Face::Face(const glm::vec3 & v0,

@@ -9,9 +9,9 @@
 #include <glm/gtx/io.hpp>
 #include <iostream>
 
-#include "audio/player.hpp"
-#include "audio/source.hpp"
-#include "audio/soundsource.hpp"
+#include <mos/audio/player.hpp>
+#include <mos/audio/source.hpp>
+#include <mos/audio/soundsource.hpp>
 
 /* Effect object functions */
 static LPALGENEFFECTS alGenEffects;

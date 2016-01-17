@@ -2,14 +2,15 @@
 #define	MOS_RENDERER_H
 
 #include "GL/glew.h"
-#include "texture2d.hpp"
-#include "model.hpp"
-#include "quad.hpp"
-#include "text.hpp"
-#include "particles.hpp"
-#include "light.hpp"
-#include "render_target.hpp"
-#include "camera.hpp"
+#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/model.hpp>
+#include <mos/graphics/quad.hpp>
+#include <mos/graphics/text.hpp>
+#include <mos/graphics/particles.hpp>
+#include <mos/graphics/light.hpp>
+#include <mos/graphics/render_target.hpp>
+#include <mos/graphics/camera.hpp>
+#include <mos/simulation/box.hpp>
 
 #include <unordered_map>
 #include <array>
@@ -117,7 +118,7 @@ public:
                 const Camera & camera,
                 const Light & light = Light());
 
-    template<class It>
+    template<class T>
     /**
      * @brief Update render state for multiple models.
      * @param begin Iterator to fist model.
@@ -125,8 +126,8 @@ public:
      * @param camera Camera to render from.
      * @param light Dynamic light.
      */
-    void update(It begin,
-                It end,
+    void update(T begin,
+                T end,
                 const Camera & camera,
                 const Light & light = Light()) {
         for (auto it = begin; it != end; ++it) {
@@ -145,10 +146,10 @@ public:
                 const glm::mat4 projection);
 
 
-    void update(Box & box,
+    void update(const Box & box,
                 const glm::mat4 & view,
                 const glm::mat4 & projection);
-    void update(Box & box, Camera & camera);
+    void update(const Box & box, const Camera & camera);
 
     /**
      * @brief Clears the screen and the depth buffer.

@@ -5,7 +5,7 @@
  * Created on October 16, 2014, 5:03 PM
  */
 
-#include "graphics/particles.hpp"
+#include <mos/graphics/particles.hpp>
 
 namespace mos {
 

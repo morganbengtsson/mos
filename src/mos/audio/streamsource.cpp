@@ -1,4 +1,4 @@
-#include "audio/streamsource.hpp"
+#include <mos/audio/streamsource.hpp>
 
 namespace mos {
 

@@ -5,7 +5,7 @@
  * Created on September 30, 2014, 9:35 PM
  */
 
-#include "graphics/material.hpp"
+#include <mos/graphics/material.hpp>
 
 namespace mos {
 

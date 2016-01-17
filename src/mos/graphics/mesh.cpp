@@ -5,8 +5,8 @@
  * Created on February 25, 2014, 6:40 PM
  */
 
-#include "graphics/mesh.hpp"
-#include "util.hpp"
+#include <mos/graphics/mesh.hpp>
+#include <mos/util.hpp>
 
 namespace mos {
     

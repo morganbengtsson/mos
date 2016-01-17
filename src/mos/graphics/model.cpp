@@ -5,13 +5,13 @@
  * Created on March 5, 2014, 10:29 PM
  */
 
-#include <graphics/model.hpp>
+#include <mos/graphics/model.hpp>
 
 namespace mos {
 
-Model::Model(){
-
+Model::Model() {
 }
+
 Model::Model(const std::string & name,
              const std::shared_ptr<Mesh> & mesh,
              const std::shared_ptr<Texture2D> & texture,

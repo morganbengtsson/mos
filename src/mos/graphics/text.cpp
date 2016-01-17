@@ -5,7 +5,9 @@
  * Created on August 28, 2013, 7:49 PM
  */
 
-#include "graphics/text.hpp"
+#include <mos/graphics/text.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
 

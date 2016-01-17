@@ -1,6 +1,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
-#include "graphics/animation.hpp"
+#include <mos/graphics/animation.hpp>
 
 namespace mos {
 

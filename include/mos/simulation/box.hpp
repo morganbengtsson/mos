@@ -9,8 +9,8 @@
 #include <algorithm>
 #include <tuple>
 #include <iostream>
-#include "vertex.hpp"
 #include <optional.hpp>
+#include <mos/graphics/vertex.hpp>
 
 namespace mos
 {
@@ -91,8 +91,7 @@ public:
         std::vector<glm::vec3> positions;
         std::transform(begin, end, std::back_inserter(positions),
                        [&](const Vertex & vertex) {
-            //return vertex.position + position;
-            return (glm::vec3)(transform * glm::vec4(vertex.position, 1.0f));
+            return glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
         });
 
         if (positions.begin() != positions.end()) {

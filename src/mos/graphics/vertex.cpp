@@ -1,4 +1,4 @@
-#include "graphics/vertex.hpp"
+#include <mos/graphics/vertex.hpp>
 
 namespace mos{
 

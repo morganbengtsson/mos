@@ -5,7 +5,7 @@
  * Created on February 25, 2014, 6:38 PM
  */
 
-#include "assets.hpp"
+#include <mos/assets.hpp>
 
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>

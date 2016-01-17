@@ -6,9 +6,10 @@
 #include <glm/glm.hpp>
 #include <algorithm>
 #include <optional.hpp>
-#include "intersection.hpp"
-#include "../graphics/mesh.hpp"
-#include "../graphics/box.hpp"
+#include <iostream>
+#include <glm/gtx/io.hpp>
+#include <mos/experimental/intersection.hpp>
+#include <mos/graphics/mesh.hpp>
 
 namespace mos {
 
@@ -29,19 +30,24 @@ private:
 class Navmesh
 {
 public:
-    Navmesh(const Mesh & mesh);
+    Navmesh();
+    Navmesh(const Mesh & mesh, const glm::mat4 & transform);
+
     template<class Tv, class Te>
     Navmesh(Tv vertices_begin,
             Tv vertices_end,
             Te elements_begin,
-            Te elements_end) :
+            Te elements_end,
+            const glm::mat4 & transform) :
         elements_(elements_begin, elements_end) {
-        for (auto it = vertices_begin; it != vertices_end; it++){
-            vertices_.push_back(it->position);
-        }
+
+        std::transform(vertices_begin, vertices_end, std::back_inserter(positions_),
+                       [&](const Vertex & vertex) {
+            return glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
+        });
 
         if (elements_.empty()) {
-            for (auto it = vertices_.begin(); it != vertices_.end();) {
+            for (auto it = positions_.begin(); it != positions_.end();) {
                 auto & v0 = *it;
                 it++;
                 auto & v1 = *it;
@@ -53,11 +59,11 @@ public:
 
         } else {
             for (auto it = elements_.begin(); it != elements_.end();) {
-                auto & v0 = vertices_[*it];
+                auto & v0 = positions_[*it];
                 it++;
-                auto & v1 = vertices_[*it];
+                auto & v1 = positions_[*it];
                 it++;
-                auto & v2 = vertices_[*it];
+                auto & v2 = positions_[*it];
                 it++;
                 faces_.push_back(Face(v0, v1, v2));
             }
@@ -69,7 +75,7 @@ public:
     ~Navmesh();
 private:
     std::vector<Face> faces_;
-    std::vector<glm::vec3> vertices_;
+    std::vector<glm::vec3> positions_;
     std::vector<int> elements_;
 
 };

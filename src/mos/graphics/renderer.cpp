@@ -21,12 +21,12 @@
 #include <map>
 #include <memory>
 
-#include "graphics/renderer.hpp"
-#include "graphics/vertex.hpp"
-#include "graphics/mesh.hpp"
-#include "graphics/texture2d.hpp"
-#include "graphics/model.hpp"
-#include "util.hpp"
+#include <mos/graphics/renderer.hpp>
+#include <mos/graphics/vertex.hpp>
+#include <mos/graphics/mesh.hpp>
+#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/model.hpp>
+#include <mos/util.hpp>
 
 namespace mos {
 
@@ -568,7 +568,7 @@ void Renderer::update(Particles & particles, const glm::mat4 view, const glm::ma
     glDrawArrays(GL_POINTS, 0, particles.size());
 }
 
-void Renderer::update(Box & box,
+void Renderer::update(const Box & box,
                       const glm::mat4 & view,
                       const glm::mat4 & projection) {
     auto & uniforms = box_programs_.at("box");
@@ -595,7 +595,7 @@ void Renderer::update(Box & box,
 
 }
 
-void Renderer::update(Box & box, Camera & camera) {
+void Renderer::update(const Box & box, const Camera & camera) {
     update(box, camera.view, camera.projection);
 }
 
