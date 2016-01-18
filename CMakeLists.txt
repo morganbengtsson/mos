@@ -60,6 +60,8 @@ add_subdirectory(externals/rapidjson)
 #Rapidxml
 include_directories(externals/rapidxml)
 
+
+
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
@@ -71,6 +73,13 @@ file(GLOB GEOMETRY_SHADERS shaders/*.geom)
 include_directories(include)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
+
+#Include what you use (CMAKE 3.3)
+#find_program(iwyu_path NAMES include-what-you-use iwyu)
+#if(NOT iwyu_path)
+#  message(FATAL_ERROR "Could not find the program include-what-you-use")
+#endif()
+#set_property(TARGET mos PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 
 IF(WIN32)
     target_link_libraries(mos OpenAL32)
@@ -90,4 +99,5 @@ externals/rapidjson/include
 externals/rapidxml
 externals/glm,
 externals/Optional)
+
 
