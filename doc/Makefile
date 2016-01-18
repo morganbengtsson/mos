@@ -170,6 +170,8 @@ doctest:
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
 xml:
+	$(DOXYGEN) config.doxy
+	@echo "Doxygen xml files created in xml."
 	$(SPHINXBUILD) -b xml $(ALLSPHINXOPTS) $(BUILDDIR)/xml
 	@echo
 	@echo "Build finished. The XML files are in $(BUILDDIR)/xml."
