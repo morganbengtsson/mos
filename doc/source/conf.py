@@ -23,7 +23,7 @@ def generate_doxygen_xml(app):
     read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
     if read_the_docs_build:
-        run_doxygen("../../examples/doxygen")
+        run_doxygen("../")
         
 
 
