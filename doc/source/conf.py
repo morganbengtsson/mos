@@ -24,9 +24,10 @@ def generate_doxygen_xml(app):
 
     if read_the_docs_build:
         run_doxygen("../")
-        
 
-
+def setup(app):
+    # Add hook for building doxygen xml when needed
+    app.connect("builder-inited", generate_doxygen_xml)
 
 # -- General configuration ------------------------------------------------
 
