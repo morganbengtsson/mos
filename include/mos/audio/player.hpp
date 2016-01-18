@@ -5,14 +5,14 @@
 #include <memory>
 #include <thread>
 
-#include "AL/al.h"
-#include "AL/alc.h"
-#include "AL/alext.h"
-#include "AL/efx-presets.h"
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
+#include <AL/efx-presets.h>
 
-#include "streamsource.hpp"
-#include "soundsource.hpp"
-#include "listener.hpp"
+#include <mos/audio/streamsource.hpp>
+#include <mos/audio/soundsource.hpp>
+#include <mos/audio/listener.hpp>
 
 namespace mos {
 
