@@ -1,5 +1,5 @@
-#ifndef MOS_AUDIO_H
-#define MOS_AUDIO_H
+#ifndef MOS_PLAYER_H
+#define MOS_PLAYER_H
 
 #include <unordered_map>
 #include <memory>
@@ -21,6 +21,9 @@ namespace mos {
  */
 class Player {
 public:
+  /**
+   * @brief Default audio player constructor.
+   */
   Player();
 
   /**
@@ -30,15 +33,15 @@ public:
   Player(const Player &audio) = delete; // Do not copy
   virtual ~Player();
 
-  template <class It>
+  template <class T>
   /**
-   * A generalized load method.
+   * A generalized load method. For sound and stream sources.
    *
    * @brief load
    * @param begin
    * @param end
    */
-  void load(It begin, It end) {
+  void load(T begin, T end) {
     for (auto it = begin; it != end; it++) {
       load(*it);
     }
@@ -55,7 +58,7 @@ public:
    * Plays audio from a StreamSource. Which streams content from a file. This
    * method starts a new thread for each source playing.
    *
-   * @brief play
+   * @brief load
    * @param stream_source
    */
   void load(const StreamSource &stream_source);
@@ -72,14 +75,14 @@ public:
    */
   void unload(const StreamSource &stream_source);
 
-  template <class It>
+  template <class T>
   /**
    * @brief A generalized update method
    * @param begin Begin iterator.
    * @param end End iterator.
    * @param dt Time step.
    */
-  void update(It begin, It end, const float dt) {
+  void update(T begin, T end, const float dt) {
     for (auto it = begin; it != end; it++) {
       update(*it, dt);
     }
@@ -109,7 +112,7 @@ public:
    * @brief Get listener data.
    * @return listener
    */
-  Listener listener();
+  Listener listener() const;
 
   /**
    * @brief Set listener data
@@ -147,4 +150,4 @@ private:
 };
 }
 
-#endif /* MOS_AUDIO_H */
+#endif /* MOS_PLAYER_H */

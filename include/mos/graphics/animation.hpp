@@ -1,8 +1,3 @@
-/**
- * @file assets.hpp
- * @author: Morgan Bengtsson <bengtsson.morgan@gmail.com>
- */
-
 #ifndef MOS_ANIMATION_HPP
 #define MOS_ANIMATION_HPP
 
@@ -10,7 +5,7 @@
 #include <memory>
 #include <utility>
 #include <initializer_list>
-#include "mesh.hpp"
+#include <mos/graphics/mesh.hpp>
 
 namespace mos {
 
@@ -45,8 +40,8 @@ public:
   void update(const float dt);
 
   /**
-   * @brief frame
-   * @return
+   * @brief Current frame
+   * @return frame
    */
   unsigned int frame() const;
 
@@ -56,12 +51,12 @@ public:
   void reset();
 
   /**
-   * @brief frames_per_second
+   * @brief Set frame rate.
    */
   void frame_rate(const unsigned int frame_rate);
 
   /**
-   * @brief frames_per_second
+   * @brief Frame rate in frames per second.
    * @return
    */
   unsigned int frame_rate() const;

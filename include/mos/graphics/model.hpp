@@ -3,9 +3,9 @@
 
 #include <memory>
 #include <optional.hpp>
-#include "mesh.hpp"
-#include "texture2d.hpp"
-#include "material.hpp"
+#include <mos/graphics/mesh.hpp>
+#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/material.hpp>
 
 namespace mos {
 
@@ -128,12 +128,12 @@ public:
 
   /**
   * @brief Get the color, (to be deprecated).
-          */
+  */
   glm::vec4 color() const;
 
   /**
   * @brief How to draw the model.
-          */
+  */
   Draw draw;
 
   /**
@@ -146,9 +146,28 @@ public:
    */
   bool receives_light;
 
+  /**
+   * @brief begin iterator for children models.
+   * @return
+   */
   Models::const_iterator begin() const;
+
+  /**
+   * @brief end iterator for children.
+   * @return
+   */
   Models::const_iterator end() const;
+
+  /**
+   * @brief begin iterator for children.
+   * @return
+   */
   Models::iterator begin();
+
+  /**
+   * @brief end iterator for children.
+   * @return
+   */
   Models::iterator end();
 
   /**

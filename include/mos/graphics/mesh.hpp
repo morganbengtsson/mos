@@ -25,7 +25,7 @@ public:
    */
   using Elements = std::vector<int>;
 
-  template <class VerticesIt, class ElementsIt>
+  template <class Tv, class Te>
   /**
    * @brief Mesh constructor.
    * @param vertices_begin Iterator to first vertex.
@@ -36,8 +36,8 @@ public:
    * Mesh constructor that takes Vertices and elements (vertex order for
    *rendering).
    */
-  Mesh(const VerticesIt vertices_begin, const VerticesIt vertices_end,
-       ElementsIt elements_begin, ElementsIt elements_end)
+  Mesh(const Tv vertices_begin, const Tv vertices_end,
+       Te elements_begin, Te elements_end)
       : valid_(false), vertices_(vertices_begin, vertices_end),
         elements_(elements_begin, elements_end) {
     id_ = current_id++;

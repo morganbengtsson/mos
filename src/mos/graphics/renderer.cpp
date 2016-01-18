@@ -30,7 +30,7 @@
 
 namespace mos {
 
-Renderer::Renderer() : lightmaps_(true), boxes_(false) {
+Renderer::Renderer() : lightmaps_(true) {
   GLenum err = glewInit();
   if (GLEW_OK != err) {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
@@ -368,13 +368,26 @@ void Renderer::clear(const glm::vec3 color) {
   glClearColor(color.r, color.g, color.b, 1.0f);
 }
 
+void Renderer::clear_buffers() {
+  for (auto &texture : textures_) {
+      glDeleteTextures(1, &texture.second);
+    }
+  textures_.clear();
+
+  for (auto &ab : array_buffers_) {
+      glDeleteBuffers(1, &ab.second);
+    }
+  array_buffers_.clear();
+
+  for (auto &eab : element_array_buffers_) {
+      glDeleteBuffers(1, &eab.second);
+    }
+  element_array_buffers_.clear();
+}
+
 void Renderer::lightmaps(const bool lightmaps) { lightmaps_ = lightmaps; }
 
 bool Renderer::lightmaps() const { return lightmaps_; }
-
-void Renderer::boxes(const bool bounding_boxes) { boxes_ = bounding_boxes; }
-
-bool Renderer::boxes() const { return boxes_; }
 
 unsigned int Renderer::create_shader(const std::string source,
                                      const unsigned int type) {

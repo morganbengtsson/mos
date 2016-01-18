@@ -6,7 +6,7 @@
 namespace mos {
 
 /**
- * \brief The Material class
+ * @brief The Material class
  *
  * Aspects of a material supported by the renderer. Different from
  * texture.

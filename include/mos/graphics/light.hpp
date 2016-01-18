@@ -8,8 +8,8 @@ namespace mos {
 /**
 * @brief The Light class
 *
-* A class describing different aspects of a light source. Used together with the
-*renderer.
+* A class describing different aspects of an omnidirectional light source. Used together with the
+* renderer.
 */
 class Light {
 public:

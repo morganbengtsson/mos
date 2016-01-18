@@ -22,7 +22,7 @@ public:
    * @brief Used to create next unique id.
    */
   static unsigned int current_id;
-  template <class It>
+  template <class T>
   /**
    * @brief Texture2D
    * @param begin
@@ -34,7 +34,7 @@ public:
    * Constructor for a texture, that takes char valus from a container as input.
    *Along with width and height.
    */
-  Texture2D(It begin, It end, unsigned int width, unsigned int height,
+  Texture2D(T begin, T end, unsigned int width, unsigned int height,
             const bool mipmaps = true)
       : mipmaps(mipmaps), width_(width), height_(height) {
     id_ = current_id++;

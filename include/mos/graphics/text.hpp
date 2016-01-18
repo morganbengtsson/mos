@@ -1,10 +1,10 @@
 #ifndef MOS_TEXT_H
 #define MOS_TEXT_H
 
-#include "model.hpp"
-#include "mesh.hpp"
-#include "character.hpp"
-#include "font.hpp"
+#include <mos/graphics/model.hpp>
+#include <mos/graphics/mesh.hpp>
+#include <mos/graphics/character.hpp>
+#include <mos/graphics/font.hpp>
 
 #include <map>
 #include <memory>
@@ -57,7 +57,16 @@ public:
    */
   float height() const;
 
+  /**
+   * @brief position
+   * @param position
+   */
   void position(const glm::vec2 &position);
+
+  /**
+   * @brief position
+   * @return
+   */
   glm::vec2 position();
 
   /**

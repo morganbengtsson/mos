@@ -41,13 +41,13 @@ public:
    */
   void load(const Model &model);
 
-  template <class It>
+  template <class T>
   /**
    * @brief Load multiple models.
    * @param begin Iterator to first model.
    * @param end Iterator to last model.
    */
-  void load(It begin, It end) {
+  void load(T begin, T end) {
     for (auto it = begin; it != end; it++) {
       load(*it);
     }
@@ -59,13 +59,13 @@ public:
    */
   void unload(const Model &model);
 
-  template <class It>
+  template <class T>
   /**
    * @brief unload multiple models.
    * @param begin Iterator.
    * @param end Iterator.
    */
-  void unload(It begin, It end) {
+  void unload(T begin, T end) {
     for (auto it = begin; it != end; it++) {
       unload(*it);
     }
@@ -86,7 +86,7 @@ public:
   void update(const Model &model, const glm::mat4 &view,
               const glm::mat4 &projection, const Light &light = Light());
 
-  template <class It>
+  template <class T>
   /**
    * @brief Update render state with multiple models
    * @param begin Iterator to fist model.
@@ -96,7 +96,7 @@ public:
    * @param projection Projection matrix.
    * @param light Dynamic light.
    */
-  void update(It begin, It end, const glm::mat4 parent_transform,
+  void update(T begin, T end, const glm::mat4 parent_transform,
               const glm::mat4 view, const glm::mat4 projection,
               const Light &light = Light()) {
     for (auto it = begin; it != end; ++it) {
@@ -150,37 +150,26 @@ public:
   /**
    * @brief Clear all internal buffers.
    */
-  void clear_buffers() {
-    for (auto &texture : textures_) {
-      glDeleteTextures(1, &texture.second);
-    }
-    textures_.clear();
-
-    for (auto &ab : array_buffers_) {
-      glDeleteBuffers(1, &ab.second);
-    }
-    array_buffers_.clear();
-
-    for (auto &eab : element_array_buffers_) {
-      glDeleteBuffers(1, &eab.second);
-    }
-    element_array_buffers_.clear();
-  }
+  void clear_buffers();
   // TODO: Remove all these from public api!
   /**
    * @brief readFBO
+   * @todo remove
    */
   GLuint readFBO;
   /**
    * @brief drawFBO
+   * @todo remove
    */
   GLuint drawFBO;
   /**
    * @brief readFBO2
+   * @todo remove
    */
   GLuint readFBO2;
   /**
    * @brief drawFBO2
+   * @todo remove
    */
   GLuint drawFBO2;
 
@@ -269,17 +258,6 @@ public:
    */
   bool lightmaps() const;
 
-  /**
-   * @brief Set bounding box rendering.
-   */
-  void boxes(const bool boxes);
-
-  /**
-   * @brief Check If bounding_boxes are shown.
-   * @return True if bounding boxes are rendered.
-   */
-  bool boxes() const;
-
 private:
   /**
    * @brief The ParticleProgramData struct, uniforms for the particle shader
@@ -334,7 +312,6 @@ private:
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
   bool lightmaps_;
-  bool boxes_;
 
   /**
    * @brief Updates render state of model.

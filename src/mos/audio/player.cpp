@@ -342,7 +342,7 @@ void Player::update(StreamSource &sound_source, const float dt) {
   }*/
 }
 
-Listener Player::listener() {
+Listener Player::listener() const{
   Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);

@@ -1,8 +1,3 @@
-/**
- * @file assets.hpp
- * @author: Morgan Bengtsson <bengtsson.morgan@gmail.com>
- */
-
 #ifndef MOS_ASSETS_H
 #define MOS_ASSETS_H
 
@@ -11,15 +6,15 @@
 #include <memory>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
-#include "audio/sound.hpp"
-#include "audio/stream.hpp"
-#include "graphics/character.hpp"
-#include "graphics/mesh.hpp"
-#include "graphics/texture2d.hpp"
-#include "graphics/material.hpp"
-#include "graphics/model.hpp"
-#include "graphics/font.hpp"
-#include "graphics/animation.hpp"
+#include <mos/audio/sound.hpp>
+#include <mos/audio/stream.hpp>
+#include <mos/graphics/character.hpp>
+#include <mos/graphics/mesh.hpp>
+#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/material.hpp>
+#include <mos/graphics/model.hpp>
+#include <mos/graphics/font.hpp>
+#include <mos/graphics/animation.hpp>
 
 namespace mos {
 

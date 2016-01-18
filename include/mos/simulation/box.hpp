@@ -2,14 +2,14 @@
 #define MOS_BOX_HPP
 
 #include <array>
-#include <glm/glm.hpp>
-#include <glm/gtx/io.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <utility>
 #include <algorithm>
 #include <tuple>
 #include <iostream>
 #include <optional.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/io.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <mos/graphics/vertex.hpp>
 
 namespace mos {

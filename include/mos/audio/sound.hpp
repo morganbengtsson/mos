@@ -14,8 +14,8 @@ public:
    * @brief Container for 16bit samples (short).
    */
   using Samples = std::vector<short>;
-  template <class It>
 
+  template <class T>
   /**
    * @brief Sound constructor.
    * @param begin iterator
@@ -24,7 +24,7 @@ public:
    *
    * Constructor that takes iterators from a container of shorts.
    */
-  Sound(It begin, It end, const unsigned int channels = 1u,
+  Sound(T begin, T end, const unsigned int channels = 1u,
         const unsigned int sample_rate = 44100u)
       : channels_(channels), sample_rate_(sample_rate), valid_(true),
         samples_(begin, end) {
@@ -47,13 +47,13 @@ public:
    * @brief begin iterator for samples
    * @return
    */
-  Samples::const_iterator begin() const { return samples_.begin(); }
+  Samples::const_iterator begin() const;
 
   /**
    * @brief end iterator for samples
    * @return
    */
-  Samples::const_iterator end() const { return samples_.end(); }
+  Samples::const_iterator end() const;
 
   /**
    * @brief Raw data
