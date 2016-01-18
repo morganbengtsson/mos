@@ -50,9 +50,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)/*
 
-html:
-	$(DOXYGEN) config.doxy
-	@echo "Doxygen xml files created in xml."
+html:	
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -169,9 +167,7 @@ doctest:
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
-xml:
-	$(DOXYGEN) config.doxy
-	@echo "Doxygen xml files created in xml."
+xml:	
 	$(SPHINXBUILD) -b xml $(ALLSPHINXOPTS) $(BUILDDIR)/xml
 	@echo
 	@echo "Build finished. The XML files are in $(BUILDDIR)/xml."
