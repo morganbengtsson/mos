@@ -55,6 +55,9 @@ Model Assets::model(rapidjson::Value &value) {
       !value.HasMember("material") || value["material"].IsNull()
           ? ""
           : value["material"].GetString();
+  bool recieves_light = !value.HasMember("receives_light") || value["receives_light"].IsNull()
+      ? true
+      : value["receives_light"].GetBool();
 
   glm::mat4 transform;
 
@@ -67,16 +70,17 @@ Model Assets::model(rapidjson::Value &value) {
     transform = glm::make_mat4x4(nums.data());
   }
 
-  auto m = mos::Model(
+  auto created_model = mos::Model(
       name, mesh_cached(mesh), texture_cached(texture_name),
       texture_cached(texture2_name), transform, mos::Model::Draw::TRIANGLES,
-      material_cached(material_name), texture_cached(lightmap_name), nullptr);
+      material_cached(material_name), texture_cached(lightmap_name), nullptr,
+      recieves_light);
 
   for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
-    m.models.push_back(model(*it));
+    created_model.models.push_back(model(*it));
   }
 
-  return m;
+  return created_model;
 }
 
 rapidjson::Document Assets::document(const std::string &file_name) {
