@@ -21,6 +21,23 @@ Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   return std::experimental::optional<Intersection>();
 }
 
+Navmesh::OptionalIntersection
+Navmesh::closest_intersection(const glm::vec3 &origin,
+                              const glm::vec3 direction) {
+  OptionalIntersection closest;
+  for (auto &face : faces) {
+    auto intersection = face.intersects(origin, direction);
+    if (intersection) {
+      auto distance = glm::distance(origin, intersection->position);
+      if (!closest ||
+          distance < glm::distance(origin, closest->position)) {
+        closest = intersection;
+      }
+    }
+  }
+  return closest;
+}
+
 Navmesh::~Navmesh() {}
 
 Face::Face(const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2)

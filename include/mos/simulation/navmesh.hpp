@@ -27,6 +27,7 @@ private:
 
 class Navmesh {
 public:
+  using OptionalIntersection = std::experimental::optional<Intersection>;
   Navmesh();
   Navmesh(const Mesh &mesh, const glm::mat4 &transform);
 
@@ -66,6 +67,9 @@ public:
   }
   std::experimental::optional<Intersection>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
+
+  std::experimental::optional<Intersection>
+  closest_intersection(const glm::vec3 &origin, const glm::vec3 direction);
 
   ~Navmesh();
 
