@@ -25,7 +25,7 @@ Navmesh::OptionalIntersection
 Navmesh::closest_intersection(const glm::vec3 &origin,
                               const glm::vec3 direction) {
   OptionalIntersection closest;
-  for (auto &face : faces) {
+  for (auto &face : faces_) {
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
