@@ -98,25 +98,16 @@ public:
   std::shared_ptr<Material> material;
 
   /**
-           * Get the transform matrix.
-           *
+   * The transform of the model
+   *
    * @brief transform
-   * @return transform mat4
    */
-  glm::mat4 transform() const;
+  glm::mat4 transform;
 
   /**
-           * Set the transform matrix.
-           *
-   * @brief transform
-   * @param transform
+   * Get the position
+   * @brief position
    */
-  void transform(const glm::mat4 &transform);
-
-  /**
-          * Get the position
-          * @brief position
-          */
   glm::vec3 position() const;
 
   /**
@@ -177,7 +168,7 @@ public:
 
 private:
   std::string name_;
-  glm::mat4 transform_;
+
 };
 }
 

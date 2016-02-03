@@ -24,16 +24,12 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
       draw(draw),
       mesh(mesh), texture(texture), texture2(texture2), material(material),
       lightmap(lightmap), normalmap(normalmap), name_(name),
-      transform_(transform), receives_light(affected_by_light), shader(shader) {
+      transform(transform), receives_light(affected_by_light), shader(shader) {
 }
 
 Model::~Model() {}
 
 std::string Model::name() const { return name_; }
-
-glm::mat4 Model::transform() const { return transform_; }
-
-void Model::transform(const glm::mat4 &transform) { transform_ = transform; }
 
 Model::Models::const_iterator Model::begin() const { return models.begin(); }
 

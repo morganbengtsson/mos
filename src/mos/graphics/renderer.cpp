@@ -341,10 +341,17 @@ void Renderer::unload(const Model &model) {
 }
 
 void Renderer::load(const std::shared_ptr<Texture2D> &texture) {
+#ifdef STREAM_TEXTURES
   if (textures_.find(texture->id()) == textures_.end()) {
     GLuint gl_id = create_texture_and_pbo(texture);
     textures_.insert({texture->id(), gl_id});
   }
+#else
+  if (textures_.find(texture->id()) == textures_.end()) {
+    GLuint gl_id = create_texture(texture);
+    textures_.insert({texture->id(), gl_id});
+  }
+#endif
 }
 
 void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
