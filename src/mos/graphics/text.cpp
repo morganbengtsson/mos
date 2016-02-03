@@ -74,15 +74,13 @@ float Text::width() const {
 float Text::height() const { return font_.height(); }
 
 void Text::position(const glm::vec2 &position) {
-  model_.transform(
-      glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f)));
+  model_.transform = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
 }
 
 glm::vec2 Text::position() { return glm::vec2(model_.position()); }
 
 void Text::scale(const float scale) {
-  model_.transform(
-      glm::scale(model_.transform(), glm::vec3(scale, scale, scale)));
+  model_.transform = glm::scale(model_.transform, glm::vec3(scale, scale, scale));
 }
 
 void Text::material(const std::shared_ptr<Material> &material) {

@@ -619,7 +619,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const Light &light) {
   load(model);
 
-  auto transform = model.transform();
+  auto transform = model.transform;
   glm::mat4 mv = view * parent_transform * transform;
   glm::mat4 mvp = projection * view * parent_transform * transform;
 
@@ -717,7 +717,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform(), view, projection,
+    update(child, parent_transform * model.transform, view, projection,
            light);
   }
 }

@@ -1,10 +1,3 @@
-/*
- * File:   Model.cpp
- * Author: morgan
- *
- * Created on March 5, 2014, 10:29 PM
- */
-
 #include <mos/graphics/model.hpp>
 
 namespace mos {
@@ -20,12 +13,10 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const std::shared_ptr<Texture2D> &normalmap,
              const float affected_by_light, const Shader shader)
     :
-
       draw(draw),
       mesh(mesh), texture(texture), texture2(texture2), material(material),
       lightmap(lightmap), normalmap(normalmap), name_(name),
-      transform(transform), receives_light(affected_by_light), shader(shader) {
-}
+      transform(transform), receives_light(affected_by_light), shader(shader) {}
 
 Model::~Model() {}
 
@@ -44,15 +35,12 @@ glm::vec4 Model::color() const {
 }
 
 glm::vec3 Model::position() const {
-  auto t = transform();
-  return glm::vec3(t[3][0], t[3][1], t[3][2]);
+  return glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
 }
 
 void Model::position(const glm::vec3 &position) {
-  auto t = transform();
-  t[3][0] = position[0];
-  t[3][1] = position[1];
-  t[3][2] = position[2];
-  transform(t);
+  transform[3][0] = position[0];
+  transform[3][1] = position[1];
+  transform[3][2] = position[2];
 }
 }
