@@ -177,7 +177,7 @@ public:
   std::shared_ptr<Stream> stream(const std::string file_name) const;
 
   /**
-   * @brief font
+   * @brief Lod font file in ngl format.
    * @param ngl_file_name
 
    * @return
@@ -193,18 +193,14 @@ public:
   std::string text(const std::string file_name) const;
 
   /**
-   * @brief Remove all unused assets
+   * @brief Remove all unused assets.
    */
   void clear_unused();
-
-  // TODO: Deprecate
-  glm::vec3 position(const std::string &file_name);
-  glm::mat4 transform(const std::string &file_name);
 
 private:
   rapidjson::Document document(const std::string &file_name);
   Model model(rapidjson::Value &value);
-  std::string directory_;
+  const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
   SoundMap sounds_;
