@@ -85,120 +85,112 @@ public:
 
   /**
    * @brief Loads a full Model from a *.model file.
-   * @param file_name
+   * @param path
    * @return Model object including associated meshes/textures/etc.
    */
-  Model model(const std::string &file_name);
+  Model model(const std::string &path);
 
   /**
    * @brief Loads an animation from meshes specified in *.animation file.
-   * @param file_name
+   * @param path
    * @return Animation object
    */
-  Animation animation(const std::string &file_name);
+  Animation animation(const std::string &path);
 
   /**
    * Loads a *.material file into a Material object, and caches it internally.
    *
-   * @param file_name
+   * @param path
    * @return fShared pointer to Material object.
    */
-  std::shared_ptr<Material> material_cached(const std::string file_name);
+  std::shared_ptr<Material> material_cached(const std::string &path);
 
   /**
    *
    * Loads  a *.material file into a Material object. Not cached.
    *
    * @brief material
-   * @param file_name
+   * @param path
    * @return Shared pointer to a Material object.
    */
-  std::shared_ptr<Material> material(const std::string file_name) const;
+  std::shared_ptr<Material> material(const std::string &path) const;
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
    *
-   * @param file_name
+   * @param path
    * @return Shared pointer to Mesh object.
    */
-  std::shared_ptr<Mesh> mesh_cached(const std::string file_name);
+  std::shared_ptr<Mesh> mesh_cached(const std::string &path);
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object. Not cached.
    *
-   * @param file_name
+   * @param path
    * @return Shared pointer to Mesh object
    */
-  std::shared_ptr<Mesh> mesh(const std::string file_name) const;
+  std::shared_ptr<Mesh> mesh(const std::string &path) const;
 
   /**
    * Loads a *.png file into a Texture2D object, and caches it internally.
    *
-   * @param file_name
+   * @param path
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  std::shared_ptr<Texture2D> texture_cached(const std::string file_name,
+  std::shared_ptr<Texture2D> texture_cached(const std::string &path,
                                             const bool mipmaps = true);
 
   /**
    * Loads a *.png file into A Texture2D object. Not cached.
    *
-   * @param file_name
+   * @param path
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  std::shared_ptr<Texture2D> texture(const std::string file_name,
+  std::shared_ptr<Texture2D> texture(const std::string &path,
                                      const bool mipmaps = true) const;
 
   /**
    * Loads a *.ogg file into a Sound object, and caches it internally.
    *
-   * @param file_name
+   * @param path
    * @return Shared pointer to Sound object.
    */
-  std::shared_ptr<Sound> sound_cached(const std::string file_name);
+  std::shared_ptr<Sound> sound_cached(const std::string &path);
 
   /**
    * Loads an *. ogg file into a Sound object. Not cached.
    *
-   * @param file_name
+   * @param path
    * @return Shared pointer to Sound object.
    */
-  std::shared_ptr<Sound> sound(const std::string file_name) const;
+  std::shared_ptr<Sound> sound(const std::string &path) const;
 
   /**
    * Loads an *.ogg file into a Stream object. Not cached, since it is streamed.
    *
    * @brief stream
-   * @param file_name
+   * @param path
    * @return
    */
-  std::shared_ptr<Stream> stream(const std::string file_name) const;
+  std::shared_ptr<Stream> stream(const std::string &path) const;
 
   /**
    * @brief Lod font file in ngl format.
-   * @param ngl_file_name
+   * @param ngl_path
 
    * @return
    */
-  Font font(const std::string &ngl_file_name);
+  Font font(const std::string &ngl_path);
 
-  /**
-   * Load text from file. Not cached.
-   *
-   * @param file_name
-   * @return String.
-   */
-  std::string text(const std::string file_name) const;
-
-  /**
+ /**
    * @brief Remove all unused assets.
    */
   void clear_unused();
 
 private:
-  rapidjson::Document document(const std::string &file_name);
+  rapidjson::Document document(const std::string &path);
   Model model(rapidjson::Value &value);
   const std::string directory_;
   MeshMap meshes_;

@@ -1,10 +1,3 @@
-/*
- * File:   Assets.cpp
- * Author: morgan
- *
- * Created on February 25, 2014, 6:38 PM
- */
-
 #include <mos/assets.hpp>
 
 #include <rapidxml.hpp>
@@ -21,6 +14,7 @@
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <mos/util.hpp>
 
 namespace mos {
 using namespace std;
@@ -83,13 +77,13 @@ Model Assets::model(rapidjson::Value &value) {
   return created_model;
 }
 
-rapidjson::Document Assets::document(const std::string &file_name) {
-  // std::cout << "Loading: " << file_name << std::endl;
-  std::ifstream is(directory_ + file_name);
+rapidjson::Document Assets::document(const std::string &path) {
+  // std::cout << "Loading: " << path << std::endl;
+  std::ifstream is(directory_ + path);
   if (!is.good()) {
-    throw std::runtime_error(directory_ + file_name + " does not exist.");
+    throw std::runtime_error(directory_ + path + " does not exist.");
   }
-  std::ifstream file(directory_ + file_name);
+  std::ifstream file(directory_ + path);
   std::string source((std::istreambuf_iterator<char>(file)),
                      std::istreambuf_iterator<char>());
   rapidjson::Document doc;
@@ -97,36 +91,36 @@ rapidjson::Document Assets::document(const std::string &file_name) {
   return doc;
 }
 
-Model Assets::model(const std::string &file_name) {
-  auto doc = document(file_name);
+Model Assets::model(const std::string &path) {
+  auto doc = document(path);
   return model(doc);
 }
 
-Animation Assets::animation(const string &file_name) {
-  auto doc = document(file_name);
+Animation Assets::animation(const string &path) {
+  auto doc = document(path);
   auto frame_rate = doc["frame_rate"].GetInt();
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
 
   for (auto it = doc["keyframes"].Begin(); it != doc["keyframes"].End(); it++) {
     auto key = (*it)["key"].GetInt();
-    auto mesh_file_name = (*it)["mesh"].GetString();
-    keyframes.insert({key, mesh_cached(mesh_file_name)});
+    auto mesh_path = (*it)["mesh"].GetString();
+    keyframes.insert({key, mesh_cached(mesh_path)});
   }
   Animation animation(keyframes, frame_rate);
   return animation;
 }
 
-std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
+std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
   // TODO: allow Null mesh? As of now it becomes empty.
   vector<mos::Vertex> vertices;
   vector<int> indices;
 
-  if (file_name.substr(file_name.find_last_of(".") + 1) == "mesh") {
+  if (path.substr(path.find_last_of(".") + 1) == "mesh") {
 
-    // std::cout << "Loading: " << file_name << std::endl;
-    std::ifstream is(directory_ + file_name, ios::binary);
+    // std::cout << "Loading: " << path << std::endl;
+    std::ifstream is(directory_ + path, ios::binary);
     if (!is.good()) {
-      throw std::runtime_error(directory_ + file_name + " does not exist.");
+      throw std::runtime_error(directory_ + path + " does not exist.");
     }
     int num_vertices;
     int num_indices;
@@ -144,10 +138,10 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
       is.read((char *)&indices[0], indices.size() * sizeof(int));
     }
 
-  } else if (file_name.substr(file_name.find_last_of(".") + 1) == "obj") {
+  } else if (path.substr(path.find_last_of(".") + 1) == "obj") {
 
-    // std::cout << "Loading: " << directory_ << file_name;
-    obj::Model obj_model = obj::loadModelFromFile(directory_ + file_name);
+    // std::cout << "Loading: " << directory_ << path;
+    obj::Model obj_model = obj::loadModelFromFile(directory_ + path);
 
     int j = 0;
     for (int i = 0; i < obj_model.vertex.size(); i += 3) {
@@ -171,27 +165,27 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string file_name) const {
                                 indices.begin(), indices.end());
 }
 
-std::shared_ptr<Mesh> Assets::mesh_cached(const std::string file_name) {
-  if (meshes_.find(file_name) == meshes_.end()) {
-    meshes_.insert(MeshPair(file_name, mesh(file_name)));
+std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
+  if (meshes_.find(path) == meshes_.end()) {
+    meshes_.insert(MeshPair(path, mesh(path)));
   }
-  return meshes_.at(file_name);
+  return meshes_.at(path);
 }
 
-std::shared_ptr<Texture2D> Assets::texture(const std::string file_name,
+std::shared_ptr<Texture2D> Assets::texture(const std::string &path,
                                            const bool mipmaps) const {
   using namespace mos;
 
   vector<unsigned char> texels_decoded;
   unsigned width, height;
 
-  if (file_name.empty()) {
+  if (path.empty()) {
     return std::shared_ptr<Texture2D>(nullptr);
   }
 
-  // std::cout << "Loading: " << directory_ + file_name << std::endl;
+  // std::cout << "Loading: " << directory_ + path << std::endl;
   auto error =
-      lodepng::decode(texels_decoded, width, height, directory_ + file_name);
+      lodepng::decode(texels_decoded, width, height, directory_ + path);
   if (error) {
     std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
               << std::endl;
@@ -200,25 +194,25 @@ std::shared_ptr<Texture2D> Assets::texture(const std::string file_name,
       texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps);
 }
 
-std::shared_ptr<Texture2D> Assets::texture_cached(const std::string file_name,
+std::shared_ptr<Texture2D> Assets::texture_cached(const std::string &path,
                                                   const bool mipmaps) {
-  if (!file_name.empty()) {
-    if (textures_.find(file_name) == textures_.end()) {
-      textures_.insert(TexturePair(file_name, texture(file_name, mipmaps)));
+  if (!path.empty()) {
+    if (textures_.find(path) == textures_.end()) {
+      textures_.insert(TexturePair(path, texture(path, mipmaps)));
     }
-    return textures_.at(file_name);
+    return textures_.at(path);
   } else {
     return std::shared_ptr<Texture2D>(nullptr);
   }
 }
 
-std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
+std::shared_ptr<Sound> Assets::sound(const std::string &path) const {
   int channels, length, sample_rate;
   short *decoded;
 
-  std::ifstream file(directory_ + file_name, std::ios::binary);
+  std::ifstream file(directory_ + path, std::ios::binary);
   if (!file.good()) {
-    throw std::runtime_error(directory_ + file_name + " does not exist.");
+    throw std::runtime_error(directory_ + path + " does not exist.");
   }
   std::vector<unsigned char> data;
 
@@ -232,14 +226,14 @@ std::shared_ptr<Sound> Assets::sound(const std::string file_name) const {
   return std::make_shared<Sound>(decoded, decoded + length);
 }
 
-std::shared_ptr<Stream> Assets::stream(const string file_name) const {
-  return std::make_shared<mos::Stream>(directory_ + file_name);
+std::shared_ptr<Stream> Assets::stream(const string &path) const {
+  return std::make_shared<mos::Stream>(directory_ + path);
 }
 
-Font Assets::font(const string &ngl_file_name) {
+Font Assets::font(const string &ngl_path) {
   std::map<char, Character> characters;
   rapidxml::xml_document<> doc;
-  auto xml_string = text(ngl_file_name);
+  auto xml_string = text(ngl_path);
   doc.parse<0>(&xml_string[0]);
 
   auto *chars_node = doc.first_node("font")->first_node("chars");
@@ -253,7 +247,7 @@ Font Assets::font(const string &ngl_file_name) {
   float descender = atof(metrics_node->first_attribute("descender")->value());
 
   auto *texture_node = doc.first_node("font")->first_node("texture");
-  std::string texture_file_name =
+  std::string texture_path =
       texture_node->first_attribute("file")->value();
 
   for (auto *char_node = chars_node->first_node("char"); char_node;
@@ -273,25 +267,25 @@ Font Assets::font(const string &ngl_file_name) {
   }
 
   auto char_map = characters;
-  auto texture = texture_cached(texture_file_name);
+  auto texture = texture_cached(texture_path);
   return Font(char_map, texture, height, ascender, descender);
 }
 
-std::shared_ptr<Sound> Assets::sound_cached(const std::string file_name) {
-  if (sounds_.find(file_name) == sounds_.end()) {
+std::shared_ptr<Sound> Assets::sound_cached(const std::string &path) {
+  if (sounds_.find(path) == sounds_.end()) {
 
-    sounds_.insert(SoundPair(file_name, sound(file_name)));
-    return sounds_.at(file_name);
+    sounds_.insert(SoundPair(path, sound(path)));
+    return sounds_.at(path);
   } else {
-    return sounds_.at(file_name);
+    return sounds_.at(path);
   }
 }
 
-std::shared_ptr<Material> Assets::material(const std::string file_name) const {
+std::shared_ptr<Material> Assets::material(const std::string &path) const {
 
-  if (file_name.substr(file_name.find_last_of(".") + 1) == "material") {
-    // std::cout << "Loading: " << directory_ + file_name << std::endl;
-    std::ifstream is(directory_ + file_name, ios::binary);
+  if (path.substr(path.find_last_of(".") + 1) == "material") {
+    // std::cout << "Loading: " << directory_ + path << std::endl;
+    std::ifstream is(directory_ + path, ios::binary);
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
@@ -307,28 +301,20 @@ std::shared_ptr<Material> Assets::material(const std::string file_name) const {
     return std::make_shared<Material>(ambient, diffuse, specular, opacity,
                                       specular_exponent);
   } else {
-    // throw std::runtime_error(file_name.substr(file_name.find_last_of(".")) +
+    // throw std::runtime_error(path.substr(path.find_last_of(".")) +
     // " file format is not supported.");
     return std::shared_ptr<Material>(nullptr);
   }
 }
 
-std::shared_ptr<Material> Assets::material_cached(const std::string file_name) {
-  if (materials_.find(file_name) == materials_.end()) {
+std::shared_ptr<Material> Assets::material_cached(const std::string &path) {
+  if (materials_.find(path) == materials_.end()) {
 
-    materials_.insert(MaterialPair(file_name, material(file_name)));
-    return materials_.at(file_name);
+    materials_.insert(MaterialPair(path, material(path)));
+    return materials_.at(path);
   } else {
-    return materials_.at(file_name);
+    return materials_.at(path);
   }
-}
-
-std::string Assets::text(const std::string file_name) const {
-
-  std::ifstream file(directory_ + file_name);
-  std::string source((std::istreambuf_iterator<char>(file)),
-                     std::istreambuf_iterator<char>());
-  return source;
 }
 
 void Assets::clear_unused() {
