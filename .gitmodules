@@ -16,6 +16,3 @@
 [submodule "externals/rapidjson"]
 	path = externals/rapidjson
 	url = https://github.com/miloyip/rapidjson.git
-[submodule "glfw"]
-	path = glfw
-	url = https://github.com/glfw/glfw.git
