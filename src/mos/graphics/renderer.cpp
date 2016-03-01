@@ -61,6 +61,9 @@ Renderer::Renderer() : lightmaps_(true) {
                      text("assets/shaders/effect_330.vert"),
                      text("assets/shaders/effect_330.frag"));
 
+  add_vertex_program(Model::Shader::BLUR, text("assets/shaders/blur_330.vert"),
+                     text("assets/shaders/blur_330.frag"));
+
   std::string particles_vert_source = text("assets/shaders/particles_330.vert");
   std::string particles_frag_source = text("assets/shaders/particles_330.frag");
   add_particle_program("particles", particles_vert_source,
@@ -202,7 +205,8 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "has_lightmap"),
           glGetUniformLocation(program, "has_normalmap"),
           glGetUniformLocation(program, "has_material"),
-          glGetUniformLocation(program, "receives_light")}));
+          glGetUniformLocation(program, "receives_light"),
+          glGetUniformLocation(program, "resolution")}));
 }
 
 void Renderer::load(const Model &model) {
@@ -365,8 +369,9 @@ void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const Light &light) {
-  update(model, glm::mat4(1.0f), view, projection, light);
+                      const glm::mat4 &projection, const Light &light,
+                      const glm::vec2 &resolution) {
+  update(model, glm::mat4(1.0f), view, projection, light, resolution);
 }
 
 void Renderer::clear(const glm::vec3 color) {
@@ -377,18 +382,18 @@ void Renderer::clear(const glm::vec3 color) {
 
 void Renderer::clear_buffers() {
   for (auto &texture : textures_) {
-      glDeleteTextures(1, &texture.second);
-    }
+    glDeleteTextures(1, &texture.second);
+  }
   textures_.clear();
 
   for (auto &ab : array_buffers_) {
-      glDeleteBuffers(1, &ab.second);
-    }
+    glDeleteBuffers(1, &ab.second);
+  }
   array_buffers_.clear();
 
   for (auto &eab : element_array_buffers_) {
-      glDeleteBuffers(1, &eab.second);
-    }
+    glDeleteBuffers(1, &eab.second);
+  }
   element_array_buffers_.clear();
 }
 
@@ -616,7 +621,7 @@ void Renderer::update(const Box &box, const Camera &camera) {
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
-                      const Light &light) {
+                      const Light &light, const glm::vec2 &resolution) {
   load(model);
 
   auto transform = model.transform;
@@ -699,6 +704,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.has_material, model.material ? true : false);
 
   glUniform1i(uniforms.receives_light, model.receives_light);
+  glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
@@ -717,13 +723,12 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection,
-           light);
+    update(child, parent_transform * model.transform, view, projection, light, resolution);
   }
 }
 
 void Renderer::update(const Model &model, const Camera &camera,
-                      const Light &light) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, light);
+                      const Light &light, const glm::vec2 & resolution) {
+  update(model, glm::mat4(1.0f), camera.view, camera.projection, light, resolution);
 }
 }

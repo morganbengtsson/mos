@@ -83,8 +83,10 @@ public:
    */
   void unload(const std::shared_ptr<Texture2D> &texture);
 
+  // TODO: resolution in rendertarget class or similar.
   void update(const Model &model, const glm::mat4 &view,
-              const glm::mat4 &projection, const Light &light = Light());
+              const glm::mat4 &projection, const Light &light = Light(),
+              const glm::vec2 &resolution = glm::vec2(0.0f));
 
   template <class T>
   /**
@@ -98,9 +100,10 @@ public:
    */
   void update(T begin, T end, const glm::mat4 parent_transform,
               const glm::mat4 view, const glm::mat4 projection,
-              const Light &light = Light()) {
+              const Light &light = Light(),
+              const glm::vec2 &resolution = glm::vec2(0.0f)) {
     for (auto it = begin; it != end; ++it) {
-      update(*it, parent_transform, view, projection, light);
+      update(*it, parent_transform, view, projection, light, resolution);
     }
   }
 
@@ -111,7 +114,7 @@ public:
    * @param light Dynamic light.
    */
   void update(const Model &model, const Camera &camera,
-              const Light &light = Light());
+              const Light &light = Light(), const glm::vec2 & resolution = glm::vec2(0.0f));
 
   template <class T>
   /**
@@ -305,6 +308,7 @@ private:
     GLint has_normalmap;
     GLint has_material;
     GLint receives_light;
+    GLint resolution;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
@@ -324,7 +328,7 @@ private:
    */
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
-              const Light &light = Light());
+              const Light &light = Light(), const glm::vec2 &resolution = glm::vec2(0.0f));
 
   void add_vertex_program(const Model::Shader shader,
                           const std::string vertex_shader_source,
