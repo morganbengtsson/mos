@@ -11,6 +11,7 @@
 #include <mos/graphics/render_target.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/simulation/box.hpp>
+#include <optional.hpp>
 
 #include <unordered_map>
 #include <array>
@@ -23,6 +24,7 @@ namespace mos {
  */
 class Renderer {
 public:
+  using OptTarget = std::optional<Target>;
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -86,7 +88,8 @@ public:
   // TODO: resolution in rendertarget class or similar.
   void update(const Model &model, const glm::mat4 &view,
               const glm::mat4 &projection, const Light &light = Light(),
-              const glm::vec2 &resolution = glm::vec2(0.0f));
+              const glm::vec2 &resolution = glm::vec2(0.0f),
+              const OptTarget render_target);
 
   template <class T>
   /**
@@ -198,7 +201,7 @@ public:
    * @brief render_target
    * @param target
    */
-  void render_target(RenderTarget target) {
+  void render_target(Target target) {
     if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
 
       GLuint frame_buffer_id;

@@ -621,7 +621,8 @@ void Renderer::update(const Box &box, const Camera &camera) {
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
-                      const Light &light, const glm::vec2 &resolution) {
+                      const Light &light, const glm::vec2 &resolution,
+                      const OptTarget & render_target) {
   load(model);
 
   auto transform = model.transform;
