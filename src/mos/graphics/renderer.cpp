@@ -1,10 +1,3 @@
-/*
- * File:   Renderer.cpp
- * Author: morgan
- *
- * Created on February 15, 2014, 2:37 PM
- */
-
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/projection.hpp>
@@ -110,7 +103,45 @@ Renderer::Renderer() : lightmaps_(true) {
 }
 
 Renderer::~Renderer() {
-  // TODO: Delete all buffers, textures and shaders.
+  for (auto & vp : vertex_programs_) {
+    glDeleteProgram(vp.second.program);
+  }
+
+  for (auto & pp: particle_programs_) {
+    glDeleteProgram(pp.second.program);
+  }
+
+  for (auto & bp : box_programs_) {
+    glDeleteProgram(bp.second.program);
+  }
+
+  for (auto & fb : frame_buffers_) {
+    glDeleteFramebuffers(1, &fb.second);
+  }
+
+  for (auto & rb : render_buffers) {
+    glDeleteRenderbuffers(1, &rb.second);
+  }
+
+  for (auto & pb : pixel_buffers_) {
+    glDeleteBuffers(1, &pb.second);
+  }
+
+  for (auto & t : textures_) {
+    glDeleteTextures(1, &t.second);
+  }
+
+  for (auto & ab : array_buffers_) {
+    glDeleteBuffers(1, &ab.second);
+  }
+
+  for (auto & eab : element_array_buffers_) {
+    glDeleteBuffers(1, &eab.second);
+  }
+
+  for (auto & va : vertex_arrays_) {
+    glDeleteVertexArrays(1, &va.second);
+  }
 }
 
 void Renderer::add_box_program(const std::string &name,
@@ -369,15 +400,9 @@ void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const Light &light,
-                      const glm::vec2 &resolution) {
+                      const glm::mat4 &projection, const glm::vec2 &resolution,
+                      const Light &light) {
   update(model, glm::mat4(1.0f), view, projection, light, resolution);
-}
-
-void Renderer::clear(const glm::vec3 color) {
-  glClearDepthf(1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(color.r, color.g, color.b, 1.0f);
 }
 
 void Renderer::clear_buffers() {
@@ -621,8 +646,8 @@ void Renderer::update(const Box &box, const Camera &camera) {
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
-                      const Light &light, const glm::vec2 &resolution,
-                      const OptTarget & render_target) {
+                      const Light &light, const glm::vec2 &resolution) {
+  glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
   auto transform = model.transform;
@@ -724,12 +749,64 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection, light, resolution);
+    update(child, parent_transform * model.transform, view, projection, light,
+           resolution);
   }
 }
 
+void Renderer::render_target(const OptTarget &target) {
+  if (target) {
+    if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
+      GLuint frame_buffer_id;
+      glGenFramebuffers(1, &frame_buffer_id);
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+      GLuint texture_id;
+      glGenTextures(1, &texture_id);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, target->texture->width(),
+                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, texture_id, 0);
+
+      GLuint depthrenderbuffer_id;
+      glGenRenderbuffers(1, &depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                            target->texture->width(), target->texture->height());
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                GL_RENDERBUFFER, depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        throw std::runtime_error("Framebuffer incomplete.");
+      }
+
+      textures_.insert({target->texture->id(), texture_id});
+      render_buffers.insert({target->id(), depthrenderbuffer_id});
+      frame_buffers_.insert({target->id(), frame_buffer_id});
+
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    auto fb = frame_buffers_[target->id()];
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+  } else {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+}
+
+void Renderer::clear(const glm::vec3 &color) {
+  glClearDepthf(1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(color.r, color.g, color.b, 1.0f);
+}
+
 void Renderer::update(const Model &model, const Camera &camera,
-                      const Light &light, const glm::vec2 & resolution) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, light, resolution);
+                      const glm::vec2 &resolution, const Light &light) {
+  update(model, glm::mat4(1.0f), camera.view, camera.projection, light,
+         resolution);
 }
 }

@@ -1,4 +1,4 @@
-#include <mos/graphics/render_target.hpp>
+#include <mos/graphics/target.hpp>
 
 namespace mos {
 
