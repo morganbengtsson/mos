@@ -114,7 +114,8 @@ public:
    * @param light Dynamic light.
    */
   void update(const Model &model, const Camera &camera,
-              const Light &light = Light(), const glm::vec2 & resolution = glm::vec2(0.0f));
+              const Light &light = Light(),
+              const glm::vec2 &resolution = glm::vec2(0.0f));
 
   template <class T>
   /**
@@ -181,6 +182,9 @@ public:
    * @param width
    * @param height
    */
+
+  /*
+   * For multisampled render target
   void render_target_reset(unsigned int width, unsigned int height) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
@@ -188,6 +192,7 @@ public:
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
+  */
 
   /**
    * @brief render_target
@@ -196,43 +201,30 @@ public:
   void render_target(RenderTarget target) {
     if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
 
-      glGenFramebuffers(1, &readFBO);
-      glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
+      GLuint frame_buffer_id;
+      glGenFramebuffers(1, &frame_buffer_id);
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      GLuint renderedTexture;
-      glGenTextures(1, &renderedTexture);
-
-      glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderedTexture);
-      glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8,
-                              target.texture->width(), target.texture->height(),
-                              GL_TRUE);
-      glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D_MULTISAMPLE, renderedTexture, 0);
-
-      GLuint depthrenderbuffer;
-      glGenRenderbuffers(1, &depthrenderbuffer);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-      glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8,
-                                       target.texture->width(),
-                                       target.texture->height());
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer);
-
-      GLuint screenTexture;
-      glGenTextures(1, &screenTexture);
-      glBindTexture(GL_TEXTURE_2D, screenTexture);
+      GLuint texture_id;
+      glGenTextures(1, &texture_id);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, target.texture->width(),
-                   target.texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glGenFramebuffers(1, &drawFBO);
-      glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
+                   target.texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, screenTexture, 0);
+                             GL_TEXTURE_2D, texture_id, 0);
+
+      GLuint depthrenderbuffer_id;
+      glGenRenderbuffers(1, &depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                            target.texture->width(),
+                            target.texture->height());
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                GL_RENDERBUFFER, depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
       // Always check that our framebuffer is ok
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -240,14 +232,15 @@ public:
       }
       // textures_.insert(TexturePair(target.texture->id(),
       // ogli::TextureBuffer{renderedTexture}));
-      textures_.insert({target.texture->id(), screenTexture});
-      frame_buffers_.insert({target.id(), readFBO});
+      textures_.insert({target.texture->id(), texture_id});
+      frame_buffers_.insert({target.id(), frame_buffer_id});
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     auto fb = frame_buffers_[target.id()];
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glViewport(0, 0, target.texture->width(), target.texture->height());
   }
 
   /**
@@ -328,7 +321,8 @@ private:
    */
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
-              const Light &light = Light(), const glm::vec2 &resolution = glm::vec2(0.0f));
+              const Light &light = Light(),
+              const glm::vec2 &resolution = glm::vec2(0.0f));
 
   void add_vertex_program(const Model::Shader shader,
                           const std::string vertex_shader_source,
