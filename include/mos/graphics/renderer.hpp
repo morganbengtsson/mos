@@ -100,7 +100,7 @@ public:
   void update(const Model &model,
               const Camera &camera,
               const glm::vec2 &resolution,
-              const Light &light);
+              const Light &light = Light());
 
   /**
    * @brief Renders particles.

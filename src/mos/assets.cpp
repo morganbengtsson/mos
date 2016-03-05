@@ -230,10 +230,10 @@ std::shared_ptr<Stream> Assets::stream(const string &path) const {
   return std::make_shared<mos::Stream>(directory_ + path);
 }
 
-Font Assets::font(const string &ngl_path) {
+Font Assets::font(const string &path) {
   std::map<char, Character> characters;
   rapidxml::xml_document<> doc;
-  auto xml_string = text(ngl_path);
+  auto xml_string = text(directory_ + path);
   doc.parse<0>(&xml_string[0]);
 
   auto *chars_node = doc.first_node("font")->first_node("chars");
