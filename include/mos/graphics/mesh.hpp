@@ -67,6 +67,9 @@ public:
    */
   virtual ~Mesh();
 
+  Vertices::iterator begin();
+  Vertices::iterator end();
+
   /**
    * @brief vertices_begin
    * @return Iterator to first Vertex.

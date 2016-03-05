@@ -73,7 +73,7 @@ public:
    * @brief clear
    * @param color
    */
-  void clear(const glm::vec3 & color);
+  void clear(const glm::vec4 & color);
 
   /**
    * @brief update

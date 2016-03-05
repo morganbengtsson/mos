@@ -39,6 +39,7 @@ Renderer::Renderer() : lightmaps_(true) {
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   glEnable(GL_FRAMEBUFFER_SRGB);
 
   std::string standard_vert_source = text("assets/shaders/standard_330.vert");
@@ -764,7 +765,7 @@ void Renderer::render_target(const OptTarget &target) {
       GLuint texture_id;
       glGenTextures(1, &texture_id);
       glBindTexture(GL_TEXTURE_2D, texture_id);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, target->texture->width(),
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, target->texture->width(),
                    target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -798,10 +799,10 @@ void Renderer::render_target(const OptTarget &target) {
   }
 }
 
-void Renderer::clear(const glm::vec3 &color) {
+void Renderer::clear(const glm::vec4 &color) {
   glClearDepthf(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(color.r, color.g, color.b, 1.0f);
+  glClearColor(color.r, color.g, color.b, color.a);
 }
 
 void Renderer::update(const Model &model, const Camera &camera,
