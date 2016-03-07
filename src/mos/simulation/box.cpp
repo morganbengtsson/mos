@@ -14,143 +14,47 @@ namespace mos {
 
 Box::Box() {}
 
-glm::vec3 Box::min() const { return position_ + extent_; }
-glm::vec3 Box::max() const { return position_ - extent_; }
+glm::vec3 Box::min() const { return position_ - extent_; }
+glm::vec3 Box::max() const { return position_ + extent_; }
 
-#if 0
-RayIntersection Box::intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2) {
-    // Intersection method from Real-Time Rendering and Essential Mathematics for Games
-    glm::mat4 model_matrix = transform();
-    glm::vec3 ray_origin = origin;
-    glm::vec3 ray_direction = direction;
-    glm::vec3 aabb_min = min_;
-    glm::vec3 aabb_max = max_;
+bool Box::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
+  float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-    float t_min = 0.0f;
-    float t_max = 100000.0f;
-    const float limit = 0.001f;
+  glm::vec3 bounds[2];
+  bounds[0] = min();
+  bounds[1] = max();
 
-    //glm::vec3 position_worldspace(model_matrix[3].x, model_matrix[3].y, model_matrix[3].z);
-    glm::vec3 position_worldspace = (glm::vec3)(transform()*glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  glm::vec3 invdir = 1.f / direction;
+  glm::i8vec3 sign;
 
-    glm::vec3 delta = position_worldspace - ray_origin;
+  sign.x = (invdir.x < 0);
+  sign.y = (invdir.y < 0);
+  sign.z = (invdir.z < 0);
 
-    // Test intersection with the 2 planes perpendicular to the OBB's X axis
-    {
-        glm::vec3 xaxis(model_matrix[0].x, model_matrix[0].y, model_matrix[0].z);
-        float e = glm::dot(xaxis, delta);
-        float f = glm::dot(ray_direction, xaxis);
+  tmin = (bounds[sign.x].x - origin.x) * invdir.x;
+  tmax = (bounds[1 - sign.x].x - origin.x) * invdir.x;
+  tymin = (bounds[sign.y].y - origin.y) * invdir.y;
+  tymax = (bounds[1 - sign.y].y - origin.y) * invdir.y;
 
-        if ( fabs(f) > limit ){ // Standard case
+  if ((tmin > tymax) || (tymin > tmax))
+      return false;
+  if (tymin > tmin)
+      tmin = tymin;
+  if (tymax < tmax)
+      tmax = tymax;
 
-            float t1 = (e+aabb_min.x)/f; // Intersection with the "left" plane
-            float t2 = (e+aabb_max.x)/f; // Intersection with the "right" plane
-            // t1 and t2 now contain distances betwen ray origin and ray-plane intersections
+  tzmin = (bounds[sign.z].z - origin.z) * invdir.z;
+  tzmax = (bounds[1 - sign.z].z - origin.z) * invdir.z;
 
-            // We want t1 to represent the nearest intersection,
-            // so if it's not the case, invert t1 and t2
-            if (t1>t2){
-                float w=t1;t1=t2;t2=w; // swap t1 and t2
-            }
+  if ((tmin > tzmax) || (tzmin > tmax))
+      return false;
+  if (tzmin > tmin)
+      tmin = tzmin;
+  if (tzmax < tmax)
+      tmax = tzmax;
 
-            // tMax is the nearest "far" intersection (amongst the X,Y and Z planes pairs)
-            if ( t2 < t_max ){
-                t_max = t2;
-            }
-            // tMin is the farthest "near" intersection (amongst the X,Y and Z planes pairs)
-            if ( t1 > t_min ){
-                t_min = t1;
-            }
-
-            // And here's the trick :
-            // If "far" is closer than "near", then there is NO intersection.
-            // See the images in the tutorials for the visual explanation.
-            if (t_max < t_min ){
-                return RayIntersection(false, 0.0f);
-            }
-
-        }else{ // Rare case : the ray is almost parallel to the planes, so they don't have any "intersection"
-            if(-e+aabb_min.x > 0.0f || -e+aabb_max.x < 0.0f){
-                return RayIntersection(false, 0.0f);
-            }
-        }
-    }
-
-
-    // Test intersection with the 2 planes perpendicular to the OBB's Y axis
-    // Exactly the same thing than above.
-    {
-        glm::vec3 yaxis(model_matrix[1].x, model_matrix[1].y, model_matrix[1].z);
-        float e = glm::dot(yaxis, delta);
-        float f = glm::dot(ray_direction, yaxis);
-
-        if ( fabs(f) > limit ){
-
-            float t1 = (e+aabb_min.y)/f;
-            float t2 = (e+aabb_max.y)/f;
-
-            if (t1>t2){
-                float w=t1;t1=t2;t2=w;
-            }
-
-            if ( t2 < t_max ){
-                t_max = t2;
-            }
-            if ( t1 > t_min ){
-                t_min = t1;
-            }
-            if (t_min > t_max){
-                return RayIntersection(false, 0.0f);
-            }
-
-        }else{
-            if(-e+aabb_min.y > 0.0f || -e+aabb_max.y < 0.0f){
-                return RayIntersection(false, 0.0f);
-            }
-        }
-    }
-
-
-    // Test intersection with the 2 planes perpendicular to the OBB's Z axis
-    // Exactly the same thing than above.
-    {
-        glm::vec3 zaxis(model_matrix[2].x, model_matrix[2].y, model_matrix[2].z);
-        float e = glm::dot(zaxis, delta);
-        float f = glm::dot(ray_direction, zaxis);
-
-        if ( fabs(f) > limit ){
-
-            float t1 = (e+aabb_min.z)/f;
-            float t2 = (e+aabb_max.z)/f;
-
-            if (t1>t2){
-                float w=t1;t1=t2;t2=w;
-            }
-
-            if ( t2 < t_max ){
-                t_max = t2;
-            }
-            if ( t1 > t_min ){
-                t_min = t1;
-            }
-            if (t_min > t_max){
-                return RayIntersection(false, 0.0f);
-            }
-
-        }else{
-            if(-e+aabb_min.z > 0.0f || -e+aabb_max.z < 0.0f)
-                return RayIntersection(false, 0.0f);
-        }
-    }
-
-    float intersection_distance = t_min;
-    return RayIntersection(true, intersection_distance);
+  return true;
 }
-
-RayIntersection Box::intersect(glm::vec3 point1, glm::vec3 point2) {
-    return intersect(point1, glm::normalize(point2 - point1), 0.0f, glm::distance(point1, point2));
-}
-#endif
 
 std::experimental::optional<BoxIntersection>
 Box::intersects(const Box &other) const {
