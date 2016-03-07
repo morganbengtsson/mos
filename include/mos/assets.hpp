@@ -182,7 +182,7 @@ public:
 
    * @return
    */
-  Font font(const std::string &ngl_path);
+  Font font(const std::string &path);
 
  /**
    * @brief Remove all unused assets.

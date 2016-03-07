@@ -2,6 +2,7 @@
 #define MOS_STREAM_HPP
 
 #include <array>
+#include <string>
 
 #include "stb_vorbis.h"
 
@@ -16,7 +17,7 @@ public:
    * @brief Stream constructor.
    * @param file_name
    */
-  explicit Stream(const std::string file_name);
+  explicit Stream(const std::string & file_name);
 
   /**
    * @brief Copy constructor.

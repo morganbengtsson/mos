@@ -22,6 +22,18 @@ public:
          const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
   /**
+   * @brief up
+   * @return up vector of camera.
+   */
+  glm::vec3 up() const;
+
+  /**
+   * @brief Set up vector.
+   * @param up
+   */
+  void up(const glm::vec3 &up);
+
+  /**
    * @brief position
    * @return Position of camera.
    */
@@ -62,6 +74,7 @@ public:
   glm::mat4 view;
 
 private:
+  void update_view();
   glm::vec3 up_;
   glm::vec3 center_;
   glm::vec3 position_;

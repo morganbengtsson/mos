@@ -8,11 +8,13 @@
 #include <mos/graphics/text.hpp>
 #include <mos/graphics/particles.hpp>
 #include <mos/graphics/light.hpp>
-#include <mos/graphics/render_target.hpp>
+#include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/simulation/box.hpp>
+#include <optional.hpp>
 
 #include <unordered_map>
+#include <optional.hpp>
 #include <array>
 
 namespace mos {
@@ -23,6 +25,8 @@ namespace mos {
  */
 class Renderer {
 public:
+  using OptTarget = std::experimental::optional<Target>;
+  using OptClear = std::experimental::optional<glm::vec3>;
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -41,35 +45,11 @@ public:
    */
   void load(const Model &model);
 
-  template <class T>
-  /**
-   * @brief Load multiple models.
-   * @param begin Iterator to first model.
-   * @param end Iterator to last model.
-   */
-  void load(T begin, T end) {
-    for (auto it = begin; it != end; it++) {
-      load(*it);
-    }
-  }
-
   /**
    * @brief unload a model from renderers own memory.
    * @param model
    */
   void unload(const Model &model);
-
-  template <class T>
-  /**
-   * @brief unload multiple models.
-   * @param begin Iterator.
-   * @param end Iterator.
-   */
-  void unload(T begin, T end) {
-    for (auto it = begin; it != end; it++) {
-      unload(*it);
-    }
-  }
 
   /**
    * @brief Load a texture into renderer memory.
@@ -83,50 +63,44 @@ public:
    */
   void unload(const std::shared_ptr<Texture2D> &texture);
 
+  /**
+   * @brief render_target
+   * @param target
+   */
+  void render_target(const OptTarget & target);
+
+  /**
+   * @brief clear
+   * @param color
+   */
+  void clear(const glm::vec4 & color);
+
+  /**
+   * @brief update
+   * @param model
+   * @param view
+   * @param projection
+   * @param light
+   * @param resolution
+   * @param target
+   */
   void update(const Model &model, const glm::mat4 &view,
-              const glm::mat4 &projection, const Light &light = Light());
-
-  template <class T>
-  /**
-   * @brief Update render state with multiple models
-   * @param begin Iterator to fist model.
-   * @param end Iterator to last model
-   * @param transform Additional transform matrix.
-   * @param view View matrix.
-   * @param projection Projection matrix.
-   * @param light Dynamic light.
-   */
-  void update(T begin, T end, const glm::mat4 parent_transform,
-              const glm::mat4 view, const glm::mat4 projection,
-              const Light &light = Light()) {
-    for (auto it = begin; it != end; ++it) {
-      update(*it, parent_transform, view, projection, light);
-    }
-  }
-
-  /**
-   * @brief Update render state.
-   * @param model Model to update.
-   * @param camera Camera to render from (view, projection)
-   * @param light Dynamic light.
-   */
-  void update(const Model &model, const Camera &camera,
+              const glm::mat4 &projection,
+              const glm::vec2 &resolution,
               const Light &light = Light());
 
-  template <class T>
   /**
-   * @brief Update render state for multiple models.
-   * @param begin Iterator to fist model.
-   * @param end Iterator to last model.
-   * @param camera Camera to render from.
-   * @param light Dynamic light.
+   * @brief update
+   * @param model
+   * @param camera
+   * @param light
+   * @param resolution
+   * @param target
    */
-  void update(T begin, T end, const Camera &camera,
-              const Light &light = Light()) {
-    for (auto it = begin; it != end; ++it) {
-      update(*it, camera, light);
-    }
-  }
+  void update(const Model &model,
+              const Camera &camera,
+              const glm::vec2 &resolution,
+              const Light &light = Light());
 
   /**
    * @brief Renders particles.
@@ -139,45 +113,16 @@ public:
 
   void update(const Box &box, const glm::mat4 &view,
               const glm::mat4 &projection);
-  void update(const Box &box, const Camera &camera);
 
-  /**
-   * @brief Clears the screen and the depth buffer.
-   * @param color
-   */
-  void clear(const glm::vec3 color);
+  void update(const Box &box, const Camera &camera);
 
   /**
    * @brief Clear all internal buffers.
    */
   void clear_buffers();
-  // TODO: Remove all these from public api!
-  /**
-   * @brief readFBO
-   * @todo remove
-   */
-  GLuint readFBO;
-  /**
-   * @brief drawFBO
-   * @todo remove
-   */
-  GLuint drawFBO;
-  /**
-   * @brief readFBO2
-   * @todo remove
-   */
-  GLuint readFBO2;
-  /**
-   * @brief drawFBO2
-   * @todo remove
-   */
-  GLuint drawFBO2;
 
-  /**
-   * @brief render_target_reset
-   * @param width
-   * @param height
-   */
+  /*
+   * For multisampled render target
   void render_target_reset(unsigned int width, unsigned int height) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
@@ -185,67 +130,7 @@ public:
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
-
-  /**
-   * @brief render_target
-   * @param target
-   */
-  void render_target(RenderTarget target) {
-    if (frame_buffers_.find(target.id()) == frame_buffers_.end()) {
-
-      glGenFramebuffers(1, &readFBO);
-      glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
-
-      GLuint renderedTexture;
-      glGenTextures(1, &renderedTexture);
-
-      glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderedTexture);
-      glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8,
-                              target.texture->width(), target.texture->height(),
-                              GL_TRUE);
-      glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D_MULTISAMPLE, renderedTexture, 0);
-
-      GLuint depthrenderbuffer;
-      glGenRenderbuffers(1, &depthrenderbuffer);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-      glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8,
-                                       target.texture->width(),
-                                       target.texture->height());
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer);
-
-      GLuint screenTexture;
-      glGenTextures(1, &screenTexture);
-      glBindTexture(GL_TEXTURE_2D, screenTexture);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, target.texture->width(),
-                   target.texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glGenFramebuffers(1, &drawFBO);
-      glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, screenTexture, 0);
-
-      // Always check that our framebuffer is ok
-      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        throw std::runtime_error("Framebuffer incomplete.");
-      }
-      // textures_.insert(TexturePair(target.texture->id(),
-      // ogli::TextureBuffer{renderedTexture}));
-      textures_.insert({target.texture->id(), screenTexture});
-      frame_buffers_.insert({target.id(), readFBO});
-
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    auto fb = frame_buffers_[target.id()];
-    glBindFramebuffer(GL_FRAMEBUFFER, fb);
-  }
+  */
 
   /**
    * @brief Set lightmap use.
@@ -305,6 +190,7 @@ private:
     GLint has_normalmap;
     GLint has_material;
     GLint receives_light;
+    GLint resolution;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
@@ -324,7 +210,8 @@ private:
    */
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
-              const Light &light = Light());
+              const Light &light = Light(),
+              const glm::vec2 &resolution = glm::vec2(0.0f));
 
   void add_vertex_program(const Model::Shader shader,
                           const std::string vertex_shader_source,
@@ -347,6 +234,7 @@ private:
   std::unordered_map<std::string, BoxProgramData> box_programs_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
+  std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
   std::unordered_map<unsigned int, GLuint> textures_;
   std::unordered_map<unsigned int, GLuint> array_buffers_;

@@ -10,14 +10,14 @@ namespace mos {
  *
  * Represents a rendertarget, with asociated texture. For off screen rendering.
  */
-class RenderTarget {
+class Target {
 public:
   /**
    * @brief RenderTarget
    * @param width
    * @param height
    */
-  explicit RenderTarget(const unsigned int width = 256,
+  explicit Target(const unsigned int width = 256,
                         const unsigned int height = 256);
 
   /**

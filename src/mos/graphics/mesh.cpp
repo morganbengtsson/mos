@@ -25,6 +25,14 @@ Mesh::Mesh(const Mesh &mesh)
 
 Mesh::~Mesh() {}
 
+Mesh::Vertices::iterator Mesh::begin() {
+  return vertices_.begin();
+}
+
+Mesh::Vertices::iterator Mesh::end() {
+  return vertices_.end();
+}
+
 Mesh::Vertices::const_iterator Mesh::vertices_begin() const {
   return vertices_.begin();
 }

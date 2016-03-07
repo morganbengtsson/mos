@@ -4,6 +4,7 @@
 #include <fstream>
 #include <functional>
 #include <algorithm>
+#include <vector>
 
 namespace mos {
 template <class T>

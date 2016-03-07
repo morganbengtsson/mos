@@ -24,7 +24,7 @@ public:
   /**
    * @brief What shader to use
    */
-  enum class Shader { TEXT, STANDARD, EFFECT };
+  enum class Shader { TEXT, STANDARD, EFFECT, BLUR };
 
   using Models = std::vector<Model>;
   using MeshPtr = std::shared_ptr<Mesh>;
