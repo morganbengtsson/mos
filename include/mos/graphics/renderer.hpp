@@ -194,6 +194,8 @@ private:
     GLint has_material;
     GLint receives_light;
     GLint resolution;
+    GLint fog_color;
+    GLint fog_density;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;

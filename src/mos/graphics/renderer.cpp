@@ -741,6 +741,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
+  //glUniform1f(uniforms.fog_density, 1, glm::value_ptr())
+
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
                                 : 0;
