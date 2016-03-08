@@ -238,7 +238,9 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "has_normalmap"),
           glGetUniformLocation(program, "has_material"),
           glGetUniformLocation(program, "receives_light"),
-          glGetUniformLocation(program, "resolution")}));
+          glGetUniformLocation(program, "resolution"),
+          glGetUniformLocation(program, "fog_color"),
+          glGetUniformLocation(program, "fog_density")}));
 }
 
 void Renderer::load(const Model &model) {
@@ -641,21 +643,21 @@ void Renderer::update(const Box &box, const Camera &camera) {
 
 void Renderer::update(const Model &model, const Camera &camera,
                       const glm::vec2 &resolution, const Light &light,
-                      const glm::vec4 &fog) {
+                      const Fog &fog) {
   update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
          light, fog);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const glm::vec2 &resolution,
-                      const Light &light, const glm::vec4 &fog) {
+                      const Light &light, const Fog &fog) {
   update(model, glm::mat4(1.0f), view, projection, resolution, light, fog);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const glm::vec2 &resolution, const Light &light,
-                      const glm::vec4 &fog) {
+                      const Fog &fog) {
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
@@ -741,7 +743,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
-  //glUniform1f(uniforms.fog_density, 1, glm::value_ptr())
+  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
+  glUniform1fv(uniforms.fog_density, 1, &fog.density);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
@@ -760,8 +763,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection, resolution,
-           light, fog);
+    update(child, parent_transform * model.transform, view, projection,
+           resolution, light, fog);
   }
 }
 

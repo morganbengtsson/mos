@@ -89,7 +89,7 @@ public:
               const glm::mat4 view, const glm::mat4 projection,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
-              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief update
@@ -105,7 +105,7 @@ public:
               const glm::mat4 &projection,
               const glm::vec2 &resolution,
               const Light &light = Light(),
-              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief update
@@ -119,7 +119,7 @@ public:
               const Camera &camera,
               const glm::vec2 &resolution,
               const Light &light = Light(),
-              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief Renders particles.
