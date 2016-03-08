@@ -10,6 +10,7 @@
 #include <mos/graphics/light.hpp>
 #include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
+#include <mos/graphics/fog.hpp>
 #include <mos/simulation/box.hpp>
 #include <optional.hpp>
 
@@ -74,6 +75,21 @@ public:
    * @param color
    */
   void clear(const glm::vec4 & color);
+
+  /**
+   * @brief Updates render state of model.
+   * @param model
+   * @param transform Additional transform matrix.
+   * @param view View matrix of the camera
+   * @param projection Projection matrix of the camera
+   * @param program_name Either "text" or "standard"
+   * @param light One dynamic light to use.
+   */
+  void update(const Model &model, const glm::mat4 transform,
+              const glm::mat4 view, const glm::mat4 projection,
+              const glm::vec2 &resolution = glm::vec2(0.0f),
+              const Light &light = Light(),
+              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief update
@@ -203,22 +219,6 @@ private:
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
   bool lightmaps_;
-
-  /**
-   * @brief Updates render state of model.
-   * @param model
-   * @param transform Additional transform matrix.
-   * @param view View matrix of the camera
-   * @param projection Projection matrix of the camera
-   * @param program_name Either "text" or "standard"
-   * @param light One dynamic light to use.
-   */
-  void update(const Model &model, const glm::mat4 transform,
-              const glm::mat4 view, const glm::mat4 projection,
-              const glm::vec2 &resolution = glm::vec2(0.0f),
-              const Light &light = Light(),
-              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
-
   void add_vertex_program(const Model::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source);
