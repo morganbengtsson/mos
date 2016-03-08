@@ -104,43 +104,43 @@ Renderer::Renderer() : lightmaps_(true) {
 }
 
 Renderer::~Renderer() {
-  for (auto & vp : vertex_programs_) {
+  for (auto &vp : vertex_programs_) {
     glDeleteProgram(vp.second.program);
   }
 
-  for (auto & pp: particle_programs_) {
+  for (auto &pp : particle_programs_) {
     glDeleteProgram(pp.second.program);
   }
 
-  for (auto & bp : box_programs_) {
+  for (auto &bp : box_programs_) {
     glDeleteProgram(bp.second.program);
   }
 
-  for (auto & fb : frame_buffers_) {
+  for (auto &fb : frame_buffers_) {
     glDeleteFramebuffers(1, &fb.second);
   }
 
-  for (auto & rb : render_buffers) {
+  for (auto &rb : render_buffers) {
     glDeleteRenderbuffers(1, &rb.second);
   }
 
-  for (auto & pb : pixel_buffers_) {
+  for (auto &pb : pixel_buffers_) {
     glDeleteBuffers(1, &pb.second);
   }
 
-  for (auto & t : textures_) {
+  for (auto &t : textures_) {
     glDeleteTextures(1, &t.second);
   }
 
-  for (auto & ab : array_buffers_) {
+  for (auto &ab : array_buffers_) {
     glDeleteBuffers(1, &ab.second);
   }
 
-  for (auto & eab : element_array_buffers_) {
+  for (auto &eab : element_array_buffers_) {
     glDeleteBuffers(1, &eab.second);
   }
 
-  for (auto & va : vertex_arrays_) {
+  for (auto &va : vertex_arrays_) {
     glDeleteVertexArrays(1, &va.second);
   }
 }
@@ -400,12 +400,6 @@ void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
   }
 }
 
-void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const glm::vec2 &resolution,
-                      const Light &light) {
-  update(model, glm::mat4(1.0f), view, projection, light, resolution);
-}
-
 void Renderer::clear_buffers() {
   for (auto &texture : textures_) {
     glDeleteTextures(1, &texture.second);
@@ -645,9 +639,23 @@ void Renderer::update(const Box &box, const Camera &camera) {
   update(box, camera.view, camera.projection);
 }
 
+void Renderer::update(const Model &model, const Camera &camera,
+                      const glm::vec2 &resolution, const Light &light,
+                      const glm::vec4 &fog) {
+  update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
+         light, fog);
+}
+
+void Renderer::update(const Model &model, const glm::mat4 &view,
+                      const glm::mat4 &projection, const glm::vec2 &resolution,
+                      const Light &light, const glm::vec4 &fog) {
+  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog);
+}
+
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
-                      const Light &light, const glm::vec2 &resolution) {
+                      const glm::vec2 &resolution, const Light &light,
+                      const glm::vec4 &fog) {
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
@@ -750,8 +758,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection, light,
-           resolution);
+    update(child, parent_transform * model.transform, view, projection, resolution,
+           light, fog);
   }
 }
 
@@ -777,7 +785,8 @@ void Renderer::render_target(const OptTarget &target) {
       glGenRenderbuffers(1, &depthrenderbuffer_id);
       glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
       glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            target->texture->width(), target->texture->height());
+                            target->texture->width(),
+                            target->texture->height());
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, depthrenderbuffer_id);
       glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -803,11 +812,5 @@ void Renderer::clear(const glm::vec4 &color) {
   glClearDepthf(1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(color.r, color.g, color.b, color.a);
-}
-
-void Renderer::update(const Model &model, const Camera &camera,
-                      const glm::vec2 &resolution, const Light &light) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, light,
-         resolution);
 }
 }

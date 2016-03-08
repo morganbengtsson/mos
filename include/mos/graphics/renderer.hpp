@@ -84,10 +84,12 @@ public:
    * @param resolution
    * @param target
    */
-  void update(const Model &model, const glm::mat4 &view,
+  void update(const Model &model,
+              const glm::mat4 &view,
               const glm::mat4 &projection,
               const glm::vec2 &resolution,
-              const Light &light = Light());
+              const Light &light = Light(),
+              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief update
@@ -100,7 +102,8 @@ public:
   void update(const Model &model,
               const Camera &camera,
               const glm::vec2 &resolution,
-              const Light &light = Light());
+              const Light &light = Light(),
+              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   /**
    * @brief Renders particles.
@@ -210,8 +213,9 @@ private:
    */
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
+              const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
-              const glm::vec2 &resolution = glm::vec2(0.0f));
+              const glm::vec4 &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
 
   void add_vertex_program(const Model::Shader shader,
                           const std::string vertex_shader_source,
