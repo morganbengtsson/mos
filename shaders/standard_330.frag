@@ -24,6 +24,12 @@ in vec2 fragment_lightmap_uv;
 
 layout(location = 0) out vec4 color;
 
+float fog(float distance, float density) {
+    float result = exp(-pow(density * distance, 2.0));
+    result = 1.0 - clamp(result, 0.0, 1.0);
+    return result;
+}
+
 void main() {
 
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -80,5 +86,8 @@ void main() {
     }
     if (has_texture) {
         color.a = tex_color.a * opacity;
-    }    
+    }
+    //Fog
+    float distance = gl_FragCoord.z / gl_FragCoord.w;
+    color = mix(color, vec4(1.0, 1.0, 1.0, 1.0), fog(distance, 0.05));
 }
