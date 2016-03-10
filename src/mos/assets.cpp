@@ -3,7 +3,6 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include <lodepng.h>
-#include <objload.h>
 #include <exception>
 #include <memory>
 #include <cstring>
@@ -138,28 +137,8 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
       is.read((char *)&indices[0], indices.size() * sizeof(int));
     }
 
-  } else if (path.substr(path.find_last_of(".") + 1) == "obj") {
-
-    // std::cout << "Loading: " << directory_ << path;
-    obj::Model obj_model = obj::loadModelFromFile(directory_ + path);
-
-    int j = 0;
-    for (int i = 0; i < obj_model.vertex.size(); i += 3) {
-      glm::vec3 position(obj_model.vertex[i], obj_model.vertex[i + 1],
-                         obj_model.vertex[i + 2]);
-      glm::vec3 normal(obj_model.normal[i], obj_model.normal[i + 1],
-                       obj_model.normal[i + 2]);
-      glm::vec2 uv(0.0f, 0.0f);
-      if (obj_model.texCoord.size() > 0) {
-        uv.x = obj_model.texCoord[j];
-        uv.y = obj_model.texCoord[j + 1];
-      }
-
-      j += 2;
-      vertices.push_back(Vertex(position, normal, uv));
-    }
-    indices.assign(obj_model.faces.find("default")->second.begin(),
-                   obj_model.faces.find("default")->second.end());
+  } else {
+    throw std::runtime_error("File extension not supported.");
   }
   return std::make_shared<Mesh>(vertices.begin(), vertices.end(),
                                 indices.begin(), indices.end());
