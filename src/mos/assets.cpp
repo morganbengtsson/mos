@@ -76,27 +76,13 @@ Model Assets::model(rapidjson::Value &value) {
   return created_model;
 }
 
-rapidjson::Document Assets::document(const std::string &path) {
-  // std::cout << "Loading: " << path << std::endl;
-  std::ifstream is(directory_ + path);
-  if (!is.good()) {
-    throw std::runtime_error(directory_ + path + " does not exist.");
-  }
-  std::ifstream file(directory_ + path);
-  std::string source((std::istreambuf_iterator<char>(file)),
-                     std::istreambuf_iterator<char>());
-  rapidjson::Document doc;
-  doc.Parse(source.c_str());
-  return doc;
-}
-
 Model Assets::model(const std::string &path) {
-  auto doc = document(path);
+  auto doc = document(directory_ + path);
   return model(doc);
 }
 
 Animation Assets::animation(const string &path) {
-  auto doc = document(path);
+  auto doc = document(directory_ + path);
   auto frame_rate = doc["frame_rate"].GetInt();
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
 
@@ -122,8 +108,6 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 
 std::shared_ptr<Texture2D> Assets::texture(const std::string &path,
                                            const bool mipmaps) const {
-  using namespace mos;
-
   vector<unsigned char> texels_decoded;
   unsigned width, height;
 

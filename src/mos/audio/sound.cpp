@@ -1,13 +1,10 @@
-/*
- * File:   Sound.cpp
- * Author: morgan
- *
- * Created on May 6, 2014, 9:38 PM
- */
-
 #include <mos/audio/sound.hpp>
 
 namespace mos {
+  Sound::Sound(const std::string & path) {
+
+  }
+
   Sound::~Sound() {}
 
   Sound::Samples::const_iterator Sound::begin() const { return samples_.begin(); }

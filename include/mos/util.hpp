@@ -5,41 +5,21 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
+#include <rapidjson/document.h>
 
 namespace mos {
-template <class T>
-/**
- * @brief The ClockwiseSorter class
- */
-class ClockwiseSorter {
-private:
-  T center;
-
-public:
-  /**
-   * @brief ClockwiseSorter
-   * @param center
-   */
-  explicit ClockwiseSorter(const T center) : center(center) {}
-
-  /**
-   * @brief operator ()
-   * @param a
-   * @param b
-   * @return
-   */
-  bool operator()(const T a, const T b) const {
-
-    float det = (a.x - center.x) * (b.y - center.y) -
-                (b.x - center.x) * (a.y - center.y);
-    if (det < 0) {
-      return true;
-    }
-    if (det > 0) {
-      return false;
-    }
+rapidjson::Document inline document(const std::string &path) {
+  std::ifstream is(path);
+  if (!is.good()) {
+    throw std::runtime_error(path + " does not exist.");
   }
-};
+  std::ifstream file(path);
+  std::string source((std::istreambuf_iterator<char>(file)),
+                     std::istreambuf_iterator<char>());
+  rapidjson::Document doc;
+  doc.Parse(source.c_str());
+  return doc;
+}
 
 /**
  * @brief Load text from file.

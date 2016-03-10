@@ -189,7 +189,6 @@ public:
   void clear_unused();
 
 private:
-  rapidjson::Document document(const std::string &path);
   Model model(rapidjson::Value &value);
   const std::string directory_;
   MeshMap meshes_;

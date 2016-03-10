@@ -2,6 +2,7 @@
 #define MOS_SOUND_H
 
 #include <vector>
+#include <string>
 
 namespace mos {
 
@@ -10,6 +11,12 @@ namespace mos {
  */
 class Sound {
 public:
+  /**
+   * @brief Sound constructor from *.ogg file.
+   * @param path
+   */
+  Sound(const std::string &path);
+
   /**
    * @brief Container for 16bit samples (short).
    */
