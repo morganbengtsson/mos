@@ -110,38 +110,7 @@ Animation Assets::animation(const string &path) {
 }
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
-  // TODO: allow Null mesh? As of now it becomes empty.
-  vector<mos::Vertex> vertices;
-  vector<int> indices;
-
-  if (path.substr(path.find_last_of(".") + 1) == "mesh") {
-
-    // std::cout << "Loading: " << path << std::endl;
-    std::ifstream is(directory_ + path, ios::binary);
-    if (!is.good()) {
-      throw std::runtime_error(directory_ + path + " does not exist.");
-    }
-    int num_vertices;
-    int num_indices;
-    is.read((char *)&num_vertices, sizeof(int));
-    is.read((char *)&num_indices, sizeof(int));
-
-    vertices = vector<mos::Vertex>(num_vertices);
-    indices = vector<int>(num_indices);
-
-    if (vertices.size() > 0) {
-      is.read((char *)&vertices[0], vertices.size() * sizeof(Vertex));
-    }
-
-    if (indices.size() > 0) {
-      is.read((char *)&indices[0], indices.size() * sizeof(int));
-    }
-
-  } else {
-    throw std::runtime_error("File extension not supported.");
-  }
-  return std::make_shared<Mesh>(vertices.begin(), vertices.end(),
-                                indices.begin(), indices.end());
+  return std::make_shared<Mesh>(Mesh(directory_ + path));
 }
 
 std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {

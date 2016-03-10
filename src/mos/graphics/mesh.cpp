@@ -1,16 +1,37 @@
-/*
- * File:   Model.cpp
- * Author: morgan
- *
- * Created on February 25, 2014, 6:40 PM
- */
-
+#include <fstream>
 #include <mos/graphics/mesh.hpp>
 #include <mos/util.hpp>
 
 namespace mos {
 
 unsigned int Mesh::current_id = 0;
+
+Mesh::Mesh(const std::string & path) : Mesh() {
+  if (path.substr(path.find_last_of(".") + 1) == "mesh") {
+    std::ifstream is(path, std::ios::binary);
+    if (!is.good()) {
+      throw std::runtime_error(path + " does not exist.");
+    }
+    int num_vertices;
+    int num_indices;
+    is.read((char *)&num_vertices, sizeof(int));
+    is.read((char *)&num_indices, sizeof(int));
+
+    vertices_ = std::vector<mos::Vertex>(num_vertices);
+    elements_ = std::vector<int>(num_indices);
+
+    if (vertices_.size() > 0) {
+      is.read((char *)&vertices_[0], vertices_.size() * sizeof(Vertex));
+    }
+
+    if (elements_.size() > 0) {
+      is.read((char *)&elements_[0], elements_.size() * sizeof(int));
+    }
+
+  } else {
+    throw std::runtime_error("File extension not supported.");
+  }
+}
 
 Mesh::Mesh(std::initializer_list<Vertex> vertices,
            std::initializer_list<int> elements)

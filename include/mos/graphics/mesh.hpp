@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <initializer_list>
-#include "vertex.hpp"
+#include <string>
+#include <mos/graphics/vertex.hpp>
 
 namespace mos {
 
@@ -24,6 +25,8 @@ public:
    * @brief Elements/indices container.
    */
   using Elements = std::vector<int>;
+
+  Mesh(const std::string & path);
 
   template <class Tv, class Te>
   /**
