@@ -347,4 +347,29 @@ void Assets::clear_unused() {
     }
   }
 }
+
+Mesh mesh(const string & path) {
+
+}
+
+Sound sound(const string & path) {
+
+}
+
+Stream stream(const string & path) {
+
+}
+
+Texture2D texture2D(const string & path) {
+
+}
+
+Material material(const string & path) {
+
+}
+
+Animation animation(const string & path) {
+
+}
+
 }

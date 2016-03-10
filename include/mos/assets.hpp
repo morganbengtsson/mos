@@ -18,6 +18,13 @@
 
 namespace mos {
 
+  mos::Mesh mesh(const std::string &path);
+  mos::Sound sound(const std::string &path);
+  mos::Stream stream(const std::string &path);
+  mos::Texture2D texture2D(const std::string &path);
+  mos::Material material(const std::string &path);
+  mos::Animation animation(const std::string &path);
+
 /**
  * An asset class that manages heavy resources such as Textures, meshes, sounds
  * and sound streams.
