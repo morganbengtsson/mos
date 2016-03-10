@@ -2,9 +2,9 @@
 
 namespace mos {
 
-Stream::Stream(const std::string & file_name) : file_name_(file_name) {
+Stream::Stream(const std::string & path) : file_name_(path) {
   vorbis_stream_ =
-      stb_vorbis_open_filename((char *)file_name.c_str(), NULL, NULL);
+      stb_vorbis_open_filename((char *)path.c_str(), NULL, NULL);
   vorbis_info_ = stb_vorbis_get_info(vorbis_stream_);
   samples_left_ = stb_vorbis_stream_length_in_samples(vorbis_stream_) *
                   vorbis_info_.channels;

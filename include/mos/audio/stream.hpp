@@ -17,7 +17,7 @@ public:
    * @brief Stream constructor.
    * @param file_name
    */
-  explicit Stream(const std::string & file_name);
+  explicit Stream(const std::string & path);
 
   /**
    * @brief Copy constructor.
