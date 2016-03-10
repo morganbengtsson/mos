@@ -1,9 +1,6 @@
 [submodule "externals/glm"]
 	path = externals/glm
 	url = git://github.com/g-truc/glm.git	
-[submodule "externals/objload"]
-	path = externals/objload
-	url = https://github.com/GerhardR/objload.git
 [submodule "externals/openal-soft"]
 	path = externals/openal-soft
 	url = http://repo.or.cz/openal-soft.git
