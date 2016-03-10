@@ -108,22 +108,10 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 
 std::shared_ptr<Texture2D> Assets::texture(const std::string &path,
                                            const bool mipmaps) const {
-  vector<unsigned char> texels_decoded;
-  unsigned width, height;
-
   if (path.empty()) {
     return std::shared_ptr<Texture2D>(nullptr);
   }
-
-  // std::cout << "Loading: " << directory_ + path << std::endl;
-  auto error =
-      lodepng::decode(texels_decoded, width, height, directory_ + path);
-  if (error) {
-    std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
-              << std::endl;
-  }
-  return std::make_shared<Texture2D>(
-      texels_decoded.begin(), texels_decoded.end(), width, height, mipmaps);
+  return std::make_shared<Texture2D>(directory_ + path, mipmaps);
 }
 
 std::shared_ptr<Texture2D> Assets::texture_cached(const std::string &path,

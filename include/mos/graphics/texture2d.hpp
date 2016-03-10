@@ -2,6 +2,7 @@
 #define MOS_TEXTURE2D_H
 
 #include <vector>
+#include <string>
 #include <glm/glm.hpp>
 
 namespace mos {
@@ -18,6 +19,7 @@ public:
    */
   using Texels = std::vector<unsigned char>;
 
+  Texture2D(const std::string &path, const bool mips = true);
   /**
    * @brief Used to create next unique id.
    */

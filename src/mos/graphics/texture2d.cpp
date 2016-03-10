@@ -6,11 +6,24 @@
  */
 
 #include <mos/graphics/texture2d.hpp>
+#include <lodepng.h>
+#include <iostream>
 
 namespace mos {
 
-unsigned int Texture2D::current_id = 0;
-Texture2D::~Texture2D() {}
+  unsigned int Texture2D::current_id = 0;
+  Texture2D::Texture2D(const std::string & path, const bool mips) {
+    auto error =
+        lodepng::decode(texels_, width_, height_, path);
+    if (error) {
+      std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
+                << std::endl;
+    }
+    mipmaps = mips;
+    id_ = current_id++;
+  }
+
+  Texture2D::~Texture2D() {}
 
 Texture2D::Texels::const_iterator Texture2D::begin() const {
   return texels_.begin();
