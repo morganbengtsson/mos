@@ -1,23 +1,43 @@
 #include <mos/audio/sound.hpp>
+#include <stb_vorbis.h>
+#include <fstream>
 
 namespace mos {
-  Sound::Sound(const std::string & path) {
+Sound::Sound(const std::string &path) {
+  int channels, length, sample_rate;
+  short *decoded;
 
+  std::ifstream file(path, std::ios::binary);
+  if (!file.good()) {
+    throw std::runtime_error(path + " does not exist.");
   }
+  std::vector<unsigned char> data;
 
-  Sound::~Sound() {}
+  unsigned char c;
+  while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
+    data.push_back(c);
+  }
+  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
+                                    &sample_rate, &decoded);
 
-  Sound::Samples::const_iterator Sound::begin() const { return samples_.begin(); }
+  samples_.assign(decoded, decoded + length);
+  channels_ = channels;
+  sample_rate_ = sample_rate;
+}
 
-  Sound::Samples::const_iterator Sound::end() const { return samples_.end(); }
+Sound::~Sound() {}
 
-  unsigned int Sound::id() const { return id_; }
+Sound::Samples::const_iterator Sound::begin() const { return samples_.begin(); }
 
-  bool Sound::valid() const { return valid_; }
+Sound::Samples::const_iterator Sound::end() const { return samples_.end(); }
 
-  unsigned int Sound::channels() const { return channels_; }
+unsigned int Sound::id() const { return id_; }
 
-  unsigned int Sound::sample_rate() const { return sample_rate_; }
+bool Sound::valid() const { return valid_; }
 
-  const short *Sound::data() const { return samples_.data(); }
+unsigned int Sound::channels() const { return channels_; }
+
+unsigned int Sound::sample_rate() const { return sample_rate_; }
+
+const short *Sound::data() const { return samples_.data(); }
 }

@@ -139,23 +139,7 @@ std::shared_ptr<Texture2D> Assets::texture_cached(const std::string &path,
 }
 
 std::shared_ptr<Sound> Assets::sound(const std::string &path) const {
-  int channels, length, sample_rate;
-  short *decoded;
-
-  std::ifstream file(directory_ + path, std::ios::binary);
-  if (!file.good()) {
-    throw std::runtime_error(directory_ + path + " does not exist.");
-  }
-  std::vector<unsigned char> data;
-
-  unsigned char c;
-  while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
-    data.push_back(c);
-  }
-  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
-                                    &sample_rate, &decoded);
-
-  return std::make_shared<Sound>(decoded, decoded + length);
+  return std::make_shared<Sound>(Sound(directory_ + path));
 }
 
 std::shared_ptr<Stream> Assets::stream(const string &path) const {
