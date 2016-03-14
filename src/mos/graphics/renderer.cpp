@@ -501,6 +501,12 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  if (glewGetExtension("GL_EXT_texture_filter_anisotropic")){
+    float aniso = 0.0f;
+    glBindTexture(GL_TEXTURE_2D, id);
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+  }
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
