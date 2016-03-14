@@ -176,11 +176,12 @@ public:
   std::shared_ptr<Stream> stream(const std::string &path) const;
 
   /**
-   * @brief Lod font file in ngl format.
+   * @brief Load font file in ngl format.
    * @param ngl_path
 
    * @return
    */
+  [[deprecated]]
   Font font(const std::string &path);
 
  /**
