@@ -243,7 +243,8 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "receives_light"),
           glGetUniformLocation(program, "resolution"),
           glGetUniformLocation(program, "fog_color"),
-          glGetUniformLocation(program, "fog_density")}));
+          glGetUniformLocation(program, "fog_density"),
+          glGetUniformLocation(program, "time")}));
 }
 
 void Renderer::load(const Model &model) {
@@ -567,7 +568,8 @@ Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> &texture) {
 }
 
 void Renderer::update(Particles &particles, const glm::mat4 view,
-                      const glm::mat4 projection) {
+                      const glm::mat4 projection, const float dt) {
+  time_ += dt;
   if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
@@ -621,7 +623,9 @@ void Renderer::update(Particles &particles, const glm::mat4 view,
 }
 
 void Renderer::update(const Box &box, const glm::mat4 &view,
-                      const glm::mat4 &projection) {
+                      const glm::mat4 &projection, const float dt) {
+  time_ += dt;
+
   auto &uniforms = box_programs_.at("box");
 
   glUseProgram(uniforms.program);
@@ -646,27 +650,28 @@ void Renderer::update(const Box &box, const glm::mat4 &view,
   glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid *)(8 * sizeof(GLuint)));
 }
 
-void Renderer::update(const Box &box, const Camera &camera) {
-  update(box, camera.view, camera.projection);
+void Renderer::update(const Box &box, const Camera &camera, const float dt) {
+  update(box, camera.view, camera.projection, dt);
 }
 
-void Renderer::update(const Model &model, const Camera &camera,
+void Renderer::update(const Model &model, const Camera &camera, const float dt,
                       const glm::vec2 &resolution, const Light &light,
                       const Fog &fog) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
+  update(model, glm::mat4(1.0f), camera.view, camera.projection, dt, resolution,
          light, fog);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const glm::vec2 &resolution,
+                      const glm::mat4 &projection, const float dt, const glm::vec2 &resolution,
                       const Light &light, const Fog &fog) {
-  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog);
+  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
-                      const glm::mat4 view, const glm::mat4 projection,
+                      const glm::mat4 view, const glm::mat4 projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
                       const Fog &fog) {
+  time_ += dt;
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
@@ -755,6 +760,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
   glUniform1fv(uniforms.fog_density, 1, &fog.density);
 
+  glUniform1fv(uniforms.time, 1, &time_);
+
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
                                 : 0;
@@ -772,7 +779,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection,
+    update(child, parent_transform * model.transform, view, projection, dt,
            resolution, light, fog);
   }
 }

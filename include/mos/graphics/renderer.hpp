@@ -87,6 +87,7 @@ public:
    */
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
+              const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -103,6 +104,7 @@ public:
   void update(const Model &model,
               const glm::mat4 &view,
               const glm::mat4 &projection,
+              const float dt,
               const glm::vec2 &resolution,
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -117,6 +119,7 @@ public:
    */
   void update(const Model &model,
               const Camera &camera,
+              const float dt,
               const glm::vec2 &resolution,
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
@@ -128,12 +131,12 @@ public:
    * @param projection Projection matrix.
    */
   void update(Particles &particles, const glm::mat4 view,
-              const glm::mat4 projection);
+              const glm::mat4 projection, const float dt);
 
   void update(const Box &box, const glm::mat4 &view,
-              const glm::mat4 &projection);
+              const glm::mat4 &projection, const float dt);
 
-  void update(const Box &box, const Camera &camera);
+  void update(const Box &box, const Camera &camera, const float dt);
 
   /**
    * @brief Clear all internal buffers.
@@ -163,6 +166,10 @@ public:
   bool lightmaps() const;
 
 private:
+  /**
+   * @brief Amount of time the renderer has been alive, used in shaders.
+   */
+  float time_;
   /**
    * @brief The ParticleProgramData struct, uniforms for the particle shader
    * program.
@@ -212,6 +219,7 @@ private:
     GLint resolution;
     GLint fog_color;
     GLint fog_density;
+    GLint time;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
