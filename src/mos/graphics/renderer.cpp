@@ -58,6 +58,9 @@ Renderer::Renderer() : lightmaps_(true) {
   add_vertex_program(Model::Shader::BLUR, text("assets/shaders/blur_330.vert"),
                      text("assets/shaders/blur_330.frag"));
 
+  add_vertex_program(Model::Shader::CRT, text("assets/shaders/crt_330.vert"),
+                     text("assets/shaders/crt_330.frag"));
+
   std::string particles_vert_source = text("assets/shaders/particles_330.vert");
   std::string particles_frag_source = text("assets/shaders/particles_330.frag");
   add_particle_program("particles", particles_vert_source,
