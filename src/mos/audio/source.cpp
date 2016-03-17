@@ -1,10 +1,3 @@
-/*
- * File:   Source.cpp
- * Author: morgan
- *
- * Created on July 28, 2014, 3:47 PM
- */
-
 #include <mos/audio/source.hpp>
 
 namespace mos {
@@ -13,7 +6,7 @@ Source::Source(const glm::vec3 position, const glm::vec3 velocity,
                const float pitch, const float gain, const bool loop,
                const bool playing, const float obstructed, const bool outside)
     : position(position), velocity(velocity), pitch(pitch), gain(gain),
-      loop(loop), playing(playing), obstructed(obstructed), outside(outside) {
+      loop(loop), playing(playing), obstructed(obstructed) {
   static unsigned int current_id = 0;
   id_ = current_id++;
 }

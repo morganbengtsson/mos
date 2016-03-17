@@ -10,6 +10,7 @@ namespace mos {
  * A sound class containing samples of 16bit integer data. In memory.
  */
 class Sound {
+  friend class Player;
 public:
   /**
    * @brief Sound constructor from *.ogg file.

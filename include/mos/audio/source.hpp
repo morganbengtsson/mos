@@ -73,13 +73,6 @@ public:
    */
   float obstructed;
 
-  /**
-   * @brief Sound otside or not.
-   * Describes if the source is outside or inside. This affects the reverb
-   * effect.
-   */
-  bool outside;
-
 private:
   unsigned int id_;
 };
