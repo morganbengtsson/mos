@@ -2,8 +2,8 @@
 #define BUTTON_HPP
 
 #include <functional>
-#include "../graphics/model.hpp"
-#include "../graphics/text.hpp"
+#include <mos/graphics/model.hpp>
+#include <mos/graphics/text.hpp>
 
 namespace mos {
 class Button {
