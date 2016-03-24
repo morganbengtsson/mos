@@ -34,26 +34,6 @@ struct BoxIntersection {
   float distance;
 };
 
-/**
- * @brief The RayIntersection struct
- * Intersection data from a ray and box intersection.
- *
- */
-struct RayIntersection {
-  /**
-   * @brief RayIntersection constructor.
-   * @param hit
-   * @param distance
-   */
-  RayIntersection(float distance = 0.0f) : distance(distance) {}
-
-  /**
-   * @brief distance
-   *
-   * Distance from
-   */
-  float distance;
-};
 
 /**
  * @brief The Box class
@@ -133,25 +113,15 @@ public:
    */
   glm::vec3 max() const;
 
-#if 0
-    /**
-     * @brief Intersection with ray between points.
-     * @param point1
-     * @param point2
-     * @return
-     */
-    RayIntersection intersect(glm::vec3 point1, glm::vec3 point2);
-
     /**
      * @brief Intersection with ray
      * @param origin
      * @param direction
-     * @param t1
-     * @param t2
+
      * @return
      */
-    RayIntersection intersect(const glm::vec3 & origin, const glm::vec3 direction, float t1, float t2);
-#endif
+   bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);
+
   /**
    * @brief intersects
    * @param other
