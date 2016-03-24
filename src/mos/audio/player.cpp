@@ -219,6 +219,15 @@ void Player::load(const SoundSource &sound_source) {
   // alSourcePlay(sources_.at(source.id()));
 }
 
+bool Player::loaded(const SoundSource & sound_source) {
+  if (sources_.find(sound_source.source.id()) == sources_.end()) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
 void Player::load(const StreamSource &stream_source) {}
 
 void Player::unload(const SoundSource &sound_source) {}
@@ -406,8 +415,12 @@ void Player::update(SoundSource &sound_source, const float dt) {
 
     ALint type;
     alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
+    /*
     if (!sound_source.source.playing && (state == AL_PLAYING) &&
         type == AL_STREAMING) {
+      alSourceStop(al_source);
+    }*/
+    if (!sound_source.source.playing && (state == AL_PLAYING)) {
       alSourceStop(al_source);
     }
 

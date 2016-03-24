@@ -54,6 +54,8 @@ public:
    */
   void load(const SoundSource &sound_source);
 
+  bool loaded(const SoundSource &sound_source);
+
   /**
    * Plays audio from a StreamSource. Which streams content from a file. This
    * method starts a new thread for each source playing.
