@@ -12,11 +12,10 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const std::shared_ptr<Texture2D> &lightmap,
              const std::shared_ptr<Texture2D> &normalmap,
              const float affected_by_light, const Shader shader)
-    :
-      draw(draw),
-      mesh(mesh), texture(texture), texture2(texture2), material(material),
-      lightmap(lightmap), normalmap(normalmap), name_(name),
-      transform(transform), receives_light(affected_by_light), shader(shader) {}
+    : draw(draw), mesh(mesh), texture(texture), texture2(texture2),
+      material(material), lightmap(lightmap), normalmap(normalmap), name_(name),
+      transform(transform), receives_light(affected_by_light), shader(shader),
+      overlay_(0.0f) {}
 
 Model::~Model() {}
 
@@ -42,5 +41,16 @@ void Model::position(const glm::vec3 &position) {
   transform[3][0] = position[0];
   transform[3][1] = position[1];
   transform[3][2] = position[2];
+}
+
+glm::vec3 Model::overlay() const {
+  return overlay_;
+}
+
+void Model::overlay(const glm::vec3 & overlay) {
+  overlay_ = overlay;
+  for (auto & model : models){
+    model.overlay(overlay);
+  }
 }
 }

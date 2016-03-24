@@ -244,7 +244,8 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "resolution"),
           glGetUniformLocation(program, "fog_color"),
           glGetUniformLocation(program, "fog_density"),
-          glGetUniformLocation(program, "time")}));
+          glGetUniformLocation(program, "time"),
+          glGetUniformLocation(program, "overlay")}));
 }
 
 void Renderer::load(const Model &model) {
@@ -505,7 +506,7 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  if (glewGetExtension("GL_EXT_texture_filter_anisotropic")){
+  if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
@@ -662,15 +663,16 @@ void Renderer::update(const Model &model, const Camera &camera, const float dt,
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const float dt, const glm::vec2 &resolution,
-                      const Light &light, const Fog &fog) {
+                      const glm::mat4 &projection, const float dt,
+                      const glm::vec2 &resolution, const Light &light,
+                      const Fog &fog) {
   update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
-                      const glm::mat4 view, const glm::mat4 projection, const float dt,
-                      const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog) {
+                      const glm::mat4 view, const glm::mat4 projection,
+                      const float dt, const glm::vec2 &resolution,
+                      const Light &light, const Fog &fog) {
   time_ += dt;
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -761,6 +763,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.fog_density, 1, &fog.density);
 
   glUniform1fv(uniforms.time, 1, &time_);
+  glUniform3fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())

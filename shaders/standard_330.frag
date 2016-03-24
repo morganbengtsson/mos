@@ -19,6 +19,7 @@ uniform bool has_normalmap;
 uniform bool has_material;
 uniform vec3 fog_color = vec3(1.0, 1.0, 1.0);
 uniform float fog_density = 0.0;
+uniform vec3 overlay = vec3(0.0, 0.0, 0.0);
 in vec3 fragment_position;
 in vec3 fragment_normal;
 in vec2 fragment_uv;
@@ -92,4 +93,5 @@ void main() {
     //Fog
     float distance = gl_FragCoord.z / gl_FragCoord.w;
     color = mix(color, vec4(fog_color, 1.0), fog(distance, fog_density));
+    color.rgb += overlay;
 }

@@ -220,6 +220,7 @@ private:
     GLint fog_color;
     GLint fog_density;
     GLint time;
+    GLint overlay;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;

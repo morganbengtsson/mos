@@ -111,11 +111,14 @@ public:
   glm::vec3 position() const;
 
   /**
-          * Set the position.
-          * @brief position
-          * @param position
-          */
+  * Set the position.
+  * @brief position
+  * @param position
+  */
   void position(const glm::vec3 &position);
+
+  glm::vec3 overlay() const;
+  void overlay(const glm::vec3 &overlay);
 
   /**
   * @brief Get the color, (to be deprecated).
@@ -168,6 +171,11 @@ public:
 
 private:
   std::string name_;
+
+  /**
+   * @brief overlay color that is not in light calculations.
+   */
+  glm::vec3 overlay_;
 
 };
 }
