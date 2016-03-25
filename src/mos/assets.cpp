@@ -154,7 +154,7 @@ Font Assets::font(const string &path) {
   auto *texture_node = doc.first_node("font")->first_node("texture");
   std::string file =
       texture_node->first_attribute("file")->value();
-  std::transform(file.begin(), file.end(), file.begin(), ::tolower);
+  //std::transform(file.begin(), file.end(), file.begin(), ::tolower);
 
   for (auto *char_node = chars_node->first_node("char"); char_node;
        char_node = char_node->next_sibling()) {
