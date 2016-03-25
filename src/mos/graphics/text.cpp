@@ -1,10 +1,3 @@
-/*
- * File:   Text.cpp
- * Author: morgan
- *
- * Created on August 28, 2013, 7:49 PM
- */
-
 #include <mos/graphics/text.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,6 +10,7 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
              transform),
       font_(font), spacing(spacing) {
   model_.shader = Model::Shader::TEXT;
+  model_.receives_light = false;
   text(txt);
 }
 

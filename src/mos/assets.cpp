@@ -14,6 +14,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <mos/util.hpp>
+#include <algorithm>
 
 namespace mos {
 using namespace std;
@@ -151,8 +152,9 @@ Font Assets::font(const string &path) {
   float descender = atof(metrics_node->first_attribute("descender")->value());
 
   auto *texture_node = doc.first_node("font")->first_node("texture");
-  std::string texture_path =
+  std::string file =
       texture_node->first_attribute("file")->value();
+  std::transform(file.begin(), file.end(), file.begin(), ::tolower);
 
   for (auto *char_node = chars_node->first_node("char"); char_node;
        char_node = char_node->next_sibling()) {
@@ -171,7 +173,7 @@ Font Assets::font(const string &path) {
   }
 
   auto char_map = characters;
-  auto texture = texture_cached(texture_path);
+  auto texture = texture_cached(file);
   return Font(char_map, texture, height, ascender, descender);
 }
 

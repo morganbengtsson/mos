@@ -181,7 +181,6 @@ public:
 
    * @return
    */
-  [[deprecated]]
   Font font(const std::string &path);
 
  /**
