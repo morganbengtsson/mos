@@ -3,6 +3,8 @@
 
 #include <string>
 #include <rapidjson/document.h>
+#include <sstream>
+#include <vector>
 
 namespace mos {
 /**
@@ -18,6 +20,10 @@ rapidjson::Document document(const std::string &path);
  * @return String with all content.
  */
 std::string text(const std::string path);
-}
 
+std::vector<std::string> &split(const std::string &s, char delim,
+                                std::vector<std::string> &elems);
+
+std::vector<std::string> split(const std::string &s, char delim);
+}
 #endif /* MOS_UTIL_H */
