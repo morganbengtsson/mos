@@ -82,6 +82,18 @@ public:
   void material(const std::shared_ptr<Material> &material);
 
   /**
+   * @brief transform
+   * @param transform
+   */
+  void transform(const glm::mat4 &transform);
+
+  /**
+   * @brief transform
+   * @return
+   */
+  glm::mat4 transform() const;
+
+  /**
    * @brief model
    * @return
    */

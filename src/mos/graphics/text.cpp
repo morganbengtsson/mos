@@ -93,6 +93,14 @@ void Text::material(const std::shared_ptr<Material> &material) {
   model_.material = material;
 }
 
+void Text::transform(const glm::mat4 & transform) {
+  model_.transform = transform;
+}
+
+glm::mat4 Text::transform() const {
+  return model_.transform;
+}
+
 Model Text::model() const { return model_; }
 
 Text &Text::operator=(const std::string &input) {
