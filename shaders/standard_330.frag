@@ -5,6 +5,7 @@ uniform vec3 material_diffuse_color;
 uniform vec3 material_specular_color;
 uniform float material_specular_exponent;
 uniform float opacity;
+uniform float multiply = 1.0;
 uniform sampler2D texture;
 uniform sampler2D texture2;
 uniform sampler2D lightmap;
@@ -90,6 +91,8 @@ void main() {
     if (has_texture) {
         color.a = tex_color.a * opacity;
     }
+    //Multiply
+    color.rgb = color.rgb * multiply;
     //Fog
     float distance = gl_FragCoord.z / gl_FragCoord.w;
     color = mix(color, vec4(fog_color, 1.0), fog(distance, fog_density));

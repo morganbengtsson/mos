@@ -245,7 +245,8 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "fog_color"),
           glGetUniformLocation(program, "fog_density"),
           glGetUniformLocation(program, "time"),
-          glGetUniformLocation(program, "overlay")}));
+          glGetUniformLocation(program, "overlay"),
+          glGetUniformLocation(program, "multiply")}));
 }
 
 void Renderer::load(const Model &model) {
@@ -657,22 +658,22 @@ void Renderer::update(const Box &box, const Camera &camera, const float dt) {
 
 void Renderer::update(const Model &model, const Camera &camera, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog) {
+                      const Fog &fog, const float multiply) {
   update(model, glm::mat4(1.0f), camera.view, camera.projection, dt, resolution,
-         light, fog);
+         light, fog, multiply);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog) {
-  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog);
+                      const Fog &fog, const float multiply) {
+  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog, multiply);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
-                      const Light &light, const Fog &fog) {
+                      const Light &light, const Fog &fog, const float multiply) {
   time_ += dt;
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -764,6 +765,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
 
   glUniform1fv(uniforms.time, 1, &time_);
   glUniform3fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
+  glUniform1fv(uniforms.multiply, 1, &multiply);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
@@ -783,7 +785,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   }
   for (auto &child : model.models) {
     update(child, parent_transform * model.transform, view, projection, dt,
-           resolution, light, fog);
+           resolution, light, fog, multiply);
   }
 }
 

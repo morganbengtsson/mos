@@ -90,7 +90,8 @@ public:
               const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const float multiply = 1.0f);
 
   /**
    * @brief update
@@ -107,7 +108,8 @@ public:
               const float dt,
               const glm::vec2 &resolution,
               const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const float multiply = 1.0f);
 
   /**
    * @brief update
@@ -122,7 +124,8 @@ public:
               const float dt,
               const glm::vec2 &resolution,
               const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
+              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const float multiply = 1.0f);
 
   /**
    * @brief Renders particles.
@@ -221,6 +224,7 @@ private:
     GLint fog_density;
     GLint time;
     GLint overlay;
+    GLint multiply;
   };
 
   using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
