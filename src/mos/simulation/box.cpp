@@ -14,8 +14,8 @@ namespace mos {
 
 Box::Box() {}
 
-glm::vec3 Box::min() const { return position_ - extent_; }
-glm::vec3 Box::max() const { return position_ + extent_; }
+glm::vec3 Box::min() const { return position_ - extent; }
+glm::vec3 Box::max() const { return position_ + extent; }
 
 bool Box::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
@@ -117,12 +117,6 @@ Box::intersects(const Box &other) const {
       distance = distances[i];
     }
   }
-
-  if (step() == true && (normal == faces[0] || normal == faces[1] ||
-                         normal == faces[2] || normal == faces[3])) {
-    std::cout << "n: " << normal << "d: " << distance << std::endl;
-    return BoxIntersection(glm::vec3(0.0f, 0.0f, 1.0), distance);
-  }
   return BoxIntersection(normal, distance);
 }
 
@@ -154,7 +148,4 @@ glm::vec3 Box::size() const {
                    glm::abs(max().z - min().z));
 }
 
-void Box::step(const bool step) { step_ = step; }
-
-bool Box::step() const { return step_; }
 }

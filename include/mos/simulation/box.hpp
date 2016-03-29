@@ -56,7 +56,7 @@ public:
    */
   Box(VertexIt begin, VertexIt end, const glm::mat4 &transform,
       const float obstruction = 0.0f, const bool step = false)
-      : obstruction_(obstruction), step_(step) {
+      : obstruction_(obstruction) {
     glm::vec3 min, max;
 
     glm::vec3 position(transform[3][0], transform[3][1], transform[3][2]);
@@ -91,9 +91,9 @@ public:
       max = glm::vec3(x_extremes.second->x, y_extremes.second->y,
                       z_extremes.second->z);
     }
-    extent_ = (max - min) / 2.0f;
+    extent = (max - min) / 2.0f;
     // position_ = position;
-    position_ = min + extent_;
+    position_ = min + extent;
   }
 
   /**
@@ -173,18 +173,11 @@ public:
    */
   glm::vec3 size() const;
 
-  /**
-   * @brief step
-   * @param step
-   */
-  void step(const bool step);
-  bool step() const;
+  glm::vec3 extent;
 
 private:
-  glm::vec3 extent_;
   glm::vec3 position_;
   float obstruction_;
-  bool step_;
 };
 }
 #endif // MOS_BOX_HPP
