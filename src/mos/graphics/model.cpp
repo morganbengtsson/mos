@@ -9,11 +9,11 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const std::shared_ptr<Texture2D> &texture2,
              const glm::mat4 &transform, const Draw draw,
              const std::shared_ptr<Material> &material,
-             const std::shared_ptr<Texture2D> &lightmap,
+             const Lightmaps &lightmaps,
              const std::shared_ptr<Texture2D> &normalmap,
              const float affected_by_light, const Shader shader)
     : draw(draw), mesh(mesh), texture(texture), texture2(texture2),
-      material(material), lightmap(lightmap), normalmap(normalmap), name_(name),
+      material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
       transform(transform), receives_light(affected_by_light), shader(shader),
       overlay_(0.0f) {}
 

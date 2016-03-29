@@ -4,11 +4,11 @@
 #include <memory>
 #include <mos/graphics/texture2d.hpp>
 
-class Lightmaps
-{
+class Lightmaps {
 public:
   using TexPtr = std::shared_ptr<mos::Texture2D>;
-  Lightmaps(const TexPtr &lightmap0, const TexPtr &lightmap1, const float mix = 0.0f);
+  Lightmaps(const TexPtr &lightmap0 = TexPtr(), const TexPtr &lightmap1 = TexPtr(),
+            const float mix = 0.0f);
   TexPtr lightmap0;
   TexPtr lightmap1;
   float mix;

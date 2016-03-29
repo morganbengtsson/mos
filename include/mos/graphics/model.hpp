@@ -6,6 +6,7 @@
 #include <mos/graphics/mesh.hpp>
 #include <mos/graphics/texture2d.hpp>
 #include <mos/graphics/material.hpp>
+#include <mos/graphics/lightmaps.hpp>
 
 namespace mos {
 
@@ -52,7 +53,7 @@ public:
         const Draw draw = Draw::TRIANGLES,
         const MatPtr &material = std::make_shared<Material>(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
-        const TexPtr &lightmap = TexPtr(), const TexPtr &normalmap = TexPtr(),
+        const Lightmaps &lightmaps = Lightmaps(), const TexPtr &normalmap = TexPtr(),
         const float receives_light = true,
         const Shader shader = Shader::STANDARD);
 
@@ -85,7 +86,7 @@ public:
   /**
    * @brief lightmap
    */
-  std::shared_ptr<Texture2D> lightmap;
+  Lightmaps lightmaps;
 
   /**
    * @brief normalmap

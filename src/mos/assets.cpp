@@ -67,7 +67,7 @@ Model Assets::model(rapidjson::Value &value) {
   auto created_model = mos::Model(
       name, mesh_cached(mesh), texture_cached(texture_name),
       texture_cached(texture2_name), transform, mos::Model::Draw::TRIANGLES,
-      material_cached(material_name), texture_cached(lightmap_name), nullptr,
+      material_cached(material_name), Lightmaps(texture_cached(lightmap_name)), nullptr,
       recieves_light);
 
   for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
