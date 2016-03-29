@@ -7,10 +7,10 @@
 class Lightmaps {
 public:
   using TexPtr = std::shared_ptr<mos::Texture2D>;
-  Lightmaps(const TexPtr &lightmap0 = TexPtr(), const TexPtr &lightmap1 = TexPtr(),
+  Lightmaps(const TexPtr &first = TexPtr(), const TexPtr &second = TexPtr(),
             const float mix = 0.0f);
-  TexPtr lightmap0;
-  TexPtr lightmap1;
+  TexPtr first;
+  TexPtr second;
   float mix;
 };
 
