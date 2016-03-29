@@ -1,4 +1,8 @@
 #version 330
+struct Lightmaps {
+    sampler2D first;
+};
+
 uniform bool receives_light;
 uniform vec3 material_ambient_color;
 uniform vec3 material_diffuse_color;
@@ -8,7 +12,7 @@ uniform float opacity;
 uniform float multiply = 1.0;
 uniform sampler2D texture;
 uniform sampler2D texture2;
-uniform sampler2D lightmap;
+uniform Lightmaps lightmaps;
 uniform sampler2D normalmap;
 uniform vec3 light_position;
 uniform vec3 light_diffuse_color;
@@ -38,7 +42,7 @@ void main() {
 
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     if (has_lightmap == true) {
-        static_light = texture2D(lightmap, fragment_lightmap_uv);
+        static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
     }
 
     vec3 normal = normalize(fragment_normal);
