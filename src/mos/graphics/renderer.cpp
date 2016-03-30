@@ -728,6 +728,14 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     texture_unit++;
   }
 
+  if (model.lightmaps.second) {
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, textures_[model.lightmaps.second->id()]);
+    glUniform1i(uniforms.lightmaps_second, texture_unit);
+    texture_unit++;
+  }
+
+
   if (model.normalmap) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[model.normalmap->id()]);
