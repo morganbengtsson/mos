@@ -1,7 +1,9 @@
 #version 330
 struct Lightmaps {
     sampler2D first;
+    sampler2D second;
     bool has_first;
+    bool has_second;
 };
 
 struct Textures {
