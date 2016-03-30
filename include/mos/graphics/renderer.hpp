@@ -203,8 +203,9 @@ private:
     GLint normal_matrix;
     GLint textures_first;
     GLint textures_second;
-    GLint lightmap;
+    GLint lightmaps_first;
     GLint lightmaps_second;
+    GLint lightmaps_mix;
     GLint normalmap;
     GLint material_ambient_color;
     GLint material_diffuse_color;

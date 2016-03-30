@@ -4,6 +4,7 @@ struct Lightmaps {
     sampler2D second;
     bool has_first;
     bool has_second;
+    float mix;
 };
 
 struct Textures {
@@ -49,6 +50,10 @@ void main() {
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     if (lightmaps.has_first == true) {
         static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
+    }
+
+    if(lightmaps.has_second == true){
+        //Do something.
     }
 
     vec3 normal = normalize(fragment_normal);

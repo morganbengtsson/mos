@@ -227,6 +227,7 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "textures.second"),
           glGetUniformLocation(program, "lightmaps.first"),
           glGetUniformLocation(program, "lightmaps.second"),
+          glGetUniformLocation(program, "lightmaps.mix"),
           glGetUniformLocation(program, "normalmap"),
           glGetUniformLocation(program, "material_ambient_color"),
           glGetUniformLocation(program, "material_diffuse_color"),
@@ -383,6 +384,12 @@ void Renderer::unload(const Model &model) {
   if (model.lightmaps.first) {
     if (textures_.find(model.lightmaps.first->id()) != textures_.end()) {
       unload(model.lightmaps.first);
+    }
+  }
+
+  if (model.lightmaps.second) {
+    if (textures_.find(model.lightmaps.second->id()) != textures_.end()) {
+      unload(model.lightmaps.second);
     }
   }
 
@@ -717,7 +724,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   if (model.lightmaps.first) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[model.lightmaps.first->id()]);
-    glUniform1i(uniforms.lightmap, texture_unit);
+    glUniform1i(uniforms.lightmaps_first, texture_unit);
     texture_unit++;
   }
 
@@ -775,6 +782,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.time, 1, &time_);
   glUniform3fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform1fv(uniforms.multiply, 1, &multiply);
+  glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
