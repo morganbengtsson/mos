@@ -65,8 +65,8 @@ Model Assets::model(rapidjson::Value &value) {
   }
 
   auto created_model = mos::Model(
-      name, mesh_cached(mesh), texture_cached(texture_name),
-      texture_cached(texture2_name), transform, mos::Model::Draw::TRIANGLES,
+      name, mesh_cached(mesh), Textures(texture_cached(texture_name),
+      texture_cached(texture2_name)), transform, mos::Model::Draw::TRIANGLES,
       material_cached(material_name), Lightmaps(texture_cached(lightmap_name)), nullptr,
       recieves_light);
 
@@ -107,15 +107,15 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture2D> Assets::texture(const std::string &path,
+std::shared_ptr<Texture> Assets::texture(const std::string &path,
                                            const bool mipmaps) const {
   if (path.empty()) {
-    return std::shared_ptr<Texture2D>(nullptr);
+    return std::shared_ptr<Texture>(nullptr);
   }
-  return std::make_shared<Texture2D>(directory_ + path, mipmaps);
+  return std::make_shared<Texture>(directory_ + path, mipmaps);
 }
 
-std::shared_ptr<Texture2D> Assets::texture_cached(const std::string &path,
+std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,
                                                   const bool mipmaps) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
@@ -123,7 +123,7 @@ std::shared_ptr<Texture2D> Assets::texture_cached(const std::string &path,
     }
     return textures_.at(path);
   } else {
-    return std::shared_ptr<Texture2D>(nullptr);
+    return std::shared_ptr<Texture>(nullptr);
   }
 }
 

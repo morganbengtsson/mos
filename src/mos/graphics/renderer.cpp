@@ -315,15 +315,15 @@ void Renderer::load(const Model &model) {
     model.mesh->valid_ = true;
   }
 
-  if (model.texture) {
-    if (textures_.find(model.texture->id()) == textures_.end()) {
-      load(model.texture);
+  if (model.textures.first) {
+    if (textures_.find(model.textures.first->id()) == textures_.end()) {
+      load(model.textures.first);
     }
   }
 
-  if (model.texture2) {
-    if (textures_.find(model.texture2->id()) == textures_.end()) {
-      load(model.texture2);
+  if (model.textures.second) {
+    if (textures_.find(model.textures.second->id()) == textures_.end()) {
+      load(model.textures.second);
     }
   }
 
@@ -359,15 +359,15 @@ void Renderer::unload(const Model &model) {
     }
   }
 
-  if (model.texture) {
-    if (textures_.find(model.texture->id()) != textures_.end()) {
-      unload(model.texture);
+  if (model.textures.first) {
+    if (textures_.find(model.textures.first->id()) != textures_.end()) {
+      unload(model.textures.first);
     }
   }
 
-  if (model.texture2) {
-    if (textures_.find(model.texture2->id()) != textures_.end()) {
-      unload(model.texture2);
+  if (model.textures.second) {
+    if (textures_.find(model.textures.second->id()) != textures_.end()) {
+      unload(model.textures.second);
     }
   }
 
@@ -384,7 +384,7 @@ void Renderer::unload(const Model &model) {
   }
 }
 
-void Renderer::load(const std::shared_ptr<Texture2D> &texture) {
+void Renderer::load(const std::shared_ptr<Texture> &texture) {
 #ifdef STREAM_TEXTURES
   if (textures_.find(texture->id()) == textures_.end()) {
     GLuint gl_id = create_texture_and_pbo(texture);
@@ -398,7 +398,7 @@ void Renderer::load(const std::shared_ptr<Texture2D> &texture) {
 #endif
 }
 
-void Renderer::unload(const std::shared_ptr<Texture2D> &texture) {
+void Renderer::unload(const std::shared_ptr<Texture> &texture) {
   if (textures_.find(texture->id()) == textures_.end()) {
 
   } else {
@@ -496,7 +496,7 @@ bool Renderer::check_program(const unsigned int program) {
   return true;
 }
 
-unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture) {
+unsigned int Renderer::create_texture(std::shared_ptr<Texture> texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
@@ -525,7 +525,7 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture2D> texture) {
 }
 
 unsigned int
-Renderer::create_texture_and_pbo(const std::shared_ptr<Texture2D> &texture) {
+Renderer::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   GLuint texture_id;
 
@@ -691,16 +691,16 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   auto &uniforms = vertex_programs_.at(model.shader);
 
   int texture_unit = 0;
-  if (model.texture != nullptr) {
+  if (model.textures.first != nullptr) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[model.texture->id()]);
+    glBindTexture(GL_TEXTURE_2D, textures_[model.textures.first->id()]);
     glUniform1i(uniforms.texture, texture_unit);
     texture_unit++;
   }
 
-  if (model.texture2 != nullptr) {
+  if (model.textures.second != nullptr) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[model.texture2->id()]);
+    glBindTexture(GL_TEXTURE_2D, textures_[model.textures.second->id()]);
     glUniform1i(uniforms.texture2, texture_unit);
     texture_unit++;
   }
@@ -750,8 +750,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular_color));
 
-  glUniform1i(uniforms.has_texture, model.texture ? true : false);
-  glUniform1i(uniforms.has_texture2, model.texture2 ? true : false);
+  glUniform1i(uniforms.has_texture0, model.textures.first ? true : false);
+  glUniform1i(uniforms.has_texture1, model.textures.second ? true : false);
   glUniform1i(uniforms.has_lightmap,
               model.lightmaps.first ? true : lightmaps_ ? true : false);
   glUniform1i(uniforms.has_normalmap, model.normalmap ? true : false);

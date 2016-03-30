@@ -33,7 +33,7 @@ public:
    * @brief Container for textures.
    */
   using TextureMap =
-      std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
+      std::unordered_map<std::string, std::shared_ptr<Texture>>;
 
   /**
    * @brief Container for sounds.
@@ -54,7 +54,7 @@ public:
   /**
    * @brief Pair for TextureMap
    */
-  using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
+  using TexturePair = std::pair<std::string, std::shared_ptr<Texture>>;
 
   /**
    * @brief Pair for SoundMap
@@ -137,7 +137,7 @@ public:
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  std::shared_ptr<Texture2D> texture_cached(const std::string &path,
+  std::shared_ptr<Texture> texture_cached(const std::string &path,
                                             const bool mipmaps = true);
 
   /**
@@ -147,7 +147,7 @@ public:
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  std::shared_ptr<Texture2D> texture(const std::string &path,
+  std::shared_ptr<Texture> texture(const std::string &path,
                                      const bool mipmaps = true) const;
 
   /**

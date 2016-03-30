@@ -12,14 +12,14 @@ namespace mos {
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
-class Texture2D {
+class Texture {
 public:
   /**
    * @brief Container for pixel data. RGB(A)
    */
   using Texels = std::vector<unsigned char>;
 
-  Texture2D(const std::string &path, const bool mips = true);
+  Texture(const std::string &path, const bool mips = true);
   /**
    * @brief Used to create next unique id.
    */
@@ -36,7 +36,7 @@ public:
    * Constructor for a texture, that takes char valus from a container as input.
    *Along with width and height.
    */
-  Texture2D(T begin, T end, unsigned int width, unsigned int height,
+  Texture(T begin, T end, unsigned int width, unsigned int height,
             const bool mipmaps = true)
       : mipmaps(mipmaps), width_(width), height_(height) {
     id_ = current_id++;
@@ -49,7 +49,7 @@ public:
    * @param height
    * @param mipmaps Generate mipmaps or not.
    */
-  Texture2D(const unsigned int width, const unsigned int height,
+  Texture(const unsigned int width, const unsigned int height,
             const bool mipmaps = true)
       : mipmaps(mipmaps), width_(width), height_(height) {
     id_ = current_id++;
@@ -58,7 +58,7 @@ public:
   /**
    * @brief Destructor.
    */
-  virtual ~Texture2D();
+  virtual ~Texture();
 
   /**
    * @brief begin iterator

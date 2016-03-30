@@ -7,6 +7,7 @@
 #include <mos/graphics/texture2d.hpp>
 #include <mos/graphics/material.hpp>
 #include <mos/graphics/lightmaps.hpp>
+#include <mos/graphics/texture2ds.hpp>
 
 namespace mos {
 
@@ -29,7 +30,7 @@ public:
 
   using Models = std::vector<Model>;
   using MeshPtr = std::shared_ptr<Mesh>;
-  using TexPtr = std::shared_ptr<Texture2D>;
+  using TexPtr = std::shared_ptr<Texture>;
   using MatPtr = std::shared_ptr<Material>;
 
   /**
@@ -48,7 +49,7 @@ public:
    * @param normalmap
    */
   Model(const std::string &name, const MeshPtr &mesh,
-        const TexPtr &texture = TexPtr(), const TexPtr &texture2 = TexPtr(),
+        const Textures &textures = Textures(),
         const glm::mat4 &transform = glm::mat4(1.0f),
         const Draw draw = Draw::TRIANGLES,
         const MatPtr &material = std::make_shared<Material>(
@@ -74,24 +75,19 @@ public:
   std::shared_ptr<Mesh> mesh;
 
   /**
-   * @brief texture
+   * @brief Collection of textures.
    */
-  std::shared_ptr<Texture2D> texture;
+  Textures textures;
 
   /**
-   * @brief texture2
-   */
-  std::shared_ptr<Texture2D> texture2;
-
-  /**
-   * @brief lightmap
+   * @brief Collection of lightmaps and how they are mixed.
    */
   Lightmaps lightmaps;
 
   /**
    * @brief normalmap
    */
-  std::shared_ptr<Texture2D> normalmap;
+  std::shared_ptr<Texture> normalmap;
 
   /**
    * @brief material

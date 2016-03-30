@@ -56,13 +56,13 @@ public:
    * @brief Load a texture into renderer memory.
    * @param texture The texture.
    */
-  void load(const std::shared_ptr<Texture2D> &texture);
+  void load(const std::shared_ptr<Texture> &texture);
 
   /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
    */
-  void unload(const std::shared_ptr<Texture2D> &texture);
+  void unload(const std::shared_ptr<Texture> &texture);
 
   /**
    * @brief render_target
@@ -213,8 +213,8 @@ private:
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
-    GLint has_texture;
-    GLint has_texture2;
+    GLint has_texture0;
+    GLint has_texture1;
     GLint has_lightmap;
     GLint has_normalmap;
     GLint has_material;
@@ -242,9 +242,9 @@ private:
   unsigned int create_shader(const std::string source, const unsigned int type);
   bool check_shader(const unsigned int shader);
   bool check_program(const unsigned int program);
-  unsigned int create_texture(std::shared_ptr<mos::Texture2D> texture);
+  unsigned int create_texture(std::shared_ptr<mos::Texture> texture);
   unsigned int
-  create_texture_and_pbo(const std::shared_ptr<mos::Texture2D> &texture);
+  create_texture_and_pbo(const std::shared_ptr<mos::Texture> &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source);
 

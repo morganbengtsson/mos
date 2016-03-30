@@ -5,14 +5,13 @@ namespace mos {
 Model::Model() {}
 
 Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
-             const std::shared_ptr<Texture2D> &texture,
-             const std::shared_ptr<Texture2D> &texture2,
+             const Textures &textures,
              const glm::mat4 &transform, const Draw draw,
              const std::shared_ptr<Material> &material,
              const Lightmaps &lightmaps,
-             const std::shared_ptr<Texture2D> &normalmap,
+             const std::shared_ptr<Texture> &normalmap,
              const float affected_by_light, const Shader shader)
-    : draw(draw), mesh(mesh), texture(texture), texture2(texture2),
+    : draw(draw), mesh(mesh), textures(textures),
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
       transform(transform), receives_light(affected_by_light), shader(shader),
       overlay_(0.0f) {}

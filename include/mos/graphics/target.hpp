@@ -24,7 +24,7 @@ public:
    * @brief The texture that is rendered to.
    * @todo Should probably not be shared.
    */
-  std::shared_ptr<mos::Texture2D> texture;
+  std::shared_ptr<mos::Texture> texture;
 
   /**
    * @brief unique id

@@ -11,7 +11,7 @@ namespace mos {
 class Font {
 public:
   using CharMap = std::map<char, Character>;
-  using TexPtr = std::shared_ptr<Texture2D>;
+  using TexPtr = std::shared_ptr<Texture>;
   Font(const std::string &path);
   Font(const CharMap &characters, const TexPtr &texture, const float height,
        const float ascender, const float descender);
