@@ -2,7 +2,7 @@
 #define MOS_RENDERER_H
 
 #include "GL/glew.h"
-#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/texture.hpp>
 #include <mos/graphics/model.hpp>
 #include <mos/graphics/quad.hpp>
 #include <mos/graphics/text.hpp>

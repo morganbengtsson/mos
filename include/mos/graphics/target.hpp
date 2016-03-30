@@ -2,7 +2,7 @@
 #define MOS_RENDER_TARGET_HPP
 
 #include <memory>
-#include "texture2d.hpp"
+#include "texture.hpp"
 
 namespace mos {
 /**

@@ -4,10 +4,10 @@
 #include <memory>
 #include <optional.hpp>
 #include <mos/graphics/mesh.hpp>
-#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/texture.hpp>
 #include <mos/graphics/material.hpp>
 #include <mos/graphics/lightmaps.hpp>
-#include <mos/graphics/texture2ds.hpp>
+#include <mos/graphics/textures.hpp>
 
 namespace mos {
 

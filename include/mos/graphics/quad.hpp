@@ -2,7 +2,7 @@
 #define MOS_QUAD_HPP
 
 #include "model.hpp"
-#include "texture2d.hpp"
+#include "texture.hpp"
 #include "mesh.hpp"
 
 #include <memory>

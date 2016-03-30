@@ -2,7 +2,7 @@
 #define LIGHTMAPS_HPP
 
 #include <memory>
-#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/texture.hpp>
 
 class Lightmaps {
 public:

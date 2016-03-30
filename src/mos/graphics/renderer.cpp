@@ -17,7 +17,7 @@
 #include <mos/graphics/renderer.hpp>
 #include <mos/graphics/vertex.hpp>
 #include <mos/graphics/mesh.hpp>
-#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/texture.hpp>
 #include <mos/graphics/model.hpp>
 #include <mos/util.hpp>
 

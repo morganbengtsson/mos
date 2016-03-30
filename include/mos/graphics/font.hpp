@@ -3,7 +3,7 @@
 
 #include <map>
 #include <memory>
-#include <mos/graphics/texture2d.hpp>
+#include <mos/graphics/texture.hpp>
 #include <mos/graphics/character.hpp>
 
 namespace mos {
