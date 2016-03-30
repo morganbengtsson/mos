@@ -237,7 +237,7 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "light_specular_color"),
           glGetUniformLocation(program, "textures.has_first"),
           glGetUniformLocation(program, "textures.has_second"),
-          glGetUniformLocation(program, "has_lightmap"),
+          glGetUniformLocation(program, "lightmaps.has_first"),
           glGetUniformLocation(program, "has_normalmap"),
           glGetUniformLocation(program, "has_material"),
           glGetUniformLocation(program, "receives_light"),
@@ -752,7 +752,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
 
   glUniform1i(uniforms.textures_has_first, model.textures.first ? true : false);
   glUniform1i(uniforms.textures_has_second, model.textures.second ? true : false);
-  glUniform1i(uniforms.has_lightmap,
+  glUniform1i(uniforms.lightmaps_has_first,
               model.lightmaps.first ? true : lightmaps_ ? true : false);
   glUniform1i(uniforms.has_normalmap, model.normalmap ? true : false);
   glUniform1i(uniforms.has_material, model.material ? true : false);

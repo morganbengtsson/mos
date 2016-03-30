@@ -1,6 +1,7 @@
 #version 330
 struct Lightmaps {
     sampler2D first;
+    bool has_first;
 };
 
 struct Textures {
@@ -23,7 +24,6 @@ uniform sampler2D normalmap;
 uniform vec3 light_position;
 uniform vec3 light_diffuse_color;
 uniform vec3 light_specular_color;
-uniform bool has_lightmap;
 uniform bool has_normalmap;
 uniform bool has_material;
 uniform vec3 fog_color = vec3(1.0, 1.0, 1.0);
@@ -45,7 +45,7 @@ float fog(float distance, float density) {
 void main() {
 
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    if (has_lightmap == true) {
+    if (lightmaps.has_first == true) {
         static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
     }
 

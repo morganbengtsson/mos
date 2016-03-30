@@ -215,7 +215,7 @@ private:
     GLint light_specular_color;
     GLint textures_has_first;
     GLint textures_has_second;
-    GLint has_lightmap;
+    GLint lightmaps_has_first;
     GLint has_normalmap;
     GLint has_material;
     GLint receives_light;
