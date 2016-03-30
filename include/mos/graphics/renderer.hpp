@@ -201,8 +201,8 @@ private:
     GLint mvp;
     GLint mv;
     GLint normal_matrix;
-    GLint texture;
-    GLint texture2;
+    GLint textures_first;
+    GLint textures_second;
     GLint lightmap;
     GLint normalmap;
     GLint material_ambient_color;

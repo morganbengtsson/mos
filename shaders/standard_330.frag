@@ -3,6 +3,11 @@ struct Lightmaps {
     sampler2D first;
 };
 
+struct Textures {
+    sampler2D first;
+    sampler2D second;
+};
+
 uniform bool receives_light;
 uniform vec3 material_ambient_color;
 uniform vec3 material_diffuse_color;
@@ -10,8 +15,7 @@ uniform vec3 material_specular_color;
 uniform float material_specular_exponent;
 uniform float opacity;
 uniform float multiply = 1.0;
-uniform sampler2D texture;
-uniform sampler2D texture2;
+uniform Textures textures;
 uniform Lightmaps lightmaps;
 uniform sampler2D normalmap;
 uniform vec3 light_position;
@@ -56,11 +60,11 @@ void main() {
 
     vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);
     if (has_texture == true) {
-        tex_color = texture2D(texture, fragment_uv);
+        tex_color = texture2D(textures.first, fragment_uv);
     }
 
     if (has_texture2 == true) {
-        vec4 tex2_color = texture2D(texture2, fragment_uv);
+        vec4 tex2_color = texture2D(textures.second, fragment_uv);
         tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
     }
 

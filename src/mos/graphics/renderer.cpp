@@ -223,8 +223,8 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           program, glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
           glGetUniformLocation(program, "normal_matrix"),
-          glGetUniformLocation(program, "texture"),
-          glGetUniformLocation(program, "texture2"),
+          glGetUniformLocation(program, "textures.first"),
+          glGetUniformLocation(program, "textures.second"),
           glGetUniformLocation(program, "lightmaps.first"),
           glGetUniformLocation(program, "normalmap"),
           glGetUniformLocation(program, "material_ambient_color"),
@@ -694,14 +694,14 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   if (model.textures.first != nullptr) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[model.textures.first->id()]);
-    glUniform1i(uniforms.texture, texture_unit);
+    glUniform1i(uniforms.textures_first, texture_unit);
     texture_unit++;
   }
 
   if (model.textures.second != nullptr) {
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[model.textures.second->id()]);
-    glUniform1i(uniforms.texture2, texture_unit);
+    glUniform1i(uniforms.textures_second, texture_unit);
     texture_unit++;
   }
 
