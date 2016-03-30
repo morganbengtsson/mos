@@ -6,6 +6,8 @@ struct Lightmaps {
 struct Textures {
     sampler2D first;
     sampler2D second;
+    bool has_first;
+    bool has_second;
 };
 
 uniform bool receives_light;
@@ -21,8 +23,6 @@ uniform sampler2D normalmap;
 uniform vec3 light_position;
 uniform vec3 light_diffuse_color;
 uniform vec3 light_specular_color;
-uniform bool has_texture;
-uniform bool has_texture2;
 uniform bool has_lightmap;
 uniform bool has_normalmap;
 uniform bool has_material;
@@ -59,11 +59,11 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     vec4 tex_color = vec4(1.0, 1.0, 1.0, 0.0);
-    if (has_texture == true) {
+    if (textures.has_first == true) {
         tex_color = texture2D(textures.first, fragment_uv);
     }
 
-    if (has_texture2 == true) {
+    if (textures.has_second == true) {
         vec4 tex2_color = texture2D(textures.second, fragment_uv);
         tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
     }
@@ -96,7 +96,7 @@ void main() {
     else {
         color = vec4(diffuse_color.rgb, opacity);
     }
-    if (has_texture) {
+    if (textures.has_first) {
         color.a = tex_color.a * opacity;
     }
     //Multiply

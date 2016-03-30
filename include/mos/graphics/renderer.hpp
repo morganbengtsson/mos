@@ -213,8 +213,8 @@ private:
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
-    GLint has_texture0;
-    GLint has_texture1;
+    GLint textures_has_first;
+    GLint textures_has_second;
     GLint has_lightmap;
     GLint has_normalmap;
     GLint has_material;
