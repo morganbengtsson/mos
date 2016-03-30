@@ -335,6 +335,13 @@ void Renderer::load(const Model &model) {
     }
   }
 
+  if (model.lightmaps.second) {
+    if (textures_.find(model.lightmaps.second->id()) == textures_.end()) {
+      load(model.lightmaps.second);
+    }
+  }
+
+
   if (model.normalmap) {
     if (textures_.find(model.normalmap->id()) == textures_.end()) {
       load(model.normalmap);
