@@ -117,6 +117,9 @@ public:
   glm::vec3 overlay() const;
   void overlay(const glm::vec3 &overlay);
 
+  float multiply() const;
+  void multiply(const float &multiply);
+
   /**
   * @brief Get the color, (to be deprecated).
   */
@@ -173,6 +176,12 @@ private:
    * @brief overlay color that is not in light calculations.
    */
   glm::vec3 overlay_;
+
+  /**
+   * @brief Extra multiply factor for light calculations.
+   */
+  //TODO vec3
+  float multiply_;
 
 };
 }

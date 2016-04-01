@@ -789,7 +789,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
 
   glUniform1fv(uniforms.time, 1, &time_);
   glUniform3fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
-  glUniform1fv(uniforms.multiply, 1, &multiply);
+  auto v = model.multiply();
+  glUniform1fv(uniforms.multiply, 1, &v);
   glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),

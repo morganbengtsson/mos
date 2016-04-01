@@ -1,5 +1,5 @@
-#ifndef MOS_NAVMESH_HPP
-#define MOS_NAVMESH_HPP
+#ifndef MOS_NAVMESH2_HPP
+#define MOS_NAVMESH2_HPP
 
 #include <vector>
 #include <array>
@@ -82,4 +82,4 @@ private:
 };
 }
 
-#endif // MOS_NAVMESH_HPP
+#endif // MOS_NAVMESH2_HPP
