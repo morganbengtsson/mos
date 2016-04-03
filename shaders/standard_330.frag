@@ -48,11 +48,12 @@ float fog(float distance, float density) {
 void main() {
 
     vec4 static_light = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    static_light = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     if (lightmaps.has_first == true) {
-        static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
+        //static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
     }
 
-    if(lightmaps.has_second == true){
+    if(lightmaps.has_second == true) {
         //Do something.
     }
 

@@ -14,7 +14,9 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
     : draw(draw), mesh(mesh), textures(textures),
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
       transform(transform), receives_light(affected_by_light), shader(shader),
-      overlay_(0.0f), multiply_(1.0f) {}
+      overlay_(0.0f), multiply_(1.0f) {
+
+}
 
 Model::~Model() {}
 
