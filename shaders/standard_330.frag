@@ -29,6 +29,13 @@ struct Fog {
     float density;
 };
 
+struct Fragment {
+    vec3 position;
+    vec3 normal;
+    vec2 uv;
+    vec2 lightmap_uv;
+};
+
 uniform bool receives_light;
 uniform float multiply = 1.0;
 uniform Material material;
@@ -38,11 +45,7 @@ uniform Light light;
 uniform Fog fog = Fog(vec3(1.0, 1.0f, 1.0), 0.0);
 uniform sampler2D normalmap;
 uniform vec3 overlay = vec3(0.0, 0.0, 0.0);
-in vec3 fragment_position;
-in vec3 fragment_normal;
-in vec2 fragment_uv;
-in vec2 fragment_lightmap_uv;
-
+in Fragment fragment;
 layout(location = 0) out vec4 color;
 
 float calculate_fog(float distance, float density) {
@@ -53,28 +56,28 @@ float calculate_fog(float distance, float density) {
 
 void main() {
 
-    vec4 static_light = texture2D(lightmaps.first, fragment_lightmap_uv);
+    vec4 static_light = texture2D(lightmaps.first, fragment.lightmap_uv);
 
-    static_light += texture2D(lightmaps.second, fragment_uv);
+    static_light += texture2D(lightmaps.second, fragment.uv);
 
-    vec3 normal = normalize(fragment_normal);
+    vec3 normal = normalize(fragment.normal);
 
     //TODO: Not correct!
-    vec4 tex_normal = texture2D(normalmap, fragment_uv);
+    vec4 tex_normal = texture2D(normalmap, fragment.uv);
     normal = mix(normal, tex_normal.xyz, tex_normal.z);
 
-    vec3 surface_to_light = normalize(light.position - fragment_position);
+    vec3 surface_to_light = normalize(light.position - fragment.position);
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture2D(textures.first, fragment_uv);
-    vec4 tex2_color = texture2D(textures.second, fragment_uv);
+    vec4 tex_color = texture2D(textures.first, fragment.uv);
+    vec4 tex2_color = texture2D(textures.second, fragment.uv);
     tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
     diffuse_color = vec4(mix(tex_color.rgb, material.diffuse.rgb, 1.0 - tex_color.a), 1.0);
 
-    float dist = distance(light.position, fragment_position);
+    float dist = distance(light.position, fragment.position);
     float a = 1.0;
     float b = 1.0;
     float att = 1.0 / (1.0 + a*dist + b*dist*dist);
@@ -82,7 +85,7 @@ void main() {
     vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
-    vec3 surface_to_view = normalize(fragment_position);
+    vec3 surface_to_view = normalize(fragment.position);
     vec3 reflection = reflect(normal, -surface_to_light);
     float specular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material.specular_exponent);
     specular = vec4(specular_contribution * light.specular * material.specular, 1.0);
