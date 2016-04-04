@@ -72,7 +72,6 @@ Renderer::Renderer() : lightmaps_(true) {
 
   create_depth_program();
 
-
   // Render boxes
   float vertices[] = {
       -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
@@ -138,7 +137,7 @@ Renderer::Renderer() : lightmaps_(true) {
   glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_texture_, 0);
   glDrawBuffer(GL_NONE);
 
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Shadowmap framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -187,6 +186,45 @@ Renderer::~Renderer() {
   }
 }
 
+void Renderer::update_depth(const Model &model,
+                            const glm::mat4 &parent_transform,
+                            const glm::mat4 &view, const glm::mat4 &projection,
+                            const glm::vec2 &resolution) {
+
+  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
+  glViewport(0, 0, resolution.x, resolution.y);
+  load(model);
+
+  auto transform = model.transform;
+  glm::mat4 mvp = projection * view * parent_transform * transform;
+
+  glUseProgram(depth_program_.program);
+
+  if (model.mesh) {
+    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+  };
+
+  auto &uniforms = depth_program_;
+
+  glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+
+  int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
+                                                model.mesh->elements_end())
+                                : 0;
+
+  if (model.mesh) {
+    if (num_elements > 0) {
+      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
+    } else {
+      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices_size());
+    }
+  }
+  for (auto &child : model.models) {
+    update_depth(child, parent_transform * model.transform, view, projection, resolution);
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void Renderer::add_box_program(const std::string &name,
                                const std::string &vs_source,
                                const std::string &fs_source) {
@@ -226,8 +264,8 @@ void Renderer::create_depth_program() {
   glLinkProgram(program);
   check_program(program);
 
-  depth_program_ = DepthProgramData{program, glGetUniformLocation(
-        program, "model_view_projection")};
+  depth_program_ = DepthProgramData{
+      program, glGetUniformLocation(program, "model_view_projection")};
 }
 
 void Renderer::add_particle_program(const std::string name,
@@ -499,7 +537,7 @@ void Renderer::lightmaps(const bool lightmaps) { lightmaps_ = lightmaps; }
 
 bool Renderer::lightmaps() const { return lightmaps_; }
 
-unsigned int Renderer::create_shader(const std::string source,
+unsigned int Renderer::create_shader(const std::string &source,
                                      const unsigned int type) {
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
@@ -746,7 +784,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const float dt, const glm::vec2 &resolution,
                       const Light &light, const Fog &fog,
                       const float multiply) {
-  time_ += dt;
+  time_ += dt; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 

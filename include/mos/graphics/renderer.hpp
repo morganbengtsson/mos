@@ -42,9 +42,11 @@ public:
 
 
   // Temporary method
-  void depth_target() {
-
-  }
+  void update_depth(const Model &model,
+                    const glm::mat4 &parent_transform,
+              const glm::mat4 &view,
+              const glm::mat4 &projection,
+              const glm::vec2 &resolution);
 
 
   /**
@@ -249,7 +251,7 @@ private:
   void add_particle_program(const std::string name, const std::string vs_source,
                             const std::string fs_source);
 
-  unsigned int create_shader(const std::string source, const unsigned int type);
+  unsigned int create_shader(const std::string &source, const unsigned int type);
   bool check_shader(const unsigned int shader);
   bool check_program(const unsigned int program);
   unsigned int create_texture(std::shared_ptr<mos::Texture> texture);
