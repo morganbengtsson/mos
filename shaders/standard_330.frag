@@ -1,4 +1,12 @@
 #version 330
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float specular_exponent;
+    float opacity;
+};
+
 struct Lightmaps {
     sampler2D first;
     sampler2D second;
@@ -11,12 +19,8 @@ struct Textures {
 };
 
 uniform bool receives_light;
-uniform vec3 material_ambient_color;
-uniform vec3 material_diffuse_color;
-uniform vec3 material_specular_color;
-uniform float material_specular_exponent;
-uniform float opacity;
 uniform float multiply = 1.0;
+uniform Material material;
 uniform Textures textures;
 uniform Lightmaps lightmaps;
 uniform sampler2D normalmap;
@@ -60,7 +64,7 @@ void main() {
     tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
-    diffuse_color = vec4(mix(tex_color.rgb, material_diffuse_color.rgb, 1.0 - tex_color.a), 1.0);
+    diffuse_color = vec4(mix(tex_color.rgb, material.diffuse.rgb, 1.0 - tex_color.a), 1.0);
 
     float dist = distance(light_position, fragment_position);
     float a = 1.0;
@@ -72,18 +76,18 @@ void main() {
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 surface_to_view = normalize(fragment_position);
     vec3 reflection = reflect(normal, -surface_to_light);
-    float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material_specular_exponent);
-    specular = vec4(secular_contribution * light_specular_color * material_specular_color, 1.0);
+    float secular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material.specular_exponent);
+    specular = vec4(secular_contribution * light_specular_color * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
 
     if(receives_light == true) {
-        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, opacity);
+        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, material.opacity);
     }
     else {
-        color = vec4(diffuse_color.rgb, opacity);
+        color = vec4(diffuse_color.rgb, material.opacity);
     }
-    color.a = opacity + tex_color.a + tex2_color.a;
+    color.a = material.opacity + tex_color.a + tex2_color.a;
 
     //Multiply
     color.rgb = color.rgb * multiply;
