@@ -70,6 +70,9 @@ Renderer::Renderer() : lightmaps_(true) {
   std::string box_frag_source = text("assets/shaders/box_330.frag");
   add_box_program("box", box_vert_source, box_frag_source);
 
+  create_depth_program();
+
+
   // Render boxes
   float vertices[] = {
       -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
@@ -204,6 +207,27 @@ void Renderer::add_box_program(const std::string &name,
       {name, BoxProgramData{program, glGetUniformLocation(
                                          program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
+}
+
+void Renderer::create_depth_program() {
+  auto vert_source = text("assets/shaders/depth_330.vert");
+  auto frag_source = text("assets/shaders/depth_330.frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader);
+
+  auto program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glLinkProgram(program);
+  check_program(program);
+
+  depth_program_ = DepthProgramData{program, glGetUniformLocation(
+        program, "model_view_projection")};
 }
 
 void Renderer::add_particle_program(const std::string name,

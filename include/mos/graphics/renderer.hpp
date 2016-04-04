@@ -40,6 +40,13 @@ public:
    */
   virtual ~Renderer();
 
+
+  // Temporary method
+  void depth_target() {
+
+  }
+
+
   /**
    * @brief load a model into renderers own memory.
    * @param model
@@ -193,6 +200,11 @@ private:
     GLint mv;
   };
 
+  struct DepthProgramData {
+    GLuint program;
+    GLint mvp;
+  };
+
   /**
    * @brief The VertexProgramData struct, uniforms for the standard shader.
    */
@@ -246,9 +258,12 @@ private:
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source);
 
+  void create_depth_program();
+
   std::map<Model::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
+  DepthProgramData depth_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
