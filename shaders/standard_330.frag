@@ -24,15 +24,19 @@ struct Textures {
     sampler2D second;
 };
 
+struct Fog {
+    vec3 color;
+    float density;
+};
+
 uniform bool receives_light;
 uniform float multiply = 1.0;
 uniform Material material;
 uniform Textures textures;
 uniform Lightmaps lightmaps;
 uniform Light light;
+uniform Fog fog = Fog(vec3(1.0, 1.0f, 1.0), 0.0);
 uniform sampler2D normalmap;
-uniform vec3 fog_color = vec3(1.0, 1.0, 1.0);
-uniform float fog_density = 0.0;
 uniform vec3 overlay = vec3(0.0, 0.0, 0.0);
 in vec3 fragment_position;
 in vec3 fragment_normal;
@@ -41,7 +45,7 @@ in vec2 fragment_lightmap_uv;
 
 layout(location = 0) out vec4 color;
 
-float fog(float distance, float density) {
+float calculate_fog(float distance, float density) {
     float result = exp(-pow(density * distance, 2.0));
     result = 1.0 - clamp(result, 0.0, 1.0);
     return result;
@@ -97,6 +101,6 @@ void main() {
     color.rgb = color.rgb * multiply;
     //Fog
     float distance = gl_FragCoord.z / gl_FragCoord.w;
-    color = mix(color, vec4(fog_color, 1.0), fog(distance, fog_density));
+    color = mix(color, vec4(fog.color, 1.0), calculate_fog(distance, fog.density));
     color.rgb += overlay;
 }
