@@ -215,12 +215,6 @@ private:
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
-    GLint textures_has_first;
-    GLint textures_has_second;
-    GLint lightmaps_has_first;
-    GLint lightmaps_has_second;
-    GLint has_normalmap;
-    GLint has_material;
     GLint receives_light;
     GLint resolution;
     GLint fog_color;
@@ -262,6 +256,7 @@ private:
   std::unordered_map<unsigned int, GLuint> array_buffers_;
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
+  unsigned int empty_texture_;
   unsigned int box_vbo;
   unsigned int box_ebo;
   unsigned int box_va;
