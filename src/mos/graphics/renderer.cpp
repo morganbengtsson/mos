@@ -114,9 +114,31 @@ Renderer::Renderer() : lightmaps_(true) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-  auto data =std::array<unsigned char, 4>{0, 0, 0, 0};
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1,
-               1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+  auto data = std::array<unsigned char, 4>{0, 0, 0, 0};
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, data.data());
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  // Shadow maps frame buffer
+  glGenFramebuffers(1, &depth_frame_buffer_);
+  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
+
+  glGenTextures(1, &depth_texture_);
+  glBindTexture(GL_TEXTURE_2D, depth_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024, 0,
+               GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_texture_, 0);
+  glDrawBuffer(GL_NONE);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+    throw std::runtime_error("Shadowmap framebuffer incomplete.");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -350,7 +372,6 @@ void Renderer::load(const Model &model) {
       load(model.lightmaps.second);
     }
   }
-
 
   if (model.normalmap) {
     if (textures_.find(model.normalmap->id()) == textures_.end()) {
@@ -692,13 +713,15 @@ void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
                       const Fog &fog, const float multiply) {
-  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog, multiply);
+  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog,
+         multiply);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
-                      const Light &light, const Fog &fog, const float multiply) {
+                      const Light &light, const Fog &fog,
+                      const float multiply) {
   time_ += dt;
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -717,27 +740,37 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
 
   int texture_unit = 0;
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.textures.first ? textures_[model.textures.first->id()] : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.textures.first
+                                   ? textures_[model.textures.first->id()]
+                                   : empty_texture_);
   glUniform1i(uniforms.textures_first, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.textures.second ? textures_[model.textures.second->id()] : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.textures.second
+                                   ? textures_[model.textures.second->id()]
+                                   : empty_texture_);
   glUniform1i(uniforms.textures_second, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmaps.first ? textures_[model.lightmaps.first->id()] : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.lightmaps.first
+                                   ? textures_[model.lightmaps.first->id()]
+                                   : empty_texture_);
   glUniform1i(uniforms.lightmaps_first, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmaps.second ? textures_[model.lightmaps.second->id()] : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.lightmaps.second
+                                   ? textures_[model.lightmaps.second->id()]
+                                   : empty_texture_);
   glUniform1i(uniforms.lightmaps_second, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.normalmap ? textures_[model.normalmap->id()] : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.normalmap
+                                   ? textures_[model.normalmap->id()]
+                                   : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
 
@@ -767,12 +800,10 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                glm::value_ptr(glm::vec3(
                    view * glm::vec4(light.position.x, light.position.y,
                                     light.position.z, 1.0f))));
-  glUniform3fv(uniforms.light_diffuse_color, 1,
-               glm::value_ptr(light.diffuse));
+  glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
-  glUniform3fv(uniforms.light_ambient_color, 1,
-               glm::value_ptr(light.ambient));
+  glUniform3fv(uniforms.light_ambient_color, 1, glm::value_ptr(light.ambient));
 
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));

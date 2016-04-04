@@ -257,10 +257,13 @@ private:
   std::unordered_map<unsigned int, GLuint> array_buffers_;
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
-  unsigned int empty_texture_;
-  unsigned int box_vbo;
-  unsigned int box_ebo;
-  unsigned int box_va;
+
+  GLuint empty_texture_;
+  GLuint box_vbo;
+  GLuint box_ebo;
+  GLuint box_va;
+  GLuint depth_texture_;
+  GLuint depth_frame_buffer_;
 };
 }
 #endif /* MOS_RENDERER_H */
