@@ -215,6 +215,7 @@ private:
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
+    GLint light_ambient_color;
     GLint receives_light;
     GLint resolution;
     GLint fog_color;

@@ -20,8 +20,9 @@ public:
    * @param specular_color
    */
   explicit Light(const glm::vec3 &position = glm::vec3(0.0f),
-                 const glm::vec3 &diffuse_color = glm::vec3(0.0f),
-                 const glm::vec3 &specular_color = glm::vec3(0.0f));
+                 const glm::vec3 &diffuse = glm::vec3(0.0f),
+                 const glm::vec3 &specular = glm::vec3(0.0f),
+                 const glm::vec3 &ambient = glm::vec3(0.0f));
   virtual ~Light();
 
   /**
@@ -32,12 +33,17 @@ public:
   /**
    * @brief diffuse_color
    */
-  glm::vec3 diffuse_color;
+  glm::vec3 diffuse;
 
   /**
    * @brief specular_color
    */
-  glm::vec3 specular_color;
+  glm::vec3 specular;
+
+  /**
+   * @brief ambient
+   */
+  glm::vec3 ambient;
 };
 }
 

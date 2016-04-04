@@ -1,6 +1,6 @@
 #version 330
 struct Material {
-    vec3 ambient; //TODO: move
+    vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     float specular_exponent;
@@ -11,6 +11,7 @@ struct Light {
     vec3 position;
     vec3 diffuse;
     vec3 specular;
+    vec3 ambient;
 };
 
 struct Lightmaps {
@@ -92,8 +93,11 @@ void main() {
 
     vec4 diffuse_static = static_light * diffuse_color;
 
+    //Ambient
+    vec3 ambient = material.ambient * light.ambient;
+
     if(receives_light == true) {
-        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz, material.opacity);
+        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz + ambient, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);

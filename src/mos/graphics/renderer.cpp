@@ -251,6 +251,7 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "light.position"),
           glGetUniformLocation(program, "light.diffuse"),
           glGetUniformLocation(program, "light.specular"),
+          glGetUniformLocation(program, "light.ambient"),
           glGetUniformLocation(program, "receives_light"),
           glGetUniformLocation(program, "resolution"),
           glGetUniformLocation(program, "fog.color"),
@@ -767,9 +768,11 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                    view * glm::vec4(light.position.x, light.position.y,
                                     light.position.z, 1.0f))));
   glUniform3fv(uniforms.light_diffuse_color, 1,
-               glm::value_ptr(light.diffuse_color));
+               glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
-               glm::value_ptr(light.specular_color));
+               glm::value_ptr(light.specular));
+  glUniform3fv(uniforms.light_ambient_color, 1,
+               glm::value_ptr(light.ambient));
 
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
