@@ -124,7 +124,7 @@ Renderer::Renderer() : lightmaps_(true) {
 
   // Shadow maps frame buffer
 
-  /*
+
   glGenTextures(1, &depth_texture_);
   glBindTexture(GL_TEXTURE_2D, depth_texture_);
 
@@ -146,7 +146,8 @@ Renderer::Renderer() : lightmaps_(true) {
     throw std::runtime_error("Shadowmap framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  */
+
+  /*
   GLuint frame_buffer_id;
   glGenFramebuffers(1, &frame_buffer_id);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
@@ -179,7 +180,7 @@ Renderer::Renderer() : lightmaps_(true) {
   depth_texture_ = texture_id;
   depth_frame_buffer_ = frame_buffer_id;
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 }
 
 Renderer::~Renderer() {
