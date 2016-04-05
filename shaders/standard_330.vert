@@ -4,7 +4,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 lightmap_uv;
-    vec2 shadow_uv;
+    vec2 shadowmap_uv;
 };
 
 struct Light {
@@ -36,7 +36,8 @@ void main()
     0.5, 0.5, 0.5, 1.0
     );
     mat4 depth_bias_mvp = bias * light.projection * light.view * model;
-    fragment.shadow_uv = (depth_bias_mvp * vec4(position, 1.0)).xy;
+    //fragment.shadowmap_uv = (depth_bias_mvp * vec4(position, 1.0)).xy;
+    fragment.shadowmap_uv = uv;
 
     fragment.uv = uv;
     fragment.lightmap_uv = lightmap_uv;

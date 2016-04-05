@@ -108,6 +108,7 @@ Renderer::Renderer() : lightmaps_(true) {
   glBindVertexArray(0);
 
   // Empty texture
+
   glGenTextures(1, &empty_texture_);
   glBindTexture(GL_TEXTURE_2D, empty_texture_);
 
@@ -122,26 +123,28 @@ Renderer::Renderer() : lightmaps_(true) {
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
-  glGenFramebuffers(1, &depth_frame_buffer_);
-  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
 
   glGenTextures(1, &depth_texture_);
   glBindTexture(GL_TEXTURE_2D, depth_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024, 0,
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0,
                GL_DEPTH_COMPONENT, GL_FLOAT, 0);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depth_texture_, 0);
+  glGenFramebuffers(1, &depth_frame_buffer_);
+  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
   glDrawBuffer(GL_NONE);
+  //glReadBuffer(GL_NONE);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Shadowmap framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Renderer::~Renderer() {
@@ -191,7 +194,6 @@ void Renderer::update_depth(const Model &model,
                             const glm::mat4 &view, const glm::mat4 &projection,
                             const glm::vec2 &resolution) {
 
-
   glViewport(0, 0, 1024, 1024);
   load(model);
 
@@ -204,9 +206,7 @@ void Renderer::update_depth(const Model &model,
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
   };
 
-  auto &uniforms = depth_program_;
-
-  glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+  glUniformMatrix4fv(depth_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
@@ -674,7 +674,7 @@ Renderer::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
 
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
   return texture_id;
 }
@@ -811,6 +811,14 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.textures_first, texture_unit);
   texture_unit++;
 
+  //Shadowmap
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_2D, depth_texture_);
+  glUniform1i(uniforms.shadowmap, texture_unit);
+  //glBindTexture(GL_TEXTURE_2D, textures_[1]);
+  //glUniform1i(uniforms.shadowmap, texture_unit);
+  texture_unit++;
+
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.textures.second
                                    ? textures_[model.textures.second->id()]
@@ -838,13 +846,6 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                                    : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
-
-  //Shadowmap
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, depth_texture_);
-  glUniform1i(uniforms.shadowmap, texture_unit);
-  texture_unit++;
-
 
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);

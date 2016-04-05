@@ -37,7 +37,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 lightmap_uv;
-    vec2 shadow_uv;
+    vec2 shadowmap_uv;
 };
 
 uniform bool receives_light;
@@ -116,8 +116,8 @@ void main() {
     color.rgb += overlay;
 
     //Shadow test
-    //float d = pow(texture(shadowmap, fragment.shadow_uv).x, 100.0);
-    //color.rgba = vec4(d,d,d, 1.0);
 
+    float d = pow(texture2D(shadowmap, fragment.uv).x, 1.0);
+    color.rgba = vec4(d,d,d, 1.0);
 
 }
