@@ -117,7 +117,7 @@ void main() {
 
     //Shadow test
 
-    float d = pow(texture2D(shadowmap, fragment.uv).x, 1.0);
-    color.rgba = vec4(d,d,d, 1.0);
+    vec4 c = texture2D(shadowmap, fragment.shadowmap_uv);
+    color.rgba = vec4(c.rgb, 1.0);
 
 }
