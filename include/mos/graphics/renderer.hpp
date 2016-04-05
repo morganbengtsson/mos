@@ -177,6 +177,10 @@ public:
    */
   bool lightmaps() const;
 
+  //TODO: Private
+  GLuint depth_texture_;
+  GLuint depth_frame_buffer_;
+
 private:
   /**
    * @brief Amount of time the renderer has been alive, used in shaders.
@@ -282,8 +286,7 @@ private:
   GLuint box_vbo;
   GLuint box_ebo;
   GLuint box_va;
-  GLuint depth_texture_;
-  GLuint depth_frame_buffer_;
+
 };
 }
 #endif /* MOS_RENDERER_H */

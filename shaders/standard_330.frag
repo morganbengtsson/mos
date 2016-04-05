@@ -116,10 +116,8 @@ void main() {
     color.rgb += overlay;
 
     //Shadow test
-    float n = 1.0; // camera z near
-    float f = 60.0; // camera z far
-    float z = texture2D(shadowmap, fragment.shadow_uv).x;
-    float d =  (2.0 * n) / (f + n - z * (f - n));
-    color.rgba = vec4(d,d,d, 1.0);
+    //float d = pow(texture(shadowmap, fragment.shadow_uv).x, 100.0);
+    //color.rgba = vec4(d,d,d, 1.0);
+
 
 }

@@ -122,6 +122,7 @@ Renderer::Renderer() : lightmaps_(true) {
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
+  /*
   glGenFramebuffers(1, &depth_frame_buffer_);
   glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
 
@@ -142,6 +143,7 @@ Renderer::Renderer() : lightmaps_(true) {
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
+  */
 }
 
 Renderer::~Renderer() {
@@ -191,8 +193,8 @@ void Renderer::update_depth(const Model &model,
                             const glm::mat4 &view, const glm::mat4 &projection,
                             const glm::vec2 &resolution) {
 
-  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
-  glViewport(0, 0, resolution.x, resolution.y);
+
+  glViewport(0, 0, 1024, 1024);
   load(model);
 
   auto transform = model.transform;
@@ -221,8 +223,7 @@ void Renderer::update_depth(const Model &model,
   }
   for (auto &child : model.models) {
     update_depth(child, parent_transform * model.transform, view, projection, resolution);
-  }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }  
 }
 
 void Renderer::add_box_program(const std::string &name,
@@ -805,12 +806,6 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
 
   int texture_unit = 0;
 
-  //Shadowmap
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, depth_texture_);
-  glUniform1i(uniforms.shadowmap, texture_unit);
-  texture_unit++;
-
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.textures.first
                                    ? textures_[model.textures.first->id()]
@@ -844,6 +839,12 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                                    ? textures_[model.normalmap->id()]
                                    : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
+  texture_unit++;
+
+  //Shadowmap
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_2D, depth_texture_);
+  glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
 
