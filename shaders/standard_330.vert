@@ -17,6 +17,7 @@ struct Light {
 };
 
 uniform Light light;
+uniform mat4 depth_bias_model_view_projection;
 uniform mat4 model;
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
@@ -27,19 +28,9 @@ layout(location = 2) in vec2 uv;
 layout(location = 3) in vec2 lightmap_uv;
 out Fragment fragment;
 void main()
-{
-    //Shadow test, todo on CPU
-    mat4 bias = mat4(
-    0.5, 0.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0
-    );
-    mat4 depth_bias_mvp = bias * light.projection * light.view * model;
-    fragment.shadowmap_uv = (depth_bias_mvp * vec4(position, 1.0)).xy;
-    fragment.shadowmap_uv = (bias * model_view_projection * vec4(position, 1.0)).xy;
-    //fragment.shadowmap_uv = uv;
-
+{    
+    vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
+    fragment.shadowmap_uv = pos_ls.xy / pos_ls.w;
     fragment.uv = uv;
     fragment.lightmap_uv = lightmap_uv;
     fragment.position = (model_view * vec4(position, 1.0)).xyz;
