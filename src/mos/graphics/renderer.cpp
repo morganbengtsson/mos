@@ -122,7 +122,6 @@ Renderer::Renderer() : lightmaps_(true) {
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
-  /*
   glGenFramebuffers(1, &depth_frame_buffer_);
   glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
 
@@ -143,7 +142,6 @@ Renderer::Renderer() : lightmaps_(true) {
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
-  */
 }
 
 Renderer::~Renderer() {
