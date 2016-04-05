@@ -221,6 +221,7 @@ private:
     GLint lightmaps_second;
     GLint lightmaps_mix;
     GLint normalmap;
+    GLint shadowmap;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
@@ -230,6 +231,8 @@ private:
     GLint light_diffuse_color;
     GLint light_specular_color;
     GLint light_ambient_color;
+    GLint light_view;
+    GLint light_projection;
     GLint receives_light;
     GLint resolution;
     GLint fog_color;

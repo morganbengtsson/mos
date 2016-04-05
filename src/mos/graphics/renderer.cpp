@@ -327,6 +327,7 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "lightmaps.second"),
           glGetUniformLocation(program, "lightmaps.mix"),
           glGetUniformLocation(program, "normalmap"),
+          glGetUniformLocation(program, "shadowmap"),
           glGetUniformLocation(program, "material.ambient"),
           glGetUniformLocation(program, "material.diffuse"),
           glGetUniformLocation(program, "material.specular"),
@@ -335,7 +336,9 @@ void Renderer::add_vertex_program(const Model::Shader shader,
           glGetUniformLocation(program, "light.position"),
           glGetUniformLocation(program, "light.diffuse"),
           glGetUniformLocation(program, "light.specular"),
-          glGetUniformLocation(program, "light.ambient"),
+          glGetUniformLocation(program, "light.ambient"),                              
+          glGetUniformLocation(program, "light.view"),
+          glGetUniformLocation(program, "light.projection"),
           glGetUniformLocation(program, "receives_light"),
           glGetUniformLocation(program, "resolution"),
           glGetUniformLocation(program, "fog.color"),
@@ -801,6 +804,13 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   auto &uniforms = vertex_programs_.at(model.shader);
 
   int texture_unit = 0;
+
+  //Shadowmap
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_2D, depth_texture_);
+  glUniform1i(uniforms.shadowmap, texture_unit);
+  texture_unit++;
+
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.textures.first
                                    ? textures_[model.textures.first->id()]
@@ -836,6 +846,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
 
+
+
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
@@ -866,6 +878,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
   glUniform3fv(uniforms.light_ambient_color, 1, glm::value_ptr(light.ambient));
+  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.view[0][0]);
+  glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE, &light.projection[0][0]);
 
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));

@@ -44,6 +44,10 @@ public:
    * @brief ambient
    */
   glm::vec3 ambient;
+
+  glm::mat4 view;
+  glm::mat4 projection;
+
 };
 }
 
