@@ -126,7 +126,7 @@ void main() {
     //Shadow test
     float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
     float depth = fragment.shadow.z;
-    float bias = 0.0002;
+    float bias = 0.005;
     float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
     color.rgb *= shadow;
 }
