@@ -37,7 +37,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 lightmap_uv;
-    vec3 shadowmap_uv;
+    vec3 shadow;
 };
 
 uniform bool receives_light;
@@ -124,9 +124,9 @@ void main() {
     color.rgb += overlay;
 
     //Shadow test
-
-    vec4 c = texture2D(shadowmap, fragment.shadowmap_uv.xy);
-    float d = linear_depth(c.x);
-    color.rgba = vec4(d, d, d, 1.0);
-
+    float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
+    float depth = fragment.shadow.z;
+    float bias = 0.0002;
+    float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
+    color.rgb *= shadow;
 }
