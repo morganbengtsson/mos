@@ -4,7 +4,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 lightmap_uv;
-    vec2 shadowmap_uv;
+    vec3 shadowmap_uv;
 };
 
 struct Light {
@@ -30,7 +30,7 @@ out Fragment fragment;
 void main()
 {    
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
-    fragment.shadowmap_uv = pos_ls.xy / pos_ls.w;
+    fragment.shadowmap_uv = pos_ls.xyz / pos_ls.w;
     fragment.uv = uv;
     fragment.lightmap_uv = lightmap_uv;
     fragment.position = (model_view * vec4(position, 1.0)).xyz;

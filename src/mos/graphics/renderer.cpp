@@ -896,7 +896,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   0.5, 0.5, 0.5, 1.0
   );
 
-  glm::mat4 depth_bias_mvp = bias * projection * view * transform;
+  glm::mat4 depth_bias_mvp = bias * light.projection * light.view * transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE, &depth_bias_mvp[0][0]);
 
   glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));

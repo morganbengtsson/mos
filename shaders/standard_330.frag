@@ -37,7 +37,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 lightmap_uv;
-    vec2 shadowmap_uv;
+    vec3 shadowmap_uv;
 };
 
 uniform bool receives_light;
@@ -57,6 +57,14 @@ float calculate_fog(float distance, float density) {
     float result = exp(-pow(density * distance, 2.0));
     result = 1.0 - clamp(result, 0.0, 1.0);
     return result;
+}
+
+float linear_depth(float value)
+{
+  float n = 1.0; // camera z near
+  float f = 60.0; // camera z far
+  float z = value;
+  return (2.0 * n) / (f + n - z * (f - n));
 }
 
 void main() {
@@ -117,8 +125,8 @@ void main() {
 
     //Shadow test
 
-    vec4 c = texture2D(shadowmap, fragment.shadowmap_uv);
-    float d = pow(c.z, 100.0);
+    vec4 c = texture2D(shadowmap, fragment.shadowmap_uv.xy);
+    float d = linear_depth(c.x);
     color.rgba = vec4(d, d, d, 1.0);
 
 }
