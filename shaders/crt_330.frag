@@ -1,12 +1,18 @@
 #version 330
+struct Fragment {
+    vec3 position;
+    vec3 normal;
+    vec2 uv;
+    vec2 lightmap_uv;
+    vec3 shadow;
+};
+
 uniform sampler2D texture;
 uniform float opacity;
 uniform vec2 resolution;
 uniform float time = 10.0f;
-in vec3 fragment_position;
-in vec2 fragment_uv;
+in Fragment fragment;
 layout(location = 0) out vec4 color;
-
 
 // Loosely based on postprocessing shader by inigo quilez, License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 
@@ -23,7 +29,7 @@ vec2 curve(vec2 uv)
 
 vec4 crt(vec2 fragCoord) {
     vec2 q = fragCoord.xy / resolution.xy;
-    vec2 uv = fragment_uv;
+    vec2 uv = fragment.uv;
     uv = curve( uv );
     vec3 oricol = texture2D(texture, vec2(q.x,q.y) ).xyz;
     vec3 col;
@@ -63,7 +69,7 @@ vec4 crt(vec2 fragCoord) {
 }
 
 void main() {
-    color = crt(fragment_uv);
+    color = crt(fragment.uv);
 };
 
 

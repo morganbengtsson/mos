@@ -95,7 +95,7 @@ public:
       glUseProgram(vertex_programs_[it->shader].program);
       for (auto &m : it->models) {
         update(m, it->view, it->projection, 0.0f, it->resolution, it->light,
-               it->fog);
+               it->fog, 1.0f, it->shader);
       }
     }
   }
@@ -114,8 +114,7 @@ public:
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const float multiply = 1.0f,
-              const Batch::Shader &shader = Batch::Shader::STANDARD);
+              const float multiply = 1.0f, const Batch::Shader &shader = Batch::Shader::STANDARD);
 
   /**
    * @brief update
@@ -130,7 +129,7 @@ public:
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const float multiply = 1.0f);
+              const float multiply = 1.0f, const Batch::Shader &shader = Batch::Shader::STANDARD);
 
   /**
    * @brief update

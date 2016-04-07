@@ -124,7 +124,7 @@ Renderer::Renderer() : lightmaps_(true) {
 
   // Shadow maps frame buffer
 
-
+  /*
   glGenTextures(1, &depth_texture_);
   glBindTexture(GL_TEXTURE_2D, depth_texture_);
 
@@ -134,7 +134,8 @@ Renderer::Renderer() : lightmaps_(true) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+  GL_COMPARE_REF_TO_TEXTURE);
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
   glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -142,12 +143,14 @@ Renderer::Renderer() : lightmaps_(true) {
   glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+  depth_texture_, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Shadowmap framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+ */
 
   /*
   GLuint frame_buffer_id;
@@ -258,8 +261,9 @@ void Renderer::update_depth(const Model &model,
     }
   }
   for (auto &child : model.models) {
-    update_depth(child, parent_transform * model.transform, view, projection, resolution);
-  }  
+    update_depth(child, parent_transform * model.transform, view, projection,
+                 resolution);
+  }
 }
 
 void Renderer::add_box_program(const std::string &name,
@@ -374,7 +378,7 @@ void Renderer::add_vertex_program(const Batch::Shader shader,
           glGetUniformLocation(program, "light.position"),
           glGetUniformLocation(program, "light.diffuse"),
           glGetUniformLocation(program, "light.specular"),
-          glGetUniformLocation(program, "light.ambient"),                              
+          glGetUniformLocation(program, "light.ambient"),
           glGetUniformLocation(program, "light.view"),
           glGetUniformLocation(program, "light.projection"),
           glGetUniformLocation(program, "receives_light"),
@@ -713,7 +717,7 @@ Renderer::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
 
   glBindTexture(GL_TEXTURE_2D, 0);
 
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
   return texture_id;
 }
@@ -815,16 +819,17 @@ void Renderer::update(const Model &model, const Camera &camera, const float dt,
 void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog, const float multiply) {
+                      const Fog &fog, const float multiply,
+                      const Batch::Shader &shader) {
   update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog,
-         multiply);
+         multiply, shader);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
-                      const Light &light, const Fog &fog,
-                      const float multiply, const Batch::Shader &shader) {
+                      const Light &light, const Fog &fog, const float multiply,
+                      const Batch::Shader &shader) {
   time_ += dt; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -848,12 +853,12 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.textures_first, texture_unit);
   texture_unit++;
 
-  //Shadowmap
+  // Shadowmap
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, depth_texture_);
   glUniform1i(uniforms.shadowmap, texture_unit);
-  //glBindTexture(GL_TEXTURE_2D, textures_[1]);
-  //glUniform1i(uniforms.shadowmap, texture_unit);
+  // glBindTexture(GL_TEXTURE_2D, textures_[1]);
+  // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -884,19 +889,15 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
 
-
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-  const glm::mat4 bias(
-  0.5, 0.0, 0.0, 0.0,
-  0.0, 0.5, 0.0, 0.0,
-  0.0, 0.0, 0.5, 0.0,
-  0.5, 0.5, 0.5, 1.0
-  );
+  const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,
+                       0.0, 0.5, 0.5, 0.5, 1.0);
 
   glm::mat4 depth_bias_mvp = bias * light.projection * light.view * transform;
-  glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE, &depth_bias_mvp[0][0]);
+  glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
+                     &depth_bias_mvp[0][0]);
 
   glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
@@ -926,7 +927,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                glm::value_ptr(light.specular));
   glUniform3fv(uniforms.light_ambient_color, 1, glm::value_ptr(light.ambient));
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.view[0][0]);
-  glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE, &light.projection[0][0]);
+  glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
+                     &light.projection[0][0]);
 
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
@@ -1013,7 +1015,8 @@ void Renderer::clear(const glm::vec4 &color) {
   glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Renderer::batches(const std::initializer_list<Batch> &batches_init, const glm::vec4 & color) {
+void Renderer::batches(const std::initializer_list<Batch> &batches_init,
+                       const glm::vec4 &color) {
   batches(batches_init.begin(), batches_init.end(), color);
 }
 }
