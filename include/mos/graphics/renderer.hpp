@@ -11,9 +11,10 @@
 #include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/fog.hpp>
+#include <mos/graphics/batch.hpp>
 #include <mos/simulation/box.hpp>
 #include <optional.hpp>
-
+#include <initializer_list>
 #include <unordered_map>
 #include <optional.hpp>
 #include <array>
@@ -83,7 +84,19 @@ public:
    * @brief clear
    * @param color
    */
-  void clear(const glm::vec4 & color);
+  void clear(const glm::vec4 &color);
+
+  void batches(const glm::vec4 &color, const std::initializer_list<mos::Batch> &batches_init);
+
+  template<class T>
+  void batches(const glm::vec4 &color, T begin, T end) {
+    clear(color);
+    for(auto it = begin; it != end; it++){
+      for (auto &m : it->models) {
+        update(m, it->view, it->projection, 0.0f, it->resolution, it->light, it->fog);
+      }
+    }
+  }
 
   /**
    * @brief Updates render state of model.

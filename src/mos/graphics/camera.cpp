@@ -2,7 +2,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
-Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
+  Camera::Camera() {
+  }
+
+  Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
                const glm::mat4 &projection, const glm::vec3 &up)
     : projection(projection), view(glm::lookAt(position, center, up)), up_(up),
       position_(position), center_(center) {}

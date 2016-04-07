@@ -1015,4 +1015,8 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(color.r, color.g, color.b, color.a);
 }
+
+void Renderer::batches(const glm::vec4 & color, const std::initializer_list<Batch> &batches_init) {
+  batches(color, batches_init.begin(), batches_init.end());
+}
 }

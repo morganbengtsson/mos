@@ -6,6 +6,7 @@
 namespace mos {
 class Fog {
 public:
+  Fog();
   Fog(const glm::vec3 &color, float density);
   Fog(const glm::vec4 & fog);
   glm::vec3 color;

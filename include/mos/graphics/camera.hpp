@@ -10,6 +10,7 @@ namespace mos {
  */
 class Camera {
 public:
+  Camera();
   /**
    * @brief Camera
    * @param eye Where the camera is located.
