@@ -123,10 +123,12 @@ void main() {
     color = mix(color, vec4(fog.color, 1.0), calculate_fog(distance, fog.density));
     color.rgb += overlay;
 
-    //Shadow test
+    //Shadow test, not that great yet.
+#ifdef SHADOWMAPS
     float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
     float depth = fragment.shadow.z;
     float bias = 0.005;
     float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
     color.rgb *= shadow;
+#endif
 }
