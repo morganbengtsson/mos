@@ -44,21 +44,21 @@ Renderer::Renderer() : lightmaps_(true) {
 
   std::string standard_vert_source = text("assets/shaders/standard_330.vert");
   std::string standard_frag_source = text("assets/shaders/standard_330.frag");
-  add_vertex_program(Model::Shader::STANDARD, standard_vert_source,
+  add_vertex_program(Batch::Shader::STANDARD, standard_vert_source,
                      standard_frag_source);
 
   std::string text_vert_source = text("assets/shaders/text_330.vert");
   std::string text_frag_source = text("assets/shaders/text_330.frag");
-  add_vertex_program(Model::Shader::TEXT, text_vert_source, text_frag_source);
+  add_vertex_program(Batch::Shader::TEXT, text_vert_source, text_frag_source);
 
-  add_vertex_program(Model::Shader::EFFECT,
+  add_vertex_program(Batch::Shader::EFFECT,
                      text("assets/shaders/effect_330.vert"),
                      text("assets/shaders/effect_330.frag"));
 
-  add_vertex_program(Model::Shader::BLUR, text("assets/shaders/blur_330.vert"),
+  add_vertex_program(Batch::Shader::BLUR, text("assets/shaders/blur_330.vert"),
                      text("assets/shaders/blur_330.frag"));
 
-  add_vertex_program(Model::Shader::CRT, text("assets/shaders/crt_330.vert"),
+  add_vertex_program(Batch::Shader::CRT, text("assets/shaders/crt_330.vert"),
                      text("assets/shaders/crt_330.frag"));
 
   std::string particles_vert_source = text("assets/shaders/particles_330.vert");
@@ -329,7 +329,7 @@ void Renderer::add_particle_program(const std::string name,
                 glGetUniformLocation(program, "model_view")}));
 }
 
-void Renderer::add_vertex_program(const Model::Shader shader,
+void Renderer::add_vertex_program(const Batch::Shader shader,
                                   const std::string vertex_shader_source,
                                   const std::string fragment_shader_source) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
@@ -824,7 +824,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
                       const Light &light, const Fog &fog,
-                      const float multiply) {
+                      const float multiply, const Batch::Shader &shader) {
   time_ += dt; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -833,14 +833,11 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glm::mat4 mv = view * parent_transform * transform;
   glm::mat4 mvp = projection * view * parent_transform * transform;
 
-
-  glUseProgram(vertex_programs_[model.shader].program);
-
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
   };
 
-  auto &uniforms = vertex_programs_.at(model.shader);
+  auto &uniforms = vertex_programs_.at(shader);
 
   int texture_unit = 0;
 
@@ -1016,7 +1013,7 @@ void Renderer::clear(const glm::vec4 &color) {
   glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Renderer::batches(const glm::vec4 & color, const std::initializer_list<Batch> &batches_init) {
-  batches(color, batches_init.begin(), batches_init.end());
+void Renderer::batches(const std::initializer_list<Batch> &batches_init, const glm::vec4 & color) {
+  batches(batches_init.begin(), batches_init.end(), color);
 }
 }

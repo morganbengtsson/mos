@@ -23,11 +23,6 @@ public:
    */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
-  /**
-   * @brief What shader to use
-   */
-  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT};
-
   using Models = std::vector<Model>;
   using MeshPtr = std::shared_ptr<Mesh>;
   using TexPtr = std::shared_ptr<Texture>;
@@ -55,8 +50,7 @@ public:
         const MatPtr &material = std::make_shared<Material>(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const Lightmaps &lightmaps = Lightmaps(), const TexPtr &normalmap = TexPtr(),
-        const float receives_light = true,
-        const Shader shader = Shader::STANDARD);
+        const float receives_light = true);
 
   /**
    * @brief ~Model destructor
@@ -128,12 +122,8 @@ public:
   /**
   * @brief How to draw the model.
   */
+  //TODO: Move to batch
   Draw draw;
-
-  /**
-   * @brief What shader to use.
-   */
-  Shader shader;
 
   /**
    * @brief If the model is affected by light model (lightmap and dynamic).

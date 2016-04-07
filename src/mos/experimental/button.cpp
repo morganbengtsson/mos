@@ -22,7 +22,6 @@ Button::Button(const Text &text, const State &s)
   rectangle_.transform =
       glm::translate(rectangle_.transform, glm::vec3(0.0f, 0.0f, -0.0f));
   rectangle_.receives_light = false;
-  rectangle_.shader = Model::Shader::STANDARD;
   rectangle_.draw = Model::Draw::TRIANGLES;
   rectangle_.mesh->invalidate();
   text_.position(glm::vec2(padding_, -padding_));

@@ -2,6 +2,7 @@
 #define MOS_RENDERER_H
 
 #include "GL/glew.h"
+#include <mos/graphics/batch.hpp>
 #include <mos/graphics/texture.hpp>
 #include <mos/graphics/model.hpp>
 #include <mos/graphics/quad.hpp>
@@ -11,7 +12,6 @@
 #include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/fog.hpp>
-#include <mos/graphics/batch.hpp>
 #include <mos/simulation/box.hpp>
 #include <optional.hpp>
 #include <initializer_list>
@@ -27,6 +27,10 @@ namespace mos {
  */
 class Renderer {
 public:
+  /**
+   * @brief What shader to use
+   */
+
   using OptTarget = std::experimental::optional<Target>;
   using OptClear = std::experimental::optional<glm::vec3>;
   /**
@@ -41,14 +45,10 @@ public:
    */
   virtual ~Renderer();
 
-
   // Temporary method
-  void update_depth(const Model &model,
-                    const glm::mat4 &parent_transform,
-              const glm::mat4 &view,
-              const glm::mat4 &projection,
-              const glm::vec2 &resolution);
-
+  void update_depth(const Model &model, const glm::mat4 &parent_transform,
+                    const glm::mat4 &view, const glm::mat4 &projection,
+                    const glm::vec2 &resolution);
 
   /**
    * @brief load a model into renderers own memory.
@@ -78,7 +78,7 @@ public:
    * @brief render_target
    * @param target
    */
-  void render_target(const OptTarget & target);
+  void render_target(const OptTarget &target);
 
   /**
    * @brief clear
@@ -86,14 +86,16 @@ public:
    */
   void clear(const glm::vec4 &color);
 
-  void batches(const glm::vec4 &color, const std::initializer_list<mos::Batch> &batches_init);
+  void batches(const std::initializer_list<Batch> &batches_init,
+               const glm::vec4 &color );
 
-  template<class T>
-  void batches(const glm::vec4 &color, T begin, T end) {
+  template <class T> void batches(T begin, T end, const glm::vec4 &color) {
     clear(color);
-    for(auto it = begin; it != end; it++){
+    for (auto it = begin; it != end; it++) {
+      glUseProgram(vertex_programs_[it->shader].program);
       for (auto &m : it->models) {
-        update(m, it->view, it->projection, 0.0f, it->resolution, it->light, it->fog);
+        update(m, it->view, it->projection, 0.0f, it->resolution, it->light,
+               it->fog);
       }
     }
   }
@@ -108,12 +110,12 @@ public:
    * @param light One dynamic light to use.
    */
   void update(const Model &model, const glm::mat4 transform,
-              const glm::mat4 view, const glm::mat4 projection,
-              const float dt,
+              const glm::mat4 view, const glm::mat4 projection, const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const float multiply = 1.0f);
+              const float multiply = 1.0f,
+              const Batch::Shader &shader = Batch::Shader::STANDARD);
 
   /**
    * @brief update
@@ -124,12 +126,9 @@ public:
    * @param resolution
    * @param target
    */
-  void update(const Model &model,
-              const glm::mat4 &view,
-              const glm::mat4 &projection,
-              const float dt,
-              const glm::vec2 &resolution,
-              const Light &light = Light(),
+  void update(const Model &model, const glm::mat4 &view,
+              const glm::mat4 &projection, const float dt,
+              const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f);
 
@@ -141,11 +140,8 @@ public:
    * @param resolution
    * @param target
    */
-  void update(const Model &model,
-              const Camera &camera,
-              const float dt,
-              const glm::vec2 &resolution,
-              const Light &light = Light(),
+  void update(const Model &model, const Camera &camera, const float dt,
+              const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f);
 
@@ -190,7 +186,7 @@ public:
    */
   bool lightmaps() const;
 
-  //TODO: Private
+  // TODO: Private
   GLuint depth_texture_;
   GLuint depth_frame_buffer_;
 
@@ -260,19 +256,20 @@ private:
     GLint multiply;
   };
 
-  using VertexProgramPair = std::pair<Model::Shader, VertexProgramData>;
+  using VertexProgramPair = std::pair<Batch::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
   bool lightmaps_;
-  void add_vertex_program(const Model::Shader shader,
+  void add_vertex_program(const Batch::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source);
 
   void add_particle_program(const std::string name, const std::string vs_source,
                             const std::string fs_source);
 
-  unsigned int create_shader(const std::string &source, const unsigned int type);
+  unsigned int create_shader(const std::string &source,
+                             const unsigned int type);
   bool check_shader(const unsigned int shader);
   bool check_program(const unsigned int program);
   unsigned int create_texture(std::shared_ptr<mos::Texture> texture);
@@ -283,7 +280,7 @@ private:
 
   void create_depth_program();
 
-  std::map<Model::Shader, VertexProgramData> vertex_programs_;
+  std::map<Batch::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
   DepthProgramData depth_program_;
@@ -300,7 +297,6 @@ private:
   GLuint box_vbo;
   GLuint box_ebo;
   GLuint box_va;
-
 };
 }
 #endif /* MOS_RENDERER_H */

@@ -4,7 +4,7 @@ Batch::Batch() {}
 
 Batch::Batch(const std::initializer_list<Model> &models, const glm::mat4 &view,
              const glm::mat4 &projection, const Light &light, const Fog &fog,
-             const glm::vec2 &resolution)
+             const glm::vec2 &resolution, const Shader &shader)
     : Batch(models.begin(), models.end(), view, projection, light, fog,
-            resolution) {}
+            resolution, shader) {}
 }

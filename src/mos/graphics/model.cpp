@@ -10,10 +10,10 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const std::shared_ptr<Material> &material,
              const Lightmaps &lightmaps,
              const std::shared_ptr<Texture> &normalmap,
-             const float affected_by_light, const Shader shader)
+             const float affected_by_light)
     : draw(draw), mesh(mesh), textures(textures),
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
-      transform(transform), receives_light(affected_by_light), shader(shader),
+      transform(transform), receives_light(affected_by_light),
       overlay_(0.0f), multiply_(1.0f) {
 
 }
