@@ -27,12 +27,7 @@ namespace mos {
  */
 class Renderer {
 public:
-  /**
-   * @brief What shader to use
-   */
-
   using OptTarget = std::experimental::optional<Target>;
-  using OptClear = std::experimental::optional<glm::vec3>;
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -87,9 +82,12 @@ public:
   void clear(const glm::vec4 &color);
 
   void batches(const std::initializer_list<Batch> &batches_init,
-               const glm::vec4 &color );
+               const glm::vec4 &color, const OptTarget &target = OptTarget());
 
-  template <class T> void batches(T begin, T end, const glm::vec4 &color) {
+  template <class T>
+  void batches(T begin, T end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+               const OptTarget &target = OptTarget()) {
+    render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
       glUseProgram(vertex_programs_[it->shader].program);
@@ -114,7 +112,8 @@ public:
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const float multiply = 1.0f, const Batch::Shader &shader = Batch::Shader::STANDARD);
+              const float multiply = 1.0f,
+              const Batch::Shader &shader = Batch::Shader::STANDARD);
 
   /**
    * @brief update
@@ -129,7 +128,8 @@ public:
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const float multiply = 1.0f, const Batch::Shader &shader = Batch::Shader::STANDARD);
+              const float multiply = 1.0f,
+              const Batch::Shader &shader = Batch::Shader::STANDARD);
 
   /**
    * @brief update

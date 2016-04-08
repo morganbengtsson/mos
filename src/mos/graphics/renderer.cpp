@@ -1016,7 +1016,8 @@ void Renderer::clear(const glm::vec4 &color) {
 }
 
 void Renderer::batches(const std::initializer_list<Batch> &batches_init,
-                       const glm::vec4 &color) {
-  batches(batches_init.begin(), batches_init.end(), color);
+                       const glm::vec4 &color,
+                       const OptTarget &target) {
+  batches(batches_init.begin(), batches_init.end(), color, target);
 }
 }

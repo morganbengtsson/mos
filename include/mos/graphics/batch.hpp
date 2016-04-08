@@ -7,12 +7,14 @@
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/light.hpp>
 #include <mos/graphics/fog.hpp>
+#include <mos/graphics/target.hpp>
 
 namespace mos {
 
 class Batch {
 public:
   enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT};
+  enum class Draw {
 
   Batch();
 
@@ -34,7 +36,6 @@ public:
   mos::Fog fog;
   glm::vec2 resolution;
   Shader shader;
-  // Shader
 };
 }
 
