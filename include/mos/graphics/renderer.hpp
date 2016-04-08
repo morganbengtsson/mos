@@ -113,7 +113,8 @@ public:
               const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f,
-              const Batch::Shader &shader = Batch::Shader::STANDARD);
+              const Batch::Shader &shader = Batch::Shader::STANDARD,
+              const Batch::Draw &draw = Batch::Draw::TRIANGLES);
 
   /**
    * @brief update
@@ -129,7 +130,8 @@ public:
               const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f,
-              const Batch::Shader &shader = Batch::Shader::STANDARD);
+              const Batch::Shader &shader = Batch::Shader::STANDARD,
+              const Batch::Draw &draw = Batch::Draw::TRIANGLES);
 
   /**
    * @brief update

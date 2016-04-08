@@ -12,7 +12,7 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
              transform),
       font_(font), spacing(spacing) {
   model_.receives_light = false;
-  //model_.material->opacity = 0.0f;
+  model_.material->opacity = 0.0f;
   text(txt);
 }
 
@@ -68,6 +68,10 @@ void Text::text(const std::string &text) {
     }
     model_.mesh->invalidate();
   }
+}
+
+void Text::intensity(const float intensity) {
+  model_.multiply(intensity);
 }
 
 float Text::width() const {

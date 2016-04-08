@@ -820,16 +820,18 @@ void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
                       const Fog &fog, const float multiply,
-                      const Batch::Shader &shader) {
+                      const Batch::Shader &shader,
+                      const Batch::Draw &draw) {
   update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog,
-         multiply, shader);
+         multiply, shader, draw);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
                       const Light &light, const Fog &fog, const float multiply,
-                      const Batch::Shader &shader) {
+                      const Batch::Shader &shader,
+                      const Batch::Draw &draw) {
   time_ += dt; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -946,9 +948,9 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                                                 model.mesh->elements_end())
                                 : 0;
   int draw_type = GL_TRIANGLES;
-  if (model.draw == Model::Draw::LINES) {
+  if (draw == Batch::Draw::LINES) {
     draw_type = GL_LINES;
-  } else if (model.draw == Model::Draw::POINTS) {
+  } else if (draw == Batch::Draw::POINTS) {
     draw_type = GL_POINTS;
   }
   if (model.mesh) {

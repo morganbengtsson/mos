@@ -40,6 +40,12 @@ public:
   void text(const std::string &text);
 
   /**
+   * @brief intensity
+   * @param intensity
+   */
+  void intensity(const float intensity);
+
+  /**
    * @brief text
    * @return Current text
    */

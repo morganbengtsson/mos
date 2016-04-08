@@ -18,11 +18,6 @@ namespace mos {
  */
 class Model {
 public:
-  /**
-   * @brief How to draw the model.
-   */
-  enum class Draw { TRIANGLES, LINES, POINTS };
-
   using Models = std::vector<Model>;
   using MeshPtr = std::shared_ptr<Mesh>;
   using TexPtr = std::shared_ptr<Texture>;
@@ -38,7 +33,6 @@ public:
    * @param mesh
    * @param texture
    * @param transform
-   * @param draw
    * @param material
    * @param lightmap
    * @param normalmap
@@ -46,7 +40,6 @@ public:
   Model(const std::string &name, const MeshPtr &mesh,
         const Textures &textures = Textures(),
         const glm::mat4 &transform = glm::mat4(1.0f),
-        const Draw draw = Draw::TRIANGLES,
         const MatPtr &material = std::make_shared<Material>(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const Lightmaps &lightmaps = Lightmaps(), const TexPtr &normalmap = TexPtr(),
@@ -118,12 +111,6 @@ public:
   * @brief Get the color, (to be deprecated).
   */
   glm::vec4 color() const;
-
-  /**
-  * @brief How to draw the model.
-  */
-  //TODO: Move to batch
-  Draw draw;
 
   /**
    * @brief If the model is affected by light model (lightmap and dynamic).

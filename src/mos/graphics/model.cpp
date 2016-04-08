@@ -6,12 +6,12 @@ Model::Model() {}
 
 Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const Textures &textures,
-             const glm::mat4 &transform, const Draw draw,
+             const glm::mat4 &transform,
              const std::shared_ptr<Material> &material,
              const Lightmaps &lightmaps,
              const std::shared_ptr<Texture> &normalmap,
              const float affected_by_light)
-    : draw(draw), mesh(mesh), textures(textures),
+    : mesh(mesh), textures(textures),
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
       transform(transform), receives_light(affected_by_light),
       overlay_(0.0f), multiply_(1.0f) {
