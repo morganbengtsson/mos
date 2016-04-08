@@ -809,6 +809,7 @@ void Renderer::update(const Box &box, const Camera &camera, const float dt) {
   update(box, camera.view, camera.projection, dt);
 }
 
+
 void Renderer::update(const Model &model, const Camera &camera, const float dt,
                       const glm::vec2 &resolution, const Light &light,
                       const Fog &fog, const float multiply) {

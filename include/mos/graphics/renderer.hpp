@@ -107,6 +107,7 @@ public:
    * @param program_name Either "text" or "standard"
    * @param light One dynamic light to use.
    */
+  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
   void update(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection, const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
@@ -125,6 +126,7 @@ public:
    * @param resolution
    * @param target
    */
+  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
   void update(const Model &model, const glm::mat4 &view,
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
@@ -141,6 +143,7 @@ public:
    * @param resolution
    * @param target
    */
+  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
   void update(const Model &model, const Camera &camera, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
               const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
