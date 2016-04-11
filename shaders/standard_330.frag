@@ -89,6 +89,7 @@ void main() {
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
     diffuse_color = vec4(mix(tex_color.rgb, material.diffuse.rgb, 1.0 - tex_color.a), 1.0);
+    //diffuse_color.rgb = mix(tex_color.rgb, tex2_color.rgb, tex2_color.a);
 
     float dist = distance(light.position, fragment.position);
     float a = 1.0;
