@@ -77,7 +77,7 @@ void main() {
 
     //TODO: Not correct!
     vec4 tex_normal = texture2D(normalmap, fragment.uv);
-    normal = mix(normal, tex_normal.xyz, tex_normal.z);
+    normal = mix(normal, tex_normal.xyz, tex_normal.w);
 
     vec3 surface_to_light = normalize(light.position - fragment.position);
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
@@ -85,11 +85,10 @@ void main() {
 
     vec4 tex_color = texture2D(textures.first, fragment.uv);
     vec4 tex2_color = texture2D(textures.second, fragment.uv);
-    tex_color.rgb = mix(tex2_color.rgb, tex_color.rgb, 1.0 - tex2_color.a);
+    vec4 combined_tex = vec4(mix(tex_color.rgb, tex2_color.rgb, tex2_color.a), clamp(tex_color.a + tex2_color.a, 0.0, 1.0));
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
-    diffuse_color = vec4(mix(tex_color.rgb, material.diffuse.rgb, 1.0 - tex_color.a), 1.0);
-    //diffuse_color.rgb = mix(tex_color.rgb, tex2_color.rgb, tex2_color.a);
+    diffuse_color = vec4(mix(material.diffuse, combined_tex.rgb, combined_tex.a), 1.0);
 
     float dist = distance(light.position, fragment.position);
     float a = 1.0;
