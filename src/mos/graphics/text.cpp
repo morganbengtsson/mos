@@ -87,6 +87,10 @@ void Text::position(const glm::vec2 &position) {
       glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
 }
 
+void Text::position(const glm::vec3 & position) {
+  model_.transform = glm::translate(glm::mat4(1.0f), position);
+}
+
 glm::vec2 Text::position() { return glm::vec2(model_.position()); }
 
 void Text::scale(const float scale) {

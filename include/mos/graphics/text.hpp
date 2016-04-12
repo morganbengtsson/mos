@@ -71,6 +71,12 @@ public:
 
   /**
    * @brief position
+   * @param position
+   */
+  void position(const glm::vec3 &position);
+
+  /**
+   * @brief position
    * @return
    */
   glm::vec2 position();
