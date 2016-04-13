@@ -103,6 +103,12 @@ public:
    */
   unsigned int sample_rate() const;
 
+  /**
+   * @brief length in seconds.
+   * @return
+   */
+  float length() const;
+
 private:
   unsigned int id_;
   Samples samples_;

@@ -39,5 +39,9 @@ unsigned int Sound::channels() const { return channels_; }
 
 unsigned int Sound::sample_rate() const { return sample_rate_; }
 
+float Sound::length() const {
+  return float(samples_.size()) / float(sample_rate() * channels());
+}
+
 const short *Sound::data() const { return samples_.data(); }
 }
