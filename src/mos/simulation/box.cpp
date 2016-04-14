@@ -12,12 +12,15 @@
 
 namespace mos {
 
+Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
+    : extent(extent), position_(position) {}
+
 Box::Box() {}
 
 glm::vec3 Box::min() const { return position_ - extent; }
 glm::vec3 Box::max() const { return position_ + extent; }
 
-bool Box::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
+bool Box::intersect(const glm::vec3 &origin, const glm::vec3 &direction) {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
   glm::vec3 bounds[2];
@@ -37,21 +40,21 @@ bool Box::intersect(const glm::vec3 & origin, const glm::vec3 & direction) {
   tymax = (bounds[1 - sign.y].y - origin.y) * invdir.y;
 
   if ((tmin > tymax) || (tymin > tmax))
-      return false;
+    return false;
   if (tymin > tmin)
-      tmin = tymin;
+    tmin = tymin;
   if (tymax < tmax)
-      tmax = tymax;
+    tmax = tymax;
 
   tzmin = (bounds[sign.z].z - origin.z) * invdir.z;
   tzmax = (bounds[1 - sign.z].z - origin.z) * invdir.z;
 
   if ((tmin > tzmax) || (tzmin > tmax))
-      return false;
+    return false;
   if (tzmin > tmin)
-      tmin = tzmin;
+    tmin = tzmin;
   if (tzmax < tmax)
-      tmax = tzmax;
+    tmax = tzmax;
 
   return true;
 }
@@ -141,11 +144,8 @@ void Box::transform(const glm::mat4 &transform) {
 
 float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
 
-float Box::obstruction() const { return obstruction_; }
-
 glm::vec3 Box::size() const {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
                    glm::abs(max().z - min().z));
 }
-
 }

@@ -34,7 +34,6 @@ struct BoxIntersection {
   float distance;
 };
 
-
 /**
  * @brief The Box class
  *
@@ -54,9 +53,7 @@ public:
    * Constructor for an AABB box, created from vertices.
    *
    */
-  Box(VertexIt begin, VertexIt end, const glm::mat4 &transform,
-      const float obstruction = 0.0f, const bool step = false)
-      : obstruction_(obstruction) {
+  Box(VertexIt begin, VertexIt end, const glm::mat4 &transform) {
     glm::vec3 min, max;
 
     glm::vec3 position(transform[3][0], transform[3][1], transform[3][2]);
@@ -96,6 +93,8 @@ public:
     position_ = min + extent;
   }
 
+  Box(const glm::vec3 &extent, const glm::vec3 &position);
+
   /**
    * @brief Box default constructor.
    */
@@ -113,14 +112,14 @@ public:
    */
   glm::vec3 max() const;
 
-    /**
-     * @brief Intersection with ray
-     * @param origin
-     * @param direction
+  /**
+   * @brief Intersection with ray
+   * @param origin
+   * @param direction
 
-     * @return
-     */
-   bool intersect(const glm::vec3 & origin, const glm::vec3 & direction);
+   * @return
+   */
+  bool intersect(const glm::vec3 &origin, const glm::vec3 &direction);
 
   /**
    * @brief intersects
@@ -161,13 +160,6 @@ public:
   float volume() const;
 
   /**
-   * @brief Obstruction factor for sound.
-   *
-   * Between 0.0 - 1.0
-   */
-  float obstruction() const;
-
-  /**
    * @brief Size of box.
    * @return size in x, y and z directions.
    */
@@ -177,7 +169,6 @@ public:
 
 private:
   glm::vec3 position_;
-  float obstruction_;
 };
 }
 #endif // MOS_BOX_HPP
