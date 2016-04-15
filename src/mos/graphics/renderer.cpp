@@ -789,7 +789,7 @@ void Renderer::update(const Box &box, const glm::mat4 &view,
 
   glm::vec3 size = box.size();
 
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position());
+  glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
 
   glm::mat4 mv = view * transform * glm::scale(glm::mat4(1.0f), size);
   glm::mat4 mvp =

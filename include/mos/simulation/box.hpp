@@ -56,7 +56,7 @@ public:
   Box(VertexIt begin, VertexIt end, const glm::mat4 &transform) {
     glm::vec3 min, max;
 
-    glm::vec3 position(transform[3][0], transform[3][1], transform[3][2]);
+    position = glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
 
     std::vector<glm::vec3> positions;
     std::transform(
@@ -89,8 +89,7 @@ public:
                       z_extremes.second->z);
     }
     extent = (max - min) / 2.0f;
-    // position_ = position;
-    position_ = min + extent;
+    position = min + extent;
   }
 
   Box(const glm::vec3 &extent, const glm::vec3 &position);
@@ -137,18 +136,6 @@ public:
   glm::vec3 intersects_simple(const Box &other);
 
   /**
-   * @brief position
-   * @return
-   */
-  glm::vec3 position() const;
-
-  /**
-   * @brief position
-   * @param position
-   */
-  void position(const glm::vec3 &position);
-
-  /**
    * @brief Set the box transform, only uses position elements.
    * @param transform
    */
@@ -165,10 +152,18 @@ public:
    */
   glm::vec3 size() const;
 
+  /**
+   * @brief extent
+   */
   glm::vec3 extent;
 
+  /**
+   * @brief position
+   */
+  glm::vec3 position;
+
 private:
-  glm::vec3 position_;
+
 };
 }
 #endif // MOS_BOX_HPP

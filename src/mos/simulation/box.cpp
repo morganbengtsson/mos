@@ -13,12 +13,12 @@
 namespace mos {
 
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
-    : extent(extent), position_(position) {}
+    : extent(extent), position(position) {}
 
 Box::Box() {}
 
-glm::vec3 Box::min() const { return position_ - extent; }
-glm::vec3 Box::max() const { return position_ + extent; }
+glm::vec3 Box::min() const { return position - extent; }
+glm::vec3 Box::max() const { return position + extent; }
 
 bool Box::intersect(const glm::vec3 &origin, const glm::vec3 &direction) {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
@@ -132,14 +132,10 @@ glm::vec3 Box::intersects_simple(const Box &other) {
   }
 }
 
-glm::vec3 Box::position() const { return position_; }
-
-void Box::position(const glm::vec3 &position) { position_ = position; }
-
 void Box::transform(const glm::mat4 &transform) {
-  position_.x = transform[3][0];
-  position_.y = transform[3][1];
-  position_.z = transform[3][2];
+  position.x = transform[3][0];
+  position.y = transform[3][1];
+  position.z = transform[3][2];
 }
 
 float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
