@@ -36,8 +36,7 @@ public:
         const unsigned int sample_rate = 44100u)
       : channels_(channels), sample_rate_(sample_rate), valid_(true),
         samples_(begin, end) {
-    static unsigned int current_id = 0;
-    id_ = current_id++;
+    id_ = current_id_++;
   }
 
   /**
@@ -45,8 +44,7 @@ public:
    * @param channels
    */
   Sound(const unsigned int channels = 1u) : channels_(channels) {
-    static unsigned int current_id = 0;
-    id_ = current_id++;
+    id_ = current_id_++;
   }
 
   virtual ~Sound();
@@ -110,6 +108,7 @@ public:
   float length() const;
 
 private:
+  static unsigned int current_id_;
   unsigned int id_;
   Samples samples_;
   unsigned int channels_;

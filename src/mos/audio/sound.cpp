@@ -3,6 +3,8 @@
 #include <fstream>
 
 namespace mos {
+  unsigned int Sound::current_id_ = 0;
+
 Sound::Sound(const std::string &path) {
   int channels, length, sample_rate;
   short *decoded;
@@ -23,6 +25,7 @@ Sound::Sound(const std::string &path) {
   samples_.assign(decoded, decoded + length);
   channels_ = channels;
   sample_rate_ = sample_rate;
+  id_ = current_id_++;
 }
 
 Sound::~Sound() {}
