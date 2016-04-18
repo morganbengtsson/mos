@@ -209,21 +209,20 @@ void Player::load(const SoundSource &sound_source) {
       const ALvoid *data = sound->data();
       alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof(short),
                    sound->sample_rate());
-    }
-    alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER, buffer);
+    }    
     buffers_.insert(BufferPair(sound->id(), buffer));
   }
+  alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER, buffers_.at(sound->id()));
   alSource3f(sources_.at(sound_source.source.id()), AL_POSITION,
              sound_source.source.position.x, sound_source.source.position.y,
              sound_source.source.position.z);
   // alSourcePlay(sources_.at(source.id()));
 }
 
-bool Player::loaded(const SoundSource & sound_source) {
+bool Player::loaded(const SoundSource &sound_source) {
   if (sources_.find(sound_source.source.id()) == sources_.end()) {
     return false;
-  }
-  else {
+  } else {
     return true;
   }
 }
@@ -351,13 +350,19 @@ void Player::update(StreamSource &sound_source, const float dt) {
   }*/
 }
 
-Listener Player::listener() const{
+Listener Player::listener() const {
   Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);
 
-  alGetListener3f(AL_ORIENTATION, &listener.orientation.x,
-                  &listener.orientation.y, &listener.orientation.z);
+  float orientation[6];
+  alGetListenerf(AL_ORIENTATION, orientation);
+  listener.direction.x = orientation[0];
+  listener.direction.y = orientation[1];
+  listener.direction.z = orientation[2];
+  listener.up.x = orientation[3];
+  listener.up.y = orientation[4];
+  listener.up.z = orientation[5];
 
   alGetListener3f(AL_VELOCITY, &listener.velocity.x, &listener.velocity.y,
                   &listener.velocity.z);
@@ -372,10 +377,10 @@ void Player::listener(const Listener &listener) {
   alListener3f(AL_VELOCITY, listener.velocity.x, listener.velocity.y,
                listener.velocity.z);
 
-  auto up = glm::vec3(0.0f, 0.0f, 1.0f);
-  float orient[6] = {listener.orientation.x, listener.orientation.y,
-                     listener.orientation.z, up.x, up.y, up.z};
-  alListenerfv(AL_ORIENTATION, orient);
+  float orientation[6] = {listener.direction.x, listener.direction.y,
+                          listener.direction.z, listener.up.x,
+                          listener.up.y,        listener.up.z};
+  alListenerfv(AL_ORIENTATION, orientation);
 }
 
 void Player::update(const SoundSource &sound_source, const float dt) {
@@ -404,7 +409,7 @@ void Player::update(const SoundSource &sound_source, const float dt) {
     alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 
-    //sound_source.source.obstructed = 0.0f;
+    // sound_source.source.obstructed = 0.0f;
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);

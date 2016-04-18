@@ -17,9 +17,10 @@ public:
    * @param orientation
    * @param velocity
    */
-  Listener(const glm::vec3 &position = glm::vec3(0.0f),
-           const glm::vec3 &orientation = glm::vec3(0.0f, 1.0f, 0.0f),
-           const glm::vec3 &velocity = glm::vec3(0.0f));
+  Listener(const glm::vec3 &position = glm::vec3(.0f),
+           const glm::vec3 &direction = glm::vec3(.0f, 1.0f, .0f),
+           const glm::vec3 &up = glm::vec3(.0f, .0f, 1.0f),
+           const glm::vec3 &velocity = glm::vec3(.0f));
   ~Listener();
 
   /**
@@ -28,9 +29,14 @@ public:
   glm::vec3 position;
 
   /**
-   * @brief orientation of listener.
+   * @brief direction of listener.
    */
-  glm::vec3 orientation;
+  glm::vec3 direction;
+
+  /**
+   * @brief up vector
+   */
+  glm::vec3 up;
 
   /**
    * @brief velocity of listener.
