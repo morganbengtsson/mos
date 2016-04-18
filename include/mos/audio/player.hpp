@@ -98,7 +98,7 @@ public:
    * @param sound_source
    * @param dt Time step.
    */
-  void update(SoundSource &sound_source, const float dt);
+  void update(const SoundSource &sound_source, const float dt);
 
   /**
   * Updates the internal source representation with data. Data

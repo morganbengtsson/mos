@@ -25,10 +25,18 @@ public:
   virtual ~SoundSource();
 
   /**
+   * @brief update the source and stop if not looping.
+   * @param dt
+   */
+  void update(const float dt);
+
+  /**
    * @brief The sound that is played from the source.
    */
   std::shared_ptr<Sound> sound;
   Source source;
+private:
+  float time_;
 };
 }
 

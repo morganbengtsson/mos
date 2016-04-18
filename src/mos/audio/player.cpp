@@ -378,7 +378,7 @@ void Player::listener(const Listener &listener) {
   alListenerfv(AL_ORIENTATION, orient);
 }
 
-void Player::update(SoundSource &sound_source, const float dt) {
+void Player::update(const SoundSource &sound_source, const float dt) {
   if (sources_.find(sound_source.source.id()) != sources_.end()) {
     ALuint al_source = sources_.at(sound_source.source.id());
     alSourcei(al_source, AL_LOOPING, sound_source.source.loop);
@@ -404,7 +404,7 @@ void Player::update(SoundSource &sound_source, const float dt) {
     alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 
-    sound_source.source.obstructed = 0.0f;
+    //sound_source.source.obstructed = 0.0f;
 
     ALenum state;
     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -415,18 +415,13 @@ void Player::update(SoundSource &sound_source, const float dt) {
 
     ALint type;
     alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
-    /*
-    if (!sound_source.source.playing && (state == AL_PLAYING) &&
-        type == AL_STREAMING) {
-      alSourceStop(al_source);
-    }*/
+
     if (!sound_source.source.playing && (state == AL_PLAYING)) {
       alSourceStop(al_source);
     }
 
     if (state == AL_STOPPED) {
       alSourceRewind(al_source);
-      sound_source.source.playing = false;
     }
   }
 }
