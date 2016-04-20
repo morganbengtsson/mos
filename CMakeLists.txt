@@ -60,7 +60,9 @@ add_subdirectory(externals/rapidjson)
 #Rapidxml
 include_directories(externals/rapidxml)
 
-
+#Json
+include_directories(externals/json/src)
+add_subdirectory(externals/json)
 
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
@@ -97,7 +99,8 @@ externals/lodepng
 externals/objload
 externals/rapidjson/include
 externals/rapidxml
-externals/glm,
-externals/Optional)
+externals/glm
+externals/Optional
+externals/json/src)
 
 
