@@ -5,8 +5,6 @@
 #include <map>
 #include <memory>
 #include <json.hpp>
-#include <rapidjson/rapidjson.h>
-#include <rapidjson/document.h>
 #include <mos/audio/sound.hpp>
 #include <mos/audio/stream.hpp>
 #include <mos/graphics/character.hpp>

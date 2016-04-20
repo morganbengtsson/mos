@@ -48,15 +48,6 @@ add_subdirectory(externals/lodepng)
 # stb
 add_subdirectory(externals/stb)
 
-#Rapidjson
-set(RAPIDJSON_HAS_CXX11_RVALUE_REFS ON)
-set(RAPIDJSON_HAS_STDSTRING ON)
-set(RAPIDJSON_BUILD_DOC ON)
-set(RAPIDJSON_BUILD_EXAMPLES OFF)
-set(RAPIDJSON_BUILD_TESTS OFF)
-include_directories(externals/rapidjson/include)
-add_subdirectory(externals/rapidjson)
-
 #Rapidxml
 include_directories(externals/rapidxml)
 
@@ -97,8 +88,6 @@ externals/openal-soft/include
 externals/stb
 externals/lodepng
 externals/objload
-externals/rapidjson/include
-externals/rapidxml
 externals/glm
 externals/Optional
 externals/json/src)
