@@ -19,47 +19,27 @@
 namespace mos {
 using namespace std;
 using namespace glm;
+using namespace nlohmann;
 
 Assets::Assets(const std::string directory) : directory_(directory) {}
 
 Assets::~Assets() {}
 
-Model Assets::model(rapidjson::Value &value) {
-  auto name = !value.HasMember("name") || value["name"].IsNull()
-                  ? ""
-                  : value["name"].GetString();
+Model Assets::model_value(const json &value) {
+  auto name = value.value("name", "");
+  std::string mesh = value.value("mesh", "");
+  std::string texture_name = value.value("texture", "");
+  std::string texture2_name = value.value("texture2", "");
+  std::string lightmap_name = value["lightmap"].is_null() ? "" : value.value("lightmap", "");
+  std::string material_name = value.value("material", "");
+  bool recieves_light = value.value("receives_light", true);
 
-  std::string mesh = !value.HasMember("mesh") || value["mesh"].IsNull()
-                         ? ""
-                         : value["mesh"].GetString();
+  glm::mat4 transform = glm::mat4(1.0f);
 
-  std::string texture_name =
-      !value.HasMember("texture") || value["texture"].IsNull()
-          ? ""
-          : value["texture"].GetString();
-  std::string texture2_name =
-      !value.HasMember("texture2") || value["texture2"].IsNull()
-          ? ""
-          : value["texture2"].GetString();
-  std::string lightmap_name =
-      !value.HasMember("lightmap") || value["lightmap"].IsNull()
-          ? ""
-          : value["lightmap"].GetString();
-  std::string material_name =
-      !value.HasMember("material") || value["material"].IsNull()
-          ? ""
-          : value["material"].GetString();
-  bool recieves_light = !value.HasMember("receives_light") || value["receives_light"].IsNull()
-      ? true
-      : value["receives_light"].GetBool();
-
-  glm::mat4 transform;
-
-  if (value.HasMember("transform")) {
+  if (!value["transform"].is_null()) {
     std::vector<float> nums;
-    for (auto it = value["transform"].Begin(); it != value["transform"].End();
-         it++) {
-      nums.push_back(it->GetDouble());
+    for (auto &num : value["transform"]) {
+      nums.push_back(num);
     }
     transform = glm::make_mat4x4(nums.data());
   }
@@ -70,16 +50,17 @@ Model Assets::model(rapidjson::Value &value) {
       material_cached(material_name), Lightmaps(texture_cached(lightmap_name)), nullptr,
       recieves_light);
 
-  for (auto it = value["models"].Begin(); it != value["models"].End(); it++) {
-    created_model.models.push_back(model(*it));
+  for (auto & m: value["models"]) {
+    created_model.models.push_back(model_value(m));
   }
 
   return created_model;
 }
 
 Model Assets::model(const std::string &path) {
-  auto doc = document(directory_ + path);
-  return model(doc);
+  //auto doc = document(directory_ + path);
+  auto doc = json::parse(mos::text(directory_ + path));
+  return model_value(doc);
 }
 
 Animation Assets::animation(const string &path) {

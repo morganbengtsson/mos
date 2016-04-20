@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <map>
 #include <memory>
+#include <json.hpp>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include <mos/audio/sound.hpp>
@@ -189,7 +190,8 @@ public:
   void clear_unused();
 
 private:
-  Model model(rapidjson::Value &value);
+  //Model model(rapidjson::Value &value);
+  Model model_value(const nlohmann::json &value);
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
