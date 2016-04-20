@@ -101,8 +101,9 @@ public:
   */
   void position(const glm::vec3 &position);
 
-  glm::vec3 overlay() const;
-  void overlay(const glm::vec3 &overlay);
+  glm::vec4 overlay() const;
+  void overlay(const glm::vec4 &overlay);
+  void overlay(const glm::vec3 &color, float alpha);
 
   float multiply() const;
   void multiply(const float &multiply);
@@ -152,7 +153,7 @@ private:
   /**
    * @brief overlay color that is not in light calculations.
    */
-  glm::vec3 overlay_;
+  glm::vec4 overlay_;
 
   /**
    * @brief Extra multiply factor for light calculations.

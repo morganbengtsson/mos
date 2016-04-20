@@ -49,7 +49,7 @@ uniform Light light;
 uniform Fog fog = Fog(vec3(1.0, 1.0f, 1.0), 0.0);
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
-uniform vec3 overlay = vec3(0.0, 0.0, 0.0);
+uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
@@ -121,7 +121,7 @@ void main() {
     //Fog
     float distance = gl_FragCoord.z / gl_FragCoord.w;
     color = mix(color, vec4(fog.color, 1.0), calculate_fog(distance, fog.density));
-    color.rgb += overlay;
+    color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
     //Shadow test, not that great yet.
 #ifdef SHADOWMAPS

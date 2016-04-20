@@ -940,7 +940,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.fog_density, 1, &fog.density);
 
   glUniform1fv(uniforms.time, 1, &time_);
-  glUniform3fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
+  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   auto v = model.multiply();
   glUniform1fv(uniforms.multiply, 1, &v);
   glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);

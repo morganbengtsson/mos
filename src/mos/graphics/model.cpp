@@ -15,7 +15,6 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
       transform(transform), receives_light(affected_by_light),
       overlay_(0.0f), multiply_(1.0f) {
-
 }
 
 Model::~Model() {}
@@ -44,15 +43,19 @@ void Model::position(const glm::vec3 &position) {
   transform[3][2] = position[2];
 }
 
-glm::vec3 Model::overlay() const {
+glm::vec4 Model::overlay() const {
   return overlay_;
 }
 
-void Model::overlay(const glm::vec3 & overlay) {
+void Model::overlay(const glm::vec4 & overlay) {
   overlay_ = overlay;
   for (auto & model : models){
     model.overlay(overlay);
   }
+}
+
+void Model::overlay(const glm::vec3 & color, float alpha){
+  overlay(glm::vec4(color, alpha));
 }
 
 float Model::multiply() const {
