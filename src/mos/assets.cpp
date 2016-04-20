@@ -58,19 +58,18 @@ Model Assets::model_value(const json &value) {
 }
 
 Model Assets::model(const std::string &path) {
-  //auto doc = document(directory_ + path);
   auto doc = json::parse(mos::text(directory_ + path));
   return model_value(doc);
 }
 
 Animation Assets::animation(const string &path) {
-  auto doc = document(directory_ + path);
-  auto frame_rate = doc["frame_rate"].GetInt();
+  auto doc = json::parse(mos::text(directory_ + path));
+  auto frame_rate = doc["frame_rate"];
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
 
-  for (auto it = doc["keyframes"].Begin(); it != doc["keyframes"].End(); it++) {
-    auto key = (*it)["key"].GetInt();
-    auto mesh_path = (*it)["mesh"].GetString();
+  for (auto &keyframe : doc["keyframes"]) {
+    auto key = keyframe["key"];
+    auto mesh_path = keyframe["mesh"];
     keyframes.insert({key, mesh_cached(mesh_path)});
   }
   Animation animation(keyframes, frame_rate);
