@@ -115,6 +115,14 @@ Mesh::Vertices::size_type Mesh::elements_size() const {
   return elements_.size();
 }
 
+Mesh::Positions Mesh::positions() const {
+  Positions pos;
+  std::transform(vertices_.begin(), vertices_.end(), std::back_inserter(pos), [](const Vertex &vertex){
+    return vertex.position;
+  });
+  return pos;
+}
+
 void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
   auto it = vertices_begin();
   auto it1 = mesh1.vertices_begin();

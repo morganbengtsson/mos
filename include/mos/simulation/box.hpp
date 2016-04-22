@@ -42,6 +42,23 @@ struct BoxIntersection {
  */
 class Box {
 public:
+  template <class T> Box(const T &positions, const glm::mat4 &transform) {
+    std::vector<glm::vec3> transformed;
+
+    position = glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
+
+    std::transform(positions.begin(), positions.end(),
+                   std::back_inserter(transformed),
+                   [&](const glm::vec3 &position) {
+                     return glm::vec3(transform * glm::vec4(position, 1.0f));
+                   });
+
+    auto min_max = min_max_positions(transformed.begin(), transformed.end());
+
+    extent = (min_max.second - min_max.first) / 2.0f;
+    position = min_max.first + extent;
+  }
+
   template <class VertexIt>
   /**
    * @brief Box constructor.
@@ -163,7 +180,30 @@ public:
   glm::vec3 position;
 
 private:
+  template <class T>
+  std::pair<glm::vec3, glm::vec3> min_max_positions(T begin, T end) const {
+    std::pair<glm::vec3, glm::vec3> m;
+    auto x_extremes = std::minmax_element(
+        begin, end, [](const glm::vec3 &left, const glm::vec3 &right) {
+          return left.x < right.x;
+        });
 
+    auto y_extremes = std::minmax_element(
+        begin, end, [](const glm::vec3 &left, const glm::vec3 &right) {
+          return left.y < right.y;
+        });
+
+    auto z_extremes = std::minmax_element(
+        begin, end, [](const glm::vec3 &left, const glm::vec3 &right) {
+          return left.z < right.z;
+        });
+
+    m.first = glm::vec3(x_extremes.first->x, y_extremes.first->y,
+                        z_extremes.first->z);
+    m.second = glm::vec3(x_extremes.second->x, y_extremes.second->y,
+                         z_extremes.second->z);
+    return m;
+  }
 };
 }
 #endif // MOS_BOX_HPP

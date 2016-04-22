@@ -16,6 +16,7 @@ class Mesh {
   friend class Renderer;
 
 public:
+  using Positions = std::vector<glm::vec3>;
   /**
    * @brief Vertices container.
    */
@@ -190,6 +191,11 @@ public:
    */
   Elements::size_type elements_size() const;
 
+  /**
+   * @brief Get a copy of positions.
+   * @return
+   */
+  Positions positions() const;
   /**
    * @brief mix
    * @param mesh1
