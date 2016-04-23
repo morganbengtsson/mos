@@ -53,10 +53,18 @@ uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float calculate_fog(float distance, float density) {
+float fog_exp(const float distance, const float density) {
     float result = exp(-pow(density * distance, 2.0));
     result = 1.0 - clamp(result, 0.0, 1.0);
     return result;
+}
+
+float fog_linear(
+  const float dist,
+  const float start,
+  const float end
+) {
+  return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
 }
 
 float linear_depth(float value)
@@ -119,8 +127,10 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     //Fog
-    float distance = gl_FragCoord.z / gl_FragCoord.w;
-    color = mix(color, vec4(fog.color, 1.0), calculate_fog(distance, fog.density));
+    //float distance = abs(fragment.position.z);
+    float distance = length(fragment.position.xyz);
+    //color = mix(color, vec4(fog.color, 1.0), fog_exp(distance, fog.density));
+    color = mix(color, vec4(fog.color, 1.0), fog_linear(distance, 31.0, 35.0));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
     //Shadow test, not that great yet.
