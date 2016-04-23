@@ -81,32 +81,9 @@ public:
           return glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
         });
 
-    if (positions.begin() != positions.end()) {
-      auto x_extremes = std::minmax_element(
-          positions.begin(), positions.end(),
-          [](const glm::vec3 &left, const glm::vec3 &right) {
-            return left.x < right.x;
-          });
-
-      auto y_extremes = std::minmax_element(
-          positions.begin(), positions.end(),
-          [](const glm::vec3 &left, const glm::vec3 &right) {
-            return left.y < right.y;
-          });
-
-      auto z_extremes = std::minmax_element(
-          positions.begin(), positions.end(),
-          [](const glm::vec3 &left, const glm::vec3 &right) {
-            return left.z < right.z;
-          });
-
-      min = glm::vec3(x_extremes.first->x, y_extremes.first->y,
-                      z_extremes.first->z);
-      max = glm::vec3(x_extremes.second->x, y_extremes.second->y,
-                      z_extremes.second->z);
-    }
-    extent = (max - min) / 2.0f;
-    position = min + extent;
+    auto min_max = min_max_positions(positions.begin(), positions.end());
+    extent = (min_max.second - min_max.first) / 2.0f;
+    position = min_max.first + extent;
   }
 
   Box(const glm::vec3 &extent, const glm::vec3 &position);
@@ -135,7 +112,7 @@ public:
 
    * @return
    */
-  bool intersect(const glm::vec3 &origin, const glm::vec3 &direction);
+  bool intersect(const glm::vec3 &origin, const glm::vec3 &direction) const;
 
   /**
    * @brief intersects
