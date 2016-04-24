@@ -11,7 +11,7 @@
 #include <mos/graphics/light.hpp>
 #include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
-#include <mos/graphics/fog.hpp>
+#include <mos/graphics/fog_exp.hpp>
 #include <mos/simulation/box.hpp>
 #include <optional.hpp>
 #include <initializer_list>

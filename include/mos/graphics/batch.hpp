@@ -6,7 +6,7 @@
 #include <mos/graphics/model.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/light.hpp>
-#include <mos/graphics/fog.hpp>
+#include <mos/graphics/fog_exp.hpp>
 #include <mos/graphics/target.hpp>
 
 namespace mos {
