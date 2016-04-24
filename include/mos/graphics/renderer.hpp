@@ -12,6 +12,7 @@
 #include <mos/graphics/target.hpp>
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/fog_exp.hpp>
+#include <mos/graphics/fog_linear.hpp>
 #include <mos/simulation/box.hpp>
 #include <optional.hpp>
 #include <initializer_list>
@@ -93,7 +94,7 @@ public:
       glUseProgram(vertex_programs_[it->shader].program);
       for (auto &m : it->models) {
         update(m, it->view, it->projection, 0.0f, it->resolution, it->light,
-               it->fog, 1.0f, it->shader);
+               it->fog, it->fog_linear, 1.0f, it->shader);
       }
     }
   }
@@ -113,6 +114,7 @@ public:
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
               const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
               const Batch::Draw &draw = Batch::Draw::TRIANGLES);
@@ -131,6 +133,7 @@ public:
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
               const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
               const Batch::Draw &draw = Batch::Draw::TRIANGLES);
@@ -147,6 +150,7 @@ public:
   void update(const Model &model, const Camera &camera, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
               const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f);
 
   /**

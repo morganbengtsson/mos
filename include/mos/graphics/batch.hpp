@@ -7,6 +7,7 @@
 #include <mos/graphics/camera.hpp>
 #include <mos/graphics/light.hpp>
 #include <mos/graphics/fog_exp.hpp>
+#include <mos/graphics/fog_linear.hpp>
 #include <mos/graphics/target.hpp>
 
 namespace mos {
@@ -16,7 +17,7 @@ public:
   /**
    * @brief The Shader enum
    */
-  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT};
+  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT };
 
   /**
    * @brief How to draw the model.
@@ -28,14 +29,17 @@ public:
   template <class T>
   Batch(T begin, T end, const glm::mat4 &view, const glm::mat4 &projection,
         const glm::vec2 &resolution, const mos::Light &light = Light(),
-        const mos::FogExp &fog = FogExp(), const Shader &shader = Shader::STANDARD,
+        const mos::FogExp &fog = FogExp(),
+        const mos::FogLinear &fog_linear = FogLinear(),
+        const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES)
       : models(begin, end), view(view), projection(projection), light(light),
-        fog(fog), resolution(resolution), shader(shader), draw(draw) {}
+        fog(fog), fog_linear(fog_linear), resolution(resolution), shader(shader), draw(draw) {}
 
   Batch(const std::initializer_list<mos::Model> &models, const glm::mat4 &view,
         const glm::mat4 &projection, const glm::vec2 &resolution,
         const mos::Light &light = Light(), const mos::FogExp &fog = FogExp(),
+        const mos::FogLinear &fog_linear = FogLinear(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   std::vector<mos::Model> models;
@@ -43,6 +47,7 @@ public:
   glm::mat4 projection;
   mos::Light light;
   mos::FogExp fog;
+  mos::FogLinear fog_linear;
   glm::vec2 resolution;
   Shader shader;
   Draw draw;

@@ -140,10 +140,9 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     //Fog
-    //float distance = abs(fragment.position.z);
     float distance = length(fragment.position.xyz);
-    //color = mix(color, vec4(fog.color, 1.0), fog_exp(distance, fog.density));
-    color = mix(color, vec4(fogs.exp.color, 1.0), fog_linear(distance, 31.0, 35.0));
+    color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
+    color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
     //Shadow test, not that great yet.
