@@ -27,13 +27,13 @@ struct Textures {
     sampler2D second;
 };
 
-struct LinearFog {
+struct FogLinear {
     float near;
     float far;
     vec3 color;
 };
 
-struct ExpFog {
+struct FogExp {
     vec3 color;
     float density;
 };
@@ -52,7 +52,7 @@ uniform Material material;
 uniform Textures textures;
 uniform Lightmaps lightmaps;
 uniform Light light;
-uniform ExpFog fog = ExpFog(vec3(1.0, 1.0f, 1.0), 0.0);
+uniform FogExp fog = FogExp(vec3(1.0, 1.0f, 1.0), 0.0);
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
