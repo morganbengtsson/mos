@@ -813,31 +813,30 @@ void Renderer::update(const Box &box, const Camera &camera, const float dt) {
 }
 
 
-void Renderer::update(const Model &model, const Camera &camera, const float dt,
+void Renderer::update(const Model &model, const Camera &camera,
                       const glm::vec2 &resolution, const Light &light,
                       const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, dt, resolution,
+  update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
          light, fog_exp, fog_linear, multiply);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection, const float dt,
+                      const glm::mat4 &projection,
                       const glm::vec2 &resolution, const Light &light,
                       const FogExp &fog_exp, const FogLinear &fog_linear,
                       const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
-  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog_exp, fog_linear,
+  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog_exp, fog_linear,
          multiply, shader, draw);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
-                      const glm::mat4 view, const glm::mat4 projection,
-                      const float dt, const glm::vec2 &resolution,
+                      const glm::mat4 view, const glm::mat4 projection, const glm::vec2 &resolution,
                       const Light &light, const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
-  time_ += dt; // TODO: Not correct since called many times!
+  time_ += 0.0f; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
@@ -970,7 +969,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection, dt,
+    update(child, parent_transform * model.transform, view, projection,
            resolution, light, fog_exp, fog_linear, multiply);
   }
 }
