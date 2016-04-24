@@ -28,21 +28,21 @@ public:
   template <class T>
   Batch(T begin, T end, const glm::mat4 &view, const glm::mat4 &projection,
         const glm::vec2 &resolution, const mos::Light &light = Light(),
-        const mos::Fog &fog = Fog(), const Shader &shader = Shader::STANDARD,
+        const mos::FogExp &fog = FogExp(), const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES)
       : models(begin, end), view(view), projection(projection), light(light),
         fog(fog), resolution(resolution), shader(shader), draw(draw) {}
 
   Batch(const std::initializer_list<mos::Model> &models, const glm::mat4 &view,
         const glm::mat4 &projection, const glm::vec2 &resolution,
-        const mos::Light &light = Light(), const mos::Fog &fog = Fog(),
+        const mos::Light &light = Light(), const mos::FogExp &fog = FogExp(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   std::vector<mos::Model> models;
   glm::mat4 view;
   glm::mat4 projection;
   mos::Light light;
-  mos::Fog fog;
+  mos::FogExp fog;
   glm::vec2 resolution;
   Shader shader;
   Draw draw;

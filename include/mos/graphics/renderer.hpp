@@ -112,7 +112,7 @@ public:
               const glm::mat4 view, const glm::mat4 projection, const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
               const Batch::Draw &draw = Batch::Draw::TRIANGLES);
@@ -130,7 +130,7 @@ public:
   void update(const Model &model, const glm::mat4 &view,
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
               const Batch::Draw &draw = Batch::Draw::TRIANGLES);
@@ -146,7 +146,7 @@ public:
   [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
   void update(const Model &model, const Camera &camera, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
-              const Fog &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const float multiply = 1.0f);
 
   /**
@@ -253,6 +253,9 @@ private:
     GLint light_projection;
     GLint receives_light;
     GLint resolution;
+    GLint fogs_linear_color;
+    GLint fogs_linear_near;
+    GLint fogs_linear_far;
     GLint fogs_exp_color;
     GLint fogs_exp_density;
     GLint time;

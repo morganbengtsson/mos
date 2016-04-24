@@ -383,6 +383,9 @@ void Renderer::add_vertex_program(const Batch::Shader shader,
           glGetUniformLocation(program, "light.projection"),
           glGetUniformLocation(program, "receives_light"),
           glGetUniformLocation(program, "resolution"),
+          glGetUniformLocation(program, "fogs.linear.color"),
+          glGetUniformLocation(program, "fogs.linear.near"),
+          glGetUniformLocation(program, "fogs.linear.far"),
           glGetUniformLocation(program, "fogs.exp.color"),
           glGetUniformLocation(program, "fogs.exp.density"),
           glGetUniformLocation(program, "time"),
@@ -812,7 +815,7 @@ void Renderer::update(const Box &box, const Camera &camera, const float dt) {
 
 void Renderer::update(const Model &model, const Camera &camera, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog, const float multiply) {
+                      const FogExp &fog, const float multiply) {
   update(model, glm::mat4(1.0f), camera.view, camera.projection, dt, resolution,
          light, fog, multiply);
 }
@@ -820,7 +823,7 @@ void Renderer::update(const Model &model, const Camera &camera, const float dt,
 void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const Fog &fog, const float multiply,
+                      const FogExp &fog, const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
   update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog,
@@ -830,7 +833,7 @@ void Renderer::update(const Model &model, const glm::mat4 &view,
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
-                      const Light &light, const Fog &fog, const float multiply,
+                      const Light &light, const FogExp &fog, const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
   time_ += dt; // TODO: Not correct since called many times!
