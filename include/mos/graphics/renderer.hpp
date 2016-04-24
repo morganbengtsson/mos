@@ -253,8 +253,8 @@ private:
     GLint light_projection;
     GLint receives_light;
     GLint resolution;
-    GLint fog_color;
-    GLint fog_density;
+    GLint fogs_exp_color;
+    GLint fogs_exp_density;
     GLint time;
     GLint overlay;
     GLint multiply;

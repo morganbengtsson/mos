@@ -383,8 +383,8 @@ void Renderer::add_vertex_program(const Batch::Shader shader,
           glGetUniformLocation(program, "light.projection"),
           glGetUniformLocation(program, "receives_light"),
           glGetUniformLocation(program, "resolution"),
-          glGetUniformLocation(program, "fog.color"),
-          glGetUniformLocation(program, "fog.density"),
+          glGetUniformLocation(program, "fogs.exp.color"),
+          glGetUniformLocation(program, "fogs.exp.density"),
           glGetUniformLocation(program, "time"),
           glGetUniformLocation(program, "overlay"),
           glGetUniformLocation(program, "multiply")}));
@@ -936,8 +936,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
-  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
-  glUniform1fv(uniforms.fog_density, 1, &fog.density);
+  glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog.color));
+  glUniform1fv(uniforms.fogs_exp_density, 1, &fog.density);
 
   glUniform1fv(uniforms.time, 1, &time_);
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
