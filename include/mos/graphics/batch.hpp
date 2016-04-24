@@ -20,7 +20,7 @@ public:
   enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT };
 
   /**
-   * @brief How to draw the model.
+   * @brief How to draw the models.
    */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
