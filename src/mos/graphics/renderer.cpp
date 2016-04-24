@@ -815,26 +815,26 @@ void Renderer::update(const Box &box, const Camera &camera, const float dt) {
 
 void Renderer::update(const Model &model, const Camera &camera, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const FogExp &fog, const FogLinear &fog_linear, const float multiply) {
+                      const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply) {
   update(model, glm::mat4(1.0f), camera.view, camera.projection, dt, resolution,
-         light, fog, fog_linear, multiply);
+         light, fog_exp, fog_linear, multiply);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 &view,
                       const glm::mat4 &projection, const float dt,
                       const glm::vec2 &resolution, const Light &light,
-                      const FogExp &fog, const FogLinear &fog_linear,
+                      const FogExp &fog_exp, const FogLinear &fog_linear,
                       const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
-  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog, fog_linear,
+  update(model, glm::mat4(1.0f), view, projection, dt, resolution, light, fog_exp, fog_linear,
          multiply, shader, draw);
 }
 
 void Renderer::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection,
                       const float dt, const glm::vec2 &resolution,
-                      const Light &light, const FogExp &fog, const FogLinear &fog_linear, const float multiply,
+                      const Light &light, const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply,
                       const Batch::Shader &shader,
                       const Batch::Draw &draw) {
   time_ += dt; // TODO: Not correct since called many times!
@@ -940,8 +940,8 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1i(uniforms.receives_light, model.receives_light);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
-  glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog.color));
-  glUniform1fv(uniforms.fogs_exp_density, 1, &fog.density);
+  glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog_exp.color));
+  glUniform1fv(uniforms.fogs_exp_density, 1, &fog_exp.density);
 
   glUniform3fv(uniforms.fogs_linear_color, 1, glm::value_ptr(fog_linear.color));
   glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
@@ -971,7 +971,7 @@ void Renderer::update(const Model &model, const glm::mat4 parent_transform,
   }
   for (auto &child : model.models) {
     update(child, parent_transform * model.transform, view, projection, dt,
-           resolution, light, fog, fog_linear, multiply);
+           resolution, light, fog_exp, fog_linear, multiply);
   }
 }
 

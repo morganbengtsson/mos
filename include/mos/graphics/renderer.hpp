@@ -94,7 +94,7 @@ public:
       glUseProgram(vertex_programs_[it->shader].program);
       for (auto &m : it->models) {
         update(m, it->view, it->projection, 0.0f, it->resolution, it->light,
-               it->fog, it->fog_linear, 1.0f, it->shader);
+               it->fog_exp, it->fog_linear, 1.0f, it->shader);
       }
     }
   }
@@ -113,7 +113,7 @@ public:
               const glm::mat4 view, const glm::mat4 projection, const float dt,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),
-              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
@@ -132,7 +132,7 @@ public:
   void update(const Model &model, const glm::mat4 &view,
               const glm::mat4 &projection, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
-              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
               const Batch::Shader &shader = Batch::Shader::STANDARD,
@@ -149,7 +149,7 @@ public:
   [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
   void update(const Model &model, const Camera &camera, const float dt,
               const glm::vec2 &resolution, const Light &light = Light(),
-              const FogExp &fog = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f);
 
