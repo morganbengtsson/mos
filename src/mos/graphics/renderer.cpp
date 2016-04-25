@@ -726,8 +726,8 @@ Renderer::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
 }
 
 void Renderer::update(Particles &particles, const glm::mat4 view,
-                      const glm::mat4 projection, const float dt) {
-  time_ += dt;
+                      const glm::mat4 projection) {
+  time_ += 0;
   if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
@@ -781,8 +781,8 @@ void Renderer::update(Particles &particles, const glm::mat4 view,
 }
 
 void Renderer::update(const Box &box, const glm::mat4 &view,
-                      const glm::mat4 &projection, const float dt) {
-  time_ += dt;
+                      const glm::mat4 &projection) {
+  time_ += 0;
 
   auto &uniforms = box_programs_.at("box");
 
@@ -808,8 +808,8 @@ void Renderer::update(const Box &box, const glm::mat4 &view,
   glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid *)(8 * sizeof(GLuint)));
 }
 
-void Renderer::update(const Box &box, const Camera &camera, const float dt) {
-  update(box, camera.view, camera.projection, dt);
+void Renderer::update(const Box &box, const Camera &camera) {
+  update(box, camera.view, camera.projection);
 }
 
 

@@ -160,12 +160,12 @@ public:
    * @param projection Projection matrix.
    */
   void update(Particles &particles, const glm::mat4 view,
-              const glm::mat4 projection, const float dt);
+              const glm::mat4 projection);
 
   void update(const Box &box, const glm::mat4 &view,
-              const glm::mat4 &projection, const float dt);
+              const glm::mat4 &projection);
 
-  void update(const Box &box, const Camera &camera, const float dt);
+  void update(const Box &box, const Camera &camera);
 
   /**
    * @brief Clear all internal buffers.
