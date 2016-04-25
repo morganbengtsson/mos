@@ -12,8 +12,10 @@
 
 namespace mos {
 
+unsigned int Box::current_id_ = 0;
+
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
-    : extent(extent), position(position) {}
+    : extent(extent), position(position) {id_ = current_id_++;}
 
 Box::Box() {}
 
@@ -139,6 +141,10 @@ void Box::transform(const glm::mat4 &transform) {
 }
 
 float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
+
+unsigned int Box::id() const {
+  return id_;
+}
 
 glm::vec3 Box::size() const {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),

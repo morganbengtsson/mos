@@ -141,6 +141,12 @@ public:
   float volume() const;
 
   /**
+   * @brief id
+   * @return
+   */
+  unsigned int id() const;
+
+  /**
    * @brief Size of box.
    * @return size in x, y and z directions.
    */
@@ -157,6 +163,9 @@ public:
   glm::vec3 position;
 
 private:
+  static unsigned int current_id_;
+  unsigned int id_;
+
   template <class T>
   std::pair<glm::vec3, glm::vec3> min_max_positions(T begin, T end) const {
     std::pair<glm::vec3, glm::vec3> m;
