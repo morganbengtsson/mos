@@ -2,10 +2,11 @@ cmake_minimum_required (VERSION 2.8.11)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
-add_definitions(-DAL_LIBTYPE_STATIC)
+
+#add_definitions(-DAL_LIBTYPE_STATIC)
 #Needed?
-add_definitions(-DRAPIDJSON_HAS_CXX11_RVALUE_REFS=1)
-add_definitions(-DRAPIDJSON_HAS_STDSTRING=1)
+#add_definitions(-DRAPIDJSON_HAS_CXX11_RVALUE_REFS=1)
+#add_definitions(-DRAPIDJSON_HAS_STDSTRING=1)
 
 # No binaries in source dir
 if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
@@ -27,12 +28,17 @@ file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINAR
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
 
 # GLEW
+set(glew-cmake_BUILD_SHARED OFF)
 add_subdirectory(externals/glew-cmake)
+include_directories(externals/glew_cmake/include)
 
 #openal soft
 set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
 set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
+set(ALSOFT_INSTALL OFF)
+set(ALSOFT_HRTF_DEFS OFF)
 add_subdirectory(externals/openal-soft)
+include_directories(externals/openal-soft/include)
 
 #Optional
 add_subdirectory(externals/Optional)
@@ -74,11 +80,11 @@ ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 #endif()
 #set_property(TARGET mos PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 
-IF(WIN32)
+if(WIN32)
     target_link_libraries(mos OpenAL32)
-ELSE()
+else()
     target_link_libraries(mos openal)
-ENDIF()
+endif()
 target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mos lodepng)
 target_link_libraries(mos stb)
@@ -91,5 +97,3 @@ externals/objload
 externals/glm
 externals/Optional
 externals/json/src)
-
-

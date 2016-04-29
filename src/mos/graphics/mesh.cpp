@@ -1,6 +1,7 @@
 #include <fstream>
 #include <mos/graphics/mesh.hpp>
 #include <mos/util.hpp>
+#include <algorithm>
 
 namespace mos {
 

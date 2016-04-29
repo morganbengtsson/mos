@@ -1,5 +1,6 @@
 #include <mos/util.hpp>
 #include <fstream>
+#include <stdexcept>
 
 std::string mos::text(const std::string path) {
   std::ifstream file(path);

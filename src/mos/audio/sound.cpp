@@ -1,6 +1,7 @@
 #include <mos/audio/sound.hpp>
 #include <stb_vorbis.h>
 #include <fstream>
+#include <stdexcept>
 
 namespace mos {
   unsigned int Sound::current_id_ = 0;
