@@ -12,4 +12,4 @@ void main() {
     fragment_color = color;
     fragment_position = (model_view * vec4(position, 0.0)).xyz;
     gl_Position = model_view_projection * vec4(position, 1.0);
-};
+}

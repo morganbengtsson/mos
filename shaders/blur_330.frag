@@ -23,7 +23,7 @@ vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 void main() {
     color = blur13(texture, fragment_uv, resolution, vec2(1.0, 0.0)) * 0.5 + blur13(texture, fragment_uv, resolution, vec2(0.0, 1.0)) * 0.5;
-};
+}
 
 
 

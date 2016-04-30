@@ -18,4 +18,4 @@ void main() {
     color = texture2D(texture, v_uv) * vec4(material.diffuse, 1.0);
     color.w = color.w * material.opacity;
     //color = vec4(v_uv, 1.0, 1.0);
-};
+}

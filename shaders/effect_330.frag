@@ -18,5 +18,5 @@ void main() {
     }
     //color = sum * pow(length(sum.xyz), 2) + color;
     color = vec4(texture_color.rgb, opacity);
-};
+}
 

@@ -36,4 +36,4 @@ void main()
     fragment.position = (model_view * vec4(position, 1.0)).xyz;
     fragment.normal = normal_matrix * normal;
     gl_Position = model_view_projection * vec4(position, 1.0);
-};
+}

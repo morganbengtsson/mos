@@ -70,7 +70,7 @@ vec4 crt(vec2 fragCoord) {
 
 void main() {
     color = crt(fragment.uv);
-};
+}
 
 
 

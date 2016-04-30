@@ -24,6 +24,7 @@
 namespace mos {
 
 Renderer::Renderer() : lightmaps_(true) {
+  glewExperimental = GL_TRUE;
   GLenum err = glewInit();
   if (GLEW_OK != err) {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));

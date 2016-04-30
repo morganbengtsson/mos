@@ -10,4 +10,4 @@ void main() {
     fragment_position = (model_view * vec4(position, 0.0)).xyz;
     fragment_uv = uv;
     gl_Position = model_view_projection * vec4(position, 1.0);
-};
+}

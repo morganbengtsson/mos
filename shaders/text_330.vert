@@ -12,4 +12,4 @@ void main(){
     v_uv = uv;
     //v_uv = (v_position.xy+vec2(1,1))/500.0;
     gl_Position = model_view_projection * vec4(position, 1.0);
-};
+}
