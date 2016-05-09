@@ -9,8 +9,17 @@
 namespace mos {
 class Window {
 public:
-  Window(const std::string &title = "Window",
-         const glm::ivec2 &resolution = {1920, 1080});
+  enum class CursorMode : int {
+    NORMAL = GLFW_CURSOR_NORMAL,
+    HIDDDEN = GLFW_CURSOR_HIDDEN,
+    DISABLED = GLFW_CURSOR_DISABLED
+  };
+
+  enum class Cursor {
+    HAND, ARROW
+  };
+
+  Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080});
   ~Window();
 
   using ErrorFunc =
@@ -37,9 +46,13 @@ public:
   void swap_buffers();
   bool close() const;
   void close(const bool);
+  void cursor_mode(const CursorMode &mode);
+  void cursor(const Cursor &cursor);
 
 private:
   GLFWwindow *window_;
+  GLFWcursor *hand_cursor_;
+  GLFWcursor *arrow_cursor_;
 
   static void error_callback(int error, const char *description);
   static void position_callback(GLFWwindow *window, int x, int y);

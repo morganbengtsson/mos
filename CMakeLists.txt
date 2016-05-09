@@ -95,10 +95,12 @@ else()
     target_link_libraries(mos openal)
 endif()
 target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
+target_link_libraries(mos glfw ${GLFW_LIBRARIES})
 target_link_libraries(mos lodepng)
 target_link_libraries(mos stb)
 target_include_directories(mos PUBLIC
 externals/glew-cmake/include
+externals/glfw/include
 externals/openal-soft/include
 externals/stb
 externals/lodepng

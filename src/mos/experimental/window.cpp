@@ -35,10 +35,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
                              nullptr);
   glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-  GLFWcursor *hand_cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-  GLFWcursor *arrow_cursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+  //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
   if (!window_) {
     glfwTerminate();
@@ -56,12 +53,19 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
 
   glfwSwapInterval(1);
 
+  hand_cursor_ = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+  arrow_cursor_ = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+
   error_func = [](int error, const std::string &description) {
     fputs(description.c_str(), stderr);
   };
 }
 
-Window::~Window() { glfwDestroyWindow(window_); }
+Window::~Window() {
+  glfwDestroyCursor(hand_cursor_);
+  glfwDestroyCursor(arrow_cursor_);
+  glfwDestroyWindow(window_);
+}
 
 void Window::error_callback(int error, const char *description) {
   if (error_func) {
@@ -120,5 +124,18 @@ void Window::swap_buffers() { glfwSwapBuffers(window_); }
 bool Window::close() const { return glfwWindowShouldClose(window_); }
 void Window::close(const bool close) {
   glfwSetWindowShouldClose(window_, close);
+}
+
+void Window::cursor_mode(const Window::CursorMode &mode) {
+  glfwSetInputMode(window_, GLFW_CURSOR, static_cast<int>(mode));
+}
+
+void Window::cursor(const Window::Cursor &cursor) {
+  if (cursor == Cursor::HAND){
+    glfwSetCursor(window_, hand_cursor_);
+  }
+  else {
+    glfwSetCursor(window_, arrow_cursor_);
+  }
 }
 }
