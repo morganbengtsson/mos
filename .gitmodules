@@ -13,3 +13,6 @@
 [submodule "externals/json"]
 	path = externals/json
 	url = https://github.com/nlohmann/json.git
+[submodule "externals/glfw"]
+	path = externals/glfw
+	url = https://github.com/glfw/glfw.git

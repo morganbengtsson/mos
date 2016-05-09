@@ -32,6 +32,15 @@ set(glew-cmake_BUILD_SHARED OFF)
 add_subdirectory(externals/glew-cmake)
 include_directories(externals/glew_cmake/include)
 
+# GLFW
+set(GLFW_BUILD_DOCS OFF CACHE STRING "" FORCE)
+set(GLFW_INSTALL OFF CACHE STRING "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE STRING "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE STRING "" FORCE)
+set(GLFW_USE_DWM_SWAP_INTERVAL ON)
+add_subdirectory(externals/glfw)
+include_directories(externals/glfw/include)
+
 #openal soft
 set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
 set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
