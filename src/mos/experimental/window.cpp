@@ -22,7 +22,9 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   glfwWindowHint(GLFW_GREEN_BITS, 8);
   glfwWindowHint(GLFW_BLUE_BITS, 8);
   glfwWindowHint(GLFW_ALPHA_BITS, 8);
+#ifdef MOS_SRGB
   glfwWindowHint(GLFW_SRGB_CAPABLE, true);
+#endif
   glfwWindowHint(GLFW_RESIZABLE, false);
 
   // Context

@@ -41,7 +41,9 @@ Renderer::Renderer() : lightmaps_(true) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+#ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
+#endif
 
   std::string standard_vert_source = text("assets/shaders/standard_330.vert");
   std::string standard_frag_source = text("assets/shaders/standard_330.frag");
@@ -119,8 +121,13 @@ Renderer::Renderer() : lightmaps_(true) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   auto data = std::array<unsigned char, 4>{0, 0, 0, 0};
+#ifdef MOS_SRGB
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, data.data());
+#else
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, data.data());
+#endif
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
@@ -670,9 +677,17 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture> texture) {
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
+
+#ifdef MOS_SRGB
+
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               texture->data());*/
+#else
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(),
+               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
+#endif
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -693,8 +708,13 @@ Renderer::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+#ifdef MOS_SRGB
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#else
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(),
+               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+#endif
 
   GLuint buffer_id;
   glGenBuffers(1, &buffer_id);
@@ -985,8 +1005,13 @@ void Renderer::render_target(const OptTarget &target) {
       GLuint texture_id;
       glGenTextures(1, &texture_id);
       glBindTexture(GL_TEXTURE_2D, texture_id);
+#ifdef MOS_SRGB
       glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, target->texture->width(),
                    target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+#else
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
+                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+#endif
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
