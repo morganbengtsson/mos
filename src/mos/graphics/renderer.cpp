@@ -23,7 +23,7 @@
 
 namespace mos {
 
-Renderer::Renderer() : lightmaps_(true) {
+Renderer::Renderer(const glm::vec4 &color) : lightmaps_(true) {
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
   if (GLEW_OK != err) {
@@ -40,6 +40,7 @@ Renderer::Renderer() : lightmaps_(true) {
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  clear(color);
 
 #ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
@@ -682,7 +683,7 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture> texture) {
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               texture->data());*/
+               texture->data());
 #else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,

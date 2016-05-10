@@ -34,7 +34,7 @@ public:
    * Inits the renderer, in this implementation also creates a
    * valid OpenGL context with GLEW.
    */
-  Renderer();
+  Renderer(const glm::vec4 &color = glm::vec4(.0f));
   /**
    * @brief Renderer destructor.
    * Deletes all allocated GPU memory. Textures, Shaders, Buffers.
