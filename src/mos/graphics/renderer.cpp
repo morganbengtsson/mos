@@ -32,10 +32,9 @@ Renderer::Renderer(const glm::vec4 &color) : lightmaps_(true) {
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
   glEnable(GL_DEPTH_TEST);
-#ifdef __ANDROID__
-#else
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-#endif
+  glEnable(GL_POINT_SMOOTH);
+
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
@@ -670,8 +669,10 @@ unsigned int Renderer::create_texture(std::shared_ptr<Texture> texture) {
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);

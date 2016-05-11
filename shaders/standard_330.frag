@@ -109,7 +109,7 @@ void main() {
     vec4 combined_tex = vec4(mix(tex_color.rgb, tex2_color.rgb, tex2_color.a), clamp(tex_color.a + tex2_color.a, 0.0, 1.0));
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
-    diffuse_color = vec4(mix(material.diffuse, combined_tex.rgb, combined_tex.a), 1.0);
+    diffuse_color = vec4(mix(material.diffuse * material.opacity, combined_tex.rgb, combined_tex.a), 1.0);
 
     float dist = distance(light.position, fragment.position);
     float a = 1.0;
@@ -145,7 +145,7 @@ void main() {
     color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
-    //Shadow test, not that great yet.
+     //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
     float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
     float depth = fragment.shadow.z;
