@@ -127,7 +127,8 @@ void main() {
     vec4 diffuse_static = static_light * diffuse_color;
 
     //Ambient
-    vec3 ambient = material.ambient * light.ambient;
+    //vec3 ambient = material.ambient * light.ambient;
+    vec3 ambient = light.ambient * diffuse_color.rgb;
 
     if(receives_light == true) {
         color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz + ambient, material.opacity);
