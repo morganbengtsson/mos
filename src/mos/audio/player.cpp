@@ -248,6 +248,9 @@ void Player::update(StreamSource &sound_source, const float dt) {
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
   };
 
+  std::cout << sound_source.source.id() << std::endl;
+  std::cout << sound_source.stream->id() << std::endl;
+
   ALuint al_source = sources_.at(sound_source.source.id());
   alSourcei(al_source, AL_LOOPING, sound_source.source.loop);
   alSourcef(al_source, AL_PITCH, sound_source.source.pitch);
@@ -278,10 +281,10 @@ void Player::update(StreamSource &sound_source, const float dt) {
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
   if (sound_source.source.playing && (state != AL_PLAYING)) {
-    if (stream_threads.count(sound_source.source.id())) {
-      stream_threads[sound_source.source.id()].running = false;
-      stream_threads[sound_source.source.id()].thread->join();
-      stream_threads.erase(sound_source.source.id());
+    if (stream_threads.count(sound_source.stream->id())) {
+      stream_threads[sound_source.stream->id()].running = false;
+      stream_threads[sound_source.stream->id()].thread->join();
+      stream_threads.erase(sound_source.stream->id());
     }
     stream_threads.insert(std::pair<unsigned int, StreamThread>(
         sound_source.stream->id(),
