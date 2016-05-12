@@ -307,12 +307,9 @@ void Player::update(StreamSource &sound_source, const float dt) {
 
                   alSourceQueueBuffers(al_source, 2, buffers);
 
-                  alSourcePlay(al_source);
-                  ALenum state;
-                  alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+                  alSourcePlay(al_source);                  
                   alSourcei(al_source, AL_STREAMING, AL_TRUE);
                   while (stream_threads[sound_source.stream->id()].running) {
-                    alGetSourcei(al_source, AL_SOURCE_STATE, &state);
                     ALint processed = 0;
                     alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
                     while (
@@ -326,10 +323,7 @@ void Player::update(StreamSource &sound_source, const float dt) {
                                    stream_ptr->sample_rate());
                       alSourceQueueBuffers(al_source, 1, &buffer);
                     }
-
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                    alGetSourcei(al_source, AL_SOURCE_STATE, &state);
-
                     if (loop && stream_ptr->done()) {
                       stream_ptr->seek_start();
                     }
