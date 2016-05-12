@@ -4,14 +4,14 @@
  *
  * Created on May 7, 2014, 9:41 PM
  */
-#include <thread>
 #include <chrono>
 #include <glm/gtx/io.hpp>
 #include <iostream>
+#include <thread>
 
 #include <mos/audio/player.hpp>
-#include <mos/audio/source.hpp>
 #include <mos/audio/soundsource.hpp>
+#include <mos/audio/source.hpp>
 
 /* Effect object functions */
 static LPALGENEFFECTS alGenEffects;
@@ -209,10 +209,11 @@ void Player::load(const SoundSource &sound_source) {
       const ALvoid *data = sound->data();
       alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof(short),
                    sound->sample_rate());
-    }    
+    }
     buffers_.insert(BufferPair(sound->id(), buffer));
   }
-  alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER, buffers_.at(sound->id()));
+  alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER,
+            buffers_.at(sound->id()));
   alSource3f(sources_.at(sound_source.source.id()), AL_POSITION,
              sound_source.source.position.x, sound_source.source.position.y,
              sound_source.source.position.z);
@@ -292,23 +293,24 @@ void Player::update(StreamSource &sound_source, const float dt) {
             std::thread(
                 [&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr,
                     const bool loop) {
-                  //mos::Stream stream(*stream_ptr);
+
                   ALuint buffers[2];
                   alGenBuffers(2, buffers);
 
                   int size = stream_ptr->buffer_size;
 
-                  alBufferData(buffers[0], AL_FORMAT_MONO16,
-                               stream_ptr->read().data(), size * sizeof(ALshort),
-                               stream_ptr->sample_rate());
-                  alBufferData(buffers[1], AL_FORMAT_MONO16,
-                               stream_ptr->read().data(), size * sizeof(ALshort),
-                               stream_ptr->sample_rate());
+                  alBufferData(
+                      buffers[0], AL_FORMAT_MONO16, stream_ptr->read().data(),
+                      size * sizeof(ALshort), stream_ptr->sample_rate());
+                  alBufferData(
+                      buffers[1], AL_FORMAT_MONO16, stream_ptr->read().data(),
+                      size * sizeof(ALshort), stream_ptr->sample_rate());
 
                   alSourceQueueBuffers(al_source, 2, buffers);
 
-                  alSourcePlay(al_source);                  
+                  alSourcePlay(al_source);
                   alSourcei(al_source, AL_STREAMING, AL_TRUE);
+
                   while (stream_threads[sound_source.stream->id()].running) {
                     ALint processed = 0;
                     alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
