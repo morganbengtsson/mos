@@ -3,6 +3,7 @@
 
 #include <array>
 #include <string>
+#include <atomic>
 
 #include "stb_vorbis.h"
 
@@ -23,7 +24,7 @@ public:
    * @brief Copy constructor.
    * @param stream
    */
-  Stream(const mos::Stream &stream);
+  //Stream(const mos::Stream &stream);
   ~Stream();
 
   /**
@@ -67,6 +68,7 @@ public:
   unsigned int id() const;
 
 private:
+  static std::atomic_uint current_id_;
   unsigned int id_;
   int samples_left_;
   int size_;

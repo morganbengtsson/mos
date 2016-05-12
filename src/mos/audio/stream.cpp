@@ -2,20 +2,22 @@
 
 namespace mos {
 
+std::atomic_uint Stream::current_id_(0);
+
 Stream::Stream(const std::string & path) : file_name_(path) {
   vorbis_stream_ =
       stb_vorbis_open_filename((char *)path.c_str(), NULL, NULL);
   vorbis_info_ = stb_vorbis_get_info(vorbis_stream_);
   samples_left_ = stb_vorbis_stream_length_in_samples(vorbis_stream_) *
                   vorbis_info_.channels;
-  static unsigned int current_id = 0;
-  id_ = current_id++;
+
+  id_ = current_id_++;
 }
 
+/*
 Stream::Stream(const Stream &stream) : Stream(stream.file_name_) {
-  static unsigned int current_id = 0;
   id_ = current_id++;
-}
+}*/
 
 Stream::~Stream() { stb_vorbis_close(vorbis_stream_); }
 

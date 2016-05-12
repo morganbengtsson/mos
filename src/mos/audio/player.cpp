@@ -292,17 +292,18 @@ void Player::update(StreamSource &sound_source, const float dt) {
             std::shared_ptr<std::thread>(new std::thread(
                 [&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr,
                     const bool loop) {
-                  mos::Stream stream(*stream_ptr);
+                  //mos::Stream stream(*stream_ptr);
                   ALuint buffers[2];
                   alGenBuffers(2, buffers);
 
-                  int size = stream.buffer_size;
+                  int size = stream_ptr->buffer_size;
+
                   alBufferData(buffers[0], AL_FORMAT_MONO16,
-                               stream.read().data(), size * sizeof(ALshort),
-                               stream.sample_rate());
+                               stream_ptr->read().data(), size * sizeof(ALshort),
+                               stream_ptr->sample_rate());
                   alBufferData(buffers[1], AL_FORMAT_MONO16,
-                               stream.read().data(), size * sizeof(ALshort),
-                               stream.sample_rate());
+                               stream_ptr->read().data(), size * sizeof(ALshort),
+                               stream_ptr->sample_rate());
 
                   alSourceQueueBuffers(al_source, 2, buffers);
 
@@ -319,21 +320,21 @@ void Player::update(StreamSource &sound_source, const float dt) {
                         (stream_threads[sound_source.stream->id()].running)) {
                       ALuint buffer = 0;
                       alSourceUnqueueBuffers(al_source, 1, &buffer);
-                      auto samples = stream.read();
+                      auto samples = stream_ptr->read();
                       alBufferData(buffer, AL_FORMAT_MONO16, samples.data(),
                                    size * sizeof(ALshort),
-                                   stream.sample_rate());
+                                   stream_ptr->sample_rate());
                       alSourceQueueBuffers(al_source, 1, &buffer);
                     }
 
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-                    if (loop && stream.done()) {
-                      stream.seek_start();
+                    if (loop && stream_ptr->done()) {
+                      stream_ptr->seek_start();
                     }
                   }
-                  stream.seek_start();
+                  stream_ptr->seek_start();
                   alDeleteBuffers(2, buffers);
                 },
                 al_source, sound_source.stream, sound_source.source.loop)),
