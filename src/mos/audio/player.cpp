@@ -169,7 +169,7 @@ Player::Player()
 Player::~Player() {
   for (auto &thread : stream_threads) {
     thread.second.running = false;
-    thread.second.thread->join();
+    thread.second.thread.join();
   }
   for (auto source : sources_) {
     alSourceStop(source.second);
@@ -283,13 +283,13 @@ void Player::update(StreamSource &sound_source, const float dt) {
   if (sound_source.source.playing && (state != AL_PLAYING)) {
     if (stream_threads.count(sound_source.stream->id())) {
       stream_threads[sound_source.stream->id()].running = false;
-      stream_threads[sound_source.stream->id()].thread->join();
+      stream_threads[sound_source.stream->id()].thread.join();
       stream_threads.erase(sound_source.stream->id());
     }
     stream_threads.insert(std::pair<unsigned int, StreamThread>(
         sound_source.stream->id(),
         StreamThread{
-            std::shared_ptr<std::thread>(new std::thread(
+            std::thread(
                 [&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr,
                     const bool loop) {
                   //mos::Stream stream(*stream_ptr);
@@ -337,7 +337,7 @@ void Player::update(StreamSource &sound_source, const float dt) {
                   stream_ptr->seek_start();
                   alDeleteBuffers(2, buffers);
                 },
-                al_source, sound_source.stream, sound_source.source.loop)),
+                al_source, sound_source.stream, sound_source.source.loop),
             true}));
   }
 

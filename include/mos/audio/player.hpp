@@ -124,7 +124,7 @@ public:
 
 private:
   struct StreamThread {
-    std::shared_ptr<std::thread> thread;
+    std::thread thread;
     bool running;
   };
 
