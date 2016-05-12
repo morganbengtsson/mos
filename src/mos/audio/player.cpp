@@ -294,19 +294,14 @@ void Player::update(StreamSource &sound_source, const float dt) {
                 [&](ALuint al_source, std::shared_ptr<mos::Stream> stream_ptr,
                     const bool loop) {
 
-                  ALuint buffers[2];
-                  alGenBuffers(2, buffers);
-
+                  ALuint buffers[4]; // TODO std array
+                  alGenBuffers(4, buffers);
                   int size = stream_ptr->buffer_size;
-
-                  alBufferData(
-                      buffers[0], AL_FORMAT_MONO16, stream_ptr->read().data(),
-                      size * sizeof(ALshort), stream_ptr->sample_rate());
-                  alBufferData(
-                      buffers[1], AL_FORMAT_MONO16, stream_ptr->read().data(),
-                      size * sizeof(ALshort), stream_ptr->sample_rate());
-
-                  alSourceQueueBuffers(al_source, 2, buffers);
+                  for (int i = 0; i < 4; i++) {
+                    alBufferData(buffers[i], AL_FORMAT_MONO16, stream_ptr->read().data(),
+                        size * sizeof(ALshort), stream_ptr->sample_rate());
+                    alSourceQueueBuffers(al_source, 1, &buffers[i]);
+                  }
 
                   alSourcePlay(al_source);
                   alSourcei(al_source, AL_STREAMING, AL_TRUE);
