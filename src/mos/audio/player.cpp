@@ -249,9 +249,6 @@ void Player::update(StreamSource &sound_source, const float dt) {
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
   };
 
-  std::cout << sound_source.source.id() << std::endl;
-  std::cout << sound_source.stream->id() << std::endl;
-
   ALuint al_source = sources_.at(sound_source.source.id());
   alSourcei(al_source, AL_LOOPING, sound_source.source.loop);
   alSourcef(al_source, AL_PITCH, sound_source.source.pitch);
