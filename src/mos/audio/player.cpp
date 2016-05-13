@@ -1,9 +1,3 @@
-/*
- * File:   Audio.cpp
- * Author: morgan
- *
- * Created on May 7, 2014, 9:41 PM
- */
 #include <chrono>
 #include <glm/gtx/io.hpp>
 #include <iostream>
@@ -12,6 +6,8 @@
 #include <mos/audio/player.hpp>
 #include <mos/audio/soundsource.hpp>
 #include <mos/audio/source.hpp>
+
+#ifdef MOS_EFX
 
 /* Effect object functions */
 static LPALGENEFFECTS alGenEffects;
@@ -94,6 +90,7 @@ void init_efx() {
       "alGetAuxiliaryEffectSlotfv");
 }
 
+#endif //MOS_EFX
 namespace mos {
 
 Player::Player()
@@ -108,7 +105,7 @@ Player::Player()
                              "ALC_EXT_EFX")) {
     throw std::runtime_error("OpenAL EFX not supported.");
   }
-
+#ifdef MOS_EFX
   init_efx();
 
   ALuint reverb_effect = 0;
@@ -162,6 +159,7 @@ Player::Player()
   alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3f);    // 0.5f
   alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f); // 0.01f
+#endif
 
   listener(Listener());
 }
@@ -189,7 +187,8 @@ void Player::load(const SoundSource &sound_source) {
     alGenSources(1, &al_source);
     sources_.insert(SourcePair(sound_source.source.id(), al_source));
 
-    // Reverb optional.
+
+#ifdef MOS_EFX
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
 
@@ -198,6 +197,7 @@ void Player::load(const SoundSource &sound_source) {
     filters_.insert(SourcePair(sound_source.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+#endif
   }
 
   auto sound = sound_source.sound;
@@ -241,12 +241,13 @@ void Player::update(StreamSource &sound_source, const float dt) {
     sources_.insert(SourcePair(sound_source.source.id(), al_source));
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
-
+#ifdef MOS_EFX
     ALuint al_filter;
     alGenFilters(1, &al_filter);
     filters_.insert(SourcePair(sound_source.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+#endif
   };
 
   ALuint al_source = sources_.at(sound_source.source.id());
@@ -258,6 +259,7 @@ void Player::update(StreamSource &sound_source, const float dt) {
   alSource3f(al_source, AL_VELOCITY, sound_source.source.velocity.x,
              sound_source.source.velocity.y, sound_source.source.velocity.z);
 
+#ifdef MOS_EFX
   auto al_filter = filters_[sound_source.source.id()];
   float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
   ALfloat al_gain;
@@ -272,6 +274,7 @@ void Player::update(StreamSource &sound_source, const float dt) {
   alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
   alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+#endif
 
   sound_source.source.obstructed = 0.0f;
 
@@ -386,6 +389,7 @@ void Player::update(const SoundSource &sound_source, const float dt) {
     alSource3f(al_source, AL_VELOCITY, sound_source.source.velocity.x,
                sound_source.source.velocity.y, sound_source.source.velocity.z);
 
+#ifdef MOS_EFX
     auto al_filter = filters_[sound_source.source.id()];
     float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
     ALfloat al_gain;
@@ -400,6 +404,7 @@ void Player::update(const SoundSource &sound_source, const float dt) {
     alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
     alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+#endif
 
     // sound_source.source.obstructed = 0.0f;
 
