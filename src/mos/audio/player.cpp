@@ -101,11 +101,12 @@ Player::Player()
   context_ = alcCreateContext(device_, contextAttr);
   alcMakeContextCurrent(context_);
 
+#ifdef MOS_EFX
   if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()),
                              "ALC_EXT_EFX")) {
     throw std::runtime_error("OpenAL EFX not supported.");
   }
-#ifdef MOS_EFX
+
   init_efx();
 
   ALuint reverb_effect = 0;
@@ -239,9 +240,10 @@ void Player::update(StreamSource &sound_source, const float dt) {
     ALuint al_source;
     alGenSources(1, &al_source);
     sources_.insert(SourcePair(sound_source.source.id(), al_source));
+
+#ifdef MOS_EFX
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
-#ifdef MOS_EFX
     ALuint al_filter;
     alGenFilters(1, &al_filter);
     filters_.insert(SourcePair(sound_source.source.id(), al_filter));
