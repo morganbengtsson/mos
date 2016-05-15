@@ -2,7 +2,8 @@
 #define MOS_RENDER_TARGET_HPP
 
 #include <memory>
-#include "texture.hpp"
+#include <glm/glm.hpp>
+#include <mos/graphics/texture.hpp>
 
 namespace mos {
 /**
@@ -19,6 +20,12 @@ public:
    */
   explicit Target(const unsigned int width = 256,
                         const unsigned int height = 256);
+
+  /**
+   * @brief Target
+   * @param resolution
+   */
+  explicit Target(const glm::ivec2 &resolution = glm::ivec2(256, 256));
 
   /**
    * @brief The texture that is rendered to.
