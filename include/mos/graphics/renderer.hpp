@@ -83,7 +83,7 @@ public:
   void clear(const glm::vec4 &color);
 
   void batches(const std::initializer_list<Batch> &batches_init,
-               const glm::vec4 &color, const OptTarget &target = OptTarget());
+               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
   template <class T>
   void batches(T begin, T end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},

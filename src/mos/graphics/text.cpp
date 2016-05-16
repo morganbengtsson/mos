@@ -112,6 +112,10 @@ glm::mat4 Text::transform() const {
 
 Model Text::model() const { return model_; }
 
+void Text::color(const glm::vec3 &color) {
+  model_.overlay(glm::vec4(color, 1.0f));
+}
+
 Text &Text::operator=(const std::string &input) {
   text(input);
   return *this;

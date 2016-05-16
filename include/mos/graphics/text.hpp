@@ -112,6 +112,12 @@ public:
   mos::Model model() const;
 
   /**
+   * @brief Set color of diffuse material.
+   * @param color
+   */
+  void color(const glm::vec3 &color);
+
+  /**
    * @brief spacing between characters
    */
   float spacing;
