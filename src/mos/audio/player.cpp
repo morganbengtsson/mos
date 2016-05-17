@@ -378,6 +378,7 @@ void Player::listener(const Listener &listener) {
                           listener.direction.z, listener.up.x,
                           listener.up.y,        listener.up.z};
   alListenerfv(AL_ORIENTATION, orientation);
+  alListenerf(AL_GAIN, listener.gain);
 }
 
 void Player::update(const SoundSource &sound_source, const float dt) {
