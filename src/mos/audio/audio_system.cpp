@@ -234,7 +234,7 @@ void AudioSystem::unload(const AudioBufferSource &buffer_source) {}
 
 void AudioSystem::unload(const AudioStreamSource &stream_source) {}
 
-void AudioSystem::update(const AudioStreamSource &stream_source, const float dt) {
+void AudioSystem::update(const AudioStreamSource &stream_source) {
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -307,12 +307,12 @@ void AudioSystem::update(const AudioStreamSource &stream_source, const float dt)
                   alSourcePlay(al_source);
                   alSourcei(al_source, AL_STREAMING, AL_TRUE);
 
-                  while (stream_threads[stream_source.stream->id()].running) {
+                  while (stream_threads[stream_ptr->id()].running) {
                     ALint processed = 0;
                     alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
                     while (
                         processed-- &&
-                        (stream_threads[stream_source.stream->id()].running)) {
+                        (stream_threads[stream_ptr->id()].running)) {
                       ALuint buffer = 0;
                       alSourceUnqueueBuffers(al_source, 1, &buffer);
                       auto samples = stream_ptr->read();
@@ -386,14 +386,14 @@ void AudioSystem::batch(const AudioBatch &batch) {
     if (!loaded(buffer_source)) {
       load(buffer_source);
     }
-    update(buffer_source, 0.0f);
+    update(buffer_source);
   }
   for (auto &stream_source : batch.stream_sources) {
-    update(stream_source, 0.0f);
+    update(stream_source);
   }
 }
 
-void AudioSystem::update(const AudioBufferSource &sound_source, const float dt) {
+void AudioSystem::update(const AudioBufferSource &sound_source) {
   if (sources_.find(sound_source.source.id()) != sources_.end()) {
     ALuint al_source = sources_.at(sound_source.source.id());
     alSourcei(al_source, AL_LOOPING, sound_source.source.loop);

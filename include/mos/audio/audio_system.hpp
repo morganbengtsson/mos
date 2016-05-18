@@ -31,7 +31,7 @@ public:
    * @brief Audio class is non copyable.
    * @param audio
    */
-  AudioSystem(const AudioSystem &audio) = delete; // Do not copy
+  AudioSystem(const AudioSystem &audio) = delete;
   virtual ~AudioSystem();
 
   template <class T>
@@ -85,9 +85,9 @@ public:
    * @param end End iterator.
    * @param dt Time step.
    */
-  void update(T begin, T end, const float dt) {
+  void update(T begin, T end) {
     for (auto it = begin; it != end; it++) {
-      update(*it, dt);
+      update(*it);
     }
   }
 
@@ -99,7 +99,7 @@ public:
    * @param sound_source
    * @param dt Time step.
    */
-  void update(const AudioBufferSource &buffer_source, const float dt);
+  void update(const AudioBufferSource &buffer_source);
 
   /**
   * Updates the internal source representation with data. Data
@@ -109,7 +109,7 @@ public:
   * @param stream_source
 * @param dt Time step.
   */
-  void update(const AudioStreamSource &stream_source, const float dt);
+  void update(const AudioStreamSource &stream_source);
 
   /**
    * @brief Get listener data.
