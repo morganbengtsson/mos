@@ -15,7 +15,7 @@ namespace mos {
 std::atomic_uint Box::current_id_(0);
 
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
-    : extent(extent), position(position) {id_ = current_id_++;}
+    : extent(extent), position(position), id_(current_id_++) {}
 
 Box::Box() {}
 

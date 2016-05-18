@@ -6,7 +6,7 @@
 namespace mos {
   std::atomic_uint AudioBuffer::current_id_(0);
 
-AudioBuffer::AudioBuffer(const std::string &path) {
+AudioBuffer::AudioBuffer(const std::string &path) : id_(current_id_++) {
   int channels, length, sample_rate;
   short *decoded;
 
@@ -26,7 +26,6 @@ AudioBuffer::AudioBuffer(const std::string &path) {
   samples_.assign(decoded, decoded + length);
   channels_ = channels;
   sample_rate_ = sample_rate;
-  id_ = current_id_++;
 }
 
 AudioBuffer::~AudioBuffer() {}

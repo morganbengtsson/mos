@@ -4,14 +4,12 @@ namespace mos {
 
 std::atomic_uint AudioStream::current_id_(0);
 
-AudioStream::AudioStream(const std::string & path) : file_name_(path) {
+AudioStream::AudioStream(const std::string & path) : file_name_(path), id_(current_id_++) {
   vorbis_stream_ =
       stb_vorbis_open_filename((char *)path.c_str(), NULL, NULL);
   vorbis_info_ = stb_vorbis_get_info(vorbis_stream_);
   samples_left_ = stb_vorbis_stream_length_in_samples(vorbis_stream_) *
                   vorbis_info_.channels;
-
-  id_ = current_id_++;
 }
 
 /*

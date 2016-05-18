@@ -12,7 +12,7 @@ namespace mos {
 //TODO: Why 10000?
 std::atomic_uint Particles::current_id_(10000);
 
-Particles::Particles() : valid_(false) { id_ = current_id_++; }
+Particles::Particles() : valid_(false), id_(current_id_++) {}
 
 Particles::~Particles() {}
 

@@ -36,16 +36,14 @@ public:
   AudioBuffer(T begin, T end, const unsigned int channels = 1u,
         const unsigned int sample_rate = 44100u)
       : channels_(channels), sample_rate_(sample_rate), valid_(true),
-        samples_(begin, end) {
-    id_ = current_id_++;
+        samples_(begin, end), id_(current_id_++) {
   }
 
   /**
    * @brief Sound constructor empty
    * @param channels
    */
-  AudioBuffer(const unsigned int channels = 1u) : channels_(channels) {
-    id_ = current_id_++;
+  AudioBuffer(const unsigned int channels = 1u) : channels_(channels), id_(current_id_++) {
   }
 
   virtual ~AudioBuffer();
