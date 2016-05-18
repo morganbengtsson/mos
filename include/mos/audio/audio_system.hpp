@@ -152,4 +152,4 @@ private:
 };
 }
 
-#endif /* MOS_PLAYER_H */
+#endif /* MOS_AUDIO_SYSTEM_H */

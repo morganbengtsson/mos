@@ -24,8 +24,8 @@ public:
    * @param obstructed
    * @param outside
    */
-  AudioSource(const glm::vec3 position = glm::vec3(0.0f),
-         const glm::vec3 velocity = glm::vec3(0.0f), const float pitch = 1.0f,
+  AudioSource(const glm::vec3 &position = glm::vec3(0.0f),
+         const glm::vec3 &velocity = glm::vec3(0.0f), const float pitch = 1.0f,
          const float gain = 1.0f, const bool loop = false,
          const bool playing = false, const float obstructed = 0.0f);
   virtual ~AudioSource();

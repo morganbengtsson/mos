@@ -1,10 +1,3 @@
-/*
- * File:   Particles.cpp
- * Author: morgan
- *
- * Created on October 16, 2014, 5:03 PM
- */
-
 #include <mos/graphics/particles.hpp>
 
 namespace mos {

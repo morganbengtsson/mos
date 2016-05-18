@@ -18,7 +18,7 @@ public:
    * @brief Stream constructor.
    * @param file_name
    */
-  explicit AudioStream(const std::string & path);
+  explicit AudioStream(const std::string &path);
 
   /**
    * @brief Copy constructor.

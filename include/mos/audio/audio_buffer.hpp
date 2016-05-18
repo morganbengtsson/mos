@@ -116,4 +116,4 @@ private:
 };
 }
 
-#endif /* MOS_SOUND_H */
+#endif /* MOS_AUDIO_BUFFER_H */
