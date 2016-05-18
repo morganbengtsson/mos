@@ -1,9 +1,9 @@
 #ifndef MOS_AUDIO_BUFFER_H
 #define MOS_AUDIO_BUFFER_H
 
-#include <vector>
-#include <string>
 #include <atomic>
+#include <string>
+#include <vector>
 
 namespace mos {
 
@@ -12,16 +12,11 @@ namespace mos {
  */
 class AudioBuffer {
   friend class AudioSystem;
+
 public:
   /**
-   * @brief Sound constructor from *.ogg file.
-   * @param path
-   */
-  AudioBuffer(const std::string &path);
-
-  /**
-   * @brief Container for 16bit samples (short).
-   */
+  * @brief Container for 16bit samples (short).
+  */
   using Samples = std::vector<short>;
 
   template <class T>
@@ -33,18 +28,17 @@ public:
    *
    * Constructor that takes iterators from a container of shorts.
    */
-  AudioBuffer(T begin, T end, const unsigned int channels = 1u,
-        const unsigned int sample_rate = 44100u)
+  AudioBuffer(const T begin, const T end, const unsigned int channels = 1u,
+              const unsigned int sample_rate = 44100u)
       : channels_(channels), sample_rate_(sample_rate), valid_(true),
-        samples_(begin, end), id_(current_id_++) {
-  }
+        samples_(begin, end), id_(current_id_++) {}
 
   /**
    * @brief Sound constructor empty
    * @param channels
    */
-  AudioBuffer(const unsigned int channels = 1u) : channels_(channels), id_(current_id_++) {
-  }
+  AudioBuffer(const unsigned int channels = 1u)
+      : channels_(channels), id_(current_id_++) {}
 
   virtual ~AudioBuffer();
 

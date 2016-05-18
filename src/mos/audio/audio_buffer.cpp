@@ -1,38 +1,20 @@
+#include <fstream>
 #include <mos/audio/audio_buffer.hpp>
 #include <stb_vorbis.h>
-#include <fstream>
 #include <stdexcept>
 
 namespace mos {
-  std::atomic_uint AudioBuffer::current_id_(0);
-
-AudioBuffer::AudioBuffer(const std::string &path) : id_(current_id_++) {
-  int channels, length, sample_rate;
-  short *decoded;
-
-  std::ifstream file(path, std::ios::binary);
-  if (!file.good()) {
-    throw std::runtime_error(path + " does not exist.");
-  }
-  std::vector<unsigned char> data;
-
-  unsigned char c;
-  while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
-    data.push_back(c);
-  }
-  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
-                                    &sample_rate, &decoded);
-
-  samples_.assign(decoded, decoded + length);
-  channels_ = channels;
-  sample_rate_ = sample_rate;
-}
+std::atomic_uint AudioBuffer::current_id_(0);
 
 AudioBuffer::~AudioBuffer() {}
 
-AudioBuffer::Samples::const_iterator AudioBuffer::begin() const { return samples_.begin(); }
+AudioBuffer::Samples::const_iterator AudioBuffer::begin() const {
+  return samples_.begin();
+}
 
-AudioBuffer::Samples::const_iterator AudioBuffer::end() const { return samples_.end(); }
+AudioBuffer::Samples::const_iterator AudioBuffer::end() const {
+  return samples_.end();
+}
 
 unsigned int AudioBuffer::id() const { return id_; }
 
