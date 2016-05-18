@@ -1,5 +1,5 @@
-#ifndef MOS_PLAYER_H
-#define MOS_PLAYER_H
+#ifndef MOS_AUDIO_SYTEM_H
+#define MOS_AUDIO_SYSTEM_H
 
 #include <unordered_map>
 #include <memory>
@@ -10,28 +10,28 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <mos/audio/streamsource.hpp>
-#include <mos/audio/soundsource.hpp>
-#include <mos/audio/listener.hpp>
+#include <mos/audio/audio_stream_source.hpp>
+#include <mos/audio/audio_buffer_source.hpp>
+#include <mos/audio/audio_listener.hpp>
 
 namespace mos {
 
 /**
- * Audio player class. Uses OpenAL for Windows/Linux/OSX.
+ * @brief Audio system. Uses OpenAL for Windows/Linux/OSX.
  */
-class Player {
+class AudioSystem {
 public:
   /**
-   * @brief Default audio player constructor.
+   * @brief Default audio system constructor.
    */
-  Player();
+  AudioSystem();
 
   /**
    * @brief Audio class is non copyable.
    * @param audio
    */
-  Player(const Player &audio) = delete; // Do not copy
-  virtual ~Player();
+  AudioSystem(const AudioSystem &audio) = delete; // Do not copy
+  virtual ~AudioSystem();
 
   template <class T>
   /**
@@ -52,9 +52,9 @@ public:
    *
    * @param source
    */
-  void load(const SoundSource &sound_source);
+  void load(const AudioBufferSource &audio_buffer_source);
 
-  bool loaded(const SoundSource &sound_source);
+  bool loaded(const AudioBufferSource &audio_buffer_source);
 
   /**
    * Plays audio from a StreamSource. Which streams content from a file. This
@@ -63,19 +63,19 @@ public:
    * @brief load
    * @param stream_source
    */
-  void load(const StreamSource &stream_source);
+  void load(const AudioStreamSource &stream_source);
 
   /**
    * @brief unload
    * @param sound_source
    */
-  void unload(const SoundSource &sound_source);
+  void unload(const AudioBufferSource &buffer_source);
 
   /**
    * @brief unload
    * @param stream_source
    */
-  void unload(const StreamSource &stream_source);
+  void unload(const AudioStreamSource &stream_source);
 
   template <class T>
   /**
@@ -98,7 +98,7 @@ public:
    * @param sound_source
    * @param dt Time step.
    */
-  void update(const SoundSource &sound_source, const float dt);
+  void update(const AudioBufferSource &buffer_source, const float dt);
 
   /**
   * Updates the internal source representation with data. Data
@@ -108,19 +108,19 @@ public:
   * @param stream_source
 * @param dt Time step.
   */
-  void update(StreamSource &stream_source, const float dt);
+  void update(AudioStreamSource &stream_source, const float dt);
 
   /**
    * @brief Get listener data.
    * @return listener
    */
-  Listener listener() const;
+  AudioListener listener() const;
 
   /**
    * @brief Set listener data
    * @param listener
    */
-  void listener(const Listener &listener);
+  void listener(const AudioListener &listener);
 
 private:
   struct StreamThread {

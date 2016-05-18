@@ -9,14 +9,14 @@ namespace mos {
 /**
  * A sound class containing samples of 16bit integer data. In memory.
  */
-class Sound {
+class AudioBuffer {
   friend class Player;
 public:
   /**
    * @brief Sound constructor from *.ogg file.
    * @param path
    */
-  Sound(const std::string &path);
+  AudioBuffer(const std::string &path);
 
   /**
    * @brief Container for 16bit samples (short).
@@ -32,7 +32,7 @@ public:
    *
    * Constructor that takes iterators from a container of shorts.
    */
-  Sound(T begin, T end, const unsigned int channels = 1u,
+  AudioBuffer(T begin, T end, const unsigned int channels = 1u,
         const unsigned int sample_rate = 44100u)
       : channels_(channels), sample_rate_(sample_rate), valid_(true),
         samples_(begin, end) {
@@ -43,11 +43,11 @@ public:
    * @brief Sound constructor empty
    * @param channels
    */
-  Sound(const unsigned int channels = 1u) : channels_(channels) {
+  AudioBuffer(const unsigned int channels = 1u) : channels_(channels) {
     id_ = current_id_++;
   }
 
-  virtual ~Sound();
+  virtual ~AudioBuffer();
 
   /**
    * @brief begin iterator for samples

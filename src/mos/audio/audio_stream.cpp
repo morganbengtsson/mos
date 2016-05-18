@@ -1,10 +1,10 @@
-#include <mos/audio/stream.hpp>
+#include <mos/audio/audio_stream.hpp>
 
 namespace mos {
 
-std::atomic_uint Stream::current_id_(0);
+std::atomic_uint AudioStream::current_id_(0);
 
-Stream::Stream(const std::string & path) : file_name_(path) {
+AudioStream::AudioStream(const std::string & path) : file_name_(path) {
   vorbis_stream_ =
       stb_vorbis_open_filename((char *)path.c_str(), NULL, NULL);
   vorbis_info_ = stb_vorbis_get_info(vorbis_stream_);
@@ -15,19 +15,19 @@ Stream::Stream(const std::string & path) : file_name_(path) {
 }
 
 /*
-Stream::Stream(const Stream &stream) : Stream(stream.file_name_) {
+AudioStream::Stream(const Stream &stream) : Stream(stream.file_name_) {
   id_ = current_id++;
 }*/
 
-Stream::~Stream() { stb_vorbis_close(vorbis_stream_); }
+AudioStream::~AudioStream() { stb_vorbis_close(vorbis_stream_); }
 
-std::array<short, Stream::buffer_size> Stream::read() {
-  auto samples = std::array<short, Stream::buffer_size>();
+std::array<short, AudioStream::buffer_size> AudioStream::read() {
+  auto samples = std::array<short, AudioStream::buffer_size>();
 
   int size = 0;
   int result = 0;
 
-  while (size < Stream::buffer_size) {
+  while (size < AudioStream::buffer_size) {
     result = stb_vorbis_get_samples_short_interleaved(
         vorbis_stream_, vorbis_info_.channels, samples.data() + size,
         buffer_size - size);
@@ -40,17 +40,17 @@ std::array<short, Stream::buffer_size> Stream::read() {
   return samples;
 }
 
-bool Stream::done() const { return samples_left_ <= 0; }
+bool AudioStream::done() const { return samples_left_ <= 0; }
 
-int Stream::sample_rate() const { return vorbis_info_.sample_rate; }
+int AudioStream::sample_rate() const { return vorbis_info_.sample_rate; }
 
-int Stream::channels() const { return vorbis_info_.channels; }
+int AudioStream::channels() const { return vorbis_info_.channels; }
 
-void Stream::seek_start() {
+void AudioStream::seek_start() {
   stb_vorbis_seek_start(vorbis_stream_);
   samples_left_ =
       stb_vorbis_stream_length_in_samples(vorbis_stream_) * channels();
 }
 
-unsigned int Stream::id() const { return id_; }
+unsigned int AudioStream::id() const { return id_; }
 }

@@ -1,11 +1,12 @@
-#ifndef MOS_SOUNDSOURCE_HPP
-#define MOS_SOUNDSOURCE_HPP
+#ifndef MOS_AUDIO_BUFFER_SOURCE_HPP
+#define MOS_AUDIO_BUFFER_SOURCE_HPP
 
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>
-#include "sound.hpp"
-#include "source.hpp"
+
+#include <mos/audio/audio_buffer.hpp>
+#include <mos/audio/audio_source.hpp>
 
 namespace mos {
 
@@ -13,16 +14,16 @@ namespace mos {
  * A classed used for audio playback. Contains sounds, together with a position.
  * That is used if 3D audio is enabled.
  */
-class SoundSource {
+class AudioBufferSource {
 public:
   /**
    * @brief SoundSource constructor.
    * @param sound
    * @param source
    */
-  explicit SoundSource(const std::shared_ptr<Sound> &sound,
-                       const Source &source = Source());
-  virtual ~SoundSource();
+  explicit AudioBufferSource(const std::shared_ptr<AudioBuffer> &buffer,
+                       const AudioSource &source = AudioSource());
+  virtual ~AudioBufferSource();
 
   /**
    * @brief update the source and stop if not looping.
@@ -33,11 +34,11 @@ public:
   /**
    * @brief The sound that is played from the source.
    */
-  std::shared_ptr<Sound> sound;
-  Source source;
+  std::shared_ptr<AudioBuffer> buffer;
+  AudioSource source;
 private:
   float time_;
 };
 }
 
-#endif // MOS_SOUNDSOURCE_HPP
+#endif // MOS_AUDIO_BUFFER_SOURCE_HPP

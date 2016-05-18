@@ -1,8 +1,8 @@
-#include <mos/audio/source.hpp>
+#include <mos/audio/audio_source.hpp>
 
 namespace mos {
 
-Source::Source(const glm::vec3 position, const glm::vec3 velocity,
+AudioSource::AudioSource(const glm::vec3 position, const glm::vec3 velocity,
                const float pitch, const float gain, const bool loop,
                const bool playing, const float obstructed, const bool outside)
     : position(position), velocity(velocity), pitch(pitch), gain(gain),
@@ -11,7 +11,7 @@ Source::Source(const glm::vec3 position, const glm::vec3 velocity,
   id_ = current_id++;
 }
 
-Source::~Source() {}
+AudioSource::~AudioSource() {}
 
-unsigned int Source::id() const { return id_; }
+unsigned int AudioSource::id() const { return id_; }
 }

@@ -1,12 +1,12 @@
-#include <mos/audio/sound.hpp>
+#include <mos/audio/audio_buffer.hpp>
 #include <stb_vorbis.h>
 #include <fstream>
 #include <stdexcept>
 
 namespace mos {
-  unsigned int Sound::current_id_ = 0;
+  unsigned int AudioBuffer::current_id_ = 0;
 
-Sound::Sound(const std::string &path) {
+AudioBuffer::AudioBuffer(const std::string &path) {
   int channels, length, sample_rate;
   short *decoded;
 
@@ -29,23 +29,23 @@ Sound::Sound(const std::string &path) {
   id_ = current_id_++;
 }
 
-Sound::~Sound() {}
+AudioBuffer::~AudioBuffer() {}
 
-Sound::Samples::const_iterator Sound::begin() const { return samples_.begin(); }
+AudioBuffer::Samples::const_iterator AudioBuffer::begin() const { return samples_.begin(); }
 
-Sound::Samples::const_iterator Sound::end() const { return samples_.end(); }
+AudioBuffer::Samples::const_iterator AudioBuffer::end() const { return samples_.end(); }
 
-unsigned int Sound::id() const { return id_; }
+unsigned int AudioBuffer::id() const { return id_; }
 
-bool Sound::valid() const { return valid_; }
+bool AudioBuffer::valid() const { return valid_; }
 
-unsigned int Sound::channels() const { return channels_; }
+unsigned int AudioBuffer::channels() const { return channels_; }
 
-unsigned int Sound::sample_rate() const { return sample_rate_; }
+unsigned int AudioBuffer::sample_rate() const { return sample_rate_; }
 
-float Sound::length() const {
+float AudioBuffer::length() const {
   return float(samples_.size()) / float(sample_rate() * channels());
 }
 
-const short *Sound::data() const { return samples_.data(); }
+const short *AudioBuffer::data() const { return samples_.data(); }
 }

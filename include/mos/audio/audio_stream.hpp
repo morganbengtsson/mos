@@ -1,5 +1,5 @@
-#ifndef MOS_STREAM_HPP
-#define MOS_STREAM_HPP
+#ifndef MOS_AUDIO_STREAM_HPP
+#define MOS_AUDIO_STREAM_HPP
 
 #include <array>
 #include <string>
@@ -12,20 +12,20 @@ namespace mos {
 /**
  * @brief The Stream class, for audio streaming from file.
  */
-class Stream {
+class AudioStream {
 public:
   /**
    * @brief Stream constructor.
    * @param file_name
    */
-  explicit Stream(const std::string & path);
+  explicit AudioStream(const std::string & path);
 
   /**
    * @brief Copy constructor.
    * @param stream
    */
   //Stream(const mos::Stream &stream);
-  ~Stream();
+  ~AudioStream();
 
   /**
    * @brief buffer_size
@@ -77,4 +77,4 @@ private:
   stb_vorbis_info vorbis_info_;
 };
 }
-#endif // MOS_STREAM_HPP
+#endif // MOS_AUDIO_STREAM_HPP

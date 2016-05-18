@@ -2,14 +2,14 @@
 #define TYPES_HPP
 
 #include <memory>
-#include <mos/audio/sound.hpp>
-#include <mos/audio/stream.hpp>
+#include <mos/audio/audio_buffer.hpp>
+#include <mos/audio/audio_stream.hpp>
 #include <mos/graphics/mesh.hpp>
 
 namespace mos {
-using SharedSound = std::shared_ptr<Sound>;
+using SharedAudioBuffer = std::shared_ptr<AudioBuffer>;
 using SharedMesh = std::shared_ptr<Mesh>;
-using SharedStream = std::shared_ptr<Stream>;
+using SharedAudioStream = std::shared_ptr<AudioStream>;
 }
 
 #endif // TYPES_HPP

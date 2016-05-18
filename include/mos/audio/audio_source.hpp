@@ -1,16 +1,16 @@
-#ifndef MOS_SOURCE_H
-#define MOS_SOURCE_H
+#ifndef MOS_AUDIO_SOURCE_H
+#define MOS_AUDIO_SOURCE_H
 
 #include <glm/vec3.hpp>
 
 namespace mos {
 
 /**
- * @brief The Source class
+ * @brief The AudioSource class
  *
  * Base class for the audio sources. Either streamed or direct from memory.
  */
-class Source {
+class AudioSource {
 public:
   /**
    * @brief Source constructor.
@@ -23,12 +23,12 @@ public:
    * @param obstructed
    * @param outside
    */
-  Source(const glm::vec3 position = glm::vec3(0.0f),
+  AudioSource(const glm::vec3 position = glm::vec3(0.0f),
          const glm::vec3 velocity = glm::vec3(0.0f), const float pitch = 1.0f,
          const float gain = 1.0f, const bool loop = false,
          const bool playing = false, const float obstructed = 0.0f,
          const bool outside = false);
-  virtual ~Source();
+  virtual ~AudioSource();
 
   /**
    * @brief unique id
@@ -78,4 +78,4 @@ private:
 };
 }
 
-#endif /* MOS_SOURCE_H */
+#endif /* MOS_AUDIO_SOURCE_H */

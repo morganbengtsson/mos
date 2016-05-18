@@ -1,11 +1,11 @@
-#ifndef MOS_LISTENER_H
-#define MOS_LISTENER_H
+#ifndef MOS_AUDIO_LISTENER_H
+#define MOS_AUDIO_LISTENER_H
 
 #include <glm/glm.hpp>
 
 namespace mos {
 
-class Listener {
+class AudioListener {
 public:
   /**
    * @brief Listener constructor.
@@ -17,12 +17,12 @@ public:
    * @param orientation
    * @param velocity
    */
-  Listener(const glm::vec3 &position = glm::vec3(.0f),
+  AudioListener(const glm::vec3 &position = glm::vec3(.0f),
            const glm::vec3 &direction = glm::vec3(.0f, 1.0f, .0f),
            const glm::vec3 &up = glm::vec3(.0f, .0f, 1.0f),
            const glm::vec3 &velocity = glm::vec3(.0f),
            const float gain = 1.0f);
-  ~Listener();
+  ~AudioListener();
 
   /**
    * @brief position of listener.
@@ -51,4 +51,4 @@ public:
 };
 }
 
-#endif /* MOS_LISTENER_H */
+#endif /* MOS_AUDIO_LISTENER_H */
