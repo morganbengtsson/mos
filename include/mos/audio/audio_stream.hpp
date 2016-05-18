@@ -5,7 +5,7 @@
 #include <string>
 #include <atomic>
 
-#include "stb_vorbis.h"
+#include <stb_vorbis.h>
 
 namespace mos {
 
@@ -20,11 +20,6 @@ public:
    */
   explicit AudioStream(const std::string &path);
 
-  /**
-   * @brief Copy constructor.
-   * @param stream
-   */
-  //Stream(const mos::Stream &stream);
   ~AudioStream();
 
   /**

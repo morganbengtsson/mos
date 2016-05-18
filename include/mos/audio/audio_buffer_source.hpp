@@ -5,6 +5,7 @@
 #include <memory>
 #include <glm/glm.hpp>
 
+#include <mos/audio/audio_types.hpp>
 #include <mos/audio/audio_buffer.hpp>
 #include <mos/audio/audio_source.hpp>
 
@@ -20,7 +21,7 @@ public:
    * @param buffer
    * @param source
    */
-  explicit AudioBufferSource(const std::shared_ptr<AudioBuffer> &buffer,
+  explicit AudioBufferSource(const SharedAudioBuffer &buffer,
                        const AudioSource &source = AudioSource());
   virtual ~AudioBufferSource();
 
@@ -30,7 +31,7 @@ public:
    */
   void update(const float dt);
 
-  std::shared_ptr<AudioBuffer> buffer;
+  SharedAudioBuffer buffer;
   AudioSource source;
 private:
   float time_;

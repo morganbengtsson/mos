@@ -5,14 +5,13 @@
 
 namespace mos {
 
+/**
+* @brief The AudioListener class, where the audio system listens from.
+*/
 class AudioListener {
 public:
   /**
    * @brief Listener constructor.
-   *
-   * A listener is collection of properties relative to a listener in the audio system.
-   * The audio system can only handle one listener at a time. Though several can exist.
-   *
    * @param position
    * @param orientation
    * @param velocity

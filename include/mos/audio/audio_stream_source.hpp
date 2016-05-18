@@ -4,13 +4,14 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+#include <mos/audio/audio_types.hpp>
 #include <mos/audio/audio_stream.hpp>
 #include <mos/audio/audio_source.hpp>
 
 namespace mos {
 
 /**
- * @brief Stream audio from file.
+ * @brief Stream audio from file, combined with source data.
  */
 class AudioStreamSource {
 public:
