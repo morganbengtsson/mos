@@ -66,18 +66,6 @@ public:
    */
   void load(const AudioStreamSource &stream_source);
 
-  /**
-   * @brief unload
-   * @param sound_source
-   */
-  void unload(const AudioBufferSource &buffer_source);
-
-  /**
-   * @brief unload
-   * @param stream_source
-   */
-  void unload(const AudioStreamSource &stream_source);
-
   template <class T>
   /**
    * @brief A generalized update method

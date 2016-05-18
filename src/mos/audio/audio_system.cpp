@@ -228,12 +228,6 @@ bool AudioSystem::loaded(const AudioBufferSource &buffer_source) {
   }
 }
 
-//void AudioSystem::load(const Source &stream_source) {}
-
-void AudioSystem::unload(const AudioBufferSource &buffer_source) {}
-
-void AudioSystem::unload(const AudioStreamSource &stream_source) {}
-
 void AudioSystem::update(const AudioStreamSource &stream_source) {
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
