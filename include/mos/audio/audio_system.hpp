@@ -35,14 +35,6 @@ public:
   ~AudioSystem();
 
   /**
-   * Load a SoundSource object. A sound source contains one sound.
-   *
-   * @param source
-   */
-  void load(const AudioBufferSource &audio_buffer_source);
-  bool loaded(const AudioBufferSource &audio_buffer_source);
-
-  /**
    * @brief Get listener data.
    * @return listener
    */
