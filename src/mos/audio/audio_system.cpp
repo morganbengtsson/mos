@@ -3,8 +3,8 @@
 #include <iostream>
 #include <thread>
 
-#include <mos/audio/audio_system.hpp>
 #include <mos/audio/audio_buffer_source.hpp>
+#include <mos/audio/audio_system.hpp>
 
 #ifdef MOS_EFX
 
@@ -89,7 +89,7 @@ void init_efx() {
       "alGetAuxiliaryEffectSlotfv");
 }
 
-#endif //MOS_EFX
+#endif // MOS_EFX
 namespace mos {
 
 AudioSystem::AudioSystem()
@@ -181,44 +181,7 @@ AudioSystem::~AudioSystem() {
   alcCloseDevice(device_);
 }
 
-void AudioSystem::load(const AudioBufferSource &sound_source) {
-  if (sources_.find(sound_source.source.id()) == sources_.end()) {
-    ALuint al_source;
-    alGenSources(1, &al_source);
-    sources_.insert(SourcePair(sound_source.source.id(), al_source));
-
-
-#ifdef MOS_EFX
-    alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
-               AL_FILTER_NULL);
-
-    ALuint al_filter;
-    alGenFilters(1, &al_filter);
-    filters_.insert(SourcePair(sound_source.source.id(), al_filter));
-    alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
-#endif
-  }
-
-  auto sound = sound_source.buffer;
-  if (buffers_.find(sound->id()) == buffers_.end()) {
-    ALuint buffer;
-    alGenBuffers(1, &buffer);
-    {
-      long data_size = std::distance(sound->begin(), sound->end());
-      const ALvoid *data = sound->data();
-      alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof(short),
-                   sound->sample_rate());
-    }
-    buffers_.insert(BufferPair(sound->id(), buffer));
-  }
-  alSourcei(sources_.at(sound_source.source.id()), AL_BUFFER,
-            buffers_.at(sound->id()));
-  alSource3f(sources_.at(sound_source.source.id()), AL_POSITION,
-             sound_source.source.position.x, sound_source.source.position.y,
-             sound_source.source.position.z);
-  // alSourcePlay(sources_.at(source.id()));
-}
+void AudioSystem::load(const AudioBufferSource &sound_source) {}
 
 bool AudioSystem::loaded(const AudioBufferSource &buffer_source) {
   if (sources_.find(buffer_source.source.id()) == sources_.end()) {
@@ -271,7 +234,7 @@ void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
 
-  //stream_source.source.obstructed = 0.0f;
+  // stream_source.source.obstructed = 0.0f;
 
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -293,7 +256,8 @@ void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
                   alGenBuffers(4, buffers);
                   int size = stream_ptr->buffer_size;
                   for (int i = 0; i < 4; i++) {
-                    alBufferData(buffers[i], AL_FORMAT_MONO16, stream_ptr->read().data(),
+                    alBufferData(
+                        buffers[i], AL_FORMAT_MONO16, stream_ptr->read().data(),
                         size * sizeof(ALshort), stream_ptr->sample_rate());
                     alSourceQueueBuffers(al_source, 1, &buffers[i]);
                   }
@@ -304,9 +268,8 @@ void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
                   while (stream_threads[stream_ptr->id()].running) {
                     ALint processed = 0;
                     alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
-                    while (
-                        processed-- &&
-                        (stream_threads[stream_ptr->id()].running)) {
+                    while (processed-- &&
+                           (stream_threads[stream_ptr->id()].running)) {
                       ALuint buffer = 0;
                       alSourceUnqueueBuffers(al_source, 1, &buffer);
                       auto samples = stream_ptr->read();
@@ -376,7 +339,7 @@ void AudioSystem::listener(const AudioListener &listener) {
 
 void AudioSystem::batch(const AudioBatch &batch) {
   listener(batch.listener);
-  for (const auto &bs: batch.buffer_sources) {
+  for (const auto &bs : batch.buffer_sources) {
     if (!loaded(bs)) {
       load(bs);
     }
@@ -388,52 +351,81 @@ void AudioSystem::batch(const AudioBatch &batch) {
 }
 
 void AudioSystem::buffer_source(const AudioBufferSource &buffer_source) {
-  if (sources_.find(buffer_source.source.id()) != sources_.end()) {
-    ALuint al_source = sources_.at(buffer_source.source.id());
-    alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
-    alSourcef(al_source, AL_PITCH, buffer_source.source.pitch);
-    alSourcef(al_source, AL_GAIN, buffer_source.source.gain);
-    alSource3f(al_source, AL_POSITION, buffer_source.source.position.x,
-               buffer_source.source.position.y, buffer_source.source.position.z);
-    alSource3f(al_source, AL_VELOCITY, buffer_source.source.velocity.x,
-               buffer_source.source.velocity.y, buffer_source.source.velocity.z);
+  if (sources_.find(buffer_source.source.id()) == sources_.end()) {
+    ALuint al_source;
+    alGenSources(1, &al_source);
+    sources_.insert(SourcePair(buffer_source.source.id(), al_source));
 
 #ifdef MOS_EFX
-    auto al_filter = filters_[sound_source.source.id()];
-    float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
-    ALfloat al_gain;
-    alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-    float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
-
-    ALfloat al_gain_hf;
-    alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-    float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
-
+    alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
+               AL_FILTER_NULL);
+    ALuint al_filter;
+    alGenFilters(1, &al_filter);
+    filters_.insert(SourcePair(sound_source.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
-    alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
+  }
 
-    // sound_source.source.obstructed = 0.0f;
-
-    ALenum state;
-    alGetSourcei(al_source, AL_SOURCE_STATE, &state);
-
-    if (buffer_source.source.playing && (state != AL_PLAYING)) {
-      alSourcePlay(al_source);
+  auto sound = buffer_source.buffer;
+  if (buffers_.find(sound->id()) == buffers_.end()) {
+    ALuint buffer;
+    alGenBuffers(1, &buffer);
+    {
+      long data_size = std::distance(sound->begin(), sound->end());
+      const ALvoid *data = sound->data();
+      alBufferData(buffer, AL_FORMAT_MONO16, data, data_size * sizeof(short),
+                   sound->sample_rate());
     }
+    buffers_.insert(BufferPair(sound->id(), buffer));
+  }
+  alSourcei(sources_.at(buffer_source.source.id()), AL_BUFFER,
+            buffers_.at(sound->id()));
 
-    ALint type;
-    alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
+  ALuint al_source = sources_.at(buffer_source.source.id());
+  alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
+  alSourcef(al_source, AL_PITCH, buffer_source.source.pitch);
+  alSourcef(al_source, AL_GAIN, buffer_source.source.gain);
+  alSource3f(al_source, AL_POSITION, buffer_source.source.position.x,
+             buffer_source.source.position.y, buffer_source.source.position.z);
+  alSource3f(al_source, AL_VELOCITY, buffer_source.source.velocity.x,
+             buffer_source.source.velocity.y, buffer_source.source.velocity.z);
 
-    if (!buffer_source.source.playing && (state == AL_PLAYING)) {
-      alSourceStop(al_source);
-    }
+#ifdef MOS_EFX
+  auto al_filter = filters_[sound_source.source.id()];
+  float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
+  ALfloat al_gain;
+  alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
+  float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
 
-    if (state == AL_STOPPED) {
-      alSourceRewind(al_source);
-    }
+  ALfloat al_gain_hf;
+  alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
+  float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
+
+  alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+  alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
+  alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
+  alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
+#endif
+
+  // sound_source.source.obstructed = 0.0f;
+
+  ALenum state;
+  alGetSourcei(al_source, AL_SOURCE_STATE, &state);
+
+  if (buffer_source.source.playing && (state != AL_PLAYING)) {
+    alSourcePlay(al_source);
+  }
+
+  ALint type;
+  alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
+
+  if (!buffer_source.source.playing && (state == AL_PLAYING)) {
+    alSourceStop(al_source);
+  }
+
+  if (state == AL_STOPPED) {
+    alSourceRewind(al_source);
   }
 }
 }
