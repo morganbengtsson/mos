@@ -32,21 +32,7 @@ public:
    * @param audio
    */
   AudioSystem(const AudioSystem &audio) = delete;
-  virtual ~AudioSystem();
-
-  template <class T>
-  /**
-   * A generalized load method. For sound and stream sources.
-   *
-   * @brief load
-   * @param begin
-   * @param end
-   */
-  void load(T begin, T end) {
-    for (auto it = begin; it != end; it++) {
-      load(*it);
-    }
-  }
+  ~AudioSystem();
 
   /**
    * Load a SoundSource object. A sound source contains one sound.
@@ -54,50 +40,7 @@ public:
    * @param source
    */
   void load(const AudioBufferSource &audio_buffer_source);
-
   bool loaded(const AudioBufferSource &audio_buffer_source);
-
-  /**
-   * Plays audio from a StreamSource. Which streams content from a file. This
-   * method starts a new thread for each source playing.
-   *
-   * @brief load
-   * @param stream_source
-   */
-  void load(const AudioStreamSource &stream_source);
-
-  template <class T>
-  /**
-   * @brief A generalized update method
-   * @param begin Begin iterator.
-   * @param end End iterator.
-   * @param dt Time step.
-   */
-  void update(T begin, T end) {
-    for (auto it = begin; it != end; it++) {
-      update(*it);
-    }
-  }
-
-  /**
-   * Updates the internal source representation with data. Data
-   * such as position, velocity, pitch and gain.
-   *
-   * @brief update
-   * @param sound_source
-   * @param dt Time step.
-   */
-  void update(const AudioBufferSource &buffer_source);
-
-  /**
-  * Updates the internal source representation with data. Data
-  * such as position, velocity, pitch and gain.
-  *
-  * @brief update
-  * @param stream_source
-* @param dt Time step.
-  */
-  void update(const AudioStreamSource &stream_source);
 
   /**
    * @brief Get listener data.
@@ -106,14 +49,31 @@ public:
   AudioListener listener() const;
 
   /**
+   * @brief Update internal representation.
+   * @param batch of audio related data.
+   */
+  void batch(const AudioBatch &batch);
+
+private:
+  /**
    * @brief Set listener data
    * @param listener
    */
   void listener(const AudioListener &listener);
 
-  void batch(const AudioBatch &batch);
+  /**
+  * @brief Update internal stream source representation.
+  * @param stream_source
+  */
+  void stream_source(const AudioStreamSource &stream_source);
 
-private:
+  /**
+   * @brief Update internal buffer source representation.
+   * @param sound_source
+   */
+  void buffer_source(const AudioBufferSource &buffer_source);
+
+
   struct StreamThread {
     std::thread thread;
     bool running;
