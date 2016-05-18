@@ -1,9 +1,9 @@
-#ifndef LIGHTMAPS_HPP
-#define LIGHTMAPS_HPP
+#ifndef MOS_LIGHTMAPS_HPP
+#define MOS_LIGHTMAPS_HPP
 
 #include <memory>
 #include <mos/graphics/texture.hpp>
-
+namespace mos {
 class Lightmaps {
 public:
   using TexPtr = std::shared_ptr<mos::Texture>;
@@ -13,5 +13,6 @@ public:
   TexPtr second;
   float mix;
 };
+}
 
-#endif // LIGHTMAPS_HPP
+#endif // MOS_LIGHTMAPS_HPP
