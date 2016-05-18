@@ -15,7 +15,7 @@ class AudioBuffer {
 
 public:
   /**
-  * @brief Container for 16bit samples (short).
+  * @brief Container name for 16bit samples (short).
   */
   using Samples = std::vector<short>;
 
