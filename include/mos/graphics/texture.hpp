@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <atomic>
 #include <glm/glm.hpp>
 
 namespace mos {
@@ -20,10 +21,12 @@ public:
   using Texels = std::vector<unsigned char>;
 
   Texture(const std::string &path, const bool mips = true);
+
   /**
    * @brief Used to create next unique id.
    */
-  static unsigned int current_id;
+  static std::atomic_uint current_id;
+
   template <class T>
   /**
    * @brief Texture2D

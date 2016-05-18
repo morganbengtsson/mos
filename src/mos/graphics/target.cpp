@@ -2,7 +2,7 @@
 
 namespace mos {
 
-unsigned int Target::current_id_ = 0;
+std::atomic_uint Target::current_id_(0);
 
 Target::Target(const unsigned int width, const unsigned int height)
     : texture(std::make_shared<Texture>(Texture(width, height, true))) {

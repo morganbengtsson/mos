@@ -2,6 +2,7 @@
 #define MOS_PARTICLES_H
 
 #include <vector>
+#include <atomic>
 #include "particle.hpp"
 
 namespace mos {
@@ -120,7 +121,7 @@ public:
 
 private:
   Parts particles_;
-  static unsigned int current_id;
+  static std::atomic_uint current_id_;
   unsigned int id_;
   bool valid_;
 };

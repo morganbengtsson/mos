@@ -5,7 +5,7 @@
 
 namespace mos {
 
-unsigned int Mesh::current_id = 0;
+std::atomic_uint Mesh::current_id(0);
 
 Mesh::Mesh(const std::string & path) : Mesh() {
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {

@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 namespace mos {
-  unsigned int AudioBuffer::current_id_ = 0;
+  std::atomic_uint AudioBuffer::current_id_(0);
 
 AudioBuffer::AudioBuffer(const std::string &path) {
   int channels, length, sample_rate;

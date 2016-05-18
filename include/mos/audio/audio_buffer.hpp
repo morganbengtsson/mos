@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <atomic>
 
 namespace mos {
 
@@ -108,7 +109,7 @@ public:
   float length() const;
 
 private:
-  static unsigned int current_id_;
+  static std::atomic_uint current_id_;
   unsigned int id_;
   Samples samples_;
   unsigned int channels_;

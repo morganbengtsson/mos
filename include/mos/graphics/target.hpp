@@ -2,6 +2,7 @@
 #define MOS_RENDER_TARGET_HPP
 
 #include <memory>
+#include <atomic>
 #include <glm/glm.hpp>
 #include <mos/graphics/texture.hpp>
 
@@ -41,7 +42,7 @@ public:
 
 private:
   unsigned int id_;
-  static unsigned int current_id_;
+  static std::atomic_uint current_id_;
 };
 }
 #endif // MOS_RENDER_TARGET_HPP

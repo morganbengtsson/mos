@@ -1,6 +1,7 @@
 #ifndef MOS_AUDIO_SOURCE_H
 #define MOS_AUDIO_SOURCE_H
 
+#include <atomic>
 #include <glm/vec3.hpp>
 
 namespace mos {
@@ -73,6 +74,7 @@ public:
   float obstructed;
 
 private:
+  static std::atomic_uint current_id_;
   unsigned int id_;
 };
 }

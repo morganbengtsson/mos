@@ -4,7 +4,8 @@
 
 namespace mos {
 
-  unsigned int Texture::current_id = 0;
+  std::atomic_uint Texture::current_id(0);
+
   Texture::Texture(const std::string & path, const bool mips) {
     auto error =
         lodepng::decode(texels_, width_, height_, path);

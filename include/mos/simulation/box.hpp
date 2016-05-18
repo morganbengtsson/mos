@@ -4,6 +4,7 @@
 #include <array>
 #include <utility>
 #include <algorithm>
+#include <atomic>
 #include <tuple>
 #include <iostream>
 #include <optional.hpp>
@@ -163,7 +164,7 @@ public:
   glm::vec3 position;
 
 private:
-  static unsigned int current_id_;
+  static std::atomic_uint current_id_;
   unsigned int id_;
 
   template <class T>

@@ -9,9 +9,10 @@
 
 namespace mos {
 
-unsigned int Particles::current_id = 10000;
+//TODO: Why 10000?
+std::atomic_uint Particles::current_id_(10000);
 
-Particles::Particles() : valid_(false) { id_ = current_id++; }
+Particles::Particles() : valid_(false) { id_ = current_id_++; }
 
 Particles::~Particles() {}
 

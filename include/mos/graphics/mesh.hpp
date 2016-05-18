@@ -4,6 +4,7 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
+#include <atomic>
 #include <mos/graphics/vertex.hpp>
 
 namespace mos {
@@ -205,7 +206,7 @@ public:
   void mix(const Mesh &mesh1, const Mesh &mesh2, const float amount);
 
 private:
-  static unsigned int current_id;
+  static std::atomic_uint current_id;
   unsigned int id_;
   Vertices vertices_;
   Elements elements_;
