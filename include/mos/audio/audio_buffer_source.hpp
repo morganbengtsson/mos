@@ -11,14 +11,13 @@
 namespace mos {
 
 /**
- * A classed used for audio playback. Contains sounds, together with a position.
- * That is used if 3D audio is enabled.
+ * Audio buffer and audio source combined.
  */
 class AudioBufferSource {
 public:
   /**
-   * @brief SoundSource constructor.
-   * @param sound
+   * @brief AudioBufferSource constructor.
+   * @param buffer
    * @param source
    */
   explicit AudioBufferSource(const std::shared_ptr<AudioBuffer> &buffer,
@@ -31,9 +30,6 @@ public:
    */
   void update(const float dt);
 
-  /**
-   * @brief The sound that is played from the source.
-   */
   std::shared_ptr<AudioBuffer> buffer;
   AudioSource source;
 private:

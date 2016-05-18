@@ -10,15 +10,12 @@
 namespace mos {
 
 /**
- * @brief The StreamSource class, for audio streaming
- *
- * Stream audio from an *ogg audio resource. Used with the Audio class for
- *playback.
+ * @brief Stream audio from file.
  */
 class AudioStreamSource {
 public:
   /**
-   * @brief StreamSource constructor.
+   * @brief AudioStreamSource constructor.
    * @param stream
    * @param source
    */
@@ -28,9 +25,12 @@ public:
 
   /**
    * @brief Stream used for the source.
-   * @todo Should it be shared?
    */
   std::shared_ptr<AudioStream> stream;
+
+  /**
+   * @brief source
+   */
   AudioSource source;
 };
 }

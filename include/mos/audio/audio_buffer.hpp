@@ -1,5 +1,5 @@
-#ifndef MOS_SOUND_H
-#define MOS_SOUND_H
+#ifndef MOS_AUDIO_BUFFER_H
+#define MOS_AUDIO_BUFFER_H
 
 #include <vector>
 #include <string>
@@ -7,10 +7,10 @@
 namespace mos {
 
 /**
- * A sound class containing samples of 16bit integer data. In memory.
+ * Audio 16bit integer buffer. In memory.
  */
 class AudioBuffer {
-  friend class Player;
+  friend class AudioSystem;
 public:
   /**
    * @brief Sound constructor from *.ogg file.

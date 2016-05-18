@@ -67,8 +67,7 @@ public:
   bool playing;
 
   /**
-   * @brief Obstructed by geometry.
-   * Describes if the source is obstructed by geometry. 1.0 means fully
+   * @brief Obstructed by geometry. 1.0 means fully
    * obstructed, 0.0f means none.
    */
   float obstructed;
