@@ -234,7 +234,7 @@ void AudioSystem::unload(const AudioBufferSource &buffer_source) {}
 
 void AudioSystem::unload(const AudioStreamSource &stream_source) {}
 
-void AudioSystem::update(AudioStreamSource &stream_source, const float dt) {
+void AudioSystem::update(const AudioStreamSource &stream_source, const float dt) {
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -277,7 +277,7 @@ void AudioSystem::update(AudioStreamSource &stream_source, const float dt) {
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
 
-  stream_source.source.obstructed = 0.0f;
+  //stream_source.source.obstructed = 0.0f;
 
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -378,6 +378,19 @@ void AudioSystem::listener(const AudioListener &listener) {
                           listener.up.y,        listener.up.z};
   alListenerfv(AL_ORIENTATION, orientation);
   alListenerf(AL_GAIN, listener.gain);
+}
+
+void AudioSystem::batch(const AudioBatch &batch) {
+  listener(batch.listener);
+  for (auto &buffer_source: batch.buffer_sources) {
+    if (!loaded(buffer_source)) {
+      load(buffer_source);
+    }
+    update(buffer_source, 0.0f);
+  }
+  for (auto &stream_source : batch.stream_sources) {
+    update(stream_source, 0.0f);
+  }
 }
 
 void AudioSystem::update(const AudioBufferSource &sound_source, const float dt) {

@@ -13,6 +13,7 @@
 #include <mos/audio/audio_stream_source.hpp>
 #include <mos/audio/audio_buffer_source.hpp>
 #include <mos/audio/audio_listener.hpp>
+#include <mos/audio/audio_batch.hpp>
 
 namespace mos {
 
@@ -108,7 +109,7 @@ public:
   * @param stream_source
 * @param dt Time step.
   */
-  void update(AudioStreamSource &stream_source, const float dt);
+  void update(const AudioStreamSource &stream_source, const float dt);
 
   /**
    * @brief Get listener data.
@@ -121,6 +122,8 @@ public:
    * @param listener
    */
   void listener(const AudioListener &listener);
+
+  void batch(const AudioBatch &batch);
 
 private:
   struct StreamThread {
