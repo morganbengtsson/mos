@@ -12,7 +12,7 @@ namespace mos {
 */
 class Particles {
 public:
-  friend class Renderer;
+  friend class RenderSystem;
   /**
    * @brief Particles constructor.
    */

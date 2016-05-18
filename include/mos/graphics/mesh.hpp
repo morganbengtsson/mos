@@ -14,7 +14,7 @@ namespace mos {
  * and elements, for vertex order, when rendering.
  */
 class Mesh {
-  friend class Renderer;
+  friend class RenderSystem;
 
 public:
   using Positions = std::vector<glm::vec3>;
