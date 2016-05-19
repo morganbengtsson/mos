@@ -1,31 +1,18 @@
-#include <mos/render/texture.hpp>
-#include <lodepng.h>
 #include <iostream>
+#include <lodepng.h>
+#include <mos/render/texture.hpp>
 
 namespace mos {
 
-  std::atomic_uint Texture::current_id(0);
+std::atomic_uint Texture::current_id_(0);
 
-  Texture::Texture(const std::string & path, const bool mips) {
-    auto error =
-        lodepng::decode(texels_, width_, height_, path);
-    if (error) {
-      std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
-                << std::endl;
-    }
-    mipmaps = mips;
-    id_ = current_id++;
-  }
-
-  Texture::~Texture() {}
+Texture::~Texture() {}
 
 Texture::Texels::const_iterator Texture::begin() const {
   return texels_.begin();
 }
 
-Texture::Texels::const_iterator Texture::end() const {
-  return texels_.end();
-}
+Texture::Texels::const_iterator Texture::end() const { return texels_.end(); }
 
 unsigned int Texture::id() const { return id_; }
 

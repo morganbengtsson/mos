@@ -89,10 +89,20 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 
 std::shared_ptr<Texture> Assets::texture(const std::string &path,
                                            const bool mipmaps) const {
+  std::vector<unsigned char> texels;
+  unsigned int width, height;
+
   if (path.empty()) {
     return std::shared_ptr<Texture>(nullptr);
   }
-  return std::make_shared<Texture>(directory_ + path, mipmaps);
+  auto error =
+      lodepng::decode(texels, width, height, directory_ + path);
+  if (error) {
+    std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
+              << std::endl;
+  }
+
+  return std::make_shared<Texture>(texels.begin(), texels.end(), width, height, mipmaps);
 }
 
 std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,

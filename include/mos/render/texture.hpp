@@ -20,13 +20,6 @@ public:
    */
   using Texels = std::vector<unsigned char>;
 
-  Texture(const std::string &path, const bool mips = true);
-
-  /**
-   * @brief Used to create next unique id.
-   */
-  static std::atomic_uint current_id;
-
   template <class T>
   /**
    * @brief Texture2D
@@ -41,9 +34,7 @@ public:
    */
   Texture(T begin, T end, unsigned int width, unsigned int height,
             const bool mipmaps = true)
-      : mipmaps(mipmaps), width_(width), height_(height) {
-    id_ = current_id++;
-    texels_.assign(begin, end);
+      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++), texels_(begin, end) {
   }
 
   /**
@@ -54,8 +45,7 @@ public:
    */
   Texture(const unsigned int width, const unsigned int height,
             const bool mipmaps = true)
-      : mipmaps(mipmaps), width_(width), height_(height) {
-    id_ = current_id++;
+      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++) {
   }
 
   /**
@@ -119,6 +109,7 @@ public:
   bool mipmaps;
 
 private:
+  static std::atomic_uint current_id_;
   unsigned int id_;
   unsigned int width_;
   unsigned int height_;
