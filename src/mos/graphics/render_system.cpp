@@ -47,21 +47,21 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 
   std::string standard_vert_source = text("assets/shaders/standard_330.vert");
   std::string standard_frag_source = text("assets/shaders/standard_330.frag");
-  add_vertex_program(RenderBatch::Shader::STANDARD, standard_vert_source,
+  add_vertex_program(ModelsBatch::Shader::STANDARD, standard_vert_source,
                      standard_frag_source);
 
   std::string text_vert_source = text("assets/shaders/text_330.vert");
   std::string text_frag_source = text("assets/shaders/text_330.frag");
-  add_vertex_program(RenderBatch::Shader::TEXT, text_vert_source, text_frag_source);
+  add_vertex_program(ModelsBatch::Shader::TEXT, text_vert_source, text_frag_source);
 
-  add_vertex_program(RenderBatch::Shader::EFFECT,
+  add_vertex_program(ModelsBatch::Shader::EFFECT,
                      text("assets/shaders/effect_330.vert"),
                      text("assets/shaders/effect_330.frag"));
 
-  add_vertex_program(RenderBatch::Shader::BLUR, text("assets/shaders/blur_330.vert"),
+  add_vertex_program(ModelsBatch::Shader::BLUR, text("assets/shaders/blur_330.vert"),
                      text("assets/shaders/blur_330.frag"));
 
-  add_vertex_program(RenderBatch::Shader::CRT, text("assets/shaders/crt_330.vert"),
+  add_vertex_program(ModelsBatch::Shader::CRT, text("assets/shaders/crt_330.vert"),
                      text("assets/shaders/crt_330.frag"));
 
   std::string particles_vert_source = text("assets/shaders/particles_330.vert");
@@ -341,7 +341,7 @@ void RenderSystem::add_particle_program(const std::string name,
                 glGetUniformLocation(program, "model_view")}));
 }
 
-void RenderSystem::add_vertex_program(const RenderBatch::Shader shader,
+void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
                                   const std::string vertex_shader_source,
                                   const std::string fragment_shader_source) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
@@ -848,8 +848,8 @@ void RenderSystem::update(const Model &model, const glm::mat4 &view,
                       const glm::vec2 &resolution, const Light &light,
                       const FogExp &fog_exp, const FogLinear &fog_linear,
                       const float multiply,
-                      const RenderBatch::Shader &shader,
-                      const RenderBatch::Draw &draw) {
+                      const ModelsBatch::Shader &shader,
+                      const ModelsBatch::Draw &draw) {
   update(model, glm::mat4(1.0f), view, projection, resolution, light, fog_exp, fog_linear,
          multiply, shader, draw);
 }
@@ -857,8 +857,8 @@ void RenderSystem::update(const Model &model, const glm::mat4 &view,
 void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
                       const glm::mat4 view, const glm::mat4 projection, const glm::vec2 &resolution,
                       const Light &light, const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply,
-                      const RenderBatch::Shader &shader,
-                      const RenderBatch::Draw &draw) {
+                      const ModelsBatch::Shader &shader,
+                      const ModelsBatch::Draw &draw) {
   time_ += 0.0f; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -979,9 +979,9 @@ void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
                                                 model.mesh->elements_end())
                                 : 0;
   int draw_type = GL_TRIANGLES;
-  if (draw == RenderBatch::Draw::LINES) {
+  if (draw == ModelsBatch::Draw::LINES) {
     draw_type = GL_LINES;
-  } else if (draw == RenderBatch::Draw::POINTS) {
+  } else if (draw == ModelsBatch::Draw::POINTS) {
     draw_type = GL_POINTS;
   }
   if (model.mesh) {
@@ -1053,7 +1053,7 @@ void RenderSystem::clear(const glm::vec4 &color) {
   glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void RenderSystem::batches(const std::initializer_list<RenderBatch> &batches_init,
+void RenderSystem::batches(const std::initializer_list<ModelsBatch> &batches_init,
                            const std::initializer_list<ParticlesBatch> &particles_batches,
                        const glm::vec4 &color,
                        const OptTarget &target) {

@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <optional.hpp>
 #include <array>
-#include <mos/graphics/render_batch.hpp>
+#include <mos/graphics/models_batch.hpp>
 #include <mos/graphics/texture.hpp>
 #include <mos/graphics/model.hpp>
 #include <mos/graphics/quad.hpp>
@@ -83,7 +83,7 @@ public:
    */
   void clear(const glm::vec4 &color);
 
-  void batches(const std::initializer_list<RenderBatch> &batches_init,
+  void batches(const std::initializer_list<ModelsBatch> &batches_init,
                const std::initializer_list<ParticlesBatch> &particles_batches,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
@@ -121,8 +121,8 @@ public:
               const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
-              const RenderBatch::Shader &shader = RenderBatch::Shader::STANDARD,
-              const RenderBatch::Draw &draw = RenderBatch::Draw::TRIANGLES);
+              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
+              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 
   /**
    * @brief update
@@ -140,8 +140,8 @@ public:
               const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f,
-              const RenderBatch::Shader &shader = RenderBatch::Shader::STANDARD,
-              const RenderBatch::Draw &draw = RenderBatch::Draw::TRIANGLES);
+              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
+              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 
   /**
    * @brief update
@@ -272,12 +272,12 @@ private:
     GLint multiply;
   };
 
-  using VertexProgramPair = std::pair<RenderBatch::Shader, VertexProgramData>;
+  using VertexProgramPair = std::pair<ModelsBatch::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
   bool lightmaps_;
-  void add_vertex_program(const RenderBatch::Shader shader,
+  void add_vertex_program(const ModelsBatch::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source);
 
@@ -296,7 +296,7 @@ private:
 
   void create_depth_program();
 
-  std::map<RenderBatch::Shader, VertexProgramData> vertex_programs_;
+  std::map<ModelsBatch::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
   DepthProgramData depth_program_;
