@@ -97,11 +97,13 @@ public:
     render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
+      /**
       glUseProgram(vertex_programs_[it->shader].program);
       for (auto &m : it->models) {
         update(m, it->view, it->projection, it->resolution, it->light,
                it->fog_exp, it->fog_linear, 1.0f, it->shader);
-      }
+      }*/
+      models_batch(*it);
     }
 
     for (auto it = p_begin; it != p_end; it++){
@@ -207,10 +209,16 @@ private:
   void particles_batch(const ParticlesBatch &batch);
 
   /**
-   * @brief boxes_batch
+   * @brief boxes_batch rendering.
    * @param batch
    */
   void boxes_batch(const BoxesBatch &batch);
+
+  /**
+   * @brief models_batch rendering.
+   * @param batch
+   */
+  void models_batch(const ModelsBatch &batch);
 
   /**
    * @brief Amount of time the renderer has been alive, used in shaders.

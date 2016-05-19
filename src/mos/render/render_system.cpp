@@ -807,21 +807,31 @@ void RenderSystem::boxes_batch(const BoxesBatch &batch) {
   glUseProgram(uniforms.program);
   glBindVertexArray(box_va);
 
-  for (auto &box : batch.boxes){
-  glm::vec3 size = box.size();
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
-  glm::mat4 mv = batch.view * transform * glm::scale(glm::mat4(1.0f), size);
-  glm::mat4 mvp =
-      batch.projection * batch.view * transform * glm::scale(glm::mat4(1.0f), size);
+  for (auto &box : batch.boxes) {
+    glm::vec3 size = box.size();
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
+    glm::mat4 mv = batch.view * transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = batch.projection * batch.view * transform *
+                    glm::scale(glm::mat4(1.0f), size);
 
-  glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-  // glDrawArrays(GL_POINTS, 0, 16);
-  glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
-  glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                 (GLvoid *)(4 * sizeof(GLuint)));
-  glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid *)(8 * sizeof(GLuint)));
+    // glDrawArrays(GL_POINTS, 0, 16);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
+                   (GLvoid *)(4 * sizeof(GLuint)));
+    glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
+                   (GLvoid *)(8 * sizeof(GLuint)));
+  }
+}
+
+void RenderSystem::models_batch(const ModelsBatch &batch) {
+  //glViewport(0, 0, batch.resolution.x, batch.resolution.y);
+
+  glUseProgram(vertex_programs_[batch.shader].program);
+  for (auto &model : batch.models) {
+    update(model, glm::mat4(1.0f), batch.view, batch.projection, batch.resolution, batch.light, batch.fog_exp, batch.fog_linear, model.multiply(), batch.shader, batch.draw);
   }
 }
 
@@ -851,7 +861,6 @@ void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
                           const float multiply,
                           const ModelsBatch::Shader &shader,
                           const ModelsBatch::Draw &draw) {
-  time_ += 0.0f; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
