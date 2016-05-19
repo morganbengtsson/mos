@@ -184,7 +184,22 @@ std::shared_ptr<AudioBuffer> Assets::sound_cached(const std::string &path) {
 }
 
 std::shared_ptr<Material> Assets::material(const std::string &path) const {
-  return std::make_shared<Material>(directory_ + path);
+  glm::vec3 ambient, diffuse, specular;
+  float opacity, specular_exponent;
+
+  if (path.substr(path.find_last_of(".") + 1) == "material") {
+    std::ifstream is(directory_ + path, std::ios::binary);
+
+    is.read((char *)&ambient, sizeof(glm::vec3));
+    is.read((char *)&diffuse, sizeof(glm::vec3));
+    is.read((char *)&specular, sizeof(glm::vec3));
+    is.read((char *)&opacity, sizeof(float));
+    is.read((char *)&specular_exponent, sizeof(float));
+  } else {
+    throw std::runtime_error(path.substr(path.find_last_of(".")) +
+    " file format is not supported.");
+  }
+  return std::make_shared<Material>(ambient, diffuse, specular, opacity, specular_exponent);
 }
 
 std::shared_ptr<Material> Assets::material_cached(const std::string &path) {

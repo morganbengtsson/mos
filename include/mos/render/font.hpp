@@ -1,22 +1,21 @@
-#ifndef FONT_HPP
-#define FONT_HPP
+#ifndef MOS_FONT_HPP
+#define MOS_FONT_HPP
 
 #include <map>
 #include <memory>
 #include <mos/render/texture.hpp>
 #include <mos/render/character.hpp>
+#include <mos/render/render_types.hpp>
 
 namespace mos {
 
 class Font {
 public:
   using CharMap = std::map<char, Character>;
-  using TexPtr = std::shared_ptr<Texture>;
-  Font(const std::string &path);
-  Font(const CharMap &characters, const TexPtr &texture, const float height,
+  Font(const CharMap &characters, const SharedTexture &texture, const float height,
        const float ascender, const float descender);
   ~Font();
-  TexPtr texture;
+  SharedTexture texture;
   CharMap characters;
   float height() const;
   float ascender() const;
@@ -29,4 +28,4 @@ private:
 };
 }
 
-#endif // FONT_HPP
+#endif // MOS_FONT_HPP

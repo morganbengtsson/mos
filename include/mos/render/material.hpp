@@ -15,7 +15,6 @@ namespace mos {
  */
 class Material {
 public:
-  Material(const std::string &path);
   /**
    * @brief Material
    * @param ambient

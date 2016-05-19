@@ -2,7 +2,7 @@
 
 namespace mos {
 
-Font::Font(const Font::CharMap &characters, const Font::TexPtr &texture,
+Font::Font(const Font::CharMap &characters, const SharedTexture &texture,
            const float height, const float ascender, const float descender)
     : characters(characters), texture(texture), height_(height),
       ascender_(ascender), descender_(descender) {}
