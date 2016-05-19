@@ -72,17 +72,7 @@ public:
    */
   void unload(const std::shared_ptr<Texture> &texture);
 
-  /**
-   * @brief render_target
-   * @param target
-   */
-  void render_target(const OptTarget &target);
 
-  /**
-   * @brief clear
-   * @param color
-   */
-  void clear(const glm::vec4 &color);
 
   void batches(const std::initializer_list<ModelsBatch> &batches_init,
                const std::initializer_list<ParticlesBatch> &particles_batches,
@@ -181,10 +171,19 @@ private:
               const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
               const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 
+
   /**
-   * @brief Amount of time the renderer has been alive, used in shaders.
+   * @brief render_target
+   * @param target
    */
-  float time_;
+  void render_target(const OptTarget &target);
+
+  /**
+   * @brief clear
+   * @param color
+   */
+  void clear(const glm::vec4 &color);
+
   /**
    * @brief The ParticleProgramData struct, uniforms for the particle shader
    * program.

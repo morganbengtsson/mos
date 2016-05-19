@@ -830,12 +830,12 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
   glViewport(0, 0, batch.resolution.x, batch.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
-    update(model, glm::mat4(1.0f), batch.view, batch.projection, batch.resolution, batch.light, batch.fog_exp, batch.fog_linear, model.multiply(), batch.shader, batch.draw);
+    models(model, glm::mat4(1.0f), batch.view, batch.projection, batch.resolution, batch.light, batch.fog_exp, batch.fog_linear, model.multiply(), batch.shader, batch.draw);
   }
 }
 
 
-void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
+void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
                           const glm::mat4 view, const glm::mat4 projection,
                           const glm::vec2 &resolution, const Light &light,
                           const FogExp &fog_exp, const FogLinear &fog_linear,
@@ -951,7 +951,8 @@ void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
   glUniform1fv(uniforms.fogs_linear_far, 1, &fog_linear.far);
 
-  glUniform1fv(uniforms.time, 1, &time_);
+  float time = 0.0f;
+  glUniform1fv(uniforms.time, 1, &time);
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   auto v = model.multiply();
   glUniform1fv(uniforms.multiply, 1, &v);
@@ -974,7 +975,7 @@ void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (auto &child : model.models) {
-    update(child, parent_transform * model.transform, view, projection,
+    models(child, parent_transform * model.transform, view, projection,
            resolution, light, fog_exp, fog_linear, multiply);
   }
 }
