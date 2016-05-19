@@ -803,10 +803,8 @@ void RenderSystem::update(const Particles &particles, const glm::mat4 &view,
   glDrawArrays(GL_POINTS, 0, particles.size());
 }
 
-void RenderSystem::update(const Box &box, const glm::mat4 &view,
+void RenderSystem::update(const RenderBox  &box, const glm::mat4 &view,
                       const glm::mat4 &projection) {
-  time_ += 0;
-
   auto &uniforms = box_programs_.at("box");
 
   glUseProgram(uniforms.program);
@@ -831,7 +829,7 @@ void RenderSystem::update(const Box &box, const glm::mat4 &view,
   glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, (GLvoid *)(8 * sizeof(GLuint)));
 }
 
-void RenderSystem::update(const Box &box, const Camera &camera) {
+void RenderSystem::update(const RenderBox &box, const Camera &camera) {
   update(box, camera.view, camera.projection);
 }
 
@@ -1055,8 +1053,11 @@ void RenderSystem::clear(const glm::vec4 &color) {
 
 void RenderSystem::batches(const std::initializer_list<ModelsBatch> &batches_init,
                            const std::initializer_list<ParticlesBatch> &particles_batches,
+                           const std::initializer_list<BoxesBatch> &boxes_batches,
                        const glm::vec4 &color,
                        const OptTarget &target) {
-  batches(batches_init.begin(), batches_init.end(), particles_batches.begin(), particles_batches.end(), color, target);
+  batches(batches_init.begin(), batches_init.end(),
+          particles_batches.begin(), particles_batches.end(),
+          boxes_batches.begin(), boxes_batches.end(), color, target);
 }
 }

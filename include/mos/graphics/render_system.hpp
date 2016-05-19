@@ -20,7 +20,8 @@
 #include <mos/graphics/fog_linear.hpp>
 #include <mos/graphics/render_types.hpp>
 #include <mos/graphics/particles_batch.hpp>
-#include <mos/simulation/box.hpp>
+#include <mos/graphics/boxes_batch.hpp>
+#include <mos/graphics/render_box.hpp>
 
 namespace mos {
 
@@ -85,10 +86,13 @@ public:
 
   void batches(const std::initializer_list<ModelsBatch> &batches_init,
                const std::initializer_list<ParticlesBatch> &particles_batches,
+               const std::initializer_list<BoxesBatch> &boxes_batches,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
-  template <class Tr, class Tp>
-  void batches(Tr begin, Tr end, Tp p_begin, Tp p_end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+  template <class Tr, class Tp, class Tb>
+  void batches(Tr begin, Tr end,
+               Tp p_begin, Tp p_end,
+               Tb b_begin, Tb b_end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                const OptTarget &target = OptTarget()) {
     render_target(target);
     clear(color);
@@ -101,6 +105,11 @@ public:
     }
     for (auto it = p_begin; it != p_end; it++){
       update(it->particles, it->view, it->projection);
+    }
+    for (auto it = b_begin; it != b_end; it++){
+      for (auto &b : it->boxes){
+        update(b, it->view, it->projection);
+      }
     }
   }
 
@@ -167,10 +176,10 @@ public:
   void update(const Particles &particles, const glm::mat4 &view,
               const glm::mat4 &projection);
 
-  void update(const Box &box, const glm::mat4 &view,
+  void update(const RenderBox &box, const glm::mat4 &view,
               const glm::mat4 &projection);
 
-  void update(const Box &box, const Camera &camera);
+  void update(const RenderBox &box, const Camera &camera);
 
   /**
    * @brief Clear all internal buffers.
