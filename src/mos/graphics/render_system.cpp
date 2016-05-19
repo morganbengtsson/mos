@@ -748,8 +748,8 @@ RenderSystem::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
   return texture_id;
 }
 
-void RenderSystem::update(Particles &particles, const glm::mat4 view,
-                      const glm::mat4 projection) {
+void RenderSystem::update(const Particles &particles, const glm::mat4 &view,
+                      const glm::mat4 &projection) {
   time_ += 0;
   if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
@@ -779,14 +779,14 @@ void RenderSystem::update(Particles &particles, const glm::mat4 view,
     vertex_arrays_.insert({particles.id(), vertex_array});
   }
 
-  if (!particles.valid()) {
+  //if (!particles.valid()) {
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
     glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                  particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    particles.valid_ = true;
-  }
+    //particles.valid_ = true;
+  //}
 
   glm::mat4 mv = view;
   glm::mat4 mvp = projection * view;
@@ -1054,8 +1054,9 @@ void RenderSystem::clear(const glm::vec4 &color) {
 }
 
 void RenderSystem::batches(const std::initializer_list<RenderBatch> &batches_init,
+                           const std::initializer_list<ParticlesBatch> &particles_batches,
                        const glm::vec4 &color,
                        const OptTarget &target) {
-  batches(batches_init.begin(), batches_init.end(), color, target);
+  batches(batches_init.begin(), batches_init.end(), particles_batches.begin(), particles_batches.end(), color, target);
 }
 }

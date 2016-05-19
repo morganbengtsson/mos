@@ -19,6 +19,7 @@
 #include <mos/graphics/fog_exp.hpp>
 #include <mos/graphics/fog_linear.hpp>
 #include <mos/graphics/render_types.hpp>
+#include <mos/graphics/particles_batch.hpp>
 #include <mos/simulation/box.hpp>
 
 namespace mos {
@@ -83,10 +84,11 @@ public:
   void clear(const glm::vec4 &color);
 
   void batches(const std::initializer_list<RenderBatch> &batches_init,
+               const std::initializer_list<ParticlesBatch> &particles_batches,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
-  template <class T>
-  void batches(T begin, T end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+  template <class Tr, class Tp>
+  void batches(Tr begin, Tr end, Tp p_begin, Tp p_end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                const OptTarget &target = OptTarget()) {
     render_target(target);
     clear(color);
@@ -96,6 +98,9 @@ public:
         update(m, it->view, it->projection, it->resolution, it->light,
                it->fog_exp, it->fog_linear, 1.0f, it->shader);
       }
+    }
+    for (auto it = p_begin; it != p_end; it++){
+      update(it->particles, it->view, it->projection);
     }
   }
 
@@ -159,8 +164,8 @@ public:
    * @param view View matrix.
    * @param projection Projection matrix.
    */
-  void update(Particles &particles, const glm::mat4 view,
-              const glm::mat4 projection);
+  void update(const Particles &particles, const glm::mat4 &view,
+              const glm::mat4 &projection);
 
   void update(const Box &box, const glm::mat4 &view,
               const glm::mat4 &projection);
