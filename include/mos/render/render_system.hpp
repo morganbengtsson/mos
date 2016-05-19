@@ -110,9 +110,7 @@ public:
 
     //Use program
     for (auto it = b_begin; it != b_end; it++){
-      for (auto &b : it->boxes) {
-        update(b, it->view, it->projection);
-      }
+      boxes_batch(*it);
     }
   }
 
@@ -216,6 +214,12 @@ private:
    * @param batch
    */
   void particles_batch(const ParticlesBatch &batch);
+
+  /**
+   * @brief boxes_batch
+   * @param batch
+   */
+  void boxes_batch(const BoxesBatch &batch);
 
   /**
    * @brief Amount of time the renderer has been alive, used in shaders.
