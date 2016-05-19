@@ -8,8 +8,8 @@
 #include <optional.hpp>
 #include <iostream>
 #include <glm/gtx/io.hpp>
-#include <mos/simulation/intersection.hpp>
-#include <mos/graphics/mesh.hpp>
+#include <mos/simulate/intersection.hpp>
+#include <mos/render/mesh.hpp>
 
 namespace mos {
 

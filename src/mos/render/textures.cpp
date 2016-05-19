@@ -1,0 +1,5 @@
+#include <mos/render/textures.hpp>
+
+Textures::Textures(const Textures::TexPtr &first,
+                     const Textures::TexPtr &second)
+    : first(first), second(second) {}

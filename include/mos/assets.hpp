@@ -7,13 +7,13 @@
 #include <json.hpp>
 #include <mos/audio/audio_buffer.hpp>
 #include <mos/audio/audio_stream.hpp>
-#include <mos/graphics/character.hpp>
-#include <mos/graphics/mesh.hpp>
-#include <mos/graphics/texture.hpp>
-#include <mos/graphics/material.hpp>
-#include <mos/graphics/model.hpp>
-#include <mos/graphics/font.hpp>
-#include <mos/graphics/animation.hpp>
+#include <mos/render/character.hpp>
+#include <mos/render/mesh.hpp>
+#include <mos/render/texture.hpp>
+#include <mos/render/material.hpp>
+#include <mos/render/model.hpp>
+#include <mos/render/font.hpp>
+#include <mos/render/animation.hpp>
 
 namespace mos {
 /**
