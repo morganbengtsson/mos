@@ -105,7 +105,7 @@ public:
     }
     //Use program
     for (auto it = p_begin; it != p_end; it++){
-      update(it->particles, it->view, it->projection);
+      particles_batch(*it);
     }
 
     //Use program
@@ -170,14 +170,8 @@ public:
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f);
 
-  /**
-   * @brief Renders particles.
-   * @param particles Particles object.
-   * @param view View matrix.
-   * @param projection Projection matrix.
-   */
-  void update(const Particles &particles, const glm::mat4 &view,
-              const glm::mat4 &projection);
+
+
 
   void update(const RenderBox &box, const glm::mat4 &view,
               const glm::mat4 &projection);
@@ -216,6 +210,13 @@ public:
   GLuint depth_frame_buffer_;
 
 private:
+
+  /**
+   * @brief particles_batch rendering.
+   * @param batch
+   */
+  void particles_batch(const ParticlesBatch &batch);
+
   /**
    * @brief Amount of time the renderer has been alive, used in shaders.
    */

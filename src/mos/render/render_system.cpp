@@ -1,24 +1,24 @@
 #include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/projection.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/random.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/io.hpp>
+#include <glm/gtx/projection.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/transform2.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/io.hpp>
-#include <glm/glm.hpp>
-#include <vector>
-#include <string>
 #include <iostream>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
-#include <mos/render/render_system.hpp>
-#include <mos/render/vertex.hpp>
 #include <mos/render/mesh.hpp>
-#include <mos/render/texture.hpp>
 #include <mos/render/model.hpp>
+#include <mos/render/render_system.hpp>
+#include <mos/render/texture.hpp>
+#include <mos/render/vertex.hpp>
 #include <mos/util.hpp>
 
 namespace mos {
@@ -52,16 +52,19 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 
   std::string text_vert_source = text("assets/shaders/text_330.vert");
   std::string text_frag_source = text("assets/shaders/text_330.frag");
-  add_vertex_program(ModelsBatch::Shader::TEXT, text_vert_source, text_frag_source);
+  add_vertex_program(ModelsBatch::Shader::TEXT, text_vert_source,
+                     text_frag_source);
 
   add_vertex_program(ModelsBatch::Shader::EFFECT,
                      text("assets/shaders/effect_330.vert"),
                      text("assets/shaders/effect_330.frag"));
 
-  add_vertex_program(ModelsBatch::Shader::BLUR, text("assets/shaders/blur_330.vert"),
+  add_vertex_program(ModelsBatch::Shader::BLUR,
+                     text("assets/shaders/blur_330.vert"),
                      text("assets/shaders/blur_330.frag"));
 
-  add_vertex_program(ModelsBatch::Shader::CRT, text("assets/shaders/crt_330.vert"),
+  add_vertex_program(ModelsBatch::Shader::CRT,
+                     text("assets/shaders/crt_330.vert"),
                      text("assets/shaders/crt_330.frag"));
 
   std::string particles_vert_source = text("assets/shaders/particles_330.vert");
@@ -125,8 +128,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, data.data());
 #else
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, data.data());
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               data.data());
 #endif
   glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -239,9 +242,10 @@ RenderSystem::~RenderSystem() {
 }
 
 void RenderSystem::update_depth(const Model &model,
-                            const glm::mat4 &parent_transform,
-                            const glm::mat4 &view, const glm::mat4 &projection,
-                            const glm::vec2 &resolution) {
+                                const glm::mat4 &parent_transform,
+                                const glm::mat4 &view,
+                                const glm::mat4 &projection,
+                                const glm::vec2 &resolution) {
 
   glViewport(0, 0, 1024, 1024);
   load(model);
@@ -275,8 +279,8 @@ void RenderSystem::update_depth(const Model &model,
 }
 
 void RenderSystem::add_box_program(const std::string &name,
-                               const std::string &vs_source,
-                               const std::string &fs_source) {
+                                   const std::string &vs_source,
+                                   const std::string &fs_source) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -318,8 +322,8 @@ void RenderSystem::create_depth_program() {
 }
 
 void RenderSystem::add_particle_program(const std::string name,
-                                    const std::string vs_source,
-                                    const std::string fs_source) {
+                                        const std::string vs_source,
+                                        const std::string fs_source) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -341,9 +345,9 @@ void RenderSystem::add_particle_program(const std::string name,
                 glGetUniformLocation(program, "model_view")}));
 }
 
-void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
-                                  const std::string vertex_shader_source,
-                                  const std::string fragment_shader_source) {
+void RenderSystem::add_vertex_program(
+    const ModelsBatch::Shader shader, const std::string vertex_shader_source,
+    const std::string fragment_shader_source) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader);
 
@@ -367,7 +371,8 @@ void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
   vertex_programs_.insert(VertexProgramPair(
       shader,
       VertexProgramData{
-          program, glGetUniformLocation(program, "model_view_projection"),
+          program,
+          glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
           glGetUniformLocation(program, "normal_matrix"),
           glGetUniformLocation(program, "depth_bias_model_view_projection"),
@@ -594,7 +599,7 @@ void RenderSystem::lightmaps(const bool lightmaps) { lightmaps_ = lightmaps; }
 bool RenderSystem::lightmaps() const { return lightmaps_; }
 
 unsigned int RenderSystem::create_shader(const std::string &source,
-                                     const unsigned int type) {
+                                         const unsigned int type) {
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
 
@@ -669,8 +674,8 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
@@ -686,9 +691,8 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
 #else
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(),
-               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               texture->data());
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
+               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
 #endif
 
   if (texture->mipmaps) {
@@ -714,8 +718,8 @@ RenderSystem::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 #else
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(),
-               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
+               0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 #endif
 
   GLuint buffer_id;
@@ -748,23 +752,21 @@ RenderSystem::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
   return texture_id;
 }
 
-void RenderSystem::update(const Particles &particles, const glm::mat4 &view,
-                      const glm::mat4 &projection) {
-
-  if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
+void RenderSystem::particles_batch(const ParticlesBatch &batch) {
+  if (vertex_arrays_.find(batch.particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
-    if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
+    if (array_buffers_.find(batch.particles.id()) == array_buffers_.end()) {
       unsigned int array_buffer;
       glGenBuffers(1, &array_buffer);
       glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-      glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
-                   particles.data(), GL_STREAM_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, batch.particles.size() * sizeof(Particle),
+                   batch.particles.data(), GL_STREAM_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({particles.id(), array_buffer});
+      array_buffers_.insert({batch.particles.id(), array_buffer});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[batch.particles.id()]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -776,35 +778,31 @@ void RenderSystem::update(const Particles &particles, const glm::mat4 &view,
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-    vertex_arrays_.insert({particles.id(), vertex_array});
+    vertex_arrays_.insert({batch.particles.id(), vertex_array});
   }
 
-  //if (!particles.valid()) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
-    glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
-                 particles.data(), GL_STREAM_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[batch.particles.id()]);
+  glBufferData(GL_ARRAY_BUFFER, batch.particles.size() * sizeof(Particle),
+               batch.particles.data(), GL_STREAM_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    //particles.valid_ = true;
-  //}
-
-  glm::mat4 mv = view;
-  glm::mat4 mvp = projection * view;
+  glm::mat4 mv = batch.view;
+  glm::mat4 mvp = batch.projection * batch.view;
 
   auto &uniforms = particle_programs_.at("particles");
 
   glUseProgram(uniforms.program);
 
-  glBindVertexArray(vertex_arrays_[particles.id()]);
+  glBindVertexArray(vertex_arrays_[batch.particles.id()]);
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-  glDrawArrays(GL_POINTS, 0, particles.size());
+  glDrawArrays(GL_POINTS, 0, batch.particles.size());
 }
 
-void RenderSystem::update(const RenderBox  &box, const glm::mat4 &view,
-                      const glm::mat4 &projection) {
+void RenderSystem::update(const RenderBox &box, const glm::mat4 &view,
+                          const glm::mat4 &projection) {
   auto &uniforms = box_programs_.at("box");
 
   glUseProgram(uniforms.program);
@@ -833,30 +831,32 @@ void RenderSystem::update(const RenderBox &box, const Camera &camera) {
   update(box, camera.view, camera.projection);
 }
 
-
 void RenderSystem::update(const Model &model, const Camera &camera,
-                      const glm::vec2 &resolution, const Light &light,
-                      const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply) {
+                          const glm::vec2 &resolution, const Light &light,
+                          const FogExp &fog_exp, const FogLinear &fog_linear,
+                          const float multiply) {
   update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
          light, fog_exp, fog_linear, multiply);
 }
 
 void RenderSystem::update(const Model &model, const glm::mat4 &view,
-                      const glm::mat4 &projection,
-                      const glm::vec2 &resolution, const Light &light,
-                      const FogExp &fog_exp, const FogLinear &fog_linear,
-                      const float multiply,
-                      const ModelsBatch::Shader &shader,
-                      const ModelsBatch::Draw &draw) {
-  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog_exp, fog_linear,
-         multiply, shader, draw);
+                          const glm::mat4 &projection,
+                          const glm::vec2 &resolution, const Light &light,
+                          const FogExp &fog_exp, const FogLinear &fog_linear,
+                          const float multiply,
+                          const ModelsBatch::Shader &shader,
+                          const ModelsBatch::Draw &draw) {
+  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog_exp,
+         fog_linear, multiply, shader, draw);
 }
 
 void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
-                      const glm::mat4 view, const glm::mat4 projection, const glm::vec2 &resolution,
-                      const Light &light, const FogExp &fog_exp, const FogLinear &fog_linear, const float multiply,
-                      const ModelsBatch::Shader &shader,
-                      const ModelsBatch::Draw &draw) {
+                          const glm::mat4 view, const glm::mat4 projection,
+                          const glm::vec2 &resolution, const Light &light,
+                          const FogExp &fog_exp, const FogLinear &fog_linear,
+                          const float multiply,
+                          const ModelsBatch::Shader &shader,
+                          const ModelsBatch::Draw &draw) {
   time_ += 0.0f; // TODO: Not correct since called many times!
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
@@ -1051,13 +1051,13 @@ void RenderSystem::clear(const glm::vec4 &color) {
   glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void RenderSystem::batches(const std::initializer_list<ModelsBatch> &batches_init,
-                           const std::initializer_list<ParticlesBatch> &particles_batches,
-                           const std::initializer_list<BoxesBatch> &boxes_batches,
-                       const glm::vec4 &color,
-                       const OptTarget &target) {
-  batches(batches_init.begin(), batches_init.end(),
-          particles_batches.begin(), particles_batches.end(),
-          boxes_batches.begin(), boxes_batches.end(), color, target);
+void RenderSystem::batches(
+    const std::initializer_list<ModelsBatch> &batches_init,
+    const std::initializer_list<ParticlesBatch> &particles_batches,
+    const std::initializer_list<BoxesBatch> &boxes_batches,
+    const glm::vec4 &color, const OptTarget &target) {
+  batches(batches_init.begin(), batches_init.end(), particles_batches.begin(),
+          particles_batches.end(), boxes_batches.begin(), boxes_batches.end(),
+          color, target);
 }
 }
