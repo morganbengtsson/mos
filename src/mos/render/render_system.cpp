@@ -827,32 +827,13 @@ void RenderSystem::boxes_batch(const BoxesBatch &batch) {
 }
 
 void RenderSystem::models_batch(const ModelsBatch &batch) {
-  //glViewport(0, 0, batch.resolution.x, batch.resolution.y);
-
+  glViewport(0, 0, batch.resolution.x, batch.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
     update(model, glm::mat4(1.0f), batch.view, batch.projection, batch.resolution, batch.light, batch.fog_exp, batch.fog_linear, model.multiply(), batch.shader, batch.draw);
   }
 }
 
-void RenderSystem::update(const Model &model, const Camera &camera,
-                          const glm::vec2 &resolution, const Light &light,
-                          const FogExp &fog_exp, const FogLinear &fog_linear,
-                          const float multiply) {
-  update(model, glm::mat4(1.0f), camera.view, camera.projection, resolution,
-         light, fog_exp, fog_linear, multiply);
-}
-
-void RenderSystem::update(const Model &model, const glm::mat4 &view,
-                          const glm::mat4 &projection,
-                          const glm::vec2 &resolution, const Light &light,
-                          const FogExp &fog_exp, const FogLinear &fog_linear,
-                          const float multiply,
-                          const ModelsBatch::Shader &shader,
-                          const ModelsBatch::Draw &draw) {
-  update(model, glm::mat4(1.0f), view, projection, resolution, light, fog_exp,
-         fog_linear, multiply, shader, draw);
-}
 
 void RenderSystem::update(const Model &model, const glm::mat4 parent_transform,
                           const glm::mat4 view, const glm::mat4 projection,

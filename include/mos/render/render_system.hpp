@@ -97,12 +97,6 @@ public:
     render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
-      /**
-      glUseProgram(vertex_programs_[it->shader].program);
-      for (auto &m : it->models) {
-        update(m, it->view, it->projection, it->resolution, it->light,
-               it->fog_exp, it->fog_linear, 1.0f, it->shader);
-      }*/
       models_batch(*it);
     }
 
@@ -115,59 +109,7 @@ public:
     }
   }
 
-  /**
-   * @brief Updates render state of model.
-   * @param model
-   * @param transform Additional transform matrix.
-   * @param view View matrix of the camera
-   * @param projection Projection matrix of the camera
-   * @param program_name Either "text" or "standard"
-   * @param light One dynamic light to use.
-   */
-  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
-  void update(const Model &model, const glm::mat4 transform,
-              const glm::mat4 view, const glm::mat4 projection,
-              const glm::vec2 &resolution = glm::vec2(0.0f),
-              const Light &light = Light(),
-              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const FogLinear &fog_linear = FogLinear(),
-              const float multiply = 1.0f,
-              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
-              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 
-  /**
-   * @brief update
-   * @param model
-   * @param view
-   * @param projection
-   * @param light
-   * @param resolution
-   * @param target
-   */
-  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
-  void update(const Model &model, const glm::mat4 &view,
-              const glm::mat4 &projection,
-              const glm::vec2 &resolution, const Light &light = Light(),
-              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const FogLinear &fog_linear = FogLinear(),
-              const float multiply = 1.0f,
-              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
-              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
-
-  /**
-   * @brief update
-   * @param model
-   * @param camera
-   * @param light
-   * @param resolution
-   * @param target
-   */
-  [[deprecated("To be removed/renamed in favor of batches(...)/batch(...)")]]
-  void update(const Model &model, const Camera &camera,
-              const glm::vec2 &resolution, const Light &light = Light(),
-              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const FogLinear &fog_linear = FogLinear(),
-              const float multiply = 1.0f);
 
   /**
    * @brief Clear all internal buffers.
@@ -219,6 +161,25 @@ private:
    * @param batch
    */
   void models_batch(const ModelsBatch &batch);
+
+  /**
+   * @brief Updates render state of model.
+   * @param model
+   * @param transform Additional transform matrix.
+   * @param view View matrix of the camera
+   * @param projection Projection matrix of the camera
+   * @param program_name Either "text" or "standard"
+   * @param light One dynamic light to use.
+   */
+  void models(const Model &model, const glm::mat4 transform,
+              const glm::mat4 view, const glm::mat4 projection,
+              const glm::vec2 &resolution = glm::vec2(0.0f),
+              const Light &light = Light(),
+              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
+              const FogLinear &fog_linear = FogLinear(),
+              const float multiply = 1.0f,
+              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
+              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 
   /**
    * @brief Amount of time the renderer has been alive, used in shaders.
