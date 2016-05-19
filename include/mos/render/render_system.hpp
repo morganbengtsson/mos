@@ -103,12 +103,11 @@ public:
                it->fog_exp, it->fog_linear, 1.0f, it->shader);
       }
     }
-    //Use program
+
     for (auto it = p_begin; it != p_end; it++){
       particles_batch(*it);
     }
 
-    //Use program
     for (auto it = b_begin; it != b_end; it++){
       boxes_batch(*it);
     }
@@ -167,14 +166,6 @@ public:
               const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
               const float multiply = 1.0f);
-
-
-
-
-  void update(const RenderBox &box, const glm::mat4 &view,
-              const glm::mat4 &projection);
-
-  void update(const RenderBox &box, const Camera &camera);
 
   /**
    * @brief Clear all internal buffers.
