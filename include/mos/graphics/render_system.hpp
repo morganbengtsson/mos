@@ -103,11 +103,14 @@ public:
                it->fog_exp, it->fog_linear, 1.0f, it->shader);
       }
     }
+    //Use program
     for (auto it = p_begin; it != p_end; it++){
       update(it->particles, it->view, it->projection);
     }
+
+    //Use program
     for (auto it = b_begin; it != b_end; it++){
-      for (auto &b : it->boxes){
+      for (auto &b : it->boxes) {
         update(b, it->view, it->projection);
       }
     }

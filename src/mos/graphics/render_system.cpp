@@ -750,7 +750,7 @@ RenderSystem::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
 
 void RenderSystem::update(const Particles &particles, const glm::mat4 &view,
                       const glm::mat4 &projection) {
-  time_ += 0;
+
   if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
