@@ -43,7 +43,7 @@ public:
         const MatPtr &material = std::make_shared<Material>(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const Lightmaps &lightmaps = Lightmaps(), const TexPtr &normalmap = TexPtr(),
-        const float receives_light = true);
+        const float lit = true);
 
   /**
    * @brief ~Model destructor
@@ -116,7 +116,7 @@ public:
   /**
    * @brief If the model is affected by light model (lightmap and dynamic).
    */
-  bool receives_light;
+  bool lit;
 
   /**
    * @brief begin iterator for children models.
@@ -164,4 +164,4 @@ private:
 };
 }
 
-#endif /* MO_MODEL_H */
+#endif /* MOS_MODEL_H */

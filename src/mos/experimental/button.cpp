@@ -21,7 +21,7 @@ Button::Button(const Text &text, const State &s)
                                  text_.height() + padding_ * 2.0f, 1.0f));
   rectangle_.transform =
       glm::translate(rectangle_.transform, glm::vec3(0.0f, 0.0f, -0.0f));
-  rectangle_.receives_light = false;
+  rectangle_.lit = false;
   rectangle_.mesh->invalidate();
   text_.position(glm::vec2(padding_, -padding_));
   state(s);

@@ -13,7 +13,7 @@ Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
              const float affected_by_light)
     : mesh(mesh), textures(textures),
       material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
-      transform(transform), receives_light(affected_by_light),
+      transform(transform), lit(affected_by_light),
       overlay_(0.0f), multiply_(1.0f) {
 }
 

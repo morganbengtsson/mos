@@ -941,7 +941,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
                      &light.projection[0][0]);
 
-  glUniform1i(uniforms.receives_light, model.receives_light);
+  glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
 
   glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog_exp.color));
