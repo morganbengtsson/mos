@@ -98,7 +98,8 @@ void main() {
 
     //TODO: Not correct!
     vec4 tex_normal = texture2D(normalmap, fragment.uv);
-    normal = mix(normal, tex_normal.xyz, tex_normal.w);
+    vec3 n = tex_normal.xyz * 2.0 - 1.0;
+    normal = normalize(mix(normal, n, tex_normal.w));
 
     vec3 surface_to_light = normalize(light.position - fragment.position);
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
