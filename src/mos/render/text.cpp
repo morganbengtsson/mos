@@ -70,7 +70,7 @@ void Text::text(const std::string &text) {
   }
 }
 
-void Text::intensity(const float intensity) {
+void Text::intensity(const glm::vec3 &intensity) {
   model_.multiply(intensity);
 }
 

@@ -52,7 +52,7 @@ struct Fragment {
 };
 
 uniform bool receives_light;
-uniform float multiply = 1.0;
+uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Textures textures;
 uniform Lightmaps lightmaps;

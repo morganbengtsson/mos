@@ -58,11 +58,11 @@ void Model::overlay(const glm::vec3 & color, float alpha){
   overlay(glm::vec4(color, alpha));
 }
 
-float Model::multiply() const {
+glm::vec3 Model::multiply() const {
   return multiply_;
 }
 
-void Model::multiply(const float & multiply) {
+void Model::multiply(const glm::vec3 & multiply) {
   multiply_ = multiply;
   for (auto & model : models){
     model.multiply(multiply);

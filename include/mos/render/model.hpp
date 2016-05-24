@@ -105,8 +105,8 @@ public:
   void overlay(const glm::vec4 &overlay);
   void overlay(const glm::vec3 &color, float alpha);
 
-  float multiply() const;
-  void multiply(const float &multiply);
+  glm::vec3 multiply() const;
+  void multiply(const glm::vec3 &multiply);
 
   /**
   * @brief Get the color, (to be deprecated).
@@ -157,9 +157,8 @@ private:
 
   /**
    * @brief Extra multiply factor for light calculations.
-   */
-  //TODO vec3
-  float multiply_;
+   */  
+  glm::vec3 multiply_;
 
 };
 }

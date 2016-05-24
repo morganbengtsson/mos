@@ -43,7 +43,7 @@ public:
    * @brief intensity
    * @param intensity
    */
-  void intensity(const float intensity);
+  void intensity(const glm::vec3 &intensity);
 
   /**
    * @brief text

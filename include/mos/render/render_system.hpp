@@ -167,7 +167,7 @@ private:
               const Light &light = Light(),
               const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
               const FogLinear &fog_linear = FogLinear(),
-              const float multiply = 1.0f,
+              const glm::vec3 &multiply = glm::vec3(1.0f),
               const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
               const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
 

@@ -839,7 +839,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
                           const glm::mat4 view, const glm::mat4 projection,
                           const glm::vec2 &resolution, const Light &light,
                           const FogExp &fog_exp, const FogLinear &fog_linear,
-                          const float multiply,
+                          const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
                           const ModelsBatch::Draw &draw) {
   glViewport(0, 0, resolution.x, resolution.y);
@@ -953,9 +953,8 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
 
   float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
-  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
-  auto v = model.multiply();
-  glUniform1fv(uniforms.multiply, 1, &v);
+  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));  
+  glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
   glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
