@@ -96,7 +96,6 @@ void main() {
 
     vec3 normal = normalize(fragment.normal);
 
-    //TODO: Not correct!
     vec4 tex_normal = texture2D(normalmap, fragment.uv);
     vec3 n = tex_normal.xyz * 2.0 - 1.0;
     normal = normalize(mix(normal, n, tex_normal.w));
