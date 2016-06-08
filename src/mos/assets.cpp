@@ -78,7 +78,12 @@ Animation Assets::animation(const string &path) {
 }
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
-  return std::make_shared<Mesh>(Mesh(directory_ + path));
+  if (path.empty()) {
+    return std::make_shared<Mesh>(Mesh());
+  }
+  else {
+    return std::make_shared<Mesh>(Mesh(directory_ + path));
+  }
 }
 
 std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
@@ -195,8 +200,14 @@ std::shared_ptr<AudioBuffer> Assets::sound_cached(const std::string &path) {
 }
 
 std::shared_ptr<Material> Assets::material(const std::string &path) const {
-  glm::vec3 ambient, diffuse, specular;
+  glm::vec3 ambient;
+  glm::vec3 diffuse(1.0f, 1.0f, 0.0f);
+  glm::vec3 specular;
   float opacity, specular_exponent;
+
+  if (path.empty()){
+    return std::make_shared<Material>(ambient, diffuse, specular, opacity, specular_exponent);
+  }
 
   if (path.substr(path.find_last_of(".") + 1) == "material") {
     std::ifstream is(directory_ + path, std::ios::binary);
