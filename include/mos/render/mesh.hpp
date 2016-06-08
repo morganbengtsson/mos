@@ -28,8 +28,6 @@ public:
    */
   using Elements = std::vector<int>;
 
-  Mesh(const std::string & path);
-
   template <class Tv, class Te>
   /**
    * @brief Mesh constructor.

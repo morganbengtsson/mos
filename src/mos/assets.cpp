@@ -1,20 +1,20 @@
 #include <mos/assets.hpp>
 
-#include <rapidxml.hpp>
-#include <rapidxml_utils.hpp>
-#include <lodepng.h>
-#include <exception>
-#include <memory>
+#include <algorithm>
 #include <cstring>
+#include <exception>
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/io.hpp>
 #include <iostream>
 #include <iterator>
-#include <stb_vorbis.h>
-#include <glm/gtx/io.hpp>
-#include <glm/gtx/euler_angles.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <lodepng.h>
+#include <memory>
 #include <mos/util.hpp>
-#include <algorithm>
+#include <rapidxml.hpp>
+#include <rapidxml_utils.hpp>
+#include <stb_vorbis.h>
 
 namespace mos {
 using namespace std;
@@ -30,7 +30,8 @@ Model Assets::model_value(const json &value) {
   auto mesh = value.value("mesh", "");
   auto texture_name = value.value("texture", "");
   auto texture2_name = value.value("texture2", "");
-  auto lightmap_name = value["lightmap"].is_null() ? "" : value.value("lightmap", "");
+  auto lightmap_name =
+      value["lightmap"].is_null() ? "" : value.value("lightmap", "");
   auto normalmap_name = value.value("normalmap", "");
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
@@ -46,12 +47,13 @@ Model Assets::model_value(const json &value) {
   }
 
   auto created_model = mos::Model(
-      name, mesh_cached(mesh), Textures(texture_cached(texture_name),
-      texture_cached(texture2_name)), transform,
-      material_cached(material_name), Lightmaps(texture_cached(lightmap_name)), texture_cached(normalmap_name),
+      name, mesh_cached(mesh),
+      Textures(texture_cached(texture_name), texture_cached(texture2_name)),
+      transform, material_cached(material_name),
+      Lightmaps(texture_cached(lightmap_name)), texture_cached(normalmap_name),
       recieves_light);
 
-  for (auto & m: value["models"]) {
+  for (auto &m : value["models"]) {
     created_model.models.push_back(model_value(m));
   }
 
@@ -80,9 +82,32 @@ Animation Assets::animation(const string &path) {
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
   if (path.empty()) {
     return std::make_shared<Mesh>(Mesh());
-  }
-  else {
-    return std::make_shared<Mesh>(Mesh(directory_ + path));
+  } else {
+    if (path.substr(path.find_last_of(".") + 1) == "mesh") {
+      std::ifstream is(directory_ + path, std::ios::binary);
+      if (!is.good()) {
+        throw std::runtime_error(directory_ + path + " does not exist.");
+      }
+      int num_vertices;
+      int num_indices;
+      is.read((char *)&num_vertices, sizeof(int));
+      is.read((char *)&num_indices, sizeof(int));
+
+      auto vertices = std::vector<mos::Vertex>(num_vertices);
+      auto elements = std::vector<int>(num_indices);
+
+      if (vertices.size() > 0) {
+        is.read((char *)&vertices[0], vertices.size() * sizeof(Vertex));
+      }
+
+      if (elements.size() > 0) {
+        is.read((char *)&elements[0], elements.size() * sizeof(int));
+      }
+      return std::make_shared<Mesh>(Mesh(vertices.begin(), vertices.end(),
+                                         elements.begin(), elements.end()));
+    } else {
+      throw std::runtime_error("File extension not supported.");
+    }
   }
 }
 
@@ -94,25 +119,25 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 }
 
 std::shared_ptr<Texture> Assets::texture(const std::string &path,
-                                           const bool mipmaps) const {
+                                         const bool mipmaps) const {
   std::vector<unsigned char> texels;
   unsigned int width, height;
 
   if (path.empty()) {
     return std::shared_ptr<Texture>(nullptr);
   }
-  auto error =
-      lodepng::decode(texels, width, height, directory_ + path);
+  auto error = lodepng::decode(texels, width, height, directory_ + path);
   if (error) {
     std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
               << std::endl;
   }
 
-  return std::make_shared<Texture>(texels.begin(), texels.end(), width, height, mipmaps);
+  return std::make_shared<Texture>(texels.begin(), texels.end(), width, height,
+                                   mipmaps);
 }
 
 std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,
-                                                  const bool mipmaps) {
+                                                const bool mipmaps) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
       textures_.insert(TexturePair(path, texture(path, mipmaps)));
@@ -141,7 +166,8 @@ std::shared_ptr<AudioBuffer> Assets::sound(const std::string &path) const {
   }
   length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
                                     &sample_rate, &decoded);
-  return std::make_shared<AudioBuffer>(AudioBuffer(decoded, decoded + length, channels, sample_rate));
+  return std::make_shared<AudioBuffer>(
+      AudioBuffer(decoded, decoded + length, channels, sample_rate));
 }
 
 std::shared_ptr<AudioStream> Assets::stream(const string &path) const {
@@ -165,9 +191,8 @@ Font Assets::font(const string &path) {
   float descender = atof(metrics_node->first_attribute("descender")->value());
 
   auto *texture_node = doc.first_node("font")->first_node("texture");
-  std::string file =
-      texture_node->first_attribute("file")->value();
-  //std::transform(file.begin(), file.end(), file.begin(), ::tolower);
+  std::string file = texture_node->first_attribute("file")->value();
+  // std::transform(file.begin(), file.end(), file.begin(), ::tolower);
 
   for (auto *char_node = chars_node->first_node("char"); char_node;
        char_node = char_node->next_sibling()) {
@@ -205,8 +230,9 @@ std::shared_ptr<Material> Assets::material(const std::string &path) const {
   glm::vec3 specular;
   float opacity, specular_exponent;
 
-  if (path.empty()){
-    return std::make_shared<Material>(ambient, diffuse, specular, opacity, specular_exponent);
+  if (path.empty()) {
+    return std::make_shared<Material>(ambient, diffuse, specular, opacity,
+                                      specular_exponent);
   }
 
   if (path.substr(path.find_last_of(".") + 1) == "material") {
@@ -219,9 +245,10 @@ std::shared_ptr<Material> Assets::material(const std::string &path) const {
     is.read((char *)&specular_exponent, sizeof(float));
   } else {
     throw std::runtime_error(path.substr(path.find_last_of(".")) +
-    " file format is not supported.");
+                             " file format is not supported.");
   }
-  return std::make_shared<Material>(ambient, diffuse, specular, opacity, specular_exponent);
+  return std::make_shared<Material>(ambient, diffuse, specular, opacity,
+                                    specular_exponent);
 }
 
 std::shared_ptr<Material> Assets::material_cached(const std::string &path) {
