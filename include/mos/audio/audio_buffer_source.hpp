@@ -14,16 +14,16 @@ namespace mos {
 /**
  * Audio buffer and audio source combined.
  */
-class AudioBufferSource {
+class AudioBufferSource final {
 public:
   /**
    * @brief AudioBufferSource constructor.
    * @param buffer
    * @param source
    */
-  explicit AudioBufferSource(const SharedAudioBuffer &buffer,
+  AudioBufferSource(const SharedAudioBuffer &buffer = nullptr,
                        const AudioSource &source = AudioSource());
-  virtual ~AudioBufferSource();
+  ~AudioBufferSource();
 
   /**
    * @brief update the source and stop if not looping.

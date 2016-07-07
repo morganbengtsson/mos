@@ -148,7 +148,7 @@ std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,
   }
 }
 
-std::shared_ptr<AudioBuffer> Assets::sound(const std::string &path) const {
+std::shared_ptr<AudioBuffer> Assets::audio_buffer(const std::string &path) const {
   int channels;
   int length;
   int sample_rate;
@@ -170,7 +170,7 @@ std::shared_ptr<AudioBuffer> Assets::sound(const std::string &path) const {
       AudioBuffer(decoded, decoded + length, channels, sample_rate));
 }
 
-std::shared_ptr<AudioStream> Assets::stream(const string &path) const {
+std::shared_ptr<AudioStream> Assets::audio_stream(const string &path) const {
   return std::make_shared<AudioStream>(directory_ + path);
 }
 
@@ -215,9 +215,9 @@ Font Assets::font(const string &path) {
   return Font(char_map, texture, height, ascender, descender);
 }
 
-std::shared_ptr<AudioBuffer> Assets::sound_cached(const std::string &path) {
+std::shared_ptr<AudioBuffer> Assets::audio_buffer_cached(const std::string &path) {
   if (sounds_.find(path) == sounds_.end()) {
-    sounds_.insert(AudioBufferPair(path, sound(path)));
+    sounds_.insert(AudioBufferPair(path, audio_buffer(path)));
     return sounds_.at(path);
   } else {
     return sounds_.at(path);

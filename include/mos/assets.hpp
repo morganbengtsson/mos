@@ -155,7 +155,7 @@ public:
    * @param path
    * @return Shared pointer to Sound object.
    */
-  std::shared_ptr<AudioBuffer> sound_cached(const std::string &path);
+  std::shared_ptr<AudioBuffer> audio_buffer_cached(const std::string &path);
 
   /**
    * Loads an *. ogg file into a Sound object. Not cached.
@@ -163,7 +163,7 @@ public:
    * @param path
    * @return Shared pointer to Sound object.
    */
-  std::shared_ptr<AudioBuffer> sound(const std::string &path) const;
+  std::shared_ptr<AudioBuffer> audio_buffer(const std::string &path) const;
 
   /**
    * Loads an *.ogg file into a Stream object. Not cached, since it is streamed.
@@ -172,7 +172,7 @@ public:
    * @param path
    * @return
    */
-  std::shared_ptr<AudioStream> stream(const std::string &path) const;
+  std::shared_ptr<AudioStream> audio_stream(const std::string &path) const;
 
   /**
    * @brief Load font file in ngl format.
