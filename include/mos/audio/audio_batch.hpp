@@ -44,17 +44,17 @@ public:
   /**
    * @brief buffer_sources to update.
    */
-  AudioBufferSources buffer_sources;
+  const AudioBufferSources buffer_sources;
 
   /**
    * @brief stream_sources to update.
    */
-  AudioStreamSources stream_sources;
+  const AudioStreamSources stream_sources;
 
   /**
    * @brief listener to update
    */
-  AudioListener listener;
+  const AudioListener listener;
 };
 }
 
