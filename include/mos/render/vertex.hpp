@@ -25,6 +25,14 @@ public:
                   const glm::vec2 uv = glm::vec2(0.0f),
                   const glm::vec2 uv_lightmap = glm::vec2(0.0f));
 
+
+  /**
+   * @brief Vertex copy constructor.
+   * @param vertex to copy.
+   */
+  /*
+  Vertex(const Vertex& vertex);*/
+
   /**
    * @brief Vertex constructor.
    * @param position_x

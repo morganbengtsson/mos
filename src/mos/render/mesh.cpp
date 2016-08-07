@@ -63,7 +63,7 @@ void Mesh::clear() {
   elements_.clear();
 }
 
-void Mesh::add(const Vertex vertex) {
+void Mesh::add(const Vertex& vertex) {
   vertices_.push_back(vertex);
   valid_ = false;
 }

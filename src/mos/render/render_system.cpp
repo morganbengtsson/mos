@@ -41,6 +41,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
+  glEnable(GL_FRAMEBUFFER_SRGB);
 #ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
 #endif
@@ -457,7 +458,7 @@ void RenderSystem::load(const Model &model) {
   if (model.mesh && !model.mesh->valid()) {
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
     glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof(Vertex),
-                 model.mesh->vertices_data(), GL_STATIC_DRAW);
+                 model.mesh->vertices_data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /*
@@ -674,10 +675,10 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
@@ -691,8 +692,12 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
 #else
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
+               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               texture->data());
+  /*
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
-               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());*/
 #endif
 
   if (texture->mipmaps) {

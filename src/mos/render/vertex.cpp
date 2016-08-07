@@ -5,6 +5,11 @@ namespace mos {
 Vertex::Vertex(const glm::vec3 position, const glm::vec3 normal,
                const glm::vec2 uv, const glm::vec2 uv_lightmap)
     : position(position), normal(normal), uv(uv), uv_lightmap(uv_lightmap) {}
+/*
+Vertex::Vertex(const Vertex &vertex)
+    : position(vertex.position), normal(vertex.normal), uv(vertex.uv),
+      uv_lightmap(vertex.uv) {}
+*/
 Vertex::Vertex(const float position_x, const float position_y,
                const float position_z, const float normal_x,
                const float normal_y, const float normal_z, const float uv_x,

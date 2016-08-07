@@ -146,13 +146,24 @@ public:
    * @brief Add a vertex.
    * @param vertex
    */
-  void add(const Vertex vertex);
+  void add(const Vertex& vertex);
+
+  template<class T>
+  void append(T begin, T end){
+    vertices_.insert(vertices_.end(), begin, end);
+    invalidate();
+  }
 
   /**
    * @brief Add an element
    * @param element
    */
   void add(const int element);
+
+  void pop_front(const int num) {
+    vertices_.erase(vertices_.begin(), vertices_.begin() + num);
+    valid_ = false;
+  }
 
   /**
    * @brief vertices
