@@ -20,7 +20,7 @@ namespace mos {
 /**
  * @brief Audio system. Uses OpenAL for Windows/Linux/OSX.
  */
-class AudioSystem {
+class AudioSystem final {
 public:
   /**
    * @brief Default audio system constructor.

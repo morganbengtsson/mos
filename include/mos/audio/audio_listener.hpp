@@ -8,7 +8,7 @@ namespace mos {
 /**
 * @brief The AudioListener class, where the audio system listens from.
 */
-class AudioListener {
+class AudioListener final{
 public:
   /**
    * @brief Listener constructor.

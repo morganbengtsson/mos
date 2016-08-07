@@ -11,7 +11,7 @@ namespace mos {
 /**
 * @brief The AudioBatch class updates everything in the audio system.
 */
-class AudioBatch {
+class AudioBatch final{
 public:
   using AudioBufferSources = std::vector<AudioBufferSource>;
   using AudioStreamSources = std::vector<AudioStreamSource>;

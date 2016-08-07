@@ -11,7 +11,7 @@ namespace mos {
  *
  * Base class for the audio sources. Either streamed or direct from memory.
  */
-class AudioSource {
+class AudioSource final {
 public:
   /**
    * @brief Source constructor.

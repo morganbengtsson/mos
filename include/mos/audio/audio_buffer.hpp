@@ -10,7 +10,7 @@ namespace mos {
 /**
  * Audio 16bit integer buffer. In memory.
  */
-class AudioBuffer {
+class AudioBuffer final{
   friend class AudioSystem;
 
 public:
@@ -70,7 +70,7 @@ public:
    * @brief valid
    *
    * A sound becomes invalid, if its data has changed. For subsystems to know,
-   *when to update.
+   * when to update.
    */
   bool valid() const;
 

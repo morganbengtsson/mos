@@ -12,7 +12,7 @@ namespace mos {
 /**
  * @brief The Stream class, for audio streaming from file.
  */
-class AudioStream {
+class AudioStream final{
 public:
   /**
    * @brief Stream constructor.
