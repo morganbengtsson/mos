@@ -37,7 +37,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
                              nullptr);
   glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
-  //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
   if (!window_) {
     glfwTerminate();
@@ -133,11 +133,16 @@ void Window::cursor_mode(const Window::CursorMode &mode) {
 }
 
 void Window::cursor(const Window::Cursor &cursor) {
-  if (cursor == Cursor::HAND){
+  if (cursor == Cursor::HAND) {
     glfwSetCursor(window_, hand_cursor_);
-  }
-  else {
+  } else {
     glfwSetCursor(window_, arrow_cursor_);
   }
+}
+
+glm::dvec2 Window::cursor_position() const {
+  double xpos, ypos;
+  glfwGetCursorPos(window_, &xpos, &ypos);
+  return glm::dvec2(xpos, ypos);
 }
 }

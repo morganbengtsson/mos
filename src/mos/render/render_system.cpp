@@ -41,7 +41,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  glEnable(GL_FRAMEBUFFER_SRGB);
+  //glEnable(GL_FRAMEBUFFER_SRGB);
 #ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
 #endif
@@ -692,12 +692,13 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
 #else
+/*
   glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               texture->data());
-  /*
+               texture->data());*/
+
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
-               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());*/
+               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
 #endif
 
   if (texture->mipmaps) {
