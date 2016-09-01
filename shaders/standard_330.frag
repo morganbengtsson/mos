@@ -16,17 +16,6 @@ struct Light {
     mat4 projection;
 };
 
-struct Lightmaps {
-    sampler2D first;
-    sampler2D second;
-    float mix;
-};
-
-struct Textures {
-    sampler2D first;
-    sampler2D second;
-};
-
 struct FogLinear {
     vec3 color;
     float near;
@@ -54,8 +43,8 @@ struct Fragment {
 uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
-uniform Textures textures;
-uniform Lightmaps lightmaps;
+uniform sampler2D texture;
+uniform sampler2D lightmap;
 uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
 //uniform FogExp fog_exp = FogExp(vec3(1.0, 1.0f, 1.0), 0.0);
@@ -90,9 +79,7 @@ float linear_depth(float value)
 
 void main() {
 
-    vec4 static_light = texture2D(lightmaps.first, fragment.lightmap_uv);
-
-    static_light += texture2D(lightmaps.second, fragment.uv);
+    vec4 static_light = texture2D(lightmap, fragment.lightmap_uv);
 
     vec3 normal = normalize(fragment.normal);
 
@@ -104,9 +91,8 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture2D(textures.first, fragment.uv);
-    vec4 tex2_color = texture2D(textures.second, fragment.uv);
-    vec4 combined_tex = vec4(mix(tex_color.rgb, tex2_color.rgb, tex2_color.a), clamp(tex_color.a + tex2_color.a, 0.0, 1.0));
+    vec4 tex_color = texture2D(texture, fragment.uv);
+    vec4 combined_tex = tex_color;
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
     diffuse_color = vec4(mix(material.diffuse * material.opacity, combined_tex.rgb, combined_tex.a), 1.0);
@@ -136,7 +122,7 @@ void main() {
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
     }
-    color.a = material.opacity + tex_color.a + tex2_color.a;
+    color.a = material.opacity + tex_color.a;
 
     //Multiply
     color.rgb = color.rgb * multiply;

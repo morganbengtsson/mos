@@ -218,11 +218,8 @@ private:
     GLint mv;
     GLint normal_matrix;
     GLint depth_bias_mvp;
-    GLint textures_first;
-    GLint textures_second;
-    GLint lightmaps_first;
-    GLint lightmaps_second;
-    GLint lightmaps_mix;
+    GLint texture;
+    GLint lightmap;
     GLint normalmap;
     GLint shadowmap;
     GLint material_ambient_color;
