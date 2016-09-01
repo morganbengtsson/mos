@@ -6,6 +6,10 @@ namespace mos {
 
 std::atomic_uint Texture::current_id_(0);
 
+Texture::Texture(const unsigned int width, const unsigned int height, const bool mipmaps, const Texture::Wrap &wrap)
+  : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++), wrap(wrap) {
+}
+
 Texture::~Texture() {}
 
 Texture::Texels::const_iterator Texture::begin() const {

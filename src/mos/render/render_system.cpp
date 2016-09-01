@@ -41,7 +41,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  //glEnable(GL_FRAMEBUFFER_SRGB);
+// glEnable(GL_FRAMEBUFFER_SRGB);
 #ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
 #endif
@@ -673,12 +673,16 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
+  static std::map<Texture::Wrap, GLuint> wrap_map{
+      {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::REPEAT, GL_REPEAT}};
+
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map[texture->wrap]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
@@ -692,10 +696,10 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
 #else
-/*
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
-               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               texture->data());*/
+  /*
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
+                 texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texture->data());*/
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
                0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
@@ -836,10 +840,11 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
   glViewport(0, 0, batch.resolution.x, batch.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
-    models(model, glm::mat4(1.0f), batch.view, batch.projection, batch.resolution, batch.light, batch.fog_exp, batch.fog_linear, model.multiply(), batch.shader, batch.draw);
+    models(model, glm::mat4(1.0f), batch.view, batch.projection,
+           batch.resolution, batch.light, batch.fog_exp, batch.fog_linear,
+           model.multiply(), batch.shader, batch.draw);
   }
 }
-
 
 void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
                           const glm::mat4 view, const glm::mat4 projection,
@@ -959,7 +964,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
 
   float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
-  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));  
+  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
   glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);
 

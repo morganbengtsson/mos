@@ -28,6 +28,7 @@ Assets::~Assets() {}
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
   auto mesh = value.value("mesh", "");
+  auto wrap = value.value("wrap", "repeat");
   auto texture_name = value.value("texture", "");
   auto texture2_name = value.value("texture2", "");
   auto lightmap_name =
@@ -36,21 +37,25 @@ Model Assets::model_value(const json &value) {
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
 
-  //glm::mat4 transform = glm::mat4(1.0f);
+  // glm::mat4 transform = glm::mat4(1.0f);
 
   auto transform = jsonarray_to_mat4(value["transform"]);
-/*
-  if (!value["transform"].is_null()) {
-    std::vector<float> nums;
-    for (auto &num : value["transform"]) {
-      nums.push_back(num);
-    }
-    transform = glm::make_mat4x4(nums.data());
-  }*/
+  /*
+    if (!value["transform"].is_null()) {
+      std::vector<float> nums;
+      for (auto &num : value["transform"]) {
+        nums.push_back(num);
+      }
+      transform = glm::make_mat4x4(nums.data());
+    }*/
+
+  static std::map<std::string, mos::Texture::Wrap> wrap_map{
+      {"clamp", mos::Texture::Wrap::CLAMP},
+      {"repeat", mos::Texture::Wrap::REPEAT}};
 
   auto created_model = mos::Model(
       name, mesh_cached(mesh),
-      Textures(texture_cached(texture_name), texture_cached(texture2_name)),
+      Textures(texture_cached(texture_name, true, wrap_map[wrap]), texture_cached(texture2_name, true, wrap_map[wrap])),
       transform, material_cached(material_name),
       Lightmaps(texture_cached(lightmap_name)), texture_cached(normalmap_name),
       recieves_light);
@@ -121,7 +126,8 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 }
 
 std::shared_ptr<Texture> Assets::texture(const std::string &path,
-                                         const bool mipmaps) const {
+                                         const bool mipmaps,
+                                         const Texture::Wrap &wrap) const {
   std::vector<unsigned char> texels;
   unsigned int width, height;
 
@@ -135,14 +141,15 @@ std::shared_ptr<Texture> Assets::texture(const std::string &path,
   }
 
   return std::make_shared<Texture>(texels.begin(), texels.end(), width, height,
-                                   mipmaps);
+                                   mipmaps, wrap);
 }
 
-std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,
-                                                const bool mipmaps) {
+std::shared_ptr<Texture>
+Assets::texture_cached(const std::string &path, const bool mipmaps,
+                       const Texture::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, texture(path, mipmaps)));
+      textures_.insert(TexturePair(path, texture(path, mipmaps, wrap)));
     }
     return textures_.at(path);
   } else {
@@ -150,7 +157,8 @@ std::shared_ptr<Texture> Assets::texture_cached(const std::string &path,
   }
 }
 
-std::shared_ptr<AudioBuffer> Assets::audio_buffer(const std::string &path) const {
+std::shared_ptr<AudioBuffer>
+Assets::audio_buffer(const std::string &path) const {
   int channels;
   int length;
   int sample_rate;
@@ -217,7 +225,8 @@ Font Assets::font(const string &path) {
   return Font(char_map, texture, height, ascender, descender);
 }
 
-std::shared_ptr<AudioBuffer> Assets::audio_buffer_cached(const std::string &path) {
+std::shared_ptr<AudioBuffer>
+Assets::audio_buffer_cached(const std::string &path) {
   if (sounds_.find(path) == sounds_.end()) {
     sounds_.insert(AudioBufferPair(path, audio_buffer(path)));
     return sounds_.at(path);

@@ -14,11 +14,14 @@ namespace mos {
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
 class Texture {
+  friend class RenderSystem;
 public:
   /**
    * @brief Container for pixel data. RGB(A)
    */
   using Texels = std::vector<unsigned char>;
+
+  enum class Wrap {REPEAT, CLAMP};
 
   template <class T>
   /**
@@ -33,8 +36,8 @@ public:
    *Along with width and height.
    */
   Texture(T begin, T end, unsigned int width, unsigned int height,
-            const bool mipmaps = true)
-      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++), texels_(begin, end) {
+            const bool mipmaps = true, const Wrap &wrap = Wrap::REPEAT)
+      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++), texels_(begin, end), wrap(wrap) {
   }
 
   /**
@@ -44,9 +47,7 @@ public:
    * @param mipmaps Generate mipmaps or not.
    */
   Texture(const unsigned int width, const unsigned int height,
-            const bool mipmaps = true)
-      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++) {
-  }
+            const bool mipmaps = true, const Wrap &wrap = Wrap::REPEAT);
 
   /**
    * @brief Destructor.
@@ -106,7 +107,8 @@ public:
   /**
    * @brief if mipmaps should be used
    */
-  bool mipmaps;
+  const bool mipmaps;
+  Wrap wrap;
 
 private:
   static std::atomic_uint current_id_;
@@ -114,6 +116,7 @@ private:
   unsigned int width_;
   unsigned int height_;
   Texels texels_;
+
 };
 }
 

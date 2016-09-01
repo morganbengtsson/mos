@@ -137,7 +137,8 @@ public:
    * @return Shared pointer to Texture2D object.
    */
   std::shared_ptr<Texture> texture_cached(const std::string &path,
-                                            const bool mipmaps = true);
+                                            const bool mipmaps = true,
+                                            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
   /**
    * Loads a *.png file into A Texture2D object. Not cached.
@@ -147,7 +148,8 @@ public:
    * @return Shared pointer to Texture2D object.
    */
   std::shared_ptr<Texture> texture(const std::string &path,
-                                     const bool mipmaps = true) const;
+                                     const bool mipmaps = true,
+                                    const Texture::Wrap &wrap = Texture::Wrap::REPEAT) const;
 
   /**
    * Loads a *.ogg file into a Sound object, and caches it internally.
