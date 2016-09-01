@@ -2,13 +2,12 @@
 #include <mos/util.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <mos/render/textures.hpp>
 
 namespace mos {
 
 Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
            const float spacing)
-    : model_("Text", std::make_shared<Mesh>(Mesh()), Textures(font.texture),
+    : model_("Text", std::make_shared<Mesh>(Mesh()), font.texture,
              transform),
       font_(font), spacing(spacing) {
   model_.lit = false;
@@ -32,12 +31,12 @@ void Text::text(const std::string &text) {
       float index = 0.0f;
       for (auto & c : line) {
         auto character = font_.characters.at(c);
-        float u1 = character.rect_x / ((float)model_.textures.first->width());
+        float u1 = character.rect_x / ((float)model_.texture->width());
         float u2 = (character.rect_x + character.rect_w) /
-                   (float)model_.textures.first->width();
-        float v1 = character.rect_y / ((float)model_.textures.first->height());
+                   (float)model_.texture->width();
+        float v1 = character.rect_y / ((float)model_.texture->height());
         float v2 = ((character.rect_y + character.rect_h) /
-                    ((float)model_.textures.first->height()));
+                    ((float)model_.texture->height()));
 
         // float offset_y = ((float) model_.texture->height()) -
         // character.offset_y;

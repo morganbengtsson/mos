@@ -5,17 +5,14 @@ namespace mos {
 Model::Model() {}
 
 Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
-             const Textures &textures,
-             const glm::mat4 &transform,
+             const SharedTexture &texture, const glm::mat4 &transform,
              const std::shared_ptr<Material> &material,
-             const Lightmaps &lightmaps,
+             const SharedTexture &lightmap,
              const std::shared_ptr<Texture> &normalmap,
              const float affected_by_light)
-    : mesh(mesh), textures(textures),
-      material(material), lightmaps(lightmaps), normalmap(normalmap), name_(name),
-      transform(transform), lit(affected_by_light),
-      overlay_(0.0f), multiply_(1.0f) {
-}
+    : mesh(mesh), texture(texture), material(material), lightmap(lightmap),
+      normalmap(normalmap), name_(name), transform(transform),
+      lit(affected_by_light), overlay_(0.0f), multiply_(1.0f) {}
 
 Model::~Model() {}
 
@@ -43,28 +40,24 @@ void Model::position(const glm::vec3 &position) {
   transform[3][2] = position[2];
 }
 
-glm::vec4 Model::overlay() const {
-  return overlay_;
-}
+glm::vec4 Model::overlay() const { return overlay_; }
 
-void Model::overlay(const glm::vec4 & overlay) {
+void Model::overlay(const glm::vec4 &overlay) {
   overlay_ = overlay;
-  for (auto & model : models){
+  for (auto &model : models) {
     model.overlay(overlay);
   }
 }
 
-void Model::overlay(const glm::vec3 & color, float alpha){
+void Model::overlay(const glm::vec3 &color, float alpha) {
   overlay(glm::vec4(color, alpha));
 }
 
-glm::vec3 Model::multiply() const {
-  return multiply_;
-}
+glm::vec3 Model::multiply() const { return multiply_; }
 
-void Model::multiply(const glm::vec3 & multiply) {
+void Model::multiply(const glm::vec3 &multiply) {
   multiply_ = multiply;
-  for (auto & model : models){
+  for (auto &model : models) {
     model.multiply(multiply);
   }
 }

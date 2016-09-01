@@ -2,12 +2,11 @@
 #define MOS_MODEL_H
 
 #include <memory>
-#include <optional.hpp>
+#include <mos/render/lightmaps.hpp>
+#include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/texture.hpp>
-#include <mos/render/material.hpp>
-#include <mos/render/lightmaps.hpp>
-#include <mos/render/textures.hpp>
+#include <optional.hpp>
 
 namespace mos {
 
@@ -19,9 +18,9 @@ namespace mos {
 class Model {
 public:
   using Models = std::vector<Model>;
-  using MeshPtr = std::shared_ptr<Mesh>;
-  using TexPtr = std::shared_ptr<Texture>;
-  using MatPtr = std::shared_ptr<Material>;
+  using SharedMesh = std::shared_ptr<Mesh>;
+  using SharedTexture = std::shared_ptr<Texture>;
+  using SharedMaterial = std::shared_ptr<Material>;
 
   /**
    * @brief Model
@@ -37,12 +36,13 @@ public:
    * @param lightmap
    * @param normalmap
    */
-  Model(const std::string &name, const MeshPtr &mesh,
-        const Textures &textures = Textures(),
+  Model(const std::string &name, const SharedMesh &mesh,
+        const SharedTexture &texture = SharedTexture(),
         const glm::mat4 &transform = glm::mat4(1.0f),
-        const MatPtr &material = std::make_shared<Material>(
+        const SharedMaterial &material = std::make_shared<Material>(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
-        const Lightmaps &lightmaps = Lightmaps(), const TexPtr &normalmap = TexPtr(),
+        const SharedTexture &lightmap = SharedTexture(),
+        const SharedTexture &normalmap = SharedTexture(),
         const float lit = true);
 
   /**
@@ -64,22 +64,22 @@ public:
   /**
    * @brief Collection of textures.
    */
-  Textures textures;
+  SharedTexture texture;
 
   /**
    * @brief Collection of lightmaps and how they are mixed.
    */
-  Lightmaps lightmaps;
+  SharedTexture lightmap;
 
   /**
    * @brief normalmap
    */
-  std::shared_ptr<Texture> normalmap;
+  SharedTexture normalmap;
 
   /**
    * @brief material
    */
-  std::shared_ptr<Material> material;
+  SharedMaterial material;
 
   /**
    * The transform of the model
@@ -157,9 +157,8 @@ private:
 
   /**
    * @brief Extra multiply factor for light calculations.
-   */  
+   */
   glm::vec3 multiply_;
-
 };
 }
 

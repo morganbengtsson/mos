@@ -28,36 +28,22 @@ Assets::~Assets() {}
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
   auto mesh = value.value("mesh", "");
-  auto wrap = value.value("wrap", "repeat");
   auto texture_name = value.value("texture", "");
-  auto texture2_name = value.value("texture2", "");
   auto lightmap_name =
       value["lightmap"].is_null() ? "" : value.value("lightmap", "");
   auto normalmap_name = value.value("normalmap", "");
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
 
-  // glm::mat4 transform = glm::mat4(1.0f);
-
   auto transform = jsonarray_to_mat4(value["transform"]);
-  /*
-    if (!value["transform"].is_null()) {
-      std::vector<float> nums;
-      for (auto &num : value["transform"]) {
-        nums.push_back(num);
-      }
-      transform = glm::make_mat4x4(nums.data());
-    }*/
-
-  static std::map<std::string, mos::Texture::Wrap> wrap_map{
-      {"clamp", mos::Texture::Wrap::CLAMP},
-      {"repeat", mos::Texture::Wrap::REPEAT}};
 
   auto created_model = mos::Model(
       name, mesh_cached(mesh),
-      Textures(texture_cached(texture_name, true, wrap_map[wrap]), texture_cached(texture2_name, true, wrap_map[wrap])),
-      transform, material_cached(material_name),
-      Lightmaps(texture_cached(lightmap_name)), texture_cached(normalmap_name),
+      texture_cached(texture_name),
+      transform,
+      material_cached(material_name),
+      texture_cached(lightmap_name),
+      texture_cached(normalmap_name),
       recieves_light);
 
   for (auto &m : value["models"]) {

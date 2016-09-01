@@ -473,27 +473,16 @@ void RenderSystem::load(const Model &model) {
     model.mesh->valid_ = true;
   }
 
-  if (model.textures.first) {
-    if (textures_.find(model.textures.first->id()) == textures_.end()) {
-      load(model.textures.first);
+  if (model.texture) {
+    if (textures_.find(model.texture->id()) == textures_.end()) {
+      load(model.texture);
     }
   }
 
-  if (model.textures.second) {
-    if (textures_.find(model.textures.second->id()) == textures_.end()) {
-      load(model.textures.second);
-    }
-  }
 
-  if (model.lightmaps.first) {
-    if (textures_.find(model.lightmaps.first->id()) == textures_.end()) {
-      load(model.lightmaps.first);
-    }
-  }
-
-  if (model.lightmaps.second) {
-    if (textures_.find(model.lightmaps.second->id()) == textures_.end()) {
-      load(model.lightmaps.second);
+  if (model.lightmap) {
+    if (textures_.find(model.lightmap->id()) == textures_.end()) {
+      load(model.lightmap);
     }
   }
 
@@ -523,27 +512,15 @@ void RenderSystem::unload(const Model &model) {
     }
   }
 
-  if (model.textures.first) {
-    if (textures_.find(model.textures.first->id()) != textures_.end()) {
-      unload(model.textures.first);
+  if (model.texture) {
+    if (textures_.find(model.texture->id()) != textures_.end()) {
+      unload(model.texture);
     }
   }
 
-  if (model.textures.second) {
-    if (textures_.find(model.textures.second->id()) != textures_.end()) {
-      unload(model.textures.second);
-    }
-  }
-
-  if (model.lightmaps.first) {
-    if (textures_.find(model.lightmaps.first->id()) != textures_.end()) {
-      unload(model.lightmaps.first);
-    }
-  }
-
-  if (model.lightmaps.second) {
-    if (textures_.find(model.lightmaps.second->id()) != textures_.end()) {
-      unload(model.lightmaps.second);
+  if (model.lightmap) {
+    if (textures_.find(model.lightmap->id()) != textures_.end()) {
+      unload(model.lightmap);
     }
   }
 
@@ -869,8 +846,8 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   int texture_unit = 0;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.textures.first
-                                   ? textures_[model.textures.first->id()]
+  glBindTexture(GL_TEXTURE_2D, model.texture
+                                   ? textures_[model.texture->id()]
                                    : empty_texture_);
   glUniform1i(uniforms.textures_first, texture_unit);
   texture_unit++;
@@ -884,24 +861,10 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.textures.second
-                                   ? textures_[model.textures.second->id()]
-                                   : empty_texture_);
-  glUniform1i(uniforms.textures_second, texture_unit);
-  texture_unit++;
-
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmaps.first
-                                   ? textures_[model.lightmaps.first->id()]
+  glBindTexture(GL_TEXTURE_2D, model.lightmap
+                                   ? textures_[model.lightmap->id()]
                                    : empty_texture_);
   glUniform1i(uniforms.lightmaps_first, texture_unit);
-  texture_unit++;
-
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmaps.second
-                                   ? textures_[model.lightmaps.second->id()]
-                                   : empty_texture_);
-  glUniform1i(uniforms.lightmaps_second, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -966,7 +929,6 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.time, 1, &time);
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
-  glUniform1fv(uniforms.lightmaps_mix, 1, &model.lightmaps.mix);
 
   int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
                                                 model.mesh->elements_end())
