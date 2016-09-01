@@ -36,15 +36,17 @@ Model Assets::model_value(const json &value) {
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
 
-  glm::mat4 transform = glm::mat4(1.0f);
+  //glm::mat4 transform = glm::mat4(1.0f);
 
+  auto transform = jsonarray_to_mat4(value["transform"]);
+/*
   if (!value["transform"].is_null()) {
     std::vector<float> nums;
     for (auto &num : value["transform"]) {
       nums.push_back(num);
     }
     transform = glm::make_mat4x4(nums.data());
-  }
+  }*/
 
   auto created_model = mos::Model(
       name, mesh_cached(mesh),

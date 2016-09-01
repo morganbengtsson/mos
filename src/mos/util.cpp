@@ -23,9 +23,17 @@ std::vector<std::string> &mos::split(const std::string & s, char delim, std::vec
   return elems;
 }
 
-
 std::vector<std::string> mos::split(const std::string & s, char delim) {
   std::vector<std::string> elems;
   split(s, delim, elems);
   return elems;
+}
+
+glm::mat4 mos::jsonarray_to_mat4(const nlohmann::json &array) {
+  glm::mat4 transform(1.0f);
+  if (!array.is_null()) {
+    std::vector<float> nums(array.begin(), array.end());
+    transform = glm::make_mat4x4(nums.data());
+  }
+  return transform;
 }
