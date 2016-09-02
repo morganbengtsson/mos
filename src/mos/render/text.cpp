@@ -38,13 +38,10 @@ void Text::text(const std::string &text) {
         float v2 = ((character.rect_y + character.rect_h) /
                     ((float)model_.texture->height()));
 
-        //auto divider = (font_.height() * 0.5f);
-        auto divider = 1.0f;
-
-        float offset_y = character.offset_y / divider;
-        float offset_x = character.offset_x / divider;
-        float rect_h = -character.rect_h / divider;
-        float rect_w = character.rect_w / divider;
+        float offset_y = character.offset_y;
+        float offset_x = character.offset_x;
+        float rect_h = -character.rect_h;
+        float rect_w = character.rect_w;
 
         model_.mesh->add(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
@@ -63,7 +60,7 @@ void Text::text(const std::string &text) {
         model_.mesh->add(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
             glm::vec3(0.0f), glm::vec2(u2, v1)));
-        index += (character.advance + spacing) / divider;
+        index += character.advance + spacing;
       }
       line_index += line_height;
     }

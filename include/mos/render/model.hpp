@@ -2,7 +2,6 @@
 #define MOS_MODEL_H
 
 #include <memory>
-#include <mos/render/lightmaps.hpp>
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/texture.hpp>
