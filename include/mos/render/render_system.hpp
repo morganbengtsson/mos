@@ -252,20 +252,24 @@ private:
   bool lightmaps_;
   void add_vertex_program(const ModelsBatch::Shader shader,
                           const std::string vertex_shader_source,
-                          const std::string fragment_shader_source);
+                          const std::string fragment_shader_source,
+						  const std::string &vert_file_name = "",
+							const std::string &frag_file_name = "");
 
   void add_particle_program(const std::string name, const std::string vs_source,
-                            const std::string fs_source);
+                            const std::string fs_source, const std::string &vs_file = "",
+	  const std::string &fs_file = "");
 
   unsigned int create_shader(const std::string &source,
                              const unsigned int type);
-  bool check_shader(const unsigned int shader);
+  bool check_shader(const unsigned int shader, const std::string &name = "");
   bool check_program(const unsigned int program);
   unsigned int create_texture(std::shared_ptr<mos::Texture> texture);
   unsigned int
   create_texture_and_pbo(const std::shared_ptr<mos::Texture> &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
-                       const std::string &fs_source);
+                       const std::string &fs_source, const std::string &vs_file,
+	  const std::string &fs_file);
 
   void create_depth_program();
 

@@ -45,37 +45,53 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 #ifdef MOS_SRGB
   glEnable(GL_FRAMEBUFFER_SRGB);
 #endif
+  std::string shader_path = "assets/shaders/";
 
-  std::string standard_vert_source = text("assets/shaders/standard_330.vert");
-  std::string standard_frag_source = text("assets/shaders/standard_330.frag");
+  std::string standard_vert = "standard_330.vert";
+  std::string standard_frag = "standard_330.frag";
+  std::string standard_vert_source = text(shader_path + standard_vert);
+  std::string standard_frag_source = text(shader_path + standard_frag);
   add_vertex_program(ModelsBatch::Shader::STANDARD, standard_vert_source,
-                     standard_frag_source);
+                     standard_frag_source, standard_vert, standard_frag);
 
-  std::string text_vert_source = text("assets/shaders/text_330.vert");
-  std::string text_frag_source = text("assets/shaders/text_330.frag");
+  std::string text_vert = "text_330.vert";
+  std::string text_frag = "text_330.frag";
+  std::string text_vert_source = text(shader_path + text_vert);
+  std::string text_frag_source = text(shader_path + text_frag);
   add_vertex_program(ModelsBatch::Shader::TEXT, text_vert_source,
-                     text_frag_source);
+                     text_frag_source, text_vert, text_frag);
 
+  std::string effect_vert = "effect_330.vert";
+  std::string effect_frag = "effect_330.frag";  
   add_vertex_program(ModelsBatch::Shader::EFFECT,
-                     text("assets/shaders/effect_330.vert"),
-                     text("assets/shaders/effect_330.frag"));
+                     text(shader_path + effect_vert),
+                     text(shader_path + effect_frag), effect_vert, effect_frag);
 
+  std::string blur_vert = "blur_330.vert";
+  std::string blur_frag = "blur_330.frag";
   add_vertex_program(ModelsBatch::Shader::BLUR,
-                     text("assets/shaders/blur_330.vert"),
-                     text("assets/shaders/blur_330.frag"));
+                     text(shader_path + blur_vert),
+                     text(shader_path + blur_frag), 
+	  blur_vert, blur_frag);
 
+  std::string crt_vert = "crt_330.vert";
+  std::string crt_frag = "crt_330.frag";
   add_vertex_program(ModelsBatch::Shader::CRT,
-                     text("assets/shaders/crt_330.vert"),
-                     text("assets/shaders/crt_330.frag"));
+                     text(shader_path + crt_vert),
+                     text(shader_path + crt_frag), crt_vert, crt_frag);
 
-  std::string particles_vert_source = text("assets/shaders/particles_330.vert");
-  std::string particles_frag_source = text("assets/shaders/particles_330.frag");
+  std::string particles_vert = "particles_330.vert";
+  std::string particles_frag = "particles_330.frag";
+  std::string particles_vert_source = text(shader_path + particles_vert);
+  std::string particles_frag_source = text(shader_path + particles_frag);
   add_particle_program("particles", particles_vert_source,
-                       particles_frag_source);
+                       particles_frag_source, particles_vert, particles_frag);
 
-  std::string box_vert_source = text("assets/shaders/box_330.vert");
-  std::string box_frag_source = text("assets/shaders/box_330.frag");
-  add_box_program("box", box_vert_source, box_frag_source);
+  std::string box_vert = "box_330.vert";
+  std::string box_frag = "box_330.frag";
+  std::string box_vert_source = text(shader_path + box_vert);
+  std::string box_frag_source = text(shader_path + box_frag);
+  add_box_program("box", box_vert_source, box_frag_source, box_vert, box_frag);
 
   create_depth_program();
 
@@ -281,11 +297,12 @@ void RenderSystem::update_depth(const Model &model,
 
 void RenderSystem::add_box_program(const std::string &name,
                                    const std::string &vs_source,
-                                   const std::string &fs_source) {
+                                   const std::string &fs_source,
+	const std::string &vs_file, const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader);
+  check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader);
+  check_shader(fragment_shader, fs_file);
 
   auto program = glCreateProgram();
 
@@ -306,9 +323,9 @@ void RenderSystem::create_depth_program() {
   auto frag_source = text("assets/shaders/depth_330.frag");
 
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader);
+  check_shader(vertex_shader, "depth_330.vert");
   auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader);
+  check_shader(fragment_shader, "depth_330.frag");
 
   auto program = glCreateProgram();
 
@@ -324,11 +341,13 @@ void RenderSystem::create_depth_program() {
 
 void RenderSystem::add_particle_program(const std::string name,
                                         const std::string vs_source,
-                                        const std::string fs_source) {
+                                        const std::string fs_source,
+										const std::string &vs_file,
+										const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader);
+  check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader);
+  check_shader(fragment_shader, fs_file);
 
   auto program = glCreateProgram();
 
@@ -348,13 +367,15 @@ void RenderSystem::add_particle_program(const std::string name,
 
 void RenderSystem::add_vertex_program(
     const ModelsBatch::Shader shader, const std::string vertex_shader_source,
-    const std::string fragment_shader_source) {
+    const std::string fragment_shader_source,
+	const std::string &vert_file_name,
+	const std::string &frag_file_name) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader);
+  check_shader(vertex_shader, vert_file_name);
 
   auto fragment_shader =
       create_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader);
+  check_shader(fragment_shader, frag_file_name);
 
   auto program = glCreateProgram();
   glAttachShader(program, vertex_shader);
@@ -589,7 +610,7 @@ unsigned int RenderSystem::create_shader(const std::string &source,
   return id;
 }
 
-bool RenderSystem::check_shader(const unsigned int shader) {
+bool RenderSystem::check_shader(const unsigned int shader, const std::string &name) {
   if (!shader) {
     return false;
   }
@@ -609,7 +630,7 @@ bool RenderSystem::check_shader(const unsigned int shader) {
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in " << types[type] << " shader"
+      std::cerr << "Compile failure in " << types[type] << " " << name << " shader"
                 << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
