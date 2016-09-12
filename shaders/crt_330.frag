@@ -31,16 +31,16 @@ vec4 crt(vec2 fragCoord) {
     vec2 q = fragCoord.xy / resolution.xy;
     vec2 uv = fragment.uv;
     uv = curve( uv );
-    vec3 oricol = texture2D(texture, vec2(q.x,q.y) ).xyz;
+    vec3 oricol = texture(texture, vec2(q.x,q.y) ).xyz;
     vec3 col;
         float x =  sin(0.3*time+uv.y*21.0)*sin(0.7*time+uv.y*29.0)*sin(0.3+0.33*time+uv.y*31.0)*0.0017;
 
-    col.r = texture2D(texture,vec2(x+uv.x+0.001,uv.y+0.001)).x+0.05;
-    col.g = texture2D(texture,vec2(x+uv.x+0.000,uv.y-0.002)).y+0.05;
-    col.b = texture2D(texture,vec2(x+uv.x-0.002,uv.y+0.000)).z+0.05;
-    col.r += 0.08*texture2D(texture,0.75*vec2(x+0.025, -0.027)+vec2(uv.x+0.001,uv.y+0.001)).x;
-    col.g += 0.05*texture2D(texture,0.75*vec2(x+-0.022, -0.02)+vec2(uv.x+0.000,uv.y-0.002)).y;
-    col.b += 0.08*texture2D(texture,0.75*vec2(x+-0.02, -0.018)+vec2(uv.x-0.002,uv.y+0.000)).z;
+    col.r = texture(texture,vec2(x+uv.x+0.001,uv.y+0.001)).x+0.05;
+    col.g = texture(texture,vec2(x+uv.x+0.000,uv.y-0.002)).y+0.05;
+    col.b = texture(texture,vec2(x+uv.x-0.002,uv.y+0.000)).z+0.05;
+    col.r += 0.08*texture(texture,0.75*vec2(x+0.025, -0.027)+vec2(uv.x+0.001,uv.y+0.001)).x;
+    col.g += 0.05*texture(texture,0.75*vec2(x+-0.022, -0.02)+vec2(uv.x+0.000,uv.y-0.002)).y;
+    col.b += 0.08*texture(texture,0.75*vec2(x+-0.02, -0.018)+vec2(uv.x-0.002,uv.y+0.000)).z;
 
     col = clamp(col*0.6+0.4*col*col*1.0,0.0,1.0);
 

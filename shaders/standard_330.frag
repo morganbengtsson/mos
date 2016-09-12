@@ -79,11 +79,11 @@ float linear_depth(float value)
 
 void main() {
 
-    vec4 static_light = texture2D(lightmap, fragment.lightmap_uv);
+    vec4 static_light = texture(lightmap, fragment.lightmap_uv);
 
     vec3 normal = normalize(fragment.normal);
 
-    vec4 tex_normal = texture2D(normalmap, fragment.uv);
+    vec4 tex_normal = texture(normalmap, fragment.uv);
     vec3 n = tex_normal.xyz * 2.0 - 1.0;
     normal = normalize(mix(normal, n, tex_normal.w));
 
@@ -91,7 +91,7 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture2D(texture, fragment.uv);
+    vec4 tex_color = texture(texture, fragment.uv);
     vec4 combined_tex = tex_color;
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
