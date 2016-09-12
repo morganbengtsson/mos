@@ -43,7 +43,7 @@ struct Fragment {
 uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
-uniform sampler2D texture;
+uniform sampler2D texturemap;
 uniform sampler2D lightmap;
 uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
@@ -91,7 +91,7 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture(texture, fragment.uv);
+    vec4 tex_color = texture(texturemap, fragment.uv);
     vec4 combined_tex = tex_color;
 
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);

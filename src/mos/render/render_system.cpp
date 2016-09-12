@@ -398,7 +398,7 @@ void RenderSystem::add_vertex_program(
           glGetUniformLocation(program, "model_view"),
           glGetUniformLocation(program, "normal_matrix"),
           glGetUniformLocation(program, "depth_bias_model_view_projection"),
-          glGetUniformLocation(program, "texture"),
+          glGetUniformLocation(program, "texturemap"),
           glGetUniformLocation(program, "lightmap"),
           glGetUniformLocation(program, "normalmap"),
           glGetUniformLocation(program, "shadowmap"),
@@ -867,7 +867,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glBindTexture(GL_TEXTURE_2D, model.texture
                                    ? textures_[model.texture->id()]
                                    : empty_texture_);
-  glUniform1i(uniforms.texture, texture_unit);
+  glUniform1i(uniforms.texturemap, texture_unit);
   texture_unit++;
 
   // Shadowmap
