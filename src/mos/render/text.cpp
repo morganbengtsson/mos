@@ -73,9 +73,14 @@ void Text::intensity(const glm::vec3 &intensity) {
 }
 
 float Text::width() const {
-  glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
-  glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end() - 2)->position);
-  return glm::distance(p1, p2);
+  if (model_.mesh->vertices_size() > 2){
+    glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
+    glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end() - 2)->position);
+    return glm::distance(p1, p2);
+  }
+  else {
+    return 0.0f;
+  }
 }
 
 float Text::height() const { return font_.height(); }

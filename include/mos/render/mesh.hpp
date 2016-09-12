@@ -214,6 +214,8 @@ public:
    */
   void mix(const Mesh &mesh1, const Mesh &mesh2, const float amount);
 
+  void apply_transform(const glm::mat4 &transform);
+
 private:
   static std::atomic_uint current_id;
   unsigned int id_;

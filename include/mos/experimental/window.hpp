@@ -49,6 +49,7 @@ public:
   void cursor_mode(const CursorMode &mode);
   void cursor(const Cursor &cursor);
   glm::dvec2 cursor_position() const;
+  float dpi() const;
 
 private:
   GLFWwindow *window_;

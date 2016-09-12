@@ -145,4 +145,13 @@ glm::dvec2 Window::cursor_position() const {
   glfwGetCursorPos(window_, &xpos, &ypos);
   return glm::dvec2(xpos, ypos);
 }
+
+float Window::dpi() const {
+  GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+  int widthMM, heightMM;
+  glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
+  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+  const double dpi = mode->width / (widthMM / 25.4);
+  return dpi;
+}
 }

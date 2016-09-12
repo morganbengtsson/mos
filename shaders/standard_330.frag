@@ -121,6 +121,7 @@ void main() {
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
+
     }
     color.a = material.opacity + tex_color.a;
 
