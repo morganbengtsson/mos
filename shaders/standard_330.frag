@@ -130,7 +130,7 @@ void main() {
     //Fog
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
-    color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
+    //color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
