@@ -5,7 +5,7 @@
 
 namespace mos {
 
-std::atomic_uint Mesh::current_id(0);
+std::atomic_uint Mesh::current_id;
 
 Mesh::Mesh(std::initializer_list<Vertex> vertices,
            std::initializer_list<int> elements)

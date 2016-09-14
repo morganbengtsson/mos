@@ -2,7 +2,7 @@
 
 namespace mos {
 
-std::atomic_uint AudioSource::current_id_(0);
+std::atomic_uint AudioSource::current_id_;
 
 AudioSource::AudioSource(const glm::vec3 &position, const glm::vec3 &velocity,
                          const float pitch, const float gain, const bool loop,

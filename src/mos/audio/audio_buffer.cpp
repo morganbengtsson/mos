@@ -2,7 +2,7 @@
 #include <mos/audio/audio_buffer.hpp>
 
 namespace mos {
-std::atomic_uint AudioBuffer::current_id_(0);
+std::atomic_uint AudioBuffer::current_id_;
 
 AudioBuffer::~AudioBuffer() {}
 

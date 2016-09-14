@@ -2,7 +2,7 @@
 
 namespace mos {
 
-std::atomic_uint AudioStream::current_id_(0);
+std::atomic_uint AudioStream::current_id_;
 
 AudioStream::AudioStream(const std::string &path)
     : file_name_(path), id_(current_id_++) {
