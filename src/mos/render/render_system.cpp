@@ -851,9 +851,8 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glViewport(0, 0, resolution.x, resolution.y);
   load(model);
 
-  auto transform = model.transform;
-  glm::mat4 mv = view * parent_transform * transform;
-  glm::mat4 mvp = projection * view * parent_transform * transform;
+  const glm::mat4 mv = view * parent_transform * model.transform;
+  const glm::mat4 mvp = projection * mv;
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -898,7 +897,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,
                        0.0, 0.5, 0.5, 0.5, 1.0);
 
-  glm::mat4 depth_bias_mvp = bias * light.projection * light.view * transform;
+  glm::mat4 depth_bias_mvp = bias * light.projection * light.view * model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
@@ -948,8 +947,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
 
-  int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
-                                                model.mesh->elements_end())
+  int num_elements = model.mesh ? model.mesh->elements_size()
                                 : 0;
   int draw_type = GL_TRIANGLES;
   if (draw == ModelsBatch::Draw::LINES) {
