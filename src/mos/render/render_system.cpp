@@ -858,7 +858,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
   };
 
-  auto &uniforms = vertex_programs_.at(shader);
+  const auto &uniforms = vertex_programs_.at(shader);
 
   int texture_unit = 0;
 
@@ -894,14 +894,14 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-  const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,
+  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,
                        0.0, 0.5, 0.5, 0.5, 1.0);
 
-  glm::mat4 depth_bias_mvp = bias * light.projection * light.view * model.transform;
+  const glm::mat4 depth_bias_mvp = bias * light.projection * light.view * model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
-  glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
+  const glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
   if (model.material) {
@@ -915,7 +915,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
                  &model.material->specular_exponent);
     glUniform1fv(uniforms.opacity, 1, &model.material->opacity);
   } else {
-    auto opacity = 1.0f;
+    static const float opacity = 1.0f;
     glUniform1fv(uniforms.opacity, 1, &opacity);
   }
 
@@ -942,12 +942,12 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
   glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
   glUniform1fv(uniforms.fogs_linear_far, 1, &fog_linear.far);
 
-  float time = 0.0f;
+  static const float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
 
-  int num_elements = model.mesh ? model.mesh->elements_size()
+  const int num_elements = model.mesh ? model.mesh->elements_size()
                                 : 0;
   int draw_type = GL_TRIANGLES;
   if (draw == ModelsBatch::Draw::LINES) {
@@ -962,7 +962,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
       glDrawArrays(draw_type, 0, model.mesh->vertices_size());
     }
   }
-  for (auto &child : model.models) {
+  for (const auto &child : model.models) {
     models(child, parent_transform * model.transform, view, projection,
            resolution, light, fog_exp, fog_linear, multiply);
   }
