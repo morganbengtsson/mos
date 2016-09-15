@@ -64,13 +64,13 @@ public:
    * @brief Load a texture into renderer memory.
    * @param texture The texture.
    */
-  void load(const std::shared_ptr<Texture> &texture);
+  void load(const SharedTexture &texture);
 
   /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
    */
-  void unload(const std::shared_ptr<Texture> &texture);
+  void unload(const SharedTexture &texture);
 
 
 
@@ -98,8 +98,6 @@ public:
       boxes_batch(*it);
     }
   }
-
-
 
   /**
    * @brief Clear all internal buffers.
@@ -264,9 +262,9 @@ private:
                              const unsigned int type);
   bool check_shader(const unsigned int shader, const std::string &name = "");
   bool check_program(const unsigned int program);
-  unsigned int create_texture(std::shared_ptr<mos::Texture> texture);
+  unsigned int create_texture(const SharedTexture &texture);
   unsigned int
-  create_texture_and_pbo(const std::shared_ptr<mos::Texture> &texture);
+  create_texture_and_pbo(const SharedTexture &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source, const std::string &vs_file,
 	  const std::string &fs_file);

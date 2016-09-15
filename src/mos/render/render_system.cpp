@@ -62,22 +62,19 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
                      text_frag_source, text_vert, text_frag);
 
   std::string effect_vert = "effect_330.vert";
-  std::string effect_frag = "effect_330.frag";  
+  std::string effect_frag = "effect_330.frag";
   add_vertex_program(ModelsBatch::Shader::EFFECT,
                      text(shader_path + effect_vert),
                      text(shader_path + effect_frag), effect_vert, effect_frag);
 
   std::string blur_vert = "blur_330.vert";
   std::string blur_frag = "blur_330.frag";
-  add_vertex_program(ModelsBatch::Shader::BLUR,
-                     text(shader_path + blur_vert),
-                     text(shader_path + blur_frag), 
-	  blur_vert, blur_frag);
+  add_vertex_program(ModelsBatch::Shader::BLUR, text(shader_path + blur_vert),
+                     text(shader_path + blur_frag), blur_vert, blur_frag);
 
   std::string crt_vert = "crt_330.vert";
   std::string crt_frag = "crt_330.frag";
-  add_vertex_program(ModelsBatch::Shader::CRT,
-                     text(shader_path + crt_vert),
+  add_vertex_program(ModelsBatch::Shader::CRT, text(shader_path + crt_vert),
                      text(shader_path + crt_frag), crt_vert, crt_frag);
 
   std::string particles_vert = "particles_330.vert";
@@ -298,7 +295,8 @@ void RenderSystem::update_depth(const Model &model,
 void RenderSystem::add_box_program(const std::string &name,
                                    const std::string &vs_source,
                                    const std::string &fs_source,
-	const std::string &vs_file, const std::string &fs_file) {
+                                   const std::string &vs_file,
+                                   const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -342,8 +340,8 @@ void RenderSystem::create_depth_program() {
 void RenderSystem::add_particle_program(const std::string name,
                                         const std::string vs_source,
                                         const std::string fs_source,
-										const std::string &vs_file,
-										const std::string &fs_file) {
+                                        const std::string &vs_file,
+                                        const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -365,11 +363,11 @@ void RenderSystem::add_particle_program(const std::string name,
                 glGetUniformLocation(program, "model_view")}));
 }
 
-void RenderSystem::add_vertex_program(
-    const ModelsBatch::Shader shader, const std::string vertex_shader_source,
-    const std::string fragment_shader_source,
-	const std::string &vert_file_name,
-	const std::string &frag_file_name) {
+void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
+                                      const std::string vertex_shader_source,
+                                      const std::string fragment_shader_source,
+                                      const std::string &vert_file_name,
+                                      const std::string &frag_file_name) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vert_file_name);
 
@@ -497,7 +495,6 @@ void RenderSystem::load(const Model &model) {
     }
   }
 
-
   if (model.lightmap) {
     if (textures_.find(model.lightmap->id()) == textures_.end()) {
       load(model.lightmap);
@@ -549,7 +546,7 @@ void RenderSystem::unload(const Model &model) {
   }
 }
 
-void RenderSystem::load(const std::shared_ptr<Texture> &texture) {
+void RenderSystem::load(const SharedTexture &texture) {
 #ifdef STREAM_TEXTURES
   if (textures_.find(texture->id()) == textures_.end()) {
     GLuint gl_id = create_texture_and_pbo(texture);
@@ -563,7 +560,7 @@ void RenderSystem::load(const std::shared_ptr<Texture> &texture) {
 #endif
 }
 
-void RenderSystem::unload(const std::shared_ptr<Texture> &texture) {
+void RenderSystem::unload(const SharedTexture &texture) {
   if (textures_.find(texture->id()) == textures_.end()) {
 
   } else {
@@ -610,7 +607,8 @@ unsigned int RenderSystem::create_shader(const std::string &source,
   return id;
 }
 
-bool RenderSystem::check_shader(const unsigned int shader, const std::string &name) {
+bool RenderSystem::check_shader(const unsigned int shader,
+                                const std::string &name) {
   if (!shader) {
     return false;
   }
@@ -630,8 +628,8 @@ bool RenderSystem::check_shader(const unsigned int shader, const std::string &na
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in " << types[type] << " " << name << " shader"
-                << std::endl;
+      std::cerr << "Compile failure in " << types[type] << " " << name
+                << " shader" << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
     return false;
@@ -661,7 +659,7 @@ bool RenderSystem::check_program(const unsigned int program) {
   return true;
 }
 
-unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
+unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
@@ -691,13 +689,10 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
                texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
                texture->data());
 #else
-  /*
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
-                 texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 texture->data());*/
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
-               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->data());
 #endif
 
   if (texture->mipmaps) {
@@ -708,7 +703,7 @@ unsigned int RenderSystem::create_texture(std::shared_ptr<Texture> texture) {
 }
 
 unsigned int
-RenderSystem::create_texture_and_pbo(const std::shared_ptr<Texture> &texture) {
+RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   GLuint texture_id;
 
@@ -863,9 +858,8 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   int texture_unit = 0;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.texture
-                                   ? textures_[model.texture->id()]
-                                   : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.texture ? textures_[model.texture->id()]
+                                             : empty_texture_);
   glUniform1i(uniforms.texturemap, texture_unit);
   texture_unit++;
 
@@ -878,9 +872,8 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmap
-                                   ? textures_[model.lightmap->id()]
-                                   : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.lightmap ? textures_[model.lightmap->id()]
+                                              : empty_texture_);
   glUniform1i(uniforms.lightmap, texture_unit);
   texture_unit++;
 
@@ -894,10 +887,11 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
 
-  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,
-                       0.0, 0.5, 0.5, 0.5, 1.0);
+  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
+                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-  const glm::mat4 depth_bias_mvp = bias * light.projection * light.view * model.transform;
+  const glm::mat4 depth_bias_mvp =
+      bias * light.projection * light.view * model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
@@ -947,8 +941,7 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
   glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
 
-  const int num_elements = model.mesh ? model.mesh->elements_size()
-                                : 0;
+  const int num_elements = model.mesh ? model.mesh->elements_size() : 0;
   int draw_type = GL_TRIANGLES;
   if (draw == ModelsBatch::Draw::LINES) {
     draw_type = GL_LINES;
