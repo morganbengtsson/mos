@@ -1,10 +1,10 @@
 #ifndef MOS_TEXTURE2D_H
 #define MOS_TEXTURE2D_H
 
-#include <vector>
-#include <string>
 #include <atomic>
 #include <glm/glm.hpp>
+#include <string>
+#include <vector>
 
 namespace mos {
 
@@ -15,13 +15,14 @@ namespace mos {
  */
 class Texture {
   friend class RenderSystem;
+
 public:
   /**
    * @brief Container for pixel data. RGB(A)
    */
   using Texels = std::vector<unsigned char>;
 
-  enum class Wrap {REPEAT, CLAMP};
+  enum class Wrap { REPEAT, CLAMP };
 
   template <class T>
   /**
@@ -36,9 +37,10 @@ public:
    *Along with width and height.
    */
   Texture(T begin, T end, unsigned int width, unsigned int height,
-            const bool mipmaps = true, const Wrap &wrap = Wrap::REPEAT)
-      : mipmaps(mipmaps), width_(width), height_(height), id_(current_id_++), texels_(begin, end), wrap(wrap) {
-  }
+          const bool mipmaps = true, const bool compress = true,
+          const Wrap &wrap = Wrap::REPEAT)
+      : mipmaps(mipmaps), compress(compress), width_(width), height_(height), id_(current_id_++),
+        texels_(begin, end), wrap(wrap) {}
 
   /**
    * @brief Texture2D constructor.
@@ -47,7 +49,8 @@ public:
    * @param mipmaps Generate mipmaps or not.
    */
   Texture(const unsigned int width, const unsigned int height,
-            const bool mipmaps = true, const Wrap &wrap = Wrap::REPEAT);
+          const bool mipmaps = true, const bool compress = true,
+          const Wrap &wrap = Wrap::REPEAT);
 
   /**
    * @brief Destructor.
@@ -108,6 +111,13 @@ public:
    * @brief if mipmaps should be used
    */
   const bool mipmaps;
+  /**
+   * @brief compress
+   */
+  const bool compress;
+  /**
+   * @brief wrap
+   */
   Wrap wrap;
 
 private:
@@ -116,7 +126,6 @@ private:
   unsigned int width_;
   unsigned int height_;
   Texels texels_;
-
 };
 }
 

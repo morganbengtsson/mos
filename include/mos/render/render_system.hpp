@@ -161,7 +161,7 @@ private:
    * @param program_name Either "text" or "standard"
    * @param light One dynamic light to use.
    */
-  void models(const Model &model, const glm::mat4 transform,
+  void render(const Model &model, const glm::mat4 transform,
               const glm::mat4 view, const glm::mat4 projection,
               const glm::vec2 &resolution = glm::vec2(0.0f),
               const Light &light = Light(),

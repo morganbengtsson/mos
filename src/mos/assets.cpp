@@ -113,6 +113,7 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 
 std::shared_ptr<Texture> Assets::texture(const std::string &path,
                                          const bool mipmaps,
+                                         const bool compress,
                                          const Texture::Wrap &wrap) const {
   std::vector<unsigned char> texels;
   unsigned int width, height;
@@ -127,15 +128,17 @@ std::shared_ptr<Texture> Assets::texture(const std::string &path,
   }
 
   return std::make_shared<Texture>(texels.begin(), texels.end(), width, height,
-                                   mipmaps, wrap);
+                                   mipmaps, compress, wrap);
 }
 
 std::shared_ptr<Texture>
-Assets::texture_cached(const std::string &path, const bool mipmaps,
+Assets::texture_cached(const std::string &path,
+                       const bool mipmaps,
+                       const bool compress,
                        const Texture::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, texture(path, mipmaps, wrap)));
+      textures_.insert(TexturePair(path, texture(path, mipmaps, compress, wrap)));
     }
     return textures_.at(path);
   } else {

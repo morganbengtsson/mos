@@ -835,13 +835,13 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
   glViewport(0, 0, batch.resolution.x, batch.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
-    models(model, glm::mat4(1.0f), batch.view, batch.projection,
+    render(model, glm::mat4(1.0f), batch.view, batch.projection,
            batch.resolution, batch.light, batch.fog_exp, batch.fog_linear,
            model.multiply(), batch.shader, batch.draw);
   }
 }
 
-void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
+void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
                           const glm::mat4 view, const glm::mat4 projection,
                           const glm::vec2 &resolution, const Light &light,
                           const FogExp &fog_exp, const FogLinear &fog_linear,
@@ -963,7 +963,7 @@ void RenderSystem::models(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (const auto &child : model.models) {
-    models(child, parent_transform * model.transform, view, projection,
+    render(child, parent_transform * model.transform, view, projection,
            resolution, light, fog_exp, fog_linear, multiply);
   }
 }
