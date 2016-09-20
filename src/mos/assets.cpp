@@ -12,8 +12,6 @@
 #include <lodepng.h>
 #include <memory>
 #include <mos/util.hpp>
-#include <rapidxml.hpp>
-#include <rapidxml_utils.hpp>
 #include <stb_vorbis.h>
 
 namespace mos {
@@ -174,44 +172,28 @@ std::shared_ptr<AudioStream> Assets::audio_stream(const string &path) const {
 }
 
 Font Assets::font(const string &path) {
+  auto doc = json::parse(text(directory_ + path));
+
   std::map<char, Character> characters;
-  rapidxml::xml_document<> doc;
-  auto xml_string = text(directory_ + path);
-  doc.parse<0>(&xml_string[0]);
-
-  auto *chars_node = doc.first_node("font")->first_node("chars");
-  auto *description_node = doc.first_node("font")->first_node("description");
-  std::string name = description_node->first_attribute("family")->value();
-  float size = atof(description_node->first_attribute("family")->value());
-
-  auto *metrics_node = doc.first_node("font")->first_node("metrics");
-  float height = atof(metrics_node->first_attribute("height")->value());
-  float ascender = atof(metrics_node->first_attribute("ascender")->value());
-  float descender = atof(metrics_node->first_attribute("descender")->value());
-
-  auto *texture_node = doc.first_node("font")->first_node("texture");
-  std::string file = texture_node->first_attribute("file")->value();
-  // std::transform(file.begin(), file.end(), file.begin(), ::tolower);
-
-  for (auto *char_node = chars_node->first_node("char"); char_node;
-       char_node = char_node->next_sibling()) {
-
+  for (auto & c : doc["chars"]){
     Character character;
-
-    character.offset_x = atof(char_node->first_attribute("offset_x")->value());
-    character.offset_y = atof(char_node->first_attribute("offset_y")->value());
-    character.advance = atof(char_node->first_attribute("advance")->value());
-    character.rect_w = atof(char_node->first_attribute("rect_w")->value());
-    character.id = *char_node->first_attribute("id")->value();
-    character.rect_x = atof(char_node->first_attribute("rect_x")->value());
-    character.rect_y = atof(char_node->first_attribute("rect_y")->value());
-    character.rect_h = atof(char_node->first_attribute("rect_h")->value());
+    character.offset_x = c["offset_x"];
+    character.offset_y = c["offset_y"];
+    character.advance = c["advance"];
+    character.rect_w = c["rect_w"];
+    std::string id = c["id"];
+    character.id = id[0];
+    character.rect_x = c["rect_x"];
+    character.rect_y = c["rect_y"];
+    character.rect_h = c["rect_h"];
     characters.insert(std::pair<char, Character>(character.id, character));
   }
-
-  auto char_map = characters;
-  auto texture = texture_cached(file);
-  return Font(char_map, texture, height, ascender, descender);
+  float height = doc["metrics"]["height"];
+  float ascender = doc["metrics"]["ascender"];
+  float descender = doc["metrics"]["descender"];
+  std::string texture_name = doc["texture"]["file"];
+  auto texture = texture_cached(texture_name);
+  return Font(characters, texture, height, ascender, descender);
 }
 
 std::shared_ptr<AudioBuffer>

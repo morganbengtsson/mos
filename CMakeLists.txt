@@ -4,9 +4,6 @@ add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 
 #add_definitions(-DAL_LIBTYPE_STATIC)
-#Needed?
-#add_definitions(-DRAPIDJSON_HAS_CXX11_RVALUE_REFS=1)
-#add_definitions(-DRAPIDJSON_HAS_STDSTRING=1)
 
 # No binaries in source dir
 if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
@@ -63,10 +60,7 @@ add_subdirectory(externals/lodepng)
 # stb
 add_subdirectory(externals/stb)
 
-#Rapidxml
-include_directories(externals/rapidxml)
-
-#Json
+# Json
 include_directories(externals/json/src)
 add_subdirectory(externals/json)
 
