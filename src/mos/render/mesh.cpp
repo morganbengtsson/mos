@@ -20,6 +20,38 @@ Mesh::Mesh(const Mesh &mesh)
 
 Mesh::~Mesh() {}
 
+SharedMesh Mesh::load(const std::string &path) {
+  if (path.empty()) {
+    return std::make_shared<Mesh>(Mesh());
+  } else {
+    if (path.substr(path.find_last_of(".") + 1) == "mesh") {
+      std::ifstream is(path, std::ios::binary);
+      if (!is.good()) {
+        throw std::runtime_error(path + " does not exist.");
+      }
+      int num_vertices;
+      int num_indices;
+      is.read((char *)&num_vertices, sizeof(int));
+      is.read((char *)&num_indices, sizeof(int));
+
+      auto vertices = std::vector<mos::Vertex>(num_vertices);
+      auto elements = std::vector<int>(num_indices);
+
+      if (vertices.size() > 0) {
+        is.read((char *)&vertices[0], vertices.size() * sizeof(Vertex));
+      }
+
+      if (elements.size() > 0) {
+        is.read((char *)&elements[0], elements.size() * sizeof(int));
+      }
+      return std::make_shared<Mesh>(Mesh(vertices.begin(), vertices.end(),
+                                         elements.begin(), elements.end()));
+    } else {
+      throw std::runtime_error("File extension not supported.");
+    }
+  }
+}
+
 Mesh::Vertices::iterator Mesh::begin() {
   return vertices_.begin();
 }

@@ -8,7 +8,6 @@
 #include <mos/render/texture.hpp>
 
 namespace mos {
-  using namespace nlohmann;
 
 /**
  * A class that gathers what is needed to render an object. A Mesh, a Texture2D

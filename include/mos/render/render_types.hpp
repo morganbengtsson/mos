@@ -8,6 +8,9 @@
 #include <optional.hpp>
 
 namespace mos {
+class Mesh;
+class RenderTarget;
+class Texture;
 using SharedMesh = std::shared_ptr<Mesh>;
 using OptTarget = std::experimental::optional<RenderTarget>;
 using SharedTexture = std::shared_ptr<Texture>;

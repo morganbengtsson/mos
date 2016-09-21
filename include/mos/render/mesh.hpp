@@ -5,10 +5,13 @@
 #include <initializer_list>
 #include <string>
 #include <atomic>
+#include <memory>
 #include <mos/render/vertex.hpp>
 
-namespace mos {
 
+namespace mos {
+  class Mesh;
+  using SharedMesh = std::shared_ptr<Mesh>;
 /**
  * A class that describes the geometric data to be rendered. Contains vertices
  * and elements, for vertex order, when rendering.
@@ -68,7 +71,9 @@ public:
   /**
    * @brief ~Mesh destructor.
    */
-  virtual ~Mesh();
+  ~Mesh();
+
+  static SharedMesh load(const std::string &path);
 
   Vertices::iterator begin();
   Vertices::iterator end();
