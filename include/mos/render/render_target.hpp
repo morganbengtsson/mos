@@ -3,10 +3,13 @@
 
 #include <memory>
 #include <atomic>
+#include <optional.hpp>
 #include <glm/glm.hpp>
 #include <mos/render/texture.hpp>
 
 namespace mos {
+  class RenderTarget;
+  using OptTarget = std::experimental::optional<RenderTarget>;
 /**
  * @brief The RenderTarget class
  *

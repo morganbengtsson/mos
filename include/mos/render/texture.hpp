@@ -2,20 +2,23 @@
 #define MOS_TEXTURE2D_H
 
 #include <atomic>
-#include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace mos {
+
+  class Texture;
+  using SharedTexture = std::shared_ptr<Texture>;
 
 /**
  * @brief The Texture2D class
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
-class Texture {
+class Texture final {
   friend class RenderSystem;
-
 public:
   /**
    * @brief Container for pixel data. RGB(A)
@@ -56,6 +59,8 @@ public:
    * @brief Destructor.
    */
   virtual ~Texture();
+
+  static SharedTexture load(const std::string &path);
 
   /**
    * @brief begin iterator

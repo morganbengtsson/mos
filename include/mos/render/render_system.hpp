@@ -18,7 +18,6 @@
 #include <mos/render/camera.hpp>
 #include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
-#include <mos/render/render_types.hpp>
 #include <mos/render/particles_batch.hpp>
 #include <mos/render/boxes_batch.hpp>
 #include <mos/render/render_box.hpp>

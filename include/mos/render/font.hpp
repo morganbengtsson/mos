@@ -5,7 +5,6 @@
 #include <memory>
 #include <mos/render/texture.hpp>
 #include <mos/render/character.hpp>
-#include <mos/render/render_types.hpp>
 
 namespace mos {
 
