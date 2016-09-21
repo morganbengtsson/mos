@@ -65,7 +65,6 @@ public:
   */
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
 
-  using SharedTexture = std::shared_ptr<mos::Texture>;
   using SharedMaterial = std::shared_ptr<mos::Material>;
   using SharedAudioBuffer = std::shared_ptr<mos::AudioBuffer>;
   using SharedAudioStream = std::shared_ptr<mos::AudioStream>;
@@ -142,17 +141,6 @@ public:
                  const bool compress = true,
                  const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
-  /**
-   * Loads a *.png file into A Texture2D object. Not cached.
-   *
-   * @param path
-   * @param mipmaps Use mipmaps or not.
-   * @return Shared pointer to Texture2D object.
-   */
-  SharedTexture
-  texture(const std::string &path, const bool mipmaps = true,
-          const bool compress = true,
-          const Texture::Wrap &wrap = Texture::Wrap::REPEAT) const;
 
   /**
    * Loads a *.ogg file into a Sound object, and caches it internally.

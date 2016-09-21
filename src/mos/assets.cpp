@@ -77,26 +77,6 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture> Assets::texture(const std::string &path,
-                                         const bool mipmaps,
-                                         const bool compress,
-                                         const Texture::Wrap &wrap) const {
-  std::vector<unsigned char> texels;
-  unsigned int width, height;
-
-  if (path.empty()) {
-    return std::shared_ptr<Texture>(nullptr);
-  }
-  auto error = lodepng::decode(texels, width, height, directory_ + path);
-  if (error) {
-    std::cout << "Decoder error: " << error << ": " << lodepng_error_text(error)
-              << std::endl;
-  }
-
-  return std::make_shared<Texture>(texels.begin(), texels.end(), width, height,
-                                   mipmaps, compress, wrap);
-}
-
 std::shared_ptr<Texture>
 Assets::texture_cached(const std::string &path,
                        const bool mipmaps,
@@ -104,7 +84,7 @@ Assets::texture_cached(const std::string &path,
                        const Texture::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, texture(path, mipmaps, compress, wrap)));
+      textures_.insert(TexturePair(path, Texture::load(directory_ + path, mipmaps, compress, wrap)));
     }
     return textures_.at(path);
   } else {
