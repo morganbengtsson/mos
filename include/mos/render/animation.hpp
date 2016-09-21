@@ -1,11 +1,11 @@
 #ifndef MOS_ANIMATION_HPP
 #define MOS_ANIMATION_HPP
 
+#include <initializer_list>
 #include <map>
 #include <memory>
-#include <utility>
-#include <initializer_list>
 #include <mos/render/mesh.hpp>
+#include <utility>
 
 namespace mos {
 
@@ -25,13 +25,16 @@ public:
    * @param keyframes Map of keys and shared Meshes
    */
   Animation(std::initializer_list<
-                std::pair<unsigned int, std::shared_ptr<Mesh const>>> keyframes,
+                std::pair<unsigned int, std::shared_ptr<Mesh const>>>
+                keyframes,
             const unsigned int frame_rate = 30);
 
   /**
    *@brief Destructor.
    */
   ~Animation();
+
+  Animation(const std::string &directory, const std::string &file);
 
   /**
    * @brief update, move the animation forward.

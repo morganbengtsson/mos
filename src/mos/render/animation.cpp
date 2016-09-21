@@ -1,9 +1,11 @@
 #include <glm/glm.hpp>
 #include <iostream>
+#include <json.hpp>
+#include <mos/util.hpp>
 #include <mos/render/animation.hpp>
 
 namespace mos {
-
+  using namespace nlohmann;
 Animation::Animation(
     const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
     const unsigned int frame_rate)
@@ -26,6 +28,16 @@ Animation::Animation(
       time_(0.0f), frame_rate_(frame_rate) {}
 
 Animation::~Animation() {}
+
+Animation::Animation(const std::string &directory, const std::string &file) {
+  auto doc = json::parse(mos::text(directory + "/" + file));
+  frame_rate_ = doc["frame_rate"];
+  for (auto &keyframe : doc["keyframes"]) {
+    auto key = keyframe["key"];
+    std::string mesh_file = keyframe["mesh"];
+    keyframes_.insert({key, Mesh::load(directory + "/" + mesh_file)});
+  }
+}
 
 unsigned int Animation::frame() const {
   return glm::floor(time_ * frame_rate_);
