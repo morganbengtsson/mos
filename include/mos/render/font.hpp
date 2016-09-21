@@ -3,17 +3,18 @@
 
 #include <map>
 #include <memory>
-#include <mos/render/texture.hpp>
 #include <mos/render/character.hpp>
+#include <mos/render/texture.hpp>
 
 namespace mos {
 
 class Font {
 public:
   using CharMap = std::map<char, Character>;
-  Font(const CharMap &characters, const SharedTexture &texture, const float height,
-       const float ascender, const float descender);
-  Font(const std::string &path);
+  Font(const CharMap &characters, const SharedTexture &texture,
+       const float height, const float ascender, const float descender);
+  Font(const std::string &directory,
+       const std::string &file);
   ~Font();
   SharedTexture texture;
   CharMap characters;
