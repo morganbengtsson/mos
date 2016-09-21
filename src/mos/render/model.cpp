@@ -1,4 +1,5 @@
 #include <mos/render/model.hpp>
+#include <mos/util.hpp>
 
 namespace mos {
 

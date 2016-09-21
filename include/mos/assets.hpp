@@ -21,7 +21,7 @@ namespace mos {
  * and sound streams.
  * Caches most things internally, so nothing is loaded twice.
  */
-class Assets {
+class Assets final {
 public:
   /**
    * @brief Container for meshes.
@@ -85,7 +85,11 @@ public:
    * @param assets
    */
   Assets(const Assets &assets) = delete; // Not copyable.
-  virtual ~Assets();
+
+  /**
+   * @brief Destructor
+   */
+  ~Assets();
 
   /**
    * @brief Loads a full Model from a *.model file.
