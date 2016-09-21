@@ -112,16 +112,6 @@ public:
    SharedMaterial material_cached(const std::string &path);
 
   /**
-   *
-   * Loads  a *.material file into a Material object. Not cached.
-   *
-   * @brief material
-   * @param path
-   * @return Shared pointer to a Material object.
-   */
-  SharedMaterial material(const std::string &path) const;
-
-  /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
    *
    * @param path
@@ -149,31 +139,6 @@ public:
    * @return Shared pointer to Sound object.
    */
   SharedAudioBuffer audio_buffer_cached(const std::string &path);
-
-  /**
-   * Loads an *. ogg file into a Sound object. Not cached.
-   *
-   * @param path
-   * @return Shared pointer to Sound object.
-   */
-  SharedAudioBuffer audio_buffer(const std::string &path) const;
-
-  /**
-   * Loads an *.ogg file into a Stream object. Not cached, since it is streamed.
-   *
-   * @brief stream
-   * @param path
-   * @return
-   */
-  SharedAudioStream audio_stream(const std::string &path) const;
-
-  /**
-   * @brief Load font file in ngl format.
-   * @param ngl_path
-
-   * @return
-   */
-  Font font(const std::string &path);
 
   /**
     * @brief Remove all unused assets.

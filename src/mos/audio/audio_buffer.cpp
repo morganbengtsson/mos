@@ -1,10 +1,33 @@
 #include <stdexcept>
 #include <mos/audio/audio_buffer.hpp>
+#include <stb_vorbis.h>
+#include <fstream>
 
 namespace mos {
 std::atomic_uint AudioBuffer::current_id_;
 
 AudioBuffer::~AudioBuffer() {}
+
+SharedAudioBuffer AudioBuffer::load(const std::string &path) {
+  int channels;
+  int length;
+  int sample_rate;
+  short *decoded;
+
+  std::ifstream file(path, std::ios::binary);
+  if (!file.good()) {
+    throw std::runtime_error(path + " does not exist.");
+  }
+  std::vector<unsigned char> data;
+
+  unsigned char c;
+  while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
+    data.push_back(c);
+  }
+  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
+                                    &sample_rate, &decoded);
+  return std::make_shared<AudioBuffer>(decoded, decoded + length, channels, sample_rate);
+}
 
 AudioBuffer::Samples::const_iterator AudioBuffer::begin() const {
   return samples_.begin();

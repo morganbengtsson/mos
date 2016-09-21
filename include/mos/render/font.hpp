@@ -13,6 +13,7 @@ public:
   using CharMap = std::map<char, Character>;
   Font(const CharMap &characters, const SharedTexture &texture, const float height,
        const float ascender, const float descender);
+  Font(const std::string &path);
   ~Font();
   SharedTexture texture;
   CharMap characters;

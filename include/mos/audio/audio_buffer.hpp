@@ -4,13 +4,15 @@
 #include <atomic>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace mos {
-
+class AudioBuffer;
+using SharedAudioBuffer = std::shared_ptr<AudioBuffer>;
 /**
  * Audio 16bit integer buffer. In memory.
  */
-class AudioBuffer final{
+class AudioBuffer final {
   friend class AudioSystem;
 
 public:
@@ -42,6 +44,7 @@ public:
 
   virtual ~AudioBuffer();
 
+  static SharedAudioBuffer load(const std::string &path);
   /**
    * @brief begin iterator for samples
    * @return

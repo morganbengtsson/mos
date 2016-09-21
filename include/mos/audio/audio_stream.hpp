@@ -4,22 +4,23 @@
 #include <array>
 #include <string>
 #include <atomic>
-
 #include <stb_vorbis.h>
+#include <memory>
 
 namespace mos {
+  class AudioStream;
+  using SharedAudioStream = std::shared_ptr<AudioStream>;
 
 /**
  * @brief The Stream class, for audio streaming from file.
  */
-class AudioStream final{
+class AudioStream final {
 public:
   /**
    * @brief Stream constructor.
    * @param file_name
    */
   explicit AudioStream(const std::string &path);
-
   ~AudioStream();
 
   /**

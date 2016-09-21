@@ -92,99 +92,22 @@ Assets::texture_cached(const std::string &path,
   }
 }
 
-std::shared_ptr<AudioBuffer>
-Assets::audio_buffer(const std::string &path) const {
-  int channels;
-  int length;
-  int sample_rate;
-  short *decoded;
 
-  std::ifstream file(directory_ + path, std::ios::binary);
-  if (!file.good()) {
-    throw std::runtime_error(directory_ + path + " does not exist.");
-  }
-  std::vector<unsigned char> data;
-
-  unsigned char c;
-  while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
-    data.push_back(c);
-  }
-  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
-                                    &sample_rate, &decoded);
-  return std::make_shared<AudioBuffer>(
-      AudioBuffer(decoded, decoded + length, channels, sample_rate));
-}
-
-std::shared_ptr<AudioStream> Assets::audio_stream(const string &path) const {
-  return std::make_shared<AudioStream>(directory_ + path);
-}
-
-Font Assets::font(const string &path) {
-  auto doc = json::parse(text(directory_ + path));
-
-  std::map<char, Character> characters;
-  for (auto & c : doc["chars"]){
-    Character character;
-    character.offset_x = c["offset_x"];
-    character.offset_y = c["offset_y"];
-    character.advance = c["advance"];
-    character.rect_w = c["rect_w"];
-    std::string id = c["id"];
-    character.id = id[0];
-    character.rect_x = c["rect_x"];
-    character.rect_y = c["rect_y"];
-    character.rect_h = c["rect_h"];
-    characters.insert(std::pair<char, Character>(character.id, character));
-  }
-  float height = doc["metrics"]["height"];
-  float ascender = doc["metrics"]["ascender"];
-  float descender = doc["metrics"]["descender"];
-  std::string texture_name = doc["texture"]["file"];
-  auto texture = texture_cached(texture_name);
-  return Font(characters, texture, height, ascender, descender);
-}
 
 std::shared_ptr<AudioBuffer>
 Assets::audio_buffer_cached(const std::string &path) {
   if (sounds_.find(path) == sounds_.end()) {
-    sounds_.insert(AudioBufferPair(path, audio_buffer(path)));
+    sounds_.insert(AudioBufferPair(path, AudioBuffer::load(directory_ + path)));
     return sounds_.at(path);
   } else {
     return sounds_.at(path);
   }
-}
-
-std::shared_ptr<Material> Assets::material(const std::string &path) const {
-  glm::vec3 ambient;
-  glm::vec3 diffuse(1.0f, 1.0f, 0.0f);
-  glm::vec3 specular;
-  float opacity, specular_exponent;
-
-  if (path.empty()) {
-    return std::make_shared<Material>(ambient, diffuse, specular, opacity,
-                                      specular_exponent);
-  }
-
-  if (path.substr(path.find_last_of(".") + 1) == "material") {
-    std::ifstream is(directory_ + path, std::ios::binary);
-
-    is.read((char *)&ambient, sizeof(glm::vec3));
-    is.read((char *)&diffuse, sizeof(glm::vec3));
-    is.read((char *)&specular, sizeof(glm::vec3));
-    is.read((char *)&opacity, sizeof(float));
-    is.read((char *)&specular_exponent, sizeof(float));
-  } else {
-    throw std::runtime_error(path.substr(path.find_last_of(".")) +
-                             " file format is not supported.");
-  }
-  return std::make_shared<Material>(ambient, diffuse, specular, opacity,
-                                    specular_exponent);
 }
 
 std::shared_ptr<Material> Assets::material_cached(const std::string &path) {
   if (materials_.find(path) == materials_.end()) {
 
-    materials_.insert(MaterialPair(path, material(path)));
+    materials_.insert(MaterialPair(path, Material::load(directory_ + path)));
     return materials_.at(path);
   } else {
     return materials_.at(path);

@@ -3,8 +3,11 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <memory>
 
 namespace mos {
+  class Material;
+  using SharedMaterial = std::shared_ptr<Material>;
 
 /**
  * @brief The Material class
@@ -29,6 +32,8 @@ public:
                     const float opacity = 1.0f,
                     const float specular_exponent = 0.0f);
   virtual ~Material();
+
+  static SharedMaterial load(const std::string &path);
 
   /**
    * @brief ambient color.
