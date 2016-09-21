@@ -60,7 +60,10 @@ public:
    */
   virtual ~Texture();
 
-  static SharedTexture load(const std::string &path);
+  static SharedTexture load(const std::string &path,
+                            const bool mipmaps = true,
+                            const bool compress = true,
+                            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
   /**
    * @brief begin iterator
