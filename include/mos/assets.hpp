@@ -66,7 +66,6 @@ public:
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
 
   using SharedTexture = std::shared_ptr<mos::Texture>;
-  using SharedMesh = std::shared_ptr<mos::Mesh>;
   using SharedMaterial = std::shared_ptr<mos::Material>;
   using SharedAudioBuffer = std::shared_ptr<mos::AudioBuffer>;
   using SharedAudioStream = std::shared_ptr<mos::AudioStream>;
@@ -130,14 +129,6 @@ public:
    * @return Shared pointer to Mesh object.
    */
   SharedMesh mesh_cached(const std::string &path);
-
-  /**
-   * Loads a *.obj or *.mesh file into a mesh object. Not cached.
-   *
-   * @param path
-   * @return Shared pointer to Mesh object
-   */
-  SharedMesh mesh(const std::string &path) const;
 
   /**
    * Loads a *.png file into a Texture2D object, and caches it internally.

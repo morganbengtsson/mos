@@ -70,41 +70,9 @@ Animation Assets::animation(const string &path) {
   return animation;
 }
 
-std::shared_ptr<Mesh> Assets::mesh(const std::string &path) const {
-  if (path.empty()) {
-    return std::make_shared<Mesh>(Mesh());
-  } else {
-    if (path.substr(path.find_last_of(".") + 1) == "mesh") {
-      std::ifstream is(directory_ + path, std::ios::binary);
-      if (!is.good()) {
-        throw std::runtime_error(directory_ + path + " does not exist.");
-      }
-      int num_vertices;
-      int num_indices;
-      is.read((char *)&num_vertices, sizeof(int));
-      is.read((char *)&num_indices, sizeof(int));
-
-      auto vertices = std::vector<mos::Vertex>(num_vertices);
-      auto elements = std::vector<int>(num_indices);
-
-      if (vertices.size() > 0) {
-        is.read((char *)&vertices[0], vertices.size() * sizeof(Vertex));
-      }
-
-      if (elements.size() > 0) {
-        is.read((char *)&elements[0], elements.size() * sizeof(int));
-      }
-      return std::make_shared<Mesh>(Mesh(vertices.begin(), vertices.end(),
-                                         elements.begin(), elements.end()));
-    } else {
-      throw std::runtime_error("File extension not supported.");
-    }
-  }
-}
-
 std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
   if (meshes_.find(path) == meshes_.end()) {
-    meshes_.insert(MeshPair(path, mesh(path)));
+    meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
   }
   return meshes_.at(path);
 }
