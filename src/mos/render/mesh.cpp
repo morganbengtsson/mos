@@ -9,10 +9,13 @@ std::atomic_uint Mesh::current_id;
 
 Mesh::Mesh(std::initializer_list<Vertex> vertices,
            std::initializer_list<int> elements)
-    : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
+  : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
-Mesh::Mesh() : valid_(false) { id_ = current_id++; }
+Mesh::Mesh(const std::string &path) {
+}
+
+Mesh::Mesh() : valid_(false), id_(current_id++) {}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(),

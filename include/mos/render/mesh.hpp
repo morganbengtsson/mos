@@ -8,7 +8,6 @@
 #include <memory>
 #include <mos/render/vertex.hpp>
 
-
 namespace mos {
   class Mesh;
   using SharedMesh = std::shared_ptr<Mesh>;
@@ -45,9 +44,7 @@ public:
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te elements_begin, Te elements_end)
       : valid_(false), vertices_(vertices_begin, vertices_end),
-        elements_(elements_begin, elements_end) {
-    id_ = current_id++;
-  }
+        elements_(elements_begin, elements_end), id_(current_id++) {}
 
   /**
    * @brief Mesh constructor
@@ -56,6 +53,12 @@ public:
    */
   Mesh(std::initializer_list<Vertex> vertices,
        std::initializer_list<int> elements);
+
+  /**
+   * @brief Mesh constructor from file.
+   * @param path
+   */
+  Mesh(const std::string &path);
 
   /**
    * @brief Mesh
@@ -67,6 +70,8 @@ public:
    * @param mesh
    */
   Mesh(const Mesh &mesh);
+
+
 
   /**
    * @brief ~Mesh destructor.
