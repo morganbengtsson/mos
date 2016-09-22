@@ -16,25 +16,15 @@ Texture::~Texture() {}
 
 SharedTexture Texture::load(const std::string &path, const bool mipmaps,
                             const bool compress, const Texture::Wrap &wrap) {
-  std::vector<unsigned char> pixels;
-  unsigned int width, height;
-
   if (path.empty()) {
     return SharedTexture();
   }
-  auto error = lodepng::decode(pixels, width, height, path);
-  if (error) {
-    std::string e = "Decoder error: " + std::to_string(error) + ": " +
-                    std::string(lodepng_error_text(error));
-    throw std::runtime_error(e);
-  }
-
   return std::make_shared<Texture>(path, mipmaps, compress, wrap);
 }
 
 Texture::Texture(const std::string &path, const bool mipmaps,
                  const bool compress, const Texture::Wrap &wrap)
-    : mipmaps(mipmaps), compress(compress), wrap(wrap) {
+    : mipmaps(mipmaps), compress(compress), wrap(wrap), id_(current_id_++) {
 
   std::vector<unsigned char> pixels;
   auto error = lodepng::decode(pixels, width_, height_, path);
