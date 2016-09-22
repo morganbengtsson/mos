@@ -6,6 +6,10 @@
 namespace mos {
 std::atomic_uint AudioBuffer::current_id_;
 
+AudioBuffer::AudioBuffer(const std::string &path) {
+
+}
+
 AudioBuffer::~AudioBuffer() {}
 
 SharedAudioBuffer AudioBuffer::load(const std::string &path) {

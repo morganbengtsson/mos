@@ -42,7 +42,13 @@ public:
   AudioBuffer(const unsigned int channels = 1u)
       : channels_(channels), id_(current_id_++) {}
 
-  virtual ~AudioBuffer();
+  /**
+   * @brief AudioBuffer construct from *.ogg file.
+   * @param path
+   */
+  AudioBuffer(const std::string &path);
+
+  ~AudioBuffer();
 
   static SharedAudioBuffer load(const std::string &path);
   /**
