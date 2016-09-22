@@ -49,7 +49,7 @@ Mesh::Mesh(const Mesh &mesh)
 Mesh::~Mesh() {}
 
 SharedMesh Mesh::load(const std::string &path) {
-  if (path.empty()) {
+  if (path.empty() || (path.back() == '/')) {
     return std::make_shared<Mesh>(Mesh());
   } else {
     return std::make_shared<Mesh>(path);

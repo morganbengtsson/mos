@@ -106,7 +106,6 @@ Assets::audio_buffer_cached(const std::string &path) {
 
 std::shared_ptr<Material> Assets::material_cached(const std::string &path) {
   if (materials_.find(path) == materials_.end()) {
-
     materials_.insert(MaterialPair(path, Material::load(directory_ + path)));
     return materials_.at(path);
   } else {

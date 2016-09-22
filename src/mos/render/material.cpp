@@ -25,7 +25,7 @@ namespace mos {
   Material::~Material() {}
 
   SharedMaterial Material::load(const std::string &path) {
-    if (path.empty()) {
+    if (path.empty() || (path.back() == '/')) {
       return std::make_shared<Material>();
     }
     return std::make_shared<Material>(path);
