@@ -6,9 +6,10 @@
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/texture.hpp>
+#include <json.hpp>
 
 namespace mos {
-
+  using namespace nlohmann;
 /**
  * A class that gathers what is needed to render an object. A Mesh, a Texture2D
  * , a Texture2D lightmap, a Texture2D normalmap and a Material.
@@ -17,9 +18,6 @@ namespace mos {
 class Model {
 public:
   using Models = std::vector<Model>;
-  using SharedMesh = std::shared_ptr<Mesh>;
-  using SharedTexture = std::shared_ptr<Texture>;
-  using SharedMaterial = std::shared_ptr<Material>;
 
   /**
    * @brief Model
@@ -43,6 +41,10 @@ public:
         const SharedTexture &lightmap = SharedTexture(),
         const SharedTexture &normalmap = SharedTexture(),
         const float lit = true);
+
+  Model(const std::string &directory, const std::string &file);
+
+  Model(const std::string &directory, const json &value);
 
   /**
    * @brief ~Model destructor
@@ -107,7 +109,7 @@ public:
   /**
    * @brief mesh
    */
-  std::shared_ptr<Mesh> mesh;
+  SharedMesh mesh;
 
   /**
    * @brief Collection of textures.

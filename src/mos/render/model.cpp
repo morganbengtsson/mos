@@ -5,11 +5,39 @@ namespace mos {
 
 Model::Model() {}
 
-Model::Model(const std::string &name, const std::shared_ptr<Mesh> &mesh,
+Model::Model(const std::string &directory, const std::string &file)
+    : Model(directory, json::parse(mos::text(directory + "/" + file))) {}
+
+Model::Model(const std::string &directory, const json &value) {
+  auto name = value.value("name", "");
+  auto mesh_name = value.value("mesh", "");
+  auto texture_name = value.value("texture", "");
+  auto lightmap_name =
+      value["lightmap"].is_null() ? "" : value.value("lightmap", "");
+  auto normalmap_name = value.value("normalmap", "");
+  std::string material_name = value.value("material", "");
+  bool recieves_light = value.value("receives_light", true);
+
+  auto t = jsonarray_to_mat4(value["transform"]);
+
+  name_ = name, mesh = Mesh::load(directory + "/" + mesh_name);
+  texture = Texture::load(directory + "/" + texture_name);
+  transform = t;
+  material = Material::load(directory + "/" + material_name);
+  lightmap = Texture::load(directory + "/" + lightmap_name);
+  normalmap = Texture::load(directory + "/" + normalmap_name);
+  lit = recieves_light;
+
+  for (auto &v : value["models"]) {
+    models.push_back(Model(directory, v));
+  }
+}
+
+Model::Model(const std::string &name, const SharedMesh &mesh,
              const SharedTexture &texture, const glm::mat4 &transform,
-             const std::shared_ptr<Material> &material,
+             const SharedMaterial &material,
              const SharedTexture &lightmap,
-             const std::shared_ptr<Texture> &normalmap,
+             const SharedTexture &normalmap,
              const float affected_by_light)
     : mesh(mesh), texture(texture), material(material), lightmap(lightmap),
       normalmap(normalmap), name_(name), transform(transform),

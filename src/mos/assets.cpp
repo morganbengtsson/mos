@@ -25,7 +25,7 @@ Assets::~Assets() {}
 
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
-  auto mesh = value.value("mesh", "");
+  auto mesh_name = value.value("mesh", "");
   auto texture_name = value.value("texture", "");
   auto lightmap_name =
       value["lightmap"].is_null() ? "" : value.value("lightmap", "");
@@ -36,12 +36,12 @@ Model Assets::model_value(const json &value) {
   auto transform = jsonarray_to_mat4(value["transform"]);
 
   auto created_model = mos::Model(
-      name, mesh_cached(mesh),
-      texture_cached(texture_name),
+      name, mesh(mesh_name),
+      texture(texture_name),
       transform,
-      material_cached(material_name),
-      texture_cached(lightmap_name),
-      texture_cached(normalmap_name),
+      material(material_name),
+      texture(lightmap_name),
+      texture(normalmap_name),
       recieves_light);
 
   for (auto &m : value["models"]) {
@@ -64,13 +64,13 @@ Animation Assets::animation(const string &path) {
   for (auto &keyframe : doc["keyframes"]) {
     auto key = keyframe["key"];
     auto mesh_path = keyframe["mesh"];
-    keyframes.insert({key, mesh_cached(mesh_path)});
+    keyframes.insert({key, mesh(mesh_path)});
   }
   Animation animation(keyframes, frame_rate);
   return animation;
 }
 
-std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
+std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (meshes_.find(path) == meshes_.end()) {
     meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
   }
@@ -78,7 +78,7 @@ std::shared_ptr<Mesh> Assets::mesh_cached(const std::string &path) {
 }
 
 std::shared_ptr<Texture>
-Assets::texture_cached(const std::string &path,
+Assets::texture(const std::string &path,
                        const bool mipmaps,
                        const bool compress,
                        const Texture::Wrap &wrap) {
@@ -95,7 +95,7 @@ Assets::texture_cached(const std::string &path,
 
 
 std::shared_ptr<AudioBuffer>
-Assets::audio_buffer_cached(const std::string &path) {
+Assets::audio_buffer(const std::string &path) {
   if (sounds_.find(path) == sounds_.end()) {
     sounds_.insert(AudioBufferPair(path, AudioBuffer::load(directory_ + path)));
     return sounds_.at(path);
@@ -104,7 +104,7 @@ Assets::audio_buffer_cached(const std::string &path) {
   }
 }
 
-std::shared_ptr<Material> Assets::material_cached(const std::string &path) {
+std::shared_ptr<Material> Assets::material(const std::string &path) {
   if (materials_.find(path) == materials_.end()) {
     materials_.insert(MaterialPair(path, Material::load(directory_ + path)));
     return materials_.at(path);

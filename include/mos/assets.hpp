@@ -109,7 +109,7 @@ public:
    * @param path
    * @return fShared pointer to Material object.
    */
-   SharedMaterial material_cached(const std::string &path);
+   SharedMaterial material(const std::string &path);
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
@@ -117,7 +117,7 @@ public:
    * @param path
    * @return Shared pointer to Mesh object.
    */
-  SharedMesh mesh_cached(const std::string &path);
+  SharedMesh mesh(const std::string &path);
 
   /**
    * Loads a *.png file into a Texture2D object, and caches it internally.
@@ -127,7 +127,7 @@ public:
    * @return Shared pointer to Texture2D object.
    */
   SharedTexture
-  texture_cached(const std::string &path, const bool mipmaps = true,
+  texture(const std::string &path, const bool mipmaps = true,
                  const bool compress = true,
                  const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
@@ -138,7 +138,7 @@ public:
    * @param path
    * @return Shared pointer to Sound object.
    */
-  SharedAudioBuffer audio_buffer_cached(const std::string &path);
+  SharedAudioBuffer audio_buffer(const std::string &path);
 
   /**
     * @brief Remove all unused assets.
