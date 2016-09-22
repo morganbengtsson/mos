@@ -8,6 +8,10 @@ namespace mos {
     : ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
+  Material::Material(const std::string &path) {
+
+  }
+
   Material::~Material() {}
 
   SharedMaterial Material::load(const std::string &path) {

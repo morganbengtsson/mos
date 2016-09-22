@@ -31,6 +31,13 @@ public:
                     const glm::vec3 &specular = glm::vec3(0.0f),
                     const float opacity = 1.0f,
                     const float specular_exponent = 0.0f);
+
+  /**
+   * @brief Material construction from *.mesh file.
+   * @param path
+   */
+  explicit Material(const std::string &path);
+
   virtual ~Material();
 
   static SharedMaterial load(const std::string &path);
