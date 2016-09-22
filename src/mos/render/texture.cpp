@@ -20,7 +20,7 @@ SharedTexture Texture::load(const std::string &path, const bool mipmaps,
   unsigned int width, height;
 
   if (path.empty()) {
-    return std::shared_ptr<Texture>(nullptr);
+    return SharedTexture();
   }
   auto error = lodepng::decode(pixels, width, height, path);
   if (error) {
@@ -29,19 +29,21 @@ SharedTexture Texture::load(const std::string &path, const bool mipmaps,
     throw std::runtime_error(e);
   }
 
-  return std::make_shared<Texture>(pixels.begin(), pixels.end(), width, height, mipmaps, compress,
-                                   wrap);
+  return std::make_shared<Texture>(path, mipmaps, compress, wrap);
 }
 
 Texture::Texture(const std::string &path, const bool mipmaps,
                  const bool compress, const Texture::Wrap &wrap)
     : mipmaps(mipmaps), compress(compress), wrap(wrap) {
-  auto error = lodepng::decode(texels_, width_, height_, path);
+
+  std::vector<unsigned char> pixels;
+  auto error = lodepng::decode(pixels, width_, height_, path);
   if (error) {
     std::string e = "Decoder error: " + std::to_string(error) + ": " +
                     std::string(lodepng_error_text(error));
     throw std::runtime_error(e);
   }
+  texels_.assign(pixels.begin(), pixels.end());
 }
 
 Texture::Texels::const_iterator Texture::begin() const {

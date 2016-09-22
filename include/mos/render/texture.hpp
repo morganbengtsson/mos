@@ -2,15 +2,15 @@
 #define MOS_TEXTURE2D_H
 
 #include <atomic>
-#include <glm/glm.hpp>
-#include <memory>
 #include <string>
 #include <vector>
+#include <memory>
+#include <glm/glm.hpp>
 
 namespace mos {
 
-class Texture;
-using SharedTexture = std::shared_ptr<Texture>;
+  class Texture;
+  using SharedTexture = std::shared_ptr<Texture>;
 
 /**
  * @brief The Texture2D class
@@ -19,7 +19,6 @@ using SharedTexture = std::shared_ptr<Texture>;
  */
 class Texture final {
   friend class RenderSystem;
-
 public:
   /**
    * @brief Container for pixel data. RGB(A)
@@ -43,8 +42,8 @@ public:
   Texture(T begin, T end, unsigned int width, unsigned int height,
           const bool mipmaps = true, const bool compress = true,
           const Wrap &wrap = Wrap::REPEAT)
-      : mipmaps(mipmaps), compress(compress), width_(width), height_(height),
-        id_(current_id_++), texels_(begin, end), wrap(wrap) {}
+      : mipmaps(mipmaps), compress(compress), width_(width), height_(height), id_(current_id_++),
+        texels_(begin, end), wrap(wrap) {}
 
   /**
    * @brief Texture2D constructor.
@@ -61,13 +60,16 @@ public:
    */
   virtual ~Texture();
 
-  static SharedTexture load(const std::string &path, const bool mipmaps = true,
+  static SharedTexture load(const std::string &path,
+                            const bool mipmaps = true,
                             const bool compress = true,
                             const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
-  Texture(const std::string &path, const bool mipmaps = true,
-          const bool compress = true,
-          const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+
+  Texture(const std::string &path,
+                            const bool mipmaps = true,
+                            const bool compress = true,
+                            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
   /**
    * @brief begin iterator
