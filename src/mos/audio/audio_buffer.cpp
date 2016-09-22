@@ -6,16 +6,7 @@
 namespace mos {
 std::atomic_uint AudioBuffer::current_id_;
 
-AudioBuffer::AudioBuffer(const std::string &path) {
-
-}
-
-AudioBuffer::~AudioBuffer() {}
-
-SharedAudioBuffer AudioBuffer::load(const std::string &path) {
-  int channels;
-  int length;
-  int sample_rate;
+AudioBuffer::AudioBuffer(const std::string &path) : id_(current_id_++) {
   short *decoded;
 
   std::ifstream file(path, std::ios::binary);
@@ -28,9 +19,15 @@ SharedAudioBuffer AudioBuffer::load(const std::string &path) {
   while (file.read(reinterpret_cast<char *>(&c), sizeof(c))) {
     data.push_back(c);
   }
-  length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
-                                    &sample_rate, &decoded);
-  return std::make_shared<AudioBuffer>(decoded, decoded + length, channels, sample_rate);
+  auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels_,
+                                    &sample_rate_, &decoded);
+  samples_.assign(decoded, decoded+length);
+}
+
+AudioBuffer::~AudioBuffer() {}
+
+SharedAudioBuffer AudioBuffer::load(const std::string &path) {
+  return std::make_shared<AudioBuffer>(path);
 }
 
 AudioBuffer::Samples::const_iterator AudioBuffer::begin() const {

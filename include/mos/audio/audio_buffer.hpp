@@ -113,8 +113,8 @@ private:
   static std::atomic_uint current_id_;
   unsigned int id_;
   Samples samples_;
-  unsigned int channels_;
-  unsigned int sample_rate_;
+  int channels_;
+  int sample_rate_;
   bool valid_;
 };
 }
