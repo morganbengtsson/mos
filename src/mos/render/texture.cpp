@@ -14,9 +14,8 @@ Texture::Texture(const unsigned int width, const unsigned int height,
 
 Texture::~Texture() {}
 
-SharedTexture Texture::load(const std::string &path,
-                            const bool mipmaps, const bool compress,
-                            const Texture::Wrap &wrap) {
+SharedTexture Texture::load(const std::string &path, const bool mipmaps,
+                            const bool compress, const Texture::Wrap &wrap) {
   std::vector<unsigned char> pixels;
   unsigned int width, height;
 
@@ -25,13 +24,24 @@ SharedTexture Texture::load(const std::string &path,
   }
   auto error = lodepng::decode(pixels, width, height, path);
   if (error) {
-    std::string e ="Decoder error: " + std::to_string(error) + ": "
-        + std::string(lodepng_error_text(error));
+    std::string e = "Decoder error: " + std::to_string(error) + ": " +
+                    std::string(lodepng_error_text(error));
     throw std::runtime_error(e);
   }
 
-  return std::make_shared<Texture>(pixels.begin(), pixels.end(), width, height,
-                                   mipmaps, compress, wrap);
+  return std::make_shared<Texture>(pixels.begin(), pixels.end(), width, height, mipmaps, compress,
+                                   wrap);
+}
+
+Texture::Texture(const std::string &path, const bool mipmaps,
+                 const bool compress, const Texture::Wrap &wrap)
+    : mipmaps(mipmaps), compress(compress), wrap(wrap) {
+  auto error = lodepng::decode(texels_, width_, height_, path);
+  if (error) {
+    std::string e = "Decoder error: " + std::to_string(error) + ": " +
+                    std::string(lodepng_error_text(error));
+    throw std::runtime_error(e);
+  }
 }
 
 Texture::Texels::const_iterator Texture::begin() const {
