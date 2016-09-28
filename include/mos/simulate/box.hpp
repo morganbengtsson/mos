@@ -87,12 +87,20 @@ public:
     position = min_max.first + extent;
   }
 
+  /**
+   * @brief Box
+   * @param extent
+   * @param position
+   */
   Box(const glm::vec3 &extent, const glm::vec3 &position);
 
   /**
    * @brief Box default constructor.
    */
   Box();
+
+  static Box create_from_min_max(const glm::vec3& min, const glm::vec3 &max);
+
 
   /**
    * @brief min

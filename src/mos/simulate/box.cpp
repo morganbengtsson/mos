@@ -19,6 +19,12 @@ Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
 
 Box::Box() {}
 
+Box Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max){
+  auto extent = (max - min) / 2.0f;
+  auto position = min + extent;
+  return Box(extent, position);
+}
+
 glm::vec3 Box::min() const { return position - extent; }
 glm::vec3 Box::max() const { return position + extent; }
 
