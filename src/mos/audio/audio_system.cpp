@@ -407,4 +407,22 @@ void AudioSystem::batch(const AudioBatch &batch) {
     stream_source(ss);
   }
 }
+
+void AudioSystem::clear() {
+  for (auto &thread : stream_threads) {
+    thread.second.running = false;
+    thread.second.thread.join();
+  }
+  for (auto source : sources_) {
+    alSourceStop(source.second);
+    alDeleteSources(1, &source.second);
+  }
+  for (auto buffer : buffers_) {
+    alDeleteBuffers(1, &buffer.second);
+  }
+  stream_threads.clear();
+  sources_.clear();
+  buffers_.clear();
+}
+
 }

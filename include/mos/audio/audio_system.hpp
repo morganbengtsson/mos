@@ -46,6 +46,11 @@ public:
    */
   void batch(const AudioBatch &batch);
 
+  /**
+   * @brief clear_buffers
+   */
+  void clear();
+
 private:
   /**
    * @brief Set listener data

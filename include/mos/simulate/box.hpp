@@ -13,6 +13,7 @@
 #include <glm/gtx/io.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <mos/render/vertex.hpp>
+#include <mos/simulate/ray.hpp>
 
 namespace mos {
 
@@ -113,7 +114,14 @@ public:
 
    * @return
    */
-  bool intersect(const glm::vec3 &origin, const glm::vec3 &direction) const;
+  bool intersects(const glm::vec3 &origin, const glm::vec3 &direction) const;
+
+  /**
+   * @brief intersect
+   * @param ray
+   * @return
+   */
+  bool intersects(const Ray &ray);
 
   /**
    * @brief intersects

@@ -22,7 +22,7 @@ Box::Box() {}
 glm::vec3 Box::min() const { return position - extent; }
 glm::vec3 Box::max() const { return position + extent; }
 
-bool Box::intersect(const glm::vec3 &origin, const glm::vec3 &direction) const {
+bool Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
   glm::vec3 bounds[2];
@@ -59,6 +59,10 @@ bool Box::intersect(const glm::vec3 &origin, const glm::vec3 &direction) const {
     tmax = tzmax;
 
   return true;
+}
+
+bool Box::intersects(const Ray &ray) {
+  return intersects(ray.origin, ray.direction());
 }
 
 std::experimental::optional<BoxIntersection>
