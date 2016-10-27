@@ -67,7 +67,7 @@ bool Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const 
   return true;
 }
 
-bool Box::intersects(const Ray &ray) {
+bool Box::intersects(const Ray &ray) const {
   return intersects(ray.origin, ray.direction());
 }
 
@@ -141,6 +141,16 @@ glm::vec3 Box::intersects_simple(const Box &other) {
     return intersection->normal * intersection->distance;
   } else {
     return glm::vec3(0.0f);
+  }
+}
+
+Box::OptionalIntersection Box::intersection(const Box &other) const{
+  auto intersection = intersects(other);
+  if (intersection){
+    return intersection->normal * intersection->distance;
+  }
+  else {
+    return OptionalIntersection();
   }
 }
 
