@@ -5,6 +5,11 @@ namespace mos {
 
 Model::Model() {}
 
+/*
+Model::Model(const mos::Model &model, const glm::mat4 transform) : Model(model), transform(transform) {
+}
+ */
+
 Model::Model(const std::string &directory, const std::string &file)
     : Model(directory, json::parse(mos::text(directory + "/" + file))) {}
 
@@ -90,4 +95,5 @@ void Model::multiply(const glm::vec3 &multiply) {
     model.multiply(multiply);
   }
 }
+
 }

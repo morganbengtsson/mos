@@ -1,14 +1,6 @@
 #include <mos/simulate/box.hpp>
-
-#include <utility>
-#include <stdexcept>
-#include <iostream>
-#include <cassert>
-#include <array>
-#include <glm/gtx/io.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/component_wise.hpp>
+#include <mos/render/model.hpp>
 
 namespace mos {
 
@@ -19,7 +11,26 @@ Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
 
 Box::Box() {}
 
-Box Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max){
+Box Box::create_from_model(const Model &model, const glm::mat4 &transform) {
+  std::vector<mos::Vertex> all_vertices;
+  std::function<void(const Model &, const glm::mat4 &, std::vector<Vertex> &)>
+      create = [&](const Model &m, const glm::mat4 &t, std::vector<Vertex> &v) {
+    if (m.mesh) {
+      for (auto &v0 : m.mesh->vertices()) {
+        auto vt0 = v0;
+        vt0.position = glm::vec3(t * m.transform * glm::vec4(v0.position, 1.0f));
+        v.push_back(vt0);
+      }
+    }
+    for (auto &child : m.models) {
+      create(child, m.transform, v);
+    }
+  };
+  create(model, transform, all_vertices);
+  return mos::Box(all_vertices.begin(), all_vertices.end(), glm::mat4(1.0f));
+}
+
+Box Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max) {
   auto extent = (max - min) / 2.0f;
   auto position = min + extent;
   return Box(extent, position);
@@ -144,12 +155,11 @@ glm::vec3 Box::intersects_simple(const Box &other) {
   }
 }
 
-Box::OptionalIntersection Box::intersection(const Box &other) const{
+Box::OptionalIntersection Box::intersection(const Box &other) const {
   auto intersection = intersects(other);
-  if (intersection){
+  if (intersection) {
     return intersection->normal * intersection->distance;
-  }
-  else {
+  } else {
     return OptionalIntersection();
   }
 }
@@ -170,4 +180,5 @@ glm::vec3 Box::size() const {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
                    glm::abs(max().z - min().z));
 }
+
 }

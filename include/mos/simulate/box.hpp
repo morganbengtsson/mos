@@ -14,6 +14,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <mos/render/vertex.hpp>
 #include <mos/simulate/ray.hpp>
+#include <mos/render/model.hpp>
 
 namespace mos {
 
@@ -101,6 +102,7 @@ public:
    */
   Box();
 
+  static Box create_from_model(const Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
   static Box create_from_min_max(const glm::vec3& min, const glm::vec3 &max);
 
 

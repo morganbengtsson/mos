@@ -46,6 +46,10 @@ public:
 
   Model(const std::string &directory, const json &value);
 
+  /*
+  Model(const mos::Model &model, const glm::mat4 transform);
+  */
+
   /**
    * @brief ~Model destructor
    */
