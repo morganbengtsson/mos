@@ -182,6 +182,14 @@ public:
   glm::vec3 size() const;
 
   /**
+   *
+   * @param os
+   * @param box
+   * @return
+   */
+  friend std::ostream &operator<<(std::ostream &os, const Box &box);
+
+  /**
    * @brief extent
    */
   glm::vec3 extent;

@@ -15,7 +15,7 @@ Box Box::create_from_model(const Model &model, const glm::mat4 &transform) {
   std::vector<mos::Vertex> all_vertices;
   std::function<void(const Model &, const glm::mat4 &, std::vector<Vertex> &)>
       create = [&](const Model &m, const glm::mat4 &t, std::vector<Vertex> &v) {
-    if (m.mesh) {
+    if (m.mesh != nullptr) {
       for (auto &v0 : m.mesh->vertices()) {
         auto vt0 = v0;
         vt0.position = glm::vec3(t * m.transform * glm::vec4(v0.position, 1.0f));
@@ -179,6 +179,10 @@ unsigned int Box::id() const {
 glm::vec3 Box::size() const {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
                    glm::abs(max().z - min().z));
+}
+std::ostream &operator<<(std::ostream &os, const Box &box) {
+  os << "Box object " << " id_: " << box.id_ << " extent: " << box.extent << " position: " << box.position << std::endl;
+  return os;
 }
 
 }
