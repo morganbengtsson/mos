@@ -28,6 +28,9 @@ std::vector<std::string> mos::split(const std::string & s, char delim) {
   split(s, delim, elems);
   return elems;
 }
+glm::vec3 mos::position(const glm::mat4 &mat) {
+  return glm::vec3(mat[3][0], mat[3][1], mat[3][2]);
+}
 
 glm::mat4 mos::jsonarray_to_mat4(const nlohmann::json &array) {
   glm::mat4 transform(1.0f);
