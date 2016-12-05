@@ -16,7 +16,7 @@ Texture::~Texture() {}
 
 SharedTexture Texture::load(const std::string &path, const bool mipmaps,
                             const bool compress, const Texture::Wrap &wrap) {
-  if (path.empty()) {
+  if (path.empty() || path.back() == '/') {
     return SharedTexture();
   }
   return std::make_shared<Texture>(path, mipmaps, compress, wrap);

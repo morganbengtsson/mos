@@ -13,7 +13,7 @@ Model::Model(const mos::Model &model, const glm::mat4 transform) : Model(model),
 Model::Model(const std::string &directory, const std::string &file)
     : Model(directory, json::parse(mos::text(directory + "/" + file))) {}
 
-Model::Model(const std::string &directory, const json &value) {
+Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), multiply_(1.0f){
   auto name = value.value("name", "");
   auto mesh_name = value.value("mesh", "");
   auto texture_name = value.value("texture", "");
@@ -36,6 +36,8 @@ Model::Model(const std::string &directory, const json &value) {
   for (auto &v : value["models"]) {
     models.push_back(Model(directory, v));
   }
+
+  //TODO Put in to other constructor?
 }
 
 Model::Model(const std::string &name, const SharedMesh &mesh,
