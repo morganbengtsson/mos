@@ -864,8 +864,8 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   int texture_unit = 0;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.texture ? textures_[model.texture->id()]
-                                             : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->texture ? textures_[model.material->texture->id()]
+                                             : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.texturemap, texture_unit);
   texture_unit++;
 
@@ -884,9 +884,9 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.normalmap
-                                   ? textures_[model.normalmap->id()]
-                                   : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normalmap
+                                   ? textures_[model.material->normalmap->id()]
+                                   : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
 

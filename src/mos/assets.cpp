@@ -102,7 +102,7 @@ Assets::audio_buffer(const std::string &path) {
 
 std::shared_ptr<Material> Assets::material(const std::string &path) {
   if (materials_.find(path) == materials_.end()) {
-    materials_.insert(MaterialPair(path, Material::load(directory_ + path)));
+    materials_.insert(MaterialPair(path, Material::load(directory_ , path)));
     return materials_.at(path);
   } else {
     return materials_.at(path);

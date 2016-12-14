@@ -11,7 +11,7 @@ namespace mos {
     : texture(texture), normalmap(normalmap), ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
-  Material::Material(const std::string &path) {
+  Material::Material(const std::string &directory, const std::string &path) {
     if (path.substr(path.find_last_of(".") + 1) == "material") {
       /*std::ifstream is(path, std::ios::binary);
       is.read((char *)&ambient, sizeof(glm::vec3));
@@ -20,9 +20,9 @@ namespace mos {
       is.read((char *)&opacity, sizeof(float));
       is.read((char *)&specular_exponent, sizeof(float));*/
 
-      auto value = json::parse(mos::text(path));
-      texture = Texture::load(value.value("texture", ""));
-      normalmap = Texture::load(value.value("normalmap", ""));
+      auto value = json::parse(mos::text(directory + '/' + path));
+      texture = Texture::load(directory + '/' + value.value("texture", ""));
+      normalmap = Texture::load(directory + '/' + value.value("normalmap", ""));
       ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
       diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
       specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
@@ -37,10 +37,10 @@ namespace mos {
 
   Material::~Material() {}
 
-  SharedMaterial Material::load(const std::string &path) {
+  SharedMaterial Material::load(const std::string &directory, const std::string &path) {
     if (path.empty() || (path.back() == '/')) {
       return std::make_shared<Material>();
     }
-    return std::make_shared<Material>(path);
+    return std::make_shared<Material>(directory, path);
   }
 }
