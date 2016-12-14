@@ -26,22 +26,18 @@ Assets::~Assets() {}
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = value.value("mesh", "");
-  auto texture_name = value.value("texture", "");
   auto lightmap_name =
       value["lightmap"].is_null() ? "" : value.value("lightmap", "");
-  auto normalmap_name = value.value("normalmap", "");
+
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
-
   auto transform = jsonarray_to_mat4(value["transform"]);
 
   auto created_model = mos::Model(
       name, mesh(mesh_name),
-      texture(texture_name),
       transform,
       material(material_name),
       texture(lightmap_name),
-      texture(normalmap_name),
       recieves_light);
 
   for (auto &m : value["models"]) {

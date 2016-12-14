@@ -489,9 +489,16 @@ void RenderSystem::load(const Model &model) {
     model.mesh->valid_ = true;
   }
 
-  if (model.texture) {
-    if (textures_.find(model.texture->id()) == textures_.end()) {
-      load(model.texture);
+  if (model.material) {
+    if (model.material->texture){
+      if (textures_.find(model.material->texture->id()) == textures_.end()) {
+        load(model.material->texture);
+      }
+    }
+    if (model.material->normalmap) {
+      if (textures_.find(model.material->normalmap->id()) == textures_.end()) {
+        load(model.material->normalmap);
+      }
     }
   }
 
@@ -501,11 +508,7 @@ void RenderSystem::load(const Model &model) {
     }
   }
 
-  if (model.normalmap) {
-    if (textures_.find(model.normalmap->id()) == textures_.end()) {
-      load(model.normalmap);
-    }
-  }
+
 }
 
 void RenderSystem::unload(const Model &model) {
@@ -527,9 +530,16 @@ void RenderSystem::unload(const Model &model) {
     }
   }
 
-  if (model.texture) {
-    if (textures_.find(model.texture->id()) != textures_.end()) {
-      unload(model.texture);
+  if (model.material) {
+    if (model.material->texture) {
+      if (textures_.find(model.material->texture->id()) != textures_.end()) {
+        unload(model.material->texture);
+      }
+    }
+    if (model.material->normalmap) {
+      if (textures_.find(model.material->normalmap->id()) != textures_.end()) {
+        unload(model.material->normalmap);
+      }
     }
   }
 
@@ -539,11 +549,7 @@ void RenderSystem::unload(const Model &model) {
     }
   }
 
-  if (model.normalmap) {
-    if (textures_.find(model.normalmap->id()) != textures_.end()) {
-      unload(model.normalmap);
-    }
-  }
+
 }
 
 void RenderSystem::load(const SharedTexture &texture) {

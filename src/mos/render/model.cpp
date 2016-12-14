@@ -26,11 +26,11 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
   auto t = jsonarray_to_mat4(value["transform"]);
 
   name_ = name, mesh = Mesh::load(directory + "/" + mesh_name);
-  texture = Texture::load(directory + "/" + texture_name);
+  //  texture = Texture::load(directory + "/" + texture_name);
   transform = t;
   material = Material::load(directory + "/" + material_name);
   lightmap = Texture::load(directory + "/" + lightmap_name);
-  normalmap = Texture::load(directory + "/" + normalmap_name);
+  //normalmap = Texture::load(directory + "/" + normalmap_name);
   lit = recieves_light;
 
   for (auto &v : value["models"]) {
@@ -41,13 +41,12 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
 }
 
 Model::Model(const std::string &name, const SharedMesh &mesh,
-             const SharedTexture &texture, const glm::mat4 &transform,
+             const glm::mat4 &transform,
              const SharedMaterial &material,
              const SharedTexture &lightmap,
-             const SharedTexture &normalmap,
              const float affected_by_light)
-    : mesh(mesh), texture(texture), material(material), lightmap(lightmap),
-      normalmap(normalmap), name_(name), transform(transform),
+    : mesh(mesh),  material(material), lightmap(lightmap),
+      name_(name), transform(transform),
       lit(affected_by_light), overlay_(0.0f), multiply_(1.0f) {}
 
 Model::~Model() {}

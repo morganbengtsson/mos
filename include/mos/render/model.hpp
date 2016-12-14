@@ -34,12 +34,12 @@ public:
    * @param normalmap
    */
   Model(const std::string &name, const SharedMesh &mesh,
-        const SharedTexture &texture = SharedTexture(),
+
         const glm::mat4 &transform = glm::mat4(1.0f),
         const SharedMaterial &material = std::make_shared<Material>(
-            Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
+            Material(nullptr, nullptr, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const SharedTexture &lightmap = SharedTexture(),
-        const SharedTexture &normalmap = SharedTexture(),
+
         const float lit = true);
 
   Model(const std::string &directory, const std::string &file);
@@ -115,20 +115,12 @@ public:
    */
   SharedMesh mesh;
 
-  /**
-   * @brief Collection of textures.
-   */
-  SharedTexture texture;
+
 
   /**
    * @brief Collection of lightmaps and how they are mixed.
    */
   SharedTexture lightmap;
-
-  /**
-   * @brief normalmap
-   */
-  SharedTexture normalmap;
 
   /**
    * @brief material

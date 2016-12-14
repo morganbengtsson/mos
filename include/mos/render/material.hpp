@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <memory>
+#include <mos/render/texture.hpp>
 
 namespace mos {
   class Material;
@@ -26,7 +27,9 @@ public:
    * @param opacity
    * @param specular_exponent
    */
-  explicit Material(const glm::vec3 &ambient = glm::vec3(1.0f),
+  explicit Material(const SharedTexture &texture = SharedTexture(),
+                    const SharedTexture &normalmap = SharedTexture(),
+                    const glm::vec3 &ambient = glm::vec3(1.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
                     const float opacity = 1.0f,
@@ -65,9 +68,19 @@ public:
   /**
    * @brief specular_exponent
    *
-   * In some equations also calld Ns.
+   * In some equations also called Ns.
    */
   float specular_exponent;
+
+  /**
+  * @brief Texture of the material.
+  */
+  SharedTexture texture;
+
+  /**
+  * @brief Normalmap for the material.
+  */
+  SharedTexture normalmap;
 };
 }
 
