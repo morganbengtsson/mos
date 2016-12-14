@@ -2,6 +2,7 @@
 #include <fstream>
 #include <json.hpp>
 #include <mos/util.hpp>
+#include <string>
 namespace mos {
   using namespace nlohmann;
   Material::Material(const SharedTexture &texture,
@@ -20,9 +21,17 @@ namespace mos {
       is.read((char *)&opacity, sizeof(float));
       is.read((char *)&specular_exponent, sizeof(float));*/
 
-      auto value = json::parse(mos::text(directory + '/' + path));
-      texture = Texture::load(directory + '/' + value.value("texture", ""));
-      normalmap = Texture::load(directory + '/' + value.value("normalmap", ""));
+      auto value = json::parse(mos::text(directory + path));
+      std::string t = "";
+      if (!value["texture"].is_null()){
+        t = value["texture"];
+      }
+      texture = Texture::load(directory + t);
+      std::string n = "";
+      if (!value["normalmap"].is_null()){
+        n = value["normalmap"];
+      }
+      normalmap = Texture::load(directory + n);
       ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
       diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
       specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
