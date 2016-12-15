@@ -43,11 +43,11 @@ Model Assets::model_value(const json &value) {
   for (auto &m : value["models"]) {
     created_model.models.push_back(model_value(m));
   }
-
   return created_model;
 }
 
 Model Assets::model(const std::string &path) {
+  std::cout << "Loading : " << path << std::endl;
   auto doc = json::parse(mos::text(directory_ + path));
   return model_value(doc);
 }
