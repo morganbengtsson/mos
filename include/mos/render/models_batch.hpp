@@ -9,6 +9,7 @@
 #include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
 #include <mos/render/render_target.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
 
@@ -51,6 +52,7 @@ public:
   glm::vec2 resolution;
   Shader shader;
   Draw draw;
+  std::shared_ptr<TextureCube> diffuse_map;
 };
 }
 
