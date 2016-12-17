@@ -38,6 +38,7 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
+    vec3 normal_w;
 };
 
 uniform bool receives_light;
@@ -45,6 +46,7 @@ uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform sampler2D texturemap;
 uniform sampler2D lightmap;
+uniform samplerCube diffusemap;
 uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
 //uniform FogExp fog_exp = FogExp(vec3(1.0, 1.0f, 1.0), 0.0);
@@ -104,6 +106,9 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
 
+    vec4 test = texture(diffusemap, vec3(fragment.normal_w));
+    diffuse = test * diffuse_color;
+
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 surface_to_view = normalize(fragment.position);
     vec3 reflection = reflect(normal, -surface_to_light);
@@ -121,7 +126,6 @@ void main() {
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
-
     }
     color.a = material.opacity + tex_color.a;
 
@@ -132,6 +136,8 @@ void main() {
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
     //color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
+
+    //color.rgb = texture(diffusemap, vec3(normal)).rgb;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS

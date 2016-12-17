@@ -35,6 +35,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_POINT_SMOOTH);
 
+  glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
@@ -400,6 +402,7 @@ void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
           glGetUniformLocation(program, "lightmap"),
           glGetUniformLocation(program, "normalmap"),
           glGetUniformLocation(program, "shadowmap"),
+          glGetUniformLocation(program, "diffusemap"),
           glGetUniformLocation(program, "material.ambient"),
           glGetUniformLocation(program, "material.diffuse"),
           glGetUniformLocation(program, "material.specular"),
@@ -508,7 +511,6 @@ void RenderSystem::load(const Model &model) {
     }
   }
 
-
 }
 
 void RenderSystem::unload(const Model &model) {
@@ -551,6 +553,21 @@ void RenderSystem::unload(const Model &model) {
 
 
 }
+
+void RenderSystem::load(const SharedTextureCube &texture) {
+  if (texture_cubes_.find(texture->id()) == texture_cubes_.end()) {
+    GLuint gl_id = create_texture_cube(texture);
+    texture_cubes_.insert({texture->id(), gl_id});
+  }
+}
+void RenderSystem::unload(const SharedTextureCube &texture) {
+  if (texture_cubes_.find(texture->id()) != textures_.end()) {
+    auto gl_id = texture_cubes_[texture->id()];
+    glDeleteTextures(1, &gl_id);
+    texture_cubes_.erase(texture->id());
+  }
+}
+
 
 void RenderSystem::load(const SharedTexture &texture) {
 #ifdef STREAM_TEXTURES
@@ -708,6 +725,58 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
   return id;
 }
 
+unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
+  GLuint id;
+  glGenTextures(1, &id);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+  GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+  //TODO: loop
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->positive_x.data());
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->negative_x.data());
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->positive_y.data());
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->negative_y.data());
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->positive_z.data());
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0,
+               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->negative_z.data());
+
+  if (texture->mipmaps) {
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+  };
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  return id;
+}
+
+
 unsigned int
 RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -836,20 +905,37 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
   glViewport(0, 0, batch.resolution.x, batch.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
-    render(model, glm::mat4(1.0f), batch.view, batch.projection,
-           batch.resolution, batch.light, batch.fog_exp, batch.fog_linear,
-           model.multiply(), batch.shader, batch.draw);
+    render(model,
+           glm::mat4(1.0f),
+           batch.view,
+           batch.projection,
+           batch.resolution,
+           batch.light,
+           batch.fog_exp,
+           batch.fog_linear,
+           model.multiply(),
+           batch.shader,
+           batch.draw,
+           batch.diffuse_map);
   }
 }
 
-void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
-                          const glm::mat4 view, const glm::mat4 projection,
-                          const glm::vec2 &resolution, const Light &light,
-                          const FogExp &fog_exp, const FogLinear &fog_linear,
+void RenderSystem::render(const Model &model,
+                          const glm::mat4 parent_transform,
+                          const glm::mat4 view,
+                          const glm::mat4 projection,
+                          const glm::vec2 &resolution,
+                          const Light &light,
+                          const FogExp &fog_exp,
+                          const FogLinear &fog_linear,
                           const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
-                          const ModelsBatch::Draw &draw) {
+                          const ModelsBatch::Draw &draw,
+                          const SharedTextureCube &diffuse_map) {
   glViewport(0, 0, resolution.x, resolution.y);
+  if (diffuse_map) {
+        load(diffuse_map);
+    }
   load(model);
 
   const glm::mat4 mv = view * parent_transform * model.transform;
@@ -889,6 +975,10 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
                                    : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;
+
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_CUBE_MAP, diffuse_map ? texture_cubes_[diffuse_map->id()] : empty_texture_); // TODO empty texture whit/black?
+  glUniform1i(uniforms.diffusemap, texture_unit);
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -962,8 +1052,18 @@ void RenderSystem::render(const Model &model, const glm::mat4 parent_transform,
     }
   }
   for (const auto &child : model.models) {
-    render(child, parent_transform * model.transform, view, projection,
-           resolution, light, fog_exp, fog_linear, multiply);
+    render(child,
+           parent_transform * model.transform,
+           view,
+           projection,
+           resolution,
+           light,
+           fog_exp,
+           fog_linear,
+           multiply,
+           shader,
+           draw,
+           diffuse_map);
   }
 }
 
@@ -1032,4 +1132,6 @@ void RenderSystem::batches(
           particles_batches.end(), boxes_batches.begin(), boxes_batches.end(),
           color, target);
 }
+
+
 }

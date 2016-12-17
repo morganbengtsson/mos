@@ -2,7 +2,7 @@
 #include <lodepng.h>
 
 namespace mos {
-std::atomic_uint Texture::current_id_;
+std::atomic_uint TextureCube::current_id_;
 
 TextureCube::TextureCube(const std::string &positive_x_path,
                          const std::string &negative_x_path,
@@ -20,7 +20,6 @@ TextureCube::TextureCube(const std::string &positive_x_path,
   decode(negative_y, negative_y_path);
   decode(positive_z, positive_z_path);
   decode(negative_z, negative_z_path);
-
 }
 
 void TextureCube::decode(Pixels &pixels, const std::string &path) {
@@ -30,6 +29,14 @@ void TextureCube::decode(Pixels &pixels, const std::string &path) {
         std::string(lodepng_error_text(error));
     throw std::runtime_error(e);
   }
-
+}
+unsigned int TextureCube::width() const {
+  return width_;
+}
+unsigned int TextureCube::height() const {
+  return height_;
+}
+unsigned int TextureCube::id() const {
+  return id_;
 }
 }

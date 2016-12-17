@@ -44,10 +44,10 @@ Model::Model(const std::string &name, const SharedMesh &mesh,
              const glm::mat4 &transform,
              const SharedMaterial &material,
              const SharedTexture &lightmap,
-             const float affected_by_light)
+             const bool lit)
     : mesh(mesh),  material(material), lightmap(lightmap),
       name_(name), transform(transform),
-      lit(affected_by_light), overlay_(0.0f), multiply_(1.0f) {}
+      lit(lit), overlay_(0.0f), multiply_(1.0f) {}
 
 Model::~Model() {}
 

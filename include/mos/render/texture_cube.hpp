@@ -6,7 +6,8 @@
 #include <string>
 
 namespace mos {
-
+  class TextureCube;
+  using SharedTextureCube = std::shared_ptr<TextureCube>;
 class TextureCube {
 public:
   using Pixels = std::vector<unsigned char>;
@@ -27,11 +28,14 @@ public:
   Pixels negative_z;
   const bool mipmaps;
   const bool compress;
+  unsigned int width() const;
+  unsigned int height() const;
+  unsigned int id() const;
 private:
   unsigned int width_;
   unsigned int height_;
   static std::atomic_uint current_id_;
-  unsigned int id_;
+  const unsigned int id_;
   void decode(Pixels &pixels, const std::string &path);
 };
 

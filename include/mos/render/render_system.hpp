@@ -9,6 +9,7 @@
 #include <array>
 #include <mos/render/models_batch.hpp>
 #include <mos/render/texture.hpp>
+#include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/quad.hpp>
 #include <mos/render/text.hpp>
@@ -71,14 +72,24 @@ public:
    */
   void unload(const SharedTexture &texture);
 
+  /**
+   * @brief Load a texture into renderer memory.
+   * @param texture The texture.
+   */
+  void load(const SharedTextureCube &texture);
 
+  /**
+   * @brief unload a texture from renderer memory.
+   * @param texture The texture.
+   */
+  void unload(const SharedTextureCube &texture);
 
   void batches(const std::initializer_list<ModelsBatch> &batches_init,
                const std::initializer_list<ParticlesBatch> &particles_batches,
                const std::initializer_list<BoxesBatch> &boxes_batches,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
-  template <class Tr, class Tp, class Tb>
+  template<class Tr, class Tp, class Tb>
   void batches(Tr begin, Tr end,
                Tp p_begin, Tp p_end,
                Tb b_begin, Tb b_end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
@@ -89,11 +100,11 @@ public:
       models_batch(*it);
     }
 
-    for (auto it = p_begin; it != p_end; it++){
+    for (auto it = p_begin; it != p_end; it++) {
       particles_batch(*it);
     }
 
-    for (auto it = b_begin; it != b_end; it++){
+    for (auto it = b_begin; it != b_end; it++) {
       boxes_batch(*it);
     }
   }
@@ -158,16 +169,18 @@ private:
    * @param program_name Either "text" or "standard"
    * @param light One dynamic light to use.
    */
-  void render(const Model &model, const glm::mat4 transform,
-              const glm::mat4 view, const glm::mat4 projection,
-              const glm::vec2 &resolution = glm::vec2(0.0f),
-              const Light &light = Light(),
-              const FogExp &fog_exp = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f),
-              const FogLinear &fog_linear = FogLinear(),
-              const glm::vec3 &multiply = glm::vec3(1.0f),
-              const ModelsBatch::Shader &shader = ModelsBatch::Shader::STANDARD,
-              const ModelsBatch::Draw &draw = ModelsBatch::Draw::TRIANGLES);
-
+  void render(const Model &model,
+              const glm::mat4 transform,
+              const glm::mat4 view,
+              const glm::mat4 projection,
+              const glm::vec2 &resolution,
+              const Light &light,
+              const FogExp &fog_exp,
+              const FogLinear &fog_linear,
+              const glm::vec3 &multiply,
+              const ModelsBatch::Shader &shader,
+              const ModelsBatch::Draw &draw,
+              const SharedTextureCube &diffuse_map);
 
   /**
    * @brief render_target
@@ -219,6 +232,7 @@ private:
     GLint lightmap;
     GLint normalmap;
     GLint shadowmap;
+    GLint diffusemap;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
@@ -250,23 +264,28 @@ private:
   void add_vertex_program(const ModelsBatch::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source,
-						  const std::string &vert_file_name = "",
-							const std::string &frag_file_name = "");
+                          const std::string &vert_file_name = "",
+                          const std::string &frag_file_name = "");
 
   void add_particle_program(const std::string name, const std::string vs_source,
                             const std::string fs_source, const std::string &vs_file = "",
-	  const std::string &fs_file = "");
+                            const std::string &fs_file = "");
 
   unsigned int create_shader(const std::string &source,
                              const unsigned int type);
   bool check_shader(const unsigned int shader, const std::string &name = "");
+
   bool check_program(const unsigned int program);
+
   unsigned int create_texture(const SharedTexture &texture);
+
+  unsigned int create_texture_cube(const SharedTextureCube &texture);
+
   unsigned int
   create_texture_and_pbo(const SharedTexture &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source, const std::string &vs_file,
-	  const std::string &fs_file);
+                       const std::string &fs_file);
 
   void create_depth_program();
 
@@ -279,6 +298,7 @@ private:
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
   std::unordered_map<unsigned int, GLuint> textures_;
+  std::unordered_map<unsigned int, GLuint> texture_cubes_;
   std::unordered_map<unsigned int, GLuint> array_buffers_;
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;

@@ -5,6 +5,7 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
+    vec3 normal_w;
 };
 
 struct Light {
@@ -34,6 +35,7 @@ void main()
     fragment.uv = uv;
     fragment.lightmap_uv = lightmap_uv;
     fragment.position = (model_view * vec4(position, 1.0)).xyz;
+    fragment.normal_w = normal;
     fragment.normal = normal_matrix * normal;
     gl_Position = model_view_projection * vec4(position, 1.0);
 }
