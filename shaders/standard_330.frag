@@ -72,11 +72,11 @@ float fog_linear(
 vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
     vec3 r = direction;
     vec2 tc;
-    tc.y = r.y;
-    r.y = 0.0;
+    tc.y = r.z;
+    r.z = 0.0;
     tc.x = normalize(r).x * 0.5;
 
-    float s = sign(r.z) * 0.5;
+    float s = sign(r.y) * 0.5;
 
     tc.s = 0.75 - s * (0.5 - tc.s);
     tc.t = 0.5 + 0.5 * tc.t;
