@@ -397,6 +397,7 @@ void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
           glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
           glGetUniformLocation(program, "normal_matrix"),
+          glGetUniformLocation(program, "normal_matrix_world"),
           glGetUniformLocation(program, "depth_bias_model_view_projection"),
           glGetUniformLocation(program, "texturemap"),
           glGetUniformLocation(program, "lightmap"),
@@ -993,6 +994,9 @@ void RenderSystem::render(const Model &model,
 
   const glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
+
+  const glm::mat3 normal_matrix_world = glm::inverseTranspose(glm::mat3(model.transform));
+  glUniformMatrix3fv(uniforms.normal_matrix_world, 1, GL_FALSE, &normal_matrix_world[0][0]);
 
   if (model.material) {
     glUniform3fv(uniforms.material_ambient_color, 1,

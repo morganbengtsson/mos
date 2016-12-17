@@ -227,6 +227,7 @@ private:
     GLint mvp;
     GLint mv;
     GLint normal_matrix;
+    GLint normal_matrix_world;
     GLint depth_bias_mvp;
     GLint texturemap;
     GLint lightmap;
