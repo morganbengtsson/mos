@@ -44,13 +44,11 @@ struct Fragment {
 uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
+uniform Light light;
+uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
 uniform sampler2D texturemap;
 uniform sampler2D lightmap;
 uniform samplerCube diffusemap;
-uniform Light light;
-uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
-//uniform FogExp fog_exp = FogExp(vec3(1.0, 1.0f, 1.0), 0.0);
-//uniform FogLinear fog_linear = FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
