@@ -224,6 +224,7 @@ private:
    */
   class VertexProgramData {
   public:
+    //TODO make all const
     VertexProgramData(){};
     VertexProgramData(const GLuint program);
     GLuint program;
