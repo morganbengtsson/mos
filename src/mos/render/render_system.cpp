@@ -902,8 +902,8 @@ void RenderSystem::render(const Model &model,
                           const SharedTextureCube &diffuse_map) {
   glViewport(0, 0, resolution.x, resolution.y);
   if (diffuse_map) {
-        load(diffuse_map);
-    }
+    load(diffuse_map);
+  }
   load(model);
 
   const glm::mat4 mv = view * parent_transform * model.transform;
