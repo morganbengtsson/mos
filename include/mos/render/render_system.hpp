@@ -222,7 +222,10 @@ private:
   /**
    * @brief The VertexProgramData struct, uniforms for the standard shader.
    */
-  struct VertexProgramData {
+  class VertexProgramData {
+  public:
+    VertexProgramData(){};
+    VertexProgramData(const GLuint program);
     GLuint program;
     GLint mvp;
     GLint mv;
