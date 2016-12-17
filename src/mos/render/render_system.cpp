@@ -391,40 +391,7 @@ void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
   check_program(program);
 
   vertex_programs_.insert(VertexProgramPair(
-      shader,
-      VertexProgramData{
-          program,
-          glGetUniformLocation(program, "model_view_projection"),
-          glGetUniformLocation(program, "model_view"),
-          glGetUniformLocation(program, "normal_matrix"),
-          glGetUniformLocation(program, "normal_matrix_world"),
-          glGetUniformLocation(program, "depth_bias_model_view_projection"),
-          glGetUniformLocation(program, "texturemap"),
-          glGetUniformLocation(program, "lightmap"),
-          glGetUniformLocation(program, "normalmap"),
-          glGetUniformLocation(program, "shadowmap"),
-          glGetUniformLocation(program, "diffusemap"),
-          glGetUniformLocation(program, "material.ambient"),
-          glGetUniformLocation(program, "material.diffuse"),
-          glGetUniformLocation(program, "material.specular"),
-          glGetUniformLocation(program, "material.specular_exponent"),
-          glGetUniformLocation(program, "material.opacity"),
-          glGetUniformLocation(program, "light.position"),
-          glGetUniformLocation(program, "light.diffuse"),
-          glGetUniformLocation(program, "light.specular"),
-          glGetUniformLocation(program, "light.ambient"),
-          glGetUniformLocation(program, "light.view"),
-          glGetUniformLocation(program, "light.projection"),
-          glGetUniformLocation(program, "receives_light"),
-          glGetUniformLocation(program, "resolution"),
-          glGetUniformLocation(program, "fogs.linear.color"),
-          glGetUniformLocation(program, "fogs.linear.near"),
-          glGetUniformLocation(program, "fogs.linear.far"),
-          glGetUniformLocation(program, "fogs.exp.color"),
-          glGetUniformLocation(program, "fogs.exp.density"),
-          glGetUniformLocation(program, "time"),
-          glGetUniformLocation(program, "overlay"),
-          glGetUniformLocation(program, "multiply")}));
+      shader, VertexProgramData(program)));
 }
 
 void RenderSystem::load(const Model &model) {
@@ -1136,5 +1103,38 @@ void RenderSystem::batches(
           color, target);
 }
 
-
+RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
+    program(program),
+    mvp(glGetUniformLocation(program, "model_view_projection")),
+    mv(glGetUniformLocation(program, "model_view")),
+    normal_matrix(glGetUniformLocation(program, "normal_matrix")),
+    normal_matrix_world(glGetUniformLocation(program, "normal_matrix_world")),
+    depth_bias_mvp(glGetUniformLocation(program, "depth_bias_model_view_projection")),
+    texturemap(glGetUniformLocation(program, "texturemap")),
+    lightmap(glGetUniformLocation(program, "lightmap")),
+    normalmap(glGetUniformLocation(program, "normalmap")),
+    shadowmap(glGetUniformLocation(program, "shadowmap")),
+    diffusemap(glGetUniformLocation(program, "diffusemap")),
+    material_ambient_color(glGetUniformLocation(program, "material.ambient")),
+    material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
+    material_specular_color(glGetUniformLocation(program, "material.specular")),
+    material_specular_exponent(glGetUniformLocation(program, "material.specular_exponent")),
+    opacity(glGetUniformLocation(program, "material.opacity")),
+    light_position(glGetUniformLocation(program, "light.position")),
+    light_diffuse_color(glGetUniformLocation(program, "light.diffuse")),
+    light_specular_color(glGetUniformLocation(program, "light.specular")),
+    light_ambient_color(glGetUniformLocation(program, "light.ambient")),
+    light_view(glGetUniformLocation(program, "light.view")),
+    light_projection(glGetUniformLocation(program, "light.projection")),
+    receives_light(glGetUniformLocation(program, "receives_light")),
+    resolution(glGetUniformLocation(program, "resolution")),
+    fogs_linear_color(glGetUniformLocation(program, "fogs.linear.color")),
+    fogs_linear_near(glGetUniformLocation(program, "fogs.linear.near")),
+    fogs_linear_far(glGetUniformLocation(program, "fogs.linear.far")),
+    fogs_exp_color(glGetUniformLocation(program, "fogs.exp.color")),
+    fogs_exp_density(glGetUniformLocation(program, "fogs.exp.density")),
+    time(glGetUniformLocation(program, "time")),
+    overlay(glGetUniformLocation(program, "overlay")),
+    multiply(glGetUniformLocation(program, "multiply")) {
+}
 }
