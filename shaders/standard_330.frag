@@ -35,10 +35,10 @@ struct Fogs {
 struct Fragment {
     vec3 position;
     vec3 normal;
+    vec3 normal_world;
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
-    vec3 normal_w;
 };
 
 uniform bool receives_light;
@@ -96,7 +96,7 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
 
-    vec4 test = texture(diffusemap, vec3(fragment.normal_w));
+    vec4 test = texture(diffusemap, vec3(fragment.normal_world));
     diffuse = test * diffuse_color;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
