@@ -884,7 +884,8 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
            model.multiply(),
            batch.shader,
            batch.draw,
-           batch.diffuse_map);
+           batch.diffuse_map,
+           batch.specular_map);
   }
 }
 
@@ -899,10 +900,14 @@ void RenderSystem::render(const Model &model,
                           const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
                           const ModelsBatch::Draw &draw,
-                          const SharedTexture &diffuse_map) {
+                          const SharedTexture &diffuse_map,
+                          const SharedTexture &specular_map) {
   glViewport(0, 0, resolution.x, resolution.y);
   if (diffuse_map) {
     load(diffuse_map);
+  }
+  if (specular_map){
+    load(specular_map);
   }
   load(model);
 
@@ -947,6 +952,11 @@ void RenderSystem::render(const Model &model,
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, diffuse_map ? textures_[diffuse_map->id()] : empty_texture_); // TODO empty texture white/black?
   glUniform1i(uniforms.diffusemap, texture_unit);
+  texture_unit++;
+
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_2D, specular_map ? textures_[specular_map->id()] : empty_texture_); // TODO empty texture white/black?
+  glUniform1i(uniforms.specularmap, texture_unit);
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -1033,7 +1043,8 @@ void RenderSystem::render(const Model &model,
            multiply,
            shader,
            draw,
-           diffuse_map);
+           diffuse_map,
+           specular_map);
   }
 }
 
@@ -1115,6 +1126,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     normalmap(glGetUniformLocation(program, "normalmap")),
     shadowmap(glGetUniformLocation(program, "shadowmap")),
     diffusemap(glGetUniformLocation(program, "diffusemap")),
+    specularmap(glGetUniformLocation(program, "specularmap")),
     material_ambient_color(glGetUniformLocation(program, "material.ambient")),
     material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
     material_specular_color(glGetUniformLocation(program, "material.specular")),

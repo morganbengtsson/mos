@@ -180,7 +180,8 @@ private:
               const glm::vec3 &multiply,
               const ModelsBatch::Shader &shader,
               const ModelsBatch::Draw &draw,
-              const SharedTexture &diffuse_map);
+              const SharedTexture &diffuse_map,
+              const SharedTexture &specular_map);
 
   /**
    * @brief render_target
@@ -238,6 +239,7 @@ private:
     GLint normalmap;
     GLint shadowmap;
     GLint diffusemap;
+    GLint specularmap;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;

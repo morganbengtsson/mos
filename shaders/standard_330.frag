@@ -49,6 +49,7 @@ uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(ve
 uniform sampler2D texturemap;
 uniform sampler2D lightmap;
 uniform sampler2D diffusemap;
+uniform sampler2D specularmap;
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
@@ -113,7 +114,11 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
 
-    vec4 test = textureEquirectangular(diffusemap, vec3(fragment.normal_world));
+    vec4 test = textureEquirectangular(diffusemap, vec3(fragment.normal_world)) / 2.0;
+
+    vec3 u = normalize(fragment.position);
+    vec3 r = reflect(u, normalize(fragment.normal));
+    test += textureEquirectangular(specularmap, r) / 2.0;
     diffuse = test * diffuse_color;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
