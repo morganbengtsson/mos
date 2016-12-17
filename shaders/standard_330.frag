@@ -71,14 +71,6 @@ float fog_linear(
   return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
 }
 
-float linear_depth(float value)
-{
-  float n = 1.0; // camera z near
-  float f = 60.0; // camera z far
-  float z = value;
-  return (2.0 * n) / (f + n - z * (f - n));
-}
-
 void main() {
 
     vec4 static_light = texture(lightmap, fragment.lightmap_uv);
