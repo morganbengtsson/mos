@@ -899,7 +899,7 @@ void RenderSystem::render(const Model &model,
                           const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
                           const ModelsBatch::Draw &draw,
-                          const SharedTextureCube &diffuse_map) {
+                          const SharedTexture &diffuse_map) {
   glViewport(0, 0, resolution.x, resolution.y);
   if (diffuse_map) {
     load(diffuse_map);
@@ -945,7 +945,7 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_CUBE_MAP, diffuse_map ? texture_cubes_[diffuse_map->id()] : empty_texture_); // TODO empty texture whit/black?
+  glBindTexture(GL_TEXTURE_2D, diffuse_map ? textures_[diffuse_map->id()] : empty_texture_); // TODO empty texture white/black?
   glUniform1i(uniforms.diffusemap, texture_unit);
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);

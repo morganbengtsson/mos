@@ -180,7 +180,7 @@ private:
               const glm::vec3 &multiply,
               const ModelsBatch::Shader &shader,
               const ModelsBatch::Draw &draw,
-              const SharedTextureCube &diffuse_map);
+              const SharedTexture &diffuse_map);
 
   /**
    * @brief render_target

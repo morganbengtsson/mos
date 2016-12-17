@@ -48,7 +48,7 @@ uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
 uniform sampler2D texturemap;
 uniform sampler2D lightmap;
-uniform samplerCube diffusemap;
+uniform sampler2D diffusemap;
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
@@ -67,6 +67,23 @@ float fog_linear(
   const float end
 ) {
   return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
+}
+
+vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
+    vec3 r = direction;
+    vec2 tc;
+    tc.y = r.y;
+    r.y = 0.0;
+    tc.x = normalize(r).x * 0.5;
+
+    float s = sign(r.z) * 0.5;
+
+    tc.s = 0.75 - s * (0.5 - tc.s);
+    tc.t = 0.5 + 0.5 * tc.t;
+
+    // Sample from scaled and biased texture coordinate
+    color = texture(tex, tc);
+    return color;
 }
 
 void main() {
@@ -96,7 +113,7 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
 
-    vec4 test = texture(diffusemap, vec3(fragment.normal_world));
+    vec4 test = textureEquirectangular(diffusemap, vec3(fragment.normal_world));
     diffuse = test * diffuse_color;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -121,6 +138,7 @@ void main() {
 
     //Multiply
     color.rgb = color.rgb * multiply;
+    color.rgb = test.rgb;
     //Fog
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));

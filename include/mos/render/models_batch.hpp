@@ -52,7 +52,7 @@ public:
   glm::vec2 resolution;
   Shader shader;
   Draw draw;
-  std::shared_ptr<TextureCube> diffuse_map;
+  std::shared_ptr<Texture> diffuse_map;
 };
 }
 
