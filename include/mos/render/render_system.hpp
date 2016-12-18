@@ -179,9 +179,7 @@ private:
               const FogLinear &fog_linear,
               const glm::vec3 &multiply,
               const ModelsBatch::Shader &shader,
-              const ModelsBatch::Draw &draw,
-              const SharedTexture &diffuse_map,
-              const SharedTexture &specular_map);
+              const ModelsBatch::Draw &draw);
 
   /**
    * @brief render_target

@@ -21,6 +21,9 @@ class Material {
 public:
   /**
    * @brief Material
+   * @param normalmap
+   * @param diffusemap
+   * @param specularmap
    * @param ambient
    * @param diffuse
    * @param specular
@@ -29,9 +32,17 @@ public:
    */
   explicit Material(const SharedTexture &texture = SharedTexture(),
                     const SharedTexture &normalmap = SharedTexture(),
+                    const SharedTexture &diffusemap = SharedTexture(),
+                    const SharedTexture &specularmap = SharedTexture(),
                     const glm::vec3 &ambient = glm::vec3(1.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
+                    const float opacity = 1.0f,
+                    const float specular_exponent = 0.0f);
+
+  explicit Material(const glm::vec3 &ambient,
+                    const glm::vec3 &diffuse,
+                    const glm::vec3 &specular,
                     const float opacity = 1.0f,
                     const float specular_exponent = 0.0f);
 
@@ -81,6 +92,17 @@ public:
   * @brief Normalmap for the material.
   */
   SharedTexture normalmap;
+
+  /**
+  * @brief Diffusemap for the material.
+  */
+  SharedTexture diffusemap;
+
+  /**
+  * @brief Specularmap for the material.
+  */
+  SharedTexture specularmap;
+
 };
 }
 

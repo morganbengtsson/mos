@@ -36,7 +36,7 @@ public:
   Model(const std::string &name, const SharedMesh &mesh,
         const glm::mat4 &transform = glm::mat4(1.0f),
         const SharedMaterial &material = std::make_shared<Material>(
-            Material(nullptr, nullptr, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
+            Material(nullptr, nullptr, nullptr, nullptr, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const SharedTexture &lightmap = SharedTexture(),
         const bool lit = true);
 
@@ -112,7 +112,6 @@ public:
    * @brief mesh
    */
   SharedMesh mesh;
-
 
 
   /**

@@ -461,9 +461,19 @@ void RenderSystem::load(const Model &model) {
   }
 
   if (model.material) {
-    if (model.material->texture){
+    if (model.material->texture) {
       if (textures_.find(model.material->texture->id()) == textures_.end()) {
         load(model.material->texture);
+      }
+    }
+    if (model.material->diffusemap) {
+      if (textures_.find(model.material->diffusemap->id()) == textures_.end()) {
+        load(model.material->diffusemap);
+      }
+    }
+    if (model.material->specularmap) {
+      if (textures_.find(model.material->specularmap->id()) == textures_.end()) {
+        load(model.material->specularmap);
       }
     }
     if (model.material->normalmap) {
@@ -883,9 +893,7 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
            batch.fog_linear,
            model.multiply(),
            batch.shader,
-           batch.draw,
-           batch.diffuse_map,
-           batch.specular_map);
+           batch.draw);
   }
 }
 
@@ -899,16 +907,9 @@ void RenderSystem::render(const Model &model,
                           const FogLinear &fog_linear,
                           const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
-                          const ModelsBatch::Draw &draw,
-                          const SharedTexture &diffuse_map,
-                          const SharedTexture &specular_map) {
+                          const ModelsBatch::Draw &draw) {
   glViewport(0, 0, resolution.x, resolution.y);
-  if (diffuse_map) {
-    load(diffuse_map);
-  }
-  if (specular_map){
-    load(specular_map);
-  }
+
   load(model);
 
   const glm::mat4 mv = view * parent_transform * model.transform;
@@ -950,13 +951,18 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, diffuse_map ? textures_[diffuse_map->id()] : empty_texture_); // TODO empty texture white/black?
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffusemap
+                                                ? textures_[model.material->diffusemap->id()]
+                                                : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.diffusemap, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, specular_map ? textures_[specular_map->id()] : empty_texture_); // TODO empty texture white/black?
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->specularmap
+                                                ? textures_[model.material->specularmap->id()]
+                                                : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.specularmap, texture_unit);
+  texture_unit++;
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -1042,9 +1048,7 @@ void RenderSystem::render(const Model &model,
            fog_linear,
            multiply,
            shader,
-           draw,
-           diffuse_map,
-           specular_map);
+           draw);
   }
 }
 

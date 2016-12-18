@@ -5,9 +5,9 @@ namespace mos {
 
 Button::Button(const Text &text, const State &s)
     : text_(text), padding_(text_.height() / 4.0f),
-      light_material_(std::make_shared<Material>(nullptr, nullptr,
+      light_material_(std::make_shared<Material>(
           glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 0.8f)),
-      dark_material_(std::make_shared<Material>(nullptr, nullptr,
+      dark_material_(std::make_shared<Material>(
           glm::vec3(0.0f), glm::vec3(0.01f), glm::vec3(0.0f), 0.8f)) {
   mos::Vertex v1(0.0f, -1.0f, 0.0f);
   mos::Vertex v2(0.0f, 0.0f, 0.0f);
