@@ -96,6 +96,7 @@ void main() {
     vec4 tex_normal = texture(normalmap, fragment.uv);
     vec3 n = tex_normal.xyz * 2.0 - 1.0;
     normal = normalize(mix(normal, n, tex_normal.w));
+    normal = normalize(tex_normal.xyz);
 
     vec3 surface_to_light = normalize(light.position - fragment.position);
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
@@ -144,6 +145,7 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     color.rgb = test.rgb;
+    color.rgb = tex_normal.rgb;
     //Fog
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));

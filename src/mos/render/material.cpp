@@ -33,6 +33,7 @@ Material::Material(const std::string &directory, const std::string &path) {
       t = value["texture"];
     }
     texture = Texture::load(directory + t);
+
     std::string n = "";
     if (!value["normalmap"].is_null()) {
       n = value["normalmap"];
