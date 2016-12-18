@@ -22,36 +22,10 @@ public:
    */
   explicit Vertex(const glm::vec3 position = glm::vec3(0.0f),
                   const glm::vec3 normal = glm::vec3(0.0f),
+                  const glm::vec3 tangent = glm::vec3(0.0f),
                   const glm::vec2 uv = glm::vec2(0.0f),
                   const glm::vec2 uv_lightmap = glm::vec2(0.0f));
 
-
-  /**
-   * @brief Vertex copy constructor.
-   * @param vertex to copy.
-   */
-  /*
-  Vertex(const Vertex& vertex);*/
-
-  /**
-   * @brief Vertex constructor.
-   * @param position_x
-   * @param position_y
-   * @param position_z
-   * @param normal_x
-   * @param normal_y
-   * @param normal_z
-   * @param uv_x
-   * @param uv_y
-   * @param uv_lightmap_x
-   * @param uv_lightmap_y
-   */
-  explicit Vertex(const float position_x, const float position_y,
-                  const float position_z, const float normal_x = 0.0f,
-                  const float normal_y = 0.0f, const float normal_z = 0.0f,
-                  const float uv_x = 0.0f, const float uv_y = 0.0f,
-                  const float uv_lightmap_x = 0.0f,
-                  const float uv_lightmap_y = 0.0f);
   /**
    * @brief Destructor.
   */
@@ -108,6 +82,11 @@ public:
    * @brief normal
    */
   glm::vec3 normal;
+
+  /**
+   * @brief tangent
+   */
+  glm::vec3 tangent;
 
   /**
    * @brief Texture cordinate for color.
