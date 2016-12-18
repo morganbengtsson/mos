@@ -52,6 +52,7 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   if (intersects) {
     auto p = origin + direction * bary.z;
     auto n = glm::triangleNormal(v0_.position, v1_.position, v2_.position);
+    auto t = glm::normalize(v0_.position - v1_.position); // Is this correct?
 
     //Document this?
     auto a = bary.x / (bary.x + bary.y + bary.z);
@@ -65,7 +66,7 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     auto uv_l = a * v0_.uv_lightmap + b * v1_.uv_lightmap + c * v2_.uv_lightmap;
 
     //auto uv_l = bary.x * v0_.uv_lightmap + bary.y * v1_.uv_lightmap + bary.z * v2_.uv_lightmap;
-    auto v = Vertex(p, n, uv, uv_l);
+    auto v = Vertex(p, n, t, uv, uv_l);
     return std::experimental::optional<Vertex>(v);
   } else {
     return std::experimental::optional<Vertex>();

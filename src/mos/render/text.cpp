@@ -46,21 +46,21 @@ void Text::text(const std::string &text) {
 
         model_.mesh->add(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
-                   glm::vec3(0.0f), glm::vec2(u1, v2)));
+                   glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
         model_.mesh->add(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
-            glm::vec3(0.0f), glm::vec2(u2, v1)));
+            glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
         model_.mesh->add(Vertex(glm::vec3(index + offset_x, offset_y + line_index, 0.0f),
-                                glm::vec3(0.0f), glm::vec2(u1, v1)));
+                                glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
         model_.mesh->add(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
-                   glm::vec3(0.0f), glm::vec2(u1, v2)));
+                   glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
         model_.mesh->add(Vertex(glm::vec3(index + rect_w + offset_x,
                                           rect_h + offset_y + line_index, 0.0f),
-                                glm::vec3(0.0f), glm::vec2(u2, v2)));
+                                glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
         model_.mesh->add(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
-            glm::vec3(0.0f), glm::vec2(u2, v1)));
+            glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
         index += character.advance + spacing;
       }
       line_index += line_height;

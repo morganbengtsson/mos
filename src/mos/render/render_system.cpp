@@ -383,8 +383,9 @@ void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
 
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "normal");
-  glBindAttribLocation(program, 2, "uv");
-  glBindAttribLocation(program, 3, "uv_lightmap");
+  glBindAttribLocation(program, 2, "tangent");
+  glBindAttribLocation(program, 3, "uv");
+  glBindAttribLocation(program, 4, "uv_lightmap");
 
   std::cout << "Linking program" << std::endl;
   glLinkProgram(program);
@@ -422,14 +423,25 @@ void RenderSystem::load(const Model &model) {
       element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()));
+    // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+    // Normal
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
+
+    // Tangent
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
+
+    // UV
     glVertexAttribPointer(
-        2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 2 +
+        3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
+
+    // Lightmap UV
+    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
                                                          sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
@@ -438,6 +450,7 @@ void RenderSystem::load(const Model &model) {
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
     glBindVertexArray(0);
     vertex_arrays_.insert({model.mesh->id(), vertex_array});
   }
