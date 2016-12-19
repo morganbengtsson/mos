@@ -987,11 +987,8 @@ void RenderSystem::render(const Model &model,
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
-  const glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(mv));
+  const glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
-
-  const glm::mat3 normal_matrix_world = glm::inverseTranspose(glm::mat3(model.transform));
-  glUniformMatrix3fv(uniforms.normal_matrix_world, 1, GL_FALSE, &normal_matrix_world[0][0]);
 
   if (model.material) {
     glUniform3fv(uniforms.material_ambient_color, 1,
@@ -1138,7 +1135,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     m(glGetUniformLocation(program, "model")),
     v(glGetUniformLocation(program, "view")),
     normal_matrix(glGetUniformLocation(program, "normal_matrix")),
-    normal_matrix_world(glGetUniformLocation(program, "normal_matrix_world")),
     depth_bias_mvp(glGetUniformLocation(program, "depth_bias_model_view_projection")),
     texturemap(glGetUniformLocation(program, "texturemap")),
     lightmap(glGetUniformLocation(program, "lightmap")),
