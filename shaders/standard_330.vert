@@ -8,6 +8,7 @@ struct Fragment {
     vec3 shadow;
     vec3 eye_dir;
     vec3 light_dir;
+    mat3 tbn;
 };
 
 struct Light {
@@ -40,9 +41,13 @@ void main()
     vec3 N = normalize(vec3(model_view * vec4(normal, 0.0)));
     vec3 B = cross(T, N);
 
+    fragment.tbn = mat3(T,B,N);
+
+    //TODO: Light camera space
     vec3 L = light.position - P.xyz;
     fragment.light_dir = normalize(vec3(dot(L, T), dot(L, B), dot(L, N)));
 
+    //TODO: camera space
     V = -P.xyz;
     fragment.eye_dir = normalize(vec3(dot(V, T), dot(V, B), dot(V, N)));
 

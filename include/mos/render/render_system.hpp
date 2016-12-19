@@ -227,6 +227,8 @@ private:
     GLuint program;
     GLint mvp;
     GLint mv;
+    GLint m;
+    GLint v;
     GLint normal_matrix;
     GLint normal_matrix_world;
     GLint depth_bias_mvp;

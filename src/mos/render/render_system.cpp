@@ -975,6 +975,9 @@ void RenderSystem::render(const Model &model,
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms.v, 1, GL_FALSE, &camera.view[0][0]);
+  glUniformMatrix4fv(uniforms.m, 1, GL_FALSE, &model.transform[0][0]);
+
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -1129,6 +1132,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     program(program),
     mvp(glGetUniformLocation(program, "model_view_projection")),
     mv(glGetUniformLocation(program, "model_view")),
+    m(glGetUniformLocation(program, "model")),
+    v(glGetUniformLocation(program, "view")),
     normal_matrix(glGetUniformLocation(program, "normal_matrix")),
     normal_matrix_world(glGetUniformLocation(program, "normal_matrix_world")),
     depth_bias_mvp(glGetUniformLocation(program, "depth_bias_model_view_projection")),

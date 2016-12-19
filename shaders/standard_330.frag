@@ -41,6 +41,7 @@ struct Fragment {
     vec3 shadow;
     vec3 eye_dir;
     vec3 light_dir;
+    mat3 tbn;
 };
 
 uniform bool receives_light;
@@ -54,6 +55,8 @@ uniform sampler2D diffusemap;
 uniform sampler2D specularmap;
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
+uniform mat4 model;
+uniform mat4 view;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
@@ -99,11 +102,11 @@ void main() {
     vec3 L = normalize(fragment.light_dir);
     // Read the normal from the normal map and normalize it.
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
+    tex_normal = fragment.tbn * tex_normal;
 
-    normal = normalize(mix(vec3(0.0, 0.0, 1.0), tex_normal, texture(normalmap, fragment.uv).a));
+    normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
 
-    //vec3 surface_to_light = normalize(light.position - fragment.position);
-    vec3 surface_to_light = L;
+    vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
@@ -152,7 +155,7 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     color.rgb = diffuse.rgb;
-    //color.rgb = test.rgb;
+    color.rgb = diffuse_environment.rgb;
     //color.rgb = tex_normal.rgb;
 
     //Fog
