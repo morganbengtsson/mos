@@ -41,6 +41,7 @@ struct Fragment {
     vec3 shadow;
     vec3 eye_dir;
     vec3 light_dir;
+    vec3 view;
     mat3 tbn;
 };
 
@@ -56,6 +57,7 @@ uniform sampler2D specularmap;
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
 uniform mat4 model;
+uniform mat4 model_view;
 uniform mat4 view;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
@@ -104,7 +106,7 @@ void main() {
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = fragment.tbn * tex_normal;
 
-    //normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
+    normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
@@ -126,8 +128,8 @@ void main() {
     vec4 diffuse_environment = textureEquirectangular(diffusemap, normal) / 2.0;
 
     vec3 u = normalize(fragment.position);
-    vec3 r = reflect(u, normalize(normal));
-    diffuse_environment += textureEquirectangular(specularmap, r) / 2.0;
+    vec3 r = reflect(fragment.view, normalize(normal));
+    diffuse_environment = textureEquirectangular(specularmap, r);
     //diffuse = test * diffuse_color;
 
     //diffuse += test;

@@ -1008,6 +1008,9 @@ void RenderSystem::render(const Model &model,
     glUniform1fv(uniforms.opacity, 1, &opacity);
   }
 
+  // Camera in world space
+  glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));
+
   //Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(
@@ -1148,6 +1151,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     material_specular_color(glGetUniformLocation(program, "material.specular")),
     material_specular_exponent(glGetUniformLocation(program, "material.specular_exponent")),
     opacity(glGetUniformLocation(program, "material.opacity")),
+    camera_position(glGetUniformLocation(program, "camera.position")),
     light_position(glGetUniformLocation(program, "light.position")),
     light_diffuse_color(glGetUniformLocation(program, "light.diffuse")),
     light_specular_color(glGetUniformLocation(program, "light.specular")),

@@ -8,7 +8,12 @@ struct Fragment {
     vec3 shadow;
     vec3 eye_dir;
     vec3 light_dir;
+    vec3 view;
     mat3 tbn;
+};
+
+struct Camera {
+    vec3 position;
 };
 
 struct Light {
@@ -21,6 +26,7 @@ struct Light {
 };
 
 uniform Light light;
+uniform Camera camera;
 uniform mat4 depth_bias_model_view_projection;
 uniform mat4 model; // NOT SET!
 uniform mat4 model_view_projection;
@@ -49,6 +55,8 @@ void main()
     V = -P.xyz;
     fragment.eye_dir = normalize(vec3(dot(V, T), dot(V, B), dot(V, N)));
 
+
+
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
     fragment.uv = uv;
@@ -56,5 +64,8 @@ void main()
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normal_matrix_world * normal;
     fragment.normal_world = normal_matrix_world * normal;
+
+    fragment.view = normalize(camera.position - fragment.position);
+
     gl_Position = model_view_projection * vec4(position, 1.0);
 }

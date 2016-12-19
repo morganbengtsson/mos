@@ -243,6 +243,7 @@ private:
     GLint material_specular_color;
     GLint material_specular_exponent;
     GLint opacity;
+    GLint camera_position;
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
