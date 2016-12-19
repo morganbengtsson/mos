@@ -5,10 +5,13 @@ namespace mos {
   Camera::Camera() {
   }
 
-  Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
-               const glm::mat4 &projection, const glm::vec3 &up)
+  Camera::Camera(const glm::vec3 &position,
+                   const glm::vec3 &center,
+                   const glm::mat4 &projection,
+                   const glm::vec3 &up,
+                   const glm::vec2 &resolution)
     : projection(projection), view(glm::lookAt(position, center, up)), up_(up),
-      position_(position), center_(center) {}
+      position_(position), center_(center), resolution(resolution) {}
 
 glm::vec3 Camera::up() const { return up_; }
 
@@ -36,4 +39,8 @@ glm::vec3 Camera::direction() const {
 }
 
 void Camera::update_view() { view = glm::lookAt(position_, center_, up_); }
+
+float Camera::aspect_ratio() const {
+  return resolution.x / resolution.y;
+}
 }

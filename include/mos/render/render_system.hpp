@@ -171,9 +171,7 @@ private:
    */
   void render(const Model &model,
               const glm::mat4 transform,
-              const glm::mat4 view,
-              const glm::mat4 projection,
-              const glm::vec2 &resolution,
+              const Camera & camera,
               const Light &light,
               const FogExp &fog_exp,
               const FogLinear &fog_linear,

@@ -17,10 +17,13 @@ public:
    * @param center Where the camera is centered.
    * @param projection Projection matrix (ortho/perspective).
    * @param up Up direction.
+   * @param resolution Render resolution.
    */
-  Camera(const glm::vec3 &position, const glm::vec3 &center,
+  Camera(const glm::vec3 &position,
+         const glm::vec3 &center,
          const glm::mat4 &projection,
-         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
+         const glm::vec2 &resolution = glm::vec2(1280.0f, 720.0f));
 
   /**
    * @brief up
@@ -73,6 +76,16 @@ public:
    * @brief View matrix.
    */
   glm::mat4 view;
+
+  /**
+   * @brief Render resolution.
+   */
+  glm::vec2 resolution;
+
+  /**
+   * @brief Aspect ratio dependent on resolution.
+   */
+  float aspect_ratio() const;
 
 private:
   void update_view();

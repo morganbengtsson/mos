@@ -893,14 +893,12 @@ void RenderSystem::boxes_batch(const BoxesBatch &batch) {
 }
 
 void RenderSystem::models_batch(const ModelsBatch &batch) {
-  glViewport(0, 0, batch.resolution.x, batch.resolution.y);
+  glViewport(0, 0, batch.camera.resolution.x, batch.camera.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
     render(model,
            glm::mat4(1.0f),
-           batch.view,
-           batch.projection,
-           batch.resolution,
+           batch.camera,
            batch.light,
            batch.fog_exp,
            batch.fog_linear,
@@ -912,21 +910,19 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
 
 void RenderSystem::render(const Model &model,
                           const glm::mat4 parent_transform,
-                          const glm::mat4 view,
-                          const glm::mat4 projection,
-                          const glm::vec2 &resolution,
+                          const Camera &camera,
                           const Light &light,
                           const FogExp &fog_exp,
                           const FogLinear &fog_linear,
                           const glm::vec3 &multiply,
                           const ModelsBatch::Shader &shader,
                           const ModelsBatch::Draw &draw) {
-  glViewport(0, 0, resolution.x, resolution.y);
+  glViewport(0, 0, camera.resolution.x, camera.resolution.y);
 
   load(model);
 
-  const glm::mat4 mv = view * parent_transform * model.transform;
-  const glm::mat4 mvp = projection * mv;
+  const glm::mat4 mv = camera.view * parent_transform * model.transform;
+  const glm::mat4 mvp = camera.projection * mv;
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -1012,7 +1008,7 @@ void RenderSystem::render(const Model &model,
   // Transform light position to eye space.
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(
-                   view * glm::vec4(light.position, 1.0f))));
+                   camera.view * glm::vec4(light.position, 1.0f))));
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
@@ -1022,7 +1018,7 @@ void RenderSystem::render(const Model &model,
                      &light.projection[0][0]);
 
   glUniform1i(uniforms.receives_light, model.lit);
-  glUniform2fv(uniforms.resolution, 1, glm::value_ptr(resolution));
+  glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
   glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog_exp.color));
   glUniform1fv(uniforms.fogs_exp_density, 1, &fog_exp.density);
@@ -1053,9 +1049,7 @@ void RenderSystem::render(const Model &model,
   for (const auto &child : model.models) {
     render(child,
            parent_transform * model.transform,
-           view,
-           projection,
-           resolution,
+           camera,
            light,
            fog_exp,
            fog_linear,
