@@ -104,7 +104,7 @@ void main() {
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = fragment.tbn * tex_normal;
 
-    normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
+    //normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
