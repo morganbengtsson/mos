@@ -37,12 +37,9 @@ layout(location = 4) in vec2 lightmap_uv;
 out Fragment fragment;
 void main()
 {
-    vec4 P = model * vec4(position, 1.0);
-    vec3 V = P.xyz;
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(normal, 0.0)));
     vec3 B = cross(T, N);
-
     fragment.tbn = mat3(T,B,N);
 
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
@@ -51,8 +48,6 @@ void main()
     fragment.lightmap_uv = lightmap_uv;
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normal_matrix * normal;
-
     fragment.camera_to_surface = normalize(camera.position - fragment.position);
-
     gl_Position = model_view_projection * vec4(position, 1.0);
 }
