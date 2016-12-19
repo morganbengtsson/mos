@@ -2,7 +2,7 @@
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
 layout(location = 0) in vec3 position;
-layout(location = 3) in vec2 uv;
+layout(location = 2) in vec2 uv;
 
 out vec2 v_position;
 out vec2 v_uv;

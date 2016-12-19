@@ -11,6 +11,7 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
              transform),
       font_(font), spacing(spacing) {
   model_.lit = false;
+  model_.material = std::make_shared<Material>();
   model_.material->opacity = 0.0f;
   model_.material->texture = font.texture;
   text(txt);

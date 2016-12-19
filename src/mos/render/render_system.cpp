@@ -405,6 +405,7 @@ void RenderSystem::load(const Model &model) {
       unsigned int array_buffer;
       glGenBuffers(1, &array_buffer);
       glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+      std::cout << "size " << sizeof(Vertex) << std::endl;
       glBufferData(GL_ARRAY_BUFFER,
                    model.mesh->vertices_size() * sizeof(Vertex),
                    model.mesh->vertices_data(), GL_STATIC_DRAW);

@@ -104,8 +104,9 @@ void main() {
     //normal = tex_normal;
     //normal = vec3(0, 0, 1);
 
+    normal = normalize(fragment.normal);
     vec3 surface_to_light = normalize(light.position - fragment.position);
-    surface_to_light = L;
+    //vec3 surface_to_light = L;
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
@@ -122,11 +123,11 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 test = textureEquirectangular(diffusemap, vec3(fragment.normal_world)) / 2.0;
+    vec4 diffuse_environment = textureEquirectangular(diffusemap, vec3(fragment.normal_world)) / 2.0;
 
     vec3 u = normalize(fragment.position);
     vec3 r = reflect(u, normalize(fragment.normal));
-    test += textureEquirectangular(specularmap, r) / 2.0;
+    diffuse_environment += textureEquirectangular(specularmap, r) / 2.0;
     //diffuse = test * diffuse_color;
 
     //diffuse += test;
@@ -154,6 +155,7 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     color.rgb = diffuse.rgb;
+    color.rgb = normal;
     //color.rgb = test.rgb;
     //color.rgb = tex_normal.rgb;
 
