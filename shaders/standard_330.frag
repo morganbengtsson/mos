@@ -39,6 +39,8 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
+    vec3 eye_dir;
+    vec3 light_dir;
 };
 
 uniform bool receives_light;
@@ -93,12 +95,17 @@ void main() {
 
     vec3 normal = normalize(fragment.normal);
 
-    vec4 tex_normal = texture(normalmap, fragment.uv);
-    vec3 n = tex_normal.xyz * 2.0 - 1.0;
-    normal = normalize(mix(normal, n, tex_normal.w));
-    normal = normalize(tex_normal.xyz);
+    vec3 V = normalize(fragment.eye_dir);
+    vec3 L = normalize(fragment.light_dir);
+    // Read the normal from the normal map and normalize it.
+    vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
+
+    //normal = normalize(mix(normal, n, tex_normal.w));
+    normal = tex_normal;
+    //normal = vec3(0, 0, 1);
 
     vec3 surface_to_light = normalize(light.position - fragment.position);
+    surface_to_light = L;
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
@@ -113,14 +120,16 @@ void main() {
     float b = 1.0;
     float att = 1.0 / (1.0 + a*dist + b*dist*dist);
 
-    vec4 diffuse = vec4(att * diffuse_contribution* light.diffuse, 1.0) * diffuse_color;
+    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec4 test = textureEquirectangular(diffusemap, vec3(fragment.normal_world)) / 2.0;
 
     vec3 u = normalize(fragment.position);
     vec3 r = reflect(u, normalize(fragment.normal));
     test += textureEquirectangular(specularmap, r) / 2.0;
-    diffuse = test * diffuse_color;
+    //diffuse = test * diffuse_color;
+
+    //diffuse += test;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 surface_to_view = normalize(fragment.position);
@@ -144,8 +153,10 @@ void main() {
 
     //Multiply
     color.rgb = color.rgb * multiply;
-    color.rgb = test.rgb;
-    color.rgb = tex_normal.rgb;
+    color.rgb = diffuse.rgb;
+    //color.rgb = test.rgb;
+    //color.rgb = tex_normal.rgb;
+
     //Fog
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
