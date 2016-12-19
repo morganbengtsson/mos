@@ -38,7 +38,7 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
-    vec3 view;
+    vec3 camera_to_surface;
     mat3 tbn;
 };
 
@@ -123,12 +123,14 @@ void main() {
     vec4 diffuse_environment = textureEquirectangular(diffusemap, normal) / 2.0;
 
     vec3 u = normalize(fragment.position);
-    vec3 r = reflect(fragment.view, normalize(normal));
+    vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     diffuse_environment = textureEquirectangular(specularmap, r);
     //diffuse = test * diffuse_color;
 
     //diffuse += test;
 
+
+    //TODO: fix
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 surface_to_view = normalize(fragment.position);
     vec3 reflection = reflect(normal, -surface_to_light);

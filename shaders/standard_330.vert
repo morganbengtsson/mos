@@ -5,7 +5,7 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
-    vec3 view;
+    vec3 camera_to_surface;
     mat3 tbn;
 };
 
@@ -52,7 +52,7 @@ void main()
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normal_matrix * normal;
 
-    fragment.view = normalize(camera.position - fragment.position);
+    fragment.camera_to_surface = normalize(camera.position - fragment.position);
 
     gl_Position = model_view_projection * vec4(position, 1.0);
 }
