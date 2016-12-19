@@ -2,7 +2,6 @@
 struct Fragment {
     vec3 position;
     vec3 normal;
-    vec3 normal_world;
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
