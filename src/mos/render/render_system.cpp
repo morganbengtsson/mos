@@ -1008,10 +1008,10 @@ void RenderSystem::render(const Model &model,
     glUniform1fv(uniforms.opacity, 1, &opacity);
   }
 
-  // Transform light position to eye space.
+  //Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(
-                   camera.view * glm::vec4(light.position, 1.0f))));
+                   glm::vec4(light.position, 1.0f))));
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));

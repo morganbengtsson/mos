@@ -123,10 +123,10 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureEquirectangular(diffusemap, vec3(fragment.normal_world)) / 2.0;
+    vec4 diffuse_environment = textureEquirectangular(diffusemap, normal) / 2.0;
 
     vec3 u = normalize(fragment.position);
-    vec3 r = reflect(u, normalize(fragment.normal));
+    vec3 r = reflect(u, normalize(normal));
     diffuse_environment += textureEquirectangular(specularmap, r) / 2.0;
     //diffuse = test * diffuse_color;
 
