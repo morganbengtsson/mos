@@ -101,10 +101,7 @@ void main() {
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
 
     normal = normalize(mix(vec3(0.0, 0.0, 1.0), tex_normal, texture(normalmap, fragment.uv).a));
-    //normal = tex_normal;
-    //normal = vec3(0, 0, 1);
 
-    normal = normalize(fragment.normal);
     vec3 surface_to_light = normalize(light.position - fragment.position);
     //vec3 surface_to_light = L;
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
@@ -155,7 +152,6 @@ void main() {
     //Multiply
     color.rgb = color.rgb * multiply;
     color.rgb = diffuse.rgb;
-    color.rgb = normal;
     //color.rgb = test.rgb;
     //color.rgb = tex_normal.rgb;
 
