@@ -100,8 +100,8 @@ void main() {
     // Read the normal from the normal map and normalize it.
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
 
-    //normal = normalize(mix(normal, n, tex_normal.w));
-    normal = tex_normal;
+    normal = normalize(mix(vec3(0.0, 0.0, 1.0), tex_normal, texture(normalmap, fragment.uv).a));
+    //normal = tex_normal;
     //normal = vec3(0, 0, 1);
 
     vec3 surface_to_light = normalize(light.position - fragment.position);
