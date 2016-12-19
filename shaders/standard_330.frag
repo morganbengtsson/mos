@@ -39,8 +39,6 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
-    vec3 eye_dir;
-    vec3 light_dir;
     vec3 view;
     mat3 tbn;
 };
@@ -100,8 +98,6 @@ void main() {
 
     vec3 normal = normalize(fragment.normal);
 
-    vec3 V = normalize(fragment.eye_dir);
-    vec3 L = normalize(fragment.light_dir);
     // Read the normal from the normal map and normalize it.
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = fragment.tbn * tex_normal;

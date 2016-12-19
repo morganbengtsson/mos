@@ -6,8 +6,6 @@ struct Fragment {
     vec2 uv;
     vec2 lightmap_uv;
     vec3 shadow;
-    vec3 eye_dir;
-    vec3 light_dir;
     vec3 view;
     mat3 tbn;
 };
@@ -48,14 +46,6 @@ void main()
     vec3 B = cross(T, N);
 
     fragment.tbn = mat3(T,B,N);
-
-    vec3 L = light.position - P.xyz;
-    fragment.light_dir = normalize(vec3(dot(L, T), dot(L, B), dot(L, N)));
-
-    V = -P.xyz;
-    fragment.eye_dir = normalize(vec3(dot(V, T), dot(V, B), dot(V, N)));
-
-
 
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
