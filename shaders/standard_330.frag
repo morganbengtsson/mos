@@ -102,8 +102,8 @@ void main() {
 
     normal = normalize(mix(vec3(0.0, 0.0, 1.0), tex_normal, texture(normalmap, fragment.uv).a));
 
-    vec3 surface_to_light = normalize(light.position - fragment.position);
-    //vec3 surface_to_light = L;
+    //vec3 surface_to_light = normalize(light.position - fragment.position);
+    vec3 surface_to_light = L;
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
