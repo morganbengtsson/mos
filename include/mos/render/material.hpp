@@ -32,6 +32,7 @@ public:
    */
   explicit Material(const SharedTexture &diffuse_map = SharedTexture(),
                     const SharedTexture &normal_map = SharedTexture(),
+                    const SharedTexture &light_map = SharedTexture(),
                     const SharedTexture &diffuse_environment_map = SharedTexture(),
                     const SharedTexture &specular_environment_map = SharedTexture(),
                     const glm::vec3 &ambient = glm::vec3(1.0f),
@@ -92,6 +93,11 @@ public:
   * @brief Normalmap for the material.
   */
   SharedTexture normal_map;
+
+  /**
+  * @brief Light map for the material.
+  */
+  SharedTexture light_map;
 
   /**
   * @brief Diffusemap for the material.

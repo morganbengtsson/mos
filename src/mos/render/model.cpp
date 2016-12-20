@@ -29,7 +29,6 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
   //  texture = Texture::load(directory + "/" + texture_name);
   transform = t;
   material = Material::load(directory, material_name);
-  lightmap = Texture::load(directory+ "/" + lightmap_name);
   //normalmap = Texture::load(directory + "/" + normalmap_name);
   lit = recieves_light;
 
@@ -43,9 +42,8 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
 Model::Model(const std::string &name, const SharedMesh &mesh,
              const glm::mat4 &transform,
              const SharedMaterial &material,
-             const SharedTexture &lightmap,
-             const bool lit)
-    : mesh(mesh),  material(material), lightmap(lightmap),
+               const bool lit)
+    : mesh(mesh),  material(material),
       name_(name), transform(transform),
       lit(lit), overlay_(0.0f), multiply_(1.0f) {}
 

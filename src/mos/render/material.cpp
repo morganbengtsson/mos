@@ -7,6 +7,7 @@ namespace mos {
 using namespace nlohmann;
 Material::Material(const SharedTexture &diffuse_map,
                    const SharedTexture &normal_map,
+                   const SharedTexture &light_map,
                    const SharedTexture &diffuse_environment_map,
                    const SharedTexture &specular_environment_map,
                    const glm::vec3 &ambient,
@@ -14,7 +15,8 @@ Material::Material(const SharedTexture &diffuse_map,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float specular_exponent)
-    : diffuse_map(diffuse_map), normal_map(normal_map), diffuse_environment_map(diffuse_environment_map),
+    : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
+      diffuse_environment_map(diffuse_environment_map),
       specular_environment_map(specular_environment_map), ambient(ambient),
       diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
@@ -40,6 +42,12 @@ Material::Material(const std::string &directory, const std::string &path) {
       n = value["normal_map"];
     }
     normal_map = Texture::load(directory + n);
+
+    std::string l = "";
+    if (!value["light_map"].is_null()) {
+      l = value["light_map"];
+    }
+    light_map = Texture::load(directory + l);
 
     std::string diffusemap_file = "";
     if (!value["diffuse_environment_map"].is_null()) {

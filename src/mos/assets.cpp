@@ -26,8 +26,6 @@ Assets::~Assets() {}
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = value.value("mesh", "");
-  auto lightmap_name =
-      value["lightmap"].is_null() ? "" : value.value("lightmap", "");
 
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
@@ -37,7 +35,6 @@ Model Assets::model_value(const json &value) {
       name, mesh(mesh_name),
       transform,
       material(material_name),
-      texture(lightmap_name),
       recieves_light);
 
   for (auto &m : value["models"]) {

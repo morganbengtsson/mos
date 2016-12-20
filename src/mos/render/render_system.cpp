@@ -494,13 +494,14 @@ void RenderSystem::load(const Model &model) {
         load(model.material->normal_map);
       }
     }
-  }
-
-  if (model.lightmap) {
-    if (textures_.find(model.lightmap->id()) == textures_.end()) {
-      load(model.lightmap);
+    if (model.material->light_map) {
+      if (textures_.find(model.material->light_map->id()) == textures_.end()) {
+        load(model.material->light_map);
+      }
     }
   }
+
+
 
 }
 
@@ -534,11 +535,10 @@ void RenderSystem::unload(const Model &model) {
         unload(model.material->normal_map);
       }
     }
-  }
-
-  if (model.lightmap) {
-    if (textures_.find(model.lightmap->id()) != textures_.end()) {
-      unload(model.lightmap);
+    if (model.material->light_map) {
+      if (textures_.find(model.material->light_map->id()) != textures_.end()) {
+        unload(model.material->light_map);
+      }
     }
   }
 
@@ -947,8 +947,9 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.lightmap ? textures_[model.lightmap->id()]
-                                              : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
+                                                ? textures_[model.material->light_map->id()]
+                                                : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.light_map, texture_unit);
   texture_unit++;
 
