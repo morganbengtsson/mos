@@ -818,19 +818,19 @@ RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
   return texture_id;
 }
 
-void RenderSystem::models_batch(const RenderScene &batch) {
-  glViewport(0, 0, batch.camera.resolution.x, batch.camera.resolution.y);
-  glUseProgram(vertex_programs_[batch.shader].program);
-  for (auto &model : batch.models) {
+void RenderSystem::scene(const RenderScene &render_scene) {
+  glViewport(0, 0, render_scene.camera.resolution.x, render_scene.camera.resolution.y);
+  glUseProgram(vertex_programs_[render_scene.shader].program);
+  for (auto &model : render_scene.models) {
     render(model,
            glm::mat4(1.0f),
-           batch.camera,
-           batch.light,
-           batch.fog_exp,
-           batch.fog_linear,
+           render_scene.camera,
+           render_scene.light,
+           render_scene.fog_exp,
+           render_scene.fog_linear,
            model.multiply(),
-           batch.shader,
-           batch.draw);
+           render_scene.shader,
+           render_scene.draw);
   }
 
   auto &uniforms = box_programs_.at("box");
@@ -838,11 +838,11 @@ void RenderSystem::models_batch(const RenderScene &batch) {
   glUseProgram(uniforms.program);
   glBindVertexArray(box_va);
 
-  for (auto &box : batch.render_boxes) {
+  for (auto &box : render_scene.render_boxes) {
     glm::vec3 size = box.size();
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
-    glm::mat4 mv = batch.camera.view * transform * glm::scale(glm::mat4(1.0f), size);
-    glm::mat4 mvp = batch.camera.projection * batch.camera.view * transform *
+    glm::mat4 mv = render_scene.camera.view * transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = render_scene.camera.projection * render_scene.camera.view * transform *
         glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -856,20 +856,20 @@ void RenderSystem::models_batch(const RenderScene &batch) {
                    (GLvoid *)(8 * sizeof(GLuint)));
   }
 
-  if (vertex_arrays_.find(batch.particles.id()) == vertex_arrays_.end()) {
+  if (vertex_arrays_.find(render_scene.particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
-    if (array_buffers_.find(batch.particles.id()) == array_buffers_.end()) {
+    if (array_buffers_.find(render_scene.particles.id()) == array_buffers_.end()) {
       unsigned int array_buffer;
       glGenBuffers(1, &array_buffer);
       glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-      glBufferData(GL_ARRAY_BUFFER, batch.particles.size() * sizeof(Particle),
-                   batch.particles.data(), GL_STREAM_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, render_scene.particles.size() * sizeof(Particle),
+                   render_scene.particles.data(), GL_STREAM_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({batch.particles.id(), array_buffer});
+      array_buffers_.insert({render_scene.particles.id(), array_buffer});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[batch.particles.id()]);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[render_scene.particles.id()]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                           reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -881,27 +881,27 @@ void RenderSystem::models_batch(const RenderScene &batch) {
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-    vertex_arrays_.insert({batch.particles.id(), vertex_array});
+    vertex_arrays_.insert({render_scene.particles.id(), vertex_array});
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[batch.particles.id()]);
-  glBufferData(GL_ARRAY_BUFFER, batch.particles.size() * sizeof(Particle),
-               batch.particles.data(), GL_STREAM_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[render_scene.particles.id()]);
+  glBufferData(GL_ARRAY_BUFFER, render_scene.particles.size() * sizeof(Particle),
+               render_scene.particles.data(), GL_STREAM_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glm::mat4 mv = batch.camera.view;
-  glm::mat4 mvp = batch.camera.projection * batch.camera.view;
+  glm::mat4 mv = render_scene.camera.view;
+  glm::mat4 mvp = render_scene.camera.projection * render_scene.camera.view;
 
   auto &uniforms2 = particle_programs_.at("particles");
 
   glUseProgram(uniforms2.program);
 
-  glBindVertexArray(vertex_arrays_[batch.particles.id()]);
+  glBindVertexArray(vertex_arrays_[render_scene.particles.id()]);
 
   glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
 
-  glDrawArrays(GL_POINTS, 0, batch.particles.size());
+  glDrawArrays(GL_POINTS, 0, render_scene.particles.size());
 
 }
 

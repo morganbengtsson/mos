@@ -91,7 +91,7 @@ public:
     render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
-      models_batch(*it);
+      scene(*it);
     }
   }
 
@@ -129,9 +129,9 @@ public:
 private:
   /**
    * @brief models_batch rendering.
-   * @param batch
+   * @param render_scene
    */
-  void models_batch(const RenderScene &batch);
+  void scene(const RenderScene &render_scene);
 
   /**
    * @brief Updates render state of model.
