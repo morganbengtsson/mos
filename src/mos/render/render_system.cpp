@@ -963,14 +963,14 @@ void RenderSystem::render(const Model &model,
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffuse_environment_map
                                                 ? textures_[model.material->diffuse_environment_map->id()]
                                                 : empty_texture_ : empty_texture_);
-  glUniform1i(uniforms.diffuse_environmentmap, texture_unit);
+  glUniform1i(uniforms.diffuse_environment_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->specular_environment_map
                                                 ? textures_[model.material->specular_environment_map->id()]
                                                 : empty_texture_ : empty_texture_);
-  glUniform1i(uniforms.specular_environmentmap, texture_unit);
+  glUniform1i(uniforms.specular_environment_map, texture_unit);
   texture_unit++;
 
   glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -1140,8 +1140,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     lightmap(glGetUniformLocation(program, "lightmap")),
     normalmap(glGetUniformLocation(program, "normalmap")),
     shadowmap(glGetUniformLocation(program, "shadowmap")),
-    diffuse_environmentmap(glGetUniformLocation(program, "diffuse_environmentmap")),
-    specular_environmentmap(glGetUniformLocation(program, "specular_environmentmap")),
+    diffuse_environment_map(glGetUniformLocation(program, "diffuse_environmentmap")),
+    specular_environment_map(glGetUniformLocation(program, "specular_environmentmap")),
     material_ambient_color(glGetUniformLocation(program, "material.ambient")),
     material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
     material_specular_color(glGetUniformLocation(program, "material.specular")),

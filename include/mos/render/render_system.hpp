@@ -235,8 +235,8 @@ private:
     GLint lightmap;
     GLint normalmap;
     GLint shadowmap;
-    GLint diffuse_environmentmap;
-    GLint specular_environmentmap;
+    GLint diffuse_environment_map;
+    GLint specular_environment_map;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
