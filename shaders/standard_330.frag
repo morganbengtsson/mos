@@ -36,7 +36,7 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    vec2 lightmap_uv;
+    vec2 light_map_uv;
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -47,10 +47,10 @@ uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
-uniform sampler2D texturemap;
-uniform sampler2D lightmap;
-uniform sampler2D normalmap;
-uniform sampler2D shadowmap;
+uniform sampler2D diffuse_map;
+uniform sampler2D light_map;
+uniform sampler2D normal_map;
+uniform sampler2D shadow_map;
 uniform sampler2D diffuse_environment_map;
 uniform sampler2D specular_environment_map;
 uniform mat4 model;
@@ -93,21 +93,21 @@ vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
 
 void main() {
 
-    vec4 static_light = texture(lightmap, fragment.lightmap_uv);
+    vec4 static_light = texture(light_map, fragment.light_map_uv);
 
     vec3 normal = fragment.normal;
 
     // Read the normal from the normal map and normalize it.
-    vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
+    vec3 tex_normal = normalize(texture(normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
 
-    normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
+    normal = normalize(mix(normal, tex_normal, texture(normal_map, fragment.uv).a));
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture(texturemap, fragment.uv);
+    vec4 tex_color = texture(diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 

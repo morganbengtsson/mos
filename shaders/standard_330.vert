@@ -3,7 +3,7 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    vec2 lightmap_uv;
+    vec2 light_map_uv;
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -33,7 +33,7 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec3 tangent;
 layout(location = 3) in vec2 uv;
-layout(location = 4) in vec2 lightmap_uv;
+layout(location = 4) in vec2 light_map_uv;
 out Fragment fragment;
 void main()
 {
@@ -45,7 +45,7 @@ void main()
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
     fragment.uv = uv;
-    fragment.lightmap_uv = lightmap_uv;
+    fragment.light_map_uv = light_map_uv;
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normalize(normal_matrix * normal);
     fragment.camera_to_surface = normalize(camera.position - fragment.position);

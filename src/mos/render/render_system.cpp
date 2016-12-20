@@ -935,13 +935,13 @@ void RenderSystem::render(const Model &model,
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffuse_map ? textures_[model.material->diffuse_map->id()]
                                              : empty_texture_ : empty_texture_);
-  glUniform1i(uniforms.texturemap, texture_unit);
+  glUniform1i(uniforms.diffuse_map, texture_unit);
   texture_unit++;
 
   // Shadowmap
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, depth_texture_);
-  glUniform1i(uniforms.shadowmap, texture_unit);
+  glUniform1i(uniforms.shadow_map, texture_unit);
   // glBindTexture(GL_TEXTURE_2D, textures_[1]);
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
@@ -949,14 +949,14 @@ void RenderSystem::render(const Model &model,
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.lightmap ? textures_[model.lightmap->id()]
                                               : empty_texture_);
-  glUniform1i(uniforms.lightmap, texture_unit);
+  glUniform1i(uniforms.light_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normal_map
                                    ? textures_[model.material->normal_map->id()]
                                    : empty_texture_ : empty_texture_);
-  glUniform1i(uniforms.normalmap, texture_unit);
+  glUniform1i(uniforms.normal_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -973,11 +973,10 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.specular_environment_map, texture_unit);
   texture_unit++;
 
-  glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
-  glUniformMatrix4fv(uniforms.v, 1, GL_FALSE, &camera.view[0][0]);
-  glUniformMatrix4fv(uniforms.m, 1, GL_FALSE, &model.transform[0][0]);
-
+  glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE, &mvp[0][0]);
+  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);
+  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model.transform[0][0]);
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -1130,16 +1129,16 @@ void RenderSystem::batches(
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     program(program),
-    mvp(glGetUniformLocation(program, "model_view_projection")),
-    mv(glGetUniformLocation(program, "model_view")),
-    m(glGetUniformLocation(program, "model")),
-    v(glGetUniformLocation(program, "view")),
+    model_view_projection_matrix(glGetUniformLocation(program, "model_view_projection")),
+    model_view_matrix(glGetUniformLocation(program, "model_view")),
+    model_matrix(glGetUniformLocation(program, "model")),
+    view_matrix(glGetUniformLocation(program, "view")),
     normal_matrix(glGetUniformLocation(program, "normal_matrix")),
     depth_bias_mvp(glGetUniformLocation(program, "depth_bias_model_view_projection")),
-    texturemap(glGetUniformLocation(program, "texturemap")),
-    lightmap(glGetUniformLocation(program, "lightmap")),
-    normalmap(glGetUniformLocation(program, "normalmap")),
-    shadowmap(glGetUniformLocation(program, "shadowmap")),
+    diffuse_map(glGetUniformLocation(program, "diffuse_map")),
+    light_map(glGetUniformLocation(program, "light_map")),
+    normal_map(glGetUniformLocation(program, "normal_map")),
+    shadow_map(glGetUniformLocation(program, "shadow_map")),
     diffuse_environment_map(glGetUniformLocation(program, "diffuse_environment_map")),
     specular_environment_map(glGetUniformLocation(program, "specular_environment_map")),
     material_ambient_color(glGetUniformLocation(program, "material.ambient")),
