@@ -4,7 +4,7 @@
 #include <vector>
 #include <initializer_list>
 #include <mos/render/model.hpp>
-#include <mos/render/camera.hpp>
+#include <mos/render/render_camera.hpp>
 #include <mos/render/light.hpp>
 #include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>

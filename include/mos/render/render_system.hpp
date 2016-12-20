@@ -16,7 +16,7 @@
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
-#include <mos/render/camera.hpp>
+#include <mos/render/render_camera.hpp>
 #include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
 #include <mos/render/particles_batch.hpp>
