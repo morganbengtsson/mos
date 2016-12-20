@@ -14,7 +14,8 @@ Material::Material(const SharedTexture &diffuse_map,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float specular_exponent)
-    : diffuse_map(diffuse_map), normal_map(normal_map), diffuse_environment_map(diffuse_environment_map), specular_environment_map(specular_environment_map), ambient(ambient),
+    : diffuse_map(diffuse_map), normal_map(normal_map), diffuse_environment_map(diffuse_environment_map),
+      specular_environment_map(specular_environment_map), ambient(ambient),
       diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
@@ -29,14 +30,14 @@ Material::Material(const std::string &directory, const std::string &path) {
 
     auto value = json::parse(mos::text(directory + path));
     std::string t = "";
-    if (!value["texture"].is_null()) {
-      t = value["texture"];
+    if (!value["diffuse_map"].is_null()) {
+      t = value["diffuse_map"];
     }
     diffuse_map = Texture::load(directory + t);
 
     std::string n = "";
-    if (!value["normalmap"].is_null()) {
-      n = value["normalmap"];
+    if (!value["normal_map"].is_null()) {
+      n = value["normal_map"];
     }
     normal_map = Texture::load(directory + n);
 
