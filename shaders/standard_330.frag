@@ -122,9 +122,10 @@ void main() {
 
     vec4 environment = textureEquirectangular(diffusemap, normal) / 1.5;
 
-    vec3 u = normalize(fragment.position);
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     environment += textureEquirectangular(specularmap, r) / 3.0f;
+
+
 
     //TODO: fix
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -148,7 +149,7 @@ void main() {
     color.a = material.opacity + tex_color.a;
 
     //Multiply
-    //color.rgb = color.rgb * multiply;
+    color.rgb = color.rgb * multiply;
     //color.rgb = diffuse.rgb;
     //color.rgb = environment.rgb;
     //color.rgb = tex_normal.rgb;
