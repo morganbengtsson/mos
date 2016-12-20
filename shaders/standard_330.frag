@@ -129,7 +129,6 @@ void main() {
 
     //diffuse += test;
 
-
     //TODO: fix
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 surface_to_view = normalize(fragment.position);
