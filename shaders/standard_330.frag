@@ -123,12 +123,9 @@ void main() {
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     environment += textureEquirectangular(specularmap, r) / 3.0f;
 
-    //TODO: fix
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
-    vec3 surface_to_view = -fragment.camera_to_surface;
-    vec3 reflection = reflect(normal, -surface_to_light);
-    float specular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material.specular_exponent);
-    specular = vec4(specular_contribution * light.specular * material.specular, 1.0);
+    vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);
+    specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * light.specular * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
 
@@ -146,17 +143,12 @@ void main() {
 
     //Multiply
     color.rgb = color.rgb * multiply;
-    //color.rgb = diffuse.rgb;
-    //color.rgb = environment.rgb;
-    //color.rgb = tex_normal.rgb;
 
     //Fog
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
     //color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
-
-    //color.rgb = texture(diffusemap, vec3(normal)).rgb;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
