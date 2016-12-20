@@ -95,11 +95,11 @@ void main() {
 
     vec4 static_light = texture(lightmap, fragment.lightmap_uv);
 
-    vec3 normal = normalize(fragment.normal);
+    vec3 normal = fragment.normal;
 
     // Read the normal from the normal map and normalize it.
     vec3 tex_normal = normalize(texture(normalmap, fragment.uv).rgb * 2.0 - vec3(1.0));
-    tex_normal = fragment.tbn * tex_normal;
+    tex_normal = normalize(fragment.tbn * tex_normal);
 
     normal = normalize(mix(normal, tex_normal, texture(normalmap, fragment.uv).a));
 
@@ -108,10 +108,8 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     vec4 tex_color = texture(texturemap, fragment.uv);
-    vec4 combined_tex = tex_color;
-
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
-    diffuse_color = vec4(mix(material.diffuse * material.opacity, combined_tex.rgb, combined_tex.a), 1.0);
+    diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     float dist = distance(light.position, fragment.position);
     float a = 1.0;
@@ -125,11 +123,9 @@ void main() {
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     environment += textureEquirectangular(specularmap, r) / 3.0f;
 
-
-
     //TODO: fix
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
-    vec3 surface_to_view = normalize(fragment.position);
+    vec3 surface_to_view = -fragment.camera_to_surface;
     vec3 reflection = reflect(normal, -surface_to_light);
     float specular_contribution = pow(max(0.0, dot(surface_to_view, reflection)), material.specular_exponent);
     specular = vec4(specular_contribution * light.specular * material.specular, 1.0);

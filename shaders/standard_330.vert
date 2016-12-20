@@ -47,7 +47,7 @@ void main()
     fragment.uv = uv;
     fragment.lightmap_uv = lightmap_uv;
     fragment.position = (model * vec4(position, 1.0)).xyz;
-    fragment.normal = normal_matrix * normal;
+    fragment.normal = normalize(normal_matrix * normal);
     fragment.camera_to_surface = normalize(camera.position - fragment.position);
     gl_Position = model_view_projection * vec4(position, 1.0);
 }
