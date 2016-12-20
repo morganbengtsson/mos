@@ -49,10 +49,10 @@ uniform Light light;
 uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
 uniform sampler2D texturemap;
 uniform sampler2D lightmap;
-uniform sampler2D diffusemap;
-uniform sampler2D specularmap;
 uniform sampler2D normalmap;
 uniform sampler2D shadowmap;
+uniform sampler2D diffuse_environmentmap;
+uniform sampler2D specular_environmentmap;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -118,10 +118,10 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 environment = textureEquirectangular(diffusemap, normal) / 1.5;
+    vec4 environment = textureEquirectangular(diffuse_environmentmap, normal) / 1.5;
 
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    environment += textureEquirectangular(specularmap, r) / 3.0f;
+    environment += textureEquirectangular(specular_environmentmap, r) / 3.0f;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);

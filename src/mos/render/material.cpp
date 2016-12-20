@@ -41,14 +41,14 @@ Material::Material(const std::string &directory, const std::string &path) {
     normalmap = Texture::load(directory + n);
 
     std::string diffusemap_file = "";
-    if (!value["diffusemap"].is_null()) {
-      diffusemap_file = value["diffusemap"];
+    if (!value["diffuse_environmentmap"].is_null()) {
+      diffusemap_file = value["diffuse_environmentmap"];
     }
     diffusemap = Texture::load(directory + diffusemap_file);
 
     std::string specularmap_file = "";
-    if (!value["specularmap"].is_null()) {
-      specularmap_file = value["specularmap"];
+    if (!value["specular_environmentmap"].is_null()) {
+      specularmap_file = value["specular_environmentmap"];
     }
     specularmap = Texture::load(directory + specularmap_file);
 
