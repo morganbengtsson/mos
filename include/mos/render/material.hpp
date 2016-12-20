@@ -86,7 +86,7 @@ public:
   /**
   * @brief Texture of the material.
   */
-  SharedTexture texture;
+  SharedTexture diffuse_map;
 
   /**
   * @brief Normalmap for the material.
