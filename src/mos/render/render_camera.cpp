@@ -2,10 +2,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
-  Camera::Camera() {
+  RenderCamera::RenderCamera() {
   }
 
-  Camera::Camera(const glm::vec3 &position,
+  RenderCamera::RenderCamera(const glm::vec3 &position,
                    const glm::vec3 &center,
                    const glm::mat4 &projection,
                    const glm::vec3 &up,
@@ -13,34 +13,34 @@ namespace mos {
     : projection(projection), view(glm::lookAt(position, center, up)), up_(up),
       position_(position), center_(center), resolution(resolution) {}
 
-glm::vec3 Camera::up() const { return up_; }
+glm::vec3 RenderCamera::up() const { return up_; }
 
-void Camera::up(const glm::vec3 &up) {
+void RenderCamera::up(const glm::vec3 &up) {
   up_ = up;
   update_view();
 }
 
-glm::vec3 Camera::position() const { return position_; }
+glm::vec3 RenderCamera::position() const { return position_; }
 
-void Camera::position(const glm::vec3 &position) {
+void RenderCamera::position(const glm::vec3 &position) {
   position_ = position;
   update_view();
 }
 
-glm::vec3 Camera::center() const { return center_; }
+glm::vec3 RenderCamera::center() const { return center_; }
 
-void Camera::center(const glm::vec3 &center) {
+void RenderCamera::center(const glm::vec3 &center) {
   center_ = center;
   update_view();
 }
 
-glm::vec3 Camera::direction() const {
+glm::vec3 RenderCamera::direction() const {
   return glm::normalize(center_ - position_);
 }
 
-void Camera::update_view() { view = glm::lookAt(position_, center_, up_); }
+void RenderCamera::update_view() { view = glm::lookAt(position_, center_, up_); }
 
-float Camera::aspect_ratio() const {
+float RenderCamera::aspect_ratio() const {
   return resolution.x / resolution.y;
 }
 }

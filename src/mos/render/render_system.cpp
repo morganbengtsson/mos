@@ -910,7 +910,7 @@ void RenderSystem::models_batch(const ModelsBatch &batch) {
 
 void RenderSystem::render(const Model &model,
                           const glm::mat4 parent_transform,
-                          const Camera &camera,
+                          const RenderCamera &camera,
                           const Light &light,
                           const FogExp &fog_exp,
                           const FogLinear &fog_linear,

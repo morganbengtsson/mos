@@ -2,7 +2,7 @@
 namespace mos {
 ModelsBatch::ModelsBatch() {}
 
-ModelsBatch::ModelsBatch(const std::initializer_list<Model> &models, const Camera &camera,
+ModelsBatch::ModelsBatch(const std::initializer_list<Model> &models, const RenderCamera &camera,
              const Light &light, const FogExp &fog_exp, const FogLinear &fog_linear, const Shader &shader,
              const Draw &draw)
     : ModelsBatch(models.begin(), models.end(), camera, light,

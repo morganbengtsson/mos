@@ -8,9 +8,9 @@ namespace mos {
 /**
  * @brief The Camera class
  */
-class Camera {
+class RenderCamera {
 public:
-  Camera();
+  RenderCamera();
   /**
    * @brief Camera
    * @param eye Where the camera is located.
@@ -19,7 +19,7 @@ public:
    * @param up Up direction.
    * @param resolution Render resolution.
    */
-  Camera(const glm::vec3 &position,
+  RenderCamera(const glm::vec3 &position,
          const glm::vec3 &center,
          const glm::mat4 &projection,
          const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
