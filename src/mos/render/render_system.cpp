@@ -479,14 +479,14 @@ void RenderSystem::load(const Model &model) {
         load(model.material->texture);
       }
     }
-    if (model.material->diffusemap) {
-      if (textures_.find(model.material->diffusemap->id()) == textures_.end()) {
-        load(model.material->diffusemap);
+    if (model.material->diffuse_environment_map) {
+      if (textures_.find(model.material->diffuse_environment_map->id()) == textures_.end()) {
+        load(model.material->diffuse_environment_map);
       }
     }
-    if (model.material->specularmap) {
-      if (textures_.find(model.material->specularmap->id()) == textures_.end()) {
-        load(model.material->specularmap);
+    if (model.material->specular_environment_map) {
+      if (textures_.find(model.material->specular_environment_map->id()) == textures_.end()) {
+        load(model.material->specular_environment_map);
       }
     }
     if (model.material->normalmap) {
@@ -960,15 +960,15 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffusemap
-                                                ? textures_[model.material->diffusemap->id()]
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffuse_environment_map
+                                                ? textures_[model.material->diffuse_environment_map->id()]
                                                 : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.diffuse_environmentmap, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->specularmap
-                                                ? textures_[model.material->specularmap->id()]
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->specular_environment_map
+                                                ? textures_[model.material->specular_environment_map->id()]
                                                 : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.specular_environmentmap, texture_unit);
   texture_unit++;

@@ -96,12 +96,12 @@ public:
   /**
   * @brief Diffusemap for the material.
   */
-  SharedTexture diffusemap;
+  SharedTexture diffuse_environment_map;
 
   /**
   * @brief Specularmap for the material.
   */
-  SharedTexture specularmap;
+  SharedTexture specular_environment_map;
 
 };
 }
