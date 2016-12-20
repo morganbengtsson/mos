@@ -21,19 +21,19 @@ class Material {
 public:
   /**
    * @brief Material
-   * @param normalmap
-   * @param diffusemap
-   * @param specularmap
+   * @param normal_map
+   * @param diffuse_environment_map
+   * @param specular_environment_map
    * @param ambient
    * @param diffuse
    * @param specular
    * @param opacity
    * @param specular_exponent
    */
-  explicit Material(const SharedTexture &texture = SharedTexture(),
-                    const SharedTexture &normalmap = SharedTexture(),
-                    const SharedTexture &diffusemap = SharedTexture(),
-                    const SharedTexture &specularmap = SharedTexture(),
+  explicit Material(const SharedTexture &diffuse_map = SharedTexture(),
+                    const SharedTexture &normal_map = SharedTexture(),
+                    const SharedTexture &diffuse_environment_map = SharedTexture(),
+                    const SharedTexture &specular_environment_map = SharedTexture(),
                     const glm::vec3 &ambient = glm::vec3(1.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),

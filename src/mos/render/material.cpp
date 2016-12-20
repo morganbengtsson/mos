@@ -5,16 +5,16 @@
 #include <string>
 namespace mos {
 using namespace nlohmann;
-Material::Material(const SharedTexture &texture,
-                   const SharedTexture &normalmap,
-                   const SharedTexture &diffusemap,
-                   const SharedTexture &specularmap,
+Material::Material(const SharedTexture &diffuse_map,
+                   const SharedTexture &normal_map,
+                   const SharedTexture &diffuse_environment_map,
+                   const SharedTexture &specular_environment_map,
                    const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float specular_exponent)
-    : texture(texture), normalmap(normalmap), diffusemap(diffusemap), specularmap(specularmap), ambient(ambient),
+    : texture(diffuse_map), normalmap(normal_map), diffusemap(diffuse_environment_map), specularmap(specular_environment_map), ambient(ambient),
       diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
