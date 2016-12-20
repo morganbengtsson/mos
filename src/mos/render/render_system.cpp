@@ -489,9 +489,9 @@ void RenderSystem::load(const Model &model) {
         load(model.material->specular_environment_map);
       }
     }
-    if (model.material->normalmap) {
-      if (textures_.find(model.material->normalmap->id()) == textures_.end()) {
-        load(model.material->normalmap);
+    if (model.material->normal_map) {
+      if (textures_.find(model.material->normal_map->id()) == textures_.end()) {
+        load(model.material->normal_map);
       }
     }
   }
@@ -529,9 +529,9 @@ void RenderSystem::unload(const Model &model) {
         unload(model.material->diffuse_map);
       }
     }
-    if (model.material->normalmap) {
-      if (textures_.find(model.material->normalmap->id()) != textures_.end()) {
-        unload(model.material->normalmap);
+    if (model.material->normal_map) {
+      if (textures_.find(model.material->normal_map->id()) != textures_.end()) {
+        unload(model.material->normal_map);
       }
     }
   }
@@ -953,8 +953,8 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normalmap
-                                   ? textures_[model.material->normalmap->id()]
+  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normal_map
+                                   ? textures_[model.material->normal_map->id()]
                                    : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.normalmap, texture_unit);
   texture_unit++;

@@ -14,7 +14,7 @@ Material::Material(const SharedTexture &diffuse_map,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float specular_exponent)
-    : diffuse_map(diffuse_map), normalmap(normal_map), diffuse_environment_map(diffuse_environment_map), specular_environment_map(specular_environment_map), ambient(ambient),
+    : diffuse_map(diffuse_map), normal_map(normal_map), diffuse_environment_map(diffuse_environment_map), specular_environment_map(specular_environment_map), ambient(ambient),
       diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
@@ -38,10 +38,10 @@ Material::Material(const std::string &directory, const std::string &path) {
     if (!value["normalmap"].is_null()) {
       n = value["normalmap"];
     }
-    normalmap = Texture::load(directory + n);
+    normal_map = Texture::load(directory + n);
 
     std::string diffusemap_file = "";
-    if (!value["diffuse_environmentmap"].is_null()) {
+    if (!value["diffuse_environment_map"].is_null()) {
       diffusemap_file = value["diffuse_environment_map"];
     }
     diffuse_environment_map = Texture::load(directory + diffusemap_file);
