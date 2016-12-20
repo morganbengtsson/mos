@@ -19,8 +19,6 @@
 #include <mos/render/render_camera.hpp>
 #include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
-#include <mos/render/particles_batch.hpp>
-#include <mos/render/boxes_batch.hpp>
 #include <mos/render/render_box.hpp>
 
 namespace mos {
@@ -84,28 +82,16 @@ public:
    */
   void unload(const SharedTextureCube &texture);
 
-  void batches(const std::initializer_list<RenderScene> &batches_init,
-               const std::initializer_list<ParticlesBatch> &particles_batches,
-               const std::initializer_list<BoxesBatch> &boxes_batches,
+  void batches(const std::initializer_list<RenderScene> &scenes_init,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
-  template<class Tr, class Tp, class Tb>
-  void batches(Tr begin, Tr end,
-               Tp p_begin, Tp p_end,
-               Tb b_begin, Tb b_end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+  template<class Tr>
+  void batches(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                const OptTarget &target = OptTarget()) {
     render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
       models_batch(*it);
-    }
-
-    for (auto it = p_begin; it != p_end; it++) {
-      particles_batch(*it);
-    }
-
-    for (auto it = b_begin; it != b_end; it++) {
-      boxes_batch(*it);
     }
   }
 
@@ -141,19 +127,6 @@ public:
   GLuint depth_frame_buffer_;
 
 private:
-
-  /**
-   * @brief particles_batch rendering.
-   * @param batch
-   */
-  void particles_batch(const ParticlesBatch &batch);
-
-  /**
-   * @brief boxes_batch rendering.
-   * @param batch
-   */
-  void boxes_batch(const BoxesBatch &batch);
-
   /**
    * @brief models_batch rendering.
    * @param batch

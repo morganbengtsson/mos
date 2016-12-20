@@ -818,7 +818,44 @@ RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
   return texture_id;
 }
 
-void RenderSystem::particles_batch(const ParticlesBatch &batch) {
+void RenderSystem::models_batch(const RenderScene &batch) {
+  glViewport(0, 0, batch.camera.resolution.x, batch.camera.resolution.y);
+  glUseProgram(vertex_programs_[batch.shader].program);
+  for (auto &model : batch.models) {
+    render(model,
+           glm::mat4(1.0f),
+           batch.camera,
+           batch.light,
+           batch.fog_exp,
+           batch.fog_linear,
+           model.multiply(),
+           batch.shader,
+           batch.draw);
+  }
+
+  auto &uniforms = box_programs_.at("box");
+
+  glUseProgram(uniforms.program);
+  glBindVertexArray(box_va);
+
+  for (auto &box : batch.render_boxes) {
+    glm::vec3 size = box.size();
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
+    glm::mat4 mv = batch.camera.view * transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = batch.camera.projection * batch.camera.view * transform *
+        glm::scale(glm::mat4(1.0f), size);
+
+    glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+
+    // glDrawArrays(GL_POINTS, 0, 16);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
+                   (GLvoid *)(4 * sizeof(GLuint)));
+    glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
+                   (GLvoid *)(8 * sizeof(GLuint)));
+  }
+
   if (vertex_arrays_.find(batch.particles.id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
     glGenVertexArrays(1, &vertex_array);
@@ -852,60 +889,20 @@ void RenderSystem::particles_batch(const ParticlesBatch &batch) {
                batch.particles.data(), GL_STREAM_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glm::mat4 mv = batch.view;
-  glm::mat4 mvp = batch.projection * batch.view;
+  glm::mat4 mv = batch.camera.view;
+  glm::mat4 mvp = batch.camera.projection * batch.camera.view;
 
-  auto &uniforms = particle_programs_.at("particles");
+  auto &uniforms2 = particle_programs_.at("particles");
 
-  glUseProgram(uniforms.program);
+  glUseProgram(uniforms2.program);
 
   glBindVertexArray(vertex_arrays_[batch.particles.id()]);
 
-  glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
+  glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
 
   glDrawArrays(GL_POINTS, 0, batch.particles.size());
-}
 
-void RenderSystem::boxes_batch(const BoxesBatch &batch) {
-  auto &uniforms = box_programs_.at("box");
-
-  glUseProgram(uniforms.program);
-  glBindVertexArray(box_va);
-
-  for (auto &box : batch.boxes) {
-    glm::vec3 size = box.size();
-    glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
-    glm::mat4 mv = batch.view * transform * glm::scale(glm::mat4(1.0f), size);
-    glm::mat4 mvp = batch.projection * batch.view * transform *
-                    glm::scale(glm::mat4(1.0f), size);
-
-    glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
-
-    // glDrawArrays(GL_POINTS, 0, 16);
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *)(4 * sizeof(GLuint)));
-    glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *)(8 * sizeof(GLuint)));
-  }
-}
-
-void RenderSystem::models_batch(const RenderScene &batch) {
-  glViewport(0, 0, batch.camera.resolution.x, batch.camera.resolution.y);
-  glUseProgram(vertex_programs_[batch.shader].program);
-  for (auto &model : batch.models) {
-    render(model,
-           glm::mat4(1.0f),
-           batch.camera,
-           batch.light,
-           batch.fog_exp,
-           batch.fog_linear,
-           model.multiply(),
-           batch.shader,
-           batch.draw);
-  }
 }
 
 void RenderSystem::render(const Model &model,
@@ -1120,11 +1117,8 @@ void RenderSystem::clear(const glm::vec4 &color) {
 
 void RenderSystem::batches(
     const std::initializer_list<RenderScene> &batches_init,
-    const std::initializer_list<ParticlesBatch> &particles_batches,
-    const std::initializer_list<BoxesBatch> &boxes_batches,
     const glm::vec4 &color, const OptTarget &target) {
-  batches(batches_init.begin(), batches_init.end(), particles_batches.begin(),
-          particles_batches.end(), boxes_batches.begin(), boxes_batches.end(),
+  batches(batches_init.begin(), batches_init.end(),
           color, target);
 }
 
