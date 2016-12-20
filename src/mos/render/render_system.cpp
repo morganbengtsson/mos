@@ -53,30 +53,30 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   std::string standard_frag = "standard_330.frag";
   std::string standard_vert_source = text(shader_path + standard_vert);
   std::string standard_frag_source = text(shader_path + standard_frag);
-  add_vertex_program(ModelsBatch::Shader::STANDARD, standard_vert_source,
+  add_vertex_program(RenderScene::Shader::STANDARD, standard_vert_source,
                      standard_frag_source, standard_vert, standard_frag);
 
   std::string text_vert = "text_330.vert";
   std::string text_frag = "text_330.frag";
   std::string text_vert_source = text(shader_path + text_vert);
   std::string text_frag_source = text(shader_path + text_frag);
-  add_vertex_program(ModelsBatch::Shader::TEXT, text_vert_source,
+  add_vertex_program(RenderScene::Shader::TEXT, text_vert_source,
                      text_frag_source, text_vert, text_frag);
 
   std::string effect_vert = "effect_330.vert";
   std::string effect_frag = "effect_330.frag";
-  add_vertex_program(ModelsBatch::Shader::EFFECT,
+  add_vertex_program(RenderScene::Shader::EFFECT,
                      text(shader_path + effect_vert),
                      text(shader_path + effect_frag), effect_vert, effect_frag);
 
   std::string blur_vert = "blur_330.vert";
   std::string blur_frag = "blur_330.frag";
-  add_vertex_program(ModelsBatch::Shader::BLUR, text(shader_path + blur_vert),
+  add_vertex_program(RenderScene::Shader::BLUR, text(shader_path + blur_vert),
                      text(shader_path + blur_frag), blur_vert, blur_frag);
 
   std::string crt_vert = "crt_330.vert";
   std::string crt_frag = "crt_330.frag";
-  add_vertex_program(ModelsBatch::Shader::CRT, text(shader_path + crt_vert),
+  add_vertex_program(RenderScene::Shader::CRT, text(shader_path + crt_vert),
                      text(shader_path + crt_frag), crt_vert, crt_frag);
 
   std::string particles_vert = "particles_330.vert";
@@ -365,7 +365,7 @@ void RenderSystem::add_particle_program(const std::string name,
                 glGetUniformLocation(program, "model_view")}));
 }
 
-void RenderSystem::add_vertex_program(const ModelsBatch::Shader shader,
+void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
                                       const std::string vertex_shader_source,
                                       const std::string fragment_shader_source,
                                       const std::string &vert_file_name,
@@ -892,7 +892,7 @@ void RenderSystem::boxes_batch(const BoxesBatch &batch) {
   }
 }
 
-void RenderSystem::models_batch(const ModelsBatch &batch) {
+void RenderSystem::models_batch(const RenderScene &batch) {
   glViewport(0, 0, batch.camera.resolution.x, batch.camera.resolution.y);
   glUseProgram(vertex_programs_[batch.shader].program);
   for (auto &model : batch.models) {
@@ -915,8 +915,8 @@ void RenderSystem::render(const Model &model,
                           const FogExp &fog_exp,
                           const FogLinear &fog_linear,
                           const glm::vec3 &multiply,
-                          const ModelsBatch::Shader &shader,
-                          const ModelsBatch::Draw &draw) {
+                          const RenderScene::Shader &shader,
+                          const RenderScene::Draw &draw) {
   glViewport(0, 0, camera.resolution.x, camera.resolution.y);
 
   load(model);
@@ -1037,9 +1037,9 @@ void RenderSystem::render(const Model &model,
 
   const int num_elements = model.mesh ? model.mesh->elements_size() : 0;
   int draw_type = GL_TRIANGLES;
-  if (draw == ModelsBatch::Draw::LINES) {
+  if (draw == RenderScene::Draw::LINES) {
     draw_type = GL_LINES;
-  } else if (draw == ModelsBatch::Draw::POINTS) {
+  } else if (draw == RenderScene::Draw::POINTS) {
     draw_type = GL_POINTS;
   }
   if (model.mesh) {
@@ -1119,7 +1119,7 @@ void RenderSystem::clear(const glm::vec4 &color) {
 }
 
 void RenderSystem::batches(
-    const std::initializer_list<ModelsBatch> &batches_init,
+    const std::initializer_list<RenderScene> &batches_init,
     const std::initializer_list<ParticlesBatch> &particles_batches,
     const std::initializer_list<BoxesBatch> &boxes_batches,
     const glm::vec4 &color, const OptTarget &target) {

@@ -10,11 +10,16 @@
 #include <mos/render/fog_linear.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/texture_cube.hpp>
+#include <mos/render/render_box.hpp>
+#include <mos/render/particles.hpp>
 
 namespace mos {
 
-class ModelsBatch {
+class RenderScene {
 public:
+  using Models = std::vector<mos::Model>;
+  using RenderBoxes = std::vector<mos::RenderBox>;
+
   /**
    * @brief The Shader enum
    */
@@ -25,10 +30,10 @@ public:
    */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
-  ModelsBatch();
+  RenderScene();
 
   template <class T>
-  ModelsBatch(T begin, T end, const RenderCamera &camera, const Light &light = Light(),
+  RenderScene(T begin, T end, const RenderCamera &camera, const Light &light = Light(),
         const mos::FogExp &fog_exp = FogExp(),
         const mos::FogLinear &fog_linear = FogLinear(),
         const Shader &shader = Shader::STANDARD,
@@ -36,12 +41,14 @@ public:
       : models(begin, end), camera(camera), light(light),
         fog_exp(fog_exp), fog_linear(fog_linear), shader(shader), draw(draw) {}
 
-  ModelsBatch(const std::initializer_list<mos::Model> &models, const RenderCamera &camera,
+  RenderScene(const std::initializer_list<mos::Model> &models, const RenderCamera &camera,
         const mos::Light &light = Light(), const mos::FogExp &fog_exp = FogExp(),
         const mos::FogLinear &fog_linear = FogLinear(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
-  std::vector<mos::Model> models;
+  Models models;
+  Particles particles;
+  RenderBoxes render_boxes;
   Light light;
   RenderCamera camera;
   FogExp fog_exp;

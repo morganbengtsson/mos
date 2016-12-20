@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <optional.hpp>
 #include <array>
-#include <mos/render/models_batch.hpp>
+#include <mos/render/render_scene.hpp>
 #include <mos/render/texture.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
@@ -84,7 +84,7 @@ public:
    */
   void unload(const SharedTextureCube &texture);
 
-  void batches(const std::initializer_list<ModelsBatch> &batches_init,
+  void batches(const std::initializer_list<RenderScene> &batches_init,
                const std::initializer_list<ParticlesBatch> &particles_batches,
                const std::initializer_list<BoxesBatch> &boxes_batches,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
@@ -158,7 +158,7 @@ private:
    * @brief models_batch rendering.
    * @param batch
    */
-  void models_batch(const ModelsBatch &batch);
+  void models_batch(const RenderScene &batch);
 
   /**
    * @brief Updates render state of model.
@@ -176,8 +176,8 @@ private:
               const FogExp &fog_exp,
               const FogLinear &fog_linear,
               const glm::vec3 &multiply,
-              const ModelsBatch::Shader &shader,
-              const ModelsBatch::Draw &draw);
+              const RenderScene::Shader &shader,
+              const RenderScene::Draw &draw);
 
   /**
    * @brief render_target
@@ -261,12 +261,12 @@ private:
     GLint multiply;
   };
 
-  using VertexProgramPair = std::pair<ModelsBatch::Shader, VertexProgramData>;
+  using VertexProgramPair = std::pair<RenderScene::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
   bool lightmaps_;
-  void add_vertex_program(const ModelsBatch::Shader shader,
+  void add_vertex_program(const RenderScene::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source,
                           const std::string &vert_file_name = "",
@@ -294,7 +294,7 @@ private:
 
   void create_depth_program();
 
-  std::map<ModelsBatch::Shader, VertexProgramData> vertex_programs_;
+  std::map<RenderScene::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
   DepthProgramData depth_program_;
