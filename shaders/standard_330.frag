@@ -118,10 +118,12 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 environment = textureEquirectangular(diffuse_environment_map, normal) / 1.5;
+    vec4 diffuse_environment = textureEquirectangular(diffuse_environment_map, normal) / 1.5;
+    diffuse_environment.rgb *= material.diffuse;
 
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    environment += textureEquirectangular(specular_environment_map, r) / 3.0f;
+    vec4 specular_environment = textureEquirectangular(specular_environment_map, r) / 3.0f;
+    specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);
@@ -143,6 +145,7 @@ void main() {
 
     //Multiply
     color.rgb = color.rgb * multiply;
+    color = diffuse_environment + specular_environment;
 
     //Fog
     float distance = length(fragment.position.xyz);
