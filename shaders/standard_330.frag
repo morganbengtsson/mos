@@ -136,7 +136,7 @@ void main() {
     vec3 ambient = light.ambient * diffuse_color.rgb;
 
     if(receives_light == true) {
-        color = vec4(diffuse.xyz + diffuse_static.xyz + specular.xyz + ambient, material.opacity);
+        color = vec4(diffuse.rgb + diffuse_static.rgb + specular.rgb + ambient + diffuse_environment.rgb + specular_environment.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
@@ -144,8 +144,7 @@ void main() {
     color.a = material.opacity + tex_color.a;
 
     //Multiply
-    color.rgb = color.rgb * multiply;
-    color = diffuse_environment + specular_environment;
+    color.rgb *= multiply;
 
     //Fog
     float distance = length(fragment.position.xyz);
