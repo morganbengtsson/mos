@@ -6,7 +6,6 @@
 #include <mos/render/model.hpp>
 #include <mos/render/render_camera.hpp>
 #include <mos/render/light.hpp>
-#include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/texture_cube.hpp>
@@ -34,16 +33,13 @@ public:
 
   template <class T>
   RenderScene(T begin, T end, const RenderCamera &camera, const Light &light = Light(),
-        const mos::FogExp &fog_exp = FogExp(),
         const mos::FogLinear &fog_linear = FogLinear(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES)
-      : models(begin, end), camera(camera), light(light),
-        fog_exp(fog_exp), fog_linear(fog_linear), shader(shader), draw(draw) {}
+      : models(begin, end), camera(camera), light(light), fog_linear(fog_linear), shader(shader), draw(draw) {}
 
   RenderScene(const std::initializer_list<mos::Model> &models, const RenderCamera &camera,
-        const mos::Light &light = Light(), const mos::FogExp &fog_exp = FogExp(),
-        const mos::FogLinear &fog_linear = FogLinear(),
+        const mos::Light &light = Light(), const mos::FogLinear &fog_linear = FogLinear(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   Models models;
@@ -51,7 +47,6 @@ public:
   RenderBoxes render_boxes;
   Light light;
   RenderCamera camera;
-  FogExp fog_exp;
   FogLinear fog_linear;
   Shader shader;
   Draw draw;

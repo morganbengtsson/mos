@@ -826,7 +826,6 @@ void RenderSystem::scene(const RenderScene &render_scene) {
            glm::mat4(1.0f),
            render_scene.camera,
            render_scene.light,
-           render_scene.fog_exp,
            render_scene.fog_linear,
            model.multiply(),
            render_scene.shader,
@@ -909,7 +908,6 @@ void RenderSystem::render(const Model &model,
                           const glm::mat4 parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
-                          const FogExp &fog_exp,
                           const FogLinear &fog_linear,
                           const glm::vec3 &multiply,
                           const RenderScene::Shader &shader,
@@ -1020,9 +1018,6 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
-  glUniform3fv(uniforms.fogs_exp_color, 1, glm::value_ptr(fog_exp.color));
-  glUniform1fv(uniforms.fogs_exp_density, 1, &fog_exp.density);
-
   glUniform3fv(uniforms.fogs_linear_color, 1, glm::value_ptr(fog_linear.color));
   glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
   glUniform1fv(uniforms.fogs_linear_far, 1, &fog_linear.far);
@@ -1051,7 +1046,6 @@ void RenderSystem::render(const Model &model,
            parent_transform * model.transform,
            camera,
            light,
-           fog_exp,
            fog_linear,
            multiply,
            shader,
@@ -1153,8 +1147,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     fogs_linear_color(glGetUniformLocation(program, "fogs.linear.color")),
     fogs_linear_near(glGetUniformLocation(program, "fogs.linear.near")),
     fogs_linear_far(glGetUniformLocation(program, "fogs.linear.far")),
-    fogs_exp_color(glGetUniformLocation(program, "fogs.exp.color")),
-    fogs_exp_density(glGetUniformLocation(program, "fogs.exp.density")),
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {

@@ -17,7 +17,6 @@
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/render_camera.hpp>
-#include <mos/render/fog_exp.hpp>
 #include <mos/render/fog_linear.hpp>
 #include <mos/render/render_box.hpp>
 
@@ -146,7 +145,6 @@ private:
               const glm::mat4 transform,
               const RenderCamera & camera,
               const Light &light,
-              const FogExp &fog_exp,
               const FogLinear &fog_linear,
               const glm::vec3 &multiply,
               const RenderScene::Shader &shader,
@@ -227,8 +225,6 @@ private:
     GLint fogs_linear_color;
     GLint fogs_linear_near;
     GLint fogs_linear_far;
-    GLint fogs_exp_color;
-    GLint fogs_exp_density;
     GLint time;
     GLint overlay;
     GLint multiply;
