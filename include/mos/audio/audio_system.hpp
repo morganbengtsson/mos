@@ -13,7 +13,7 @@
 #include <mos/audio/audio_stream_source.hpp>
 #include <mos/audio/audio_buffer_source.hpp>
 #include <mos/audio/audio_listener.hpp>
-#include <mos/audio/audio_batch.hpp>
+#include <mos/audio/audio_scene.hpp>
 
 namespace mos {
 
@@ -44,7 +44,7 @@ public:
    * @brief Update internal representation.
    * @param batch of audio related data.
    */
-  void batch(const AudioBatch &batch);
+  void batch(const AudioScene &batch);
 
   /**
    * @brief clear_buffers

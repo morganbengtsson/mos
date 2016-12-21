@@ -11,7 +11,7 @@ namespace mos {
 /**
 * @brief The AudioBatch class updates everything in the audio system.
 */
-class AudioBatch final{
+class AudioScene final{
 public:
   using AudioBufferSources = std::vector<AudioBufferSource>;
   using AudioStreamSources = std::vector<AudioStreamSource>;
@@ -25,7 +25,7 @@ public:
    * @param streams_end
    * @param listener
    */
-  AudioBatch(const Tb buffers_begin, const Tb buffers_end,
+  AudioScene(const Tb buffers_begin, const Tb buffers_end,
              const Ts streams_begin, const Ts streams_end,
              const AudioListener &listener)
       : buffer_sources(buffers_begin, buffers_end),
@@ -37,7 +37,7 @@ public:
    * @param stream_sources
    * @param listener
    */
-  AudioBatch(const std::initializer_list<AudioBufferSource> buffer_sources,
+  AudioScene(const std::initializer_list<AudioBufferSource> buffer_sources,
              const std::initializer_list<AudioStreamSource> stream_sources,
              const AudioListener &listener);
 
