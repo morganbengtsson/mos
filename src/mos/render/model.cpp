@@ -28,7 +28,7 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
   name_ = name, mesh = Mesh::load(directory + "/" + mesh_name);
   //  texture = Texture::load(directory + "/" + texture_name);
   transform = t;
-  material = Material::load(directory, material_name);
+  material = Material::load(directory + "/" + material_name);
   //normalmap = Texture::load(directory + "/" + normalmap_name);
   lit = recieves_light;
 

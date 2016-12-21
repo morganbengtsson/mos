@@ -51,11 +51,11 @@ public:
    * @brief Material construction from *.mesh file.
    * @param path
    */
-  explicit Material(const std::string &directory, const std::string &path);
+  explicit Material(const std::string &path);
 
   virtual ~Material();
 
-  static SharedMaterial load(const std::string &directory, const std::string &path);
+  static SharedMaterial load(const std::string &path);
 
   /**
    * @brief ambient color.

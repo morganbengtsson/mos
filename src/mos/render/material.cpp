@@ -2,7 +2,8 @@
 #include <fstream>
 #include <json.hpp>
 #include <mos/util.hpp>
-#include <string>
+#include <filesystem/path.h>
+
 namespace mos {
 using namespace nlohmann;
 Material::Material(const SharedTexture &diffuse_map,
@@ -21,8 +22,9 @@ Material::Material(const SharedTexture &diffuse_map,
       diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {}
 
-Material::Material(const std::string &directory, const std::string &path) {
-  if (path.substr(path.find_last_of(".") + 1) == "material") {
+Material::Material(const std::string &path) {
+  filesystem::path fpath = path;
+  if (fpath.extension() == "material") {
     /*std::ifstream is(path, std::ios::binary);
     is.read((char *)&ambient, sizeof(glm::vec3));
     is.read((char *)&diffuse, sizeof(glm::vec3));
@@ -30,36 +32,36 @@ Material::Material(const std::string &directory, const std::string &path) {
     is.read((char *)&opacity, sizeof(float));
     is.read((char *)&specular_exponent, sizeof(float));*/
 
-    auto value = json::parse(mos::text(directory + path));
+    auto value = json::parse(mos::text(fpath.str()));
     std::string t = "";
     if (!value["diffuse_map"].is_null()) {
       t = value["diffuse_map"];
     }
-    diffuse_map = Texture::load(directory + t);
+    diffuse_map = Texture::load(fpath.parent_path().str() + "/" + t);
 
     std::string n = "";
     if (!value["normal_map"].is_null()) {
       n = value["normal_map"];
     }
-    normal_map = Texture::load(directory + n);
+    normal_map = Texture::load(fpath.parent_path().str() + "/" + n);
 
     std::string l = "";
     if (!value["light_map"].is_null()) {
       l = value["light_map"];
     }
-    light_map = Texture::load(directory + l);
+    light_map = Texture::load(fpath.parent_path().str() + "/" + l);
 
     std::string diffusemap_file = "";
     if (!value["diffuse_environment_map"].is_null()) {
       diffusemap_file = value["diffuse_environment_map"];
     }
-    diffuse_environment_map = Texture::load(directory + diffusemap_file);
+    diffuse_environment_map = Texture::load(fpath.parent_path().str() + "/" + diffusemap_file);
 
     std::string specularmap_file = "";
     if (!value["specular_environment_map"].is_null()) {
       specularmap_file = value["specular_environment_map"];
     }
-    specular_environment_map = Texture::load(directory + specularmap_file);
+    specular_environment_map = Texture::load(fpath.parent_path().str() + "/" + specularmap_file);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
@@ -75,11 +77,12 @@ Material::Material(const std::string &directory, const std::string &path) {
 
 Material::~Material() {}
 
-SharedMaterial Material::load(const std::string &directory, const std::string &path) {
-  if (path.empty() || (path.back() == '/')) {
+SharedMaterial Material::load(const std::string &path) {
+  filesystem::path fpath = path;
+  if (fpath.is_directory()) {
     return std::make_shared<Material>();
   }
-  return std::make_shared<Material>(directory, path);
+  return std::make_shared<Material>(path);
 }
 Material::Material(const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
