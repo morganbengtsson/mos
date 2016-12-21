@@ -1,5 +1,6 @@
 #include <mos/render/model.hpp>
 #include <mos/util.hpp>
+#include <filesystem/path.h>
 
 namespace mos {
 
@@ -10,10 +11,12 @@ Model::Model(const mos::Model &model, const glm::mat4 transform) : Model(model),
 }
  */
 
-Model::Model(const std::string &directory, const std::string &file)
-    : Model(directory, json::parse(mos::text(directory + "/" + file))) {}
+Model::Model(const std::string &path)
+    : Model(path, json::parse(mos::text(path))) {}
 
-Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), multiply_(1.0f){
+Model::Model(const std::string &path, const json &value) : overlay_(0.0f), multiply_(1.0f){
+  filesystem::path fpath = path;
+
   auto name = value.value("name", "");
   auto mesh_name = value.value("mesh", "");
   auto texture_name = value.value("texture", "");
@@ -25,15 +28,15 @@ Model::Model(const std::string &directory, const json &value) : overlay_(0.0f), 
 
   auto t = jsonarray_to_mat4(value["transform"]);
 
-  name_ = name, mesh = Mesh::load(directory + "/" + mesh_name);
+  name_ = name, mesh = Mesh::load(fpath.parent_path().str() + "/" + mesh_name);
   //  texture = Texture::load(directory + "/" + texture_name);
   transform = t;
-  material = Material::load(directory + "/" + material_name);
+  material = Material::load(fpath.parent_path().str() + "/" + material_name);
   //normalmap = Texture::load(directory + "/" + normalmap_name);
   lit = recieves_light;
 
   for (auto &v : value["models"]) {
-    models.push_back(Model(directory, v));
+    models.push_back(Model(fpath.parent_path().str(), v));
   }
 
   //TODO Put in to other constructor?

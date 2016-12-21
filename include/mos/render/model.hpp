@@ -38,9 +38,9 @@ public:
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const bool lit = true);
 
-  Model(const std::string &directory, const std::string &file);
+  Model(const std::string &path);
 
-  Model(const std::string &directory, const json &value);
+  Model(const std::string &path, const json &value);
 
   /*
   Model(const mos::Model &model, const glm::mat4 transform);
