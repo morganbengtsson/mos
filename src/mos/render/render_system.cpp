@@ -1144,9 +1144,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_projection(glGetUniformLocation(program, "light.projection")),
     receives_light(glGetUniformLocation(program, "receives_light")),
     resolution(glGetUniformLocation(program, "resolution")),
-    fogs_linear_color(glGetUniformLocation(program, "fogs.linear.color")),
-    fogs_linear_near(glGetUniformLocation(program, "fogs.linear.near")),
-    fogs_linear_far(glGetUniformLocation(program, "fogs.linear.far")),
+    fogs_linear_color(glGetUniformLocation(program, "fog.color")),
+    fogs_linear_near(glGetUniformLocation(program, "fog.near")),
+    fogs_linear_far(glGetUniformLocation(program, "fog.far")),
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {

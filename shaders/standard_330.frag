@@ -16,20 +16,10 @@ struct Light {
     mat4 projection;
 };
 
-struct FogLinear {
+struct Fog {
     vec3 color;
     float near;
     float far;
-};
-
-struct FogExp {
-    vec3 color;
-    float density;
-};
-
-struct Fogs {
-    FogLinear linear;
-    FogExp exp;
 };
 
 struct Fragment {
@@ -46,7 +36,7 @@ uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
-uniform Fogs fogs = Fogs(FogLinear(vec3(1.0, 1.0, 1.0), 200.0, 300.0), FogExp(vec3(1.0, 1.0f, 1.0), 0.0));
+uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
@@ -59,12 +49,6 @@ uniform mat4 view;
 uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
-
-float fog_exp(const float distance, const float density) {
-    float result = exp(-pow(density * distance, 2.0));
-    result = 1.0 - clamp(result, 0.0, 1.0);
-    return result;
-}
 
 float fog_linear(
   const float dist,
@@ -97,7 +81,6 @@ void main() {
 
     vec3 normal = fragment.normal;
 
-    // Read the normal from the normal map and normalize it.
     vec3 tex_normal = normalize(texture(normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
 
@@ -148,8 +131,7 @@ void main() {
 
     //Fog
     float distance = length(fragment.position.xyz);
-    color.rgb = mix(color.rgb, fogs.linear.color, fog_linear(distance, fogs.linear.near, fogs.linear.far));
-    //color.rgb = mix(color.rgb, fogs.exp.color, fog_exp(distance, fogs.exp.density));
+    color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
