@@ -1,6 +1,7 @@
 #include <json.hpp>
 #include <mos/render/font.hpp>
 #include <mos/util.hpp>
+#include <filesystem/path.h>
 
 namespace mos {
   using namespace nlohmann;
@@ -11,8 +12,9 @@ Font::Font(const Font::CharMap &characters, const SharedTexture &texture,
   texture->wrap = Texture::Wrap::CLAMP;
 }
 
-Font::Font(const std::string &directory, const std::string &file) {
-    auto doc = json::parse(text(directory + "/" + file));
+Font::Font(const std::string &path) {
+    filesystem::path fpath = path;
+    auto doc = json::parse(text(fpath.str()));
     for (auto & c : doc["chars"]){
       Character character;
       character.offset_x = c["offset_x"];
@@ -30,7 +32,7 @@ Font::Font(const std::string &directory, const std::string &file) {
     ascender_ = doc["metrics"]["ascender"];
     descender_ = doc["metrics"]["descender"];
     std::string texture_name = doc["texture"]["file"];
-    texture = Texture::load(directory + "/" + texture_name);
+    texture = Texture::load(fpath.parent_path().str() + "/" + texture_name);
 }
 
 Font::~Font() {}
