@@ -16,3 +16,6 @@
 [submodule "externals/glfw"]
 	path = externals/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "externals/filesystem"]
+	path = externals/filesystem
+	url = https://github.com/wjakob/filesystem.git
