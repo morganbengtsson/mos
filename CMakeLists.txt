@@ -50,6 +50,10 @@ include_directories(externals/openal-soft/include)
 add_subdirectory(externals/Optional)
 include_directories(externals/Optional)
 
+#Optional
+add_subdirectory(externals/filesystem)
+include_directories(externals/filesystem)
+
 #glm
 include_directories(externals/glm)
 add_subdirectory(externals/glm)
@@ -101,4 +105,5 @@ externals/lodepng
 externals/objload
 externals/glm
 externals/Optional
+externals/filesystem
 externals/json/src)

@@ -34,7 +34,7 @@ public:
    */
   ~Animation();
 
-  Animation(const std::string &directory, const std::string &file);
+  Animation(const std::string &path);
 
   /**
    * @brief update, move the animation forward.

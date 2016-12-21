@@ -3,6 +3,7 @@
 #include <json.hpp>
 #include <mos/util.hpp>
 #include <mos/render/animation.hpp>
+#include <filesystem/path.h>
 
 namespace mos {
   using namespace nlohmann;
@@ -29,13 +30,14 @@ Animation::Animation(
 
 Animation::~Animation() {}
 
-Animation::Animation(const std::string &directory, const std::string &file) {
-  auto doc = json::parse(mos::text(directory + "/" + file));
+Animation::Animation(const std::string &path) {
+  filesystem::path fpath = path;
+  auto doc = json::parse(mos::text(fpath.str()));
   frame_rate_ = doc["frame_rate"];
   for (auto &keyframe : doc["keyframes"]) {
     auto key = keyframe["key"];
     std::string mesh_file = keyframe["mesh"];
-    keyframes_.insert({key, Mesh::load(directory + "/" + mesh_file)});
+    keyframes_.insert({key, Mesh::load(fpath.parent_path().str() + "/" + mesh_file)});
   }
 }
 
