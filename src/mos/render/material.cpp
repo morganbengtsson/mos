@@ -20,7 +20,16 @@ Material::Material(const SharedTexture &diffuse_map,
       diffuse_environment_map(diffuse_environment_map),
       specular_environment_map(specular_environment_map), ambient(ambient),
       diffuse(diffuse), specular(specular), opacity(opacity),
-      specular_exponent(specular_exponent) {}
+      specular_exponent(specular_exponent) {
+
+  if (diffuse_environment_map) {
+    diffuse_environment_map->wrap = mos::Texture::Wrap::CLAMP;
+  }
+  if (specular_environment_map) {
+    specular_environment_map->wrap = mos::Texture::Wrap::CLAMP;
+
+  }
+}
 
 Material::Material(const std::string &path) {
   filesystem::path fpath = path;
@@ -55,13 +64,13 @@ Material::Material(const std::string &path) {
     if (!value["diffuse_environment_map"].is_null()) {
       diffusemap_file = value["diffuse_environment_map"];
     }
-    diffuse_environment_map = Texture::load(fpath.parent_path().str() + "/" + diffusemap_file);
+    diffuse_environment_map = Texture::load(fpath.parent_path().str() + "/" + diffusemap_file, false);
 
     std::string specularmap_file = "";
     if (!value["specular_environment_map"].is_null()) {
       specularmap_file = value["specular_environment_map"];
     }
-    specular_environment_map = Texture::load(fpath.parent_path().str() + "/" + specularmap_file);
+    specular_environment_map = Texture::load(fpath.parent_path().str() + "/" + specularmap_file, false);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);

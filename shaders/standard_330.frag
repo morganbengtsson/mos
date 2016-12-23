@@ -101,11 +101,11 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureEquirectangular(diffuse_environment_map, normal) / 1.5;
+    vec4 diffuse_environment = textureEquirectangular(diffuse_environment_map, normal);
     diffuse_environment.rgb *= material.diffuse;
 
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    vec4 specular_environment = textureEquirectangular(specular_environment_map, r) / 3.0f;
+    vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -133,6 +133,8 @@ void main() {
     float distance = length(fragment.position.xyz);
     color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
+
+    color.rgb = diffuse_environment.rgb;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
