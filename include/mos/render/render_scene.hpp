@@ -1,5 +1,5 @@
-#ifndef MOS_BATCH_HPP
-#define MOS_BATCH_HPP
+#ifndef MOS_RENDER_SCENE_HPP
+#define MOS_RENDER_SCENE_HPP
 
 #include <vector>
 #include <initializer_list>
@@ -53,4 +53,4 @@ public:
 };
 }
 
-#endif // MOS_BATCH_HPP
+#endif // MOS_RENDER_SCENE_HPP

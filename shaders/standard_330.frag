@@ -134,8 +134,6 @@ void main() {
     color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
-    color.rgb = diffuse_environment.rgb;
-
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
     float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
