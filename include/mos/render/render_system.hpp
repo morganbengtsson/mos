@@ -81,16 +81,16 @@ public:
    */
   void unload(const SharedTextureCube &texture);
 
-  void batches(const std::initializer_list<RenderScene> &scenes_init,
+  void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
                const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
   template<class Tr>
-  void batches(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+  void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                const OptTarget &target = OptTarget()) {
     render_target(target);
     clear(color);
     for (auto it = begin; it != end; it++) {
-      scene(*it);
+      render_scene(*it);
     }
   }
 
@@ -130,7 +130,7 @@ private:
    * @brief models_batch rendering.
    * @param render_scene
    */
-  void scene(const RenderScene &render_scene);
+  void render_scene(const RenderScene &render_scene);
 
   /**
    * @brief Updates render state of model.

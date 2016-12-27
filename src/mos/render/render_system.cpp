@@ -818,7 +818,7 @@ RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
   return texture_id;
 }
 
-void RenderSystem::scene(const RenderScene &render_scene) {
+void RenderSystem::render_scene(const RenderScene &render_scene) {
   glViewport(0, 0, render_scene.camera.resolution.x, render_scene.camera.resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
@@ -1109,10 +1109,10 @@ void RenderSystem::clear(const glm::vec4 &color) {
   glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void RenderSystem::batches(
+void RenderSystem::render_scenes(
     const std::initializer_list<RenderScene> &batches_init,
     const glm::vec4 &color, const OptTarget &target) {
-  batches(batches_init.begin(), batches_init.end(),
+  render_scenes(batches_init.begin(), batches_init.end(),
           color, target);
 }
 
