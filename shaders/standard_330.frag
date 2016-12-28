@@ -16,6 +16,10 @@ struct Light {
     mat4 projection;
 };
 
+struct Camera {
+    vec3 position;
+};
+
 struct Fog {
     vec3 color;
     float near;
@@ -36,6 +40,7 @@ uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
+uniform Camera camera;
 uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
@@ -130,7 +135,7 @@ void main() {
     color.rgb *= multiply;
 
     //Fog
-    float distance = length(fragment.position.xyz);
+    float distance = distance(fragment.position, camera.position);
     color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
