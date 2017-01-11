@@ -42,4 +42,5 @@ float Font::height() const { return height_; }
 float Font::ascender() const { return ascender_; }
 
 float Font::descender() const { return descender_; }
+
 }
