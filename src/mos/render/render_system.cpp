@@ -941,6 +941,12 @@ void RenderSystem::render(const Model &model,
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
+  // Decal
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glBindTexture(GL_TEXTURE_2D, render_s);
+  glUniform1i(uniforms.shadow_map, texture_unit);
+  texture_unit++;
+
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
                                                 ? textures_[model.material->light_map->id()]
@@ -1128,6 +1134,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_map(glGetUniformLocation(program, "light_map")),
     normal_map(glGetUniformLocation(program, "normal_map")),
     shadow_map(glGetUniformLocation(program, "shadow_map")),
+    decal_map(glGetUniformLocation(program, "decal_map")),
     diffuse_environment_map(glGetUniformLocation(program, "diffuse_environment_map")),
     specular_environment_map(glGetUniformLocation(program, "specular_environment_map")),
     material_ambient_color(glGetUniformLocation(program, "material.ambient")),
