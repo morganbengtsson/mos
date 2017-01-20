@@ -95,9 +95,9 @@ void main() {
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     float dist = distance(light.position, fragment.position);
-    float a = 0.0; //TODO: set in light
-    float b = 0.0; // TODO: set in light
-    float att = 1.0 / (1.0 + a*dist + b*dist*dist);
+    float linear_attenuation_factor = 0.0; //TODO: set in light
+    float quadratic_attenuation_factor = 0.0; // TODO: set in light
+    float att = 1.0 / (1.0 + linear_attenuation_factor*dist + b*dist*dist);
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
