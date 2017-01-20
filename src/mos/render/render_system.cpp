@@ -1021,7 +1021,7 @@ void RenderSystem::render(const Model &model,
   glUniform1fv(uniforms.fog_far, 1, &fog_linear.far);
   glUniform1fv(uniforms.fog_linear_factor, 1, &fog_linear.linear_factor);
   glUniform1fv(uniforms.fog_exponential_factor, 1, &fog_linear.exponential_factor);
-  glUniform1fv(uniforms.fog_exponential_squared_factor, 1, &fog_linear.exponential_squared_factor);
+  glUniform1fv(uniforms.fog_exponential_power, 1, &fog_linear.exponential_power);
   glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog_linear.exponential_attenuation_factor);
 
   static const float time = 0.0f;
@@ -1150,7 +1150,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     fog_far(glGetUniformLocation(program, "fog.far")),
     fog_linear_factor(glGetUniformLocation(program, "fog.linear_factor")),
     fog_exponential_factor(glGetUniformLocation(program, "fog.exponential_factor")),
-    fog_exponential_squared_factor(glGetUniformLocation(program, "fog.exponential_squared_factor")),
+    fog_exponential_power(glGetUniformLocation(program, "fog.exponential_power")),
     fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),

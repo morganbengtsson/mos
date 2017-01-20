@@ -26,8 +26,8 @@ struct Fog {
     float far;
     float linear_factor;
     float exponential_factor;
-    float exponential_squared_factor;
     float exponential_attenuation_factor;
+    float exponential_power;
 };
 
 struct Fragment {
@@ -45,7 +45,7 @@ uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 0.0);
+uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
@@ -62,9 +62,8 @@ layout(location = 0) out vec4 color;
 
 float fog_attenuation(const float dist, const Fog fog) {
     float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
-    float exponential = 1.0 / exp(dist * fog.exponential_attenuation_factor);
-    float exponential_squared = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, 2.0));
-    return linear * fog.linear_factor + exponential * fog.exponential_factor + exponential_squared * fog.exponential_squared_factor;
+    float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
+    return linear * fog.linear_factor + exponential * fog.exponential_factor;
 }
 
 vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
