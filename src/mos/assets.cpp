@@ -25,7 +25,10 @@ Assets::~Assets() {}
 
 Model Assets::model_value(const json &value) {
   auto name = value.value("name", "");
-  auto mesh_name = value.value("mesh", "");
+  auto mesh_name = std::string("");
+  if (!value["mesh"].is_null()) {
+    mesh_name = value.value("mesh", "");
+  }
 
   std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
