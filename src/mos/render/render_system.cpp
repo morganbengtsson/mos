@@ -826,8 +826,7 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
            glm::mat4(1.0f),
            render_scene.camera,
            render_scene.light,
-           render_scene.fog_linear,
-           model.multiply(),
+           render_scene.fog,
            render_scene.shader,
            render_scene.draw);
   }
@@ -905,11 +904,10 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
 }
 
 void RenderSystem::render(const Model &model,
-                          const glm::mat4 parent_transform,
+                          const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
-                          const FogLinear &fog_linear,
-                          const glm::vec3 &multiply,
+                          const Fog &fog,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   glViewport(0, 0, camera.resolution.x, camera.resolution.y);
@@ -1026,9 +1024,13 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
-  glUniform3fv(uniforms.fogs_linear_color, 1, glm::value_ptr(fog_linear.color));
-  glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
-  glUniform1fv(uniforms.fogs_linear_far, 1, &fog_linear.far);
+  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
+  glUniform1fv(uniforms.fog_near, 1, &fog.near);
+  glUniform1fv(uniforms.fog_far, 1, &fog.far);
+  glUniform1fv(uniforms.fog_linear_factor, 1, &fog.linear_factor);
+  glUniform1fv(uniforms.fog_exponential_factor, 1, &fog.exponential_factor);
+  glUniform1fv(uniforms.fog_exponential_power, 1, &fog.exponential_power);
+  glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog.exponential_attenuation_factor);
 
   static const float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
@@ -1054,8 +1056,7 @@ void RenderSystem::render(const Model &model,
            parent_transform * model.transform,
            camera,
            light,
-           fog_linear,
-           multiply,
+           fog,
            shader,
            draw);
   }
@@ -1153,9 +1154,13 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_projection(glGetUniformLocation(program, "light.projection")),
     receives_light(glGetUniformLocation(program, "receives_light")),
     resolution(glGetUniformLocation(program, "resolution")),
-    fogs_linear_color(glGetUniformLocation(program, "fog.color")),
-    fogs_linear_near(glGetUniformLocation(program, "fog.near")),
-    fogs_linear_far(glGetUniformLocation(program, "fog.far")),
+    fog_color(glGetUniformLocation(program, "fog.color")),
+    fog_near(glGetUniformLocation(program, "fog.near")),
+    fog_far(glGetUniformLocation(program, "fog.far")),
+    fog_linear_factor(glGetUniformLocation(program, "fog.linear_factor")),
+    fog_exponential_factor(glGetUniformLocation(program, "fog.exponential_factor")),
+    fog_exponential_power(glGetUniformLocation(program, "fog.exponential_power")),
+    fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {

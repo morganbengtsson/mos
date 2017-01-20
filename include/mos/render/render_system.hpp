@@ -17,7 +17,7 @@
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/render_camera.hpp>
-#include <mos/render/fog_linear.hpp>
+#include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
 
 namespace mos {
@@ -142,11 +142,10 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const glm::mat4 transform,
-              const RenderCamera & camera,
+              const glm::mat4 &transform,
+              const RenderCamera &camera,
               const Light &light,
-              const FogLinear &fog_linear,
-              const glm::vec3 &multiply,
+              const Fog &fog,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);
 
@@ -223,9 +222,13 @@ private:
     GLint light_projection;
     GLint receives_light;
     GLint resolution;
-    GLint fogs_linear_color;
-    GLint fogs_linear_near;
-    GLint fogs_linear_far;
+    GLint fog_color;
+    GLint fog_near;
+    GLint fog_far;
+    GLint fog_linear_factor;
+    GLint fog_exponential_factor;
+    GLint fog_exponential_power;
+    GLint fog_exponential_attenuation_factor;
     GLint time;
     GLint overlay;
     GLint multiply;

@@ -24,6 +24,10 @@ struct Fog {
     vec3 color;
     float near;
     float far;
+    float linear_factor;
+    float exponential_factor;
+    float exponential_attenuation_factor;
+    float exponential_power;
 };
 
 struct Fragment {
@@ -41,7 +45,7 @@ uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
+uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
@@ -56,12 +60,10 @@ uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float fog_linear(
-  const float dist,
-  const float start,
-  const float end
-) {
-  return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
+float fog_attenuation(const float dist, const Fog fog) {
+    float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
+    float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
+    return linear * fog.linear_factor + exponential * fog.exponential_factor;
 }
 
 vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
@@ -137,7 +139,12 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
+    //color.rgb = mix(color.rgb, fog.color, fog_attenuation(distance, fog));
+    color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+
+    //float linear = clamp((fog.far - distance) / (fog.far - fog.near), 0.0, 1.0);
+    //color.rgb = mix(fog.color, color.rgb, linear);
+
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
