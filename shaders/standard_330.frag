@@ -64,6 +64,14 @@ float fog_linear(
   return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
 }
 
+float fog_combined(const float dist, const float start, const float end, const float linear_attenuation_factor,
+const float exponential_attenuation_factor, const float exponential_squared_attenuation_factor) {
+    float linear = 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0) * linear_attenuation_factor;
+    float exponential = 1.0 / exp(dist * exponential_attenuation_factor);
+    float exponential_squared = 1.0 / exp(pow(dist * exponential_squared_attenuation_factor, 2.0));
+    return (linear + exponential + exponential_squared) / 3.0f;
+}
+
 vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
     vec3 r = direction;
     vec2 tc;
