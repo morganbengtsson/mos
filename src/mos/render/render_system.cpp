@@ -681,7 +681,8 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
   static std::map<Texture::Wrap, GLuint> wrap_map{
-      {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
       {Texture::Wrap::REPEAT, GL_REPEAT}};
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
@@ -823,6 +824,7 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     render(model,
+           render_scene.decals,
            glm::mat4(1.0f),
            render_scene.camera,
            render_scene.light,
@@ -904,7 +906,7 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
 }
 
 void RenderSystem::render(const Model &model,
-                          const Decal &decal,
+                          const Decals &decals,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
@@ -941,12 +943,13 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   // Decal
-  /*
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, render_s);
-  glUniform1i(uniforms.shadow_map, texture_unit);
-  texture_unit++;
-*/
+  for (auto &decal : decals) {
+    load(decal.texture);
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, textures_[decal.texture->id()]);
+    glUniform1i(uniforms.decal_map, texture_unit);
+    texture_unit++;
+  }
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
@@ -982,8 +985,10 @@ void RenderSystem::render(const Model &model,
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model.transform[0][0]);
 
   //Decal
-  const glm::mat4 decal_mvp = decal.projection * decal.view * decal.transform;
-  glUniformMatrix4fv(uniforms.decal_model_view_projection_matrix, 1, GL_FALSE, &decal_mvp[0][0]);
+  if (decals.size() > 0) {
+    const glm::mat4 decal_mvp = decals[0].projection * decals[0].view * decals[0].transform;
+    glUniformMatrix4fv(uniforms.decal_model_view_projection_matrix, 1, GL_FALSE, &decal_mvp[0][0]);
+  }
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -1058,6 +1063,7 @@ void RenderSystem::render(const Model &model,
   }
   for (const auto &child : model.models) {
     render(child,
+           decals,
            parent_transform * model.transform,
            camera,
            light,

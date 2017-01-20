@@ -5,15 +5,13 @@
 #include <mos/render/texture.hpp>
 
 namespace mos {
-
 class Decal {
 public:
   glm::mat4 transform;
   glm::mat4 projection;
   glm::mat4 view;
-  mos::Texture texture;
+  mos::SharedTexture texture;
 };
-
 }
 
 #endif //MOS_DECAL_HPP

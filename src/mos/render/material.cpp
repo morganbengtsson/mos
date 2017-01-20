@@ -23,10 +23,10 @@ Material::Material(const SharedTexture &diffuse_map,
       specular_exponent(specular_exponent) {
 
   if (diffuse_environment_map) {
-    diffuse_environment_map->wrap = mos::Texture::Wrap::CLAMP;
+    diffuse_environment_map->wrap = mos::Texture::Wrap::CLAMP_TO_EDGE;
   }
   if (specular_environment_map) {
-    specular_environment_map->wrap = mos::Texture::Wrap::CLAMP;
+    specular_environment_map->wrap = mos::Texture::Wrap::CLAMP_TO_EDGE;
 
   }
 }

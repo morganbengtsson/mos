@@ -35,6 +35,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
+    vec2 decal_uv;
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -52,7 +53,7 @@ uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_environment_map;
 uniform sampler2D specular_environment_map;
-uniform sampler2D projected_map;
+uniform sampler2D decal_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -99,8 +100,9 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     vec4 tex_color = texture(diffuse_map, fragment.uv);
-    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
+    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+    diffuse_color.rgb += texture(decal_map, fragment.decal_uv).rgb;
 
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = 0.0; //TODO: set in light
@@ -139,12 +141,7 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    //color.rgb = mix(color.rgb, fog.color, fog_attenuation(distance, fog));
     color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
-
-    //float linear = clamp((fog.far - distance) / (fog.far - fog.near), 0.0, 1.0);
-    //color.rgb = mix(fog.color, color.rgb, linear);
-
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.

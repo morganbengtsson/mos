@@ -25,7 +25,7 @@ public:
    */
   using Texels = std::vector<unsigned char>;
 
-  enum class Wrap { REPEAT, CLAMP };
+  enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER};
 
   template <class T>
   /**

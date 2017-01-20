@@ -29,6 +29,7 @@ namespace mos {
  */
 class RenderSystem {
 public:
+  using Decals = std::vector<Decal>;
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -143,7 +144,7 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const Decal &decal,
+              const Decals &decals,
               const glm::mat4 &transform,
               const RenderCamera &camera,
               const Light &light,

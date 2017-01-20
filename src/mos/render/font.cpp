@@ -9,7 +9,7 @@ Font::Font(const Font::CharMap &characters, const SharedTexture &texture,
            const float height, const float ascender, const float descender)
     : characters(characters), texture(texture), height_(height),
       ascender_(ascender), descender_(descender) {
-  texture->wrap = Texture::Wrap::CLAMP;
+  texture->wrap = Texture::Wrap::CLAMP_TO_EDGE;
 }
 
 Font::Font(const std::string &path) {
