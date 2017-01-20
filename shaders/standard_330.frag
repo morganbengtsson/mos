@@ -48,6 +48,7 @@ uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_environment_map;
 uniform sampler2D specular_environment_map;
+uniform sampler2D projected_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
