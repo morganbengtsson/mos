@@ -142,11 +142,10 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const glm::mat4 transform,
-              const RenderCamera & camera,
+              const glm::mat4 &transform,
+              const RenderCamera &camera,
               const Light &light,
               const FogLinear &fog_linear,
-              const glm::vec3 &multiply,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);
 

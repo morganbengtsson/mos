@@ -827,7 +827,6 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
            render_scene.camera,
            render_scene.light,
            render_scene.fog_linear,
-           model.multiply(),
            render_scene.shader,
            render_scene.draw);
   }
@@ -905,11 +904,10 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
 }
 
 void RenderSystem::render(const Model &model,
-                          const glm::mat4 parent_transform,
+                          const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
                           const FogLinear &fog_linear,
-                          const glm::vec3 &multiply,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   glViewport(0, 0, camera.resolution.x, camera.resolution.y);
@@ -1047,7 +1045,6 @@ void RenderSystem::render(const Model &model,
            camera,
            light,
            fog_linear,
-           multiply,
            shader,
            draw);
   }
