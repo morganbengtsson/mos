@@ -942,10 +942,12 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   // Decal
+  /*
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, render_s);
   glUniform1i(uniforms.shadow_map, texture_unit);
   texture_unit++;
+*/
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
