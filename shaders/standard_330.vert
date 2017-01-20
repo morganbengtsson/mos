@@ -28,6 +28,7 @@ uniform mat4 depth_bias_model_view_projection;
 uniform mat4 model; // NOT SET!
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
+uniform mat4 decal_model_view_projection;
 uniform mat3 normal_matrix;
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -35,8 +36,7 @@ layout(location = 2) in vec3 tangent;
 layout(location = 3) in vec2 uv;
 layout(location = 4) in vec2 light_map_uv;
 out Fragment fragment;
-void main()
-{
+void main() {
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 N = normalize(vec3(model * vec4(normal, 0.0)));
     vec3 B = cross(T, N);

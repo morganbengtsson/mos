@@ -19,6 +19,7 @@
 #include <mos/render/render_camera.hpp>
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
+#include <mos/render/decal.hpp>
 
 namespace mos {
 
@@ -142,6 +143,7 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
+              const Decal &decal,
               const glm::mat4 &transform,
               const RenderCamera &camera,
               const Light &light,
@@ -200,6 +202,7 @@ private:
     GLint model_matrix;
     GLint view_matrix;
     GLint normal_matrix;
+    GLint decal_model_view_projection_matrix;
     GLint depth_bias_mvp;
     GLint diffuse_map;
     GLint light_map;
