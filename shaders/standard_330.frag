@@ -141,10 +141,10 @@ void main() {
     //Fog
     float distance = distance(fragment.position, camera.position);
     //color.rgb = mix(color.rgb, fog.color, fog_attenuation(distance, fog));
-    //color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+    color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
 
-    float linear = clamp((fog.far - distance) / (fog.far - fog.near), 0.0, 1.0);
-    color.rgb = mix(fog.color, color.rgb, linear);
+    //float linear = clamp((fog.far - distance) / (fog.far - fog.near), 0.0, 1.0);
+    //color.rgb = mix(fog.color, color.rgb, linear);
 
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
