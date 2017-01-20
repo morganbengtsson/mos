@@ -59,19 +59,10 @@ uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float fog_linear(
-  const float dist,
-  const float start,
-  const float end
-) {
-  return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
-}
-
-float fog_combined(const float dist, const float start, const float end, const float linear_attenuation_factor,
-const float exponential_attenuation_factor, const float exponential_squared_attenuation_factor) {
-    float linear = 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0) * linear_attenuation_factor;
-    float exponential = 1.0 / exp(dist * exponential_attenuation_factor);
-    float exponential_squared = 1.0 / exp(pow(dist * exponential_squared_attenuation_factor, 2.0));
+float fog_attenuation(const float dist, const Fog fog) {
+    float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
+    float exponential = 1.0 / exp(dist * fog.exponential_attenuation_factor);
+    float exponential_squared = 1.0 / exp(pow(dist * fog.exponential_attenuation_squared_factor, 2.0));
     return (linear + exponential + exponential_squared) / 3.0f;
 }
 
@@ -148,7 +139,12 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
+    //color.rgb = mix(color.rgb, fog.color, fog_attenuation(distance, fog));
+    //color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+
+    float linear = clamp((fog.far - distance) / (fog.far - fog.near), 0.0, 1.0);
+    color.rgb = mix(fog.color, color.rgb, linear);
+
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
