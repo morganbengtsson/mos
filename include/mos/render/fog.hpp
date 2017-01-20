@@ -4,9 +4,9 @@
 #include <glm/glm.hpp>
 
 namespace mos {
-class FogLinear {
+class Fog {
 public:
-  FogLinear(const glm::vec3 &color = glm::vec3(1.0f),
+  Fog(const glm::vec3 &color = glm::vec3(1.0f),
             const float near = 2000.0f, const float far = 3000.0f,
             const float linear_factor = 1.0f,
             const float exponential_factor = 0.0f,
@@ -19,7 +19,7 @@ public:
   float exponential_factor;
   float exponential_attenuation_factor;
   float exponential_power;
-  ~FogLinear();
+  ~Fog();
 };
 }
 

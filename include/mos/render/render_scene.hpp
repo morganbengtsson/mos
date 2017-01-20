@@ -6,7 +6,7 @@
 #include <mos/render/model.hpp>
 #include <mos/render/render_camera.hpp>
 #include <mos/render/light.hpp>
-#include <mos/render/fog_linear.hpp>
+#include <mos/render/fog.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/render_box.hpp>
@@ -33,13 +33,13 @@ public:
 
   template <class T>
   RenderScene(T begin, T end, const RenderCamera &camera, const Light &light = Light(),
-        const mos::FogLinear &fog_linear = FogLinear(),
+        const mos::Fog &fog_linear = Fog(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES)
-      : models(begin, end), camera(camera), light(light), fog_linear(fog_linear), shader(shader), draw(draw) {}
+      : models(begin, end), camera(camera), light(light), fog(fog_linear), shader(shader), draw(draw) {}
 
   RenderScene(const std::initializer_list<mos::Model> &models, const RenderCamera &camera,
-        const mos::Light &light = Light(), const mos::FogLinear &fog_linear = FogLinear(),
+        const mos::Light &light = Light(), const mos::Fog &fog = Fog(),
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   Models models;
@@ -47,7 +47,7 @@ public:
   RenderBoxes render_boxes;
   Light light;
   RenderCamera camera;
-  FogLinear fog_linear;
+  Fog fog;
   Shader shader;
   Draw draw;
 };

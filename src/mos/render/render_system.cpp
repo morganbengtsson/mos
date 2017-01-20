@@ -826,7 +826,7 @@ void RenderSystem::render_scene(const RenderScene &render_scene) {
            glm::mat4(1.0f),
            render_scene.camera,
            render_scene.light,
-           render_scene.fog_linear,
+           render_scene.fog,
            render_scene.shader,
            render_scene.draw);
   }
@@ -907,7 +907,7 @@ void RenderSystem::render(const Model &model,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
-                          const FogLinear &fog_linear,
+                          const Fog &fog,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   glViewport(0, 0, camera.resolution.x, camera.resolution.y);
@@ -1016,13 +1016,13 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
-  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog_linear.color));
-  glUniform1fv(uniforms.fog_near, 1, &fog_linear.near);
-  glUniform1fv(uniforms.fog_far, 1, &fog_linear.far);
-  glUniform1fv(uniforms.fog_linear_factor, 1, &fog_linear.linear_factor);
-  glUniform1fv(uniforms.fog_exponential_factor, 1, &fog_linear.exponential_factor);
-  glUniform1fv(uniforms.fog_exponential_power, 1, &fog_linear.exponential_power);
-  glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog_linear.exponential_attenuation_factor);
+  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
+  glUniform1fv(uniforms.fog_near, 1, &fog.near);
+  glUniform1fv(uniforms.fog_far, 1, &fog.far);
+  glUniform1fv(uniforms.fog_linear_factor, 1, &fog.linear_factor);
+  glUniform1fv(uniforms.fog_exponential_factor, 1, &fog.exponential_factor);
+  glUniform1fv(uniforms.fog_exponential_power, 1, &fog.exponential_power);
+  glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog.exponential_attenuation_factor);
 
   static const float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
@@ -1048,7 +1048,7 @@ void RenderSystem::render(const Model &model,
            parent_transform * model.transform,
            camera,
            light,
-           fog_linear,
+           fog,
            shader,
            draw);
   }

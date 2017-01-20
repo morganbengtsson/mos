@@ -17,7 +17,7 @@
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/render_camera.hpp>
-#include <mos/render/fog_linear.hpp>
+#include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
 
 namespace mos {
@@ -145,7 +145,7 @@ private:
               const glm::mat4 &transform,
               const RenderCamera &camera,
               const Light &light,
-              const FogLinear &fog_linear,
+              const Fog &fog,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);
 

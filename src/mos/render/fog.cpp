@@ -1,7 +1,7 @@
-#include <mos/render/fog_linear.hpp>
+#include <mos/render/fog.hpp>
 
 namespace mos {
-FogLinear::FogLinear(const glm::vec3 &color,
+Fog::Fog(const glm::vec3 &color,
                      const float near,
                      const float far,
                      const float linear_factor,
@@ -14,5 +14,5 @@ FogLinear::FogLinear(const glm::vec3 &color,
       exponential_power(exponential_power),
       exponential_attenuation_factor(exponential_attenuation_factor) {}
 
-FogLinear::~FogLinear() {}
+Fog::~Fog() {}
 }
