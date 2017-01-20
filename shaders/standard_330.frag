@@ -24,6 +24,9 @@ struct Fog {
     vec3 color;
     float near;
     float far;
+    float linear_attenuation_factor;
+    float exponential_attenuation_factor;
+    float exponential_attenuation_squared_factor;
 };
 
 struct Fragment {
@@ -41,7 +44,7 @@ uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
+uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
