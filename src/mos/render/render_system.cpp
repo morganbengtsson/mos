@@ -1016,9 +1016,12 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
-  glUniform3fv(uniforms.fogs_linear_color, 1, glm::value_ptr(fog_linear.color));
-  glUniform1fv(uniforms.fogs_linear_near, 1, &fog_linear.near);
-  glUniform1fv(uniforms.fogs_linear_far, 1, &fog_linear.far);
+  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog_linear.color));
+  glUniform1fv(uniforms.fog_near, 1, &fog_linear.near);
+  glUniform1fv(uniforms.fog_far, 1, &fog_linear.far);
+  glUniform1fv(uniforms.fog_linear_attenuation_factor, 1, &fog_linear.linear_attenuation_factor);
+  glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog_linear.exponential_attenuation_factor);
+  glUniform1fv(uniforms.fog_exponential_attenuation_squared_factor, 1, &fog_linear.exponential_attenuation_squared_factor);
 
   static const float time = 0.0f;
   glUniform1fv(uniforms.time, 1, &time);
@@ -1141,9 +1144,12 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_projection(glGetUniformLocation(program, "light.projection")),
     receives_light(glGetUniformLocation(program, "receives_light")),
     resolution(glGetUniformLocation(program, "resolution")),
-    fogs_linear_color(glGetUniformLocation(program, "fog.color")),
-    fogs_linear_near(glGetUniformLocation(program, "fog.near")),
-    fogs_linear_far(glGetUniformLocation(program, "fog.far")),
+    fog_color(glGetUniformLocation(program, "fog.color")),
+    fog_near(glGetUniformLocation(program, "fog.near")),
+    fog_far(glGetUniformLocation(program, "fog.far")),
+    fog_linear_attenuation_factor(glGetUniformLocation(program, "fog.linear_attenuation_factor")),
+    fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
+    fog_exponential_attenuation_squared_factor(glGetUniformLocation(program, "fog.exponential_attenuation_squared_factor")),
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {

@@ -221,9 +221,12 @@ private:
     GLint light_projection;
     GLint receives_light;
     GLint resolution;
-    GLint fogs_linear_color;
-    GLint fogs_linear_near;
-    GLint fogs_linear_far;
+    GLint fog_color;
+    GLint fog_near;
+    GLint fog_far;
+    GLint fog_linear_attenuation_factor;
+    GLint fog_exponential_attenuation_factor;
+    GLint fog_exponential_attenuation_squared_factor;
     GLint time;
     GLint overlay;
     GLint multiply;
