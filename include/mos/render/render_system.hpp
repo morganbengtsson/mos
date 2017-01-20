@@ -224,9 +224,10 @@ private:
     GLint fog_color;
     GLint fog_near;
     GLint fog_far;
-    GLint fog_linear_attenuation_factor;
+    GLint fog_linear_factor;
+    GLint fog_exponential_factor;
+    GLint fog_exponential_squared_factor;
     GLint fog_exponential_attenuation_factor;
-    GLint fog_exponential_attenuation_squared_factor;
     GLint time;
     GLint overlay;
     GLint multiply;
