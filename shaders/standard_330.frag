@@ -103,7 +103,7 @@ void main() {
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = 0.0; //TODO: set in light
     float quadratic_attenuation_factor = 0.0; // TODO: set in light
-    float att = 1.0 / (1.0 + linear_attenuation_factor*dist + b*dist*dist);
+    float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
