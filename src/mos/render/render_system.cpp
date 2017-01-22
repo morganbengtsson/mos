@@ -943,11 +943,11 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   // Decal
-  for (auto &decal : decals) {
-    load(decal.texture);
+  for (int i = 0; i < decals.size(); i++) {
+    load(decals[i].texture);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[decal.texture->id()]);
-    glUniform1i(uniforms.decal_map, texture_unit);
+    glBindTexture(GL_TEXTURE_2D, textures_[decals[i].texture->id()]);
+    glUniform1i(uniforms.decal_maps[i], texture_unit);
     texture_unit++;
   }
 
@@ -1149,7 +1149,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_map(glGetUniformLocation(program, "light_map")),
     normal_map(glGetUniformLocation(program, "normal_map")),
     shadow_map(glGetUniformLocation(program, "shadow_map")),
-    decal_map(glGetUniformLocation(program, "decal_map")),
     diffuse_environment_map(glGetUniformLocation(program, "diffuse_environment_map")),
     specular_environment_map(glGetUniformLocation(program, "specular_environment_map")),
     material_ambient_color(glGetUniformLocation(program, "material.ambient")),
@@ -1176,5 +1175,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {
+  for (int i = 0; i < decal_maps.size(); i++) {
+    auto str = "decal_maps[" + std::to_string(i) + "]";
+    decal_maps[i] = glGetUniformLocation(program, str.c_str());
+  }
 }
 }

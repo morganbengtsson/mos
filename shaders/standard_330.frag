@@ -53,7 +53,7 @@ uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_environment_map;
 uniform sampler2D specular_environment_map;
-uniform sampler2D decal_map;
+uniform sampler2D decal_maps[5];
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -102,7 +102,9 @@ void main() {
     vec4 tex_color = texture(diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
-    diffuse_color.rgb += texture(decal_map, fragment.decal_uv).rgb;
+    for (int i = 0; i < 5; i++){
+        diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uv).rgb;
+    }
 
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = 0.0; //TODO: set in light
