@@ -35,7 +35,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec2 decal_uv;
+    vec2 decal_uvs[5];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -103,7 +103,7 @@ void main() {
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
     for (int i = 0; i < 5; i++){
-        diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uv).rgb;
+        diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
     }
 
     float dist = distance(light.position, fragment.position);

@@ -203,7 +203,7 @@ private:
     GLint model_matrix;
     GLint view_matrix;
     GLint normal_matrix;
-    GLint decal_model_view_projection_matrix;
+    std::array<GLint, 5> decal_model_view_projection_matrices;
     GLint depth_bias_mvp;
     GLint diffuse_map;
     GLint light_map;
