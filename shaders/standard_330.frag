@@ -103,7 +103,9 @@ void main() {
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
     for (int i = 0; i < 5; i++){
-        diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
+        //diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
+        vec4 decal = texture(decal_maps[i], fragment.decal_uvs[i]);
+        diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 
     float dist = distance(light.position, fragment.position);
