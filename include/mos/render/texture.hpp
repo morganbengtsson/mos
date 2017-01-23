@@ -124,7 +124,7 @@ public:
   /**
    * @brief if mipmaps should be used
    */
-  const bool mipmaps;
+  bool mipmaps;
   /**
    * @brief compress
    */

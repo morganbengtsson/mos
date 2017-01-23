@@ -29,8 +29,11 @@ Model Assets::model_value(const json &value) {
   if (!value["mesh"].is_null()) {
     mesh_name = value.value("mesh", "");
   }
+  std::string material_name = "";
+  if (!value["material"].is_null()){
+    material_name = value.value("material", "");
+  }
 
-  std::string material_name = value.value("material", "");
   bool recieves_light = value.value("receives_light", true);
   auto transform = jsonarray_to_mat4(value["transform"]);
 
