@@ -995,7 +995,8 @@ void RenderSystem::render(const Model &model,
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
-  const glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(model.transform));
+  glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) * glm::mat3(model.transform));
+  normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
   if (model.material) {
