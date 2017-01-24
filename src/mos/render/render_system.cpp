@@ -983,9 +983,10 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms.model_view_matrix, 1, GL_FALSE, &mv[0][0]);
   glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);
-  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model.transform[0][0]);
+  auto model_matrix = parent_transform * model.transform;
+  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);

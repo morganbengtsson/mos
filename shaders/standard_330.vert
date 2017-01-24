@@ -39,7 +39,7 @@ layout(location = 4) in vec2 light_map_uv;
 out Fragment fragment;
 void main() {
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
-    vec3 N = normalize(vec3(model * vec4(normal_matrix * normal, 0.0)));
+    vec3 N = normalize(normal_matrix * normal);
     vec3 B = cross(T, N);
     fragment.tbn = mat3(T,B,N);
 

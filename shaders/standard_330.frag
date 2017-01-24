@@ -147,6 +147,7 @@ void main() {
     float distance = distance(fragment.position, camera.position);
     color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
+    color.rgb = normal;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
