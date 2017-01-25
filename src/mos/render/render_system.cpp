@@ -698,17 +698,10 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
 
-#ifdef MOS_SRGB
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
-               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               texture->data());
-#else
   glTexImage2D(GL_TEXTURE_2D, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
                GL_UNSIGNED_BYTE, texture->data());
-#endif
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
