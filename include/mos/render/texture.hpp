@@ -40,7 +40,7 @@ public:
    *Along with width and height.
    */
   Texture(T begin, T end, unsigned int width, unsigned int height,
-          const bool mipmaps = true, const bool compress = true,
+          const bool mipmaps = true, const bool compress = false,
           const Wrap &wrap = Wrap::REPEAT)
       : mipmaps(mipmaps), compress(compress), width_(width), height_(height), id_(current_id_++),
         texels_(begin, end), wrap(wrap) {}
@@ -52,7 +52,7 @@ public:
    * @param mipmaps Generate mipmaps or not.
    */
   Texture(const unsigned int width, const unsigned int height,
-          const bool mipmaps = true, const bool compress = true,
+          const bool mipmaps = true, const bool compress = false,
           const Wrap &wrap = Wrap::REPEAT);
 
   /**
@@ -62,13 +62,13 @@ public:
 
   static SharedTexture load(const std::string &path,
                             const bool mipmaps = true,
-                            const bool compress = true,
+                            const bool compress = false,
                             const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
 
   Texture(const std::string &path,
                             const bool mipmaps = true,
-                            const bool compress = true,
+                            const bool compress = false,
                             const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
   /**
