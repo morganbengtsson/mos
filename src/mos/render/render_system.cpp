@@ -936,7 +936,7 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   // Decal
-  for (int i = 0; i < decals.size(); i++) {
+ for (int i = 0; i < decals.size(); i++) {
     load(decals[i].texture);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[decals[i].texture->id()]);
@@ -1022,6 +1022,11 @@ void RenderSystem::render(const Model &model,
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.view[0][0]);
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
                      &light.projection[0][0]);
+
+  glUniform1fv(uniforms.light_linear_attenuation_factor, 1,
+               &light.linear_attenuation_factor);
+  glUniform1fv(uniforms.light_quadratic_attenuation_factor,1,
+               &light.quadratic_attenuation_factor);
 
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
@@ -1154,6 +1159,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_ambient_color(glGetUniformLocation(program, "light.ambient")),
     light_view(glGetUniformLocation(program, "light.view")),
     light_projection(glGetUniformLocation(program, "light.projection")),
+    light_linear_attenuation_factor(glGetUniformLocation(program, "light.linear_attenuation_factor")),
+    light_quadratic_attenuation_factor(glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
     receives_light(glGetUniformLocation(program, "receives_light")),
     resolution(glGetUniformLocation(program, "resolution")),
     fog_color(glGetUniformLocation(program, "fog.color")),

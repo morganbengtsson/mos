@@ -21,6 +21,8 @@ struct Light {
     vec3 ambient;
     mat4 view;
     mat4 projection;
+    float linear_attenuation_factor;
+    float quadratic_attenuation_factor;
 };
 
 uniform Light light;

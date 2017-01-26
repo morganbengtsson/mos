@@ -22,7 +22,9 @@ public:
   explicit Light(const glm::vec3 &position = glm::vec3(0.0f),
                  const glm::vec3 &diffuse = glm::vec3(0.0f),
                  const glm::vec3 &specular = glm::vec3(0.0f),
-                 const glm::vec3 &ambient = glm::vec3(0.0f));
+                 const glm::vec3 &ambient = glm::vec3(0.0f),
+                 const float linear_attenuation_factor = 0.0f,
+                 const float quadratic_attenuation_factor = 0.0f);
   virtual ~Light();
 
   /**
@@ -45,7 +47,24 @@ public:
    */
   glm::vec3 ambient;
 
+  /**
+   * @brief linear falloff
+   */
+  float linear_attenuation_factor;
+
+  /**
+   * @brief quadratic falloff
+   */
+  float quadratic_attenuation_factor;
+
+  /**
+   * @brief view
+   */
   glm::mat4 view;
+
+  /**
+   * @brief projection
+   */
   glm::mat4 projection;
 
 };

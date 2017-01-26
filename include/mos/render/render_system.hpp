@@ -224,6 +224,8 @@ private:
     GLint light_ambient_color;
     GLint light_view;
     GLint light_projection;
+    GLint light_linear_attenuation_factor;
+    GLint light_quadratic_attenuation_factor;
     GLint receives_light;
     GLint resolution;
     GLint fog_color;

@@ -14,6 +14,8 @@ struct Light {
     vec3 ambient;
     mat4 view;
     mat4 projection;
+    float linear_attenuation_factor;
+    float quadratic_attenuation_factor;
 };
 
 struct Camera {
@@ -109,14 +111,14 @@ void main() {
     }
 
     float dist = distance(light.position, fragment.position);
-    float linear_attenuation_factor = 0.0; //TODO: set in light
-    float quadratic_attenuation_factor = 0.0; // TODO: set in light
+    float linear_attenuation_factor = light.linear_attenuation_factor;
+    float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
     float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec4 diffuse_environment = textureEquirectangular(diffuse_environment_map, normal);
-    diffuse_environment.rgb *= material.diffuse;
+    diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
@@ -133,7 +135,7 @@ void main() {
     vec3 ambient = light.ambient * diffuse_color.rgb;
 
     if(receives_light == true) {
-        color = vec4(diffuse.rgb + diffuse_static.rgb + specular.rgb + ambient + diffuse_environment.rgb + specular_environment.rgb, material.opacity);
+        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb + specular.rgb + ambient  + specular_environment.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
