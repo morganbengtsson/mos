@@ -936,6 +936,7 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   // Decal
+  /*
  for (int i = 0; i < decals.size(); i++) {
     load(decals[i].texture);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -946,6 +947,7 @@ void RenderSystem::render(const Model &model,
     const glm::mat4 decal_mvp = decals[i].projection * decals[i].view * decals[i].transform;
     glUniformMatrix4fv(uniforms.decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
+   */
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
@@ -1173,12 +1175,13 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {
+  /*
   for (int i = 0; i < decal_maps.size(); i++) {
     auto decals_uniform_name = "decal_maps[" + std::to_string(i) + "]";
     decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
 
     auto decal_matrices_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
     decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
-  }
+  }*/
 }
 }
