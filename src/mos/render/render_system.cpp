@@ -722,12 +722,12 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->positive_x.data());
+               GL_UNSIGNED_BYTE, texture->data_positive_x());
 
   glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->negative_x.data());
+               GL_UNSIGNED_BYTE, texture->data_negative_x());
 
   glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
@@ -737,17 +737,17 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->negative_y.data());
+               GL_UNSIGNED_BYTE, texture->data_negative_y());
 
   glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->positive_z.data());
+               GL_UNSIGNED_BYTE, texture->data_positive_z());
 
   glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->negative_z.data());
+               GL_UNSIGNED_BYTE, texture->data_negative_z());
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
