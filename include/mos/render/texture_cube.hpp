@@ -10,7 +10,7 @@ namespace mos {
   using SharedTextureCube = std::shared_ptr<TextureCube>;
 class TextureCube {
 public:
-  using Pixels = std::vector<unsigned char>;
+  using Data = std::vector<unsigned char>;
 
   TextureCube(const std::string &positive_x_path,
               const std::string &negative_x_path,
@@ -19,24 +19,31 @@ public:
               const std::string &positive_z_path,
               const std::string &negative_z_path,
               const bool mipmaps = true,
-              const bool compress = true);
-  Pixels positive_x;
-  Pixels negative_x;
-  Pixels positive_y;
-  Pixels negative_y;
-  Pixels positive_z;
-  Pixels negative_z;
+              const bool compress = false);
+  const unsigned char * data_positive_x();
+  const unsigned char * data_negative_x();
+  const unsigned char * data_positive_y();
+  const unsigned char * data_negative_y();
+  const unsigned char * data_positive_z();
+  const unsigned char * data_negative_z();
+
   const bool mipmaps;
   const bool compress;
   unsigned int width() const;
   unsigned int height() const;
   unsigned int id() const;
 private:
+  Data positive_x;
+  Data negative_x;
+  Data positive_y;
+  Data negative_y;
+  Data positive_z;
+  Data negative_z;
   unsigned int width_;
   unsigned int height_;
   static std::atomic_uint current_id_;
   const unsigned int id_;
-  void decode(Pixels &pixels, const std::string &path);
+  void decode(Data &pixels, const std::string &path);
 };
 
 }

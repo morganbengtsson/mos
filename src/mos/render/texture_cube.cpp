@@ -22,7 +22,7 @@ TextureCube::TextureCube(const std::string &positive_x_path,
   decode(negative_z, negative_z_path);
 }
 
-void TextureCube::decode(Pixels &pixels, const std::string &path) {
+void TextureCube::decode(Data &pixels, const std::string &path) {
   auto error = lodepng::decode(pixels, width_, height_, path);
   if (error) {
     std::string e = "Error decoding " + path + " : " + std::to_string(error) + ": " +
@@ -38,5 +38,23 @@ unsigned int TextureCube::height() const {
 }
 unsigned int TextureCube::id() const {
   return id_;
+}
+const unsigned char *TextureCube::data_positive_x() {
+  return positive_x.data();
+}
+const unsigned char *TextureCube::data_negative_x() {
+  return negative_x.data();
+}
+const unsigned char *TextureCube::data_positive_y() {
+  return positive_y.data();
+}
+const unsigned char *TextureCube::data_negative_y() {
+  return negative_y.data();
+}
+const unsigned char *TextureCube::data_positive_z() {
+  return positive_z.data();
+}
+const unsigned char *TextureCube::data_negative_z() {
+  return negative_z.data();
 }
 }
