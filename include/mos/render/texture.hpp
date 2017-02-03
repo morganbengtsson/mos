@@ -75,12 +75,14 @@ public:
    * @brief begin iterator
    * @return constand begin iterator
    */
+  [[deprecated]]
   Texels::const_iterator begin() const;
 
   /**
    * @brief end iterator
    * @return constant end iterator
    */
+  [[deprecated]]
   Texels::const_iterator end() const;
 
   /**
