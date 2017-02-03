@@ -732,7 +732,7 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->positive_y.data());
+               GL_UNSIGNED_BYTE, texture->data_positive_y());
 
   glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0,
                texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
