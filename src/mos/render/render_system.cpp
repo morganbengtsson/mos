@@ -140,13 +140,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   auto data = std::array<unsigned char, 4>{0, 0, 0, 0};
-#ifdef MOS_SRGB
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1, 1, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, data.data());
-#else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                data.data());
-#endif
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
