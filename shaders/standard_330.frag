@@ -124,7 +124,8 @@ void main() {
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
     //vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
     vec4 specular_environment = texture(specular_environment_map, r);
-    specular_environment = textureLod(specular_environment_map, r, 5);
+    specular_environment = textureLod(specular_environment_map, r, 9);
+    specular_environment = textureLod(specular_environment_map, normal, 9);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);

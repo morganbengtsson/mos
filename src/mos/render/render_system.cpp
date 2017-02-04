@@ -35,7 +35,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_POINT_SMOOTH);
 
-  glEnable(GL_TEXTURE_CUBE_MAP);
+  //glEnable(GL_TEXTURE_CUBE_MAP);
+  glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
