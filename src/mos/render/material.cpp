@@ -71,7 +71,7 @@ Material::Material(const std::string &path) {
       spec_file_base = value["specular_environment_map"];
     }
 
-    specular_environment_map = TextureCube::load(fpath.parent_path().str() + "/" + spec_file_base, false);
+    specular_environment_map = TextureCube::load(fpath.parent_path().str() + "/" + spec_file_base);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
