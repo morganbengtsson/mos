@@ -1,5 +1,6 @@
 #include <mos/render/texture_cube.hpp>
 #include <lodepng.h>
+#include <filesystem/path.h>
 
 namespace mos {
 std::atomic_uint TextureCube::current_id_;
@@ -12,8 +13,8 @@ TextureCube::TextureCube(const std::string &positive_x_path,
                          const std::string &negative_z_path,
                          const bool mipmaps,
                          const bool compress, const Wrap &wrap) : mipmaps(mipmaps),
-                                                compress(compress), wrap(wrap),
-                                                id_(current_id_++) {
+                                                                  compress(compress), wrap(wrap),
+                                                                  id_(current_id_++) {
   decode(positive_x, positive_x_path);
   decode(negative_x, negative_x_path);
   decode(positive_y, positive_y_path);
@@ -66,6 +67,34 @@ SharedTextureCube TextureCube::load(const std::string &positive_x_path,
                                     const bool mipmaps,
                                     const bool compress,
                                     const TextureCube::Wrap &wrap) {
-  return mos::SharedTextureCube();
+  return std::make_shared<TextureCube>(positive_x_path,
+                                negative_x_path,
+                                positive_y_path,
+                                negative_y_path,
+                                positive_z_path,
+                                negative_z_path,
+                                       mipmaps,
+                                       compress,
+                                       wrap);
+}
+
+TextureCube::TextureCube(const std::string &base_path,
+                         const bool mipmaps,
+                         const bool compress,
+                         const TextureCube::Wrap &wrap) : TextureCube(
+    base_path.substr(0, base_path.find_last_of(".")) + "_positive_x.png",
+    base_path.substr(0, base_path.find_last_of(".")) + "_negative_x.png",
+    base_path.substr(0, base_path.find_last_of(".")) + "_positive_y.png",
+    base_path.substr(0, base_path.find_last_of(".")) + "_negative_y.png",
+    base_path.substr(0, base_path.find_last_of(".")) + "_positive_z.png",
+    base_path.substr(0, base_path.find_last_of(".")) + "_negative_z.png", mipmaps, compress, wrap) {}
+SharedTextureCube TextureCube::load(const std::string &base_path,
+                                    const bool mipmaps,
+                                    const bool compress,
+                                    const TextureCube::Wrap &wrap) {
+  if (base_path.empty() || base_path.back() == '/') {
+    return nullptr;
+  }
+  return std::make_shared<TextureCube>(base_path, mipmaps, compress, wrap);
 }
 }

@@ -66,36 +66,12 @@ Material::Material(const std::string &path) {
     }
     diffuse_environment_map = Texture::load(fpath.parent_path().str() + "/" + diffusemap_file, false);
 
-    std::string spec_file_pos_x = "";
-    std::string spec_file_neg_x = "";
-    std::string spec_file_pos_y = "";
-    std::string spec_file_neg_y = "";
-    std::string spec_file_pos_z = "";
-    std::string spec_file_neg_z = "";
-    if (!value["specular_environment_map_pos_x"].is_null()) {
-      spec_file_pos_x = value["specular_environment_map_pos_x"];
+    std::string spec_file_base = "";
+    if (!value["specular_environment_map"].is_null()) {
+      spec_file_base = value["specular_environment_map"];
     }
-    if (!value["specular_environment_map_neg_x"].is_null()) {
-      spec_file_neg_x = value["specular_environment_map_neg_x"];
-    }
-    if (!value["specular_environment_map_pos_y"].is_null()) {
-      spec_file_pos_y = value["specular_environment_map_pos_y"];
-    }
-    if (!value["specular_environment_map_neg_y"].is_null()) {
-      spec_file_neg_y = value["specular_environment_map_neg_y"];
-    }
-    if (!value["specular_environment_map_pos_z"].is_null()) {
-      spec_file_pos_z = value["specular_environment_map_pos_z"];
-    }
-    if (!value["specular_environment_map_neg_z"].is_null()) {
-      spec_file_neg_z = value["specular_environment_map_neg_z"];
-    }
-    specular_environment_map = TextureCube::load(fpath.parent_path().str() + "/" + spec_file_pos_x,
-                                                 fpath.parent_path().str() + "/" + spec_file_neg_x,
-                                                 fpath.parent_path().str() + "/" + spec_file_pos_y,
-                                                 fpath.parent_path().str() + "/" + spec_file_neg_y,
-                                                 fpath.parent_path().str() + "/" + spec_file_pos_z,
-                                                 fpath.parent_path().str() + "/" + spec_file_neg_z, false);
+
+    specular_environment_map = TextureCube::load(fpath.parent_path().str() + "/" + spec_file_base, false);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);

@@ -13,6 +13,11 @@ public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
 
+  TextureCube(const std::string &base_path,
+              const bool mipmaps = true,
+              const bool compress = false,
+              const Wrap &wrap = Wrap::REPEAT);
+
   TextureCube(const std::string &positive_x_path,
               const std::string &negative_x_path,
               const std::string &positive_y_path,
@@ -41,6 +46,11 @@ public:
                                 const std::string &negative_y_path,
                                 const std::string &positive_z_path,
                                 const std::string &negative_z_path,
+                                const bool mipmaps = true,
+                                const bool compress = false,
+                                const Wrap &wrap = Wrap::REPEAT);
+
+  static SharedTextureCube load(const std::string &base_path,
                                 const bool mipmaps = true,
                                 const bool compress = false,
                                 const Wrap &wrap = Wrap::REPEAT);
