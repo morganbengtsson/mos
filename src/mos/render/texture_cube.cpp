@@ -11,8 +11,8 @@ TextureCube::TextureCube(const std::string &positive_x_path,
                          const std::string &positive_z_path,
                          const std::string &negative_z_path,
                          const bool mipmaps,
-                         const bool compress) : mipmaps(mipmaps),
-                                                compress(compress),
+                         const bool compress, const Wrap &wrap) : mipmaps(mipmaps),
+                                                compress(compress), wrap(wrap),
                                                 id_(current_id_++) {
   decode(positive_x, positive_x_path);
   decode(negative_x, negative_x_path);
@@ -56,5 +56,16 @@ const unsigned char *TextureCube::data_positive_z() {
 }
 const unsigned char *TextureCube::data_negative_z() {
   return negative_z.data();
+}
+SharedTextureCube TextureCube::load(const std::string &positive_x_path,
+                                    const std::string &negative_x_path,
+                                    const std::string &positive_y_path,
+                                    const std::string &negative_y_path,
+                                    const std::string &positive_z_path,
+                                    const std::string &negative_z_path,
+                                    const bool mipmaps,
+                                    const bool compress,
+                                    const TextureCube::Wrap &wrap) {
+  return mos::SharedTextureCube();
 }
 }

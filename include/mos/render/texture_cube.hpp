@@ -6,11 +6,12 @@
 #include <string>
 
 namespace mos {
-  class TextureCube;
-  using SharedTextureCube = std::shared_ptr<TextureCube>;
+class TextureCube;
+using SharedTextureCube = std::shared_ptr<TextureCube>;
 class TextureCube {
 public:
   using Data = std::vector<unsigned char>;
+  enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
 
   TextureCube(const std::string &positive_x_path,
               const std::string &negative_x_path,
@@ -19,19 +20,30 @@ public:
               const std::string &positive_z_path,
               const std::string &negative_z_path,
               const bool mipmaps = true,
-              const bool compress = false);
-  const unsigned char * data_positive_x();
-  const unsigned char * data_negative_x();
-  const unsigned char * data_positive_y();
-  const unsigned char * data_negative_y();
-  const unsigned char * data_positive_z();
-  const unsigned char * data_negative_z();
+              const bool compress = false,
+              const Wrap &wrap = Wrap::REPEAT);
+  const unsigned char *data_positive_x();
+  const unsigned char *data_negative_x();
+  const unsigned char *data_positive_y();
+  const unsigned char *data_negative_y();
+  const unsigned char *data_positive_z();
+  const unsigned char *data_negative_z();
 
   const bool mipmaps;
   const bool compress;
+  Wrap wrap;
   unsigned int width() const;
   unsigned int height() const;
   unsigned int id() const;
+  static SharedTextureCube load(const std::string &positive_x_path,
+                                const std::string &negative_x_path,
+                                const std::string &positive_y_path,
+                                const std::string &negative_y_path,
+                                const std::string &positive_z_path,
+                                const std::string &negative_z_path,
+                                const bool mipmaps = true,
+                                const bool compress = false,
+                                const Wrap &wrap = Wrap::REPEAT);
 private:
   Data positive_x;
   Data negative_x;

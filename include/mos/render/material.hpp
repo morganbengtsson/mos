@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <mos/render/texture.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
   class Material;
@@ -34,7 +35,7 @@ public:
                     const SharedTexture &normal_map = SharedTexture(),
                     const SharedTexture &light_map = SharedTexture(),
                     const SharedTexture &diffuse_environment_map = SharedTexture(),
-                    const SharedTexture &specular_environment_map = SharedTexture(),
+                    const SharedTextureCube &specular_environment_map = SharedTextureCube(),
                     const glm::vec3 &ambient = glm::vec3(1.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
@@ -107,7 +108,7 @@ public:
   /**
   * @brief Specularmap for the material.
   */
-  SharedTexture specular_environment_map;
+  SharedTextureCube specular_environment_map;
 
 };
 }
