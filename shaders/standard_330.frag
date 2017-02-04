@@ -54,7 +54,7 @@ uniform sampler2D light_map;
 uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_environment_map;
-uniform sampler2D specular_environment_map;
+uniform samplerCube specular_environment_map;
 //uniform sampler2D decal_maps[5];
 uniform mat4 model;
 uniform mat4 model_view;
@@ -122,7 +122,8 @@ void main() {
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
+    //vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
+    vec4 specular_environment = texture(specular_environment_map, r);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);

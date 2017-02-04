@@ -35,7 +35,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_POINT_SMOOTH);
 
-  glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+  glEnable(GL_TEXTURE_CUBE_MAP);
 
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
@@ -480,7 +480,7 @@ void RenderSystem::load(const Model &model) {
       }
     }
     if (model.material->specular_environment_map) {
-      if (textures_.find(model.material->specular_environment_map->id()) == textures_.end()) {
+      if (texture_cubes_.find(model.material->specular_environment_map->id()) == texture_cubes_.end()) {
         load(model.material->specular_environment_map);
       }
     }
@@ -708,7 +708,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
 unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
   GLuint id;
   glGenTextures(1, &id);
-  glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, id);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
@@ -717,11 +717,11 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
       {TextureCube::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
       {TextureCube::Wrap::REPEAT, GL_REPEAT}};
 
-  glTexParameterf(GL_TEXTURE_CUBE_MAP_SEAMLESS, GL_TEXTURE_MIN_FILTER, sampling);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP_SEAMLESS, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_SEAMLESS, GL_TEXTURE_WRAP_S, wrap_map[texture->wrap]);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_SEAMLESS, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP_SEAMLESS, GL_TEXTURE_WRAP_R, wrap_map[texture->wrap]);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
   //TODO: loop
   glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0,
@@ -755,9 +755,9 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
                GL_UNSIGNED_BYTE, texture->data_negative_z());
 
   if (texture->mipmaps) {
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   };
-  glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, 0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   return id;
 }
 
@@ -971,8 +971,8 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_CUBE_MAP_SEAMLESS, model.material ? model.material->specular_environment_map
-                                                ? textures_[model.material->specular_environment_map->id()]
+  glBindTexture(GL_TEXTURE_CUBE_MAP, model.material ? model.material->specular_environment_map
+                                                ? texture_cubes_[model.material->specular_environment_map->id()]
                                                 : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.specular_environment_map, texture_unit);
   texture_unit++;
