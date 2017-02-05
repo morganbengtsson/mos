@@ -5,7 +5,7 @@
 #include <atomic>
 #include <optional.hpp>
 #include <glm/glm.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
   class RenderTargetCube;
@@ -35,7 +35,7 @@ public:
    * @brief The texture that is rendered to.
    * @todo Should probably not be shared.
    */
-  std::shared_ptr<mos::Texture> texture;
+  std::shared_ptr<mos::TextureCube> texture;
 
   /**
    * @brief unique id

@@ -53,6 +53,7 @@ public:
   Fog fog;
   Shader shader;
   Draw draw;
+  void specular_environment_map(const mos::SharedTextureCube & texture);
 };
 }
 

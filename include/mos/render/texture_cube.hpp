@@ -13,6 +13,10 @@ public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
 
+  TextureCube(int width, int height, const bool mipmaps)
+      : width_(width), height_(height), mipmaps(mipmaps), compress(false), id_(current_id_++) {
+  }
+
   TextureCube(const std::string &base_path,
               const bool mipmaps = true,
               const bool compress = false,

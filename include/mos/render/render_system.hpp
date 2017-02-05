@@ -85,7 +85,7 @@ public:
   void unload(const SharedTextureCube &texture);
 
   void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
-               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
+               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube());
 
   template<class Tr>
   void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},

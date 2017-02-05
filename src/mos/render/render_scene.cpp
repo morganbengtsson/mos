@@ -7,4 +7,12 @@ RenderScene::RenderScene(const std::initializer_list<Model> &models, const Rende
              const Draw &draw)
     : RenderScene(models.begin(), models.end(), camera, light,
             fog, shader, draw) {}
+
+void RenderScene::specular_environment_map(const mos::SharedTextureCube &texture) {
+  // TODO: model childrens
+  for (auto & model : models) {
+    model.material->specular_environment_map = texture;
+  }
+
+}
 }

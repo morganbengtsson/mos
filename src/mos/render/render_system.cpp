@@ -1088,8 +1088,15 @@ void RenderSystem::render_target(const OptTargetCube &target) {
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+      for (int i = 0; i < 6; i++) {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                     GL_RGBA,
+                     target->texture->width(), target->texture->height(), 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+      }
+
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_CUBE_MAP, texture_id, 0);
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
 
       GLuint depthrenderbuffer_id;
       glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -1171,9 +1178,9 @@ void RenderSystem::clear(const glm::vec4 &color) {
 
 void RenderSystem::render_scenes(
     const std::initializer_list<RenderScene> &batches_init,
-    const glm::vec4 &color, const OptTarget &target) {
+    const glm::vec4 &color, const OptTarget &target, const OptTargetCube &target_cube) {
   render_scenes(batches_init.begin(), batches_init.end(),
-          color, target);
+          color, target, target_cube);
 }
 
 
