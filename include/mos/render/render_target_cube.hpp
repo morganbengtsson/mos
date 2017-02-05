@@ -42,6 +42,7 @@ public:
    * @return id
    */
   unsigned int id() const;
+  int layers;
 
 private:
   unsigned int id_;

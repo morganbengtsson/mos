@@ -92,6 +92,18 @@ public:
                const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube()) {
     render_target(target);
     render_target(target_cube);
+    if (target_cube) {
+      for (int i = 0; i < target_cube->layers;i++){
+        auto texture_id = texture_cubes_[target_cube->id()];
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_id, 0);
+        clear(color);
+        for (auto it = begin; it != end; it++) {
+          render_scene(*it);
+        }
+      }
+    }
+
     clear(color);
     for (auto it = begin; it != end; it++) {
       render_scene(*it);
