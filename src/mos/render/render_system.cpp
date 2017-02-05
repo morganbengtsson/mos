@@ -1073,6 +1073,51 @@ void RenderSystem::render(const Model &model,
   }
 }
 
+void RenderSystem::render_target(const OptTargetCube &target) {
+  if (target) {
+    if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
+      GLuint frame_buffer_id;
+      glGenFramebuffers(1, &frame_buffer_id);
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+      GLuint texture_id;
+      glGenTextures(1, &texture_id);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+      glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA, target->texture->width(),
+                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_CUBE_MAP, texture_id, 0);
+
+      GLuint depthrenderbuffer_id;
+      glGenRenderbuffers(1, &depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                            target->texture->width(),
+                            target->texture->height());
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                GL_RENDERBUFFER, depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        throw std::runtime_error("Framebuffer incomplete.");
+      }
+
+      texture_cubes_.insert({target->texture->id(), texture_id});
+      render_buffers.insert({target->id(), depthrenderbuffer_id});
+      frame_buffers_.insert({target->id(), frame_buffer_id});
+
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    auto fb = frame_buffers_[target->id()];
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+  } else {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+}
+
 void RenderSystem::render_target(const OptTarget &target) {
   if (target) {
     if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
@@ -1130,6 +1175,7 @@ void RenderSystem::render_scenes(
   render_scenes(batches_init.begin(), batches_init.end(),
           color, target);
 }
+
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     program(program),

@@ -16,6 +16,7 @@
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
+#include <mos/render/render_target_cube.hpp>
 #include <mos/render/render_camera.hpp>
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
@@ -88,8 +89,9 @@ public:
 
   template<class Tr>
   void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-               const OptTarget &target = OptTarget()) {
+               const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube()) {
     render_target(target);
+    render_target(target_cube);
     clear(color);
     for (auto it = begin; it != end; it++) {
       render_scene(*it);
@@ -157,6 +159,8 @@ private:
    * @param target
    */
   void render_target(const OptTarget &target);
+
+  void render_target(const OptTargetCube &target);
 
   /**
    * @brief clear
