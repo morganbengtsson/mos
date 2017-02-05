@@ -1083,13 +1083,8 @@ void RenderSystem::render_target(const OptTarget &target) {
       GLuint texture_id;
       glGenTextures(1, &texture_id);
       glBindTexture(GL_TEXTURE_2D, texture_id);
-#ifdef MOS_SRGB
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, target->texture->width(),
-                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-#else
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
                    target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-#endif
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
