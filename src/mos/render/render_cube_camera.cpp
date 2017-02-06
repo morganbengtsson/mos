@@ -8,11 +8,11 @@ RenderCubeCamera::RenderCubeCamera(const glm::vec3 &position,
                                                                                               0.1f,
                                                                                               100.0f)),
                                                                   up(glm::vec3(0.0f, 0.0f, 1.0f)),
-    cameras{{mos::RenderCamera(position, position + glm::vec3(1.0f, 0.0f, 0.0f), projection, glm::vec3(0.0f, 1.0f, 0.0f), resolution),
-             mos::RenderCamera(position, position + glm::vec3(-1.0f, 0.0f, 0.0f), projection, glm::vec3(0.0f, 1.0f, 0.0f), resolution),
-             mos::RenderCamera(position, position + glm::vec3(0.0f, 1.0f, 0.0f), projection, glm::vec3(0.0f, 0.0f, -1.0f), resolution),
-             mos::RenderCamera(position, position + glm::vec3(0.0f, -1.0f, 0.0f), projection, glm::vec3(0.0f, 0.0f, 1.0f), resolution),
-             mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, 1.0f), projection, glm::vec3(0.0f, 1.0f, 0.0f), resolution),
-             mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, -1.0f), projection, glm::vec3(0.0f, 1.0f, 0.0f), resolution)}}
+    cameras{{mos::RenderCamera(position, position + glm::vec3(1.0f, 0.0f, 0.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution),
+             mos::RenderCamera(position, position + glm::vec3(-1.0f, 0.0f, 0.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution),
+             mos::RenderCamera(position, position + glm::vec3(0.0f, 1.0f, 0.0f), projection, glm::vec3(0.0f, 0.0f, 1.0f), resolution),
+             mos::RenderCamera(position, position + glm::vec3(0.0f, -1.0f, 0.0f), projection, glm::vec3(0.0f, 0.0f, -1.0f), resolution),
+             mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, 1.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution),
+             mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, -1.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution)}}
     {}
 }
