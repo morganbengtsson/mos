@@ -1091,6 +1091,7 @@ void RenderSystem::render_target(const OptTargetCube &target) {
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+
       for (int i = 0; i < 6; i++) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                      GL_RGBA,
