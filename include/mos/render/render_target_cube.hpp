@@ -22,14 +22,14 @@ public:
    * @param width
    * @param height
    */
-  explicit RenderTargetCube(const unsigned int width = 256,
-                        const unsigned int height = 256);
+  explicit RenderTargetCube(const float width = 128.0f,
+                        const float height = 128.0f);
 
   /**
    * @brief Target
    * @param resolution
    */
-  explicit RenderTargetCube(const glm::ivec2 &resolution = glm::ivec2(256, 256));
+  explicit RenderTargetCube(const glm::vec2 &resolution = glm::vec2(128, 128));
 
   /**
    * @brief The texture that is rendered to.

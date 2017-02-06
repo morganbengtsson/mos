@@ -1111,6 +1111,8 @@ void RenderSystem::render_target(const OptTargetCube &target) {
                                 GL_RENDERBUFFER, depthrenderbuffer_id);
       glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+      std::cout << target->texture->width() << std::endl;
+
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         throw std::runtime_error("Framebuffer incomplete.");
       }
