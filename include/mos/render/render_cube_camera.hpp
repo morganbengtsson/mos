@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <array>
 
+
 namespace mos {
 class RenderCubeCamera {
 public:
