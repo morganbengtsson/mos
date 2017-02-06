@@ -12,6 +12,7 @@
 #include <mos/render/render_box.hpp>
 #include <mos/render/particles.hpp>
 #include <mos/render/decal.hpp>
+#include <mos/render/render_cube_camera.hpp>
 
 namespace mos {
 
@@ -50,6 +51,7 @@ public:
   RenderBoxes render_boxes;
   Light light;
   RenderCamera camera;
+  RenderCubeCamera cube_camera;
   Fog fog;
   Shader shader;
   Draw draw;
