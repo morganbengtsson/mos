@@ -93,20 +93,23 @@ public:
     render_target(target);
     render_target(target_cube);
     if (target_cube) {
+      auto texture_id = texture_cubes_[target_cube->id()];
       for (int i = 0; i < target_cube->layers;i++){
-        auto texture_id = texture_cubes_[target_cube->id()];
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_id, 0);
         clear(color);
         for (auto it = begin; it != end; it++) {
-          render_scene(*it);
+          render_scene(it->cube_camera.cameras[i], *it);
         }
       }
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+      glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 
     clear(color);
     for (auto it = begin; it != end; it++) {
-      render_scene(*it);
+      render_scene(it->camera, *it);
     }
   }
 
@@ -146,7 +149,7 @@ private:
    * @brief models_batch rendering.
    * @param render_scene
    */
-  void render_scene(const RenderScene &render_scene);
+  void render_scene(const RenderCamera &camera, const RenderScene &render_scene);
 
   /**
    * @brief Updates render state of model.
