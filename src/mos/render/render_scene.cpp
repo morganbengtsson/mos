@@ -11,7 +11,7 @@ RenderScene::RenderScene(const std::initializer_list<Model> &models, const Rende
 void RenderScene::specular_environment_map(const mos::SharedTextureCube &texture) {
   // TODO: model childrens
   for (auto & model : models) {
-    model.material->specular_environment_map = texture;
+    model.material->environment_map = texture;
   }
 
 }

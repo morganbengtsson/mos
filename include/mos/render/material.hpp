@@ -34,8 +34,7 @@ public:
   explicit Material(const SharedTexture &diffuse_map = SharedTexture(),
                     const SharedTexture &normal_map = SharedTexture(),
                     const SharedTexture &light_map = SharedTexture(),
-                    const SharedTexture &diffuse_environment_map = SharedTexture(),
-                    const SharedTextureCube &specular_environment_map = SharedTextureCube(),
+                    const SharedTextureCube &environment_map = SharedTextureCube(),
                     const glm::vec3 &ambient = glm::vec3(1.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
@@ -101,14 +100,9 @@ public:
   SharedTexture light_map;
 
   /**
-  * @brief Diffusemap for the material.
+  * @brief Environment map for the material.
   */
-  SharedTexture diffuse_environment_map;
-
-  /**
-  * @brief Specularmap for the material.
-  */
-  SharedTextureCube specular_environment_map;
+  SharedTextureCube environment_map;
 
 };
 }
