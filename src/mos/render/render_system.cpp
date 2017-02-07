@@ -34,6 +34,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_POINT_SMOOTH);
+  glEnable(GL_FRAMEBUFFER_SRGB);
 
   //glEnable(GL_TEXTURE_CUBE_MAP);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -44,10 +45,6 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-// glEnable(GL_FRAMEBUFFER_SRGB);
-#ifdef MOS_SRGB
-  glEnable(GL_FRAMEBUFFER_SRGB);
-#endif
   std::string shader_path = "assets/shaders/";
 
   std::string standard_vert = "standard_330.vert";

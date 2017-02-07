@@ -86,8 +86,9 @@ void main() {
     vec4 tex_color = texture(diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+
     /*
-    for (int i = 0; i < 5; i++){
+    for (int i = 0; i < 5; i++) {
         //diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
         vec4 decal = texture(decal_maps[i], fragment.decal_uvs[i]);
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
@@ -100,11 +101,11 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.8f;
+    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.5f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = reflect(fragment.camera_to_surface, normal);
-    vec4 specular_environment = texture(environment_map, -r, 4) * 0.2;
+    vec4 specular_environment = texture(environment_map, -r, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -130,7 +131,7 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+    //color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
