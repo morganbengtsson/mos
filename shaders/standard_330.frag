@@ -68,6 +68,21 @@ float fog_attenuation(const float dist, const Fog fog) {
     return linear * fog.linear_factor + exponential * fog.exponential_factor;
 }
 
+vec3 parallax_correct(const vec3 box, const vec3 box_pos, const vec3 dir){
+    vec3 box_min = -box/2.0;
+    vec3 box_max = box/2.0;
+    vec3 nrdir = normalize(dir);
+    vec3 rbmax = ((box_max + box_pos) - fragment.position)/nrdir;
+    vec3 rbmin = ((box_min + box_pos) - fragment.position)/nrdir;
+
+    vec3 rbminmax = max(rbmax, rbmin);
+    float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+
+    vec3 posonbox = fragment.position + nrdir*fa;
+    vec3 rdir = normalize(posonbox - box_pos);
+    return rdir;
+}
+
 void main() {
 
     vec4 static_light = texture(light_map, fragment.light_map_uv);
