@@ -100,11 +100,11 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = vec4(0.0, 0.0, 0.0, 0.0);
+    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.8f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
-    vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    vec4 specular_environment = texture(environment_map, -r);
+    vec3 r = reflect(fragment.camera_to_surface, normal);
+    vec4 specular_environment = texture(environment_map, -r, 4) * 0.2;
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
