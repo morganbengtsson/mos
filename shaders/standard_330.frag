@@ -116,23 +116,14 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.8f;
+    vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
+    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 9) * 1.0f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
+    vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), r);
 
-    vec3 nrdir = normalize(r);
-    vec3 rbmax = ((vec3(2.5, 2.5, 1.25) + vec3(0.0, 0.0, 1.25)) - fragment.position)/nrdir;
-    vec3 rbmin = ((vec3(-2.5, -2.5, -1.25) + vec3(0.0, 0.0, 1.25)) - fragment.position)/nrdir;
-
-    vec3 rbminmax = max(rbmax, rbmin);
-    float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
-
-    vec3 posonbox = fragment.position+ nrdir*fa;
-    vec3 env_box_pos = vec3(0.0, 0.0, 1.25);
-    vec3 rdir = normalize(posonbox - env_box_pos);
-
-    vec4 specular_environment = texture(environment_map, rdir, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
+    vec4 specular_environment = texture(environment_map, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0) * 0.5;
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -146,8 +137,8 @@ void main() {
     vec3 ambient = light.ambient * diffuse_color.rgb;
 
     if(receives_light == true) {
-        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb + specular.rgb + ambient  + specular_environment.rgb, material.opacity);
-        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb + ambient  + specular_environment.rgb, material.opacity);
+        vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
+        color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + ambient, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
