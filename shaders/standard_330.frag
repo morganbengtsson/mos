@@ -68,23 +68,6 @@ float fog_attenuation(const float dist, const Fog fog) {
     return linear * fog.linear_factor + exponential * fog.exponential_factor;
 }
 
-vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
-    vec3 r = direction;
-    vec2 tc;
-    tc.y = r.z;
-    r.z = 0.0;
-    tc.x = normalize(r).x * 0.5;
-
-    float s = sign(r.y) * 0.5;
-
-    tc.s = 0.75 - s * (0.5 - tc.s);
-    tc.t = 0.5 + 0.5 * tc.t;
-
-    // Sample from scaled and biased texture coordinate
-    color = texture(tex, tc);
-    return color;
-}
-
 void main() {
 
     vec4 static_light = texture(light_map, fragment.light_map_uv);
