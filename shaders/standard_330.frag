@@ -105,7 +105,19 @@ void main() {
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = reflect(fragment.camera_to_surface, normal);
-    vec4 specular_environment = texture(environment_map, -r, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
+
+    vec3 nrdir = normalize(r);
+    vec3 rbmax = ((vec3(2.5, 2.5, 1.25) + vec3(0.0, 0.0, 1.25)) - fragment.position)/nrdir;
+    vec3 rbmin = ((vec3(-2.5, -2.5, -1.25) + vec3(0.0, 0.0, 1.25)) - fragment.position)/nrdir;
+
+    vec3 rbminmax = max(rbmax, rbmin);
+    float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+
+    vec3 posonbox = fragment.position+ nrdir*fa;
+    vec3 env_box_pos = vec3(0.0, 0.0, 1.25);
+    vec3 rdir = posonbox - env_box_pos;
+
+    vec4 specular_environment = texture(environment_map, -rdir, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
