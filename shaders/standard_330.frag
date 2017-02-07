@@ -101,10 +101,10 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.5f;
+    vec4 diffuse_environment = textureLod(environment_map, normal, 9) * 0.8f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
-    vec3 r = reflect(fragment.camera_to_surface, normal);
+    vec3 r = -reflect(fragment.camera_to_surface, normal);
 
     vec3 nrdir = normalize(r);
     vec3 rbmax = ((vec3(2.5, 2.5, 1.25) + vec3(0.0, 0.0, 1.25)) - fragment.position)/nrdir;
@@ -115,9 +115,9 @@ void main() {
 
     vec3 posonbox = fragment.position+ nrdir*fa;
     vec3 env_box_pos = vec3(0.0, 0.0, 1.25);
-    vec3 rdir = posonbox - env_box_pos;
+    vec3 rdir = normalize(posonbox - env_box_pos);
 
-    vec4 specular_environment = texture(environment_map, -rdir, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
+    vec4 specular_environment = texture(environment_map, rdir, (1.0 - (material.specular_exponent / 512)) * 10.0) * 1.0;
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -132,6 +132,7 @@ void main() {
 
     if(receives_light == true) {
         color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb + specular.rgb + ambient  + specular_environment.rgb, material.opacity);
+        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb + ambient  + specular_environment.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
