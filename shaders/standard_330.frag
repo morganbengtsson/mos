@@ -123,7 +123,7 @@ void main() {
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), r);
 
-    vec4 specular_environment = texture(environment_map, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0) * 0.5;
+    vec4 specular_environment = texture(environment_map, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -150,7 +150,7 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    //color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+    color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
