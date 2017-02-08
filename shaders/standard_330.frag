@@ -117,7 +117,7 @@ void main() {
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
-    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 9) * 0.3f;
+    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 5) * .3f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
@@ -139,6 +139,7 @@ void main() {
     if(receives_light == true) {
         vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
         color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + ambient, material.opacity);
+        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
