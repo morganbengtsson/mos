@@ -117,7 +117,7 @@ void main() {
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
-    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 9) * 1.0f;
+    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 9) * 0.3f;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
