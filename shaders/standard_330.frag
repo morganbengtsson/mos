@@ -83,6 +83,18 @@ vec3 parallax_correct(const vec3 box, const vec3 box_pos, const vec3 dir){
     return rdir;
 }
 
+vec4 averageCube(const samplerCube sampler, const vec3 dir, const float mip){
+    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+    float v = 0.5;
+    color += textureLod(sampler, dir + vec3(v, 0.0, 0.0), mip);
+    color += textureLod(sampler, dir + vec3(-v, 0.0, 0.0), mip);
+    color += textureLod(sampler, dir + vec3(0.0, v, 0.0), mip);
+    color += textureLod(sampler, dir + vec3(0.0, -v, 0.0), mip);
+    color += textureLod(sampler, dir + vec3(0.0, 0.0, v), mip);
+    color += textureLod(sampler, dir + vec3(0.0, 0.0, -v), mip);
+    return color / 6.0;
+}
+
 void main() {
 
     vec4 static_light = texture(light_map, fragment.light_map_uv);
@@ -117,7 +129,8 @@ void main() {
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
-    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 5) * .3f;
+    //vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 5) * .3f;
+    vec4 diffuse_environment = averageCube(environment_map, corrected_normal, 5) * 0.3;
     diffuse_environment.rgb *= diffuse_color.rgb;
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
@@ -140,6 +153,7 @@ void main() {
         vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
         color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + ambient, material.opacity);
         color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
+        color = vec4(diffuse.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
