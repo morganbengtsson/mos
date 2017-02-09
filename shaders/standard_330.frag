@@ -152,8 +152,8 @@ void main() {
     if(receives_light == true) {
         vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
         color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + ambient, material.opacity);
-        color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
-        color = vec4(diffuse.rgb, material.opacity);
+        //color = vec4(diffuse.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
+        //color = vec4(diffuse.rgb, material.opacity);
     }
     else {
         color = vec4(diffuse_color.rgb, material.opacity);
