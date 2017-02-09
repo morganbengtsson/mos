@@ -62,6 +62,53 @@ uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
+const float Pi = 3.141592654f;
+const float CosineA0 = Pi;
+const float CosineA1 = (2.0f * Pi) / 3.0f;
+const float CosineA2 = Pi * 0.25f;
+
+struct SH9 {
+    float c[9];
+};
+
+struct SH9Color {
+    vec3 c[9];
+};
+
+SH9 SHCosineLobe(const vec3 dir) {
+    SH9 sh;
+
+    // Band 0
+    sh.c[0] = 0.282095f * CosineA0;
+
+    // Band 1
+    sh.c[1] = 0.488603f * dir.y * CosineA1;
+    sh.c[2] = 0.488603f * dir.z * CosineA1;
+    sh.c[3] = 0.488603f * dir.x * CosineA1;
+
+    // Band 2
+    sh.c[4] = 1.092548f * dir.x * dir.y * CosineA2;
+    sh.c[5] = 1.092548f * dir.y * dir.z * CosineA2;
+    sh.c[6] = 0.315392f * (3.0f * dir.z * dir.z - 1.0f) * CosineA2;
+    sh.c[7] = 1.092548f * dir.x * dir.z * CosineA2;
+    sh.c[8] = 0.546274f * (dir.x * dir.x - dir.y * dir.y) * CosineA2;
+
+    return sh;
+}
+
+vec3 ComputeSHIrradiance(const vec3 normal, const SH9Color radiance) {
+    // Compute the cosine lobe in SH, oriented about the normal direction
+    SH9 shCosine = SHCosineLobe(normal);
+
+    // Compute the SH dot product to get irradiance
+    vec3 irradiance = vec3(0.0, 0.0, 0.0);
+    for(int i = 0; i < 9; ++i) {
+        irradiance += radiance.c[i] * shCosine.c[i];
+    }
+
+    return irradiance;
+}
+
 float fog_attenuation(const float dist, const Fog fog) {
     float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
     float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
