@@ -1059,71 +1059,6 @@ void RenderSystem::render(const Model &model,
   }
 }
 
-void RenderSystem::render_target(const OptTargetCube &target) {
-  if (target) {
-    if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
-      GLuint frame_buffer_id;
-      glGenFramebuffers(1, &frame_buffer_id);
-      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
-      GLuint texture_id;
-      glGenTextures(1, &texture_id);
-      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-      glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA, target->texture->width(),
-                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-      /*
-      if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
-        float aniso = 0.0f;
-        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-        glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-      }
-      */
-
-      for (int i = 0; i < 6; i++) {
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                     GL_RGBA,
-                     target->texture->width(), target->texture->height(), 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, nullptr);
-      }
-
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
-
-      GLuint depthrenderbuffer_id;
-      glGenRenderbuffers(1, &depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            target->texture->width(),
-                            target->texture->height());
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-      std::cout << target->texture->width() << std::endl;
-
-      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        throw std::runtime_error("Framebuffer incomplete.");
-      }
-
-      texture_cubes_.insert({target->texture->id(), texture_id});
-      render_buffers.insert({target->id(), depthrenderbuffer_id});
-      frame_buffers_.insert({target->id(), frame_buffer_id});
-
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-    auto fb = frame_buffers_[target->id()];
-    glBindFramebuffer(GL_FRAMEBUFFER, fb);
-  } else {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
-}
-
 void RenderSystem::render_target(const OptTarget &target) {
   if (target) {
     if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
@@ -1200,9 +1135,9 @@ void RenderSystem::clear(const glm::vec4 &color) {
 
 void RenderSystem::render_scenes(
     const std::initializer_list<RenderScene> &batches_init,
-    const glm::vec4 &color, const OptTarget &target, const OptTargetCube &target_cube) {
+    const glm::vec4 &color, const OptTarget &target) {
   render_scenes(batches_init.begin(), batches_init.end(),
-          color, target, target_cube);
+          color, target);
 }
 
 

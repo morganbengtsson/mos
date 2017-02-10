@@ -29,12 +29,12 @@ public:
   /**
    * @brief The texture that is rendered to.
    */
-  SharedTexture texture;
+  const SharedTexture texture;
 
   /**
-   * @brief Cube texture that can be rendererd to.
+   * @brief Cube texture that can be rendered to.
    */
-  SharedTextureCube texture_cube;
+  const SharedTextureCube texture_cube;
 
   int width() const;
   int height() const;

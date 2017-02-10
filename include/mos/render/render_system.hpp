@@ -16,7 +16,6 @@
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
-#include <mos/render/render_target_cube.hpp>
 #include <mos/render/render_camera.hpp>
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
@@ -85,13 +84,12 @@ public:
   void unload(const SharedTextureCube &texture);
 
   void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
-               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube());
+               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
 
   template<class Tr>
   void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-               const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube()) {
+               const OptTarget &target = OptTarget()) {
     render_target(target);
-    //render_target(target_cube);
     if (target->texture_cube) {
       auto texture_id = texture_cubes_[target->id()];
       for (int i = 0; i < 6;i++){
@@ -174,8 +172,6 @@ private:
    * @param target
    */
   void render_target(const OptTarget &target);
-
-  void render_target(const OptTargetCube &target);
 
   /**
    * @brief clear
