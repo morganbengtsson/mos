@@ -687,7 +687,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+               texture->compress ? GL_COMPRESSED_SRGB_ALPHA: GL_SRGB_ALPHA,
                texture->width(), texture->height(), 0, GL_RGBA,
                GL_UNSIGNED_BYTE, texture->data());
 
@@ -1083,7 +1083,7 @@ void RenderSystem::render_target(const OptTargetCube &target) {
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
         glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
       }
-       */
+      */
 
       for (int i = 0; i < 6; i++) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
