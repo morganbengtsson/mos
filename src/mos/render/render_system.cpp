@@ -1131,23 +1131,49 @@ void RenderSystem::render_target(const OptTarget &target) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      GLuint texture_id;
-      glGenTextures(1, &texture_id);
-      glBindTexture(GL_TEXTURE_2D, texture_id);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
-                   target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      if (target->texture) {
+        GLuint texture_id;
+        glGenTextures(1, &texture_id);
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
+                     target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, texture_id, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D, texture_id, 0);
+        textures_.insert({target->texture->id(), texture_id});
+      }
+      if (target->texture_cube) {
+        GLuint texture_id;
+        glGenTextures(1, &texture_id);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA, target->texture_cube->width(),
+                     target->texture_cube->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        for (int i = 0; i < 6; i++) {
+          glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                       GL_RGBA,
+                       target->texture_cube->width(), target->texture_cube->height(), 0, GL_RGBA,
+                       GL_UNSIGNED_BYTE, nullptr);
+        }
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
+        texture_cubes_.insert({target->texture_cube->id(), texture_id});
+      }
 
       GLuint depthrenderbuffer_id;
       glGenRenderbuffers(1, &depthrenderbuffer_id);
       glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
       glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            target->texture->width(),
-                            target->texture->height());
+                            target->width(),
+                            target->height());
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                 GL_RENDERBUFFER, depthrenderbuffer_id);
       glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -1155,11 +1181,8 @@ void RenderSystem::render_target(const OptTarget &target) {
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         throw std::runtime_error("Framebuffer incomplete.");
       }
-
-      textures_.insert({target->texture->id(), texture_id});
       render_buffers.insert({target->id(), depthrenderbuffer_id});
       frame_buffers_.insert({target->id(), frame_buffer_id});
-
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     auto fb = frame_buffers_[target->id()];

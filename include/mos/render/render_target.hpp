@@ -6,6 +6,7 @@
 #include <optional.hpp>
 #include <glm/glm.hpp>
 #include <mos/render/texture.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
   class RenderTarget;
@@ -17,25 +18,26 @@ namespace mos {
  */
 class RenderTarget {
 public:
-  /**
-   * @brief RenderTarget
-   * @param width
-   * @param height
-   */
-  explicit RenderTarget(const unsigned int width = 256,
-                        const unsigned int height = 256);
 
   /**
    * @brief Target
    * @param resolution
    */
-  explicit RenderTarget(const glm::ivec2 &resolution = glm::ivec2(256, 256));
+  explicit RenderTarget(const SharedTexture & texture,
+                        const SharedTextureCube texture_cube);
 
   /**
    * @brief The texture that is rendered to.
-   * @todo Should probably not be shared.
    */
-  std::shared_ptr<mos::Texture> texture;
+  SharedTexture texture;
+
+  /**
+   * @brief Cube texture that can be rendererd to.
+   */
+  SharedTextureCube texture_cube;
+
+  int width() const;
+  int height() const;
 
   /**
    * @brief unique id

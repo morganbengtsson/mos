@@ -91,10 +91,10 @@ public:
   void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                const OptTarget &target = OptTarget(), const OptTargetCube &target_cube = OptTargetCube()) {
     render_target(target);
-    render_target(target_cube);
-    if (target_cube) {
-      auto texture_id = texture_cubes_[target_cube->id()];
-      for (int i = 0; i < target_cube->layers;i++){
+    //render_target(target_cube);
+    if (target->texture_cube) {
+      auto texture_id = texture_cubes_[target->id()];
+      for (int i = 0; i < 6;i++){
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_id, 0);
         clear(color);
