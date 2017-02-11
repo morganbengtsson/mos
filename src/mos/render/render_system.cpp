@@ -94,9 +94,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 
   // Render boxes
   float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0,  -0.5, 0.5,  -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5,  1.0,  0.5,  0.5,  0.5, 1.0,  -0.5, 0.5, 0.5, 1.0,
+      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
+      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
+      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
   };
 
   glGenBuffers(1, &box_vbo);
@@ -122,7 +122,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
                         GL_FALSE, // take our values as-is
                         0,        // no extra data between each position
                         0         // offset of first element
-                        );
+  );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
   glBindVertexArray(0);
@@ -307,7 +307,7 @@ void RenderSystem::add_box_program(const std::string &name,
 
   box_programs_.insert(
       {name, BoxProgramData{program, glGetUniformLocation(
-                                         program, "model_view_projection"),
+          program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
 }
 
@@ -354,8 +354,8 @@ void RenderSystem::add_particle_program(const std::string name,
 
   particle_programs_.insert(ParticleProgramPair(
       name, ParticleProgramData{
-                program, glGetUniformLocation(program, "model_view_projection"),
-                glGetUniformLocation(program, "model_view")}));
+          program, glGetUniformLocation(program, "model_view_projection"),
+          glGetUniformLocation(program, "model_view")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -435,7 +435,7 @@ void RenderSystem::load(const Model &model) {
     // Lightmap UV
     glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                                                         sizeof(glm::vec2)));
+                              sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                  element_array_buffers_.at(model.mesh->id()));
@@ -489,8 +489,6 @@ void RenderSystem::load(const Model &model) {
     }
   }
 
-
-
 }
 
 void RenderSystem::unload(const Model &model) {
@@ -530,7 +528,6 @@ void RenderSystem::unload(const Model &model) {
     }
   }
 
-
 }
 
 void RenderSystem::load(const SharedTextureCube &texture) {
@@ -546,7 +543,6 @@ void RenderSystem::unload(const SharedTextureCube &texture) {
     texture_cubes_.erase(texture->id());
   }
 }
-
 
 void RenderSystem::load(const SharedTexture &texture) {
 #ifdef STREAM_TEXTURES
@@ -687,7 +683,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               texture->compress ? GL_COMPRESSED_SRGB_ALPHA: GL_SRGB_ALPHA,
+               texture->compress ? GL_COMPRESSED_SRGB_ALPHA : GL_SRGB_ALPHA,
                texture->width(), texture->height(), 0, GL_RGBA,
                GL_UNSIGNED_BYTE, texture->data());
 
@@ -753,7 +749,6 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   return id;
 }
-
 
 unsigned int
 RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
@@ -837,9 +832,9 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
     // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *)(4 * sizeof(GLuint)));
+                   (GLvoid *) (4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *)(8 * sizeof(GLuint)));
+                   (GLvoid *) (8 * sizeof(GLuint)));
   }
 
   if (vertex_arrays_.find(render_scene.particles.id()) == vertex_arrays_.end()) {
@@ -915,8 +910,9 @@ void RenderSystem::render(const Model &model,
   int texture_unit = 0;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->diffuse_map ? textures_[model.material->diffuse_map->id()]
-                                             : empty_texture_ : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D,
+                model.material ? model.material->diffuse_map ? textures_[model.material->diffuse_map->id()]
+                                                             : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.diffuse_map, texture_unit);
   texture_unit++;
 
@@ -951,16 +947,15 @@ void RenderSystem::render(const Model &model,
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normal_map
-                                   ? textures_[model.material->normal_map->id()]
-                                   : empty_texture_ : empty_texture_);
+                                                ? textures_[model.material->normal_map->id()]
+                                                : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.normal_map, texture_unit);
   texture_unit++;
 
-
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_CUBE_MAP, model.material ? model.material->environment_map
-                                                ? texture_cubes_[model.material->environment_map->id()]
-                                                : empty_texture_ : empty_texture_);
+                                                      ? texture_cubes_[model.material->environment_map->id()]
+                                                      : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.environment_map, texture_unit);
   texture_unit++;
 
@@ -1014,7 +1009,7 @@ void RenderSystem::render(const Model &model,
 
   glUniform1fv(uniforms.light_linear_attenuation_factor, 1,
                &light.linear_attenuation_factor);
-  glUniform1fv(uniforms.light_quadratic_attenuation_factor,1,
+  glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
 
   glUniform1i(uniforms.receives_light, model.lit);
@@ -1134,12 +1129,12 @@ void RenderSystem::clear(const glm::vec4 &color) {
 }
 
 void RenderSystem::render_scenes(
+    const std::initializer_list<RenderCamera> &cameras_init,
     const std::initializer_list<RenderScene> &batches_init,
     const glm::vec4 &color, const OptTarget &target) {
-  render_scenes(batches_init.begin(), batches_init.end(),
-          color, target);
+  render_scenes(cameras_init.begin(), cameras_init.end(), batches_init.begin(), batches_init.end(),
+                color, target);
 }
-
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     program(program),
