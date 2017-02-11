@@ -712,9 +712,22 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrap_map[texture->wrap]);
 
+  static std::map<TextureCube::Format, GLuint> format_map{
+      {TextureCube::Format::SRGB, GL_SRGB},
+      {TextureCube::Format::SRGBA, GL_SRGB_ALPHA},
+      {TextureCube::Format::RGB, GL_RGB},
+      {TextureCube::Format::RGBA, GL_RGBA}};
+
+  static std::map<TextureCube::Format, GLuint> format_map_compressed{
+      {TextureCube::Format::SRGB, GL_COMPRESSED_SRGB},
+      {TextureCube::Format::SRGBA, GL_COMPRESSED_SRGB_ALPHA},
+      {TextureCube::Format::RGB, GL_COMPRESSED_RGB},
+      {TextureCube::Format::RGBA, GL_COMPRESSED_RGBA}};
+
+
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+                 texture->compress ? format_map_compressed[texture->format] : format_map[texture->format],
                  texture->width(), texture->height(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, texture->data(i));
   }

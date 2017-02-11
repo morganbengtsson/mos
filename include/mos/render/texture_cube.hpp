@@ -21,7 +21,7 @@ public:
   TextureCube(const std::string &base_path,
               const bool mipmaps = true,
               const bool compress = false,
-              const Wrap &wrap = Wrap::REPEAT);
+              const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   TextureCube(const std::string &positive_x_path,
               const std::string &negative_x_path,
@@ -31,7 +31,7 @@ public:
               const std::string &negative_z_path,
               const bool mipmaps = true,
               const bool compress = false,
-              const Wrap &wrap = Wrap::REPEAT);
+              const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
   const unsigned char *data_positive_x();
   const unsigned char *data_negative_x();
   const unsigned char *data_positive_y();
