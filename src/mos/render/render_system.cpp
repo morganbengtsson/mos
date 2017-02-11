@@ -1051,6 +1051,7 @@ void RenderSystem::render_target(const OptTarget &target) {
 
       if (target->texture) {
         GLuint texture_id;
+
         glGenTextures(1, &texture_id);
         glBindTexture(GL_TEXTURE_2D, texture_id);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
@@ -1064,6 +1065,7 @@ void RenderSystem::render_target(const OptTarget &target) {
       }
       if (target->texture_cube) {
         GLuint texture_id;
+        /*
         glGenTextures(1, &texture_id);
         glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
         glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA, target->texture_cube->width(),
@@ -1079,7 +1081,8 @@ void RenderSystem::render_target(const OptTarget &target) {
                        GL_RGBA,
                        target->texture_cube->width(), target->texture_cube->height(), 0, GL_RGBA,
                        GL_UNSIGNED_BYTE, nullptr);
-        }
+        }*/
+        texture_id = create_texture_cube(target->texture_cube);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
