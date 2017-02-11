@@ -12,9 +12,10 @@ class TextureCube {
 public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
+  enum class Format {RGB, RGBA, SRGB, SRGBA};
 
-  TextureCube(int width, int height, const bool mipmaps)
-      : width_(width), height_(height), mipmaps(mipmaps), compress(false), id_(current_id_++) {
+  TextureCube(int width, int height, const bool mipmaps, const Format &format)
+      : width_(width), height_(height), mipmaps(mipmaps), compress(false), id_(current_id_++), format(format) {
   }
 
   TextureCube(const std::string &base_path,
@@ -42,6 +43,7 @@ public:
   const bool mipmaps;
   const bool compress;
   Wrap wrap;
+  const Format format;
   unsigned int width() const;
   unsigned int height() const;
   unsigned int id() const;

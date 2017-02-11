@@ -12,7 +12,8 @@ TextureCube::TextureCube(const std::string &positive_x_path,
                          const std::string &positive_z_path,
                          const std::string &negative_z_path,
                          const bool mipmaps,
-                         const bool compress, const Wrap &wrap) : mipmaps(mipmaps),
+                         const bool compress,
+                         const Wrap &wrap) : mipmaps(mipmaps),format(Format::SRGBA),
                                                                   compress(compress), wrap(wrap),
                                                                   id_(current_id_++) {
   decode(layers_[0], positive_x_path);
@@ -88,6 +89,7 @@ TextureCube::TextureCube(const std::string &base_path,
     base_path.substr(0, base_path.find_last_of(".")) + "_negative_y.png",
     base_path.substr(0, base_path.find_last_of(".")) + "_positive_z.png",
     base_path.substr(0, base_path.find_last_of(".")) + "_negative_z.png", mipmaps, compress, wrap) {}
+
 SharedTextureCube TextureCube::load(const std::string &base_path,
                                     const bool mipmaps,
                                     const bool compress,
