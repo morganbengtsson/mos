@@ -60,7 +60,7 @@ public:
                                 const bool compress = false,
                                 const Wrap &wrap = Wrap::REPEAT);
 private:
-  std::array<Data, 6> data_;
+  std::array<Data, 6> layers_;
   unsigned int width_;
   unsigned int height_;
   static std::atomic_uint current_id_;

@@ -712,37 +712,12 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrap_map[texture->wrap]);
 
-  //TODO: loop
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_positive_x());
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_negative_x());
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_positive_y());
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_negative_y());
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_positive_z());
-
-  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0,
-               texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
-               texture->width(), texture->height(), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data_negative_z());
-
+  for (int i = 0; i < 6; i++) {
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+                 texture->compress ? GL_COMPRESSED_RGBA : GL_RGBA,
+                 texture->width(), texture->height(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texture->data(i));
+  }
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   };

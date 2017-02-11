@@ -15,12 +15,12 @@ TextureCube::TextureCube(const std::string &positive_x_path,
                          const bool compress, const Wrap &wrap) : mipmaps(mipmaps),
                                                                   compress(compress), wrap(wrap),
                                                                   id_(current_id_++) {
-  decode(data_[0], positive_x_path);
-  decode(data_[1], negative_x_path);
-  decode(data_[2], positive_y_path);
-  decode(data_[3], negative_y_path);
-  decode(data_[4], positive_z_path);
-  decode(data_[5], negative_z_path);
+  decode(layers_[0], positive_x_path);
+  decode(layers_[1], negative_x_path);
+  decode(layers_[2], positive_y_path);
+  decode(layers_[3], negative_y_path);
+  decode(layers_[4], positive_z_path);
+  decode(layers_[5], negative_z_path);
 }
 
 void TextureCube::decode(Data &pixels, const std::string &path) {
@@ -41,22 +41,22 @@ unsigned int TextureCube::id() const {
   return id_;
 }
 const unsigned char *TextureCube::data_positive_x() {
-  return data_[0].data();
+  return layers_[0].data();
 }
 const unsigned char *TextureCube::data_negative_x() {
-  return data_[1].data();
+  return layers_[1].data();
 }
 const unsigned char *TextureCube::data_positive_y() {
-  return data_[2].data();
+  return layers_[2].data();
 }
 const unsigned char *TextureCube::data_negative_y() {
-  return data_[3].data();
+  return layers_[3].data();
 }
 const unsigned char *TextureCube::data_positive_z() {
-  return data_[4].data();
+  return layers_[4].data();
 }
 const unsigned char *TextureCube::data_negative_z() {
-  return data_[5].data();
+  return layers_[5].data();
 }
 SharedTextureCube TextureCube::load(const std::string &positive_x_path,
                                     const std::string &negative_x_path,
@@ -98,6 +98,6 @@ SharedTextureCube TextureCube::load(const std::string &base_path,
   return std::make_shared<TextureCube>(base_path, mipmaps, compress, wrap);
 }
 const unsigned char *TextureCube::data(const int i) {
-  return data_[i].data();
+  return layers_[i].data();
 }
 }
