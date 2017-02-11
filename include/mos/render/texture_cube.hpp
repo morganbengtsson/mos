@@ -37,6 +37,7 @@ public:
   const unsigned char *data_negative_y();
   const unsigned char *data_positive_z();
   const unsigned char *data_negative_z();
+  const unsigned char *data(const int i);
 
   const bool mipmaps;
   const bool compress;
@@ -59,12 +60,7 @@ public:
                                 const bool compress = false,
                                 const Wrap &wrap = Wrap::REPEAT);
 private:
-  Data positive_x;
-  Data negative_x;
-  Data positive_y;
-  Data negative_y;
-  Data positive_z;
-  Data negative_z;
+  std::array<Data, 6> data_;
   unsigned int width_;
   unsigned int height_;
   static std::atomic_uint current_id_;
