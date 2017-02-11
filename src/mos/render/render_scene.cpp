@@ -13,6 +13,5 @@ void RenderScene::specular_environment_map(const mos::SharedTextureCube &texture
   for (auto & model : models) {
     model.material->environment_map = texture;
   }
-
 }
 }
