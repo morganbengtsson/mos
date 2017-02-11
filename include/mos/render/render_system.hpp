@@ -83,42 +83,24 @@ public:
    */
   void unload(const SharedTextureCube &texture);
 
-  void render_scenes(const std::initializer_list<RenderCamera> &cameras_init,
-                     const std::initializer_list<RenderScene> &scenes_init,
+  void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
                      const glm::vec4 &color = glm::vec4(.0f),
                      const OptTarget &target = OptTarget());
 
+
   template<class Ts>
-  void render_scenes(const std::initializer_list<RenderCamera> &cameras_init,
-                    Ts scenes_begin, Ts scenes_end,
-                     const glm::vec4 &color = glm::vec4(.0f),
-                     const OptTarget &target = OptTarget()){
-    render_scenes(cameras_init.begin(), cameras_init.end(), scenes_begin, scenes_end, color, target);
-  }
-
-  template<class Tc>
-  void render_scenes(Tc cameras_begin, Tc cameras_end,
-                     const std::initializer_list<RenderScene> &scenes_init,
-                     const glm::vec4 &color = glm::vec4(.0f),
-                     const OptTarget &target = OptTarget()){
-    render_scenes(cameras_begin, cameras_end, scenes_init.begin(), scenes_init.end(), color, target);
-  }
-
-  template<class Ts, class Tc>
-  void render_scenes(Tc cameras_begin,
-                     Tc cameras_end,
-                     Ts scenes_begin,
+  void render_scenes(Ts scenes_begin,
                      Ts scenes_end,
                      const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                      const OptTarget &target = OptTarget()) {
     render_target(target);
     if (target->texture_cube) {
       auto texture_id = texture_cubes_[target->id()];
-      for (auto c_it = cameras_begin; c_it != cameras_end; c_it++){
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(cameras_begin, c_it), texture_id, 0);
-        clear(color);
         for (auto it = scenes_begin; it != scenes_end; it++) {
+          for (auto c_it = it->cameras.begin(); c_it != it->cameras.end(); c_it++){
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(it->cameras.begin(), c_it), texture_id, 0);
+            clear(color);
           render_scene(*c_it, *it);
         }
       }
@@ -129,7 +111,9 @@ public:
 
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
-      render_scene(it->camera, *it);
+      for (auto &camera : it->cameras) {
+        render_scene(camera, *it);
+      }
     }
   }
 

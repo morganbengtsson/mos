@@ -822,8 +822,8 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
   for (auto &box : render_scene.render_boxes) {
     glm::vec3 size = box.size();
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
-    glm::mat4 mv = render_scene.camera.view * transform * glm::scale(glm::mat4(1.0f), size);
-    glm::mat4 mvp = render_scene.camera.projection * render_scene.camera.view * transform *
+    glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = camera.projection * camera.view * transform *
         glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -870,8 +870,8 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
                render_scene.particles.data(), GL_STREAM_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  glm::mat4 mv = render_scene.camera.view;
-  glm::mat4 mvp = render_scene.camera.projection * render_scene.camera.view;
+  glm::mat4 mv = camera.view;
+  glm::mat4 mvp = camera.projection * camera.view;
 
   auto &uniforms2 = particle_programs_.at("particles");
 
@@ -1129,10 +1129,9 @@ void RenderSystem::clear(const glm::vec4 &color) {
 }
 
 void RenderSystem::render_scenes(
-    const std::initializer_list<RenderCamera> &cameras_init,
     const std::initializer_list<RenderScene> &batches_init,
     const glm::vec4 &color, const OptTarget &target) {
-  render_scenes(cameras_init.begin(), cameras_init.end(), batches_init.begin(), batches_init.end(),
+  render_scenes(batches_init.begin(), batches_init.end(),
                 color, target);
 }
 
