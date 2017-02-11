@@ -1064,28 +1064,11 @@ void RenderSystem::render_target(const OptTarget &target) {
         textures_.insert({target->texture->id(), texture_id});
       }
       if (target->texture_cube) {
-        GLuint texture_id;
-        /*
-        glGenTextures(1, &texture_id);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-        glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA, target->texture_cube->width(),
-                     target->texture_cube->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-        for (int i = 0; i < 6; i++) {
-          glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                       GL_RGBA,
-                       target->texture_cube->width(), target->texture_cube->height(), 0, GL_RGBA,
-                       GL_UNSIGNED_BYTE, nullptr);
-        }*/
-        texture_id = create_texture_cube(target->texture_cube);
+        GLuint texture_id = create_texture_cube(target->texture_cube);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
+
         texture_cubes_.insert({target->texture_cube->id(), texture_id});
       }
 
