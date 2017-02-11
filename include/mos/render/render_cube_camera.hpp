@@ -16,9 +16,6 @@ public:
                    const glm::vec2 &resolution = glm::vec2(128.0f, 128.0f));
 
   std::array<mos::RenderCamera, 6> cameras;
-
-
-
 };
 }
 
