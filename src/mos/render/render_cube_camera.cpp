@@ -15,4 +15,7 @@ RenderCubeCamera::RenderCubeCamera(const glm::vec3 &position,
              mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, 1.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution),
              mos::RenderCamera(position, position + glm::vec3(0.0f, 0.0f, -1.0f), projection, glm::vec3(0.0f, -1.0f, 0.0f), resolution)}}
     {}
+glm::vec3 RenderCubeCamera::position() const {
+    return cameras[0].position();
+}
 }

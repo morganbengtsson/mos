@@ -15,6 +15,7 @@ public:
   RenderCubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
                    const glm::vec2 &resolution = glm::vec2(128.0f, 128.0f));
 
+  glm::vec3 position() const;
   std::array<mos::RenderCamera, 6> cameras;
 };
 }
