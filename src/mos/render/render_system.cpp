@@ -944,6 +944,11 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.environment_map, texture_unit);
   texture_unit++;
 
+  glUniform3fv(uniforms.environment_position, 1,
+               glm::value_ptr(environment.box.position));
+  glUniform3fv(uniforms.environment_extent, 1,
+               glm::value_ptr(environment.box.extent));
+
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms.model_view_matrix, 1, GL_FALSE, &mv[0][0]);
   glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);

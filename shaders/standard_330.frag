@@ -74,12 +74,12 @@ float fog_attenuation(const float dist, const Fog fog) {
     return linear * fog.linear_factor + exponential * fog.exponential_factor;
 }
 
-vec3 parallax_correct(const vec3 box, const vec3 box_pos, const vec3 dir){
-    vec3 box_min = -box/2.0;
-    vec3 box_max = box/2.0;
+vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
+    vec3 box_min = box_pos - box_extent;
+    vec3 box_max = box_pos + box_extent;
     vec3 nrdir = normalize(dir);
-    vec3 rbmax = ((box_max + box_pos) - fragment.position)/nrdir;
-    vec3 rbmin = ((box_min + box_pos) - fragment.position)/nrdir;
+    vec3 rbmax = (box_max - fragment.position)/nrdir;
+    vec3 rbmin = (box_min - fragment.position)/nrdir;
 
     vec3 rbminmax = max(rbmax, rbmin);
     float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
@@ -134,13 +134,13 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
+    vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 5.0), environment.position,normal);
 
     vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, 7);
     diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
-    vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), r);
+    vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 5.0), environment.position, r);
 
     vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
     specular_environment.rgb *= material.specular;
