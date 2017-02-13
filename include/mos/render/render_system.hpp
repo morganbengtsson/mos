@@ -17,7 +17,7 @@
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/render_camera.hpp>
-#include <mos/render/environment.hpp>
+#include <mos/render/environment_light.hpp>
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
 #include <mos/render/decal.hpp>
@@ -170,7 +170,7 @@ private:
               const glm::mat4 &transform,
               const RenderCamera &camera,
               const Light &light,
-              const Environment &environment,
+              const EnvironmentLight &environment,
               const Fog &fog,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);

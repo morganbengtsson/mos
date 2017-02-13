@@ -875,7 +875,7 @@ void RenderSystem::render(const Model &model,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
-                          const Environment &environment,
+                          const EnvironmentLight &environment,
                           const Fog &fog,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {

@@ -13,7 +13,7 @@
 #include <mos/render/particles.hpp>
 #include <mos/render/decal.hpp>
 #include <mos/render/render_cube_camera.hpp>
-#include <mos/render/environment.hpp>
+#include <mos/render/environment_light.hpp>
 
 namespace mos {
 
@@ -63,7 +63,7 @@ public:
   Fog fog;
   Shader shader;
   Draw draw;
-  Environment environment;
+  EnvironmentLight environment;
 };
 }
 
