@@ -881,6 +881,7 @@ void RenderSystem::render(const Model &model,
                           const RenderScene::Draw &draw) {
   //glViewport(0, 0, camera.resolution.x, camera.resolution.y);
 
+  load(environment.texture);
   load(model);
 
   const glm::mat4 mv = camera.view * parent_transform * model.transform;

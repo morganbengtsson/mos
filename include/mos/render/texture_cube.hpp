@@ -55,12 +55,12 @@ public:
                                 const std::string &negative_z_path,
                                 const bool mipmaps = true,
                                 const bool compress = false,
-                                const Wrap &wrap = Wrap::REPEAT);
+                                const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   static SharedTextureCube load(const std::string &base_path,
                                 const bool mipmaps = true,
                                 const bool compress = false,
-                                const Wrap &wrap = Wrap::REPEAT);
+                                const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 private:
   std::array<Data, 6> layers_;
   unsigned int width_;
