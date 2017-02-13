@@ -233,8 +233,10 @@ private:
     GLint normal_map;
     GLint shadow_map;
     //std::array<GLint, 5> decal_maps;
-    GLint diffuse_environment_map;
+
     GLint environment_map;
+    GLint environment_position;
+    GLint environment_extent;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;

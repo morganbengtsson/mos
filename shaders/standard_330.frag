@@ -22,6 +22,12 @@ struct Camera {
     vec3 position;
 };
 
+struct Environment {
+    vec3 position;
+    vec3 extent;
+    samplerCube texture;
+};
+
 struct Fog {
     vec3 color;
     float near;
@@ -47,13 +53,13 @@ uniform bool receives_light;
 uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
+uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
-uniform samplerCube environment_map;
 //uniform sampler2D decal_maps[5];
 uniform mat4 model;
 uniform mat4 model_view;
@@ -130,13 +136,13 @@ void main() {
 
     vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), normal);
 
-    vec4 diffuse_environment = textureLod(environment_map, corrected_normal, 7);
+    vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, 7);
     diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 2.5), vec3(0.0, 0.0, 1.25), r);
 
-    vec4 specular_environment = texture(environment_map, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
+    vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
