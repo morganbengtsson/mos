@@ -29,7 +29,8 @@ struct Environment {
 };
 
 struct Fog {
-    vec3 color;
+    vec3 color_near;
+    vec3 color_far;
     float near;
     float far;
     float linear_factor;
@@ -55,7 +56,7 @@ uniform Material material;
 uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
+uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
 uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
@@ -169,7 +170,9 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    color.rgb = mix(fog.color, color.rgb, fog_attenuation(distance, fog));
+    float fog_att = fog_attenuation(distance, fog);
+    vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
+    color.rgb = mix(fog_color, color.rgb, fog_att);
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.

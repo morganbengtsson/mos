@@ -253,7 +253,8 @@ private:
     GLint light_quadratic_attenuation_factor;
     GLint receives_light;
     GLint resolution;
-    GLint fog_color;
+    GLint fog_color_near;
+    GLint fog_color_far;
     GLint fog_near;
     GLint fog_far;
     GLint fog_linear_factor;

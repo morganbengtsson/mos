@@ -1011,7 +1011,8 @@ void RenderSystem::render(const Model &model,
     }
   }
 
-  glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
+  glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
+  glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
   glUniform1fv(uniforms.fog_near, 1, &fog.near);
   glUniform1fv(uniforms.fog_far, 1, &fog.far);
   glUniform1fv(uniforms.fog_linear_factor, 1, &fog.linear_factor);
@@ -1149,7 +1150,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     light_quadratic_attenuation_factor(glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
     receives_light(glGetUniformLocation(program, "receives_light")),
     resolution(glGetUniformLocation(program, "resolution")),
-    fog_color(glGetUniformLocation(program, "fog.color")),
+    fog_color_near(glGetUniformLocation(program, "fog.color_near")),
+    fog_color_far(glGetUniformLocation(program, "fog.color_far")),
     fog_near(glGetUniformLocation(program, "fog.near")),
     fog_far(glGetUniformLocation(program, "fog.far")),
     fog_linear_factor(glGetUniformLocation(program, "fog.linear_factor")),
