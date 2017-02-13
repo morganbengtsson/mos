@@ -135,13 +135,13 @@ void main() {
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec3 corrected_normal = parallax_correct(vec3(5.0, 5.0, 5.0), environment.position,normal);
+    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
     vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, 7);
     diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
-    vec3 corrected_r = parallax_correct(vec3(5.0, 5.0, 5.0), environment.position, r);
+    vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
     vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
     specular_environment.rgb *= material.specular;
