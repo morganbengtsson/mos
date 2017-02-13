@@ -526,9 +526,11 @@ void RenderSystem::unload(const Model &model) {
 }
 
 void RenderSystem::load(const SharedTextureCube &texture) {
-  if (texture_cubes_.find(texture->id()) == texture_cubes_.end()) {
-    GLuint gl_id = create_texture_cube(texture);
-    texture_cubes_.insert({texture->id(), gl_id});
+  if (texture) { //TODO: maybe just send in the texture reference.
+    if (texture_cubes_.find(texture->id()) == texture_cubes_.end()) {
+      GLuint gl_id = create_texture_cube(texture);
+      texture_cubes_.insert({texture->id(), gl_id});
+    }
   }
 }
 void RenderSystem::unload(const SharedTextureCube &texture) {
