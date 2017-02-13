@@ -9,19 +9,14 @@ using namespace nlohmann;
 Material::Material(const SharedTexture &diffuse_map,
                    const SharedTexture &normal_map,
                    const SharedTexture &light_map,
-                   const SharedTextureCube &environment_map,
                    const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float specular_exponent)
     : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
-       environment_map(environment_map), ambient(ambient),
-      diffuse(diffuse), specular(specular), opacity(opacity),
+       ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity),
       specular_exponent(specular_exponent) {
-  if (environment_map) {
-    environment_map->wrap = mos::TextureCube::Wrap::CLAMP_TO_EDGE;
-  }
 }
 
 Material::Material(const std::string &path) {
@@ -52,13 +47,6 @@ Material::Material(const std::string &path) {
       l = value["light_map"];
     }
     light_map = Texture::load(fpath.parent_path().str() + "/" + l);
-
-    std::string spec_file_base = "";
-    if (!value["environment_map"].is_null()) {
-      spec_file_base = value["environment_map"];
-    }
-
-    environment_map = TextureCube::load(fpath.parent_path().str() + "/" + spec_file_base);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);

@@ -472,11 +472,6 @@ void RenderSystem::load(const Model &model) {
         load(model.material->diffuse_map);
       }
     }
-    if (model.material->environment_map) {
-      if (texture_cubes_.find(model.material->environment_map->id()) == texture_cubes_.end()) {
-        load(model.material->environment_map);
-      }
-    }
     if (model.material->normal_map) {
       if (textures_.find(model.material->normal_map->id()) == textures_.end()) {
         load(model.material->normal_map);
@@ -797,6 +792,7 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
            glm::mat4(1.0f),
            camera,
            render_scene.light,
+           render_scene.environment,
            render_scene.fog,
            render_scene.shader,
            render_scene.draw);
@@ -879,6 +875,7 @@ void RenderSystem::render(const Model &model,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
+                          const Environment &environment,
                           const Fog &fog,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
@@ -941,8 +938,8 @@ void RenderSystem::render(const Model &model,
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_CUBE_MAP, model.material ? model.material->environment_map
-                                                      ? texture_cubes_[model.material->environment_map->id()]
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment.texture ? environment.texture
+                                                      ? texture_cubes_[environment.texture->id()]
                                                       : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.environment_map, texture_unit);
   texture_unit++;
@@ -1003,6 +1000,12 @@ void RenderSystem::render(const Model &model,
   glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
+  if (environment.texture) {
+    if (texture_cubes_.find(environment.texture->id()) == texture_cubes_.end()) {
+      load(environment.texture);
+    }
+  }
+
   glUniform3fv(uniforms.fog_color, 1, glm::value_ptr(fog.color));
   glUniform1fv(uniforms.fog_near, 1, &fog.near);
   glUniform1fv(uniforms.fog_far, 1, &fog.far);
@@ -1036,6 +1039,7 @@ void RenderSystem::render(const Model &model,
            parent_transform * model.transform,
            camera,
            light,
+           environment,
            fog,
            shader,
            draw);
