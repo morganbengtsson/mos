@@ -176,7 +176,6 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
-    color.rgb = normal;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
