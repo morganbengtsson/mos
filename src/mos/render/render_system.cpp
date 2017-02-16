@@ -678,9 +678,13 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
-
+/*
   glTexImage2D(GL_TEXTURE_2D, 0,
                texture->compress ? GL_COMPRESSED_SRGB_ALPHA : GL_SRGB_ALPHA,
+               texture->width(), texture->height(), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->data());*/
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               GL_RGBA,
                texture->width(), texture->height(), 0, GL_RGBA,
                GL_UNSIGNED_BYTE, texture->data());
 

@@ -110,8 +110,10 @@ void main() {
 
     vec3 tex_normal = normalize(texture(normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
-
-    normal = normalize(mix(normal, tex_normal, texture(normal_map, fragment.uv).a));
+    float amount = texture(normal_map, fragment.uv).a;
+    if (amount > 0.0f){
+        normal = normalize(mix(normal, tex_normal, amount));
+    }
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
@@ -174,6 +176,7 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
     color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
+    color.rgb = normal;
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
