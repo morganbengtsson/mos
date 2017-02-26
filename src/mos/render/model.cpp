@@ -44,7 +44,7 @@ Model::Model(const std::string &path, const json &value) : overlay_(0.0f), multi
 
 Model::Model(const std::string &name, const SharedMesh &mesh,
              const glm::mat4 &transform,
-             const SharedMaterial &material,
+             const Material &material,
                const bool lit)
     : mesh(mesh),  material(material),
       name_(name), transform(transform),
@@ -63,7 +63,7 @@ Model::Models::iterator Model::begin() { return models.begin(); }
 Model::Models::iterator Model::end() { return models.end(); }
 
 glm::vec4 Model::color() const {
-  return glm::vec4(material->diffuse, material->opacity);
+  return glm::vec4(material.diffuse, material.opacity);
 }
 
 glm::vec3 Model::position() const {

@@ -62,12 +62,12 @@ Material::Material(const std::string &path) {
 
 Material::~Material() {}
 
-SharedMaterial Material::load(const std::string &path) {
+Material Material::load(const std::string &path) {
   filesystem::path fpath = path;
   if (fpath.is_directory()) {
-    return std::make_shared<Material>();
+    return Material();
   }
-  return std::make_shared<Material>(path);
+  return Material(path);
 }
 Material::Material(const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,

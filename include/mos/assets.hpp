@@ -40,12 +40,6 @@ public:
       std::unordered_map<std::string, std::shared_ptr<AudioBuffer>>;
 
   /**
-   * @brief Container for materials.
-   */
-  using MaterialMap =
-      std::unordered_map<std::string, std::shared_ptr<Material>>;
-
-  /**
    * @brief Pair for MeshMap.
    */
   using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
@@ -109,7 +103,7 @@ public:
    * @param path
    * @return fShared pointer to Material object.
    */
-   SharedMaterial material(const std::string &path);
+   Material material(const std::string &path);
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
@@ -152,7 +146,6 @@ private:
   MeshMap meshes_;
   TextureMap textures_;
   AudioBufferMap sounds_;
-  MaterialMap materials_;
 };
 }
 #endif /* MOS_ASSETS_H */

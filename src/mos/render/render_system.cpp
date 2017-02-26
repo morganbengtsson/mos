@@ -466,21 +466,19 @@ void RenderSystem::load(const Model &model) {
     model.mesh->valid_ = true;
   }
 
-  if (model.material) {
-    if (model.material->diffuse_map) {
-      if (textures_.find(model.material->diffuse_map->id()) == textures_.end()) {
-        load(model.material->diffuse_map);
-      }
+  if (model.material.diffuse_map) {
+    if (textures_.find(model.material.diffuse_map->id()) == textures_.end()) {
+      load(model.material.diffuse_map);
     }
-    if (model.material->normal_map) {
-      if (textures_.find(model.material->normal_map->id()) == textures_.end()) {
-        load(model.material->normal_map);
-      }
+  }
+  if (model.material.normal_map) {
+    if (textures_.find(model.material.normal_map->id()) == textures_.end()) {
+      load(model.material.normal_map);
     }
-    if (model.material->light_map) {
-      if (textures_.find(model.material->light_map->id()) == textures_.end()) {
-        load(model.material->light_map);
-      }
+  }
+  if (model.material.light_map) {
+    if (textures_.find(model.material.light_map->id()) == textures_.end()) {
+      load(model.material.light_map);
     }
   }
 
@@ -505,21 +503,19 @@ void RenderSystem::unload(const Model &model) {
     }
   }
 
-  if (model.material) {
-    if (model.material->diffuse_map) {
-      if (textures_.find(model.material->diffuse_map->id()) != textures_.end()) {
-        unload(model.material->diffuse_map);
-      }
+  if (model.material.diffuse_map) {
+    if (textures_.find(model.material.diffuse_map->id()) != textures_.end()) {
+      unload(model.material.diffuse_map);
     }
-    if (model.material->normal_map) {
-      if (textures_.find(model.material->normal_map->id()) != textures_.end()) {
-        unload(model.material->normal_map);
-      }
+  }
+  if (model.material.normal_map) {
+    if (textures_.find(model.material.normal_map->id()) != textures_.end()) {
+      unload(model.material.normal_map);
     }
-    if (model.material->light_map) {
-      if (textures_.find(model.material->light_map->id()) != textures_.end()) {
-        unload(model.material->light_map);
-      }
+  }
+  if (model.material.light_map) {
+    if (textures_.find(model.material.light_map->id()) != textures_.end()) {
+      unload(model.material.light_map);
     }
   }
 
@@ -725,7 +721,6 @@ unsigned int RenderSystem::create_texture_cube(const SharedTextureCube &texture)
       {TextureCube::Format::RGB, GL_COMPRESSED_RGB},
       {TextureCube::Format::RGBA, GL_COMPRESSED_RGBA}};
 
-
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  texture->compress ? format_map_compressed[texture->format] : format_map[texture->format],
@@ -822,9 +817,9 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
     // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *) (4 * sizeof(GLuint)));
+                   (GLvoid * )(4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *) (8 * sizeof(GLuint)));
+                   (GLvoid * )(8 * sizeof(GLuint)));
   }
 
   if (vertex_arrays_.find(render_scene.particles.id()) == vertex_arrays_.end()) {
@@ -903,8 +898,7 @@ void RenderSystem::render(const Model &model,
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D,
-                model.material ? model.material->diffuse_map ? textures_[model.material->diffuse_map->id()]
-                                                             : empty_texture_ : empty_texture_);
+                model.material.diffuse_map ? textures_[model.material.diffuse_map->id()] : empty_texture_);
   glUniform1i(uniforms.diffuse_map, texture_unit);
   texture_unit++;
 
@@ -931,23 +925,23 @@ void RenderSystem::render(const Model &model,
    */
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->light_map
-                                                ? textures_[model.material->light_map->id()]
-                                                : empty_texture_ : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.material.light_map
+                               ? textures_[model.material.light_map->id()]
+                               : empty_texture_);
   glUniform1i(uniforms.light_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, model.material ? model.material->normal_map
-                                                ? textures_[model.material->normal_map->id()]
-                                                : empty_texture_ : empty_texture_);
+  glBindTexture(GL_TEXTURE_2D, model.material.normal_map
+                               ? textures_[model.material.normal_map->id()]
+                               : empty_texture_);
   glUniform1i(uniforms.normal_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment.texture ? environment.texture
-                                                      ? texture_cubes_[environment.texture->id()]
-                                                      : empty_texture_ : empty_texture_);
+                                                           ? texture_cubes_[environment.texture->id()]
+                                                           : empty_texture_ : empty_texture_);
   glUniform1i(uniforms.environment_map, texture_unit);
   texture_unit++;
 
@@ -974,20 +968,15 @@ void RenderSystem::render(const Model &model,
   normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-  if (model.material) {
-    glUniform3fv(uniforms.material_ambient_color, 1,
-                 glm::value_ptr(model.material->ambient));
-    glUniform3fv(uniforms.material_diffuse_color, 1,
-                 glm::value_ptr(model.material->diffuse));
-    glUniform3fv(uniforms.material_specular_color, 1,
-                 glm::value_ptr(model.material->specular));
-    glUniform1fv(uniforms.material_specular_exponent, 1,
-                 &model.material->specular_exponent);
-    glUniform1fv(uniforms.opacity, 1, &model.material->opacity);
-  } else {
-    static const float opacity = 1.0f;
-    glUniform1fv(uniforms.opacity, 1, &opacity);
-  }
+  glUniform3fv(uniforms.material_ambient_color, 1,
+               glm::value_ptr(model.material.ambient));
+  glUniform3fv(uniforms.material_diffuse_color, 1,
+               glm::value_ptr(model.material.diffuse));
+  glUniform3fv(uniforms.material_specular_color, 1,
+               glm::value_ptr(model.material.specular));
+  glUniform1fv(uniforms.material_specular_exponent, 1,
+               &model.material.specular_exponent);
+  glUniform1fv(uniforms.opacity, 1, &model.material.opacity);
 
   // Camera in world space
   glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));

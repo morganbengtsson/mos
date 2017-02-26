@@ -91,7 +91,7 @@ public:
    * @brief material
    * @param material
    */
-  void material(const std::shared_ptr<Material> &material);
+  void material(const Material &material);
 
   /**
    * @brief transform

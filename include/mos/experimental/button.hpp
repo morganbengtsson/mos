@@ -26,8 +26,8 @@ private:
   Model rectangle_;
   float padding_;
   State state_;
-  std::shared_ptr<mos::Material> light_material_;
-  std::shared_ptr<mos::Material> dark_material_;
+  mos::Material light_material_;
+  mos::Material dark_material_;
   std::function<void()> click_callback_;
 };
 }

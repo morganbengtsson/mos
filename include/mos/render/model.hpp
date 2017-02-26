@@ -34,7 +34,7 @@ public:
    */
   Model(const std::string &name, const SharedMesh &mesh,
         const glm::mat4 &transform = glm::mat4(1.0f),
-        const SharedMaterial &material = std::make_shared<Material>(
+        const Material &material = Material(
             Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
         const bool lit = true);
 
@@ -113,9 +113,9 @@ public:
 
 
   /**
-   * @brief material
+   * @brief material Note this is not shared.
    */
-  SharedMaterial material;
+  Material material;
 
   /**
    * The transform of the model

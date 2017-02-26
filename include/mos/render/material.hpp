@@ -54,7 +54,7 @@ public:
 
   virtual ~Material();
 
-  static SharedMaterial load(const std::string &path);
+  static Material load(const std::string &path);
 
   /**
    * @brief ambient color.

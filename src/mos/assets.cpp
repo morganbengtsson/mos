@@ -103,13 +103,8 @@ Assets::audio_buffer(const std::string &path) {
   }
 }
 
-std::shared_ptr<Material> Assets::material(const std::string &path) {
-  if (materials_.find(path) == materials_.end()) {
-    materials_.insert(MaterialPair(path, Material::load(directory_ + path)));
-    return materials_.at(path);
-  } else {
-    return materials_.at(path);
-  }
+Material Assets::material(const std::string &path) {
+  return Material::load(directory_ + path);
 }
 
 void Assets::clear_unused() {
@@ -130,13 +125,6 @@ void Assets::clear_unused() {
   for (auto it = sounds_.begin(); it != sounds_.end();) {
     if (it->second.use_count() <= 1) {
       sounds_.erase(it++);
-    } else {
-      ++it;
-    }
-  }
-  for (auto it = materials_.begin(); it != materials_.end();) {
-    if (it->second.use_count() <= 1) {
-      materials_.erase(it++);
     } else {
       ++it;
     }
