@@ -22,13 +22,6 @@ Material::Material(const SharedTexture &diffuse_map,
 Material::Material(const std::string &path) {
   filesystem::path fpath = path;
   if (fpath.extension() == "material") {
-    /*std::ifstream is(path, std::ios::binary);
-    is.read((char *)&ambient, sizeof(glm::vec3));
-    is.read((char *)&diffuse, sizeof(glm::vec3));
-    is.read((char *)&specular, sizeof(glm::vec3));
-    is.read((char *)&opacity, sizeof(float));
-    is.read((char *)&specular_exponent, sizeof(float));*/
-
     auto value = json::parse(mos::text(fpath.str()));
     std::string t = "";
     if (!value["diffuse_map"].is_null()) {

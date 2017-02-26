@@ -1,18 +1,12 @@
 #include <mos/assets.hpp>
 
-#include <algorithm>
 #include <cstring>
-#include <exception>
+#include <filesystem/path.h>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/io.hpp>
-#include <iostream>
-#include <iterator>
-#include <lodepng.h>
-#include <memory>
 #include <mos/util.hpp>
-#include <stb_vorbis.h>
 
 namespace mos {
 using namespace std;
@@ -104,7 +98,37 @@ Assets::audio_buffer(const std::string &path) {
 }
 
 Material Assets::material(const std::string &path) {
-  return Material::load(directory_ + path);
+  filesystem::path fpath = directory_ + path;
+  if (fpath.extension() == "material") {
+    auto value = json::parse(mos::text(fpath.str()));
+    std::string t = "";
+    if (!value["diffuse_map"].is_null()) {
+      t = value["diffuse_map"];
+    }
+    auto diffuse_map = texture(t);
+
+    std::string n = "";
+    if (!value["normal_map"].is_null()) {
+      n = value["normal_map"];
+    }
+    auto normal_map = texture(n);
+
+    std::string l = "";
+    if (!value["light_map"].is_null()) {
+      l = value["light_map"];
+    }
+    auto light_map = texture(l);
+
+    auto ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
+    auto diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
+    auto specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
+    auto opacity = value["opacity"];
+    auto specular_exponent = value["specular_exponent"];
+    return Material(diffuse_map, normal_map, light_map, ambient, diffuse, specular, opacity, specular_exponent);
+  } else {
+    throw std::runtime_error(path.substr(path.find_last_of(".")) +
+        " file format is not supported.");
+  }
 }
 
 void Assets::clear_unused() {
