@@ -881,6 +881,8 @@ void RenderSystem::render(const Model &model,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   //glViewport(0, 0, camera.resolution.x, camera.resolution.y);
+  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
+                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
   load(environment.texture);
   load(model);
@@ -918,7 +920,7 @@ void RenderSystem::render(const Model &model,
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[decals[i].texture->id()]);
     glUniform1i(uniforms.decal_maps[i], texture_unit);
-    const glm::mat4 decal_mvp = decals[i].projection * decals[i].view * decals[i].transform;
+    const glm::mat4 decal_mvp = bias * decals[i].projection * decals[i].view * decals[i].transform;
     glUniformMatrix4fv(uniforms.decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
   texture_unit++;
@@ -955,8 +957,7 @@ void RenderSystem::render(const Model &model,
   auto model_matrix = parent_transform * model.transform;
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
-  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
-                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+
 
   const glm::mat4 depth_bias_mvp =
       bias * light.projection * light.view * model.transform;

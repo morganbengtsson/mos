@@ -44,7 +44,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec2 decal_uvs[5];
+    vec3 decal_uvs[5];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -125,8 +125,7 @@ void main() {
 
 
     for (int i = 0; i < 5; i++) {
-        //diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
-        vec4 decal = texture(decal_maps[i], fragment.decal_uvs[i]);
+        vec4 decal = texture(decal_maps[i], fragment.decal_uvs[i].xy);
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 

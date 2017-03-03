@@ -4,7 +4,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec2 decal_uvs[5];
+    vec3 decal_uvs[5];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -41,12 +41,12 @@ layout(location = 4) in vec2 light_map_uv;
 out Fragment fragment;
 
 bool in_frustum(mat4 M, vec3 p) {
-    vec4 Pclip = M * vec4(p, 1.);
-    return abs(Pclip.x) < Pclip.w &&
-           abs(Pclip.y) < Pclip.w &&
-           0 < Pclip.z &&
-           Pclip.z < Pclip.w;
-}
+        vec4 Pclip = M * vec4(p, 1.);
+        return abs(Pclip.x) < Pclip.w &&
+               abs(Pclip.y) < Pclip.w &&
+               0 < Pclip.z &&
+               Pclip.z < Pclip.w;
+    }
 
 void main() {
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
@@ -59,7 +59,12 @@ void main() {
 
     for (int i = 0; i < 5; i++) {
         vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
-        fragment.decal_uvs[i] = pos_d.xy / pos_d.w;
+        if(pos_d.w > 0.0){
+            fragment.decal_uvs[i] = pos_d.xyz / pos_d.w;
+        }
+        else {
+            fragment.decal_uvs[i] = vec3(0.0, 0.0, 0.0);
+        }
     }
     fragment.uv = uv;
     fragment.light_map_uv = light_map_uv;
