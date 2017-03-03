@@ -39,6 +39,15 @@ layout(location = 2) in vec3 tangent;
 layout(location = 3) in vec2 uv;
 layout(location = 4) in vec2 light_map_uv;
 out Fragment fragment;
+
+bool in_frustum(mat4 M, vec3 p) {
+    vec4 Pclip = M * vec4(p, 1.);
+    return abs(Pclip.x) < Pclip.w &&
+           abs(Pclip.y) < Pclip.w &&
+           0 < Pclip.z &&
+           Pclip.z < Pclip.w;
+}
+
 void main() {
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 N = normalize(normal_matrix * normal);
@@ -48,7 +57,7 @@ void main() {
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
 
-    for (int i = 0; i < 5; i++){
+    for (int i = 0; i < 5; i++) {
         vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
         fragment.decal_uvs[i] = pos_d.xy / pos_d.w;
     }
