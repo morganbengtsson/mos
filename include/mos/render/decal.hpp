@@ -7,11 +7,9 @@
 namespace mos {
 class Decal {
 public:
-  Decal(const glm::mat4 &transform,
-        const glm::mat4 &projection,
+  Decal(const glm::mat4 &projection,
         const glm::mat4 &view,
         const mos::SharedTexture &texture);
-  glm::mat4 transform;
   glm::mat4 projection;
   glm::mat4 view;
   mos::SharedTexture texture;

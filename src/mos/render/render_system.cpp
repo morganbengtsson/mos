@@ -920,7 +920,7 @@ void RenderSystem::render(const Model &model,
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, textures_[decals[i].texture->id()]);
     glUniform1i(uniforms.decal_maps[i], texture_unit);
-    const glm::mat4 decal_mvp = bias * decals[i].projection * decals[i].view * decals[i].transform;
+    const glm::mat4 decal_mvp = bias * decals[i].projection * decals[i].view;
     glUniformMatrix4fv(uniforms.decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
   texture_unit++;
