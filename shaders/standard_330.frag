@@ -44,7 +44,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    //vec2 decal_uvs[5];
+    vec2 decal_uvs[5];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -61,7 +61,7 @@ uniform sampler2D diffuse_map;
 uniform sampler2D light_map;
 uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
-//uniform sampler2D decal_maps[5];
+uniform sampler2D decal_maps[5];
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -123,12 +123,12 @@ void main() {
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
-    /*
+
     for (int i = 0; i < 5; i++) {
         //diffuse_color.rgb += texture(decal_maps[i], fragment.decal_uvs[i]).rgb;
         vec4 decal = texture(decal_maps[i], fragment.decal_uvs[i]);
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
-    }*/
+    }
 
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = light.linear_attenuation_factor;
