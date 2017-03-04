@@ -92,18 +92,6 @@ vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir)
     return rdir;
 }
 
-vec4 averageCube(const samplerCube sampler, const vec3 dir, const float mip){
-    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
-    float v = 0.5;
-    color += textureLod(sampler, dir + vec3(v, 0.0, 0.0), mip);
-    color += textureLod(sampler, dir + vec3(-v, 0.0, 0.0), mip);
-    color += textureLod(sampler, dir + vec3(0.0, v, 0.0), mip);
-    color += textureLod(sampler, dir + vec3(0.0, -v, 0.0), mip);
-    color += textureLod(sampler, dir + vec3(0.0, 0.0, v), mip);
-    color += textureLod(sampler, dir + vec3(0.0, 0.0, -v), mip);
-    return color / 6.0;
-}
-
 void main() {
 
     vec4 static_light = texture(material.light_map, fragment.light_map_uv);
