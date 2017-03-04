@@ -24,12 +24,19 @@
 namespace mos {
 
 RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
+
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
+
+  //std::cout << "Uniforms: " << glewGetString(GL_MAX_UNIFORM_LOCATIONS) << std::endl;
+  //char *version = (char*)glewGetString(GL_VERSION);
+  //std::cout << version << std::endl;
   if (GLEW_OK != err) {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+  fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
+  fprintf(stdout, "Max uniform locations: %s\n", glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
