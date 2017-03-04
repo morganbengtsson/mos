@@ -28,14 +28,12 @@ Model Assets::model_value(const json &value) {
     material_name = value.value("material", "");
   }
 
-  bool recieves_light = value.value("receives_light", true);
   auto transform = jsonarray_to_mat4(value["transform"]);
 
   auto created_model = mos::Model(
       name, mesh(mesh_name),
       transform,
-      material(material_name),
-      recieves_light);
+      material(material_name));
 
   for (auto &m : value["models"]) {
     created_model.models.push_back(model_value(m));

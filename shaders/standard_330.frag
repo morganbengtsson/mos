@@ -60,7 +60,7 @@ uniform Material material;
 uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
+uniform Fog fog;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_decal_maps[20];
 uniform sampler2D normal_decal_maps[20];

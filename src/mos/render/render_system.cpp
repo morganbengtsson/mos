@@ -1021,7 +1021,6 @@ void RenderSystem::render(const Model &model,
   glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
 
-  glUniform1i(uniforms.receives_light, model.lit);
   glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
 
   if (environment.texture) {
@@ -1038,11 +1037,6 @@ void RenderSystem::render(const Model &model,
   glUniform1fv(uniforms.fog_exponential_factor, 1, &fog.exponential_factor);
   glUniform1fv(uniforms.fog_exponential_power, 1, &fog.exponential_power);
   glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1, &fog.exponential_attenuation_factor);
-
-  static const float time = 0.0f;
-  glUniform1fv(uniforms.time, 1, &time);
-  glUniform4fv(uniforms.overlay, 1, glm::value_ptr(model.overlay()));
-  glUniform3fv(uniforms.multiply, 1, glm::value_ptr(model.multiply()));
 
   const int num_elements = model.mesh ? model.mesh->elements_size() : 0;
   int draw_type = GL_TRIANGLES;

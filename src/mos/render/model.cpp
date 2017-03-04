@@ -14,7 +14,7 @@ Model::Model(const mos::Model &model, const glm::mat4 transform) : Model(model),
 Model::Model(const std::string &path)
     : Model(path, json::parse(mos::text(path))) {}
 
-Model::Model(const std::string &path, const json &value) : overlay_(0.0f), multiply_(1.0f){
+Model::Model(const std::string &path, const json &value) : {
   filesystem::path fpath = path;
 
   auto name = value.value("name", "");
