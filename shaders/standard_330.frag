@@ -1,10 +1,13 @@
-#version 330
+#version 450
 struct Material {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     float specular_exponent;
     float opacity;
+    sampler2D diffuse_map;
+    sampler2D light_map;
+    sampler2D normal_map;
 };
 
 struct Light {
@@ -58,9 +61,6 @@ uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), vec3(1.0, 1.0, 1.0), 200.0, 300.0, 1.0, 0.0, 0.0, 1.0);
-uniform sampler2D diffuse_map;
-uniform sampler2D light_map;
-uniform sampler2D normal_map;
 uniform sampler2D shadow_map;
 uniform sampler2D diffuse_decal_maps[20];
 uniform sampler2D normal_decal_maps[20];
@@ -106,13 +106,13 @@ vec4 averageCube(const samplerCube sampler, const vec3 dir, const float mip){
 
 void main() {
 
-    vec4 static_light = texture(light_map, fragment.light_map_uv);
+    vec4 static_light = texture(material.light_map, fragment.light_map_uv);
 
     vec3 normal = fragment.normal;
 
-    vec3 tex_normal = normalize(texture(normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
+    vec3 tex_normal = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
-    float amount = texture(normal_map, fragment.uv).a;
+    float amount = texture(material.normal_map, fragment.uv).a;
     if (amount > 0.0f){
         normal = normalize(mix(normal, tex_normal, amount));
     }
@@ -121,7 +121,7 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture(diffuse_map, fragment.uv);
+    vec4 tex_color = texture(material.diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 

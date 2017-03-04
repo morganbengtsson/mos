@@ -910,7 +910,7 @@ void RenderSystem::render(const Model &model,
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D,
                 model.material.diffuse_map ? textures_[model.material.diffuse_map->id()] : empty_texture_);
-  glUniform1i(uniforms.diffuse_map, texture_unit);
+  glUniform1i(uniforms.material_diffuse_map, texture_unit);
   texture_unit++;
 
   // Shadowmap
@@ -952,14 +952,14 @@ void RenderSystem::render(const Model &model,
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
                                ? textures_[model.material.light_map->id()]
                                : empty_texture_);
-  glUniform1i(uniforms.light_map, texture_unit);
+  glUniform1i(uniforms.material_light_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                ? textures_[model.material.normal_map->id()]
                                : empty_texture_);
-  glUniform1i(uniforms.normal_map, texture_unit);
+  glUniform1i(uniforms.material_normal_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -1147,9 +1147,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     view_matrix(glGetUniformLocation(program, "view")),
     normal_matrix(glGetUniformLocation(program, "normal_matrix")),
     depth_bias_mvp(glGetUniformLocation(program, "depth_bias_model_view_projection")),
-    diffuse_map(glGetUniformLocation(program, "diffuse_map")),
-    light_map(glGetUniformLocation(program, "light_map")),
-    normal_map(glGetUniformLocation(program, "normal_map")),
+    material_diffuse_map(glGetUniformLocation(program, "material.diffuse_map")),
+    material_light_map(glGetUniformLocation(program, "material.light_map")),
+    material_normal_map(glGetUniformLocation(program, "material.normal_map")),
     shadow_map(glGetUniformLocation(program, "shadow_map")),
     environment_map(glGetUniformLocation(program, "environment.texture")),
     environment_position(glGetUniformLocation(program, "environment.position")),
