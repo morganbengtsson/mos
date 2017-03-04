@@ -1181,10 +1181,10 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {
     for (int i = 0; i < diffuse_decal_maps.size(); i++) {
-      auto decals_uniform_name = "decal_maps[" + std::to_string(i) + "]";
+      auto decals_uniform_name = "diffuse_decal_maps[" + std::to_string(i) + "]";
       diffuse_decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
 
-      auto decal_matrices_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
+      auto decal_matrices_uniform_name = "diffuse_decal_model_view_projections[" + std::to_string(i) + "]";
       diffuse_decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
     }
     for (int i = 0; i < normal_decal_maps.size(); i++) {
