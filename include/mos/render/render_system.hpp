@@ -30,7 +30,8 @@ namespace mos {
  */
 class RenderSystem {
 public:
-  using Decals = std::vector<Decal>;
+  using DiffuseDecals = std::vector<Decal>;
+  using NormalDecals = std::vector<Decal>;
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -166,7 +167,8 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const Decals &decals,
+              const DiffuseDecals &diffuse_decals,
+              const NormalDecals &normal_decals,
               const glm::mat4 &transform,
               const RenderCamera &camera,
               const Light &light,
@@ -226,14 +228,15 @@ private:
     GLint model_matrix;
     GLint view_matrix;
     GLint normal_matrix;
-    std::array<GLint, 20> decal_model_view_projection_matrices;
+    std::array<GLint, 20> diffuse_decal_model_view_projection_matrices;
+    std::array<GLint, 20> normal_decal_model_view_projection_matrices;
     GLint depth_bias_mvp;
     GLint diffuse_map;
     GLint light_map;
     GLint normal_map;
     GLint shadow_map;
-    std::array<GLint, 20> decal_maps;
-
+    std::array<GLint, 20> diffuse_decal_maps;
+    std::array<GLint, 20> normal_decal_maps;
     GLint environment_map;
     GLint environment_position;
     GLint environment_extent;

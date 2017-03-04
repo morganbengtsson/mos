@@ -796,7 +796,8 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     render(model,
-           render_scene.decals,
+           render_scene.diffuse_decals,
+           render_scene.normal_decals,
            glm::mat4(1.0f),
            camera,
            render_scene.light,
@@ -879,7 +880,8 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
 }
 
 void RenderSystem::render(const Model &model,
-                          const Decals &decals,
+                          const DiffuseDecals &diffuse_decals,
+                          const NormalDecals &normal_decals,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
@@ -919,16 +921,29 @@ void RenderSystem::render(const Model &model,
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
-  for (int i = 0; i < decals.size(); i++) {
-    if (i > 0 && decals[i].texture->id() != decals[i - 1].texture->id()) {
+  for (int i = 0; i < diffuse_decals.size(); i++) {
+    if (i > 0 && diffuse_decals[i].texture->id() != diffuse_decals[i - 1].texture->id()) {
       texture_unit++;
     }
-    load(decals[i].texture);
+    load(diffuse_decals[i].texture);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[decals[i].texture->id()]);
-    glUniform1i(uniforms.decal_maps[i], texture_unit);
-    const glm::mat4 decal_mvp = bias * decals[i].projection * decals[i].view;
-    glUniformMatrix4fv(uniforms.decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
+    glBindTexture(GL_TEXTURE_2D, textures_[diffuse_decals[i].texture->id()]);
+    glUniform1i(uniforms.diffuse_decal_maps[i], texture_unit);
+    const glm::mat4 decal_mvp = bias * diffuse_decals[i].projection * diffuse_decals[i].view;
+    glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
+  }
+  texture_unit++;
+
+  for (int i = 0; i < normal_decals.size(); i++) {
+    if (i > 0 && normal_decals[i].texture->id() != normal_decals[i - 1].texture->id()) {
+      texture_unit++;
+    }
+    load(normal_decals[i].texture);
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, textures_[normal_decals[i].texture->id()]);
+    glUniform1i(uniforms.diffuse_decal_maps[i], texture_unit);
+    const glm::mat4 decal_mvp = bias * normal_decals[i].projection * normal_decals[i].view;
+    glUniformMatrix4fv(uniforms.normal_decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
   texture_unit++;
 
@@ -1044,7 +1059,8 @@ void RenderSystem::render(const Model &model,
   }
   for (const auto &child : model.models) {
     render(child,
-           decals,
+           diffuse_decals,
+           normal_decals,
            parent_transform * model.transform,
            camera,
            light,
@@ -1164,12 +1180,19 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     time(glGetUniformLocation(program, "time")),
     overlay(glGetUniformLocation(program, "overlay")),
     multiply(glGetUniformLocation(program, "multiply")) {
-  for (int i = 0; i < decal_maps.size(); i++) {
-    auto decals_uniform_name = "decal_maps[" + std::to_string(i) + "]";
-    decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
+    for (int i = 0; i < diffuse_decal_maps.size(); i++) {
+      auto decals_uniform_name = "decal_maps[" + std::to_string(i) + "]";
+      diffuse_decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
 
-    auto decal_matrices_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
-    decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
-  }
+      auto decal_matrices_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
+      diffuse_decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
+    }
+    for (int i = 0; i < normal_decal_maps.size(); i++) {
+      auto normal_decals_uniform_name = "normal_decal_maps[" + std::to_string(i) + "]";
+      normal_decal_maps[i] = glGetUniformLocation(program, normal_decals_uniform_name.c_str());
+
+      auto normal_decal_matrices_uniform_name = "normal_decal_model_view_projections[" + std::to_string(i) + "]";
+      normal_decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, normal_decal_matrices_uniform_name.c_str()));
+    }
 }
 }
