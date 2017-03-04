@@ -125,17 +125,17 @@ void main() {
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
-
     for (int i = 0; i < 20; i++) {
         vec4 decal = texture(diffuse_decal_maps[i], fragment.diffuse_decal_uvs[i]);
-        diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+        //diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 
-    for (int i = 0; i < 20; i++) {
-        vec4 decal = texture(normal_decal_maps[i], fragment.normal_decal_uvs[i]);
-        vec3 decal_normal = normalize(decal.rgb * 2.0 - vec3(1.0));
-        decal_normal = normalize(fragment.tbn * decal_normal);
-        normal = normalize(mix(normal, decal_normal, decal.a));
+    for (int j = 0; j < 20; j++) {
+        vec4 decal = texture(normal_decal_maps[j], fragment.normal_decal_uvs[j]);
+        vec3 tex_normal = normalize(decal.rgb * 2.0 - vec3(1.0));
+        tex_normal = normalize(fragment.tbn * tex_normal);
+        //diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+        normal = mix(normal, tex_normal, decal.a);
     }
 
     float dist = distance(light.position, fragment.position);
