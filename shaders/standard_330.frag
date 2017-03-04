@@ -131,6 +131,13 @@ void main() {
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 
+    for (int i = 0; i < 20; i++) {
+        vec4 decal = texture(normal_decal_maps[i], fragment.normal_decal_uvs[i]);
+        vec3 decal_normal = normalize(decal.rgb * 2.0 - vec3(1.0));
+        decal_normal = normalize(fragment.tbn * decal_normal);
+        normal = normalize(mix(normal, decal_normal, decal.a));
+    }
+
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = light.linear_attenuation_factor;
     float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
