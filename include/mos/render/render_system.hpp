@@ -11,7 +11,6 @@
 #include <mos/render/texture.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
-#include <mos/render/quad.hpp>
 #include <mos/render/text.hpp>
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>

@@ -10,8 +10,9 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
-  model_.lit = false;
+
   model_.material = Material();
+  model_.material.ambient = glm::vec3(1.0f);
   model_.material.opacity = 0.0f;
   model_.material.diffuse_map = font.texture;
   text(txt);
@@ -71,7 +72,7 @@ void Text::text(const std::string &text) {
 }
 
 void Text::intensity(const glm::vec3 &intensity) {
-  model_.multiply(intensity);
+  model_.material.ambient = intensity;
 }
 
 float Text::width() const {
@@ -118,7 +119,7 @@ glm::mat4 Text::transform() const {
 Model Text::model() const { return model_; }
 
 void Text::color(const glm::vec3 &color) {
-  model_.overlay(glm::vec4(color, 1.0f));
+  model_.material.diffuse = color;
 }
 
 Text &Text::operator=(const std::string &input) {

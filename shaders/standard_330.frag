@@ -54,8 +54,6 @@ struct Fragment {
     mat3 tbn;
 };
 
-uniform bool receives_light;
-uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
 uniform Environment environment;
@@ -67,7 +65,7 @@ uniform sampler2D normal_decal_maps[20];
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
-uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
+
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
@@ -152,28 +150,16 @@ void main() {
 
     vec4 diffuse_static = static_light * diffuse_color;
 
-    //Ambient
-    //vec3 ambient = material.ambient * light.ambient;
-    vec3 ambient = light.ambient * diffuse_color.rgb;
+    vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient, material.opacity);
 
-    if(receives_light == true) {
-        vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
-        color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + ambient, material.opacity);
-    }
-    else {
-        color = vec4(diffuse_color.rgb, material.opacity);
-    }
     color.a = material.opacity + tex_color.a;
-
-    //Multiply
-    color.rgb *= multiply;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-    color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
 
      //Shadow test, not that great yet.
 #ifdef SHADOWMAPS
