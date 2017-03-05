@@ -929,7 +929,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                       : empty_texture_);
     glUniform1i(uniforms.decal_material_diffuse_map, texture_unit);
 
-    const glm::mat4 decal_mvp = bias * decal.projection * decal.view;
+    const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform ;
     glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrix,
                        1, GL_FALSE, &decal_mvp[0][0]);
 
