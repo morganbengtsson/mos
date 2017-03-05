@@ -55,13 +55,12 @@ struct Fragment {
 };
 
 uniform Material material;
+uniform Material decal_materials[20];
 uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
 uniform sampler2D shadow_map;
-uniform sampler2D diffuse_decal_maps[20];
-uniform sampler2D normal_decal_maps[20];
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -112,7 +111,7 @@ void main() {
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     for (int i = 0; i < 20; i++) {
-        vec4 decal = texture(diffuse_decal_maps[i], fragment.diffuse_decal_uvs[i]);
+        vec4 decal = texture(decal_materials[i].diffuse_map, fragment.diffuse_decal_uvs[i]);
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 

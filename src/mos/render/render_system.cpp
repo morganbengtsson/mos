@@ -928,7 +928,7 @@ void RenderSystem::render(const Model &model,
     glBindTexture(GL_TEXTURE_2D, decal.material.diffuse_map
                                  ? textures_[decal.material.diffuse_map->id()]
                                  : empty_texture_);
-    glUniform1i(uniforms.diffuse_decal_maps[i], texture_unit);
+    glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
     if (diffuse_decals.front().material.diffuse_map->id() != decal.material.diffuse_map->id()){
       texture_unit++;
     }
@@ -1178,19 +1178,21 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     fog_exponential_power(glGetUniformLocation(program, "fog.exponential_power")),
     fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor"))
     {
-    for (int i = 0; i < diffuse_decal_maps.size(); i++) {
-      auto decals_uniform_name = "diffuse_decal_maps[" + std::to_string(i) + "]";
-      diffuse_decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
+    for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
+      auto decals_uniform_name = "decal_materials[" + std::to_string(i) + "].diffuse_map";
+      decal_material_diffuse_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
 
       auto decal_matrices_uniform_name = "diffuse_decal_model_view_projections[" + std::to_string(i) + "]";
       diffuse_decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
     }
+
+    /*
     for (int i = 0; i < normal_decal_maps.size(); i++) {
       auto normal_decals_uniform_name = "normal_decal_maps[" + std::to_string(i) + "]";
       normal_decal_maps[i] = glGetUniformLocation(program, normal_decals_uniform_name.c_str());
 
       auto normal_decal_matrices_uniform_name = "normal_decal_model_view_projections[" + std::to_string(i) + "]";
       normal_decal_model_view_projection_matrices[i] = (glGetUniformLocation(program, normal_decal_matrices_uniform_name.c_str()));
-    }
+    }*/
 }
 }
