@@ -227,34 +227,39 @@ private:
     GLint model_matrix;
     GLint view_matrix;
     GLint normal_matrix;
+    GLint depth_bias_mvp;
+
     std::array<GLint, 20> diffuse_decal_model_view_projection_matrices;
     std::array<GLint, 20> normal_decal_model_view_projection_matrices;
-    GLint depth_bias_mvp;
-    GLint material_diffuse_map;
-    GLint material_light_map;
-    GLint material_normal_map;
+
     GLint shadow_map;
     std::array<GLint, 20> diffuse_decal_maps;
     std::array<GLint, 20> normal_decal_maps;
+
     GLint environment_map;
     GLint environment_position;
     GLint environment_extent;
+
+    GLint material_diffuse_map;
+    GLint material_light_map;
+    GLint material_normal_map;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
     GLint material_specular_exponent;
-    GLint opacity;
+    GLint material_opacity;
+
+    GLint camera_resolution;
     GLint camera_position;
+
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
-    GLint light_ambient_color;
     GLint light_view;
     GLint light_projection;
     GLint light_linear_attenuation_factor;
     GLint light_quadratic_attenuation_factor;
-    GLint receives_light;
-    GLint resolution;
+
     GLint fog_color_near;
     GLint fog_color_far;
     GLint fog_near;
@@ -263,9 +268,6 @@ private:
     GLint fog_exponential_factor;
     GLint fog_exponential_power;
     GLint fog_exponential_attenuation_factor;
-    GLint time;
-    GLint overlay;
-    GLint multiply;
   };
 
   using VertexProgramPair = std::pair<RenderScene::Shader, VertexProgramData>;

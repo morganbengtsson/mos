@@ -999,7 +999,7 @@ void RenderSystem::render(const Model &model,
                glm::value_ptr(model.material.specular));
   glUniform1fv(uniforms.material_specular_exponent, 1,
                &model.material.specular_exponent);
-  glUniform1fv(uniforms.opacity, 1, &model.material.opacity);
+  glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
   // Camera in world space
   glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));
@@ -1011,7 +1011,6 @@ void RenderSystem::render(const Model &model,
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
-  glUniform3fv(uniforms.light_ambient_color, 1, glm::value_ptr(light.ambient));
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.view[0][0]);
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
                      &light.projection[0][0]);
@@ -1021,7 +1020,7 @@ void RenderSystem::render(const Model &model,
   glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
 
-  glUniform2fv(uniforms.resolution, 1, glm::value_ptr(camera.resolution));
+  glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(camera.resolution));
 
   if (environment.texture) {
     if (texture_cubes_.find(environment.texture->id()) == texture_cubes_.end()) {
@@ -1152,18 +1151,17 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
     material_specular_color(glGetUniformLocation(program, "material.specular")),
     material_specular_exponent(glGetUniformLocation(program, "material.specular_exponent")),
-    opacity(glGetUniformLocation(program, "material.opacity")),
+    material_opacity(glGetUniformLocation(program, "material.opacity")),
     camera_position(glGetUniformLocation(program, "camera.position")),
+    camera_resolution(glGetUniformLocation(program, "camera.resolution")),
     light_position(glGetUniformLocation(program, "light.position")),
     light_diffuse_color(glGetUniformLocation(program, "light.diffuse")),
     light_specular_color(glGetUniformLocation(program, "light.specular")),
-    light_ambient_color(glGetUniformLocation(program, "light.ambient")),
     light_view(glGetUniformLocation(program, "light.view")),
     light_projection(glGetUniformLocation(program, "light.projection")),
     light_linear_attenuation_factor(glGetUniformLocation(program, "light.linear_attenuation_factor")),
     light_quadratic_attenuation_factor(glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
-    receives_light(glGetUniformLocation(program, "receives_light")),
-    resolution(glGetUniformLocation(program, "resolution")),
+
     fog_color_near(glGetUniformLocation(program, "fog.color_near")),
     fog_color_far(glGetUniformLocation(program, "fog.color_far")),
     fog_near(glGetUniformLocation(program, "fog.near")),
@@ -1171,10 +1169,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program) :
     fog_linear_factor(glGetUniformLocation(program, "fog.linear_factor")),
     fog_exponential_factor(glGetUniformLocation(program, "fog.exponential_factor")),
     fog_exponential_power(glGetUniformLocation(program, "fog.exponential_power")),
-    fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
-    time(glGetUniformLocation(program, "time")),
-    overlay(glGetUniformLocation(program, "overlay")),
-    multiply(glGetUniformLocation(program, "multiply")) {
+    fog_exponential_attenuation_factor(glGetUniformLocation(program, "fog.exponential_attenuation_factor"))
+    {
     for (int i = 0; i < diffuse_decal_maps.size(); i++) {
       auto decals_uniform_name = "diffuse_decal_maps[" + std::to_string(i) + "]";
       diffuse_decal_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());

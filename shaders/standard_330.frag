@@ -14,7 +14,6 @@ struct Light {
     vec3 position;
     vec3 diffuse;
     vec3 specular;
-    vec3 ambient;
     mat4 view;
     mat4 projection;
     float linear_attenuation_factor;
@@ -23,6 +22,7 @@ struct Light {
 
 struct Camera {
     vec3 position;
+    vec2 resolution;
 };
 
 struct Environment {
