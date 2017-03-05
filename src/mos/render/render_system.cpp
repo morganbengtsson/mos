@@ -796,8 +796,7 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     render(model,
-           render_scene.diffuse_decals,
-           render_scene.normal_decals,
+           render_scene.decals,
            glm::mat4(1.0f),
            camera,
            render_scene.light,
@@ -880,8 +879,7 @@ void RenderSystem::render_scene(const RenderCamera &camera, const RenderScene &r
 }
 
 void RenderSystem::render(const Model &model,
-                          const DiffuseDecals &diffuse_decals,
-                          const NormalDecals &normal_decals,
+                          const Decals &decals,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera,
                           const Light &light,
@@ -921,19 +919,19 @@ void RenderSystem::render(const Model &model,
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
-  for (int i = 0; i < diffuse_decals.size(); i++) {
-    auto &decal = diffuse_decals[i];
+  for (int i = 0; i < decals.size(); i++) {
+    auto &decal = decals[i];
     load(decal.material.diffuse_map);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D, decal.material.diffuse_map
                                  ? textures_[decal.material.diffuse_map->id()]
                                  : empty_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
-    if (diffuse_decals.front().material.diffuse_map->id() != decal.material.diffuse_map->id()){
+    if (decals.front().material.diffuse_map->id() != decal.material.diffuse_map->id()){
       texture_unit++;
     }
 
-    const glm::mat4 decal_mvp = bias * diffuse_decals[i].projection * diffuse_decals[i].view;
+    const glm::mat4 decal_mvp = bias * decals[i].projection * decals[i].view;
     glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
   //TODO: Jumps one texture unit?
@@ -1060,8 +1058,7 @@ void RenderSystem::render(const Model &model,
   }
   for (const auto &child : model.models) {
     render(child,
-           diffuse_decals,
-           normal_decals,
+           decals,
            parent_transform * model.transform,
            camera,
            light,

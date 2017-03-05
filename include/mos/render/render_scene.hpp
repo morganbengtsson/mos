@@ -21,8 +21,7 @@ class RenderScene {
 public:
   using Models = std::vector<mos::Model>;
   using RenderBoxes = std::vector<mos::RenderBox>;
-  using DiffuseDecals = std::vector<mos::Decal>;
-  using NormalDecals = std::vector<mos::Decal>;
+  using Decals = std::vector<mos::Decal>;
 
   /**
    * @brief The Shader enum
@@ -56,8 +55,7 @@ public:
         const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   Models models;
-  DiffuseDecals diffuse_decals;
-  NormalDecals normal_decals;
+  Decals decals;
   Particles particles;
   RenderBoxes render_boxes;
   Light light;
