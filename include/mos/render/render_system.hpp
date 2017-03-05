@@ -228,12 +228,10 @@ private:
     GLint normal_matrix;
     GLint depth_bias_mvp;
 
-    std::array<GLint, 20> diffuse_decal_model_view_projection_matrices;
-    std::array<GLint, 20> normal_decal_model_view_projection_matrices;
-
     GLint shadow_map;
-    std::array<GLint, 20> decal_material_diffuse_maps;
-    std::array<GLint, 20> normal_decal_maps;
+
+    GLint diffuse_decal_model_view_projection_matrix;
+    GLint decal_material_diffuse_map;
 
     GLint environment_map;
     GLint environment_position;
