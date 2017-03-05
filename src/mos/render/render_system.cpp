@@ -921,20 +921,26 @@ void RenderSystem::render(const Model &model,
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
-
   for (int i = 0; i < diffuse_decals.size(); i++) {
-    if (i > 0 && diffuse_decals[i].texture->id() != diffuse_decals[i - 1].texture->id()) {
+    auto &decal = diffuse_decals[i];
+    load(decal.material.diffuse_map);
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, decal.material.diffuse_map
+                                 ? textures_[decal.material.diffuse_map->id()]
+                                 : empty_texture_);
+    glUniform1i(uniforms.diffuse_decal_maps[i], texture_unit);
+    if (diffuse_decals.front().material.diffuse_map->id() != decal.material.diffuse_map->id()){
       texture_unit++;
     }
-    load(diffuse_decals[i].texture);
-    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[diffuse_decals[i].texture->id()]);
-    glUniform1i(uniforms.diffuse_decal_maps[i], texture_unit);
+
     const glm::mat4 decal_mvp = bias * diffuse_decals[i].projection * diffuse_decals[i].view;
     glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrices[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
+  //TODO: Jumps one texture unit?
   texture_unit++;
 
+
+  /*
   for (int i = 0; i < normal_decals.size(); i++) {
     if (i > 0 && normal_decals[i].texture->id() != normal_decals[i - 1].texture->id()) {
       texture_unit++;
@@ -947,6 +953,7 @@ void RenderSystem::render(const Model &model,
     glUniformMatrix4fv(uniforms.normal_decal_model_view_projection_matrices[i], 1, GL_FALSE, &normal_decal_mvp[0][0]);
   }
   texture_unit++;
+  */
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.light_map

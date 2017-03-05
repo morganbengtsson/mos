@@ -1,7 +1,9 @@
 #include <mos/render/decal.hpp>
 mos::Decal::Decal(const glm::mat4 &projection,
                   const glm::mat4 &view,
-                  const mos::SharedTexture &texture)
-    : projection(projection), view(view), texture(texture) {
-  texture->wrap = mos::Texture::Wrap::CLAMP_TO_BORDER;
+                  const mos::Material &material)
+    : projection(projection), view(view), material(material) {
+  if (material.diffuse_map) {
+    material.diffuse_map->wrap = mos::Texture::Wrap::CLAMP_TO_BORDER;
+  }
 }
