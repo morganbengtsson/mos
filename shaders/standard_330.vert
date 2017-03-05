@@ -4,7 +4,8 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec2 decal_uv;
+    vec3 decal_uv;
+    vec4 proj_coords;
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -50,7 +51,8 @@ void main() {
     fragment.shadow = pos_ls.xyz / pos_ls.w;
 
     vec4 pos_d = diffuse_decal_model_view_projection_matrix * vec4(position, 1.0);
-    fragment.decal_uv = pos_d.xy / pos_d.w;
+    fragment.decal_uv = pos_d.xyz / pos_d.w;
+    fragment.proj_coords = pos_d;
 
     fragment.uv = uv;
     fragment.light_map_uv = light_map_uv;

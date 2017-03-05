@@ -4,6 +4,6 @@ mos::Decal::Decal(const glm::mat4 &projection,
                   const mos::Material &material)
     : projection(projection), view(view), material(material) {
   if (material.diffuse_map) {
-    material.diffuse_map->wrap = mos::Texture::Wrap::REPEAT;
+    material.diffuse_map->wrap = mos::Texture::Wrap::CLAMP_TO_BORDER;
   }
 }

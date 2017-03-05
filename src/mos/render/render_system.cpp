@@ -887,8 +887,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
-  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
-                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0,
+                              0.0, 0.5, 0.0, 0.0,
+                              0.0, 0.0, 0.5, 0.0,
+                              0.5, 0.5, 0.5, 1.0);
 
   load(environment.texture);
   load(model);
@@ -929,7 +931,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                       : empty_texture_);
     glUniform1i(uniforms.decal_material_diffuse_map, texture_unit);
 
-    const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform ;
+    const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrix,
                        1, GL_FALSE, &decal_mvp[0][0]);
 
