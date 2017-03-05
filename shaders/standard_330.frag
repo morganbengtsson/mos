@@ -113,17 +113,7 @@ void main() {
     for (int i = 0; i < 20; i++) {
         vec4 decal = texture(decal_materials[i].diffuse_map, fragment.diffuse_decal_uvs[i]);
         diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
-    }
-
-    /* TODO: Does not work
-    for (int j = 0; j < 20; j++) {
-        vec4 decal = texture(normal_decal_maps[j], fragment.normal_decal_uvs[j]);
-        vec3 tex_normal = normalize(decal.rgb * 2.0 - vec3(1.0));
-        tex_normal = normalize(fragment.tbn * tex_normal);
-        //diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
-        normal = mix(normal, tex_normal, decal.a);
-    }
-    */
+    }   
 
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = light.linear_attenuation_factor;
