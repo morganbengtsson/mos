@@ -921,18 +921,18 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   // glUniform1i(uniforms.shadowmap, texture_unit);
   texture_unit++;
 
-  if (decals.size() > 0) {
-    auto &decal = decals[0];
+  for (int i = 0; i < decals.size(); i++){
+    auto &decal = decals[i];
     load(decal.material.diffuse_map);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.diffuse_map
                       ? textures_[decal.material.diffuse_map->id()]
                       : empty_texture_);
-    glUniform1i(uniforms.decal_material_diffuse_maps[0], texture_unit);
+    glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
-    glUniformMatrix4fv(uniforms.decal_mvps[0],
+    glUniformMatrix4fv(uniforms.decal_mvps[i],
                        1, GL_FALSE, &decal_mvp[0][0]);
 
     texture_unit++;
