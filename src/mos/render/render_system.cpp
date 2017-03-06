@@ -1177,8 +1177,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     auto decals_uniform_name = "decal_materials[" + std::to_string(i) + "].diffuse_map";
     decal_material_diffuse_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
 
-    auto decals_mvp_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
-    decal_mvps[i] = glGetUniformLocation(program, decals_mvp_uniform_name.c_str());
+    auto decal_mvps_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
+    decal_mvps[i] = glGetUniformLocation(program, decal_mvps_uniform_name.c_str());
   }
 
 }

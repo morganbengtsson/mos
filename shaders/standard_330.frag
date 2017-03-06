@@ -1,4 +1,7 @@
-#version 450
+#version 330
+
+const int max_decals = 20;
+
 struct Material {
     vec3 ambient;
     vec3 diffuse;
@@ -47,15 +50,14 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec3 decal_uvs[20];
-    vec4 proj_coords[20];
+    vec4 proj_coords[max_decals];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
 };
 
 uniform Material material;
-uniform Material decal_materials[20];
+uniform Material decal_materials[max_decals];
 uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
@@ -111,9 +113,9 @@ void main() {
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     if (fragment.proj_coords[0].w > 0.0){
-    vec2 d_uv = fragment.proj_coords[0].xy / fragment.proj_coords[0].w;
-    vec4 decal = texture(decal_materials[0].diffuse_map, d_uv);
-        diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+        vec2 d_uv = fragment.proj_coords[0].xy / fragment.proj_coords[0].w;
+        vec4 decal = texture(decal_materials[0].diffuse_map, d_uv);
+            diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
     }
 
     float dist = distance(light.position, fragment.position);
