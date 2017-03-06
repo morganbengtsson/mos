@@ -110,9 +110,11 @@ void main() {
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
+    if (fragment.proj_coords.w > 0.0){
     vec2 d_uv = fragment.proj_coords.xy / fragment.proj_coords.w;
     vec4 decal = texture(decal_material.diffuse_map, d_uv);
     diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+    }
 
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = light.linear_attenuation_factor;

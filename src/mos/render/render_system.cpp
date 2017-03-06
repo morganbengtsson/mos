@@ -929,10 +929,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                   decal.material.diffuse_map
                       ? textures_[decal.material.diffuse_map->id()]
                       : empty_texture_);
-    glUniform1i(uniforms.decal_material_diffuse_map, texture_unit);
+    glUniform1i(uniforms.decal_material_diffuse_maps[0], texture_unit);
 
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
-    glUniformMatrix4fv(uniforms.diffuse_decal_model_view_projection_matrix,
+    glUniformMatrix4fv(uniforms.decal_mvps[0],
                        1, GL_FALSE, &decal_mvp[0][0]);
 
     texture_unit++;
@@ -1168,12 +1168,10 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "fog.exponential_attenuation_factor"))
 
       ,
-      diffuse_decal_model_view_projection_matrix(glGetUniformLocation(
-          program, "diffuse_decal_model_view_projection_matrix")),
-      decal_material_diffuse_map(
-          glGetUniformLocation(program, "decal_material.diffuse_map"))
-
-{
+      decal_mvps{glGetUniformLocation(
+          program, "diffuse_decal_model_view_projection_matrix")},
+      decal_material_diffuse_maps{
+          glGetUniformLocation(program, "decal_material.diffuse_map")} {
   /*
   for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
     auto decals_uniform_name = "decal_materials[" + std::to_string(i) +
@@ -1187,18 +1185,5 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
   (glGetUniformLocation(program, decal_matrices_uniform_name.c_str()));
   }
   */
-
-  /*
-  for (int i = 0; i < normal_decal_maps.size(); i++) {
-    auto normal_decals_uniform_name = "normal_decal_maps[" + std::to_string(i) +
-  "]";
-    normal_decal_maps[i] = glGetUniformLocation(program,
-  normal_decals_uniform_name.c_str());
-
-    auto normal_decal_matrices_uniform_name =
-  "normal_decal_model_view_projections[" + std::to_string(i) + "]";
-    normal_decal_model_view_projection_matrices[i] =
-  (glGetUniformLocation(program, normal_decal_matrices_uniform_name.c_str()));
-  }*/
 }
 }

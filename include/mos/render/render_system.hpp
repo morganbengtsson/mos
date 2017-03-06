@@ -230,8 +230,8 @@ private:
 
     GLint shadow_map;
 
-    GLint diffuse_decal_model_view_projection_matrix;
-    GLint decal_material_diffuse_map;
+    std::array<GLint, 20> decal_mvps;
+    std::array<GLint, 20> decal_material_diffuse_maps;
 
     GLint environment_map;
     GLint environment_position;
