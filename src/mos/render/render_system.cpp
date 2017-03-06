@@ -935,8 +935,11 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     glUniformMatrix4fv(uniforms.decal_mvps[i],
                        1, GL_FALSE, &decal_mvp[0][0]);
 
-    texture_unit++;
+    if (decal.material.diffuse_map->id() != decals.front().material.diffuse_map->id()){
+      texture_unit++;
+    }
   }
+  texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
