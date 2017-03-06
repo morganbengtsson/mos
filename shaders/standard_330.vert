@@ -4,8 +4,8 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
-    vec3 decal_uv;
-    vec4 proj_coords;
+    vec3 decal_uvs[20];
+    vec4 proj_coords[20];
     vec3 shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -32,7 +32,7 @@ uniform mat4 depth_bias_model_view_projection;
 uniform mat4 model; // NOT SET!
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
-uniform mat4 diffuse_decal_model_view_projection_matrix;
+uniform mat4 decal_model_view_projections[20];
 uniform mat3 normal_matrix;
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -50,9 +50,9 @@ void main() {
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
 
-    vec4 pos_d = diffuse_decal_model_view_projection_matrix * vec4(position, 1.0);
-    fragment.decal_uv = pos_d.xyz / pos_d.w;
-    fragment.proj_coords = pos_d;
+    vec4 pos_d = decal_model_view_projections[0] * vec4(position, 1.0);
+    fragment.decal_uvs[0] = pos_d.xyz / pos_d.w;
+    fragment.proj_coords[0] = pos_d;
 
     fragment.uv = uv;
     fragment.light_map_uv = light_map_uv;
