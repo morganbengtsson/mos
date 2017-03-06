@@ -114,7 +114,7 @@ void main() {
 
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
-            vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[0].w;
+            vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
             vec4 decal = texture(decal_materials[i].diffuse_map, d_uv);
                 diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
         }
