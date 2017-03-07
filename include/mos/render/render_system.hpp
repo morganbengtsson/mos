@@ -20,6 +20,7 @@
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
 #include <mos/render/decal.hpp>
+#include "texture.hpp"
 
 namespace mos {
 
@@ -319,5 +320,6 @@ private:
   GLuint box_ebo;
   GLuint box_va;
 };
+
 }
 #endif /* MOS_RENDERER_H */
