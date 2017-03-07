@@ -63,21 +63,6 @@ public:
                             const bool mipmaps = true,
                             const bool compress = false,
                             const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
-
-  /**
-   * @brief begin iterator
-   * @return constand begin iterator
-   */
-  [[deprecated]]
-  Data::const_iterator begin() const;
-
-  /**
-   * @brief end iterator
-   * @return constant end iterator
-   */
-  [[deprecated]]
-  Data::const_iterator end() const;
-
 };
 }
 

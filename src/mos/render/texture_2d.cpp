@@ -21,23 +21,5 @@ SharedTexture Texture2D::load(const std::string &path, const bool mipmaps,
 
 Texture2D::Texture2D(const std::string &path, const bool mipmaps,
                      const bool compress, const Texture2D::Wrap &wrap)
-    : Texture(0, 0, wrap, mipmaps, compress) {
-
-  std::vector<unsigned char> pixels;
-  auto error = lodepng::decode(pixels, width_, height_, path);
-  if (error) {
-    std::string e = "Decoder error: " + std::to_string(error) + ": " +
-        std::string(lodepng_error_text(error));
-    throw std::runtime_error(e);
-  }
-  layers_[0].assign(pixels.begin(), pixels.end());
-}
-
-Texture2D::Data::const_iterator Texture2D::begin() const {
-  return layers_[0].begin();
-}
-
-Texture2D::Data::const_iterator Texture2D::end() const {
-  return layers_[0].end();
-}
+    : Texture({path}, wrap, mipmaps, compress) {}
 }
