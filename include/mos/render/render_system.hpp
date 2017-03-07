@@ -321,5 +321,6 @@ private:
   GLuint box_va;
 };
 
+
 }
 #endif /* MOS_RENDERER_H */

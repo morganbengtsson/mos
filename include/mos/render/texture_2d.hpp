@@ -6,27 +6,20 @@
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>
+#include <mos/render/texture.hpp>
 
 namespace mos {
 
   class Texture2D;
   using SharedTexture = std::shared_ptr<Texture2D>;
-
 /**
  * @brief The Texture2D class
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
-class Texture2D final {
+class Texture2D final : public Texture {
   friend class RenderSystem;
 public:
-  /**
-   * @brief Container for pixel data. RGB(A)
-   */
-  using Texels = std::vector<unsigned char>;
-
-  enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER};
-
   template <class T>
   /**
    * @brief Texture2D
@@ -42,8 +35,8 @@ public:
   Texture2D(T begin, T end, unsigned int width, unsigned int height,
           const bool mipmaps = true, const bool compress = false,
           const Wrap &wrap = Wrap::REPEAT)
-      : mipmaps(mipmaps), compress(compress), width_(width), height_(height), id_(current_id_++),
-        texels_(begin, end), wrap(wrap) {}
+      : Texture({Data(begin, end)}, width, height, wrap, mipmaps, compress){
+  }
 
   /**
    * @brief Texture2D constructor.
@@ -76,72 +69,15 @@ public:
    * @return constand begin iterator
    */
   [[deprecated]]
-  Texels::const_iterator begin() const;
+  Data::const_iterator begin() const;
 
   /**
    * @brief end iterator
    * @return constant end iterator
    */
   [[deprecated]]
-  Texels::const_iterator end() const;
+  Data::const_iterator end() const;
 
-  /**
-   * @brief unique id
-   * @return id
-   */
-  unsigned int id() const;
-
-  /**
-   * @brief width in pixels
-   * @return
-   */
-  unsigned int width() const;
-
-  /**
-   * @brief height in pixels
-   * @return
-   */
-  unsigned int height() const;
-
-  /**
-   * @brief size of buffer
-   * @return
-   */
-  unsigned int size() const;
-
-  /**
-   * @brief sample the texture
-   * @param x less than width
-   * @param y less than height
-   * @return
-   */
-  glm::vec4 sample(const unsigned int x, const unsigned int y);
-
-  /**
-   * @brief data
-   * @return Raw bytes.
-   */
-  const unsigned char *data() const;
-
-  /**
-   * @brief if mipmaps should be used
-   */
-  bool mipmaps;
-  /**
-   * @brief compress
-   */
-  const bool compress;
-  /**
-   * @brief wrap
-   */
-  Wrap wrap;
-
-private:
-  static std::atomic_uint current_id_;
-  unsigned int id_;
-  unsigned int width_;
-  unsigned int height_;
-  Texels texels_;
 };
 }
 
