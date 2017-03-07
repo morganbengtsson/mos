@@ -27,19 +27,19 @@ Material::Material(const std::string &path) {
     if (!value["diffuse_map"].is_null()) {
       t = value["diffuse_map"];
     }
-    diffuse_map = Texture::load(fpath.parent_path().str() + "/" + t);
+    diffuse_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
 
     std::string n = "";
     if (!value["normal_map"].is_null()) {
       n = value["normal_map"];
     }
-    normal_map = Texture::load(fpath.parent_path().str() + "/" + n);
+    normal_map = Texture2D::load(fpath.parent_path().str() + "/" + n);
 
     std::string l = "";
     if (!value["light_map"].is_null()) {
       l = value["light_map"];
     }
-    light_map = Texture::load(fpath.parent_path().str() + "/" + l);
+    light_map = Texture2D::load(fpath.parent_path().str() + "/" + l);
 
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);

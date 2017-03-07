@@ -9,15 +9,15 @@
 
 namespace mos {
 
-  class Texture;
-  using SharedTexture = std::shared_ptr<Texture>;
+  class Texture2D;
+  using SharedTexture = std::shared_ptr<Texture2D>;
 
 /**
  * @brief The Texture2D class
  *
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
-class Texture final {
+class Texture2D final {
   friend class RenderSystem;
 public:
   /**
@@ -39,7 +39,7 @@ public:
    * Constructor for a texture, that takes char valus from a container as input.
    *Along with width and height.
    */
-  Texture(T begin, T end, unsigned int width, unsigned int height,
+  Texture2D(T begin, T end, unsigned int width, unsigned int height,
           const bool mipmaps = true, const bool compress = false,
           const Wrap &wrap = Wrap::REPEAT)
       : mipmaps(mipmaps), compress(compress), width_(width), height_(height), id_(current_id_++),
@@ -51,25 +51,25 @@ public:
    * @param height
    * @param mipmaps Generate mipmaps or not.
    */
-  Texture(const unsigned int width, const unsigned int height,
+  Texture2D(const unsigned int width, const unsigned int height,
           const bool mipmaps = true, const bool compress = false,
           const Wrap &wrap = Wrap::REPEAT);
 
   /**
    * @brief Destructor.
    */
-  virtual ~Texture();
+  virtual ~Texture2D();
 
   static SharedTexture load(const std::string &path,
                             const bool mipmaps = true,
                             const bool compress = false,
-                            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+                            const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
 
-  Texture(const std::string &path,
+  Texture2D(const std::string &path,
                             const bool mipmaps = true,
                             const bool compress = false,
-                            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+                            const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
   /**
    * @brief begin iterator

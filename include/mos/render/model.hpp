@@ -5,7 +5,7 @@
 #include <optional.hpp>
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <json.hpp>
 
 namespace mos {

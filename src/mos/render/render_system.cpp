@@ -17,7 +17,7 @@
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/render_system.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/vertex.hpp>
 #include <mos/util.hpp>
 
@@ -665,10 +665,10 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
-  static std::map<Texture::Wrap, GLuint> wrap_map{
-      {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-      {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture::Wrap::REPEAT, GL_REPEAT}};
+  static std::map<Texture2D::Wrap, GLuint> wrap_map{
+      {Texture2D::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
+      {Texture2D::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
+      {Texture2D::Wrap::REPEAT, GL_REPEAT}};
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);

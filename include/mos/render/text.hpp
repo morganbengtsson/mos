@@ -18,7 +18,7 @@ namespace mos {
 class Text {
 public:
   using CharMap = std::map<char, Character>;
-  using TexPtr = std::shared_ptr<Texture>;
+  using TexPtr = std::shared_ptr<Texture2D>;
 
   /**
    * @brief Text constructor

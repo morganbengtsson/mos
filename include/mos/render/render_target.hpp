@@ -5,7 +5,7 @@
 #include <atomic>
 #include <optional.hpp>
 #include <glm/glm.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {

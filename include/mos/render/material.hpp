@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <memory>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {

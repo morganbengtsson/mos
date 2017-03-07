@@ -12,7 +12,7 @@
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <unordered_map>
 
 namespace mos {
@@ -31,7 +31,7 @@ public:
   /**
    * @brief Container for textures.
    */
-  using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+  using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 
   /**
    * @brief Container for audio buffers.
@@ -47,7 +47,7 @@ public:
   /**
    * @brief Pair for TextureMap
    */
-  using TexturePair = std::pair<std::string, std::shared_ptr<Texture>>;
+  using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
 
   /**
    * @brief Pair for SoundMap
@@ -123,7 +123,7 @@ public:
   SharedTexture
   texture(const std::string &path, const bool mipmaps = true,
                  const bool compress = true,
-                 const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+                 const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
 
   /**

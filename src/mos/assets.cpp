@@ -68,18 +68,18 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture>
+std::shared_ptr<Texture2D>
 Assets::texture(const std::string &path,
                        const bool mipmaps,
                        const bool compress,
-                       const Texture::Wrap &wrap) {
+                       const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, Texture::load(directory_ + path, mipmaps, compress, wrap)));
+      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, mipmaps, compress, wrap)));
     }
     return textures_.at(path);
   } else {
-    return std::shared_ptr<Texture>(nullptr);
+    return std::shared_ptr<Texture2D>(nullptr);
   }
 }
 

@@ -4,7 +4,7 @@
 #include <map>
 #include <memory>
 #include <mos/render/character.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 
 namespace mos {
 

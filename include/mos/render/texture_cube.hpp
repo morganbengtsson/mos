@@ -1,7 +1,7 @@
 #ifndef MOS_TEXTURECUBE_HPP
 #define MOS_TEXTURECUBE_HPP
 
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <vector>
 #include <string>
 

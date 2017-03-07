@@ -8,7 +8,7 @@
 #include <optional.hpp>
 #include <array>
 #include <mos/render/render_scene.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/text.hpp>
