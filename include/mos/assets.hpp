@@ -120,7 +120,7 @@ public:
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  SharedTexture
+  SharedTexture2D
   texture(const std::string &path, const bool mipmaps = true,
                  const bool compress = true,
                  const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);

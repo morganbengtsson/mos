@@ -6,9 +6,9 @@
 
 namespace mos {
 using namespace nlohmann;
-Material::Material(const SharedTexture &diffuse_map,
-                   const SharedTexture &normal_map,
-                   const SharedTexture &light_map,
+Material::Material(const SharedTexture2D &diffuse_map,
+                   const SharedTexture2D &normal_map,
+                   const SharedTexture2D &light_map,
                    const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,

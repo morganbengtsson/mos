@@ -31,9 +31,9 @@ public:
    * @param opacity
    * @param specular_exponent
    */
-  explicit Material(const SharedTexture &diffuse_map = SharedTexture(),
-                    const SharedTexture &normal_map = SharedTexture(),
-                    const SharedTexture &light_map = SharedTexture(),
+  explicit Material(const SharedTexture2D &diffuse_map = SharedTexture2D(),
+                    const SharedTexture2D &normal_map = SharedTexture2D(),
+                    const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &ambient = glm::vec3(0.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
@@ -86,17 +86,17 @@ public:
   /**
   * @brief Texture of the material.
   */
-  SharedTexture diffuse_map;
+  SharedTexture2D diffuse_map;
 
   /**
   * @brief Normalmap for the material.
   */
-  SharedTexture normal_map;
+  SharedTexture2D normal_map;
 
   /**
   * @brief Light map for the material.
   */
-  SharedTexture light_map;
+  SharedTexture2D light_map;
 
 };
 }

@@ -564,7 +564,7 @@ void RenderSystem::unload(const SharedTextureCube &texture) {
   }
 }
 
-void RenderSystem::load(const SharedTexture &texture) {
+void RenderSystem::load(const SharedTexture2D &texture) {
 #ifdef STREAM_TEXTURES
   if (textures_.find(texture->id()) == textures_.end()) {
     GLuint gl_id = create_texture_and_pbo(texture);
@@ -578,7 +578,7 @@ void RenderSystem::load(const SharedTexture &texture) {
 #endif
 }
 
-void RenderSystem::unload(const SharedTexture &texture) {
+void RenderSystem::unload(const SharedTexture2D &texture) {
   if (textures_.find(texture->id()) == textures_.end()) {
 
   } else {
@@ -677,7 +677,7 @@ bool RenderSystem::check_program(const unsigned int program) {
   return true;
 }
 
-unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
+unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
@@ -738,7 +738,7 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
 }
 
 unsigned int
-RenderSystem::create_texture_and_pbo(const SharedTexture &texture) {
+RenderSystem::create_texture_and_pbo(const SharedTexture2D &texture) {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   GLuint texture_id;
 

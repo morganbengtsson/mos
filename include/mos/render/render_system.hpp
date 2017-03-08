@@ -65,13 +65,13 @@ public:
    * @brief Load a texture into renderer memory.
    * @param texture The texture.
    */
-  void load(const SharedTexture &texture);
+  void load(const SharedTexture2D &texture);
 
   /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
    */
-  void unload(const SharedTexture &texture);
+  void unload(const SharedTexture2D &texture);
 
   /**
    * @brief Load a texture into renderer memory.
@@ -289,12 +289,12 @@ private:
 
   bool check_program(const unsigned int program);
 
-  unsigned int create_texture(const SharedTexture &texture);
+  unsigned int create_texture(const SharedTexture2D &texture);
 
   unsigned int create_texture_cube(const SharedTextureCube &texture);
 
   unsigned int
-  create_texture_and_pbo(const SharedTexture &texture);
+  create_texture_and_pbo(const SharedTexture2D &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source, const std::string &vs_file,
                        const std::string &fs_file);

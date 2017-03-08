@@ -5,7 +5,10 @@
 #include <atomic>
 #include <initializer_list>
 #include <lodepng.h>
+#include <memory>
 namespace mos {
+  class Texture;
+  using SharedTexture = std::shared_ptr<Texture>;
 class Texture {
   friend class RenderSystem;
 public:

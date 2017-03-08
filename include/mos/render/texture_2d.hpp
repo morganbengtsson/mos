@@ -11,7 +11,7 @@
 namespace mos {
 
 class Texture2D;
-using SharedTexture = std::shared_ptr<Texture2D>;
+using SharedTexture2D = std::shared_ptr<Texture2D>;
 /**
  * @brief The Texture2D class
  *
@@ -52,7 +52,7 @@ public:
    */
   virtual ~Texture2D();
 
-  static SharedTexture load(const std::string &path,
+  static SharedTexture2D load(const std::string &path,
                             const bool mipmaps = true,
                             const bool compress = false,
                             const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);

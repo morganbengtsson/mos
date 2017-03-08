@@ -11,11 +11,11 @@ namespace mos {
 class Font {
 public:
   using CharMap = std::map<char, Character>;
-  Font(const CharMap &characters, const SharedTexture &texture,
+  Font(const CharMap &characters, const SharedTexture2D &texture,
        const float height, const float ascender, const float descender);
   Font(const std::string &path);
   ~Font();
-  SharedTexture texture;
+  SharedTexture2D texture;
   CharMap characters;
   float height() const;
   float ascender() const;
