@@ -5,9 +5,9 @@
 namespace mos {
 
 Texture2D::Texture2D(const unsigned int width, const unsigned int height,
-                     const bool mipmaps, const bool compress,
-                     const Texture2D::Wrap &wrap)
-    : Texture(width, height, Format::SRGBA, wrap, mipmaps, compress) {}
+                     const Format &format, const Wrap &wrap,
+                     const bool mipmaps, const bool compress)
+    : Texture(width, height, format, wrap, mipmaps, compress) {}
 
 Texture2D::~Texture2D() {}
 
