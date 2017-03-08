@@ -23,6 +23,25 @@
 
 namespace mos {
 
+static std::map<Texture::Format, GLuint> format_map{
+    {Texture::Format::SRGB, GL_SRGB},
+    {Texture::Format::SRGBA, GL_SRGB_ALPHA},
+    {Texture::Format::RGB, GL_RGB},
+    {Texture::Format::RGBA, GL_RGBA},
+    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT}};
+
+static std::map<Texture::Format, GLuint> format_map_compressed{
+    {Texture::Format::SRGB, GL_COMPRESSED_SRGB},
+    {Texture::Format::SRGBA, GL_COMPRESSED_SRGB_ALPHA},
+    {Texture::Format::RGB, GL_COMPRESSED_RGB},
+    {Texture::Format::RGBA, GL_COMPRESSED_RGBA},
+    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT}};
+
+static std::map<Texture::Wrap, GLuint> wrap_map{
+    {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
+    {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
+    {Texture::Wrap::REPEAT, GL_REPEAT}};
+
 RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 
   glewExperimental = GL_TRUE;
@@ -665,29 +684,19 @@ unsigned int RenderSystem::create_texture(const SharedTexture &texture) {
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
-  static std::map<Texture2D::Wrap, GLuint> wrap_map{
-      {Texture2D::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-      {Texture2D::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture2D::Wrap::REPEAT, GL_REPEAT}};
-
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map[texture->wrap]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
-  /*
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 texture->compress ? GL_COMPRESSED_SRGB_ALPHA : GL_SRGB_ALPHA,
-                 texture->width(), texture->height(), 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, texture->data());*/
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
+
+  glTexImage2D(GL_TEXTURE_2D, 0, texture->compress ? format_map_compressed[texture->format]
+                                                   : format_map[texture->format], texture->width(), texture->height(),
                0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
 
   if (texture->mipmaps) {
@@ -705,11 +714,6 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
-  static std::map<TextureCube::Wrap, GLuint> wrap_map{
-      {TextureCube::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-      {TextureCube::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {TextureCube::Wrap::REPEAT, GL_REPEAT}};
-
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
@@ -718,18 +722,6 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
                   wrap_map[texture->wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
                   wrap_map[texture->wrap]);
-
-  static std::map<TextureCube::Format, GLuint> format_map{
-      {TextureCube::Format::SRGB, GL_SRGB},
-      {TextureCube::Format::SRGBA, GL_SRGB_ALPHA},
-      {TextureCube::Format::RGB, GL_RGB},
-      {TextureCube::Format::RGBA, GL_RGBA}};
-
-  static std::map<TextureCube::Format, GLuint> format_map_compressed{
-      {TextureCube::Format::SRGB, GL_COMPRESSED_SRGB},
-      {TextureCube::Format::SRGBA, GL_COMPRESSED_SRGB_ALPHA},
-      {TextureCube::Format::RGB, GL_COMPRESSED_RGB},
-      {TextureCube::Format::RGBA, GL_COMPRESSED_RGBA}};
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
