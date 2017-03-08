@@ -24,12 +24,18 @@ public:
    * @param resolution
    */
   explicit RenderTarget(const SharedTexture & texture,
+                        const SharedTexture & depth_texture,
                         const SharedTextureCube texture_cube);
 
   /**
    * @brief The texture that is rendered to.
    */
   const SharedTexture texture;
+
+  /**
+   * @brief The depth texture that is rendered to.
+   */
+  const SharedTexture depth_texture;
 
   /**
    * @brief Cube texture that can be rendered to.
