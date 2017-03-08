@@ -2,21 +2,17 @@
 #define MOS_TEXTURECUBE_HPP
 
 #include <mos/render/texture_2d.hpp>
+#include <mos/render/texture.hpp>
 #include <vector>
 #include <string>
 
 namespace mos {
 class TextureCube;
+class Texture;
 using SharedTextureCube = std::shared_ptr<TextureCube>;
-class TextureCube {
+class TextureCube final : public Texture {
 public:
-  using Data = std::vector<unsigned char>;
-  enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
-  enum class Format {RGB, RGBA, SRGB, SRGBA};
-
-  TextureCube(int width, int height, const bool mipmaps, const Format &format)
-      : width_(width), height_(height), mipmaps(mipmaps), compress(false), id_(current_id_++), format(format) {
-  }
+  TextureCube(const int width, const int height, const bool mipmaps, const Format &format);
 
   TextureCube(const std::string &base_path,
               const bool mipmaps = true,
@@ -32,21 +28,7 @@ public:
               const bool mipmaps = true,
               const bool compress = false,
               const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
-  const unsigned char *data_positive_x();
-  const unsigned char *data_negative_x();
-  const unsigned char *data_positive_y();
-  const unsigned char *data_negative_y();
-  const unsigned char *data_positive_z();
-  const unsigned char *data_negative_z();
-  const unsigned char *data(const int i);
 
-  const bool mipmaps;
-  const bool compress;
-  Wrap wrap;
-  const Format format;
-  unsigned int width() const;
-  unsigned int height() const;
-  unsigned int id() const;
   static SharedTextureCube load(const std::string &positive_x_path,
                                 const std::string &negative_x_path,
                                 const std::string &positive_y_path,
@@ -62,12 +44,7 @@ public:
                                 const bool compress = false,
                                 const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 private:
-  std::array<Data, 6> layers_;
-  unsigned int width_;
-  unsigned int height_;
-  static std::atomic_uint current_id_;
-  const unsigned int id_;
-  void decode(Data &pixels, const std::string &path);
+
 };
 
 }
