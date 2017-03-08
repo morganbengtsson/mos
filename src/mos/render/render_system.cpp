@@ -1056,14 +1056,7 @@ void RenderSystem::render_target(const OptTarget &target) {
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
       if (target->texture) {
-        GLuint texture_id;
-
-        glGenTextures(1, &texture_id);
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, target->texture->width(),
-                     target->texture->height(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        GLuint texture_id = create_texture(target->texture);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                GL_TEXTURE_2D, texture_id, 0);
