@@ -53,6 +53,7 @@ struct Fragment {
     vec2 light_map_uv;
     vec4 proj_coords[max_decals];
     vec3 shadow;
+    vec4 proj_shadow;
     vec3 camera_to_surface;
     mat3 tbn;
 };
@@ -155,9 +156,16 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-    float v = texture(light.shadow_map, fragment.shadow.xy).r;
-    v = pow(v, 1000.0);
-    color.rgb = vec3(v,v,v);
+
+    if( fragment.proj_shadow.w > 0.0){
+        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+        float closest_depth = texture(light.shadow_map, s_uv.xy).r;
+        float current_depth = s_uv.z - 0.0005;
+        float shadow = current_depth > closest_depth ? 0.0 : 1.0;
+        float v = pow(closest_depth, 1000);
+        //color.rgb = vec3(v,v,v);
+        color.rgb *= shadow;
+    }
 
      //Shadow test, not that great yet.
      /*

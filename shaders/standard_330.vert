@@ -9,6 +9,7 @@ struct Fragment {
     vec2 light_map_uv;
     vec4 proj_coords[max_decals];
     vec3 shadow;
+    vec4 proj_shadow;
     vec3 camera_to_surface;
     mat3 tbn;
 };
@@ -52,6 +53,7 @@ void main() {
 
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.shadow = pos_ls.xyz / pos_ls.w;
+    fragment.proj_shadow = pos_ls;
 
     for (int i = 0; i < max_decals; i++){
         vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
