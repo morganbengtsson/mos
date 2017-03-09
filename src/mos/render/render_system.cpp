@@ -975,7 +975,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
   const glm::mat4 depth_bias_mvp =
-      bias * light.projection * light.view * model.transform;
+      bias * light.projection * light.view * parent_transform * model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 

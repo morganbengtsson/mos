@@ -155,7 +155,7 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-    float v = texture(light.shadow_map, fragment.uv).r;
+    float v = texture(light.shadow_map, fragment.shadow.xy).r;
     v = pow(v, 1000.0);
     color.rgb = vec3(v,v,v);
 
