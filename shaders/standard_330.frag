@@ -21,6 +21,7 @@ struct Light {
     mat4 projection;
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
+    sampler2D shadow_map;
 };
 
 struct Camera {
@@ -62,7 +63,7 @@ uniform Material decal_materials[max_decals];
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
-uniform sampler2D shadow_map;
+//uniform sampler2D shadow_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -154,7 +155,7 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-    float v = texture(shadow_map, fragment.uv).r;
+    float v = texture(light.shadow_map, fragment.uv).r;
     v = pow(v, 1000.0);
     color.rgb = vec3(v,v,v);
 

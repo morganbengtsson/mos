@@ -1153,7 +1153,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       light_quadratic_attenuation_factor(
           glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
       light_shadow_map(
-          glGetUniformLocation(program, "shadow_map")),
+          glGetUniformLocation(program, "light.shadow_map")),
 
       fog_color_near(glGetUniformLocation(program, "fog.color_near")),
       fog_color_far(glGetUniformLocation(program, "fog.color_far")),
