@@ -933,7 +933,6 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
 
   // Shadowmap
-
   if (light.shadow_map) {
     load(light.shadow_map);
     glActiveTexture(GL_TEXTURE0 + texture_unit);
