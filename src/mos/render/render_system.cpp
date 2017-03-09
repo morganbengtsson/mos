@@ -909,7 +909,6 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   texture_unit++;
 
 
-/*
   for (int i = 0; i < decals.size(); i++){
     auto &decal = decals[i];
     load(decal.material.diffuse_map);
@@ -929,8 +928,6 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     }
   }
   texture_unit++;
-  */
-
 
   // Shadowmap
   if (light.shadow_map) {
