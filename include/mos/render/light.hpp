@@ -2,6 +2,7 @@
 #define MOS_LIGHT_H
 
 #include <glm/glm.hpp>
+#include <mos/render/texture_2d.hpp>
 
 namespace mos {
 
@@ -60,6 +61,8 @@ public:
    * @brief projection
    */
   glm::mat4 projection;
+
+  SharedTexture2D shadow_map;
 
 };
 }

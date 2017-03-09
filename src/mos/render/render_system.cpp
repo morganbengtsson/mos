@@ -909,12 +909,12 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   texture_unit++;
 
   // Shadowmap
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-  glBindTexture(GL_TEXTURE_2D, depth_texture_);
-  glUniform1i(uniforms.shadow_map, texture_unit);
-  // glBindTexture(GL_TEXTURE_2D, textures_[1]);
-  // glUniform1i(uniforms.shadowmap, texture_unit);
-  texture_unit++;
+  if (light.shadow_map) {
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
+    glUniform1i(uniforms.shadow_map, texture_unit);
+    texture_unit++;
+  }
 
   for (int i = 0; i < decals.size(); i++){
     auto &decal = decals[i];
@@ -1155,6 +1155,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "light.linear_attenuation_factor")),
       light_quadratic_attenuation_factor(
           glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
+      light_shadow_map(
+          glGetUniformLocation(program, "light.shadow_map")),
 
       fog_color_near(glGetUniformLocation(program, "fog.color_near")),
       fog_color_far(glGetUniformLocation(program, "fog.color_far")),
