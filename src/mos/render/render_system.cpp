@@ -683,6 +683,9 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
   glBindTexture(GL_TEXTURE_2D, id);
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+  if (texture->format == Texture::Format::DEPTH){
+    sampling = GL_NEAREST;
+  }
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
@@ -697,7 +700,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
 
   glTexImage2D(GL_TEXTURE_2D, 0, texture->compress ? format_map_compressed[texture->format]
                                                    : format_map[texture->format], texture->width(), texture->height(),
-               0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+               0, texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT : GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -1062,6 +1065,7 @@ void RenderSystem::render_target(const OptTarget &target) {
                                GL_TEXTURE_2D, texture_id, 0);
         textures_.insert({target->texture->id(), texture_id});
       }
+
       if (target->texture_cube) {
         GLuint texture_id = create_texture_cube(target->texture_cube);
 
@@ -1070,20 +1074,29 @@ void RenderSystem::render_target(const OptTarget &target) {
 
         texture_cubes_.insert({target->texture_cube->id(), texture_id});
       }
+      if (target->depth_texture){
+        GLuint texture_id = create_texture(target->depth_texture);
 
-      GLuint depthrenderbuffer_id;
-      glGenRenderbuffers(1, &depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            target->width(), target->height());
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                               GL_TEXTURE_2D, texture_id, 0);
+        textures_.insert({target->depth_texture->id(), texture_id});
+      }
+      else {
+        GLuint depthrenderbuffer_id;
+        glGenRenderbuffers(1, &depthrenderbuffer_id);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                              target->width(), target->height());
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                  GL_RENDERBUFFER, depthrenderbuffer_id);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        render_buffers.insert({target->id(), depthrenderbuffer_id});
+      }
 
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         throw std::runtime_error("Framebuffer incomplete.");
       }
-      render_buffers.insert({target->id(), depthrenderbuffer_id});
+
       frame_buffers_.insert({target->id(), frame_buffer_id});
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
