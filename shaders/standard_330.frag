@@ -21,7 +21,6 @@ struct Light {
     mat4 projection;
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
-    //sampler2D shadow_map;
 };
 
 struct Camera {
@@ -58,11 +57,12 @@ struct Fragment {
 };
 
 uniform Material material;
-uniform Material decal_materials[max_decals];
 uniform Light light;
+uniform Material decal_materials[max_decals];
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
+uniform sampler2D shadow_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -156,11 +156,12 @@ void main() {
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
      //Shadow test, not that great yet.
+     /*
 #ifdef SHADOWMAPS
     float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
     float depth = fragment.shadow.z;
     float bias = 0.005;
     float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
     color.rgb *= shadow;
-#endif
+#endif*/
 }
