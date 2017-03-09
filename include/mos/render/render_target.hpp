@@ -23,9 +23,9 @@ public:
    * @brief Target
    * @param resolution
    */
-  explicit RenderTarget(const SharedTexture2D & texture,
-                        const SharedTexture2D & depth_texture,
-                        const SharedTextureCube texture_cube);
+  explicit RenderTarget(const SharedTexture2D & texture = nullptr,
+                        const SharedTexture2D & depth_texture = nullptr,
+                        const SharedTextureCube texture_cube = nullptr);
 
   /**
    * @brief The texture that is rendered to.
