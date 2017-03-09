@@ -21,6 +21,7 @@ struct Light {
     mat4 projection;
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
+    //sampler2D shadow_map;
 };
 
 struct Camera {
@@ -62,7 +63,6 @@ uniform Light light;
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
-uniform sampler2D shadow_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;

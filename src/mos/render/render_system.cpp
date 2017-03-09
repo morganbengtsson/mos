@@ -908,13 +908,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform1i(uniforms.material_diffuse_map, texture_unit);
   texture_unit++;
 
-  // Shadowmap
-  if (light.shadow_map) {
-    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
-    glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
-    glUniform1i(uniforms.shadow_map, texture_unit);
-    texture_unit++;
-  }
+
 
   for (int i = 0; i < decals.size(); i++){
     auto &decal = decals[i];
@@ -935,6 +929,16 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     }
   }
   texture_unit++;
+
+  // Shadowmap
+
+  if (light.shadow_map) {
+    load(light.shadow_map);
+    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
+    glUniform1i(uniforms.light_shadow_map, texture_unit);
+    texture_unit++;
+  }
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
@@ -1132,7 +1136,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "material.diffuse_map")),
       material_light_map(glGetUniformLocation(program, "material.light_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
-      shadow_map(glGetUniformLocation(program, "shadow_map")),
       environment_map(glGetUniformLocation(program, "environment.texture")),
       environment_position(
           glGetUniformLocation(program, "environment.position")),

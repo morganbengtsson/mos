@@ -229,8 +229,6 @@ private:
     GLint normal_matrix;
     GLint depth_bias_mvp;
 
-    GLint shadow_map;
-
     std::array<GLint, 20> decal_mvps;
     std::array<GLint, 20> decal_material_diffuse_maps;
 
