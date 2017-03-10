@@ -10,7 +10,7 @@ Light::Light(const glm::vec3 &position,
              const glm::vec3 &specular,
              const float linear_attenuation_factor,
              const float quadratic_attenuation_factor)
-    : position(position), diffuse(diffuse), specular(specular), angle(angle),
+    : position(position), diffuse(diffuse), specular(specular), angle(angle), direction(direction),
       linear_attenuation_factor(linear_attenuation_factor),
       quadratic_attenuation_factor(quadratic_attenuation_factor),
       camera(position, position + direction, glm::perspective(angle, 1.0f, 0.01f, 10.0f),

@@ -36,6 +36,8 @@ public:
    */
   float angle;
 
+  glm::vec3 direction;
+
   /**
    * @brief position
    */

@@ -22,6 +22,7 @@ struct Light {
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
     float angle;
+    vec3 direction;
     sampler2D shadow_map;
 };
 
@@ -123,12 +124,15 @@ void main() {
         }
     }
 
+    float cosDir = dot(surface_to_light, -light.direction);
+    float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
+
     float dist = distance(light.position, fragment.position);
     float linear_attenuation_factor = light.linear_attenuation_factor;
     float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
     float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
 
-    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
+    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse * spotEffect, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
@@ -149,7 +153,7 @@ void main() {
     vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
 
     //Shadow
-    if( fragment.proj_shadow.w > 0.0){
+    if( fragment.proj_shadow.w > 0.0) {
         vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
         float closest_depth = texture(light.shadow_map, s_uv.xy).r;
         float current_depth = s_uv.z - 0.0005;

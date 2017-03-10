@@ -28,6 +28,7 @@ struct Light {
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
     float angle;
+    vec3 direction;
     sampler2D shadow_map;
 };
 
