@@ -975,7 +975,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
   const glm::mat4 depth_bias_mvp =
-      bias * light.projection * light.view * parent_transform * model.transform;
+      bias * light.camera.projection * light.camera.view * parent_transform * model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
@@ -1004,9 +1004,9 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
-  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.view[0][0]);
+  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.camera.view[0][0]);
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
-                     &light.projection[0][0]);
+                     &light.camera.projection[0][0]);
 
   glUniform1fv(uniforms.light_linear_attenuation_factor, 1,
                &light.linear_attenuation_factor);

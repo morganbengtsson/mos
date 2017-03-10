@@ -3,6 +3,7 @@
 namespace mos {
 
 Light::Light(const glm::vec3 &position,
+             const glm::vec3 &direction,
              const glm::vec3 &diffuse,
              const glm::vec3 &specular,
              const float linear_attenuation_factor,

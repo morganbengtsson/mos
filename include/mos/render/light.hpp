@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <mos/render/texture_2d.hpp>
+#include <mos/render/render_camera.hpp>
 
 namespace mos {
 
@@ -21,6 +22,7 @@ public:
    * @param specular_color
    */
   explicit Light(const glm::vec3 &position = glm::vec3(0.0f),
+                 const glm::vec3 &direction = glm::vec3(0.0f, 0.0f, -1.0f),
                  const glm::vec3 &diffuse = glm::vec3(0.0f),
                  const glm::vec3 &specular = glm::vec3(0.0f),
                  const float linear_attenuation_factor = 0.0f,
@@ -53,15 +55,13 @@ public:
   float quadratic_attenuation_factor;
 
   /**
-   * @brief view
+   * @brief Camera to render shadow map from.
    */
-  glm::mat4 view;
+  RenderCamera camera;
 
   /**
-   * @brief projection
-   */
-  glm::mat4 projection;
-
+  * @brief Shadowmap
+  */
   SharedTexture2D shadow_map;
 
 };
