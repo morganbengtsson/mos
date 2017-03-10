@@ -145,8 +145,17 @@ void main() {
     specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * light.specular * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
-
     vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
+
+    //Shadow
+    if( fragment.proj_shadow.w > 0.0){
+        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+        float closest_depth = texture(light.shadow_map, s_uv.xy).r;
+        float current_depth = s_uv.z - 0.0005;
+        float shadow = current_depth > closest_depth ? 0.0 : 1.0;
+        diffuse.rgb *= shadow;
+    }
+
     color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient, material.opacity);
 
     color.a = material.opacity + tex_color.a;
@@ -157,23 +166,5 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
-    if( fragment.proj_shadow.w > 0.0){
-        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-        float closest_depth = texture(light.shadow_map, s_uv.xy).r;
-        float current_depth = s_uv.z - 0.0005;
-        float shadow = current_depth > closest_depth ? 0.0 : 1.0;
-        float v = pow(closest_depth, 1000);
-        //color.rgb = vec3(v,v,v);
-        color.rgb *= shadow;
-    }
 
-     //Shadow test, not that great yet.
-     /*
-#ifdef SHADOWMAPS
-    float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
-    float depth = fragment.shadow.z;
-    float bias = 0.005;
-    float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
-    color.rgb *= shadow;
-#endif*/
 }
