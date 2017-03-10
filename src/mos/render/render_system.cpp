@@ -1012,6 +1012,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                &light.linear_attenuation_factor);
   glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
+  glUniform1fv(uniforms.light_angle, 1,
+               &light.angle);
 
   glUniform2fv(uniforms.camera_resolution, 1,
                glm::value_ptr(camera.resolution));
@@ -1151,6 +1153,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
       light_shadow_map(
           glGetUniformLocation(program, "light.shadow_map")),
+      light_angle(
+          glGetUniformLocation(program, "light.angle")),
 
       fog_color_near(glGetUniformLocation(program, "fog.color_near")),
       fog_color_far(glGetUniformLocation(program, "fog.color_far")),

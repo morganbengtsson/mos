@@ -256,6 +256,7 @@ private:
     GLint light_linear_attenuation_factor;
     GLint light_quadratic_attenuation_factor;
     GLint light_shadow_map;
+    GLint light_angle;
 
     GLint fog_color_near;
     GLint fog_color_far;

@@ -21,6 +21,7 @@ struct Light {
     mat4 projection;
     float linear_attenuation_factor;
     float quadratic_attenuation_factor;
+    float angle;
     sampler2D shadow_map;
 };
 
