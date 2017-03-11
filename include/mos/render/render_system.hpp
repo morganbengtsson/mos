@@ -316,7 +316,8 @@ private:
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  GLuint empty_texture_;
+  GLuint black_texture_;
+  GLuint white_texture_;
   GLuint box_vbo;
   GLuint box_ebo;
   GLuint box_va;

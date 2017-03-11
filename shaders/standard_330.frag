@@ -132,7 +132,7 @@ void main() {
     float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
     float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
 
-    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse * spotEffect, 1.0) * diffuse_color;
+    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
@@ -152,6 +152,9 @@ void main() {
     vec4 diffuse_static = static_light * diffuse_color;
     vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
 
+    diffuse.rgb *= spotEffect;
+    specular.rgb *= spotEffect;
+
     //Shadow
     if( fragment.proj_shadow.w > 0.0) {
         vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
@@ -159,6 +162,7 @@ void main() {
         float current_depth = s_uv.z - 0.0005;
         float shadow = current_depth > closest_depth ? 0.0 : 1.0;
         diffuse.rgb *= shadow;
+        specular.rgb *= shadow;
     }
 
     color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient, material.opacity);

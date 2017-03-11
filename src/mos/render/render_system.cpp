@@ -157,8 +157,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
 
   // Empty texture
 
-  glGenTextures(1, &empty_texture_);
-  glBindTexture(GL_TEXTURE_2D, empty_texture_);
+  glGenTextures(1, &black_texture_);
+  glBindTexture(GL_TEXTURE_2D, black_texture_);
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -168,6 +168,19 @@ RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
   auto data = std::array<unsigned char, 4>{0, 0, 0, 0};
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                data.data());
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  glGenTextures(1, &white_texture_);
+  glBindTexture(GL_TEXTURE_2D, white_texture_);
+
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  auto data_white = std::array<unsigned char, 4>{255, 255, 255, 255};
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               data_white.data());
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Shadow maps frame buffer
@@ -904,7 +917,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.diffuse_map
                                    ? textures_[model.material.diffuse_map->id()]
-                                   : empty_texture_);
+                                   : black_texture_);
   glUniform1i(uniforms.material_diffuse_map, texture_unit);
   texture_unit++;
 
@@ -937,18 +950,24 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     glUniform1i(uniforms.light_shadow_map, texture_unit);
     texture_unit++;
   }
+  else {
+    glActiveTexture(GL_TEXTURE0 + texture_unit);
+    glBindTexture(GL_TEXTURE_2D, white_texture_);
+    glUniform1i(uniforms.light_shadow_map, texture_unit);
+    texture_unit++;
+  }
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
                                    ? textures_[model.material.light_map->id()]
-                                   : empty_texture_);
+                                   : black_texture_);
   glUniform1i(uniforms.material_light_map, texture_unit);
   texture_unit++;
 
   glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                    ? textures_[model.material.normal_map->id()]
-                                   : empty_texture_);
+                                   : black_texture_);
   glUniform1i(uniforms.material_normal_map, texture_unit);
   texture_unit++;
 
@@ -957,8 +976,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                 environment.texture
                     ? environment.texture
                           ? texture_cubes_[environment.texture->id()]
-                          : empty_texture_
-                    : empty_texture_);
+                          : black_texture_
+                    : black_texture_);
   glUniform1i(uniforms.environment_map, texture_unit);
   texture_unit++;
 
