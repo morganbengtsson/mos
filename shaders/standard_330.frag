@@ -158,9 +158,20 @@ void main() {
     //Shadow
     if( fragment.proj_shadow.w > 0.0) {
         vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-        float closest_depth = texture(light.shadow_map, s_uv.xy).r;
+        //float closest_depth = textureLod(light.shadow_map, s_uv.xy, 3).r;
         float current_depth = s_uv.z - 0.0005;
-        float shadow = current_depth > closest_depth ? 0.0 : 1.0;
+        //float shadow = current_depth > closest_depth ? 0.0 : 1.0;
+
+        float shadow = 0.0;
+        vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+        for(int x = -1; x <= 1; ++x) {
+            for(int y = -1; y <= 1; ++y) {
+                float pcfDepth = texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r;
+                shadow += current_depth > pcfDepth ? 0.0 : 1.0;
+            }
+        }
+        shadow /= 9.0;
+
         diffuse.rgb *= shadow;
         specular.rgb *= shadow;
     }

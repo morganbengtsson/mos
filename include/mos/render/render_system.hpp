@@ -96,8 +96,9 @@ public:
                      const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                      const OptTarget &target = OptTarget()) {
     render_target(target);
+
     if (target && target->texture_cube) {
-      auto texture_id = texture_cubes_[target->id()];
+      auto texture_id = texture_cubes_[target->texture_cube->id()];
         for (auto it = scenes_begin; it != scenes_end; it++) {
           for (auto c_it = it->cameras.begin(); c_it != it->cameras.end(); c_it++){
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
@@ -110,7 +111,6 @@ public:
       glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
       glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
-
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       for (auto &camera : it->cameras) {
