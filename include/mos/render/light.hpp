@@ -38,11 +38,10 @@ public:
 
   glm::vec3 direction;
 
-  /**
-   * @brief position
-   */
-  glm::vec3 position;
 
+  void position(const glm::vec3 &position);
+
+  glm::vec3 position() const;
   /**
    * @brief diffuse_color
    */
@@ -72,7 +71,11 @@ public:
   * @brief Shadowmap
   */
   SharedTexture2D shadow_map;
-
+private:
+  /**
+  * @brief position
+  */
+  glm::vec3 position_;
 };
 }
 

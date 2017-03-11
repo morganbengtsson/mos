@@ -136,7 +136,8 @@ void main() {
 
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
-    vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, 7);
+    vec2 t_size = textureSize(environment.texture, 0);
+    vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0));
     diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);

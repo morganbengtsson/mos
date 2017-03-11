@@ -1019,7 +1019,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
-               glm::value_ptr(glm::vec3(glm::vec4(light.position, 1.0f))));
+               glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));

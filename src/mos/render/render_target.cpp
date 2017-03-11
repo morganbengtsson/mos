@@ -16,9 +16,9 @@ RenderTarget::RenderTarget(const SharedTexture2D &texture,
 
 }
 int RenderTarget::width() const {
-  return texture ? texture->width() : texture_cube ? texture_cube->width() : 0;
+  return texture ? texture->width() : depth_texture ? depth_texture->width() : texture_cube ? texture_cube->width() : 0;
 }
 int RenderTarget::height() const {
-  return texture ? texture->height() : texture_cube ? texture_cube->height() : 0;
+  return texture ? texture->height() : depth_texture ? depth_texture->height() : texture_cube ? texture_cube->height() : 0;
 }
 }
