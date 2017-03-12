@@ -23,7 +23,7 @@ public:
          const glm::vec3 &center,
          const glm::mat4 &projection,
          const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
-         const glm::vec2 &resolution = glm::vec2(1280.0f, 720.0f));
+         const glm::vec2 &resolution = glm::vec2(100.0f, 100.0f));
 
   /**
    * @brief up
