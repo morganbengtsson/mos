@@ -43,14 +43,9 @@ static std::map<Texture::Wrap, GLuint> wrap_map{
     {Texture::Wrap::REPEAT, GL_REPEAT}};
 
 RenderSystem::RenderSystem(const glm::vec4 &color) {
-
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
 
-  // std::cout << "Uniforms: " << glewGetString(GL_MAX_UNIFORM_LOCATIONS) <<
-  // std::endl;
-  // char *version = (char*)glewGetString(GL_VERSION);
-  // std::cout << version << std::endl;
   if (GLEW_OK != err) {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
@@ -182,71 +177,6 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                data_white.data());
   glBindTexture(GL_TEXTURE_2D, 0);
-
-  // Shadow maps frame buffer
-
-  /*
-  glGenTextures(1, &depth_texture_);
-  glBindTexture(GL_TEXTURE_2D, depth_texture_);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0,
-               GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
-  GL_COMPARE_REF_TO_TEXTURE);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glGenFramebuffers(1, &depth_frame_buffer_);
-  glBindFramebuffer(GL_FRAMEBUFFER, depth_frame_buffer_);
-  glDrawBuffer(GL_NONE);
-  glReadBuffer(GL_NONE);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-  depth_texture_, 0);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Shadowmap framebuffer incomplete.");
-  }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
- */
-
-  /*
-  GLuint frame_buffer_id;
-  glGenFramebuffers(1, &frame_buffer_id);
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
-  GLuint texture_id;
-  glGenTextures(1, &texture_id);
-  glBindTexture(GL_TEXTURE_2D, texture_id);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 1024,
-               1024, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D, texture_id, 0);
-
-  GLuint depthrenderbuffer_id;
-  glGenRenderbuffers(1, &depthrenderbuffer_id);
-  glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                        1024,
-                        1024);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                            GL_RENDERBUFFER, depthrenderbuffer_id);
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete.");
-  }
-
-  depth_texture_ = texture_id;
-  depth_frame_buffer_ = frame_buffer_id;
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 }
 
 RenderSystem::~RenderSystem() {
