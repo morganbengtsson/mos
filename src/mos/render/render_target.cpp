@@ -20,9 +20,9 @@ RenderTarget::RenderTarget(const int width,
 
 }
 int RenderTarget::width() const {
-  return texture ? texture->width() : depth_texture ? depth_texture->width() : texture_cube ? texture_cube->width() : 0;
+  return width_;
 }
 int RenderTarget::height() const {
-  return texture ? texture->height() : depth_texture ? depth_texture->height() : texture_cube ? texture_cube->height() : 0;
+  return height_;
 }
 }

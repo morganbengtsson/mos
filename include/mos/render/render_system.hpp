@@ -106,10 +106,12 @@ public:
       glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
       glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
-    clear(color);
-    for (auto it = scenes_begin; it != scenes_end; it++) {
-      for (auto &camera : it->cameras) {
-        render_scene(camera, *it);
+    else {
+      clear(color);
+      for (auto it = scenes_begin; it != scenes_end; it++) {
+        for (auto &camera : it->cameras) {
+          render_scene(camera, *it);
+        }
       }
     }
   }
