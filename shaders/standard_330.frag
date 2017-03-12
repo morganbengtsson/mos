@@ -74,6 +74,10 @@ uniform mat4 view;
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 float fog_attenuation(const float dist, const Fog fog) {
     float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
     float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
@@ -165,13 +169,14 @@ void main() {
 
         float shadow = 0.0;
         vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
-        for(int x = -1; x <= 1; ++x) {
-            for(int y = -1; y <= 1; ++y) {
+        for(float x = -1.5; x <= 1.5; ++x) {
+            for(float y = -1.5; y <= 1.5; ++y) {
                 float pcfDepth = texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r;
-                shadow += current_depth > pcfDepth ? 0.0 : 1.0;
+                //shadow += current_depth > pcfDepth ? 0.0 : 1.0;
+                shadow += step(current_depth, texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r);
             }
         }
-        shadow /= 9.0;
+        shadow /= 16.0;
 
         diffuse.rgb *= shadow;
         specular.rgb *= shadow;

@@ -697,7 +697,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
   if (texture->format == Texture::Format::DEPTH){
-    sampling = GL_NEAREST;
+    sampling = GL_LINEAR;
   }
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
