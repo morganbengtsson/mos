@@ -291,43 +291,6 @@ RenderSystem::~RenderSystem() {
   }
 }
 
-void RenderSystem::update_depth(const Model &model,
-                                const glm::mat4 &parent_transform,
-                                const glm::mat4 &view,
-                                const glm::mat4 &projection,
-                                const glm::vec2 &resolution) {
-
-  glViewport(0, 0, 1024, 1024);
-  load(model);
-
-  auto transform = model.transform;
-  glm::mat4 mvp = projection * view * parent_transform * transform;
-
-  glUseProgram(depth_program_.program);
-
-  if (model.mesh) {
-    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
-  };
-
-  glUniformMatrix4fv(depth_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
-
-  int num_elements = model.mesh ? std::distance(model.mesh->elements_begin(),
-                                                model.mesh->elements_end())
-                                : 0;
-
-  if (model.mesh) {
-    if (num_elements > 0) {
-      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
-    } else {
-      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices_size());
-    }
-  }
-  for (auto &child : model.models) {
-    update_depth(child, parent_transform * model.transform, view, projection,
-                 resolution);
-  }
-}
-
 void RenderSystem::add_box_program(const std::string &name,
                                    const std::string &vs_source,
                                    const std::string &fs_source,

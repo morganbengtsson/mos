@@ -44,11 +44,6 @@ public:
    */
   ~RenderSystem();
 
-  // Temporary method
-  void update_depth(const Model &model, const glm::mat4 &parent_transform,
-                    const glm::mat4 &view, const glm::mat4 &projection,
-                    const glm::vec2 &resolution);
-
   /**
    * @brief load a model into renderers own memory.
    * @param model
