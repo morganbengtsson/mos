@@ -8,10 +8,9 @@ namespace mos {
   RenderCamera::RenderCamera(const glm::vec3 &position,
                    const glm::vec3 &center,
                    const glm::mat4 &projection,
-                   const glm::vec3 &up,
-                   const glm::vec2 &resolution)
+                   const glm::vec3 &up)
     : projection(projection), view(glm::lookAt(position, center, up)), up_(up),
-      position_(position), center_(center), resolution(resolution) {}
+      position_(position), center_(center){}
 
 glm::vec3 RenderCamera::up() const { return up_; }
 

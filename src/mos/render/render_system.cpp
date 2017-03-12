@@ -8,18 +8,14 @@
 #include <glm/gtx/projection.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/transform2.hpp>
-#include <iostream>
-#include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/render_system.hpp>
-#include <mos/render/texture_2d.hpp>
-#include <mos/render/vertex.hpp>
 #include <mos/util.hpp>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <vector>
 
 namespace mos {
 
@@ -693,13 +689,13 @@ RenderSystem::create_texture_and_pbo(const SharedTexture2D &texture) {
 }
 
 void RenderSystem::render_scene(const RenderCamera &camera,
-                                const RenderScene &render_scene) {
-  glViewport(0, 0, camera.resolution.x, camera.resolution.y);
+                                const RenderScene &render_scene, const glm::vec2 &resolution) {
+  //glViewport(0, 0, camera.resolution.x, camera.resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     render(model, render_scene.decals, glm::mat4(1.0f), camera,
            render_scene.light, render_scene.environment, render_scene.fog,
-           render_scene.shader, render_scene.draw);
+           resolution, render_scene.shader, render_scene.draw);
   }
 
   auto &uniforms = box_programs_.at("box");
@@ -781,6 +777,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera, const Light &light,
                           const EnvironmentLight &environment, const Fog &fog,
+                          const glm::vec2 &resolution,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
@@ -926,7 +923,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                glm::value_ptr(light.direction));
 
   glUniform2fv(uniforms.camera_resolution, 1,
-               glm::value_ptr(camera.resolution));
+               glm::value_ptr(resolution));
 
   glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
   glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
@@ -954,13 +951,14 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   }
   for (const auto &child : model.models) {
     render(child, decals, parent_transform * model.transform, camera, light,
-           environment, fog, shader, draw);
+           environment, fog, resolution, shader, draw);
   }
 }
 
 void RenderSystem::render_target(const OptTarget &target) {
   if (target) {
-    if (frame_buffers_.find(target->id()) == frame_buffers_.end()) {
+    glViewport(0.0f, 0.0f, target->width(), target->height());
+    if ((target->texture || target->texture_cube || target->depth_texture) &&frame_buffers_.find(target->id()) == frame_buffers_.end()) {
       GLuint frame_buffer_id;
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
@@ -988,7 +986,7 @@ void RenderSystem::render_target(const OptTarget &target) {
                                GL_TEXTURE_2D, texture_id, 0);
         textures_.insert({target->depth_texture->id(), texture_id});
       }
-      else {
+      if (target->texture || target->texture_cube) {
         GLuint depthrenderbuffer_id;
         glGenRenderbuffers(1, &depthrenderbuffer_id);
         glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);

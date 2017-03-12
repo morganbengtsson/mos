@@ -99,7 +99,7 @@ public:
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(it->cameras.begin(), c_it), texture_id, 0);
             clear(color);
-          render_scene(*c_it, *it);
+          render_scene(*c_it, *it, glm::vec2(target->width(), target->height()));
         }
       }
       glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
@@ -110,7 +110,7 @@ public:
       clear(color);
       for (auto it = scenes_begin; it != scenes_end; it++) {
         for (auto &camera : it->cameras) {
-          render_scene(camera, *it);
+          render_scene(camera, *it, glm::vec2(target->width(), target->height()));
         }
       }
     }
@@ -137,7 +137,7 @@ private:
    * @brief models_batch rendering.
    * @param render_scene
    */
-  void render_scene(const RenderCamera &camera, const RenderScene &render_scene);
+  void render_scene(const RenderCamera &camera, const RenderScene &render_scene, const glm::vec2 &resolution);
 
   /**
    * @brief Updates render state of model.
@@ -155,6 +155,7 @@ private:
               const Light &light,
               const EnvironmentLight &environment,
               const Fog &fog,
+              const glm::vec2 &resolution,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);
 
