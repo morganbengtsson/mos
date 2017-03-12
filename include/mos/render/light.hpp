@@ -31,13 +31,12 @@ public:
                  const float quadratic_attenuation_factor = 0.0f);
   virtual ~Light();
 
-  /**
-   * @brief angle.
-   */
-  float angle;
+  void angle(const float angle);
+  float angle() const;
 
-  glm::vec3 direction;
+  void direction(const glm::vec3 &direction);
 
+  glm::vec3 direction() const;
 
   void position(const glm::vec3 &position);
 
@@ -76,6 +75,16 @@ private:
   * @brief position
   */
   glm::vec3 position_;
+
+  /**
+   * @brief
+   */
+  glm::vec3 direction_;
+
+  /**
+  * @brief angle.
+  */
+  float angle_;
 };
 }
 

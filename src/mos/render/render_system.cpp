@@ -917,10 +917,11 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                &light.linear_attenuation_factor);
   glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
+  auto light_angle = light.angle();
   glUniform1fv(uniforms.light_angle, 1,
-               &light.angle);
+               &light_angle);
   glUniform3fv(uniforms.light_direction, 1,
-               glm::value_ptr(light.direction));
+               glm::value_ptr(light.direction()));
 
   glUniform2fv(uniforms.camera_resolution, 1,
                glm::value_ptr(resolution));
