@@ -130,21 +130,6 @@ public:
   }
   */
 
-  /**
-   * @brief Set lightmap use.
-   */
-  void lightmaps(const bool lightmaps);
-
-  /**
-   * @brief Check if lightmaps is enabled.
-   * @return True if lightmaps are enabled.
-   */
-  bool lightmaps() const;
-
-  // TODO: Private
-  GLuint depth_texture_;
-  GLuint depth_frame_buffer_;
-
 private:
   /**
    * @brief models_batch rendering.
@@ -268,7 +253,6 @@ private:
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
-  bool lightmaps_;
   void add_vertex_program(const RenderScene::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source,

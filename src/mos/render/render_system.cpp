@@ -42,7 +42,7 @@ static std::map<Texture::Wrap, GLuint> wrap_map{
     {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
     {Texture::Wrap::REPEAT, GL_REPEAT}};
 
-RenderSystem::RenderSystem(const glm::vec4 &color) : lightmaps_(true) {
+RenderSystem::RenderSystem(const glm::vec4 &color) {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
@@ -580,10 +580,6 @@ void RenderSystem::clear_buffers() {
   }
   element_array_buffers_.clear();
 }
-
-void RenderSystem::lightmaps(const bool lightmaps) { lightmaps_ = lightmaps; }
-
-bool RenderSystem::lightmaps() const { return lightmaps_; }
 
 unsigned int RenderSystem::create_shader(const std::string &source,
                                          const unsigned int type) {
