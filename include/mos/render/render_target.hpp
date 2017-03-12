@@ -23,7 +23,9 @@ public:
    * @brief Target
    * @param resolution
    */
-  explicit RenderTarget(const SharedTexture2D & texture = nullptr,
+  explicit RenderTarget(const int width,
+                        const int height,
+                        const SharedTexture2D & texture = nullptr,
                         const SharedTexture2D & depth_texture = nullptr,
                         const SharedTextureCube texture_cube = nullptr);
 
@@ -52,6 +54,9 @@ public:
   unsigned int id() const;
 
 private:
+  int width_;
+  int height_;
+  int depth_;
   unsigned int id_;
   static std::atomic_uint current_id_;
 };
