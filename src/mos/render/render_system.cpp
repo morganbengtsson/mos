@@ -798,17 +798,15 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   const auto &uniforms = vertex_programs_.at(shader);
 
-  int texture_unit = 0;
-
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glActiveTexture(GLenum(GL_TEXTURE0));
   glBindTexture(GL_TEXTURE_2D, model.material.diffuse_map
                                    ? textures_[model.material.diffuse_map->id()]
                                    : black_texture_);
-  glUniform1i(uniforms.material_diffuse_map, texture_unit);
-  texture_unit++;
+  glUniform1i(uniforms.material_diffuse_map, 0);
 
-/*
-  for (int i = 0; i < decals.size(); i++){
+  for (int i = 0; i < decals.size(); i++) {
+    //Uses two texture units
+    int texture_unit = 1 + i % 2;
     auto &decal = decals[i];
     load(decal.material.diffuse_map);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
@@ -821,54 +819,42 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.decal_mvps[i],
                        1, GL_FALSE, &decal_mvp[0][0]);
-
-
-    if (decal.material.diffuse_map->id() != decals.front().material.diffuse_map->id()){
-      texture_unit++;
-    }
-    texture_unit++;
   }
-  texture_unit++;
-  */
 
   // Shadowmap
   if (light.shadow_map) {
     load(light.shadow_map);
-    glActiveTexture(GL_TEXTURE0 + texture_unit);
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
-    glUniform1i(uniforms.light_shadow_map, texture_unit);
-    texture_unit++;
+    glUniform1i(uniforms.light_shadow_map, 3);
   }
   else {
-    glActiveTexture(GL_TEXTURE0 + texture_unit);
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, white_texture_);
-    glUniform1i(uniforms.light_shadow_map, texture_unit);
-    texture_unit++;
+    glUniform1i(uniforms.light_shadow_map, 3);
   }
 
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
                                    ? textures_[model.material.light_map->id()]
                                    : black_texture_);
-  glUniform1i(uniforms.material_light_map, texture_unit);
-  texture_unit++;
+  glUniform1i(uniforms.material_light_map, 4);
 
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glActiveTexture(GL_TEXTURE5);
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                    ? textures_[model.material.normal_map->id()]
                                    : black_texture_);
-  glUniform1i(uniforms.material_normal_map, texture_unit);
-  texture_unit++;
+  glUniform1i(uniforms.material_normal_map, 5);
 
-  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+  glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 environment.texture
                     ? environment.texture
                           ? texture_cubes_[environment.texture->id()]
                           : black_texture_
                     : black_texture_);
-  glUniform1i(uniforms.environment_map, texture_unit);
-  texture_unit++;
+  glUniform1i(uniforms.environment_map, 6);
+
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
