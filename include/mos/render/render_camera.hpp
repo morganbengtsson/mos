@@ -67,6 +67,11 @@ public:
   glm::vec3 direction() const;
 
   /**
+   * @brief set direction
+   */
+  void direction(const glm::vec3 &direction);
+
+  /**
    * @brief Projection matrix.
    */
   glm::mat4 projection;

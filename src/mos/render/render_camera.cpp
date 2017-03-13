@@ -37,9 +37,17 @@ glm::vec3 RenderCamera::direction() const {
   return glm::normalize(center_ - position_);
 }
 
+void RenderCamera::direction(const glm::vec3 &direction) {
+  center(position_ + direction);
+  update_view();
+}
+
+
 void RenderCamera::update_view() { view = glm::lookAt(position_, center_, up_); }
 
 float RenderCamera::aspect_ratio() const {
   return projection[1][1] / projection[0][0];
 }
+
+
 }
