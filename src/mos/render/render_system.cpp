@@ -807,7 +807,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform1i(uniforms.material_diffuse_map, texture_unit);
   texture_unit++;
 
-/*
+
   for (int i = 0; i < decals.size(); i++){
     auto &decal = decals[i];
     load(decal.material.diffuse_map);
@@ -815,18 +815,20 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.diffuse_map
                       ? textures_[decal.material.diffuse_map->id()]
-                      : empty_texture_);
+                      : black_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.decal_mvps[i],
                        1, GL_FALSE, &decal_mvp[0][0]);
 
+    /*
     if (decal.material.diffuse_map->id() != decals.front().material.diffuse_map->id()){
       texture_unit++;
-    }
+    }*/
+    texture_unit++;
   }
-  texture_unit++;*/
+  texture_unit++;
 
   // Shadowmap
   if (light.shadow_map) {
