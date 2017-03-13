@@ -112,11 +112,7 @@ void main() {
         normal = normalize(mix(normal, tex_normal, amount));
     }
 
-    vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
-    float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
-    diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
-
-    vec4 tex_color = texture(material.diffuse_map, fragment.uv);
+   vec4 tex_color = texture(material.diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
@@ -124,9 +120,22 @@ void main() {
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
             vec4 decal = texture(decal_materials[i].diffuse_map, d_uv);
-                diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+            diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+
+            vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
+            decal_normal = normalize(fragment.tbn * decal_normal);
+            float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
+            if (amount > 0.0f){
+                normal = normalize(mix(normal, decal_normal, amount));
+            }
         }
     }
+
+    vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
+    float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
+    diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
+
+
 
     float cosDir = dot(surface_to_light, -light.direction);
     float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
