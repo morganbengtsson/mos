@@ -816,7 +816,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                       : black_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
-
+    /*
     if (decal.material.normal_map) {
       load(decal.material.normal_map);
     }
@@ -825,7 +825,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                   decal.material.normal_map
                   ? textures_[decal.material.normal_map->id()]
                   : black_texture_);
-    glUniform1i(uniforms.decal_material_normal_maps[i], texture_unit + 2);
+    glUniform1i(uniforms.decal_material_normal_maps[i], texture_unit + 2);*/
 
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.decal_mvps[i],
