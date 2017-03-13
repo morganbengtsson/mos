@@ -214,6 +214,7 @@ private:
 
     std::array<GLint, 20> decal_mvps;
     std::array<GLint, 20> decal_material_diffuse_maps;
+    std::array<GLint, 20> decal_material_normal_maps;
 
     GLint environment_map;
     GLint environment_position;
