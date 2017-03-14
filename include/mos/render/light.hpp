@@ -22,8 +22,8 @@ public:
    * @param diffuse_color
    * @param specular_color
    */
-  explicit Light(const glm::vec3 &position = glm::vec3(0.0f),
-                 const glm::vec3 &direction = glm::vec3(0.0f, 0.0f, -1.0f),
+  explicit Light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 2.0f),
+                 const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
                  const float angle = glm::half_pi<float>(),
                  const glm::vec3 &diffuse = glm::vec3(0.0f),
                  const glm::vec3 &specular = glm::vec3(0.0f),
@@ -31,18 +31,48 @@ public:
                  const float quadratic_attenuation_factor = 0.0f);
   virtual ~Light();
 
+  /**
+   * @brief Set spot anagle.
+   * @param angle of the spotlight.
+   */
   void angle(const float angle);
+
+   /**
+   * @brief get spot angle.
+   * @return angle of the spotlight.
+   */
   float angle() const;
 
-  void direction(const glm::vec3 &direction);
-
-  glm::vec3 direction() const;
-
+  /**
+   * @breif Set position.
+   * @param position
+   */
   void position(const glm::vec3 &position);
 
+  /**
+   * @brief Get position.
+   * @return
+   */
   glm::vec3 position() const;
 
+  /**
+   * @brief Set center/focus of spotlight
+   * @param center of the spotlight.
+   */
   void center(const glm::vec3 &center);
+
+  /**
+   *@brief Get center of spotlight.
+   * @return center of the spotlight.
+   */
+  glm::vec3 center() const;
+
+  /**
+   * @brief Get the direction of spotlight.
+   * @return direction.
+   */
+  glm::vec3 direction() const;
+
   /**
    * @brief diffuse_color
    */
@@ -69,7 +99,7 @@ public:
   RenderCamera camera;
 
   /**
-  * @brief Shadowmap
+  * @brief Shadowmap if used.
   */
   SharedTexture2D shadow_map;
 private:
