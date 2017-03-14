@@ -7,12 +7,25 @@
 #include <mos/render/texture_2d.hpp>
 
 namespace mos {
-
+/**
+ * @brief Represents a bitmap font.
+ */
 class Font {
 public:
   using CharMap = std::map<char, Character>;
-  Font(const CharMap &characters, const SharedTexture2D &texture,
-       const float height, const float ascender, const float descender);
+
+  /**
+   * @param characters is the chars supported.
+   * @param texture is the image with glyphs.
+   * @param height
+   * @param ascender
+   * @param descender
+   */
+  Font(const CharMap &characters,
+       const SharedTexture2D &texture,
+       const float height,
+       const float ascender,
+       const float descender);
   Font(const std::string &path);
   ~Font();
   SharedTexture2D texture;

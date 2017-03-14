@@ -44,6 +44,8 @@ public:
       const float exponential_attenuation_factor = 0.0f,
       const float exponential_power = 1.0f);
 
+  ~Fog();
+
   glm::vec3 color_near;
   glm::vec3 color_far;
   float near;
@@ -52,7 +54,7 @@ public:
   float exponential_factor;
   float exponential_attenuation_factor;
   float exponential_power;
-  ~Fog();
+
 };
 }
 

@@ -16,7 +16,6 @@ Fog::Fog(const glm::vec3 &color,
                                               exponential_attenuation_factor,
                                               exponential_power) {}
 
-Fog::~Fog() {}
 Fog::Fog(const glm::vec3 &color_near,
          const glm::vec3 &color_far,
          const float near,
@@ -29,4 +28,6 @@ Fog::Fog(const glm::vec3 &color_near,
                                           exponential_factor(exponential_factor),
                                           exponential_power(exponential_power),
                                           exponential_attenuation_factor(exponential_attenuation_factor) {}
+
+Fog::~Fog() {}
 }
