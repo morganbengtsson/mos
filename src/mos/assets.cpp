@@ -17,7 +17,7 @@ Assets::Assets(const std::string directory) : directory_(directory) {}
 
 Assets::~Assets() {}
 
-Model Assets::model_value(const json &value) {
+Model Assets::model_value(const std::string & base_path, const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = std::string("");
   if (!value["mesh"].is_null()) {
@@ -31,20 +31,22 @@ Model Assets::model_value(const json &value) {
   auto transform = jsonarray_to_mat4(value["transform"]);
 
   auto created_model = mos::Model(
-      name, mesh(mesh_name),
+      name, mesh(base_path + mesh_name),
       transform,
-      material(material_name));
+      material(base_path + material_name));
 
   for (auto &m : value["models"]) {
-    created_model.models.push_back(model_value(m));
+    created_model.models.push_back(model_value(base_path, m));
   }
   return created_model;
 }
 
 Model Assets::model(const std::string &path) {
   std::cout << "Loading : " << path << std::endl;
+  filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
-  return model_value(doc);
+
+  return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc);
 }
 
 Animation Assets::animation(const string &path) {

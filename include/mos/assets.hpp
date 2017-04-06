@@ -141,7 +141,7 @@ public:
 
 private:
   // Model model(rapidjson::Value &value);
-  Model model_value(const nlohmann::json &value);
+  Model model_value(const std::string &base_path, const nlohmann::json &value);
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
