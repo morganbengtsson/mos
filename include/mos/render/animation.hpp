@@ -15,6 +15,7 @@ namespace mos {
  */
 class Animation {
 public:
+  Animation();
   /**
    * @brief Animation default contructor
    */
