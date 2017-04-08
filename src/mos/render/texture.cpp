@@ -36,7 +36,7 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
                  const Texture::Format &format,
                  const Texture::Wrap &wrap,
                  const bool mipmaps,
-                 const bool compress) : wrap(wrap), format(format), mipmaps(mipmaps), compress(compress) {
+                 const bool compress) : id_(current_id_++), wrap(wrap), format(format), mipmaps(mipmaps), compress(compress) {
   for (auto &path : paths) {
     std::vector<unsigned char> pixels;
     auto error = lodepng::decode(pixels, width_, height_, path);

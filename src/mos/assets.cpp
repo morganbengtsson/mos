@@ -85,8 +85,6 @@ Assets::texture(const std::string &path,
   }
 }
 
-
-
 std::shared_ptr<AudioBuffer>
 Assets::audio_buffer(const std::string &path) {
   if (sounds_.find(path) == sounds_.end()) {
@@ -98,26 +96,28 @@ Assets::audio_buffer(const std::string &path) {
 }
 
 Material Assets::material(const std::string &path) {
-  filesystem::path fpath = directory_ + path;
+  filesystem::path fpath = path;
+  auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
+
   if (fpath.extension() == "material") {
-    auto value = json::parse(mos::text(fpath.str()));
+    auto value = json::parse(mos::text(directory_ + fpath.str()));
     std::string t = "";
     if (!value["diffuse_map"].is_null()) {
       t = value["diffuse_map"];
     }
-    auto diffuse_map = texture(t);
+    auto diffuse_map = t.empty() ? texture("") : texture(base_path + t);
 
     std::string n = "";
     if (!value["normal_map"].is_null()) {
       n = value["normal_map"];
     }
-    auto normal_map = texture(n);
+    auto normal_map = n.empty() ? texture("") : texture(base_path + n);
 
     std::string l = "";
     if (!value["light_map"].is_null()) {
       l = value["light_map"];
     }
-    auto light_map = texture(l);
+    auto light_map = l.empty() ? texture("") : texture(base_path + l);
 
     auto ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     auto diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
