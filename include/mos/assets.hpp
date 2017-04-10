@@ -12,7 +12,7 @@
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <unordered_map>
 
 namespace mos {
@@ -31,19 +31,13 @@ public:
   /**
    * @brief Container for textures.
    */
-  using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture>>;
+  using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 
   /**
    * @brief Container for audio buffers.
    */
   using AudioBufferMap =
       std::unordered_map<std::string, std::shared_ptr<AudioBuffer>>;
-
-  /**
-   * @brief Container for materials.
-   */
-  using MaterialMap =
-      std::unordered_map<std::string, std::shared_ptr<Material>>;
 
   /**
    * @brief Pair for MeshMap.
@@ -53,7 +47,7 @@ public:
   /**
    * @brief Pair for TextureMap
    */
-  using TexturePair = std::pair<std::string, std::shared_ptr<Texture>>;
+  using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
 
   /**
    * @brief Pair for SoundMap
@@ -109,7 +103,7 @@ public:
    * @param path
    * @return fShared pointer to Material object.
    */
-   SharedMaterial material(const std::string &path);
+   Material material(const std::string &path);
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
@@ -126,10 +120,10 @@ public:
    * @param mipmaps Use mipmaps or not.
    * @return Shared pointer to Texture2D object.
    */
-  SharedTexture
+  SharedTexture2D
   texture(const std::string &path, const bool mipmaps = true,
                  const bool compress = true,
-                 const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+                 const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
 
   /**
@@ -147,12 +141,11 @@ public:
 
 private:
   // Model model(rapidjson::Value &value);
-  Model model_value(const nlohmann::json &value);
+  Model model_value(const std::string &base_path, const nlohmann::json &value);
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
   AudioBufferMap sounds_;
-  MaterialMap materials_;
 };
 }
 #endif /* MOS_ASSETS_H */

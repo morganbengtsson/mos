@@ -8,17 +8,19 @@
 #include <optional.hpp>
 #include <array>
 #include <mos/render/render_scene.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
-#include <mos/render/quad.hpp>
 #include <mos/render/text.hpp>
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>
 #include <mos/render/render_target.hpp>
 #include <mos/render/render_camera.hpp>
-#include <mos/render/fog_linear.hpp>
+#include <mos/render/environment_light.hpp>
+#include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
+#include <mos/render/decal.hpp>
+#include "texture.hpp"
 
 namespace mos {
 
@@ -28,6 +30,8 @@ namespace mos {
  */
 class RenderSystem {
 public:
+  using Decals = std::vector<Decal>;
+
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
@@ -39,11 +43,6 @@ public:
    * Deletes all allocated GPU memory. Textures, Shaders, Buffers.
    */
   ~RenderSystem();
-
-  // Temporary method
-  void update_depth(const Model &model, const glm::mat4 &parent_transform,
-                    const glm::mat4 &view, const glm::mat4 &projection,
-                    const glm::vec2 &resolution);
 
   /**
    * @brief load a model into renderers own memory.
@@ -61,13 +60,13 @@ public:
    * @brief Load a texture into renderer memory.
    * @param texture The texture.
    */
-  void load(const SharedTexture &texture);
+  void load(const SharedTexture2D &texture);
 
   /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
    */
-  void unload(const SharedTexture &texture);
+  void unload(const SharedTexture2D &texture);
 
   /**
    * @brief Load a texture into renderer memory.
@@ -82,15 +81,38 @@ public:
   void unload(const SharedTextureCube &texture);
 
   void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
-               const glm::vec4 &color = glm::vec4(.0f), const OptTarget &target = OptTarget());
+                     const glm::vec4 &color = glm::vec4(.0f),
+                     const RenderTarget &target = RenderTarget(128,128));
 
-  template<class Tr>
-  void render_scenes(Tr begin, Tr end, const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-               const OptTarget &target = OptTarget()) {
+
+  template<class Ts>
+  void render_scenes(Ts scenes_begin,
+                     Ts scenes_end,
+                     const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+                     const RenderTarget &target = RenderTarget(128,128)) {
     render_target(target);
-    clear(color);
-    for (auto it = begin; it != end; it++) {
-      render_scene(*it);
+
+    if (target.texture_cube) {
+      auto texture_id = texture_cubes_[target.texture_cube->id()];
+        for (auto it = scenes_begin; it != scenes_end; it++) {
+          for (auto c_it = it->cameras.begin(); c_it != it->cameras.end(); c_it++){
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(it->cameras.begin(), c_it), texture_id, 0);
+            clear(color);
+          render_scene(*c_it, *it, glm::vec2(target.width(), target.height()));
+        }
+      }
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+      glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
+    else {
+      clear(color);
+      for (auto it = scenes_begin; it != scenes_end; it++) {
+        for (auto &camera : it->cameras) {
+          render_scene(camera, *it, glm::vec2(target.width(), target.height()));
+        }
+      }
     }
   }
 
@@ -110,27 +132,12 @@ public:
   }
   */
 
-  /**
-   * @brief Set lightmap use.
-   */
-  void lightmaps(const bool lightmaps);
-
-  /**
-   * @brief Check if lightmaps is enabled.
-   * @return True if lightmaps are enabled.
-   */
-  bool lightmaps() const;
-
-  // TODO: Private
-  GLuint depth_texture_;
-  GLuint depth_frame_buffer_;
-
 private:
   /**
    * @brief models_batch rendering.
    * @param render_scene
    */
-  void render_scene(const RenderScene &render_scene);
+  void render_scene(const RenderCamera &camera, const RenderScene &render_scene, const glm::vec2 &resolution);
 
   /**
    * @brief Updates render state of model.
@@ -142,11 +149,13 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const glm::mat4 transform,
-              const RenderCamera & camera,
+              const Decals &diffuse_decals,
+              const glm::mat4 &transform,
+              const RenderCamera &camera,
               const Light &light,
-              const FogLinear &fog_linear,
-              const glm::vec3 &multiply,
+              const EnvironmentLight &environment,
+              const Fog &fog,
+              const glm::vec2 &resolution,
               const RenderScene::Shader &shader,
               const RenderScene::Draw &draw);
 
@@ -154,7 +163,7 @@ private:
    * @brief render_target
    * @param target
    */
-  void render_target(const OptTarget &target);
+  void render_target(const RenderTarget &target);
 
   /**
    * @brief clear
@@ -193,7 +202,7 @@ private:
   class VertexProgramData {
   public:
     //TODO make all const
-    VertexProgramData(){};
+    VertexProgramData() {};
     VertexProgramData(const GLuint program);
     GLuint program;
     GLint model_view_projection_matrix;
@@ -202,39 +211,52 @@ private:
     GLint view_matrix;
     GLint normal_matrix;
     GLint depth_bias_mvp;
-    GLint diffuse_map;
-    GLint light_map;
-    GLint normal_map;
-    GLint shadow_map;
-    GLint diffuse_environment_map;
-    GLint specular_environment_map;
+
+    std::array<GLint, 20> decal_mvps;
+    std::array<GLint, 20> decal_material_diffuse_maps;
+    std::array<GLint, 20> decal_material_normal_maps;
+
+    GLint environment_map;
+    GLint environment_position;
+    GLint environment_extent;
+
+    GLint material_diffuse_map;
+    GLint material_light_map;
+    GLint material_normal_map;
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
     GLint material_specular_exponent;
-    GLint opacity;
+    GLint material_opacity;
+
+    GLint camera_resolution;
     GLint camera_position;
+
     GLint light_position;
     GLint light_diffuse_color;
     GLint light_specular_color;
-    GLint light_ambient_color;
     GLint light_view;
     GLint light_projection;
-    GLint receives_light;
-    GLint resolution;
-    GLint fogs_linear_color;
-    GLint fogs_linear_near;
-    GLint fogs_linear_far;
-    GLint time;
-    GLint overlay;
-    GLint multiply;
+    GLint light_linear_attenuation_factor;
+    GLint light_quadratic_attenuation_factor;
+    GLint light_shadow_map;
+    GLint light_angle;
+    GLint light_direction;
+
+    GLint fog_color_near;
+    GLint fog_color_far;
+    GLint fog_near;
+    GLint fog_far;
+    GLint fog_linear_factor;
+    GLint fog_exponential_factor;
+    GLint fog_exponential_power;
+    GLint fog_exponential_attenuation_factor;
   };
 
   using VertexProgramPair = std::pair<RenderScene::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
-  bool lightmaps_;
   void add_vertex_program(const RenderScene::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source,
@@ -251,12 +273,12 @@ private:
 
   bool check_program(const unsigned int program);
 
-  unsigned int create_texture(const SharedTexture &texture);
+  unsigned int create_texture(const SharedTexture2D &texture);
 
   unsigned int create_texture_cube(const SharedTextureCube &texture);
 
   unsigned int
-  create_texture_and_pbo(const SharedTexture &texture);
+  create_texture_and_pbo(const SharedTexture2D &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source, const std::string &vs_file,
                        const std::string &fs_file);
@@ -277,10 +299,12 @@ private:
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  GLuint empty_texture_;
+  GLuint black_texture_;
+  GLuint white_texture_;
   GLuint box_vbo;
   GLuint box_ebo;
   GLuint box_va;
 };
+
 }
 #endif /* MOS_RENDERER_H */

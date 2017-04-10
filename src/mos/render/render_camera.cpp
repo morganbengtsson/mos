@@ -8,10 +8,9 @@ namespace mos {
   RenderCamera::RenderCamera(const glm::vec3 &position,
                    const glm::vec3 &center,
                    const glm::mat4 &projection,
-                   const glm::vec3 &up,
-                   const glm::vec2 &resolution)
+                   const glm::vec3 &up)
     : projection(projection), view(glm::lookAt(position, center, up)), up_(up),
-      position_(position), center_(center), resolution(resolution) {}
+      position_(position), center_(center){}
 
 glm::vec3 RenderCamera::up() const { return up_; }
 
@@ -38,9 +37,17 @@ glm::vec3 RenderCamera::direction() const {
   return glm::normalize(center_ - position_);
 }
 
+void RenderCamera::direction(const glm::vec3 &direction) {
+  center(position_ + direction);
+  update_view();
+}
+
+
 void RenderCamera::update_view() { view = glm::lookAt(position_, center_, up_); }
 
 float RenderCamera::aspect_ratio() const {
-  return resolution.x / resolution.y;
+  return projection[1][1] / projection[0][0];
 }
+
+
 }

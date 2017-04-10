@@ -4,11 +4,6 @@
 namespace mos {
 
 /**
- * Describes measurements of a character. Used by the Text object
- * for text rendering.
- */
-
-/**
  * @brief The Character struct
  *
  * Describes measurements of a character. Used by the Text object

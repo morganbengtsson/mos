@@ -58,19 +58,17 @@ void Animation::update(const float dt) {
   if (frame() >= keyframes_.rbegin()->first) {
     time_ = 0;
   }
-
-  std::cout << frame() << std::endl;
   auto next_frame = keyframes_.upper_bound(frame());
   auto previous_frame = next_frame;
   previous_frame--;
-  // auto a =  (float)(frame() - previous_frame->first) /
-  // (float)(next_frame->first - previous_frame->first);
   auto amount = (float)((time_ * frame_rate_) - previous_frame->first) /
                 (float)(next_frame->first - previous_frame->first);
 
   mesh_->mix(*previous_frame->second, *next_frame->second, amount);
-
 }
 
 std::shared_ptr<Mesh> Animation::mesh() { return mesh_; }
+
+Animation::Animation() {}
+
 }

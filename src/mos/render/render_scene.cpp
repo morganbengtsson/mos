@@ -2,9 +2,11 @@
 namespace mos {
 RenderScene::RenderScene() {}
 
-RenderScene::RenderScene(const std::initializer_list<Model> &models, const RenderCamera &camera,
-             const Light &light, const FogLinear &fog_linear, const Shader &shader,
+RenderScene::RenderScene(const std::initializer_list<Model> &models,
+                         const std::initializer_list<RenderCamera> &cameras,
+             const Light &light, const Fog &fog, const Shader &shader,
              const Draw &draw)
-    : RenderScene(models.begin(), models.end(), camera, light,
-            fog_linear, shader, draw) {}
+    : RenderScene(models.begin(), models.end(), cameras.begin(), cameras.end(), light,
+            fog, shader, draw) {}
+
 }

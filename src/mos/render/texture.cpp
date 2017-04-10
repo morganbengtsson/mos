@@ -1,64 +1,70 @@
-#include <iostream>
-#include <lodepng.h>
 #include <mos/render/texture.hpp>
+#include <stdexcept>
 
 namespace mos {
-
 std::atomic_uint Texture::current_id_;
+Texture::Texture(const int width,
+                 const int height,
+                 const Texture::Format &format,
+                 const Texture::Wrap &wrap,
+                 const bool mipmaps,
+                 const bool compress) : id_(current_id_++),
+                                        width_(width),
+                                        height_(height),
+                                        format(format),
+                                        wrap(wrap),
+                                        mipmaps(mipmaps),
+                                        compress(compress),
+                                        layers_{Data()} {}
 
-Texture::Texture(const unsigned int width, const unsigned int height,
-                 const bool mipmaps, const bool compress,
-                 const Texture::Wrap &wrap)
-    : mipmaps(mipmaps), compress(compress), width_(width), height_(height),
-      id_(current_id_++), wrap(wrap) {}
+Texture::Texture(const std::initializer_list<Texture::Data> &layers,
+                 const int width,
+                 const int height,
+                 const Texture::Format &format,
+                 const Texture::Wrap &wrap,
+                 const bool mipmaps,
+                 const bool compress) : Texture(layers.begin(),
+                                                layers.end(),
+                                                width,
+                                                height,
+                                                format,
+                                                wrap,
+                                                mipmaps,
+                                                compress) {}
 
-Texture::~Texture() {}
-
-SharedTexture Texture::load(const std::string &path, const bool mipmaps,
-                            const bool compress, const Texture::Wrap &wrap) {
-  if (path.empty() || path.back() == '/') {
-    return SharedTexture();
+Texture::Texture(const std::initializer_list<std::string> &paths,
+                 const Texture::Format &format,
+                 const Texture::Wrap &wrap,
+                 const bool mipmaps,
+                 const bool compress) : id_(current_id_++), wrap(wrap), format(format), mipmaps(mipmaps), compress(compress) {
+  for (auto &path : paths) {
+    std::vector<unsigned char> pixels;
+    auto error = lodepng::decode(pixels, width_, height_, path);
+    if (error) {
+      std::string e = "Decoder error: " + std::to_string(error) + ": " +
+          std::string(lodepng_error_text(error));
+      throw std::runtime_error(e);
+    }
+    layers_.push_back(Data(pixels.begin(), pixels.end()));
   }
-  return std::make_shared<Texture>(path, mipmaps, compress, wrap);
 }
 
-Texture::Texture(const std::string &path, const bool mipmaps,
-                 const bool compress, const Texture::Wrap &wrap)
-    : mipmaps(mipmaps), compress(compress), wrap(wrap), id_(current_id_++) {
-
-  std::vector<unsigned char> pixels;
-  auto error = lodepng::decode(pixels, width_, height_, path);
-  if (error) {
-    std::string e = "Decoder error: " + std::to_string(error) + ": " +
-                    std::string(lodepng_error_text(error));
-    throw std::runtime_error(e);
-  }
-  texels_.assign(pixels.begin(), pixels.end());
+int Texture::id() const {
+  return id_;
 }
-
-Texture::Texels::const_iterator Texture::begin() const {
-  return texels_.begin();
+int Texture::width() const {
+  return width_;
 }
-
-Texture::Texels::const_iterator Texture::end() const { return texels_.end(); }
-
-unsigned int Texture::id() const { return id_; }
-
-unsigned int Texture::width() const { return width_; }
-
-unsigned int Texture::height() const { return height_; }
-
-unsigned int Texture::size() const { return texels_.size(); }
-
-glm::vec4 Texture::sample(const unsigned int x, const unsigned int y) {
-  unsigned int index = x * 4 * height() + y * 4;
-  unsigned char r = texels_[index];
-  unsigned char g = texels_[index + 1];
-  unsigned char b = texels_[index + 2];
-  unsigned char a = texels_[index + 3];
-  return glm::vec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f,
-                   (float)a / 255.0f);
+int Texture::height() const {
+  return height_;
 }
-
-const unsigned char *Texture::data() const { return texels_.data(); }
+int Texture::depth() const {
+  return layers_.size();
+}
+int Texture::size(const int layer) {
+  return layers_[layer].size();
+}
+const unsigned char *Texture::data(const int layer) const {
+  return layers_[layer].data();
+}
 }

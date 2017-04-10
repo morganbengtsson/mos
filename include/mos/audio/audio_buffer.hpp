@@ -50,16 +50,21 @@ public:
 
   ~AudioBuffer();
 
-  static SharedAudioBuffer load(const std::string &path);
   /**
+  * @brief Loads a shared AudioBuffer.
+  * @return Shared audio buffer
+  */
+  static SharedAudioBuffer load(const std::string &path);
+
+   /**
    * @brief begin iterator for samples
-   * @return
+   * @return iterator
    */
   Samples::const_iterator begin() const;
 
   /**
    * @brief end iterator for samples
-   * @return
+   * @return iterator
    */
   Samples::const_iterator end() const;
 

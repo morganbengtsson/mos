@@ -5,11 +5,11 @@
 
 namespace mos {
   using namespace nlohmann;
-Font::Font(const Font::CharMap &characters, const SharedTexture &texture,
+Font::Font(const Font::CharMap &characters, const SharedTexture2D &texture,
            const float height, const float ascender, const float descender)
     : characters(characters), texture(texture), height_(height),
       ascender_(ascender), descender_(descender) {
-  texture->wrap = Texture::Wrap::CLAMP;
+  texture->wrap = Texture2D::Wrap::CLAMP_TO_EDGE;
 }
 
 Font::Font(const std::string &path) {
@@ -32,7 +32,7 @@ Font::Font(const std::string &path) {
     ascender_ = doc["metrics"]["ascender"];
     descender_ = doc["metrics"]["descender"];
     std::string texture_name = doc["texture"]["file"];
-    texture = Texture::load(fpath.parent_path().str() + "/" + texture_name);
+    texture = Texture2D::load(fpath.parent_path().str() + "/" + texture_name);
 }
 
 Font::~Font() {}

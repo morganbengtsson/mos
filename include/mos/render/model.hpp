@@ -5,7 +5,7 @@
 #include <optional.hpp>
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
 #include <json.hpp>
 
 namespace mos {
@@ -34,9 +34,8 @@ public:
    */
   Model(const std::string &name, const SharedMesh &mesh,
         const glm::mat4 &transform = glm::mat4(1.0f),
-        const SharedMaterial &material = std::make_shared<Material>(
-            Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))),
-        const bool lit = true);
+        const Material &material = Material(
+            Material(glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(1.0f))));
 
   Model(const std::string &path);
 
@@ -69,13 +68,6 @@ public:
   * @param position
   */
   void position(const glm::vec3 &position);
-
-  glm::vec4 overlay() const;
-  void overlay(const glm::vec4 &overlay);
-  void overlay(const glm::vec3 &color, float alpha);
-
-  glm::vec3 multiply() const;
-  void multiply(const glm::vec3 &multiply);
 
   /**
   * @brief Get the color, (to be deprecated).
@@ -111,11 +103,10 @@ public:
    */
   SharedMesh mesh;
 
-
   /**
-   * @brief material
+   * @brief material Note this is not shared.
    */
-  SharedMaterial material;
+  Material material;
 
   /**
    * The transform of the model
@@ -124,10 +115,6 @@ public:
    */
   glm::mat4 transform;
 
-  /**
-   * @brief If the model is affected by light model (lightmap and dynamic).
-   */
-  bool lit;
 
   /**
    * @brief Children.
@@ -136,16 +123,6 @@ public:
 
 private:
   std::string name_;
-
-  /**
-   * @brief overlay color that is not in light calculations.
-   */
-  glm::vec4 overlay_;
-
-  /**
-   * @brief Extra multiply factor for light calculations.
-   */
-  glm::vec3 multiply_;
 };
 }
 

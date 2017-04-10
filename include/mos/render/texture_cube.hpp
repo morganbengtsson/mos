@@ -1,16 +1,23 @@
 #ifndef MOS_TEXTURECUBE_HPP
 #define MOS_TEXTURECUBE_HPP
 
+#include <mos/render/texture_2d.hpp>
 #include <mos/render/texture.hpp>
 #include <vector>
 #include <string>
 
 namespace mos {
-  class TextureCube;
-  using SharedTextureCube = std::shared_ptr<TextureCube>;
-class TextureCube {
+class TextureCube;
+class Texture;
+using SharedTextureCube = std::shared_ptr<TextureCube>;
+class TextureCube final : public Texture {
 public:
-  using Pixels = std::vector<unsigned char>;
+  TextureCube(const int width, const int height, const bool mipmaps, const Format &format);
+
+  TextureCube(const std::string &base_path,
+              const bool mipmaps = true,
+              const bool compress = false,
+              const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   TextureCube(const std::string &positive_x_path,
               const std::string &negative_x_path,
@@ -19,24 +26,25 @@ public:
               const std::string &positive_z_path,
               const std::string &negative_z_path,
               const bool mipmaps = true,
-              const bool compress = true);
-  Pixels positive_x;
-  Pixels negative_x;
-  Pixels positive_y;
-  Pixels negative_y;
-  Pixels positive_z;
-  Pixels negative_z;
-  const bool mipmaps;
-  const bool compress;
-  unsigned int width() const;
-  unsigned int height() const;
-  unsigned int id() const;
+              const bool compress = false,
+              const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
+
+  static SharedTextureCube load(const std::string &positive_x_path,
+                                const std::string &negative_x_path,
+                                const std::string &positive_y_path,
+                                const std::string &negative_y_path,
+                                const std::string &positive_z_path,
+                                const std::string &negative_z_path,
+                                const bool mipmaps = true,
+                                const bool compress = false,
+                                const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
+
+  static SharedTextureCube load(const std::string &base_path,
+                                const bool mipmaps = true,
+                                const bool compress = false,
+                                const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 private:
-  unsigned int width_;
-  unsigned int height_;
-  static std::atomic_uint current_id_;
-  const unsigned int id_;
-  void decode(Pixels &pixels, const std::string &path);
+
 };
 
 }

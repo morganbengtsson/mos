@@ -1,29 +1,51 @@
 #version 330
+
+const int max_decals = 20;
+
 struct Material {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
     float specular_exponent;
     float opacity;
+    sampler2D diffuse_map;
+    sampler2D light_map;
+    sampler2D normal_map;
 };
 
 struct Light {
     vec3 position;
     vec3 diffuse;
     vec3 specular;
-    vec3 ambient;
     mat4 view;
     mat4 projection;
+    float linear_attenuation_factor;
+    float quadratic_attenuation_factor;
+    float angle;
+    vec3 direction;
+    sampler2D shadow_map;
 };
 
 struct Camera {
     vec3 position;
+    vec2 resolution;
+};
+
+struct Environment {
+    vec3 position;
+    vec3 extent;
+    samplerCube texture;
 };
 
 struct Fog {
-    vec3 color;
+    vec3 color_near;
+    vec3 color_far;
     float near;
     float far;
+    float linear_factor;
+    float exponential_factor;
+    float exponential_attenuation_factor;
+    float exponential_power;
 };
 
 struct Fragment {
@@ -31,86 +53,110 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
+    vec4 proj_coords[max_decals];
     vec3 shadow;
+    vec4 proj_shadow;
     vec3 camera_to_surface;
     mat3 tbn;
 };
 
-uniform bool receives_light;
-uniform vec3 multiply = vec3(1.0, 1.0, 1.0);
 uniform Material material;
 uniform Light light;
+uniform Material decal_materials[max_decals];
+uniform Environment environment;
 uniform Camera camera;
-uniform Fog fog = Fog(vec3(1.0, 1.0, 1.0), 200.0, 300.0);
-uniform sampler2D diffuse_map;
-uniform sampler2D light_map;
-uniform sampler2D normal_map;
-uniform sampler2D shadow_map;
-uniform sampler2D diffuse_environment_map;
-uniform sampler2D specular_environment_map;
+uniform Fog fog;
+//uniform sampler2D shadow_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
-uniform vec4 overlay = vec4(0.0, 0.0, 0.0, 0.0);
+
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float fog_linear(
-  const float dist,
-  const float start,
-  const float end
-) {
-  return 1.0 - clamp((end - dist) / (end - start), 0.0, 1.0);
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
-vec4 textureEquirectangular(const sampler2D tex, const vec3 direction){
-    vec3 r = direction;
-    vec2 tc;
-    tc.y = r.z;
-    r.z = 0.0;
-    tc.x = normalize(r).x * 0.5;
+float fog_attenuation(const float dist, const Fog fog) {
+    float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
+    float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
+    return linear * fog.linear_factor + exponential * fog.exponential_factor;
+}
 
-    float s = sign(r.y) * 0.5;
+vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
+    vec3 box_min = box_pos - box_extent;
+    vec3 box_max = box_pos + box_extent;
+    vec3 nrdir = normalize(dir);
+    vec3 rbmax = (box_max - fragment.position)/nrdir;
+    vec3 rbmin = (box_min - fragment.position)/nrdir;
 
-    tc.s = 0.75 - s * (0.5 - tc.s);
-    tc.t = 0.5 + 0.5 * tc.t;
+    vec3 rbminmax = max(rbmax, rbmin);
+    float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
 
-    // Sample from scaled and biased texture coordinate
-    color = texture(tex, tc);
-    return color;
+    vec3 posonbox = fragment.position + nrdir*fa;
+    vec3 rdir = normalize(posonbox - box_pos);
+    return rdir;
 }
 
 void main() {
 
-    vec4 static_light = texture(light_map, fragment.light_map_uv);
+    vec4 static_light = texture(material.light_map, fragment.light_map_uv);
 
     vec3 normal = fragment.normal;
 
-    vec3 tex_normal = normalize(texture(normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
+    vec3 tex_normal = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
+    float amount = texture(material.normal_map, fragment.uv).a;
+    if (amount > 0.0f){
+        normal = normalize(mix(normal, tex_normal, amount));
+    }
 
-    normal = normalize(mix(normal, tex_normal, texture(normal_map, fragment.uv).a));
+   vec4 tex_color = texture(material.diffuse_map, fragment.uv);
+    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
+    diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+
+    for (int i = 0; i < max_decals; i++){
+        if (fragment.proj_coords[i].w > 0.0){
+            vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
+            vec4 decal = texture(decal_materials[i].diffuse_map, d_uv);
+            diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+
+            vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
+            decal_normal = normalize(fragment.tbn * decal_normal);
+            float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
+            if (amount > 0.0f){
+                normal = normalize(mix(normal, decal_normal, amount));
+            }
+        }
+    }
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-    vec4 tex_color = texture(diffuse_map, fragment.uv);
-    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0);
-    diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+
+
+    float cosDir = dot(surface_to_light, -light.direction);
+    float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
 
     float dist = distance(light.position, fragment.position);
-    float a = 1.0;
-    float b = 1.0;
-    float att = 1.0 / (1.0 + a*dist + b*dist*dist);
+    float linear_attenuation_factor = light.linear_attenuation_factor;
+    float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
+    float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
 
     vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
-    vec4 diffuse_environment = textureEquirectangular(diffuse_environment_map, normal);
-    diffuse_environment.rgb *= material.diffuse;
+    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
-    vec3 r = reflect(fragment.camera_to_surface, normalize(normal));
-    vec4 specular_environment = textureEquirectangular(specular_environment_map, r);
+    vec2 t_size = textureSize(environment.texture, 0);
+    vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0));
+    diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
+
+    vec3 r = -reflect(fragment.camera_to_surface, normal);
+    vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
+
+    vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
     specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
@@ -118,33 +164,42 @@ void main() {
     specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * light.specular * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
+    vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
 
-    //Ambient
-    //vec3 ambient = material.ambient * light.ambient;
-    vec3 ambient = light.ambient * diffuse_color.rgb;
+    diffuse.rgb *= spotEffect;
+    specular.rgb *= spotEffect;
 
-    if(receives_light == true) {
-        color = vec4(diffuse.rgb + diffuse_static.rgb + specular.rgb + ambient + diffuse_environment.rgb + specular_environment.rgb, material.opacity);
+    //Shadow
+    if( fragment.proj_shadow.w > 0.0) {
+        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+        //float closest_depth = textureLod(light.shadow_map, s_uv.xy, 3).r;
+        float current_depth = s_uv.z - 0.0005;
+        //float shadow = current_depth > closest_depth ? 0.0 : 1.0;
+
+        float shadow = 0.0;
+        vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+        for(float x = -1.5; x <= 1.5; ++x) {
+            for(float y = -1.5; y <= 1.5; ++y) {
+                float pcfDepth = texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r;
+                //shadow += current_depth > pcfDepth ? 0.0 : 1.0;
+                shadow += step(current_depth, texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r);
+            }
+        }
+        shadow /= 16.0;
+
+        diffuse.rgb *= shadow;
+        specular.rgb *= shadow;
     }
-    else {
-        color = vec4(diffuse_color.rgb, material.opacity);
-    }
+
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient, material.opacity);
+
     color.a = material.opacity + tex_color.a;
-
-    //Multiply
-    color.rgb *= multiply;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    color.rgb = mix(color.rgb, fog.color, fog_linear(distance, fog.near, fog.far));
-    color.rgb = mix(color.rgb, overlay.rgb, overlay.a);
+    float fog_att = fog_attenuation(distance, fog);
+    vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
+    color.rgb = mix(fog_color, color.rgb, fog_att);
 
-     //Shadow test, not that great yet.
-#ifdef SHADOWMAPS
-    float closest_depth = texture(shadowmap, fragment.shadow.xy).x;
-    float depth = fragment.shadow.z;
-    float bias = 0.005;
-    float shadow = closest_depth < depth - bias  ? 0.0 : 1.0;
-    color.rgb *= shadow;
-#endif
+
 }

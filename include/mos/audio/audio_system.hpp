@@ -44,7 +44,7 @@ public:
    * @brief Update internal representation.
    * @param batch of audio related data.
    */
-  void batch(const AudioScene &batch);
+  void render_scene(const AudioScene &batch);
 
   /**
    * @brief clear_buffers

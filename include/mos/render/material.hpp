@@ -4,7 +4,8 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <memory>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
   class Material;
@@ -30,12 +31,10 @@ public:
    * @param opacity
    * @param specular_exponent
    */
-  explicit Material(const SharedTexture &diffuse_map = SharedTexture(),
-                    const SharedTexture &normal_map = SharedTexture(),
-                    const SharedTexture &light_map = SharedTexture(),
-                    const SharedTexture &diffuse_environment_map = SharedTexture(),
-                    const SharedTexture &specular_environment_map = SharedTexture(),
-                    const glm::vec3 &ambient = glm::vec3(1.0f),
+  explicit Material(const SharedTexture2D &diffuse_map = SharedTexture2D(),
+                    const SharedTexture2D &normal_map = SharedTexture2D(),
+                    const SharedTexture2D &light_map = SharedTexture2D(),
+                    const glm::vec3 &ambient = glm::vec3(0.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
                     const float opacity = 1.0f,
@@ -55,7 +54,7 @@ public:
 
   virtual ~Material();
 
-  static SharedMaterial load(const std::string &path);
+  static Material load(const std::string &path);
 
   /**
    * @brief ambient color.
@@ -87,27 +86,17 @@ public:
   /**
   * @brief Texture of the material.
   */
-  SharedTexture diffuse_map;
+  SharedTexture2D diffuse_map;
 
   /**
   * @brief Normalmap for the material.
   */
-  SharedTexture normal_map;
+  SharedTexture2D normal_map;
 
   /**
   * @brief Light map for the material.
   */
-  SharedTexture light_map;
-
-  /**
-  * @brief Diffusemap for the material.
-  */
-  SharedTexture diffuse_environment_map;
-
-  /**
-  * @brief Specularmap for the material.
-  */
-  SharedTexture specular_environment_map;
+  SharedTexture2D light_map;
 
 };
 }

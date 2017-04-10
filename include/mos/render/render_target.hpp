@@ -5,7 +5,8 @@
 #include <atomic>
 #include <optional.hpp>
 #include <glm/glm.hpp>
-#include <mos/render/texture.hpp>
+#include <mos/render/texture_2d.hpp>
+#include <mos/render/texture_cube.hpp>
 
 namespace mos {
   class RenderTarget;
@@ -17,25 +18,34 @@ namespace mos {
  */
 class RenderTarget {
 public:
-  /**
-   * @brief RenderTarget
-   * @param width
-   * @param height
-   */
-  explicit RenderTarget(const unsigned int width = 256,
-                        const unsigned int height = 256);
 
   /**
    * @brief Target
    * @param resolution
    */
-  explicit RenderTarget(const glm::ivec2 &resolution = glm::ivec2(256, 256));
+  explicit RenderTarget(const int width,
+                        const int height,
+                        const SharedTexture2D & texture = nullptr,
+                        const SharedTexture2D & depth_texture = nullptr,
+                        const SharedTextureCube texture_cube = nullptr);
 
   /**
    * @brief The texture that is rendered to.
-   * @todo Should probably not be shared.
    */
-  std::shared_ptr<mos::Texture> texture;
+  const SharedTexture2D texture;
+
+  /**
+   * @brief The depth texture that is rendered to.
+   */
+  const SharedTexture2D depth_texture;
+
+  /**
+   * @brief Cube texture that can be rendered to.
+   */
+  const SharedTextureCube texture_cube;
+
+  int width() const;
+  int height() const;
 
   /**
    * @brief unique id
@@ -44,6 +54,9 @@ public:
   unsigned int id() const;
 
 private:
+  int width_;
+  int height_;
+  int depth_;
   unsigned int id_;
   static std::atomic_uint current_id_;
 };

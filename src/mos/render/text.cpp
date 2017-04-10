@@ -10,10 +10,11 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
-  model_.lit = false;
-  model_.material = std::make_shared<Material>();
-  model_.material->opacity = 0.0f;
-  model_.material->diffuse_map = font.texture;
+
+  model_.material = Material();
+  model_.material.ambient = glm::vec3(1.0f);
+  model_.material.opacity = 0.0f;
+  model_.material.diffuse_map = font.texture;
   text(txt);
 }
 
@@ -33,12 +34,12 @@ void Text::text(const std::string &text) {
       float index = 0.0f;
       for (auto & c : line) {
         auto character = font_.characters.at(c);
-        float u1 = character.rect_x / ((float)model_.material->diffuse_map->width());
+        float u1 = character.rect_x / ((float)model_.material.diffuse_map->width());
         float u2 = (character.rect_x + character.rect_w) /
-                   (float)model_.material->diffuse_map->width();
-        float v1 = character.rect_y / ((float)model_.material->diffuse_map->height());
+                   (float)model_.material.diffuse_map->width();
+        float v1 = character.rect_y / ((float)model_.material.diffuse_map->height());
         float v2 = ((character.rect_y + character.rect_h) /
-                    ((float)model_.material->diffuse_map->height()));
+                    ((float)model_.material.diffuse_map->height()));
 
         float offset_y = character.offset_y;
         float offset_x = character.offset_x;
@@ -71,7 +72,7 @@ void Text::text(const std::string &text) {
 }
 
 void Text::intensity(const glm::vec3 &intensity) {
-  model_.multiply(intensity);
+  model_.material.ambient = intensity;
 }
 
 float Text::width() const {
@@ -103,7 +104,7 @@ void Text::scale(const float scale) {
       glm::scale(model_.transform, glm::vec3(scale, scale, scale));
 }
 
-void Text::material(const std::shared_ptr<Material> &material) {
+void Text::material(const Material &material) {
   model_.material = material;
 }
 
@@ -118,7 +119,7 @@ glm::mat4 Text::transform() const {
 Model Text::model() const { return model_; }
 
 void Text::color(const glm::vec3 &color) {
-  model_.overlay(glm::vec4(color, 1.0f));
+  model_.material.diffuse = color;
 }
 
 Text &Text::operator=(const std::string &input) {

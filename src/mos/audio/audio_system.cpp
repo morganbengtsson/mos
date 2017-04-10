@@ -398,7 +398,7 @@ void AudioSystem::listener(const AudioListener &listener) {
   alListenerf(AL_GAIN, listener.gain);
 }
 
-void AudioSystem::batch(const AudioScene &batch) {
+void AudioSystem::render_scene(const AudioScene &batch) {
   listener(batch.listener);
   for (const auto &bs : batch.buffer_sources) {
     buffer_source(bs);
