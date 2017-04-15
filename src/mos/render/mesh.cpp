@@ -36,13 +36,13 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
     vertices_.assign(vertices.begin(), vertices.end());
     elements_.assign(elements.begin(), elements.end());
 
-
     if (elements_.size() == 0) {
       for (int i = 0; i < vertices_.size(); i += 3) {
         //TODO: Generalize
         auto &v0 = vertices_[i];
         auto &v1 = vertices_[i + 1];
         auto &v2 = vertices_[i + 2];
+
         calculate_tangents(v0, v1, v2);
       }
     }
