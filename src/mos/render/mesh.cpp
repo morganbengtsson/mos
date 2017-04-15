@@ -37,35 +37,70 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
     elements_.assign(elements.begin(), elements.end());
 
 
-    for (int i = 0; i < vertices_.size(); i+=3) {
-      auto & v0 = vertices_[i];
-      auto & v1 = vertices_[i+1];
-      auto & v2 = vertices_[i+2];
+    if (elements_.size() == 0) {
+      for (int i = 0; i < vertices_.size(); i += 3) {
+        //TODO: Generalize
+        auto &v0 = vertices_[i];
+        auto &v1 = vertices_[i + 1];
+        auto &v2 = vertices_[i + 2];
 
-      auto pos1 = v0.position;
-      auto pos2 = v1.position;
-      auto pos3 = v2.position;
+        auto pos1 = v0.position;
+        auto pos2 = v1.position;
+        auto pos3 = v2.position;
 
-      auto uv1 = v0.uv;
-      auto uv2 = v1.uv;
-      auto uv3 = v2.uv;
+        auto uv1 = v0.uv;
+        auto uv2 = v1.uv;
+        auto uv3 = v2.uv;
 
-      glm::vec3 edge1 = pos2 - pos1;
-      glm::vec3 edge2 = pos3 - pos1;
-      glm::vec2 deltaUV1 = uv2 - uv1;
-      glm::vec2 deltaUV2 = uv3 - uv1;
+        glm::vec3 edge1 = pos2 - pos1;
+        glm::vec3 edge2 = pos3 - pos1;
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
 
-      float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
 
-      glm::vec3 tangent1;
-      tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-      tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-      tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-      tangent1 = glm::normalize(tangent1);
+        glm::vec3 tangent1;
+        tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        tangent1 = glm::normalize(tangent1);
 
-      v0.tangent = tangent1;
-      v1.tangent = tangent1;
-      v2.tangent = tangent1;
+        v0.tangent = tangent1;
+        v1.tangent = tangent1;
+        v2.tangent = tangent1;
+      }
+    }
+    else{
+      for (int i = 0; i < elements_.size(); i += 3) {
+        auto &v0 = vertices_[elements_[i]];
+        auto &v1 = vertices_[elements_[i + 1]];
+        auto &v2 = vertices_[elements_[i + 2]];
+
+        auto pos1 = v0.position;
+        auto pos2 = v1.position;
+        auto pos3 = v2.position;
+
+        auto uv1 = v0.uv;
+        auto uv2 = v1.uv;
+        auto uv3 = v2.uv;
+
+        glm::vec3 edge1 = pos2 - pos1;
+        glm::vec3 edge2 = pos3 - pos1;
+        glm::vec2 deltaUV1 = uv2 - uv1;
+        glm::vec2 deltaUV2 = uv3 - uv1;
+
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        glm::vec3 tangent1;
+        tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        tangent1 = glm::normalize(tangent1);
+
+        v0.tangent = tangent1;
+        v1.tangent = tangent1;
+        v2.tangent = tangent1;
+      }
     }
 
   } else {
