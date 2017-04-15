@@ -43,31 +43,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
         auto &v0 = vertices_[i];
         auto &v1 = vertices_[i + 1];
         auto &v2 = vertices_[i + 2];
-
-        auto pos1 = v0.position;
-        auto pos2 = v1.position;
-        auto pos3 = v2.position;
-
-        auto uv1 = v0.uv;
-        auto uv2 = v1.uv;
-        auto uv3 = v2.uv;
-
-        glm::vec3 edge1 = pos2 - pos1;
-        glm::vec3 edge2 = pos3 - pos1;
-        glm::vec2 deltaUV1 = uv2 - uv1;
-        glm::vec2 deltaUV2 = uv3 - uv1;
-
-        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-
-        glm::vec3 tangent1;
-        tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-        tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-        tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-        tangent1 = glm::normalize(tangent1);
-
-        v0.tangent = tangent1;
-        v1.tangent = tangent1;
-        v2.tangent = tangent1;
+        calculate_tangents(v0, v1, v2);
       }
     }
     else{
@@ -76,30 +52,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
         auto &v1 = vertices_[elements_[i + 1]];
         auto &v2 = vertices_[elements_[i + 2]];
 
-        auto pos1 = v0.position;
-        auto pos2 = v1.position;
-        auto pos3 = v2.position;
-
-        auto uv1 = v0.uv;
-        auto uv2 = v1.uv;
-        auto uv3 = v2.uv;
-
-        glm::vec3 edge1 = pos2 - pos1;
-        glm::vec3 edge2 = pos3 - pos1;
-        glm::vec2 deltaUV1 = uv2 - uv1;
-        glm::vec2 deltaUV2 = uv3 - uv1;
-
-        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-
-        glm::vec3 tangent1;
-        tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-        tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-        tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-        tangent1 = glm::normalize(tangent1);
-
-        v0.tangent = tangent1;
-        v1.tangent = tangent1;
-        v2.tangent = tangent1;
+        calculate_tangents(v0, v1, v2);
       }
     }
 
@@ -228,6 +181,29 @@ void Mesh::apply_transform(const glm::mat4 &transform) {
 void Mesh::calculate_tangents(mos::Vertex &v0,
                               mos::Vertex &v1,
                               mos::Vertex &v2) {
+  auto pos1 = v0.position;
+  auto pos2 = v1.position;
+  auto pos3 = v2.position;
 
+  auto uv1 = v0.uv;
+  auto uv2 = v1.uv;
+  auto uv3 = v2.uv;
+
+  glm::vec3 edge1 = pos2 - pos1;
+  glm::vec3 edge2 = pos3 - pos1;
+  glm::vec2 delta_uv1 = uv2 - uv1;
+  glm::vec2 delta_uv2 = uv3 - uv1;
+
+  float f = 1.0f / (delta_uv1.x * delta_uv2.y - delta_uv2.x * delta_uv1.y);
+
+  glm::vec3 tangent;
+  tangent.x = f * (delta_uv2.y * edge1.x - delta_uv1.y * edge2.x);
+  tangent.y = f * (delta_uv2.y * edge1.y - delta_uv1.y * edge2.y);
+  tangent.z = f * (delta_uv2.y * edge1.z - delta_uv1.y * edge2.z);
+  tangent = glm::normalize(tangent);
+
+  v0.tangent = tangent;
+  v1.tangent = tangent;
+  v2.tangent = tangent;
 }
 }
