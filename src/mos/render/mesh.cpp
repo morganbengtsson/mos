@@ -224,4 +224,10 @@ void Mesh::apply_transform(const glm::mat4 &transform) {
     vertex.position = glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
   }
 }
+
+void Mesh::calculate_tangents(mos::Vertex &v0,
+                              mos::Vertex &v1,
+                              mos::Vertex &v2) {
+
+}
 }

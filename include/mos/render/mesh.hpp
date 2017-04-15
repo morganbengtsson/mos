@@ -227,6 +227,7 @@ public:
   void apply_transform(const glm::mat4 &transform);
 
 private:
+  void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
   static std::atomic_uint current_id;
   unsigned int id_;
   Vertices vertices_;
