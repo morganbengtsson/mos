@@ -10,9 +10,8 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
-
-  model_.material = Material();
-  model_.material.ambient = glm::vec3(1.0f);
+  model_.material.ambient = glm::vec3(0.0f);
+  model_.material.diffuse = glm::vec3(1.0f);
   model_.material.opacity = 0.0f;
   model_.material.diffuse_map = font.texture;
   text(txt);
@@ -48,21 +47,25 @@ void Text::text(const std::string &text) {
 
         model_.mesh->add(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
-                   glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
+                   glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
+
         model_.mesh->add(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
-            glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+            glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
+
         model_.mesh->add(Vertex(glm::vec3(index + offset_x, offset_y + line_index, 0.0f),
-                                glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
+                                glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v1), glm::vec2(u1, v1)));
         model_.mesh->add(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
-                   glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
+                   glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
+
         model_.mesh->add(Vertex(glm::vec3(index + rect_w + offset_x,
                                           rect_h + offset_y + line_index, 0.0f),
-                                glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
+                                glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v2), glm::vec2(u2, v2)));
         model_.mesh->add(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
-            glm::vec3(0.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+            glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
+
         index += character.advance + spacing;
       }
       line_index += line_height;
@@ -71,8 +74,12 @@ void Text::text(const std::string &text) {
   }
 }
 
-void Text::intensity(const glm::vec3 &intensity) {
-  model_.material.ambient = intensity;
+void Text::ambient(const glm::vec3 &ambient) {
+  model_.material.ambient = ambient;
+}
+
+void Text::diffuse(const glm::vec3 &diffuse) {
+  model_.material.diffuse = diffuse;
 }
 
 float Text::width() const {
@@ -118,9 +125,7 @@ glm::mat4 Text::transform() const {
 
 Model Text::model() const { return model_; }
 
-void Text::color(const glm::vec3 &color) {
-  model_.material.diffuse = color;
-}
+
 
 Text &Text::operator=(const std::string &input) {
   text(input);
@@ -131,4 +136,5 @@ Text &Text::operator+=(const std::string &input) {
   text(text() + input);
   return *this;
 }
+
 }

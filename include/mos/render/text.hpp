@@ -41,9 +41,9 @@ public:
 
   /**
    * @brief intensity
-   * @param intensity
+   * @param ambient
    */
-  void intensity(const glm::vec3 &intensity);
+  void ambient(const glm::vec3 &ambient);
 
   /**
    * @brief text
@@ -113,9 +113,9 @@ public:
 
   /**
    * @brief Set color of diffuse material.
-   * @param color
+   * @param diffuse
    */
-  void color(const glm::vec3 &color);
+  void diffuse(const glm::vec3 &diffuse);
 
   /**
    * @brief spacing between characters
