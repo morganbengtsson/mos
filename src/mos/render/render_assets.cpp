@@ -1,4 +1,4 @@
-#include <mos/assets.hpp>
+#include <mos/render/render_assets.hpp>
 #include <cstring>
 #include <filesystem/path.h>
 #include <fstream>
@@ -12,11 +12,11 @@ using namespace std;
 using namespace glm;
 using namespace nlohmann;
 
-Assets::Assets(const std::string directory) : directory_(directory) {}
+RenderAssets::RenderAssets(const std::string directory) : directory_(directory) {}
 
-Assets::~Assets() {}
+RenderAssets::~RenderAssets() {}
 
-Model Assets::model_value(const std::string & base_path, const json &value) {
+Model RenderAssets::model_value(const std::string & base_path, const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = std::string("");
   if (!value["mesh"].is_null()) {
@@ -40,7 +40,7 @@ Model Assets::model_value(const std::string & base_path, const json &value) {
   return created_model;
 }
 
-Model Assets::model(const std::string &path) {
+Model RenderAssets::model(const std::string &path) {
   std::cout << "Loading : " << path << std::endl;
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
@@ -48,7 +48,7 @@ Model Assets::model(const std::string &path) {
   return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc);
 }
 
-Animation Assets::animation(const string &path) {
+Animation RenderAssets::animation(const string &path) {
   auto doc = json::parse(mos::text(directory_ + path));
   auto frame_rate = doc["frame_rate"];
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
@@ -62,7 +62,7 @@ Animation Assets::animation(const string &path) {
   return animation;
 }
 
-std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
+std::shared_ptr<Mesh> RenderAssets::mesh(const std::string &path) {
   if (meshes_.find(path) == meshes_.end()) {
     meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
   }
@@ -70,7 +70,7 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
 }
 
 std::shared_ptr<Texture2D>
-Assets::texture(const std::string &path,
+RenderAssets::texture(const std::string &path,
                        const bool mipmaps,
                        const bool compress,
                        const Texture2D::Wrap &wrap) {
@@ -84,7 +84,7 @@ Assets::texture(const std::string &path,
   }
 }
 
-Material Assets::material(const std::string &path) {
+Material RenderAssets::material(const std::string &path) {
   if (path.empty()) {
     return Material();
   } else {
@@ -124,7 +124,7 @@ Material Assets::material(const std::string &path) {
     }
 }
 
-void Assets::clear_unused() {
+void RenderAssets::clear_unused() {
   for (auto it = textures_.begin(); it != textures_.end();) {
     if (it->second.use_count() <= 1) {
       textures_.erase(it++);

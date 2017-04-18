@@ -19,7 +19,7 @@ namespace mos {
  * and sound streams.
  * Caches most things internally, so nothing is loaded twice.
  */
-class Assets final {
+class RenderAssets final {
 public:
   /**
    * @brief Container for meshes.
@@ -56,18 +56,18 @@ public:
    * @param directory The directory where the assets exist, relative to the run
    *directory, default is "assets/"
    */
-  Assets(const std::string directory = "assets/");
+  RenderAssets(const std::string directory = "assets/");
 
   /**
    * @brief Assets non copyable.
    * @param assets
    */
-  Assets(const Assets &assets) = delete; // Not copyable.
+  RenderAssets(const RenderAssets &assets) = delete; // Not copyable.
 
   /**
    * @brief Destructor
    */
-  ~Assets();
+  ~RenderAssets();
 
   /**
    * @brief Loads a full Model from a *.model file.
