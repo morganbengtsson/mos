@@ -1,5 +1,4 @@
 #include <mos/assets.hpp>
-
 #include <cstring>
 #include <filesystem/path.h>
 #include <fstream>
@@ -85,16 +84,6 @@ Assets::texture(const std::string &path,
   }
 }
 
-std::shared_ptr<AudioBuffer>
-Assets::audio_buffer(const std::string &path) {
-  if (sounds_.find(path) == sounds_.end()) {
-    sounds_.insert(AudioBufferPair(path, AudioBuffer::load(directory_ + path)));
-    return sounds_.at(path);
-  } else {
-    return sounds_.at(path);
-  }
-}
-
 Material Assets::material(const std::string &path) {
   if (path.empty()) {
     return Material();
@@ -150,12 +139,6 @@ void Assets::clear_unused() {
       ++it;
     }
   }
-  for (auto it = sounds_.begin(); it != sounds_.end();) {
-    if (it->second.use_count() <= 1) {
-      sounds_.erase(it++);
-    } else {
-      ++it;
-    }
-  }
+
 }
 }

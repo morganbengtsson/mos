@@ -4,8 +4,6 @@
 #include <json.hpp>
 #include <map>
 #include <memory>
-#include <mos/audio/audio_buffer.hpp>
-#include <mos/audio/audio_stream.hpp>
 #include <mos/render/animation.hpp>
 #include <mos/render/character.hpp>
 #include <mos/render/font.hpp>
@@ -34,12 +32,6 @@ public:
   using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
 
   /**
-   * @brief Container for audio buffers.
-   */
-  using AudioBufferMap =
-      std::unordered_map<std::string, std::shared_ptr<AudioBuffer>>;
-
-  /**
    * @brief Pair for MeshMap.
    */
   using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
@@ -50,18 +42,12 @@ public:
   using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
 
   /**
-   * @brief Pair for SoundMap
-   */
-  using AudioBufferPair = std::pair<std::string, std::shared_ptr<AudioBuffer>>;
-
-  /**
   * @brief Pair for MaterialMap.
   */
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
 
   using SharedMaterial = std::shared_ptr<mos::Material>;
-  using SharedAudioBuffer = std::shared_ptr<mos::AudioBuffer>;
-  using SharedAudioStream = std::shared_ptr<mos::AudioStream>;
+
 
   /**
    * Constructor for the asset manager.
@@ -126,13 +112,7 @@ public:
                  const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
 
-  /**
-   * Loads a *.ogg file into a Sound object, and caches it internally.
-   *
-   * @param path
-   * @return Shared pointer to Sound object.
-   */
-  SharedAudioBuffer audio_buffer(const std::string &path);
+
 
   /**
     * @brief Remove all unused assets.
@@ -145,7 +125,6 @@ private:
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
-  AudioBufferMap sounds_;
 };
 }
 #endif /* MOS_ASSETS_H */
