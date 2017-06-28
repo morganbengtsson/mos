@@ -222,8 +222,6 @@ void Mesh::calculate_normals() {
     }
   }
   else {
-    //std::vector<Vector3> normals(num_vertices, Vector3(0,0,0));
-
     for (std::vector<int>::const_iterator i = elements_.begin(); i != elements_.end(); std::advance(i, 3))
     {
       glm::vec3 v[3] = { vertices_[*i].position, vertices_[*(i+1)].position, vertices_[*(i+2)].position };
@@ -240,23 +238,6 @@ void Mesh::calculate_normals() {
     for (auto & vertex : vertices_){
       vertex.normal = glm::normalize(vertex.normal);
     }
-
-    //std::for_each(normals.begin(), normals.end(), std::mem_fun_ref(&Vector3::normalize));
-
-
-    /*
-    for (int i = 0; i < elements_.size(); i += 3) {
-
-
-      auto &v0 = vertices_[elements_[i]];
-      auto &v1 = vertices_[elements_[i + 1]];
-      auto &v2 = vertices_[elements_[i + 2]];
-
-      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
-      v0.normal = normal;
-      v1.normal = normal;
-      v2.normal = normal;
-    }*/
   }
 }
 }
