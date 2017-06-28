@@ -1,6 +1,7 @@
 #include <fstream>
 #include <mos/render/mesh.hpp>
 #include <mos/util.hpp>
+#include <glm/gtx/normal.hpp>
 #include <algorithm>
 
 namespace mos {
@@ -205,5 +206,57 @@ void Mesh::calculate_tangents(mos::Vertex &v0,
   v0.tangent = tangent;
   v1.tangent = tangent;
   v2.tangent = tangent;
+}
+void Mesh::calculate_normals() {
+  if (elements_.size() == 0) {
+    for (int i = 0; i < vertices_.size(); i += 3) {
+      //TODO: Generalize
+      auto &v0 = vertices_[i];
+      auto &v1 = vertices_[i + 1];
+      auto &v2 = vertices_[i + 2];
+
+      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
+      v0.normal = normal;
+      v1.normal = normal;
+      v2.normal = normal;
+    }
+  }
+  else {
+    //std::vector<Vector3> normals(num_vertices, Vector3(0,0,0));
+
+    for (std::vector<int>::const_iterator i = elements_.begin(); i != elements_.end(); std::advance(i, 3))
+    {
+      glm::vec3 v[3] = { vertices_[*i].position, vertices_[*(i+1)].position, vertices_[*(i+2)].position };
+      glm::vec3 normal = glm::cross(v[1] - v[0], v[2] - v[0]);
+
+      for (int j = 0; j < 3; ++j)
+      {
+        glm::vec3 a = v[(j+1) % 3] - v[j];
+        glm::vec3 b = v[(j+2) % 3] - v[j];
+        float weight =  glm::acos(glm::dot(a, b) / (a.length() * b.length()));
+        vertices_[*(i+j)].normal += weight * normal;
+      }
+    }
+    for (auto & vertex : vertices_){
+      vertex.normal = glm::normalize(vertex.normal);
+    }
+
+    //std::for_each(normals.begin(), normals.end(), std::mem_fun_ref(&Vector3::normalize));
+
+
+    /*
+    for (int i = 0; i < elements_.size(); i += 3) {
+
+
+      auto &v0 = vertices_[elements_[i]];
+      auto &v1 = vertices_[elements_[i + 1]];
+      auto &v2 = vertices_[elements_[i + 2]];
+
+      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
+      v0.normal = normal;
+      v1.normal = normal;
+      v2.normal = normal;
+    }*/
+  }
 }
 }
