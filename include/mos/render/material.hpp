@@ -29,7 +29,7 @@ public:
    * @param diffuse
    * @param specular
    * @param opacity
-   * @param specular_exponent
+   * @param shininess
    */
   explicit Material(const SharedTexture2D &diffuse_map = SharedTexture2D(),
                     const SharedTexture2D &normal_map = SharedTexture2D(),
@@ -38,13 +38,13 @@ public:
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
                     const float opacity = 1.0f,
-                    const float specular_exponent = 0.0f);
+                    const float shininess = 0.0f);
 
   explicit Material(const glm::vec3 &ambient,
                     const glm::vec3 &diffuse,
                     const glm::vec3 &specular,
                     const float opacity = 1.0f,
-                    const float specular_exponent = 0.0f);
+                    const float shininess = 0.0f);
 
   /**
    * @brief Material construction from *.mesh file.

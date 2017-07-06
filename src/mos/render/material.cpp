@@ -13,10 +13,10 @@ Material::Material(const SharedTexture2D &diffuse_map,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
                    const float opacity,
-                   const float specular_exponent)
+                   const float shininess)
     : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
        ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity),
-      specular_exponent(specular_exponent) {
+      specular_exponent(shininess) {
 }
 
 Material::Material(const std::string &path) {
@@ -66,8 +66,8 @@ Material::Material(const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
                    const float opacity,
-                   const float specular_exponent)
-    : ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity), specular_exponent(specular_exponent) {
+                   const float shininess)
+    : ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity), specular_exponent(shininess) {
 
 }
 }
