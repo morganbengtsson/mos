@@ -37,12 +37,14 @@ public:
                     const glm::vec3 &ambient = glm::vec3(0.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
+                    const glm::vec3 &emission = glm::vec3(0.0f),
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
   explicit Material(const glm::vec3 &ambient,
                     const glm::vec3 &diffuse,
                     const glm::vec3 &specular,
+                    const glm::vec3 &emission,
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
@@ -72,16 +74,21 @@ public:
   glm::vec3 specular;
 
   /**
+   * @brief emission color.
+   */
+  glm::vec3 emission;
+
+  /**
    * @brief opacity
    */
   float opacity;
 
   /**
-   * @brief specular_exponent
+   * @brief shininess
    *
    * In some equations also called Ns.
    */
-  float specular_exponent;
+  float shininess;
 
   /**
   * @brief Texture of the material.

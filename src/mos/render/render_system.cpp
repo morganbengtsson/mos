@@ -896,8 +896,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                glm::value_ptr(model.material.diffuse));
   glUniform3fv(uniforms.material_specular_color, 1,
                glm::value_ptr(model.material.specular));
+  glUniform3fv(uniforms.material_emission_color, 1,
+               glm::value_ptr(model.material.emission));
   glUniform1fv(uniforms.material_specular_exponent, 1,
-               &model.material.specular_exponent);
+               &model.material.shininess);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
   // Camera in world space
@@ -1047,6 +1049,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
       material_specular_color(
           glGetUniformLocation(program, "material.specular")),
+      material_emission_color(
+          glGetUniformLocation(program, "material.emission")),
       material_specular_exponent(
           glGetUniformLocation(program, "material.specular_exponent")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),

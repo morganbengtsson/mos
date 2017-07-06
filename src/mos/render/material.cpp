@@ -12,11 +12,12 @@ Material::Material(const SharedTexture2D &diffuse_map,
                    const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
+                   const glm::vec3 &emission,
                    const float opacity,
                    const float shininess)
     : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
-       ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity),
-      specular_exponent(shininess) {
+       ambient(ambient), diffuse(diffuse), specular(specular), emission(emission), opacity(opacity),
+      shininess(shininess) {
 }
 
 Material::Material(const std::string &path) {
@@ -44,8 +45,9 @@ Material::Material(const std::string &path) {
     ambient = glm::vec3(value["ambient"][0], value["ambient"][1], value["ambient"][2]);
     diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
     specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
+    emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
     opacity = value["opacity"];
-    specular_exponent = value["specular_exponent"];
+    shininess = value["shininess"];
 
   } else {
     throw std::runtime_error(path.substr(path.find_last_of(".")) +
@@ -65,9 +67,10 @@ Material Material::load(const std::string &path) {
 Material::Material(const glm::vec3 &ambient,
                    const glm::vec3 &diffuse,
                    const glm::vec3 &specular,
+                   const glm::vec3 &emission,
                    const float opacity,
                    const float shininess)
-    : ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity), specular_exponent(shininess) {
+    : ambient(ambient), diffuse(diffuse), specular(specular), opacity(opacity), shininess(shininess) {
 
 }
 }

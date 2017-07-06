@@ -6,6 +6,7 @@ struct Material {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    vec3 emission;
     float specular_exponent;
     float opacity;
     sampler2D diffuse_map;
@@ -191,7 +192,7 @@ void main() {
         specular.rgb *= shadow;
     }
 
-    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient, material.opacity);
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + material.emission, material.opacity);
 
     color.a = material.opacity + tex_color.a;
 

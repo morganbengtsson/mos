@@ -226,6 +226,7 @@ private:
     GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
+    GLint material_emission_color;
     GLint material_specular_exponent;
     GLint material_opacity;
 
