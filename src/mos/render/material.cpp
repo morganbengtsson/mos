@@ -33,7 +33,7 @@ Material::Material(const std::string &path) {
 
     std::string e = "";
     if (!value["emission_map"].is_null()) {
-      t = value["emission_map"];
+      e = value["emission_map"];
     }
     emission_map = Texture2D::load(fpath.parent_path().str() + "/" + e);
 
