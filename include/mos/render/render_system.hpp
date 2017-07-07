@@ -221,6 +221,7 @@ private:
     GLint environment_extent;
 
     GLint material_diffuse_map;
+    GLint material_emission_map;
     GLint material_light_map;
     GLint material_normal_map;
     GLint material_ambient_color;

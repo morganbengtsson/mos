@@ -858,13 +858,19 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform1i(uniforms.material_normal_map, 7);
 
   glActiveTexture(GL_TEXTURE8);
+  glBindTexture(GL_TEXTURE_2D, model.material.emission_map
+                               ? textures_[model.material.emission_map->id()]
+                               : black_texture_);
+  glUniform1i(uniforms.material_emission_map, 8);
+
+  glActiveTexture(GL_TEXTURE9);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 environment.texture
                     ? environment.texture
                           ? texture_cubes_[environment.texture->id()]
                           : black_texture_
                     : black_texture_);
-  glUniform1i(uniforms.environment_map, 8);
+  glUniform1i(uniforms.environment_map, 9);
 
 
   glUniform3fv(uniforms.environment_position, 1,
@@ -1039,6 +1045,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "depth_bias_model_view_projection")),
       material_diffuse_map(
           glGetUniformLocation(program, "material.diffuse_map")),
+      material_emission_map(
+          glGetUniformLocation(program, "material.emission_map")),
       material_light_map(glGetUniformLocation(program, "material.light_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
       environment_map(glGetUniformLocation(program, "environment.texture")),

@@ -10,6 +10,7 @@ struct Material {
     float specular_exponent;
     float opacity;
     sampler2D diffuse_map;
+    sampler2D emission_map;
     sampler2D light_map;
     sampler2D normal_map;
 };
@@ -115,6 +116,7 @@ void main() {
 
    vec4 tex_color = texture(material.diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
+    //TODO: Shouldnt it be tex_color.a * material.opacity?
     diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     for (int i = 0; i < max_decals; i++){
@@ -192,7 +194,10 @@ void main() {
         specular.rgb *= shadow;
     }
 
-    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + material.emission, material.opacity);
+    vec4 emission_tex = texture(material.emission_map, fragment.uv);
+    vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
+
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + emission, material.opacity);
 
     color.a = material.opacity + tex_color.a;
 
