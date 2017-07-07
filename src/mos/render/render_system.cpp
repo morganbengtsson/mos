@@ -113,9 +113,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
 
   // Render boxes
   float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0,  -0.5, 0.5,  -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5,  1.0,  0.5,  0.5,  0.5, 1.0,  -0.5, 0.5, 0.5, 1.0,
+      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
+      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
+      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
   };
 
   glGenBuffers(1, &box_vbo);
@@ -141,7 +141,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
                         GL_FALSE, // take our values as-is
                         0,        // no extra data between each position
                         0         // offset of first element
-                        );
+  );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
   glBindVertexArray(0);
@@ -237,7 +237,7 @@ void RenderSystem::add_box_program(const std::string &name,
 
   box_programs_.insert(
       {name, BoxProgramData{program, glGetUniformLocation(
-                                         program, "model_view_projection"),
+          program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
 }
 
@@ -284,8 +284,8 @@ void RenderSystem::add_particle_program(const std::string name,
 
   particle_programs_.insert(ParticleProgramPair(
       name, ParticleProgramData{
-                program, glGetUniformLocation(program, "model_view_projection"),
-                glGetUniformLocation(program, "model_view")}));
+          program, glGetUniformLocation(program, "model_view_projection"),
+          glGetUniformLocation(program, "model_view")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -366,7 +366,7 @@ void RenderSystem::load(const Model &model) {
     // Lightmap UV
     glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                                                         sizeof(glm::vec2)));
+                              sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                  element_array_buffers_.at(model.mesh->id()));
@@ -386,38 +386,20 @@ void RenderSystem::load(const Model &model) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /*
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-       element_array_buffers_[model.mesh->id()]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     model.mesh->elements_size() * sizeof (unsigned int),
-                     model.mesh->elements_data(),
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        */
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+    element_array_buffers_[model.mesh->id()]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 model.mesh->elements_size() * sizeof (unsigned int),
+                 model.mesh->elements_data(),
+                 GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    */
     model.mesh->valid_ = true;
   }
-
-  //TODO: The find is done in load?
-  if (model.material.diffuse_map) {
-    if (textures_.find(model.material.diffuse_map->id()) == textures_.end()) {
-      load(model.material.diffuse_map);
-    }
-  }
-  if (model.material.emission_map) {
-    if (textures_.find(model.material.emission_map->id()) == textures_.end()) {
-      load(model.material.emission_map);
-    }
-  }
-  if (model.material.normal_map) {
-    if (textures_.find(model.material.normal_map->id()) == textures_.end()) {
-      load(model.material.normal_map);
-    }
-  }
-  if (model.material.light_map) {
-    if (textures_.find(model.material.light_map->id()) == textures_.end()) {
-      load(model.material.light_map);
-    }
-  }
+  load(model.material.diffuse_map);
+  load(model.material.emission_map);
+  load(model.material.normal_map);
+  load(model.material.light_map);
 }
 
 void RenderSystem::unload(const Model &model) {
@@ -438,27 +420,10 @@ void RenderSystem::unload(const Model &model) {
       element_array_buffers_.erase(model.mesh->id());
     }
   }
-
-  if (model.material.diffuse_map) {
-    if (textures_.find(model.material.diffuse_map->id()) != textures_.end()) {
-      unload(model.material.diffuse_map);
-    }
-  }
-  if (model.material.emission_map) {
-    if (textures_.find(model.material.emission_map->id()) != textures_.end()) {
-      unload(model.material.emission_map);
-    }
-  }
-  if (model.material.normal_map) {
-    if (textures_.find(model.material.normal_map->id()) != textures_.end()) {
-      unload(model.material.normal_map);
-    }
-  }
-  if (model.material.light_map) {
-    if (textures_.find(model.material.light_map->id()) != textures_.end()) {
-      unload(model.material.light_map);
-    }
-  }
+  unload(model.material.diffuse_map);
+  unload(model.material.emission_map);
+  unload(model.material.normal_map);
+  unload(model.material.light_map);
 }
 
 void RenderSystem::load(const SharedTextureCube &texture) {
@@ -470,10 +435,12 @@ void RenderSystem::load(const SharedTextureCube &texture) {
   }
 }
 void RenderSystem::unload(const SharedTextureCube &texture) {
-  if (texture_cubes_.find(texture->id()) != textures_.end()) {
-    auto gl_id = texture_cubes_[texture->id()];
-    glDeleteTextures(1, &gl_id);
-    texture_cubes_.erase(texture->id());
+  if (texture) {
+    if (texture_cubes_.find(texture->id()) != textures_.end()) {
+      auto gl_id = texture_cubes_[texture->id()];
+      glDeleteTextures(1, &gl_id);
+      texture_cubes_.erase(texture->id());
+    }
   }
 }
 
@@ -484,20 +451,22 @@ void RenderSystem::load(const SharedTexture2D &texture) {
     textures_.insert({texture->id(), gl_id});
   }
 #else
-  if (textures_.find(texture->id()) == textures_.end()) {
-    GLuint gl_id = create_texture(texture);
-    textures_.insert({texture->id(), gl_id});
+  if (texture) {
+    if (textures_.find(texture->id()) == textures_.end()) {
+      GLuint gl_id = create_texture(texture);
+      textures_.insert({texture->id(), gl_id});
+    }
   }
 #endif
 }
 
 void RenderSystem::unload(const SharedTexture2D &texture) {
-  if (textures_.find(texture->id()) == textures_.end()) {
-
-  } else {
-    auto gl_id = textures_[texture->id()];
-    glDeleteTextures(1, &gl_id);
-    textures_.erase(texture->id());
+  if (texture) {
+    if (textures_.find(texture->id()) != textures_.end()) {
+      auto gl_id = textures_[texture->id()];
+      glDeleteTextures(1, &gl_id);
+      textures_.erase(texture->id());
+    }
   }
 }
 
@@ -592,7 +561,7 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
   glBindTexture(GL_TEXTURE_2D, id);
 
   GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-  if (texture->format == Texture::Format::DEPTH){
+  if (texture->format == Texture::Format::DEPTH) {
     sampling = GL_LINEAR;
   }
 
@@ -607,9 +576,16 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, texture->compress ? format_map_compressed[texture->format]
-                                                   : format_map[texture->format], texture->width(), texture->height(),
-               0, texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT : GL_RGBA, GL_UNSIGNED_BYTE, texture->data());
+  glTexImage2D(GL_TEXTURE_2D,
+               0,
+               texture->compress ? format_map_compressed[texture->format]
+                                 : format_map[texture->format],
+               texture->width(),
+               texture->height(),
+               0,
+               texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT : GL_RGBA,
+               GL_UNSIGNED_BYTE,
+               texture->data());
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -719,7 +695,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
     glm::mat4 mvp = camera.projection * camera.view * transform *
-                    glm::scale(glm::mat4(1.0f), size);
+        glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -727,9 +703,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *)(4 * sizeof(GLuint)));
+                   (GLvoid *) (4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *)(8 * sizeof(GLuint)));
+                   (GLvoid *) (8 * sizeof(GLuint)));
   }
 
   if (vertex_arrays_.find(render_scene.particles.id()) ==
@@ -811,8 +787,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glActiveTexture(GLenum(GL_TEXTURE0));
   glBindTexture(GL_TEXTURE_2D, model.material.diffuse_map
-                                   ? textures_[model.material.diffuse_map->id()]
-                                   : black_texture_);
+                               ? textures_[model.material.diffuse_map->id()]
+                               : black_texture_);
   glUniform1i(uniforms.material_diffuse_map, 0);
 
   for (int i = 0; i < decals.size(); i++) {
@@ -823,8 +799,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.diffuse_map
-                      ? textures_[decal.material.diffuse_map->id()]
-                      : black_texture_);
+                  ? textures_[decal.material.diffuse_map->id()]
+                  : black_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
     /*
@@ -849,8 +825,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
     glUniform1i(uniforms.light_shadow_map, 5);
-  }
-  else {
+  } else {
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, white_texture_);
     glUniform1i(uniforms.light_shadow_map, 5);
@@ -858,14 +833,14 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
-                                   ? textures_[model.material.light_map->id()]
-                                   : black_texture_);
+                               ? textures_[model.material.light_map->id()]
+                               : black_texture_);
   glUniform1i(uniforms.material_light_map, 6);
 
   glActiveTexture(GL_TEXTURE7);
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                   ? textures_[model.material.normal_map->id()]
-                                   : black_texture_);
+                               ? textures_[model.material.normal_map->id()]
+                               : black_texture_);
   glUniform1i(uniforms.material_normal_map, 7);
 
   glActiveTexture(GL_TEXTURE8);
@@ -877,12 +852,11 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glActiveTexture(GL_TEXTURE9);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 environment.texture
-                    ? environment.texture
-                          ? texture_cubes_[environment.texture->id()]
-                          : black_texture_
-                    : black_texture_);
+                ? environment.texture
+                  ? texture_cubes_[environment.texture->id()]
+                  : black_texture_
+                : black_texture_);
   glUniform1i(uniforms.environment_map, 9);
-
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
@@ -902,7 +876,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                      &depth_bias_mvp[0][0]);
 
   glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
-                                                  glm::mat3(model.transform));
+      glm::mat3(model.transform));
   normal_matrix =
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
@@ -1047,7 +1021,7 @@ void RenderSystem::render_scenes(
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
-                            program, "model_view_projection")),
+    program, "model_view_projection")),
       model_view_matrix(glGetUniformLocation(program, "model_view")),
       model_matrix(glGetUniformLocation(program, "model")),
       view_matrix(glGetUniformLocation(program, "view")),
