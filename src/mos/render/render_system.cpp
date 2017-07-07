@@ -397,9 +397,15 @@ void RenderSystem::load(const Model &model) {
     model.mesh->valid_ = true;
   }
 
+  //TODO: The find is done in load?
   if (model.material.diffuse_map) {
     if (textures_.find(model.material.diffuse_map->id()) == textures_.end()) {
       load(model.material.diffuse_map);
+    }
+  }
+  if (model.material.emission_map) {
+    if (textures_.find(model.material.emission_map->id()) == textures_.end()) {
+      load(model.material.emission_map);
     }
   }
   if (model.material.normal_map) {
@@ -436,6 +442,11 @@ void RenderSystem::unload(const Model &model) {
   if (model.material.diffuse_map) {
     if (textures_.find(model.material.diffuse_map->id()) != textures_.end()) {
       unload(model.material.diffuse_map);
+    }
+  }
+  if (model.material.emission_map) {
+    if (textures_.find(model.material.emission_map->id()) != textures_.end()) {
+      unload(model.material.emission_map);
     }
   }
   if (model.material.normal_map) {

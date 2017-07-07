@@ -198,8 +198,8 @@ void main() {
     vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
 
     color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + emission, material.opacity);
+    color.a = material.opacity + tex_color.a + emission_tex.a;
 
-    color.a = material.opacity + tex_color.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
