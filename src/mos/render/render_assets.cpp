@@ -99,6 +99,12 @@ Material RenderAssets::material(const std::string &path) {
         }
         auto diffuse_map = t.empty() ? texture("") : texture(base_path + t);
 
+        std::string e = "";
+        if (!value["emission_map"].is_null()) {
+          t = value["emission_map"];
+        }
+        auto emission_map = e.empty() ? texture("") : texture(base_path + e);
+
         std::string n = "";
         if (!value["normal_map"].is_null()) {
           n = value["normal_map"];
@@ -117,7 +123,7 @@ Material RenderAssets::material(const std::string &path) {
         auto emissive = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
         auto opacity = value["opacity"];
         auto shininess = value["shininess"];
-        return Material(diffuse_map, normal_map, light_map, ambient, diffuse, specular, emissive, opacity, shininess);
+        return Material(diffuse_map, emission_map, normal_map, light_map, ambient, diffuse, specular, emissive, opacity, shininess);
       } else {
         throw std::runtime_error(path.substr(path.find_last_of(".")) +
             " file format is not supported.");

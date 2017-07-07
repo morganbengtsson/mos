@@ -7,6 +7,7 @@
 namespace mos {
 using namespace nlohmann;
 Material::Material(const SharedTexture2D &diffuse_map,
+                   const SharedTexture2D &emission_map,
                    const SharedTexture2D &normal_map,
                    const SharedTexture2D &light_map,
                    const glm::vec3 &ambient,
@@ -15,7 +16,7 @@ Material::Material(const SharedTexture2D &diffuse_map,
                    const glm::vec3 &emission,
                    const float opacity,
                    const float shininess)
-    : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
+    : diffuse_map(diffuse_map), emission_map(emission_map), normal_map(normal_map), light_map(light_map),
        ambient(ambient), diffuse(diffuse), specular(specular), emission(emission), opacity(opacity),
       shininess(shininess) {
 }
@@ -30,8 +31,14 @@ Material::Material(const std::string &path) {
     }
     diffuse_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
 
+    std::string e = "";
+    if (!value["emission_map"].is_null()) {
+      t = value["emission_map"];
+    }
+    emission_map = Texture2D::load(fpath.parent_path().str() + "/" + e);
+
     std::string n = "";
-    if (!value["normal_map"].is_null()) {
+    if (!value["_map"].is_null()) {
       n = value["normal_map"];
     }
     normal_map = Texture2D::load(fpath.parent_path().str() + "/" + n);
