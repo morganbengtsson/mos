@@ -767,7 +767,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
   glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
 
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   glDrawArrays(GL_POINTS, 0, render_scene.particles.size());
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void RenderSystem::render(const Model &model, const Decals &decals,

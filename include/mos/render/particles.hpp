@@ -120,6 +120,12 @@ public:
    */
   void invalidate();
 
+  /**
+   * @brief sort particles relative to a position
+   * @param position
+   */
+  void sort(const glm::vec3 &position);
+
   //TODO: Texture array for animation
   /**
    * @brief texture for quad
