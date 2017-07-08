@@ -285,7 +285,8 @@ void RenderSystem::add_particle_program(const std::string name,
   particle_programs_.insert(ParticleProgramPair(
       name, ParticleProgramData{
           program, glGetUniformLocation(program, "model_view_projection"),
-          glGetUniformLocation(program, "model_view")}));
+          glGetUniformLocation(program, "model_view"),
+          glGetUniformLocation(program, "tex")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -745,6 +746,8 @@ void RenderSystem::render_scene(const RenderCamera &camera,
                render_scene.particles.data(), GL_STREAM_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
+
   glm::mat4 mv = camera.view;
   glm::mat4 mvp = camera.projection * camera.view;
 
@@ -753,6 +756,13 @@ void RenderSystem::render_scene(const RenderCamera &camera,
   glUseProgram(uniforms2.program);
 
   glBindVertexArray(vertex_arrays_[render_scene.particles.id()]);
+
+  load(render_scene.particles.emission_map);
+  glActiveTexture(GL_TEXTURE10);
+  glBindTexture(GL_TEXTURE_2D, render_scene.particles.emission_map
+                               ? textures_[render_scene.particles.emission_map->id()]
+                               : black_texture_);
+  glUniform1i(uniforms2.texture, 10);
 
   glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);

@@ -179,6 +179,7 @@ private:
     GLuint program;
     GLint mvp;
     GLint mv;
+    GLint texture;
   };
 
   /**

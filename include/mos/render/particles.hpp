@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <atomic>
+#include <mos/render/texture_2d.hpp>
 #include "particle.hpp"
 
 namespace mos {
@@ -118,6 +119,12 @@ public:
    * @brief invalidate
    */
   void invalidate();
+
+  //TODO: Texture array for animation
+  /**
+   * @brief texture for quad
+   */
+  SharedTexture2D emission_map;
 
 private:
   Parts particles_;

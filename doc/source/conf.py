@@ -47,3 +47,5 @@ html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'MOSdoc'
+
+html_extra_path = ['../build/html']
