@@ -286,7 +286,9 @@ void RenderSystem::add_particle_program(const std::string name,
       name, ParticleProgramData{
           program, glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
-          glGetUniformLocation(program, "tex")}));
+          glGetUniformLocation(program, "projection"),
+          glGetUniformLocation(program, "tex"),
+          glGetUniformLocation(program, "resolution")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -766,6 +768,8 @@ void RenderSystem::render_scene(const RenderCamera &camera,
 
   glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
   glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms2.p, 1, GL_FALSE, &camera.projection[0][0]);
+  glUniform2fv(uniforms2.resolution, 1, glm::value_ptr(resolution));
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   glDrawArrays(GL_POINTS, 0, render_scene.particles.size());
