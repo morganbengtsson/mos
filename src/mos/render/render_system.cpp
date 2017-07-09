@@ -711,69 +711,72 @@ void RenderSystem::render_scene(const RenderCamera &camera,
                    (GLvoid *) (8 * sizeof(GLuint)));
   }
 
-  if (vertex_arrays_.find(render_scene.particles.id()) ==
-      vertex_arrays_.end()) {
-    unsigned int vertex_array;
-    glGenVertexArrays(1, &vertex_array);
-    glBindVertexArray(vertex_array);
-    if (array_buffers_.find(render_scene.particles.id()) ==
-        array_buffers_.end()) {
-      unsigned int array_buffer;
-      glGenBuffers(1, &array_buffer);
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-      glBufferData(GL_ARRAY_BUFFER,
-                   render_scene.particles.size() * sizeof(Particle),
-                   render_scene.particles.data(), GL_STREAM_DRAW);
+  for (auto &particles : render_scene.particle_clouds) {
+
+    if (vertex_arrays_.find(particles.id()) ==
+        vertex_arrays_.end()) {
+      unsigned int vertex_array;
+      glGenVertexArrays(1, &vertex_array);
+      glBindVertexArray(vertex_array);
+      if (array_buffers_.find(particles.id()) ==
+          array_buffers_.end()) {
+        unsigned int array_buffer;
+        glGenBuffers(1, &array_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+        glBufferData(GL_ARRAY_BUFFER,
+                     particles.size() * sizeof(Particle),
+                     particles.data(), GL_STREAM_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        array_buffers_.insert({particles.id(), array_buffer});
+      }
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
+      glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                            reinterpret_cast<const void *>(sizeof(glm::vec3)));
+      glVertexAttribPointer(
+          2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+          reinterpret_cast<const void *>(sizeof(glm::vec3) + sizeof(glm::vec4)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({render_scene.particles.id(), array_buffer});
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glEnableVertexAttribArray(2);
+      glBindVertexArray(0);
+      vertex_arrays_.insert({particles.id(), vertex_array});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[render_scene.particles.id()]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
-    glVertexAttribPointer(
-        2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) + sizeof(glm::vec4)));
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
+    glBufferData(GL_ARRAY_BUFFER,
+                 particles.size() * sizeof(Particle),
+                 particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glBindVertexArray(0);
-    vertex_arrays_.insert({render_scene.particles.id(), vertex_array});
-  }
-
-  glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[render_scene.particles.id()]);
-  glBufferData(GL_ARRAY_BUFFER,
-               render_scene.particles.size() * sizeof(Particle),
-               render_scene.particles.data(), GL_STREAM_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 
-  glm::mat4 mv = camera.view;
-  glm::mat4 mvp = camera.projection * camera.view;
+    glm::mat4 mv = camera.view;
+    glm::mat4 mvp = camera.projection * camera.view;
 
-  auto &uniforms2 = particle_programs_.at("particles");
+    auto &uniforms2 = particle_programs_.at("particles");
 
-  glUseProgram(uniforms2.program);
+    glUseProgram(uniforms2.program);
 
-  glBindVertexArray(vertex_arrays_[render_scene.particles.id()]);
+    glBindVertexArray(vertex_arrays_[particles.id()]);
 
-  load(render_scene.particles.emission_map);
-  glActiveTexture(GL_TEXTURE10);
-  glBindTexture(GL_TEXTURE_2D, render_scene.particles.emission_map
-                               ? textures_[render_scene.particles.emission_map->id()]
-                               : black_texture_);
-  glUniform1i(uniforms2.texture, 10);
+    load(particles.emission_map);
+    glActiveTexture(GL_TEXTURE10);
+    glBindTexture(GL_TEXTURE_2D, particles.emission_map
+                                 ? textures_[particles.emission_map->id()]
+                                 : black_texture_);
+    glUniform1i(uniforms2.texture, 10);
 
-  glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
-  glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
-  glUniformMatrix4fv(uniforms2.p, 1, GL_FALSE, &camera.projection[0][0]);
-  glUniform2fv(uniforms2.resolution, 1, glm::value_ptr(resolution));
+    glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(uniforms2.p, 1, GL_FALSE, &camera.projection[0][0]);
+    glUniform2fv(uniforms2.resolution, 1, glm::value_ptr(resolution));
 
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-  glDrawArrays(GL_POINTS, 0, render_scene.particles.size());
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDrawArrays(GL_POINTS, 0, particles.size());
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 }
 
 void RenderSystem::render(const Model &model, const Decals &decals,

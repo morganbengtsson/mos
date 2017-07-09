@@ -22,6 +22,7 @@ public:
   using Models = std::vector<mos::Model>;
   using RenderBoxes = std::vector<mos::RenderBox>;
   using Decals = std::vector<mos::Decal>;
+  using ParticleClouds = std::vector<mos::Particles>;
 
   /**
    * @brief The Shader enum
@@ -56,7 +57,8 @@ public:
         const Draw &draw = Draw::TRIANGLES);
   Models models;
   Decals decals;
-  Particles particles;
+  //Particles particles;
+  ParticleClouds  particle_clouds;
   RenderBoxes render_boxes;
   Light light;
   std::vector<RenderCamera> cameras;
