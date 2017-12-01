@@ -79,6 +79,13 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   add_vertex_program(RenderScene::Shader::TEXT, text_vert_source,
                      text_frag_source, text_vert, text_frag);
 
+  std::string depth_vert = "depth_330.vert";
+  std::string depth_frag = "depth_330.frag";
+  std::string depth_vert_source = text(shader_path + depth_vert);
+  std::string depth_frag_source = text(shader_path + depth_frag);
+  add_vertex_program(RenderScene::Shader::DEPTH, depth_vert_source,
+                     depth_frag_source, depth_vert, depth_frag);
+
   std::string effect_vert = "effect_330.vert";
   std::string effect_frag = "effect_330.frag";
   add_vertex_program(RenderScene::Shader::EFFECT,

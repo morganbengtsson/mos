@@ -200,12 +200,10 @@ void main() {
     color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + emission, material.opacity);
     color.a = material.opacity + tex_color.a + emission_tex.a;
 
-
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-
 
 }
