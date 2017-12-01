@@ -48,7 +48,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
   fprintf(stdout, "Max uniform locations: %s\n",
-          glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
+  glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
