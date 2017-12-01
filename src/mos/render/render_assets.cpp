@@ -72,11 +72,10 @@ std::shared_ptr<Mesh> RenderAssets::mesh(const std::string &path) {
 std::shared_ptr<Texture2D>
 RenderAssets::texture(const std::string &path,
                        const bool mipmaps,
-                       const bool compress,
                        const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, mipmaps, compress, wrap)));
+      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, mipmaps, wrap)));
     }
     return textures_.at(path);
   } else {

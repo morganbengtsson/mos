@@ -7,14 +7,12 @@ Texture::Texture(const int width,
                  const int height,
                  const Texture::Format &format,
                  const Texture::Wrap &wrap,
-                 const bool mipmaps,
-                 const bool compress) : id_(current_id_++),
+                 const bool mipmaps) : id_(current_id_++),
                                         width_(width),
                                         height_(height),
                                         format(format),
                                         wrap(wrap),
                                         mipmaps(mipmaps),
-                                        compress(compress),
                                         layers_{Data()} {}
 
 Texture::Texture(const std::initializer_list<Texture::Data> &layers,
@@ -22,21 +20,18 @@ Texture::Texture(const std::initializer_list<Texture::Data> &layers,
                  const int height,
                  const Texture::Format &format,
                  const Texture::Wrap &wrap,
-                 const bool mipmaps,
-                 const bool compress) : Texture(layers.begin(),
+                 const bool mipmaps) : Texture(layers.begin(),
                                                 layers.end(),
                                                 width,
                                                 height,
                                                 format,
                                                 wrap,
-                                                mipmaps,
-                                                compress) {}
+                                                mipmaps) {}
 
 Texture::Texture(const std::initializer_list<std::string> &paths,
                  const Texture::Format &format,
                  const Texture::Wrap &wrap,
-                 const bool mipmaps,
-                 const bool compress) : id_(current_id_++), wrap(wrap), format(format), mipmaps(mipmaps), compress(compress) {
+                 const bool mipmaps) : id_(current_id_++), wrap(wrap), format(format), mipmaps(mipmaps) {
   for (auto &path : paths) {
     std::vector<unsigned char> pixels;
     auto error = lodepng::decode(pixels, width_, height_, path);

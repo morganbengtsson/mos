@@ -8,30 +8,29 @@
 #include <glm/gtx/projection.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/transform2.hpp>
+#include <iostream>
+#include <map>
+#include <memory>
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/render_system.hpp>
 #include <mos/util.hpp>
-#include <iostream>
-#include <map>
-#include <memory>
 #include <vector>
 
 namespace mos {
 
 static std::map<Texture::Format, GLuint> format_map{
+    {Texture::Format::R, GL_RED},
+    {Texture::Format::RG, GL_RG},
     {Texture::Format::SRGB, GL_SRGB},
     {Texture::Format::SRGBA, GL_SRGB_ALPHA},
     {Texture::Format::RGB, GL_RGB},
     {Texture::Format::RGBA, GL_RGBA},
-    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT}};
-
-static std::map<Texture::Format, GLuint> format_map_compressed{
-    {Texture::Format::SRGB, GL_COMPRESSED_SRGB},
-    {Texture::Format::SRGBA, GL_COMPRESSED_SRGB_ALPHA},
-    {Texture::Format::RGB, GL_COMPRESSED_RGB},
-    {Texture::Format::RGBA, GL_COMPRESSED_RGBA},
-    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT}};
+    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT},
+    {Texture::Format::COMPRESSED_SRGB, GL_COMPRESSED_SRGB},
+    {Texture::Format::COMPRESSED_SRGBA, GL_COMPRESSED_SRGB_ALPHA},
+    {Texture::Format::COMPRESSED_RGB, GL_COMPRESSED_RGB},
+    {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA}};
 
 static std::map<Texture::Wrap, GLuint> wrap_map{
     {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
@@ -48,7 +47,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
   fprintf(stdout, "Max uniform locations: %s\n",
-  glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
+          glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -113,9 +112,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
 
   // Render boxes
   float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
+      -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
+      1.0,  -0.5, 0.5,  -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
+      0.5,  1.0,  0.5,  0.5,  0.5, 1.0,  -0.5, 0.5, 0.5, 1.0,
   };
 
   glGenBuffers(1, &box_vbo);
@@ -141,7 +140,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
                         GL_FALSE, // take our values as-is
                         0,        // no extra data between each position
                         0         // offset of first element
-  );
+                        );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
   glBindVertexArray(0);
@@ -237,7 +236,7 @@ void RenderSystem::add_box_program(const std::string &name,
 
   box_programs_.insert(
       {name, BoxProgramData{program, glGetUniformLocation(
-          program, "model_view_projection"),
+                                         program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
 }
 
@@ -284,11 +283,11 @@ void RenderSystem::add_particle_program(const std::string name,
 
   particle_programs_.insert(ParticleProgramPair(
       name, ParticleProgramData{
-          program, glGetUniformLocation(program, "model_view_projection"),
-          glGetUniformLocation(program, "model_view"),
-          glGetUniformLocation(program, "projection"),
-          glGetUniformLocation(program, "tex"),
-          glGetUniformLocation(program, "resolution")}));
+                program, glGetUniformLocation(program, "model_view_projection"),
+                glGetUniformLocation(program, "model_view"),
+                glGetUniformLocation(program, "projection"),
+                glGetUniformLocation(program, "tex"),
+                glGetUniformLocation(program, "resolution")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -369,7 +368,7 @@ void RenderSystem::load(const Model &model) {
     // Lightmap UV
     glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                              sizeof(glm::vec2)));
+                                                         sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                  element_array_buffers_.at(model.mesh->id()));
@@ -389,14 +388,14 @@ void RenderSystem::load(const Model &model) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /*
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-    element_array_buffers_[model.mesh->id()]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 model.mesh->elements_size() * sizeof (unsigned int),
-                 model.mesh->elements_data(),
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    */
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+  element_array_buffers_[model.mesh->id()]);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               model.mesh->elements_size() * sizeof (unsigned int),
+               model.mesh->elements_data(),
+               GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  */
     model.mesh->valid_ = true;
   }
   load(model.material.diffuse_map);
@@ -579,16 +578,12 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
   }
 
-  glTexImage2D(GL_TEXTURE_2D,
-               0,
-               texture->compress ? format_map_compressed[texture->format]
-                                 : format_map[texture->format],
-               texture->width(),
-               texture->height(),
-               0,
-               texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT : GL_RGBA,
-               GL_UNSIGNED_BYTE,
-               texture->data());
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               format_map[texture->format],
+               texture->width(), texture->height(), 0,
+               texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT
+                                                         : GL_RGBA,
+               GL_UNSIGNED_BYTE, texture->data());
 
   if (texture->mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -616,8 +611,7 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 texture->compress ? format_map_compressed[texture->format]
-                                   : format_map[texture->format],
+                 format_map[texture->format],
                  texture->width(), texture->height(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, texture->data(i));
   }
@@ -666,10 +660,10 @@ RenderSystem::create_texture_and_pbo(const SharedTexture2D &texture) {
   glDeleteBuffers(1, &buffer_id);
 
   /*
-  if(texture->mipmaps) {
-      glGenerateMipmap(GL_TEXTURE_2D);
-  };
-  */
+if(texture->mipmaps) {
+    glGenerateMipmap(GL_TEXTURE_2D);
+};
+*/
 
   glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -679,8 +673,9 @@ RenderSystem::create_texture_and_pbo(const SharedTexture2D &texture) {
 }
 
 void RenderSystem::render_scene(const RenderCamera &camera,
-                                const RenderScene &render_scene, const glm::vec2 &resolution) {
-  //glViewport(0, 0, camera.resolution.x, camera.resolution.y);
+                                const RenderScene &render_scene,
+                                const glm::vec2 &resolution) {
+  // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     render(model, render_scene.decals, glm::mat4(1.0f), camera,
@@ -698,7 +693,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
     glm::mat4 mvp = camera.projection * camera.view * transform *
-        glm::scale(glm::mat4(1.0f), size);
+                    glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -706,25 +701,22 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *) (4 * sizeof(GLuint)));
+                   (GLvoid *)(4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *) (8 * sizeof(GLuint)));
+                   (GLvoid *)(8 * sizeof(GLuint)));
   }
 
   for (auto &particles : render_scene.particle_clouds) {
 
-    if (vertex_arrays_.find(particles.id()) ==
-        vertex_arrays_.end()) {
+    if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
       glGenVertexArrays(1, &vertex_array);
       glBindVertexArray(vertex_array);
-      if (array_buffers_.find(particles.id()) ==
-          array_buffers_.end()) {
+      if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
         unsigned int array_buffer;
         glGenBuffers(1, &array_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-        glBufferData(GL_ARRAY_BUFFER,
-                     particles.size() * sizeof(Particle),
+        glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                      particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         array_buffers_.insert({particles.id(), array_buffer});
@@ -733,9 +725,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
-      glVertexAttribPointer(
-          2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
-          reinterpret_cast<const void *>(sizeof(glm::vec3) + sizeof(glm::vec4)));
+      glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                            reinterpret_cast<const void *>(sizeof(glm::vec3) +
+                                                           sizeof(glm::vec4)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableVertexAttribArray(0);
       glEnableVertexAttribArray(1);
@@ -744,12 +736,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
-    glBufferData(GL_ARRAY_BUFFER,
-                 particles.size() * sizeof(Particle),
+    glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                  particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
 
     glm::mat4 mv = camera.view;
     glm::mat4 mvp = camera.projection * camera.view;
@@ -763,8 +752,8 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                 ? textures_[particles.emission_map->id()]
-                                 : black_texture_);
+                                     ? textures_[particles.emission_map->id()]
+                                     : black_texture_);
     glUniform1i(uniforms2.texture, 10);
 
     glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -775,8 +764,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.size());
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
+  }
 }
 
 void RenderSystem::render(const Model &model, const Decals &decals,
@@ -787,10 +775,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                           const RenderScene::Shader &shader,
                           const RenderScene::Draw &draw) {
   // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
-  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0,
-                              0.0, 0.5, 0.0, 0.0,
-                              0.0, 0.0, 0.5, 0.0,
-                              0.5, 0.5, 0.5, 1.0);
+  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
+                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
   load(environment.texture);
   load(model);
@@ -806,36 +792,36 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glActiveTexture(GLenum(GL_TEXTURE0));
   glBindTexture(GL_TEXTURE_2D, model.material.diffuse_map
-                               ? textures_[model.material.diffuse_map->id()]
-                               : black_texture_);
+                                   ? textures_[model.material.diffuse_map->id()]
+                                   : black_texture_);
   glUniform1i(uniforms.material_diffuse_map, 0);
 
   for (int i = 0; i < decals.size(); i++) {
-    //Uses two texture units
+    // Uses two texture units
     int texture_unit = 1 + i % 2;
     auto &decal = decals[i];
     load(decal.material.diffuse_map);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.diffuse_map
-                  ? textures_[decal.material.diffuse_map->id()]
-                  : black_texture_);
+                      ? textures_[decal.material.diffuse_map->id()]
+                      : black_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
     /*
-    if (decal.material.normal_map) {
-      load(decal.material.normal_map);
-    }
-    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit + 2));
-    glBindTexture(GL_TEXTURE_2D,
-                  decal.material.normal_map
-                  ? textures_[decal.material.normal_map->id()]
-                  : black_texture_);
-    glUniform1i(uniforms.decal_material_normal_maps[i], texture_unit + 2);*/
+  if (decal.material.normal_map) {
+    load(decal.material.normal_map);
+  }
+  glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit + 2));
+  glBindTexture(GL_TEXTURE_2D,
+                decal.material.normal_map
+                ? textures_[decal.material.normal_map->id()]
+                : black_texture_);
+  glUniform1i(uniforms.decal_material_normal_maps[i], texture_unit + 2);*/
 
-    const glm::mat4 decal_mvp = bias * decal.projection * decal.view * parent_transform * model.transform;
-    glUniformMatrix4fv(uniforms.decal_mvps[i],
-                       1, GL_FALSE, &decal_mvp[0][0]);
+    const glm::mat4 decal_mvp = bias * decal.projection * decal.view *
+                                parent_transform * model.transform;
+    glUniformMatrix4fv(uniforms.decal_mvps[i], 1, GL_FALSE, &decal_mvp[0][0]);
   }
 
   // Shadowmap
@@ -852,29 +838,30 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_2D, model.material.light_map
-                               ? textures_[model.material.light_map->id()]
-                               : black_texture_);
+                                   ? textures_[model.material.light_map->id()]
+                                   : black_texture_);
   glUniform1i(uniforms.material_light_map, 6);
 
   glActiveTexture(GL_TEXTURE7);
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                               ? textures_[model.material.normal_map->id()]
-                               : black_texture_);
+                                   ? textures_[model.material.normal_map->id()]
+                                   : black_texture_);
   glUniform1i(uniforms.material_normal_map, 7);
 
   glActiveTexture(GL_TEXTURE8);
-  glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                               ? textures_[model.material.emission_map->id()]
-                               : black_texture_);
+  glBindTexture(GL_TEXTURE_2D,
+                model.material.emission_map
+                    ? textures_[model.material.emission_map->id()]
+                    : black_texture_);
   glUniform1i(uniforms.material_emission_map, 8);
 
   glActiveTexture(GL_TEXTURE9);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 environment.texture
-                ? environment.texture
-                  ? texture_cubes_[environment.texture->id()]
-                  : black_texture_
-                : black_texture_);
+                    ? environment.texture
+                          ? texture_cubes_[environment.texture->id()]
+                          : black_texture_
+                    : black_texture_);
   glUniform1i(uniforms.environment_map, 9);
 
   glUniform3fv(uniforms.environment_position, 1,
@@ -889,13 +876,14 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   auto model_matrix = parent_transform * model.transform;
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
-  const glm::mat4 depth_bias_mvp =
-      bias * light.camera.projection * light.camera.view * parent_transform * model.transform;
+  const glm::mat4 depth_bias_mvp = bias * light.camera.projection *
+                                   light.camera.view * parent_transform *
+                                   model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
   glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
-      glm::mat3(model.transform));
+                                                  glm::mat3(model.transform));
   normal_matrix =
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
@@ -921,7 +909,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
   glUniform3fv(uniforms.light_specular_color, 1,
                glm::value_ptr(light.specular));
-  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE, &light.camera.view[0][0]);
+  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
+                     &light.camera.view[0][0]);
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
                      &light.camera.projection[0][0]);
 
@@ -930,13 +919,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
                &light.quadratic_attenuation_factor);
   auto light_angle = light.angle();
-  glUniform1fv(uniforms.light_angle, 1,
-               &light_angle);
-  glUniform3fv(uniforms.light_direction, 1,
-               glm::value_ptr(light.direction()));
+  glUniform1fv(uniforms.light_angle, 1, &light_angle);
+  glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(light.direction()));
 
-  glUniform2fv(uniforms.camera_resolution, 1,
-               glm::value_ptr(resolution));
+  glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
 
   glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
   glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
@@ -1040,7 +1026,7 @@ void RenderSystem::render_scenes(
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
-    program, "model_view_projection")),
+                            program, "model_view_projection")),
       model_view_matrix(glGetUniformLocation(program, "model_view")),
       model_matrix(glGetUniformLocation(program, "model")),
       view_matrix(glGetUniformLocation(program, "view")),
@@ -1077,12 +1063,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "light.linear_attenuation_factor")),
       light_quadratic_attenuation_factor(
           glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
-      light_shadow_map(
-          glGetUniformLocation(program, "light.shadow_map")),
-      light_angle(
-          glGetUniformLocation(program, "light.angle")),
-      light_direction(
-          glGetUniformLocation(program, "light.direction")),
+      light_shadow_map(glGetUniformLocation(program, "light.shadow_map")),
+      light_angle(glGetUniformLocation(program, "light.angle")),
+      light_direction(glGetUniformLocation(program, "light.direction")),
 
       fog_color_near(glGetUniformLocation(program, "fog.color_near")),
       fog_color_far(glGetUniformLocation(program, "fog.color_far")),
@@ -1097,15 +1080,20 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "fog.exponential_attenuation_factor")) {
 
   for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
-    auto decals_uniform_name = "decal_materials[" + std::to_string(i) + "].diffuse_map";
-    decal_material_diffuse_maps[i] = glGetUniformLocation(program, decals_uniform_name.c_str());
+    auto decals_uniform_name =
+        "decal_materials[" + std::to_string(i) + "].diffuse_map";
+    decal_material_diffuse_maps[i] =
+        glGetUniformLocation(program, decals_uniform_name.c_str());
 
-    auto normal_map_name = "decal_materials[" + std::to_string(i) + "].normal_map";
-    decal_material_normal_maps[i] = glGetUniformLocation(program, normal_map_name.c_str());
+    auto normal_map_name =
+        "decal_materials[" + std::to_string(i) + "].normal_map";
+    decal_material_normal_maps[i] =
+        glGetUniformLocation(program, normal_map_name.c_str());
 
-    auto decal_mvps_uniform_name = "decal_model_view_projections[" + std::to_string(i) + "]";
-    decal_mvps[i] = glGetUniformLocation(program, decal_mvps_uniform_name.c_str());
+    auto decal_mvps_uniform_name =
+        "decal_model_view_projections[" + std::to_string(i) + "]";
+    decal_mvps[i] =
+        glGetUniformLocation(program, decal_mvps_uniform_name.c_str());
   }
-
 }
 }

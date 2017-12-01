@@ -14,36 +14,42 @@ class Texture {
 public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
-  enum class Format {RGB, RGBA, SRGB, SRGBA, DEPTH};
+  enum class Format {R,
+                     RG,
+                     RGB,
+                     RGBA,
+                     SRGB,
+                     SRGBA,
+                     DEPTH,
+                     COMPRESSED_RGB,
+                     COMPRESSED_RGBA,
+                     COMPRESSED_SRGB,
+                     COMPRESSED_SRGBA};
   template<class T>
   Texture(T begin, T end,
           const int width,
           const int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true,
-          const bool compress = false) : layers_(begin, end),
+          const bool mipmaps = true) : layers_(begin, end),
                                          width_(width), height_(height),
-                                         format(format), wrap(wrap), mipmaps(mipmaps),
-                                         compress(compress), id_(current_id_++) {};
+                                         format(format), wrap(wrap), mipmaps(mipmaps), id_(current_id_++) {};
 
   Texture(const std::initializer_list<Data> &layers,
           const int width,
           const int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true,
-          const bool compress = false);
+          const bool mipmaps = true);
 
   Texture(const int width,
           const int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true,
-          const bool compress = false);
+          const bool mipmaps = true);
 
   Texture(const std::initializer_list<std::string> &paths, const Format &format,
-          const Wrap &wrap, const bool mipmaps, const bool compress);
+          const Wrap &wrap, const bool mipmaps);
 
   int id() const;
   int width() const;
@@ -52,7 +58,6 @@ public:
   int size(const int layer = 0);
   const unsigned char *data(const int layer = 0) const;
   bool mipmaps; // TODO: const
-  const bool compress;
   Wrap wrap; // TODO: const
   Format format; // TODO: const
 private:

@@ -16,7 +16,6 @@ public:
 
   TextureCube(const std::string &base_path,
               const bool mipmaps = true,
-              const bool compress = false,
               const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   TextureCube(const std::string &positive_x_path,
@@ -26,7 +25,6 @@ public:
               const std::string &positive_z_path,
               const std::string &negative_z_path,
               const bool mipmaps = true,
-              const bool compress = false,
               const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   static SharedTextureCube load(const std::string &positive_x_path,
@@ -36,12 +34,10 @@ public:
                                 const std::string &positive_z_path,
                                 const std::string &negative_z_path,
                                 const bool mipmaps = true,
-                                const bool compress = false,
                                 const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 
   static SharedTextureCube load(const std::string &base_path,
                                 const bool mipmaps = true,
-                                const bool compress = false,
                                 const Wrap &wrap = Wrap::CLAMP_TO_EDGE);
 private:
 

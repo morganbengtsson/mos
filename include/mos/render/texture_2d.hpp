@@ -34,8 +34,8 @@ public:
    */
   Texture2D(T begin, T end, unsigned int width, unsigned int height,
             const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::REPEAT,
-            const bool mipmaps = true, const bool compress = false)
-      : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps, compress) {}
+            const bool mipmaps = true)
+      : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps) {}
 
   /**
    * @brief Texture2D constructor.
@@ -45,7 +45,7 @@ public:
    */
   Texture2D(const unsigned int width, const unsigned int height,
             const Format &format = Format::RGBA, const Wrap &wrap = Wrap::REPEAT,
-            const bool mipmaps = true, const bool compress = false);
+            const bool mipmaps = true);
 
   /**
    * @brief Destructor.
@@ -54,12 +54,10 @@ public:
 
   static SharedTexture2D load(const std::string &path,
                             const bool mipmaps = true,
-                            const bool compress = false,
                             const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
   Texture2D(const std::string &path,
             const bool mipmaps = true,
-            const bool compress = false,
             const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 };
 }
