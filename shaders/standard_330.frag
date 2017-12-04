@@ -215,10 +215,6 @@ void main() {
     diffuse.rgb *= shadow;
     specular.rgb*= shadow;
 
-    float v = texture(light.shadow_map, shadow_map_uv.xy).x;
-    v = pow(v, 10.0);
-
-
     vec4 emission_tex = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
 
@@ -231,5 +227,4 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
-    color.rgb = vec3(v,v,v);
 }
