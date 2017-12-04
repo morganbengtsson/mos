@@ -13,7 +13,7 @@ Light::Light(const glm::vec3 &position,
     : diffuse(diffuse), specular(specular), angle_(angle),
       linear_attenuation_factor(linear_attenuation_factor),
       quadratic_attenuation_factor(quadratic_attenuation_factor),
-      camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 50.0f),
+      camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
                         glm::vec3(0.0f, 0.0001f, 1.0f)){}
 
 Light::~Light() {}
@@ -28,7 +28,7 @@ glm::vec3 Light::position() const{
 
 void Light::angle(const float angle) {
   angle_ = angle;
-  camera.projection = glm::perspective(angle_, 1.0f, 0.01f, 10.0f);
+  camera.projection = glm::perspective(angle_, 1.0f, 1.0f, 100.0f);
 }
 
 float Light::angle() const {
