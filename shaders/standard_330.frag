@@ -106,7 +106,15 @@ float linstep(float low, float high, float v){
 }
 
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
-    vec2 moments = texture(shadow_map, uv.xy).xy;
+    vec2 moments = vec2(0.0, 0.0);
+    vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+    for(float x = -1.5; x <= 1.5; ++x) {
+        for(float y = -1.5; y <= 1.5; ++y) {
+            moments += textureLod(light.shadow_map, uv + vec2(x, y) * texelSize, 0).xy;
+        }
+    }
+    moments /= 16.0;
+
     float p = step(compare, moments.x);
     float variance = max(moments.y - moments.x * moments.x, 0.00002);
 
@@ -185,29 +193,6 @@ void main() {
 
     diffuse.rgb *= spotEffect;
     specular.rgb *= spotEffect;
-
-    //Shadow
-    /*
-    if( fragment.proj_shadow.w > 0.0) {
-        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-        //float closest_depth = textureLod(light.shadow_map, s_uv.xy, 3).r;
-        float current_depth = s_uv.z - 0.0005;
-        //float shadow = current_depth > closest_depth ? 0.0 : 1.0;
-
-        float shadow = 0.0;
-        vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
-        for(float x = -1.5; x <= 1.5; ++x) {
-            for(float y = -1.5; y <= 1.5; ++y) {
-                float pcfDepth = texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r;
-                //shadow += current_depth > pcfDepth ? 0.0 : 1.0;
-                shadow += step(current_depth, texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r);
-            }
-        }
-        shadow /= 16.0;
-
-        diffuse.rgb *= shadow;
-        specular.rgb *= shadow;
-    }*/
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
     float current_depth = shadow_map_uv.z;

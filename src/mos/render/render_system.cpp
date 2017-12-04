@@ -836,6 +836,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     load(light.shadow_map);
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
+    glGenerateMipmap(GL_TEXTURE_2D);
     glUniform1i(uniforms.light_shadow_map, 5);
   } else {
     glActiveTexture(GL_TEXTURE5);
