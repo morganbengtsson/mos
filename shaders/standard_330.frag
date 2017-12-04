@@ -71,6 +71,7 @@ uniform Fog fog;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
+uniform mat4 depth_bias_model_view_projection;
 
 in Fragment fragment;
 layout(location = 0) out vec4 color;
@@ -208,13 +209,15 @@ void main() {
         specular.rgb *= shadow;
     }*/
 
-    if( fragment.proj_shadow.w > 0.0){
-        vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-        float current_depth = shadow_map_uv.z;
-        float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
-        diffuse.rgb *= shadow;
-        specular.rgb*= shadow;
-    }
+    vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+    float current_depth = shadow_map_uv.z;
+    float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
+    diffuse.rgb *= shadow;
+    specular.rgb*= shadow;
+
+    float v = texture(light.shadow_map, shadow_map_uv.xy).x;
+    v = pow(v, 10.0);
+
 
     vec4 emission_tex = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
@@ -228,4 +231,5 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
+    color.rgb = vec3(v,v,v);
 }

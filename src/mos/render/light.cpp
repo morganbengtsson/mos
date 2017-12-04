@@ -28,7 +28,7 @@ glm::vec3 Light::position() const{
 
 void Light::angle(const float angle) {
   angle_ = angle;
-  camera.projection = glm::perspective(angle_, 1.0f, 0.01f, 10.0f);
+  camera.projection = glm::perspective(angle_, 1.0f, 1.0f, 100.0f);
 }
 
 float Light::angle() const {
