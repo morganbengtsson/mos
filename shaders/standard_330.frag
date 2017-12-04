@@ -56,7 +56,6 @@ struct Fragment {
     vec2 uv;
     vec2 light_map_uv;
     vec4 proj_coords[max_decals];
-    vec3 shadow;
     vec4 proj_shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -152,6 +151,7 @@ void main() {
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
+
 
     float cosDir = dot(surface_to_light, -light.direction);
     float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
