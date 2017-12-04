@@ -56,7 +56,6 @@ struct Fragment {
     vec2 uv;
     vec2 light_map_uv;
     vec4 proj_coords[max_decals];
-    vec3 shadow;
     vec4 proj_shadow;
     vec3 camera_to_surface;
     mat3 tbn;
@@ -72,6 +71,7 @@ uniform Fog fog;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
+uniform mat4 depth_bias_model_view_projection;
 
 in Fragment fragment;
 layout(location = 0) out vec4 color;
@@ -99,6 +99,29 @@ vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir)
     vec3 posonbox = fragment.position + nrdir*fa;
     vec3 rdir = normalize(posonbox - box_pos);
     return rdir;
+}
+
+float linstep(float low, float high, float v){
+    return clamp((v-low)/(high-low), 0.0, 1.0);
+}
+
+float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
+    vec2 moments = vec2(0.0, 0.0);
+    vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+    for(float x = -1.5; x <= 1.5; ++x) {
+        for(float y = -1.5; y <= 1.5; ++y) {
+            moments += textureLod(light.shadow_map, uv + vec2(x, y) * texelSize, 0).xy;
+        }
+    }
+    moments /= 16.0;
+
+    float p = step(compare, moments.x);
+    float variance = max(moments.y - moments.x * moments.x, 0.00002);
+
+    float d = compare - moments.x;
+    float p_max = variance / (variance + d*d);
+
+    return clamp(max(p, p_max), 0.0, 1.0);
 }
 
 void main() {
@@ -139,7 +162,6 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
 
-
     float cosDir = dot(surface_to_light, -light.direction);
     float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
 
@@ -172,27 +194,11 @@ void main() {
     diffuse.rgb *= spotEffect;
     specular.rgb *= spotEffect;
 
-    //Shadow
-    if( fragment.proj_shadow.w > 0.0) {
-        vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-        //float closest_depth = textureLod(light.shadow_map, s_uv.xy, 3).r;
-        float current_depth = s_uv.z - 0.0005;
-        //float shadow = current_depth > closest_depth ? 0.0 : 1.0;
-
-        float shadow = 0.0;
-        vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
-        for(float x = -1.5; x <= 1.5; ++x) {
-            for(float y = -1.5; y <= 1.5; ++y) {
-                float pcfDepth = texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r;
-                //shadow += current_depth > pcfDepth ? 0.0 : 1.0;
-                shadow += step(current_depth, texture(light.shadow_map, s_uv.xy + vec2(x, y) * texelSize).r);
-            }
-        }
-        shadow /= 16.0;
-
-        diffuse.rgb *= shadow;
-        specular.rgb *= shadow;
-    }
+    vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+    float current_depth = shadow_map_uv.z;
+    float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
+    diffuse.rgb *= shadow;
+    specular.rgb*= shadow;
 
     vec4 emission_tex = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
@@ -200,12 +206,10 @@ void main() {
     color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + emission, material.opacity);
     color.a = material.opacity + tex_color.a + emission_tex.a;
 
-
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-
 
 }

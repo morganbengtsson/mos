@@ -21,7 +21,7 @@ namespace mos {
 
 static std::map<Texture::Format, GLuint> format_map{
     {Texture::Format::R, GL_RED},
-    {Texture::Format::RG, GL_RG},
+    {Texture::Format::RG, GL_RG32F},
     {Texture::Format::SRGB, GL_SRGB},
     {Texture::Format::SRGBA, GL_SRGB_ALPHA},
     {Texture::Format::RGB, GL_RGB},
@@ -78,6 +78,13 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   std::string text_frag_source = text(shader_path + text_frag);
   add_vertex_program(RenderScene::Shader::TEXT, text_vert_source,
                      text_frag_source, text_vert, text_frag);
+
+  std::string depth_vert = "depth_330.vert";
+  std::string depth_frag = "depth_330.frag";
+  std::string depth_vert_source = text(shader_path + depth_vert);
+  std::string depth_frag_source = text(shader_path + depth_frag);
+  add_vertex_program(RenderScene::Shader::DEPTH, depth_vert_source,
+                     depth_frag_source, depth_vert, depth_frag);
 
   std::string effect_vert = "effect_330.vert";
   std::string effect_frag = "effect_330.frag";
@@ -829,6 +836,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
     load(light.shadow_map);
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()]);
+    glGenerateMipmap(GL_TEXTURE_2D);
     glUniform1i(uniforms.light_shadow_map, 5);
   } else {
     glActiveTexture(GL_TEXTURE5);

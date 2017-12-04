@@ -27,7 +27,7 @@ public:
   /**
    * @brief The Shader enum
    */
-  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT };
+  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT, DEPTH };
 
   /**
    * @brief How to draw the models.
