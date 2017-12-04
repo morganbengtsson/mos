@@ -21,7 +21,7 @@ namespace mos {
 
 static std::map<Texture::Format, GLuint> format_map{
     {Texture::Format::R, GL_RED},
-    {Texture::Format::RG, GL_RG},
+    {Texture::Format::RG, GL_RG32F},
     {Texture::Format::SRGB, GL_SRGB},
     {Texture::Format::SRGBA, GL_SRGB_ALPHA},
     {Texture::Format::RGB, GL_RGB},

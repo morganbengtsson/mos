@@ -101,6 +101,21 @@ vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir)
     return rdir;
 }
 
+float linstep(float low, float high, float v){
+    return clamp((v-low)/(high-low), 0.0, 1.0);
+}
+
+float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
+    vec2 moments = texture(shadow_map, uv.xy).xy;
+    float p = step(compare, moments.x);
+    float variance = max(moments.y - moments.x * moments.x, 0.00002);
+
+    float d = compare - moments.x;
+    float p_max = variance / (variance + d*d);
+
+    return clamp(max(p, p_max), 0.0, 1.0);
+}
+
 void main() {
 
     vec4 static_light = texture(material.light_map, fragment.light_map_uv);
@@ -138,8 +153,6 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-
-
     float cosDir = dot(surface_to_light, -light.direction);
     float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
 
@@ -173,6 +186,7 @@ void main() {
     specular.rgb *= spotEffect;
 
     //Shadow
+    /*
     if( fragment.proj_shadow.w > 0.0) {
         vec3 s_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
         //float closest_depth = textureLod(light.shadow_map, s_uv.xy, 3).r;
@@ -192,6 +206,14 @@ void main() {
 
         diffuse.rgb *= shadow;
         specular.rgb *= shadow;
+    }*/
+
+    if( fragment.proj_shadow.w > 0.0){
+        vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+        float current_depth = shadow_map_uv.z;
+        float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
+        diffuse.rgb *= shadow;
+        specular.rgb*= shadow;
     }
 
     vec4 emission_tex = texture(material.emission_map, fragment.uv);
