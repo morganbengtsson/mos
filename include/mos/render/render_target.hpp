@@ -23,29 +23,7 @@ public:
    * @brief Target
    * @param resolution
    */
-  explicit RenderTarget(const int width,
-                        const int height,
-                        const SharedTexture2D & texture = nullptr,
-                        const SharedTexture2D & depth_texture = nullptr,
-                        const SharedTextureCube texture_cube = nullptr);
-
-  /**
-   * @brief The texture that is rendered to.
-   */
-  const SharedTexture2D texture;
-
-  /**
-   * @brief The depth texture that is rendered to.
-   */
-  const SharedTexture2D depth_texture;
-
-  /**
-   * @brief Cube texture that can be rendered to.
-   */
-  const SharedTextureCube texture_cube;
-
-  int width() const;
-  int height() const;
+  RenderTarget();
 
   /**
    * @brief unique id

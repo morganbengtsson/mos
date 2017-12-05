@@ -92,6 +92,7 @@ public:
                      const RenderTarget &target = RenderTarget(128,128)) {
     render_target(target);
 
+    /*
     if (target.texture_cube) {
       auto texture_id = texture_cubes_[target.texture_cube->id()];
         for (auto it = scenes_begin; it != scenes_end; it++) {
@@ -106,13 +107,14 @@ public:
       glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
       glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
-    else {
-      clear(color);
-      for (auto it = scenes_begin; it != scenes_end; it++) {
-        for (auto &camera : it->cameras) {
-          render_scene(camera, *it, glm::vec2(target.width(), target.height()));
-        }
+     */
+    //else {
+    clear(color);
+    for (auto it = scenes_begin; it != scenes_end; it++) {
+      for (auto &camera : it->cameras) {
+        render_scene(camera, *it, glm::vec2(target.width(), target.height()));
       }
+    //}
     }
   }
 

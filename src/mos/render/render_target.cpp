@@ -7,22 +7,7 @@ std::atomic_uint RenderTarget::current_id_(0);
 
 unsigned int RenderTarget::id() const { return id_; }
 
-RenderTarget::RenderTarget(const int width,
-                           const int height,
-                           const SharedTexture2D &texture,
-                           const SharedTexture2D &depth_texture,
-                           const SharedTextureCube texture_cube) :
-    width_(width),
-    height_(height),
-    texture(texture),
-    depth_texture(depth_texture),
-    texture_cube(texture_cube) , id_(current_id_++) {
-
-}
-int RenderTarget::width() const {
-  return width_;
-}
-int RenderTarget::height() const {
-  return height_;
+RenderTarget::RenderTarget() :
+   id_(current_id_++) {
 }
 }
