@@ -14,7 +14,10 @@ Light::Light(const glm::vec3 &position,
       linear_attenuation_factor(linear_attenuation_factor),
       quadratic_attenuation_factor(quadratic_attenuation_factor),
       camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
-                        glm::vec3(0.0f, 0.0001f, 1.0f)){}
+                        glm::vec3(0.0f, 0.0001f, 1.0f)),
+      shadow_map(mos::SharedTexture2D(new mos::Texture2D(
+          512, 512, mos::Texture::Format::RG,
+          mos::Texture::Wrap::CLAMP_TO_BORDER, true))){}
 
 Light::~Light() {}
 

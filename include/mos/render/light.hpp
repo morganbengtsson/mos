@@ -5,6 +5,7 @@
 #include <glm/gtc/constants.hpp>
 #include <mos/render/texture_2d.hpp>
 #include <mos/render/render_camera.hpp>
+#include <mos/render/render_target.hpp>
 
 namespace mos {
 
@@ -102,6 +103,8 @@ public:
   * @brief Shadowmap if used.
   */
   SharedTexture2D shadow_map;
+
+  RenderTarget target;
 private:
   /**
   * @brief angle.

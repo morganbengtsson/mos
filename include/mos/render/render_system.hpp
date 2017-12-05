@@ -109,6 +109,12 @@ public:
     }
      */
     //else {
+    //Shadows
+
+    for (auto it = scenes_begin; it != scenes_end; it++) {
+        render_shadow_map(*it);
+    }
+
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       for (auto &camera : it->cameras) {
@@ -140,6 +146,8 @@ private:
    * @param render_scene
    */
   void render_scene(const RenderCamera &camera, const RenderScene &render_scene, const glm::vec2 &resolution);
+
+  void render_shadow_map(const RenderScene &render_scene);
 
   /**
    * @brief Updates render state of model.

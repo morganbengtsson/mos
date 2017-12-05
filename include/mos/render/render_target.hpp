@@ -32,9 +32,6 @@ public:
   unsigned int id() const;
 
 private:
-  int width_;
-  int height_;
-  int depth_;
   unsigned int id_;
   static std::atomic_uint current_id_;
 };

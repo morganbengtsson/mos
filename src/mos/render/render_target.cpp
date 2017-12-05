@@ -3,7 +3,7 @@
 
 namespace mos {
 
-std::atomic_uint RenderTarget::current_id_(0);
+std::atomic_uint RenderTarget::current_id_;
 
 unsigned int RenderTarget::id() const { return id_; }
 
