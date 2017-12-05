@@ -63,8 +63,8 @@ public:
 private:
   static std::atomic_uint current_id_;
   int id_;
-  unsigned int width_;
-  unsigned int height_;
+  int width_;
+  int height_;
   std::vector<Data> layers_;
 };
 }

@@ -1,5 +1,7 @@
 #include <mos/render/texture.hpp>
 #include <stdexcept>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 namespace mos {
 std::atomic_uint Texture::current_id_;
@@ -33,14 +35,9 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
                  const Texture::Wrap &wrap,
                  const bool mipmaps) : id_(current_id_++), wrap(wrap), format(format), mipmaps(mipmaps) {
   for (auto &path : paths) {
-    std::vector<unsigned char> pixels;
-    auto error = lodepng::decode(pixels, width_, height_, path);
-    if (error) {
-      std::string e = "Decoder error: " + std::to_string(error) + ": " +
-          std::string(lodepng_error_text(error));
-      throw std::runtime_error(e);
-    }
-    layers_.push_back(Data(pixels.begin(), pixels.end()));
+    int bpp;
+    unsigned char * pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, STBI_rgb_alpha);
+    layers_.push_back(Data(pixels, pixels + (width_ * height_ * 4)));
   }
 }
 
