@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
+add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
+
 file(GLOB ROOT_SOURCE *.c)
 file(GLOB ROOT_HEADER *.h)
 
