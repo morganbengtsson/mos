@@ -962,6 +962,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   }
 }
 
+/*
 void RenderSystem::render_target(const RenderTarget &target) {
   glViewport(0.0f, 0.0f, target.width(), target.height());
   if (target.texture || target.texture_cube || target.depth_texture) {
@@ -1019,6 +1020,7 @@ void RenderSystem::render_target(const RenderTarget &target) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 }
+ */
 
 void RenderSystem::clear(const glm::vec4 &color) {
   glClearDepthf(1.0f);
@@ -1028,8 +1030,8 @@ void RenderSystem::clear(const glm::vec4 &color) {
 
 void RenderSystem::render_scenes(
     const std::initializer_list<RenderScene> &batches_init,
-    const glm::vec4 &color, const RenderTarget &target) {
-  render_scenes(batches_init.begin(), batches_init.end(), color, target);
+    const glm::vec4 &color, const glm::ivec2 &resolution) {
+  render_scenes(batches_init.begin(), batches_init.end(), color, resolution);
 }
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)

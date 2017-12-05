@@ -82,15 +82,15 @@ public:
 
   void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
                      const glm::vec4 &color = glm::vec4(.0f),
-                     const RenderTarget &target = RenderTarget(128,128));
+                     const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
 
   template<class Ts>
   void render_scenes(Ts scenes_begin,
                      Ts scenes_end,
                      const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-                     const RenderTarget &target = RenderTarget(128,128)) {
-    render_target(target);
+                     const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
+    //render_target(target);
 
     /*
     if (target.texture_cube) {
@@ -112,7 +112,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       for (auto &camera : it->cameras) {
-        render_scene(camera, *it, glm::vec2(target.width(), target.height()));
+        render_scene(camera, *it, resolution);
       }
     //}
     }
