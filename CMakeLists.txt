@@ -58,9 +58,6 @@ include_directories(externals/filesystem)
 include_directories(externals/glm)
 add_subdirectory(externals/glm)
 
-# lodepng
-add_subdirectory(externals/lodepng)
-
 # stb
 add_subdirectory(externals/stb)
 
@@ -94,14 +91,12 @@ else()
 endif()
 target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mos glfw ${GLFW_LIBRARIES})
-target_link_libraries(mos lodepng)
 target_link_libraries(mos stb)
 target_include_directories(mos PUBLIC
 externals/glew-cmake/include
 externals/glfw/include
 externals/openal-soft/include
 externals/stb
-externals/lodepng
 externals/objload
 externals/glm
 externals/Optional

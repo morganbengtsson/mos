@@ -1,5 +1,4 @@
 #include <mos/render/texture_cube.hpp>
-#include <lodepng.h>
 #include <filesystem/path.h>
 
 namespace mos {

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <lodepng.h>
 #include <mos/render/texture_2d.hpp>
 
 namespace mos {
