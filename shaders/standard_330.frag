@@ -161,16 +161,13 @@ void main() {
     float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
-
     float cosDir = dot(surface_to_light, -light.direction);
     float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
 
-    float dist = distance(light.position, fragment.position);
-    float linear_attenuation_factor = light.linear_attenuation_factor;
-    float quadratic_attenuation_factor = light.quadratic_attenuation_factor;
-    float att = 1.0 / (1.0 + linear_attenuation_factor*dist + quadratic_attenuation_factor*dist*dist);
+    float light_fragment_distance = distance(light.position, fragment.position);
+    float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
 
-    vec4 diffuse = vec4(att * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
+    vec4 diffuse = vec4(attenuation * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
 
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
