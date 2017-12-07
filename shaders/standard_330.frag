@@ -1,6 +1,7 @@
 #version 330
 
 const int max_decals = 20;
+const float PI = 3.14159265359;
 
 struct Material {
     vec3 ambient;
@@ -158,7 +159,7 @@ void main() {
     }
 
     vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
-    float diffuse_contribution = max(dot(normal, surface_to_light), 0.0);
+    float diffuse_contribution = max(dot(normal, surface_to_light), 0.0); // NdotL
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     float cosDir = dot(surface_to_light, -light.direction);
@@ -166,8 +167,10 @@ void main() {
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+    vec3 radiance = light.diffuse * attenuation;
 
-    vec4 diffuse = vec4(attenuation * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
+    //vec4 diffuse = vec4(attenuation * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
+    vec4 diffuse = vec4((diffuse_color.rgb / PI) * radiance * diffuse_contribution, 1.0f);
 
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
