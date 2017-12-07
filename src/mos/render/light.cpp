@@ -16,7 +16,7 @@ Light::Light(const glm::vec3 &position,
       camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
                         glm::vec3(0.0f, 0.0001f, 1.0f)),
       shadow_map(mos::SharedTexture2D(new mos::Texture2D(
-          512, 512, mos::Texture::Format::RG,
+          512, 512, mos::Texture::Format::RG32F,
           mos::Texture::Wrap::CLAMP_TO_BORDER, true))){}
 
 Light::~Light() {}

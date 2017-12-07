@@ -21,7 +21,7 @@ namespace mos {
 
 static std::map<Texture::Format, GLuint> format_map{
     {Texture::Format::R, GL_RED},
-    {Texture::Format::RG, GL_RG32F},
+    {Texture::Format::RG, GL_RG},
     {Texture::Format::SRGB, GL_SRGB},
     {Texture::Format::SRGBA, GL_SRGB_ALPHA},
     {Texture::Format::RGB, GL_RGB},
@@ -30,7 +30,15 @@ static std::map<Texture::Format, GLuint> format_map{
     {Texture::Format::COMPRESSED_SRGB, GL_COMPRESSED_SRGB},
     {Texture::Format::COMPRESSED_SRGBA, GL_COMPRESSED_SRGB_ALPHA},
     {Texture::Format::COMPRESSED_RGB, GL_COMPRESSED_RGB},
-    {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA}};
+    {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA},
+    {Texture::Format::R16F, GL_R16F},
+    {Texture::Format::RG16F, GL_RG16F},
+    {Texture::Format::RGB16F, GL_RGB16F},
+    {Texture::Format::RGBA16F, GL_RGBA16F},
+    {Texture::Format::R32F, GL_R32F},
+    {Texture::Format::RG32F, GL_RG32F},
+    {Texture::Format::RGB32F, GL_RGB32F},
+    {Texture::Format::RGBA32F, GL_RGBA32F}};
 
 static std::map<Texture::Wrap, GLuint> wrap_map{
     {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
