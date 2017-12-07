@@ -20,12 +20,9 @@ struct Camera {
 
 struct Light {
     vec3 position;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 color;
     mat4 view;
     mat4 projection;
-    float linear_attenuation_factor;
-    float quadratic_attenuation_factor;
     float angle;
     vec3 direction;
     sampler2D shadow_map;

@@ -248,7 +248,7 @@ private:
     GLint camera_position;
 
     GLint light_position;
-    GLint light_diffuse_color;
+    GLint light_color;
     GLint light_specular_color;
     GLint light_view;
     GLint light_projection;

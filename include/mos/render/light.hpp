@@ -26,10 +26,7 @@ public:
   explicit Light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 2.0f),
                  const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
                  const float angle = glm::half_pi<float>(),
-                 const glm::vec3 &diffuse = glm::vec3(0.0f),
-                 const glm::vec3 &specular = glm::vec3(0.0f),
-                 const float linear_attenuation_factor = 0.0f,
-                 const float quadratic_attenuation_factor = 0.0f);
+                 const glm::vec3 &color = glm::vec3(0.0f));
   virtual ~Light();
 
   /**
@@ -77,22 +74,7 @@ public:
   /**
    * @brief diffuse_color
    */
-  glm::vec3 diffuse;
-
-  /**
-   * @brief specular_color
-   */
-  glm::vec3 specular;
-
-  /**
-   * @brief linear falloff
-   */
-  float linear_attenuation_factor;
-
-  /**
-   * @brief quadratic falloff
-   */
-  float quadratic_attenuation_factor;
+  glm::vec3 color;
 
   /**
    * @brief Camera to render shadow map from.
@@ -104,6 +86,9 @@ public:
   */
   SharedTexture2D shadow_map;
 
+  /**
+   * Render target for the
+   */
   RenderTarget target;
 private:
   /**

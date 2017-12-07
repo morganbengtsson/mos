@@ -6,13 +6,8 @@ namespace mos {
 Light::Light(const glm::vec3 &position,
              const glm::vec3 &center,
              const float angle,
-             const glm::vec3 &diffuse,
-             const glm::vec3 &specular,
-             const float linear_attenuation_factor,
-             const float quadratic_attenuation_factor)
-    : diffuse(diffuse), specular(specular), angle_(angle),
-      linear_attenuation_factor(linear_attenuation_factor),
-      quadratic_attenuation_factor(quadratic_attenuation_factor),
+             const glm::vec3 &color)
+    : color(color), angle_(angle),
       camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
                         glm::vec3(0.0f, 0.0001f, 1.0f)),
       shadow_map(mos::SharedTexture2D(new mos::Texture2D(

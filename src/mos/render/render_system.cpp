@@ -922,18 +922,13 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
-  glUniform3fv(uniforms.light_diffuse_color, 1, glm::value_ptr(light.diffuse));
-  glUniform3fv(uniforms.light_specular_color, 1,
-               glm::value_ptr(light.specular));
+  glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light.color));
+
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
                      &light.camera.view[0][0]);
   glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
                      &light.camera.projection[0][0]);
 
-  glUniform1fv(uniforms.light_linear_attenuation_factor, 1,
-               &light.linear_attenuation_factor);
-  glUniform1fv(uniforms.light_quadratic_attenuation_factor, 1,
-               &light.quadratic_attenuation_factor);
   auto light_angle = light.angle();
   glUniform1fv(uniforms.light_angle, 1, &light_angle);
   glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(light.direction()));
@@ -1113,14 +1108,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       camera_position(glGetUniformLocation(program, "camera.position")),
       camera_resolution(glGetUniformLocation(program, "camera.resolution")),
       light_position(glGetUniformLocation(program, "light.position")),
-      light_diffuse_color(glGetUniformLocation(program, "light.diffuse")),
-      light_specular_color(glGetUniformLocation(program, "light.specular")),
+      light_color(glGetUniformLocation(program, "light.color")),
       light_view(glGetUniformLocation(program, "light.view")),
       light_projection(glGetUniformLocation(program, "light.projection")),
-      light_linear_attenuation_factor(
-          glGetUniformLocation(program, "light.linear_attenuation_factor")),
-      light_quadratic_attenuation_factor(
-          glGetUniformLocation(program, "light.quadratic_attenuation_factor")),
       light_shadow_map(glGetUniformLocation(program, "light.shadow_map")),
       light_angle(glGetUniformLocation(program, "light.angle")),
       light_direction(glGetUniformLocation(program, "light.direction")),

@@ -18,12 +18,9 @@ struct Material {
 
 struct Light {
     vec3 position;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 color;
     mat4 view;
     mat4 projection;
-    float linear_attenuation_factor;
-    float quadratic_attenuation_factor;
     float angle;
     vec3 direction;
     sampler2D shadow_map;
@@ -167,7 +164,7 @@ void main() {
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-    vec3 radiance = light.diffuse * attenuation;
+    vec3 radiance = light.color * attenuation;
 
     //vec4 diffuse = vec4(attenuation * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
     vec4 diffuse = vec4((diffuse_color.rgb / PI) * radiance * diffuse_contribution, 1.0f);
@@ -186,7 +183,7 @@ void main() {
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);
-    specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * light.specular * material.specular, 1.0);
+    specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
     vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
