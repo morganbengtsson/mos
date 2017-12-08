@@ -897,8 +897,6 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glUniform3fv(uniforms.material_albedo_color, 1,
                glm::value_ptr(model.material.albedo));
-  glUniform3fv(uniforms.material_specular_color, 1,
-               glm::value_ptr(model.material.specular));
   glUniform1fv(uniforms.material_specular_exponent, 1,
                &model.material.shininess);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);

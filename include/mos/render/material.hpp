@@ -25,7 +25,6 @@ public:
    * @param normal_map
    * @param ambient
    * @param albedo
-   * @param specular
    * @param opacity
    * @param shininess
    */
@@ -33,12 +32,10 @@ public:
                     const SharedTexture2D &normal_map = SharedTexture2D(),
                     const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
-                    const glm::vec3 &specular = glm::vec3(0.0f),
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
   explicit Material(const glm::vec3 &diffuse,
-                    const glm::vec3 &specular,
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
@@ -56,11 +53,6 @@ public:
    * @brief diffuse color.
    */
   glm::vec3 albedo;
-
-  /**
-   * @brief specular color.
-   */
-  glm::vec3 specular;
 
   /**
    * @brief opacity

@@ -10,11 +10,10 @@ Material::Material(const SharedTexture2D &albedo_map,
                    const SharedTexture2D &normal_map,
                    const SharedTexture2D &light_map,
                    const glm::vec3 &albedo,
-                   const glm::vec3 &specular,
                    const float opacity,
                    const float shininess)
     : albedo_map(albedo_map), normal_map(normal_map), light_map(light_map),
-       albedo(albedo), specular(specular), opacity(opacity),
+       albedo(albedo), opacity(opacity),
       shininess(shininess) {
 }
 
@@ -41,7 +40,6 @@ Material::Material(const std::string &path) {
     light_map = Texture2D::load(fpath.parent_path().str() + "/" + l);
 
     albedo = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
-    specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
     opacity = value["opacity"];
     shininess = value["shininess"];
 
@@ -61,10 +59,9 @@ Material Material::load(const std::string &path) {
   return Material(path);
 }
 Material::Material(const glm::vec3 &albedo,
-                   const glm::vec3 &specular,
                    const float opacity,
                    const float shininess)
-    : albedo(albedo), specular(specular), opacity(opacity), shininess(shininess) {
+    : albedo(albedo), opacity(opacity), shininess(shininess) {
 
 }
 }

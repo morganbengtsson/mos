@@ -111,10 +111,9 @@ Material RenderAssets::material(const std::string &path) {
         auto light_map = l.empty() ? texture("") : texture(base_path + l);
 
         auto diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
-        auto specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
         auto opacity = value["opacity"];
         auto shininess = value["shininess"];
-        return Material(diffuse_map, normal_map, light_map, diffuse, specular, opacity, shininess);
+        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, shininess);
       } else {
         throw std::runtime_error(path.substr(path.find_last_of(".")) +
             " file format is not supported.");
