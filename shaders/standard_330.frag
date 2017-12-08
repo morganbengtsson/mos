@@ -153,6 +153,11 @@ float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
+vec3 fresnel_schlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
 void main() {
 
     vec4 static_light = texture(material.light_map, fragment.light_map_uv);
@@ -209,12 +214,36 @@ void main() {
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
-    //vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
-    //specular_environment.rgb *= material.specular;
+    vec3 F0 = vec3(0.04);
+    float metallic = 0.5; // Move to material
+    F0 = mix(F0, material.albedo, metallic);
 
-    vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
-    vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);
-    //specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * material.specular, 1.0);
+    vec3 N = normalize(normal);
+    vec3 V = normalize(camera.position - fragment.position);
+
+    vec3 L = normalize(light.position - fragment.position);
+    vec3 H = normalize(V + L);
+
+
+
+    // Cook-Torrance BRDF
+    float NDF = distribution_GGX(N, H, material.roughness);
+    float G = geometry_smith(N, V, L, material.roughness);
+    vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+
+    vec3 nominator = NDF * G * F;
+    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+    vec3 specular = nominator / max(denominator, 0.001); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
+
+    vec3 kS = F;
+    vec3 kD = vec3(1.0) - kS;
+    kD *= 1.0 - metallic;
+
+    float NdotL = max(dot(N, L), 0.0);
+
+    vec3 Lo = (kD * material.albedo / PI + specular) * radiance * NdotL;
+
+    diffuse.rgb = Lo;
 
     vec4 diffuse_static = static_light * diffuse_color;
     vec3 environment = diffuse_environment.rgb;
