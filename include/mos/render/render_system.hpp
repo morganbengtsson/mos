@@ -234,13 +234,10 @@ private:
     GLint environment_extent;
 
     GLint material_diffuse_map;
-    GLint material_emission_map;
     GLint material_light_map;
     GLint material_normal_map;
-    GLint material_ambient_color;
     GLint material_diffuse_color;
     GLint material_specular_color;
-    GLint material_emission_color;
     GLint material_specular_exponent;
     GLint material_opacity;
 
@@ -249,11 +246,8 @@ private:
 
     GLint light_position;
     GLint light_color;
-    GLint light_specular_color;
     GLint light_view;
     GLint light_projection;
-    GLint light_linear_attenuation_factor;
-    GLint light_quadratic_attenuation_factor;
     GLint light_shadow_map;
     GLint light_angle;
     GLint light_direction;

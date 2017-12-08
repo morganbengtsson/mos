@@ -32,20 +32,15 @@ public:
    * @param shininess
    */
   explicit Material(const SharedTexture2D &diffuse_map = SharedTexture2D(),
-                    const SharedTexture2D &emmision_map = SharedTexture2D(),
                     const SharedTexture2D &normal_map = SharedTexture2D(),
                     const SharedTexture2D &light_map = SharedTexture2D(),
-                    const glm::vec3 &ambient = glm::vec3(0.0f),
                     const glm::vec3 &diffuse = glm::vec3(1.0f),
                     const glm::vec3 &specular = glm::vec3(0.0f),
-                    const glm::vec3 &emission = glm::vec3(0.0f),
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
-  explicit Material(const glm::vec3 &ambient,
-                    const glm::vec3 &diffuse,
+  explicit Material(const glm::vec3 &diffuse,
                     const glm::vec3 &specular,
-                    const glm::vec3 &emission,
                     const float opacity = 1.0f,
                     const float shininess = 0.0f);
 
@@ -60,11 +55,6 @@ public:
   static Material load(const std::string &path);
 
   /**
-   * @brief ambient color.
-   */
-  glm::vec3 ambient;
-
-  /**
    * @brief diffuse color.
    */
   glm::vec3 diffuse;
@@ -73,11 +63,6 @@ public:
    * @brief specular color.
    */
   glm::vec3 specular;
-
-  /**
-   * @brief emission color.
-   */
-  glm::vec3 emission;
 
   /**
    * @brief opacity
@@ -95,11 +80,6 @@ public:
   * @brief Texture of the material.
   */
   SharedTexture2D diffuse_map;
-
-  /**
-  * @brief Texture of the material.
-  */
-  SharedTexture2D emission_map;
 
   /**
   * @brief Normalmap for the material.

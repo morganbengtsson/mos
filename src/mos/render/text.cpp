@@ -10,7 +10,6 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
-  model_.material.ambient = glm::vec3(0.0f);
   model_.material.diffuse = glm::vec3(1.0f);
   model_.material.opacity = 0.0f;
   model_.material.diffuse_map = font.texture;
@@ -72,10 +71,6 @@ void Text::text(const std::string &text) {
     }
     model_.mesh->invalidate();
   }
-}
-
-void Text::ambient(const glm::vec3 &ambient) {
-  model_.material.ambient = ambient;
 }
 
 void Text::diffuse(const glm::vec3 &diffuse) {

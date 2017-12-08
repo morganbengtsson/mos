@@ -414,7 +414,6 @@ void RenderSystem::load(const Model &model) {
     model.mesh->valid_ = true;
   }
   load(model.material.diffuse_map);
-  load(model.material.emission_map);
   load(model.material.normal_map);
   load(model.material.light_map);
 }
@@ -438,7 +437,6 @@ void RenderSystem::unload(const Model &model) {
     }
   }
   unload(model.material.diffuse_map);
-  unload(model.material.emission_map);
   unload(model.material.normal_map);
   unload(model.material.light_map);
 }
@@ -865,13 +863,6 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glUniform1i(uniforms.material_normal_map, 7);
 
   glActiveTexture(GL_TEXTURE8);
-  glBindTexture(GL_TEXTURE_2D,
-                model.material.emission_map
-                    ? textures_[model.material.emission_map->id()]
-                    : black_texture_);
-  glUniform1i(uniforms.material_emission_map, 8);
-
-  glActiveTexture(GL_TEXTURE9);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 environment.texture
                     ? environment.texture
@@ -904,14 +895,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-  glUniform3fv(uniforms.material_ambient_color, 1,
-               glm::value_ptr(model.material.ambient));
   glUniform3fv(uniforms.material_diffuse_color, 1,
                glm::value_ptr(model.material.diffuse));
   glUniform3fv(uniforms.material_specular_color, 1,
                glm::value_ptr(model.material.specular));
-  glUniform3fv(uniforms.material_emission_color, 1,
-               glm::value_ptr(model.material.emission));
   glUniform1fv(uniforms.material_specular_exponent, 1,
                &model.material.shininess);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
@@ -1088,20 +1075,17 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "depth_bias_model_view_projection")),
       material_diffuse_map(
           glGetUniformLocation(program, "material.diffuse_map")),
-      material_emission_map(
-          glGetUniformLocation(program, "material.emission_map")),
+
       material_light_map(glGetUniformLocation(program, "material.light_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
       environment_map(glGetUniformLocation(program, "environment.texture")),
       environment_position(
           glGetUniformLocation(program, "environment.position")),
       environment_extent(glGetUniformLocation(program, "environment.extent")),
-      material_ambient_color(glGetUniformLocation(program, "material.ambient")),
+
       material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
       material_specular_color(
           glGetUniformLocation(program, "material.specular")),
-      material_emission_color(
-          glGetUniformLocation(program, "material.emission")),
       material_specular_exponent(
           glGetUniformLocation(program, "material.specular_exponent")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),

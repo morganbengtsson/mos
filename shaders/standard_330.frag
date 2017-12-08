@@ -4,14 +4,11 @@ const int max_decals = 20;
 const float PI = 3.14159265359;
 
 struct Material {
-    vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-    vec3 emission;
     float specular_exponent;
     float opacity;
     sampler2D diffuse_map;
-    sampler2D emission_map;
     sampler2D light_map;
     sampler2D normal_map;
 };
@@ -198,11 +195,8 @@ void main() {
     diffuse.rgb *= shadow;
     specular.rgb*= shadow;
 
-    vec4 emission_tex = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission, emission_tex.rgb, emission_tex.a);
-
-    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb + material.ambient + emission, material.opacity);
-    color.a = material.opacity + tex_color.a + emission_tex.a;
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb, material.opacity);
+    color.a = material.opacity + tex_color.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
