@@ -194,6 +194,7 @@ void main() {
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
     float current_depth = shadow_map_uv.z;
     float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
+
     diffuse.rgb *= shadow;
     specular.rgb*= shadow;
 
