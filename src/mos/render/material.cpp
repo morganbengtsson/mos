@@ -6,15 +6,15 @@
 
 namespace mos {
 using namespace nlohmann;
-Material::Material(const SharedTexture2D &diffuse_map,
+Material::Material(const SharedTexture2D &albedo_map,
                    const SharedTexture2D &normal_map,
                    const SharedTexture2D &light_map,
-                   const glm::vec3 &diffuse,
+                   const glm::vec3 &albedo,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float shininess)
-    : diffuse_map(diffuse_map), normal_map(normal_map), light_map(light_map),
-       diffuse(diffuse), specular(specular), opacity(opacity),
+    : albedo_map(albedo_map), normal_map(normal_map), light_map(light_map),
+       albedo(albedo), specular(specular), opacity(opacity),
       shininess(shininess) {
 }
 
@@ -23,10 +23,10 @@ Material::Material(const std::string &path) {
   if (fpath.extension() == "material") {
     auto value = json::parse(mos::text(fpath.str()));
     std::string t = "";
-    if (!value["diffuse_map"].is_null()) {
-      t = value["diffuse_map"];
+    if (!value["albedo_map"].is_null()) {
+      t = value["albedo_map"];
     }
-    diffuse_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
+    albedo_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
 
     std::string n = "";
     if (!value["_map"].is_null()) {
@@ -40,7 +40,7 @@ Material::Material(const std::string &path) {
     }
     light_map = Texture2D::load(fpath.parent_path().str() + "/" + l);
 
-    diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
+    albedo = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
     specular = glm::vec3(value["specular"][0], value["specular"][1], value["specular"][2]);
     opacity = value["opacity"];
     shininess = value["shininess"];
@@ -60,11 +60,11 @@ Material Material::load(const std::string &path) {
   }
   return Material(path);
 }
-Material::Material(const glm::vec3 &diffuse,
+Material::Material(const glm::vec3 &albedo,
                    const glm::vec3 &specular,
                    const float opacity,
                    const float shininess)
-    : diffuse(diffuse), specular(specular), opacity(opacity), shininess(shininess) {
+    : albedo(albedo), specular(specular), opacity(opacity), shininess(shininess) {
 
 }
 }

@@ -4,7 +4,7 @@ const int max_decals = 20;
 const float PI = 3.14159265359;
 
 struct Material {
-    vec3 diffuse;
+    vec3 albedo;
     vec3 specular;
     float specular_exponent;
     float opacity;
@@ -135,7 +135,7 @@ void main() {
    vec4 tex_color = texture(material.diffuse_map, fragment.uv);
     vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     //TODO: Shouldnt it be tex_color.a * material.opacity?
-    diffuse_color = vec4(mix(material.diffuse * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+    diffuse_color = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){

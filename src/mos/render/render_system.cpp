@@ -413,7 +413,7 @@ void RenderSystem::load(const Model &model) {
   */
     model.mesh->valid_ = true;
   }
-  load(model.material.diffuse_map);
+  load(model.material.albedo_map);
   load(model.material.normal_map);
   load(model.material.light_map);
 }
@@ -436,7 +436,7 @@ void RenderSystem::unload(const Model &model) {
       element_array_buffers_.erase(model.mesh->id());
     }
   }
-  unload(model.material.diffuse_map);
+  unload(model.material.albedo_map);
   unload(model.material.normal_map);
   unload(model.material.light_map);
 }
@@ -804,20 +804,20 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   const auto &uniforms = vertex_programs_.at(shader);
 
   glActiveTexture(GLenum(GL_TEXTURE0));
-  glBindTexture(GL_TEXTURE_2D, model.material.diffuse_map
-                                   ? textures_[model.material.diffuse_map->id()]
+  glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                   ? textures_[model.material.albedo_map->id()]
                                    : black_texture_);
-  glUniform1i(uniforms.material_diffuse_map, 0);
+  glUniform1i(uniforms.material_albedo_map, 0);
 
   for (int i = 0; i < decals.size(); i++) {
     // Uses two texture units
     int texture_unit = 1 + i % 2;
     auto &decal = decals[i];
-    load(decal.material.diffuse_map);
+    load(decal.material.albedo_map);
     glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
     glBindTexture(GL_TEXTURE_2D,
-                  decal.material.diffuse_map
-                      ? textures_[decal.material.diffuse_map->id()]
+                  decal.material.albedo_map
+                      ? textures_[decal.material.albedo_map->id()]
                       : black_texture_);
     glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
 
@@ -895,8 +895,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-  glUniform3fv(uniforms.material_diffuse_color, 1,
-               glm::value_ptr(model.material.diffuse));
+  glUniform3fv(uniforms.material_albedo_color, 1,
+               glm::value_ptr(model.material.albedo));
   glUniform3fv(uniforms.material_specular_color, 1,
                glm::value_ptr(model.material.specular));
   glUniform1fv(uniforms.material_specular_exponent, 1,
@@ -1073,8 +1073,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       normal_matrix(glGetUniformLocation(program, "normal_matrix")),
       depth_bias_mvp(
           glGetUniformLocation(program, "depth_bias_model_view_projection")),
-      material_diffuse_map(
-          glGetUniformLocation(program, "material.diffuse_map")),
+      material_albedo_map(
+          glGetUniformLocation(program, "material.albedo_map")),
 
       material_light_map(glGetUniformLocation(program, "material.light_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
@@ -1083,7 +1083,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "environment.position")),
       environment_extent(glGetUniformLocation(program, "environment.extent")),
 
-      material_diffuse_color(glGetUniformLocation(program, "material.diffuse")),
+      material_albedo_color(glGetUniformLocation(program, "material.albedo")),
       material_specular_color(
           glGetUniformLocation(program, "material.specular")),
       material_specular_exponent(

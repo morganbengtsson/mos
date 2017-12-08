@@ -233,10 +233,10 @@ private:
     GLint environment_position;
     GLint environment_extent;
 
-    GLint material_diffuse_map;
+    GLint material_albedo_map;
     GLint material_light_map;
     GLint material_normal_map;
-    GLint material_diffuse_color;
+    GLint material_albedo_color;
     GLint material_specular_color;
     GLint material_specular_exponent;
     GLint material_opacity;

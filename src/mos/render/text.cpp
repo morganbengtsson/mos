@@ -10,9 +10,9 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
-  model_.material.diffuse = glm::vec3(1.0f);
+  model_.material.albedo = glm::vec3(1.0f);
   model_.material.opacity = 0.0f;
-  model_.material.diffuse_map = font.texture;
+  model_.material.albedo_map = font.texture;
   text(txt);
 }
 
@@ -32,12 +32,12 @@ void Text::text(const std::string &text) {
       float index = 0.0f;
       for (auto & c : line) {
         auto character = font_.characters.at(c);
-        float u1 = character.rect_x / ((float)model_.material.diffuse_map->width());
+        float u1 = character.rect_x / ((float)model_.material.albedo_map->width());
         float u2 = (character.rect_x + character.rect_w) /
-                   (float)model_.material.diffuse_map->width();
-        float v1 = character.rect_y / ((float)model_.material.diffuse_map->height());
+                   (float)model_.material.albedo_map->width();
+        float v1 = character.rect_y / ((float)model_.material.albedo_map->height());
         float v2 = ((character.rect_y + character.rect_h) /
-                    ((float)model_.material.diffuse_map->height()));
+                    ((float)model_.material.albedo_map->height()));
 
         float offset_y = character.offset_y;
         float offset_x = character.offset_x;
@@ -74,7 +74,7 @@ void Text::text(const std::string &text) {
 }
 
 void Text::diffuse(const glm::vec3 &diffuse) {
-  model_.material.diffuse = diffuse;
+  model_.material.albedo = diffuse;
 }
 
 float Text::width() const {
