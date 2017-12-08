@@ -5,7 +5,6 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec3 albedo;
-    vec3 specular;
     float specular_exponent;
     float opacity;
     sampler2D diffuse_map;
@@ -175,27 +174,25 @@ void main() {
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
-    vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
-    specular_environment.rgb *= material.specular;
+    //vec4 specular_environment = texture(environment.texture, corrected_r, (1.0 - (material.specular_exponent / 512)) * 10.0);
+    //specular_environment.rgb *= material.specular;
 
     vec4 specular = vec4(0.0, 0.0, 0.0, 0.0);
     vec3 halfway = normalize(surface_to_light + fragment.camera_to_surface);
-    specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * material.specular, 1.0);
+    //specular = vec4(pow(max(dot(normal, halfway), 0.0), material.specular_exponent) * material.specular, 1.0);
 
     vec4 diffuse_static = static_light * diffuse_color;
-    vec3 environment = diffuse_environment.rgb + specular_environment.rgb;
+    vec3 environment = diffuse_environment.rgb;
 
     diffuse.rgb *= spotEffect;
-    specular.rgb *= spotEffect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
     float current_depth = shadow_map_uv.z;
     float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
 
     diffuse.rgb *= shadow;
-    specular.rgb*= shadow;
 
-    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb + specular.rgb, material.opacity);
+    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
