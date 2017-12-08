@@ -118,6 +118,41 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     return clamp(max(p, p_max), 0.0, 1.0);
 }
 
+float distribution_GGX(vec3 N, vec3 H, float roughness)
+{
+    float a = roughness*roughness;
+    float a2 = a*a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / max(denom, 0.001);
+}
+
+float geometry_schlick_GGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+
+float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = geometry_schlick_GGX(NdotV, roughness);
+    float ggx1 = geometry_schlick_GGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+
 void main() {
 
     vec4 static_light = texture(material.light_map, fragment.light_map_uv);
