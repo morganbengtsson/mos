@@ -258,4 +258,6 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
+
+    //color.rgb = color.rgb / (color.rgb + vec3(1.0));
 }
