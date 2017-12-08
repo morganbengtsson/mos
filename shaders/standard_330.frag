@@ -202,9 +202,6 @@ void main() {
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
     vec3 radiance = light.color * attenuation;
 
-    //vec4 diffuse = vec4(attenuation * diffuse_contribution * light.diffuse, 1.0) * diffuse_color;
-    vec4 diffuse = vec4((diffuse_color.rgb / PI) * radiance * diffuse_contribution, 1.0f);
-
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
     vec2 t_size = textureSize(environment.texture, 0);
@@ -224,8 +221,6 @@ void main() {
     vec3 L = normalize(light.position - fragment.position);
     vec3 H = normalize(V + L);
 
-
-
     // Cook-Torrance BRDF
     float NDF = distribution_GGX(N, H, material.roughness);
     float G = geometry_smith(N, V, L, material.roughness);
@@ -243,20 +238,18 @@ void main() {
 
     vec3 Lo = (kD * material.albedo / PI + specular) * radiance * NdotL;
 
-    diffuse.rgb = Lo;
-
     vec4 diffuse_static = static_light * diffuse_color;
     vec3 environment = diffuse_environment.rgb;
 
-    diffuse.rgb *= spotEffect;
+    Lo.rgb *= spotEffect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
     float current_depth = shadow_map_uv.z;
     float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
 
-    diffuse.rgb *= shadow;
+    Lo.rgb *= shadow;
 
-    color = vec4(diffuse.rgb + diffuse_static.rgb + environment.rgb, material.opacity);
+    color = vec4(Lo.rgb + diffuse_static.rgb + environment.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
