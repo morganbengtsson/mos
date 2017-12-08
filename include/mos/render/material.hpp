@@ -33,11 +33,13 @@ public:
                     const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     const float opacity = 1.0f,
-                    const float roughness = 0.0f);
+                    const float roughness = 0.0f,
+                    const float metallic = 0.0f);
 
   explicit Material(const glm::vec3 &diffuse,
                     const float opacity = 1.0f,
-                    const float roughness = 0.0f);
+                    const float roughness = 0.0f,
+                    const float metallic = 0.0f);
 
   /**
    * @brief Material construction from *.mesh file.
@@ -63,6 +65,11 @@ public:
    * @brief roughness
     */
   float roughness;
+
+  /**
+   * @brief metallic
+    */
+  float metallic;
 
   /**
   * @brief Texture of the material.

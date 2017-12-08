@@ -899,6 +899,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                glm::value_ptr(model.material.albedo));
   glUniform1fv(uniforms.material_roughness, 1,
                &model.material.roughness);
+  glUniform1fv(uniforms.material_metallic, 1,
+               &model.material.metallic);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
   // Camera in world space
@@ -1084,6 +1086,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       material_albedo(glGetUniformLocation(program, "material.albedo")),
       material_roughness(
           glGetUniformLocation(program, "material.roughness")),
+      material_metallic(
+          glGetUniformLocation(program, "material.metallic")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),
 
       camera_position(glGetUniformLocation(program, "camera.position")),

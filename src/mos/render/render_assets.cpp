@@ -113,7 +113,8 @@ Material RenderAssets::material(const std::string &path) {
         auto diffuse = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
         auto opacity = value["opacity"];
         auto roughness = value["roughness"];
-        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, roughness);
+        auto metallic = value["metallic"];
+        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, roughness, metallic);
       } else {
         throw std::runtime_error(path.substr(path.find_last_of(".")) +
             " file format is not supported.");

@@ -6,6 +6,7 @@ const float PI = 3.14159265359;
 struct Material {
     vec3 albedo;
     float roughness;
+    float metallic;
     float opacity;
     sampler2D diffuse_map;
     sampler2D light_map;
@@ -212,8 +213,7 @@ void main() {
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
     vec3 F0 = vec3(0.04);
-    float metallic = 0.5; // Move to material
-    F0 = mix(F0, material.albedo, metallic);
+    F0 = mix(F0, material.albedo, material.metallic);
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
@@ -232,7 +232,7 @@ void main() {
 
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
+    kD *= 1.0 - material.metallic;
 
     float NdotL = max(dot(N, L), 0.0);
 
