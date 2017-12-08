@@ -237,7 +237,6 @@ private:
     GLint material_light_map;
     GLint material_normal_map;
     GLint material_albedo_color;
-    GLint material_specular_color;
     GLint material_specular_exponent;
     GLint material_opacity;
 

@@ -1082,8 +1082,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       environment_extent(glGetUniformLocation(program, "environment.extent")),
 
       material_albedo_color(glGetUniformLocation(program, "material.albedo")),
-      material_specular_color(
-          glGetUniformLocation(program, "material.specular")),
       material_specular_exponent(
           glGetUniformLocation(program, "material.specular_exponent")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),
