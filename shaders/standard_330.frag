@@ -5,7 +5,7 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec3 albedo;
-    float specular_exponent;
+    float roughness;
     float opacity;
     sampler2D diffuse_map;
     sampler2D light_map;

@@ -236,8 +236,8 @@ private:
     GLint material_albedo_map;
     GLint material_light_map;
     GLint material_normal_map;
-    GLint material_albedo_color;
-    GLint material_specular_exponent;
+    GLint material_albedo;
+    GLint material_roughness;
     GLint material_opacity;
 
     GLint camera_resolution;

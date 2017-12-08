@@ -26,18 +26,18 @@ public:
    * @param ambient
    * @param albedo
    * @param opacity
-   * @param shininess
+   * @param roughness
    */
   explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
                     const SharedTexture2D &normal_map = SharedTexture2D(),
                     const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     const float opacity = 1.0f,
-                    const float shininess = 0.0f);
+                    const float roughness = 0.0f);
 
   explicit Material(const glm::vec3 &diffuse,
                     const float opacity = 1.0f,
-                    const float shininess = 0.0f);
+                    const float roughness = 0.0f);
 
   /**
    * @brief Material construction from *.mesh file.
@@ -60,11 +60,9 @@ public:
   float opacity;
 
   /**
-   * @brief shininess
-   *
-   * In some equations also called Ns.
-   */
-  float shininess;
+   * @brief roughness
+    */
+  float roughness;
 
   /**
   * @brief Texture of the material.

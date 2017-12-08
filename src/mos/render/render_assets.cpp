@@ -93,8 +93,8 @@ Material RenderAssets::material(const std::string &path) {
       if (fpath.extension() == "material") {
         auto value = json::parse(mos::text(directory_ + fpath.str()));
         std::string t = "";
-        if (!value["diffuse_map"].is_null()) {
-          t = value["diffuse_map"];
+        if (!value["albedo_map"].is_null()) {
+          t = value["albedo_map"];
         }
         auto diffuse_map = t.empty() ? texture("") : texture(base_path + t);
 
@@ -110,10 +110,10 @@ Material RenderAssets::material(const std::string &path) {
         }
         auto light_map = l.empty() ? texture("") : texture(base_path + l);
 
-        auto diffuse = glm::vec3(value["diffuse"][0], value["diffuse"][1], value["diffuse"][2]);
+        auto diffuse = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
         auto opacity = value["opacity"];
-        auto shininess = value["shininess"];
-        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, shininess);
+        auto roughness = value["roughness"];
+        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, roughness);
       } else {
         throw std::runtime_error(path.substr(path.find_last_of(".")) +
             " file format is not supported.");

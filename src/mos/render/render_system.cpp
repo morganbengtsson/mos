@@ -895,10 +895,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-  glUniform3fv(uniforms.material_albedo_color, 1,
+  glUniform3fv(uniforms.material_albedo, 1,
                glm::value_ptr(model.material.albedo));
-  glUniform1fv(uniforms.material_specular_exponent, 1,
-               &model.material.shininess);
+  glUniform1fv(uniforms.material_roughness, 1,
+               &model.material.roughness);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
   // Camera in world space
@@ -1081,10 +1081,11 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "environment.position")),
       environment_extent(glGetUniformLocation(program, "environment.extent")),
 
-      material_albedo_color(glGetUniformLocation(program, "material.albedo")),
-      material_specular_exponent(
-          glGetUniformLocation(program, "material.specular_exponent")),
+      material_albedo(glGetUniformLocation(program, "material.albedo")),
+      material_roughness(
+          glGetUniformLocation(program, "material.roughness")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),
+
       camera_position(glGetUniformLocation(program, "camera.position")),
       camera_resolution(glGetUniformLocation(program, "camera.resolution")),
       light_position(glGetUniformLocation(program, "light.position")),
