@@ -869,7 +869,7 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                           ? texture_cubes_[environment.texture->id()]
                           : black_texture_
                     : black_texture_);
-  glUniform1i(uniforms.environment_map, 9);
+  glUniform1i(uniforms.environment_map, 8);
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));

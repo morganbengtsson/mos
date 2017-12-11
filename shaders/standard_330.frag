@@ -173,15 +173,15 @@ void main() {
     }
 
    vec4 tex_color = texture(material.diffuse_map, fragment.uv);
-    vec4 diffuse_color = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
+    vec4 albedo = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     //TODO: Shouldnt it be tex_color.a * material.opacity?
-    diffuse_color = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+    albedo = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
             vec4 decal = texture(decal_materials[i].diffuse_map, d_uv);
-            diffuse_color.rgb = mix(diffuse_color.rgb, decal.rgb, decal.a);
+            albedo.rgb = mix(albedo.rgb, decal.rgb, decal.a);
 
             vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
             decal_normal = normalize(fragment.tbn * decal_normal);
@@ -206,8 +206,9 @@ void main() {
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
 
     vec2 t_size = textureSize(environment.texture, 0);
-    vec4 diffuse_environment = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0));
-    diffuse_environment.rgb *= diffuse_color.rgb * (1.0f / 3.14);
+    vec3 irradiance = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0)).rgb;
+    vec3 diffuse_environment = irradiance * albedo.rgb;
+    diffuse_environment.rgb /= PI;
 
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
@@ -238,7 +239,7 @@ void main() {
 
     vec3 Lo = (kD * material.albedo / PI + specular) * radiance * NdotL;
 
-    vec4 diffuse_static = static_light * diffuse_color;
+    vec4 diffuse_static = static_light * albedo;
     vec3 environment = diffuse_environment.rgb;
 
     Lo.rgb *= spotEffect;
