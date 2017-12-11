@@ -197,21 +197,11 @@ void main() {
     diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
 
     float cosDir = dot(surface_to_light, -light.direction);
-    float spotEffect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
+    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
     vec3 radiance = light.color * attenuation;
-
-    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
-
-    vec2 t_size = textureSize(environment.texture, 0);
-    vec3 irradiance = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0)).rgb;
-    vec3 diffuse_environment = irradiance * albedo.rgb;
-    diffuse_environment.rgb /= PI;
-
-    vec3 r = -reflect(fragment.camera_to_surface, normal);
-    vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, material.albedo, material.metallic);
@@ -240,9 +230,8 @@ void main() {
     vec3 Lo = (kD * material.albedo / PI + specular) * radiance * NdotL;
 
     vec4 diffuse_static = static_light * albedo;
-    vec3 environment = diffuse_environment.rgb;
 
-    Lo.rgb *= spotEffect;
+    Lo.rgb *= spot_effect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
     float current_depth = shadow_map_uv.z;
@@ -250,7 +239,17 @@ void main() {
 
     Lo.rgb *= shadow;
 
-    color = vec4(Lo.rgb + diffuse_static.rgb + environment.rgb, material.opacity);
+    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
+
+    vec2 t_size = textureSize(environment.texture, 0);
+    vec3 irradiance = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0)).rgb;
+    vec3 diffuse_environment = irradiance * albedo.rgb;
+    diffuse_environment.rgb /= PI;
+
+    vec3 r = -reflect(fragment.camera_to_surface, normal);
+    vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
+
+    color = vec4(Lo.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
