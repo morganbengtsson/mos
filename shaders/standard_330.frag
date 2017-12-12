@@ -159,6 +159,12 @@ vec3 fresnel_schlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+
 void main() {
 
     vec4 static_light = texture(material.light_map, fragment.light_map_uv);
@@ -249,16 +255,22 @@ void main() {
 
     float maxsize = max(t_size.x, t_size.x);
     float num_levels = log2(maxsize) + 1;
-    float mip_level = material.roughness * num_levels;
+    float mip_level = material.roughness * num_levels + 5.0;
 
-    vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb;
+    vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, material.roughness);
 
-    vec3 irradiance = textureLod(environment.texture, cn, num_levels - 2.0).rgb;
+    vec3 kS_env = F;
+    vec3 kD_env = 1.0 - kS_env;
+    kD_env *= 1.0 - material.metallic;
+
+    vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb / PI;
+
+    vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo.rgb;
 
-    vec3 ambient = (kD * diffuse_environment + specular_environment);
+    vec3 ambient = (kD_env * diffuse_environment + specular_environment);
 
-    color = vec4(Lo.rgb + diffuse_static.rgb, material.opacity);
+    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
