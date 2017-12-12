@@ -257,13 +257,13 @@ void main() {
     float num_levels = log2(maxsize) + 1;
     float mip_level = material.roughness * num_levels * 3.0;
 
-
     vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, material.roughness);
 
-    vec3 kS_env = F;
+    vec3 kS_env = F_env;
     vec3 kD_env = 1.0 - kS_env;
     kD_env *= 1.0 - material.metallic;
 
+    //Divide by PI?
     vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb / PI;
 
     vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
