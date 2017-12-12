@@ -258,6 +258,12 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
+    float maxsize = max(t_size.x, t_size.x);
+    float num_levels = log2(maxsize) + 1;
+    float mip_level = material.roughness * num_levels;
+
+    vec3 t = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
+    color.rgb = textureLod(environment.texture, t, mip_level).rgb;
 
     //color.rgb = color.rgb / (color.rgb + vec3(1.0));
 }
