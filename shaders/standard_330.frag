@@ -255,7 +255,7 @@ void main() {
 
     float maxsize = max(t_size.x, t_size.x);
     float num_levels = log2(maxsize) + 1;
-    float mip_level = material.roughness * num_levels * 4.0;
+    float mip_level = material.roughness * num_levels * 3.0;
 
 
     vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, material.roughness);
