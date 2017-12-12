@@ -177,8 +177,7 @@ void main() {
     if (amount > 0.0f){
         normal = normalize(mix(normal, tex_normal, amount));
     }
-
-   vec4 tex_color = texture(material.albedo_map, fragment.uv);
+    vec4 tex_color = texture(material.albedo_map, fragment.uv);
     vec4 albedo = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     //TODO: Shouldnt it be tex_color.a * material.opacity?
     albedo = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
@@ -233,7 +232,7 @@ void main() {
 
     float NdotL = max(dot(N, L), 0.0);
 
-    vec3 Lo = (kD * material.albedo / PI + specular) * radiance * NdotL;
+    vec3 Lo = (kD * albedo.rgb / PI + specular) * radiance * NdotL;
 
     vec4 diffuse_static = static_light * albedo;
 
@@ -271,7 +270,7 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment);
 
-    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
+    color = vec4(Lo.rgb + diffuse_static.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
