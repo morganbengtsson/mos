@@ -239,17 +239,26 @@ void main() {
 
     Lo.rgb *= shadow;
 
-    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
-
     vec2 t_size = textureSize(environment.texture, 0);
-    vec3 irradiance = textureLod(environment.texture, corrected_normal, int(t_size.x / 20.0)).rgb;
-    vec3 diffuse_environment = irradiance * albedo.rgb;
-    diffuse_environment.rgb /= PI;
-
+    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
-    color = vec4(Lo.rgb + diffuse_static.rgb + diffuse_environment.rgb, material.opacity);
+    vec3 cr = vec3(corrected_r.x, corrected_r.z, corrected_r.y);
+    vec3 cn = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
+
+    float maxsize = max(t_size.x, t_size.x);
+    float num_levels = log2(maxsize) + 1;
+    float mip_level = material.roughness * num_levels;
+
+    vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb;
+
+    vec3 irradiance = textureLod(environment.texture, cn, num_levels - 2.0).rgb;
+    vec3 diffuse_environment = irradiance * albedo.rgb;
+
+    vec3 ambient = (kD * diffuse_environment + specular_environment);
+
+    color = vec4(Lo.rgb + diffuse_static.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
@@ -257,13 +266,6 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-
-    float maxsize = max(t_size.x, t_size.x);
-    float num_levels = log2(maxsize) + 1;
-    float mip_level = material.roughness * num_levels;
-
-    vec3 t = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
-    color.rgb = textureLod(environment.texture, t, mip_level).rgb;
 
     //color.rgb = color.rgb / (color.rgb + vec3(1.0));
 }
