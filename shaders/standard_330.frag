@@ -8,7 +8,7 @@ struct Material {
     float roughness;
     float metallic;
     float opacity;
-    sampler2D diffuse_map;
+    sampler2D albedo_map;
     sampler2D light_map;
     sampler2D normal_map;
 };
@@ -178,7 +178,7 @@ void main() {
         normal = normalize(mix(normal, tex_normal, amount));
     }
 
-   vec4 tex_color = texture(material.diffuse_map, fragment.uv);
+   vec4 tex_color = texture(material.albedo_map, fragment.uv);
     vec4 albedo = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
     //TODO: Shouldnt it be tex_color.a * material.opacity?
     albedo = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
@@ -186,7 +186,7 @@ void main() {
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
-            vec4 decal = texture(decal_materials[i].diffuse_map, d_uv);
+            vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
             albedo.rgb = mix(albedo.rgb, decal.rgb, decal.a);
 
             vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
