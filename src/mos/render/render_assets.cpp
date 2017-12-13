@@ -16,14 +16,14 @@ RenderAssets::RenderAssets(const std::string directory) : directory_(directory) 
 
 RenderAssets::~RenderAssets() {}
 
-Model RenderAssets::model_value(const std::string & base_path, const json &value) {
+Model RenderAssets::model_value(const std::string &base_path, const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = std::string("");
   if (!value["mesh"].is_null()) {
     mesh_name = value.value("mesh", "");
   }
   std::string material_name = "";
-  if (!value["material"].is_null()){
+  if (!value["material"].is_null()) {
     material_name = value.value("material", "");
   }
 
@@ -71,8 +71,8 @@ std::shared_ptr<Mesh> RenderAssets::mesh(const std::string &path) {
 
 std::shared_ptr<Texture2D>
 RenderAssets::texture(const std::string &path,
-                       const bool mipmaps,
-                       const Texture2D::Wrap &wrap) {
+                      const bool mipmaps,
+                      const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
       textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, mipmaps, wrap)));
@@ -87,39 +87,8 @@ Material RenderAssets::material(const std::string &path) {
   if (path.empty()) {
     return Material();
   } else {
-      filesystem::path fpath = path;
-      auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
-
-      if (fpath.extension() == "material") {
-        auto value = json::parse(mos::text(directory_ + fpath.str()));
-        std::string t = "";
-        if (!value["albedo_map"].is_null()) {
-          t = value["albedo_map"];
-        }
-        auto diffuse_map = t.empty() ? texture("") : texture(base_path + t);
-
-        std::string n = "";
-        if (!value["normal_map"].is_null()) {
-          n = value["normal_map"];
-        }
-        auto normal_map = n.empty() ? texture("") : texture(base_path + n);
-
-        std::string l = "";
-        if (!value["light_map"].is_null()) {
-          l = value["light_map"];
-        }
-        auto light_map = l.empty() ? texture("") : texture(base_path + l);
-
-        auto diffuse = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
-        auto opacity = value["opacity"];
-        auto roughness = value["roughness"];
-        auto metallic = value["metallic"];
-        return Material(diffuse_map, normal_map, light_map, diffuse, opacity, roughness, metallic);
-      } else {
-        throw std::runtime_error(path.substr(path.find_last_of(".")) +
-            " file format is not supported.");
-      }
-    }
+    return Material(directory_ + path);
+  }
 }
 
 void RenderAssets::clear_unused() {
