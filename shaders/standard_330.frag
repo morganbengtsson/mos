@@ -244,8 +244,6 @@ void main() {
     float NdotL = max(dot(N, L), 0.0);
 
     vec3 Lo = (kD * albedo.rgb / PI + specular) * radiance * NdotL;
-    Lo = (kD / PI) * radiance * NdotL;
-    //Lo = (kD * albedo.rgb * radiance * NdotL) / (PI * 10.0);
 
     vec4 diffuse_static = static_light * albedo;
 
