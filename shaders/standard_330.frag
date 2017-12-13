@@ -11,6 +11,9 @@ struct Material {
     sampler2D albedo_map;
     sampler2D light_map;
     sampler2D normal_map;
+    sampler2D metallic_map;
+    sampler2D roughness_map;
+    sampler2D ambient_occlusion_map;
 };
 
 struct Light {
