@@ -74,7 +74,7 @@ uniform mat4 depth_bias_model_view_projection;
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float rand(vec2 co){
+float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
@@ -188,6 +188,9 @@ void main() {
     vec4 metallic_map_color = texture(material.metallic_map, fragment.uv);
     float metallic = mix(material.metallic, metallic_map_color.r, metallic_map_color.a);
 
+    vec4 roughness_map_color = texture(material.roughness_map, fragment.uv);
+    float roughness = mix(material.roughness, roughness_map_color.r, roughness_map_color.a);
+
     float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
 
     for (int i = 0; i < max_decals; i++){
@@ -278,14 +281,15 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
+    //color = vec4(Lo.rgb + diffuse_static + ambient, material.opacity);
+    color = vec4(Lo.rgb, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    color.rgb = mix(fog_color, color.rgb, fog_att);
+    //color.rgb = mix(fog_color, color.rgb, fog_att);
 
     //color.rgb = color.rgb / (color.rgb + vec3(1.0));
 }
