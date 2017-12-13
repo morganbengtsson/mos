@@ -82,6 +82,11 @@ public:
   SharedTexture2D normal_map;
 
   /**
+  * @brief Metallic map for the material.
+  */
+  SharedTexture2D metallic_map;
+
+  /**
   * @brief Light map for the material.
   */
   SharedTexture2D light_map;

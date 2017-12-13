@@ -30,7 +30,7 @@ Material::Material(const std::string &path) {
     albedo_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
 
     std::string n = "";
-    if (!value["_map"].is_null()) {
+    if (!value["normal_map"].is_null()) {
       n = value["normal_map"];
     }
     normal_map = Texture2D::load(fpath.parent_path().str() + "/" + n);
