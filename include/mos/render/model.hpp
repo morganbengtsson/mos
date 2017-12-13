@@ -37,14 +37,6 @@ public:
         const Material &material = Material(
             Material(glm::vec3(1.0f))));
 
-  Model(const std::string &path);
-
-  Model(const std::string &path, const json &value);
-
-  /*
-  Model(const mos::Model &model, const glm::mat4 transform);
-  */
-
   /**
    * @brief ~Model destructor
    */

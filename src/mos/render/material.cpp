@@ -19,48 +19,8 @@ Material::Material(const SharedTexture2D &albedo_map,
       metallic(metallic) {
 }
 
-Material::Material(const std::string &path) {
-  filesystem::path fpath = path;
-  if (fpath.extension() == "material") {
-    auto value = json::parse(mos::text(fpath.str()));
-    std::string t = "";
-    if (!value["albedo_map"].is_null()) {
-      t = value["albedo_map"];
-    }
-    albedo_map = Texture2D::load(fpath.parent_path().str() + "/" + t);
-
-    std::string n = "";
-    if (!value["normal_map"].is_null()) {
-      n = value["normal_map"];
-    }
-    normal_map = Texture2D::load(fpath.parent_path().str() + "/" + n);
-
-    std::string l = "";
-    if (!value["light_map"].is_null()) {
-      l = value["light_map"];
-    }
-    light_map = Texture2D::load(fpath.parent_path().str() + "/" + l);
-
-    albedo = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
-    opacity = value["opacity"];
-    roughness = value["roughness"];
-    metallic = value["metallic"];
-
-  } else {
-    throw std::runtime_error(path.substr(path.find_last_of(".")) +
-        " file format is not supported.");
-  }
-}
-
 Material::~Material() {}
 
-Material Material::load(const std::string &path) {
-  filesystem::path fpath = path;
-  if (fpath.is_directory()) {
-    return Material();
-  }
-  return Material(path);
-}
 Material::Material(const glm::vec3 &albedo,
                    const float opacity,
                    const float roughness,

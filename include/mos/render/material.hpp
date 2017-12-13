@@ -41,15 +41,7 @@ public:
                     const float roughness = 0.0f,
                     const float metallic = 0.0f);
 
-  /**
-   * @brief Material construction from *.mesh file.
-   * @param path
-   */
-  explicit Material(const std::string &path);
-
   virtual ~Material();
-
-  static Material load(const std::string &path);
 
   /**
    * @brief diffuse color.
@@ -85,6 +77,16 @@ public:
   * @brief Metallic map for the material.
   */
   SharedTexture2D metallic_map;
+
+  /**
+  * @brief Roughness map for the material.
+  */
+  SharedTexture2D roughness_map;
+
+  /**
+  * @brief Ambnient occlusion map for the material.
+  */
+  SharedTexture2D ambient_occlusion_map;
 
   /**
   * @brief Light map for the material.
