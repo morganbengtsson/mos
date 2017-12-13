@@ -30,6 +30,9 @@ public:
    */
   explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
                     const SharedTexture2D &normal_map = SharedTexture2D(),
+                    const SharedTexture2D &metallic_map = SharedTexture2D(),
+                    const SharedTexture2D &roughness_map = SharedTexture2D(),
+                    const SharedTexture2D &ambient_occlusion_map = SharedTexture2D(),
                     const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     const float opacity = 1.0f,
