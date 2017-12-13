@@ -415,6 +415,9 @@ void RenderSystem::load(const Model &model) {
   }
   load(model.material.albedo_map);
   load(model.material.normal_map);
+  load(model.material.metallic_map);
+  load(model.material.roughness_map);
+  load(model.material.ambient_occlusion_map);
   load(model.material.light_map);
 }
 
@@ -871,6 +874,30 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                     : black_texture_);
   glUniform1i(uniforms.environment_map, 8);
 
+  glActiveTexture(GL_TEXTURE9);
+  glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
+                               ? textures_[model.material.metallic_map->id()]
+                               : black_texture_);
+  glUniform1i(uniforms.material_metallic_map, 9);
+
+  glActiveTexture(GL_TEXTURE10);
+  glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
+                               ? textures_[model.material.roughness_map->id()]
+                               : black_texture_);
+  glUniform1i(uniforms.material_roughness_map, 10);
+
+  glActiveTexture(GL_TEXTURE11);
+  glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
+                               ? textures_[model.material.roughness_map->id()]
+                               : black_texture_);
+  glUniform1i(uniforms.material_roughness_map, 11);
+
+  glActiveTexture(GL_TEXTURE12);
+  glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
+                               ? textures_[model.material.ambient_occlusion_map->id()]
+                               : white_texture_);
+  glUniform1i(uniforms.material_ambient_occlusion_map, 12);
+
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
   glUniform3fv(uniforms.environment_extent, 1,
@@ -1073,15 +1100,19 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       normal_matrix(glGetUniformLocation(program, "normal_matrix")),
       depth_bias_mvp(
           glGetUniformLocation(program, "depth_bias_model_view_projection")),
+      environment_map(glGetUniformLocation(program, "environment.texture")),
+      environment_position(
+          glGetUniformLocation(program, "environment.position")),
+      environment_extent(glGetUniformLocation(program, "environment.extent")),
+
       material_albedo_map(
           glGetUniformLocation(program, "material.albedo_map")),
 
       material_light_map(glGetUniformLocation(program, "material.light_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
-      environment_map(glGetUniformLocation(program, "environment.texture")),
-      environment_position(
-          glGetUniformLocation(program, "environment.position")),
-      environment_extent(glGetUniformLocation(program, "environment.extent")),
+      material_metallic_map(glGetUniformLocation(program, "material.metallic_map")),
+      material_roughness_map(glGetUniformLocation(program, "material.roughness_map")),
+      material_ambient_occlusion_map(glGetUniformLocation(program, "material.ambient_occlusion_map")),
 
       material_albedo(glGetUniformLocation(program, "material.albedo")),
       material_roughness(
