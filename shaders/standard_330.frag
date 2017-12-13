@@ -281,8 +281,8 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    //color = vec4(Lo.rgb + diffuse_static + ambient, material.opacity);
-    color = vec4(Lo.rgb, material.opacity);
+    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
+    //color = vec4(Lo.rgb, material.opacity);
     //color.a = material.opacity + tex_color.a;
 
     //Fog

@@ -887,17 +887,12 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                                : black_texture_);
   glUniform1i(uniforms.material_roughness_map, 10);
 
-  glActiveTexture(GL_TEXTURE11);
-  glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                               ? textures_[model.material.roughness_map->id()]
-                               : black_texture_);
-  glUniform1i(uniforms.material_roughness_map, 11);
 
-  glActiveTexture(GL_TEXTURE12);
+  glActiveTexture(GL_TEXTURE11);
   glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                ? textures_[model.material.ambient_occlusion_map->id()]
                                : white_texture_);
-  glUniform1i(uniforms.material_ambient_occlusion_map, 12);
+  glUniform1i(uniforms.material_ambient_occlusion_map, 11);
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
