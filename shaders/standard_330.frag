@@ -185,6 +185,11 @@ void main() {
     //TODO: Shouldnt it be tex_color.a * material.opacity?
     albedo = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
 
+    vec4 metallic_map_color = texture(material.metallic_map, fragment.uv);
+    float metallic = mix(material.metallic, metallic_map_color.r, metallic_map_color.a);
+
+    float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
+
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
@@ -212,7 +217,7 @@ void main() {
     vec3 radiance = light.color * attenuation;
 
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, material.albedo, material.metallic);
+    F0 = mix(F0, albedo.rgb, metallic);
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
@@ -231,7 +236,7 @@ void main() {
 
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - material.metallic;
+    kD *= 1.0 - metallic;
 
     float NdotL = max(dot(N, L), 0.0);
 
@@ -263,7 +268,7 @@ void main() {
 
     vec3 kS_env = F_env;
     vec3 kD_env = 1.0 - kS_env;
-    kD_env *= 1.0 - material.metallic;
+    kD_env *= 1.0 - metallic;
 
     //Divide by PI?
     vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb / PI;
@@ -271,9 +276,9 @@ void main() {
     vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo.rgb;
 
-    vec3 ambient = (kD_env * diffuse_environment + specular_environment);
+    vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color = vec4(Lo.rgb + diffuse_static.rgb, material.opacity);
+    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
     color.a = material.opacity + tex_color.a;
 
     //Fog
