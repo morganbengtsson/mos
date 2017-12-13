@@ -244,6 +244,8 @@ void main() {
     float NdotL = max(dot(N, L), 0.0);
 
     vec3 Lo = (kD * albedo.rgb / PI + specular) * radiance * NdotL;
+    Lo = (kD / PI) * radiance * NdotL;
+    //Lo = (kD * albedo.rgb * radiance * NdotL) / (PI * 10.0);
 
     vec4 diffuse_static = static_light * albedo;
 
@@ -283,7 +285,7 @@ void main() {
 
     //color = vec4(Lo.rgb + diffuse_static + ambient, material.opacity);
     color = vec4(Lo.rgb, material.opacity);
-    color.a = material.opacity + tex_color.a;
+    //color.a = material.opacity + tex_color.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
@@ -291,5 +293,4 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     //color.rgb = mix(fog_color, color.rgb, fog_att);
 
-    //color.rgb = color.rgb / (color.rgb + vec3(1.0));
 }

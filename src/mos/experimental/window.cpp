@@ -18,10 +18,6 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   glfwSetErrorCallback(error_callback);
 
   glfwWindowHint(GLFW_SAMPLES, 8);
-  glfwWindowHint(GLFW_RED_BITS, 8);
-  glfwWindowHint(GLFW_GREEN_BITS, 8);
-  glfwWindowHint(GLFW_BLUE_BITS, 8);
-  glfwWindowHint(GLFW_ALPHA_BITS, 8);
   glfwWindowHint(GLFW_SRGB_CAPABLE, true);
   glfwWindowHint(GLFW_RESIZABLE, false);
 
