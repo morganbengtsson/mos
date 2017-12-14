@@ -259,12 +259,7 @@ private:
 
     GLint fog_color_near;
     GLint fog_color_far;
-    GLint fog_near;
-    GLint fog_far;
-    GLint fog_linear_factor;
-    GLint fog_exponential_factor;
-    GLint fog_exponential_power;
-    GLint fog_exponential_attenuation_factor;
+    GLint fog_attenuation_factor;
 
     GLint brdf_lut;
   };

@@ -40,12 +40,7 @@ struct Environment {
 struct Fog {
     vec3 color_near;
     vec3 color_far;
-    float near;
-    float far;
-    float linear_factor;
-    float exponential_factor;
-    float exponential_attenuation_factor;
-    float exponential_power;
+    float attenuation_factor;
 };
 
 struct Fragment {
@@ -79,9 +74,7 @@ float rand(vec2 co) {
 }
 
 float fog_attenuation(const float dist, const Fog fog) {
-    float linear = clamp((fog.far - dist) / (fog.far - fog.near), 0.0, 1.0) ;
-    float exponential = 1.0 / exp(pow(dist * fog.exponential_attenuation_factor, fog.exponential_power));
-    return linear * fog.linear_factor + exponential * fog.exponential_factor;
+    return 1.0 / exp(pow(dist * fog.attenuation_factor, 2.0));
 }
 
 vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
@@ -281,5 +274,4 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
-
 }

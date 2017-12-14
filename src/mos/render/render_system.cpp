@@ -966,13 +966,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
   glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
   glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
-  glUniform1fv(uniforms.fog_near, 1, &fog.near);
-  glUniform1fv(uniforms.fog_far, 1, &fog.far);
-  glUniform1fv(uniforms.fog_linear_factor, 1, &fog.linear_factor);
-  glUniform1fv(uniforms.fog_exponential_factor, 1, &fog.exponential_factor);
-  glUniform1fv(uniforms.fog_exponential_power, 1, &fog.exponential_power);
-  glUniform1fv(uniforms.fog_exponential_attenuation_factor, 1,
-               &fog.exponential_attenuation_factor);
+  glUniform1fv(uniforms.fog_attenuation_factor, 1,
+               &fog.attenuation_factor);
 
   const int num_elements = model.mesh ? model.mesh->elements_size() : 0;
   int draw_type = GL_TRIANGLES;
@@ -1149,15 +1144,8 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
 
       fog_color_near(glGetUniformLocation(program, "fog.color_near")),
       fog_color_far(glGetUniformLocation(program, "fog.color_far")),
-      fog_near(glGetUniformLocation(program, "fog.near")),
-      fog_far(glGetUniformLocation(program, "fog.far")),
-      fog_linear_factor(glGetUniformLocation(program, "fog.linear_factor")),
-      fog_exponential_factor(
-          glGetUniformLocation(program, "fog.exponential_factor")),
-      fog_exponential_power(
-          glGetUniformLocation(program, "fog.exponential_power")),
-      fog_exponential_attenuation_factor(
-          glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
+      fog_attenuation_factor(
+          glGetUniformLocation(program, "fog.attenuation_factor")),
       brdf_lut(
           glGetUniformLocation(program, "brdf_lut")){
 
