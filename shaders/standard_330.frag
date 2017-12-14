@@ -234,9 +234,9 @@ void main() {
     float G = geometry_smith(N, V, L, material.roughness);
     vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
-    vec3 nominator = NDF * G * F;
-    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-    vec3 specular = nominator / max(denominator, 0.001); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
+    vec3 nominator    = NDF * G * F;
+    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+    vec3 specular = nominator / denominator;
 
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
@@ -291,7 +291,8 @@ void main() {
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    color.rgb = mix(fog_color, color.rgb, fog_att);
+    //color.rgb = mix(fog_color, color.rgb, fog_att);
+
 
 
 }
