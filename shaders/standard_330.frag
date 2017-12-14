@@ -268,7 +268,7 @@ void main() {
     float num_levels = log2(maxsize) + 1;
     float mip_level = material.roughness * num_levels * 3.0;
 
-    vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, material.roughness);
+    vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
 
     vec3 kS_env = F_env;
     vec3 kD_env = 1.0 - kS_env;
@@ -291,5 +291,4 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 
-    //color.rgb = specular_environment;
 }
