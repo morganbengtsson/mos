@@ -58,7 +58,7 @@ public:
           const Wrap &wrap = Wrap::REPEAT,
           const bool mipmaps = true);
 
-  Texture(const std::initializer_list<std::string> &paths, const Format &format,
+  Texture(const std::initializer_list<std::string> &paths,
           const Wrap &wrap, const bool mipmaps);
 
   int id() const;

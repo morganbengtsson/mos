@@ -18,5 +18,5 @@ SharedTexture2D Texture2D::load(const std::string &path, const bool mipmaps, con
 }
 
 Texture2D::Texture2D(const std::string &path, const bool mipmaps, const Texture2D::Wrap &wrap)
-    : Texture({path}, Format::SRGBA, wrap, mipmaps) {}
+    : Texture({path}, wrap, mipmaps) {}
 }

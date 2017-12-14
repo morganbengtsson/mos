@@ -13,7 +13,6 @@ TextureCube::TextureCube(const std::string &positive_x_path,
                          const Wrap &wrap) : Texture({positive_x_path, negative_x_path,
                                                       positive_y_path, negative_y_path,
                                                       positive_z_path, negative_z_path},
-                                                     Format::SRGBA,
                                                      wrap,
                                                      mipmaps) {}
 
