@@ -318,9 +318,13 @@ private:
   GLuint box_ebo;
   GLuint box_va;
 
+  struct FormatPair{
+    GLuint internal_format;
+    GLuint format;
+  };
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
-  std::map<Texture::Format, GLuint> format_map_;
+  std::map<Texture::Format, FormatPair> format_map_;
 };
 
 }

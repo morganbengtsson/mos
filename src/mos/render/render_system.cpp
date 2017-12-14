@@ -21,25 +21,25 @@ namespace mos {
 
 RenderSystem::RenderSystem(const glm::vec4 &color):
   format_map_{
-      {Texture::Format::R, GL_RED},
-      {Texture::Format::RG, GL_RG},
-      {Texture::Format::SRGB, GL_SRGB},
-      {Texture::Format::SRGBA, GL_SRGB_ALPHA},
-      {Texture::Format::RGB, GL_RGB},
-      {Texture::Format::RGBA, GL_RGBA},
-      {Texture::Format::DEPTH, GL_DEPTH_COMPONENT},
-      {Texture::Format::COMPRESSED_SRGB, GL_COMPRESSED_SRGB},
-      {Texture::Format::COMPRESSED_SRGBA, GL_COMPRESSED_SRGB_ALPHA},
-      {Texture::Format::COMPRESSED_RGB, GL_COMPRESSED_RGB},
-      {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA},
-      {Texture::Format::R16F, GL_R16F},
-      {Texture::Format::RG16F, GL_RG16F},
-      {Texture::Format::RGB16F, GL_RGB16F},
-      {Texture::Format::RGBA16F, GL_RGBA16F},
-      {Texture::Format::R32F, GL_R32F},
-      {Texture::Format::RG32F, GL_RG32F},
-      {Texture::Format::RGB32F, GL_RGB32F},
-      {Texture::Format::RGBA32F, GL_RGBA32F}},
+      {Texture::Format::R, {GL_RED, GL_RED}},
+      {Texture::Format::RG, {GL_RG, GL_RG}},
+      {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
+      {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
+      {Texture::Format::RGB, {GL_RGB, GL_RGB}},
+      {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}},
+      {Texture::Format::DEPTH, {GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT}},
+      {Texture::Format::COMPRESSED_SRGB, {GL_COMPRESSED_SRGB, GL_RGB}},
+      {Texture::Format::COMPRESSED_SRGBA, {GL_COMPRESSED_SRGB_ALPHA, GL_RGBA}},
+      {Texture::Format::COMPRESSED_RGB, {GL_COMPRESSED_RGB, GL_RGB}},
+      {Texture::Format::COMPRESSED_RGBA, {GL_COMPRESSED_RGBA, GL_RGBA}},
+      {Texture::Format::R16F, {GL_R16F, GL_R}},
+      {Texture::Format::RG16F, {GL_RG16F, GL_RG}},
+      {Texture::Format::RGB16F, {GL_RGB16F, GL_RGB}},
+      {Texture::Format::RGBA16F, {GL_RGBA16F, GL_RGBA}},
+      {Texture::Format::R32F, {GL_R32F, GL_R}},
+      {Texture::Format::RG32F, {GL_RG32F, GL_RG}},
+      {Texture::Format::RGB32F, {GL_RGB32F, GL_RGB}},
+      {Texture::Format::RGBA32F, {GL_RGBA32F, GL_RGBA}}},
   wrap_map_{
       {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
@@ -607,10 +607,9 @@ unsigned int RenderSystem::create_texture(const Texture2D &texture) {
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               format_map_[texture.format],
+               format_map_[texture.format].internal_format,
                texture.width(), texture.height(), 0,
-               texture.format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT
-                                                         : GL_RGBA,
+               format_map_[texture.format].format,
                GL_UNSIGNED_BYTE, texture.data());
 
   if (texture.mipmaps) {
@@ -643,8 +642,8 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 format_map_[texture->format],
-                 texture->width(), texture->height(), 0, GL_RGBA,
+                 format_map_[texture->format].internal_format,
+                 texture->width(), texture->height(), 0, format_map_[texture->format].format,
                  GL_UNSIGNED_BYTE, texture->data(i));
   }
   if (texture->mipmaps) {
