@@ -166,8 +166,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   glGenTextures(1, &black_texture_);
   glBindTexture(GL_TEXTURE_2D, black_texture_);
 
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -179,8 +179,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   glGenTextures(1, &white_texture_);
   glBindTexture(GL_TEXTURE_2D, white_texture_);
 
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -188,6 +188,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color) {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                data_white.data());
   glBindTexture(GL_TEXTURE_2D, 0);
+
+  auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
+  load(brdf_lut_texture);
 }
 
 RenderSystem::~RenderSystem() {
@@ -453,6 +456,8 @@ void RenderSystem::load(const SharedTextureCube &texture) {
     }
   }
 }
+
+
 void RenderSystem::unload(const SharedTextureCube &texture) {
   if (texture) {
     if (texture_cubes_.find(texture->id()) != textures_.end()) {
@@ -460,6 +465,13 @@ void RenderSystem::unload(const SharedTextureCube &texture) {
       glDeleteTextures(1, &gl_id);
       texture_cubes_.erase(texture->id());
     }
+  }
+}
+
+void RenderSystem::load(const Texture2D &texture) {
+  if (textures_.find(texture.id()) == textures_.end()) {
+    GLuint gl_id = create_texture(texture);
+    textures_.insert({texture.id(), gl_id});
   }
 }
 
@@ -471,10 +483,7 @@ void RenderSystem::load(const SharedTexture2D &texture) {
   }
 #else
   if (texture) {
-    if (textures_.find(texture->id()) == textures_.end()) {
-      GLuint gl_id = create_texture(texture);
-      textures_.insert({texture->id(), gl_id});
-    }
+    load(*texture);
   }
 #endif
 }
@@ -574,20 +583,20 @@ bool RenderSystem::check_program(const unsigned int program) {
   return true;
 }
 
-unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
+unsigned int RenderSystem::create_texture(const Texture2D &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
 
-  GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-  if (texture->format == Texture::Format::DEPTH) {
+  GLfloat sampling = texture.mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+  if (texture.format == Texture::Format::DEPTH) {
     sampling = GL_LINEAR;
   }
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map[texture->wrap]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map[texture->wrap]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map[texture.wrap]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map[texture.wrap]);
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
@@ -596,17 +605,21 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               format_map[texture->format],
-               texture->width(), texture->height(), 0,
-               texture->format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT
+               format_map[texture.format],
+               texture.width(), texture.height(), 0,
+               texture.format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT
                                                          : GL_RGBA,
-               GL_UNSIGNED_BYTE, texture->data());
+               GL_UNSIGNED_BYTE, texture.data());
 
-  if (texture->mipmaps) {
+  if (texture.mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
   };
   glBindTexture(GL_TEXTURE_2D, 0);
   return id;
+}
+
+unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
+  return create_texture(*texture);
 }
 
 unsigned int
@@ -1086,6 +1099,7 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
                glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(

@@ -62,6 +62,8 @@ public:
    */
   void load(const SharedTexture2D &texture);
 
+  void load(const Texture2D &texture);
+
   /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
@@ -286,6 +288,7 @@ private:
   bool check_program(const unsigned int program);
 
   unsigned int create_texture(const SharedTexture2D &texture);
+  unsigned int create_texture(const Texture2D &texture);
 
   unsigned int create_texture_cube(const SharedTextureCube &texture);
 
@@ -313,6 +316,7 @@ private:
 
   GLuint black_texture_;
   GLuint white_texture_;
+  GLuint brdf_lut_texture_;
   GLuint box_vbo;
   GLuint box_ebo;
   GLuint box_va;
