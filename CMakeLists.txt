@@ -24,6 +24,9 @@ file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINAR
 #Copy shader files to assets
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
 
+#Copy brdf LUT etc
+file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
+
 # GLEW
 set(glew-cmake_BUILD_SHARED OFF)
 add_subdirectory(externals/glew-cmake)
