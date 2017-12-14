@@ -70,6 +70,7 @@ uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
 uniform mat4 depth_bias_model_view_projection;
+uniform sampler2D brdf_lut;
 
 in Fragment fragment;
 layout(location = 0) out vec4 color;
@@ -290,5 +291,6 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     //color.rgb = mix(fog_color, color.rgb, fog_att);
+    color.rgb = texture(brdf_lut, vec2(0.5, 0.5)).rgb;
 
 }

@@ -37,7 +37,7 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
   for (auto &path : paths) {
     int bpp;
     unsigned char * pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, STBI_rgb_alpha);
-    layers_.push_back(Data(pixels, pixels + (width_ * height_ * 4)));
+    layers_.push_back(Data(pixels, pixels + (width_ * height_ * bpp)));
   }
 }
 

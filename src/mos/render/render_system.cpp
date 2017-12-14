@@ -189,7 +189,8 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
   glBindTexture(GL_TEXTURE_2D, 0);
 
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
-  load(brdf_lut_texture);
+  brdf_lut_texture.format = Texture::Format::RGB;
+  brdf_lut_texture_ = create_texture(brdf_lut_texture);
 }
 
 RenderSystem::~RenderSystem() {
@@ -908,6 +909,10 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                                : white_texture_);
   glUniform1i(uniforms.material_ambient_occlusion_map, 11);
 
+  glActiveTexture(GL_TEXTURE12);
+  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
+  glUniform1i(uniforms.brdf_lut, 12);
+
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
   glUniform3fv(uniforms.environment_extent, 1,
@@ -1152,7 +1157,9 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       fog_exponential_power(
           glGetUniformLocation(program, "fog.exponential_power")),
       fog_exponential_attenuation_factor(
-          glGetUniformLocation(program, "fog.exponential_attenuation_factor")) {
+          glGetUniformLocation(program, "fog.exponential_attenuation_factor")),
+      brdf_lut(
+          glGetUniformLocation(program, "brdf_lut")){
 
   for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
     auto decals_uniform_name =

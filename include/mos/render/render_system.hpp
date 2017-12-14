@@ -265,6 +265,8 @@ private:
     GLint fog_exponential_factor;
     GLint fog_exponential_power;
     GLint fog_exponential_attenuation_factor;
+
+    GLint brdf_lut;
   };
 
   using VertexProgramPair = std::pair<RenderScene::Shader, VertexProgramData>;
