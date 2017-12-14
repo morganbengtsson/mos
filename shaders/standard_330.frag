@@ -274,8 +274,9 @@ void main() {
     vec3 kD_env = 1.0 - kS_env;
     kD_env *= 1.0 - metallic;
 
-    //Divide by PI?
-    vec3 specular_environment = textureLod(environment.texture, cr, mip_level).rgb / PI;
+    vec3 filtered = textureLod(environment.texture, cr, mip_level).rgb;
+    vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y);
 
     vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo.rgb;
@@ -290,7 +291,7 @@ void main() {
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    //color.rgb = mix(fog_color, color.rgb, fog_att);
-    color.rgb = texture(brdf_lut, vec2(0.5, 0.5)).rgb;
+    color.rgb = mix(fog_color, color.rgb, fog_att);
+
 
 }
