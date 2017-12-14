@@ -65,7 +65,6 @@ uniform Material decal_materials[max_decals];
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
-//uniform sampler2D shadow_map;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
@@ -167,9 +166,6 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
 {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
-
-
-
 
 void main() {
 
