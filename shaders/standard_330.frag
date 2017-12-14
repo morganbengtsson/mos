@@ -180,21 +180,6 @@ void main() {
     vec3 tex_normal = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
 
-    vec3 tangentNormal = texture(material.normal_map, fragment.uv).xyz * 2.0 - 1.0;
-
-    vec3 Q1  = dFdx(fragment.position);
-    vec3 Q2  = dFdy(fragment.position);
-    vec2 st1 = dFdx(fragment.uv);
-    vec2 st2 = dFdy(fragment.uv);
-
-    vec3 N2   = normalize(fragment.normal);
-    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
-    vec3 B  = -normalize(cross(N2, T));
-    mat3 TBN = mat3(T, B, N2);
-
-    tex_normal =  normalize(TBN * tangentNormal);
-
-
     float amount = texture(material.normal_map, fragment.uv).a;
     if (amount > 0.0f){
         normal = normalize(mix(normal, tex_normal, amount));
