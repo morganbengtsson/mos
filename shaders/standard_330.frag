@@ -169,6 +169,8 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
+
+
 void main() {
 
     vec3 static_light = texture(material.light_map, fragment.light_map_uv).rgb;
@@ -177,10 +179,27 @@ void main() {
 
     vec3 tex_normal = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
     tex_normal = normalize(fragment.tbn * tex_normal);
+
+    vec3 tangentNormal = texture(material.normal_map, fragment.uv).xyz * 2.0 - 1.0;
+
+    vec3 Q1  = dFdx(fragment.position);
+    vec3 Q2  = dFdy(fragment.position);
+    vec2 st1 = dFdx(fragment.uv);
+    vec2 st2 = dFdy(fragment.uv);
+
+    vec3 N2   = normalize(fragment.normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N2, T));
+    mat3 TBN = mat3(T, B, N2);
+
+    tex_normal =  normalize(TBN * tangentNormal);
+
+
     float amount = texture(material.normal_map, fragment.uv).a;
     if (amount > 0.0f){
         normal = normalize(mix(normal, tex_normal, amount));
     }
+
     vec4 tex_color = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a);
 
@@ -207,12 +226,10 @@ void main() {
         }
     }
 
-    vec3 surface_to_light = normalize(light.position - fragment.position); // TODO: Do in vertex shader ?
-    float diffuse_contribution = max(dot(normal, surface_to_light), 0.0); // NdotL
-    diffuse_contribution = clamp(diffuse_contribution, 0.0, 1.0);
+    vec3 surface_to_light = normalize(light.position - fragment.position);
 
-    float cosDir = dot(surface_to_light, -light.direction);
-    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cosDir);
+    float cos_dir = dot(surface_to_light, -light.direction);
+    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
@@ -277,20 +294,16 @@ void main() {
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y);
 
     vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
-    vec3 diffuse_environment = irradiance * albedo.rgb;
+    vec3 diffuse_environment = irradiance * albedo;
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
     color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
-    //color = vec4(Lo.rgb, material.opacity);
-    //color.a = material.opacity + tex_color.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    //color.rgb = mix(fog_color, color.rgb, fog_att);
-
-
+    color.rgb = mix(fog_color, color.rgb, fog_att);
 
 }
