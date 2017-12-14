@@ -20,7 +20,7 @@
 
 namespace mos {
 
-static std::map<Texture::Format, GLuint> format_map{
+std::map<Texture::Format, GLuint> RenderSystem::format_map_{
     {Texture::Format::R, GL_RED},
     {Texture::Format::RG, GL_RG},
     {Texture::Format::SRGB, GL_SRGB},
@@ -41,12 +41,38 @@ static std::map<Texture::Format, GLuint> format_map{
     {Texture::Format::RGB32F, GL_RGB32F},
     {Texture::Format::RGBA32F, GL_RGBA32F}};
 
-static std::map<Texture::Wrap, GLuint> wrap_map{
+std::map<Texture::Wrap, GLuint> RenderSystem::wrap_map_{
     {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
     {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
     {Texture::Wrap::REPEAT, GL_REPEAT}};
 
-RenderSystem::RenderSystem(const glm::vec4 &color) {
+RenderSystem::RenderSystem(const glm::vec4 &color){
+  format_map_ = {
+      {Texture::Format::R, GL_RED},
+      {Texture::Format::RG, GL_RG},
+      {Texture::Format::SRGB, GL_SRGB},
+      {Texture::Format::SRGBA, GL_SRGB_ALPHA},
+      {Texture::Format::RGB, GL_RGB},
+      {Texture::Format::RGBA, GL_RGBA},
+      {Texture::Format::DEPTH, GL_DEPTH_COMPONENT},
+      {Texture::Format::COMPRESSED_SRGB, GL_COMPRESSED_SRGB},
+      {Texture::Format::COMPRESSED_SRGBA, GL_COMPRESSED_SRGB_ALPHA},
+      {Texture::Format::COMPRESSED_RGB, GL_COMPRESSED_RGB},
+      {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA},
+      {Texture::Format::R16F, GL_R16F},
+      {Texture::Format::RG16F, GL_RG16F},
+      {Texture::Format::RGB16F, GL_RGB16F},
+      {Texture::Format::RGBA16F, GL_RGBA16F},
+      {Texture::Format::R32F, GL_R32F},
+      {Texture::Format::RG32F, GL_RG32F},
+      {Texture::Format::RGB32F, GL_RGB32F},
+      {Texture::Format::RGBA32F, GL_RGBA32F}};
+
+  wrap_map_ = {
+      {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
+      {Texture::Wrap::REPEAT, GL_REPEAT}};
+
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
 
@@ -595,8 +621,10 @@ unsigned int RenderSystem::create_texture(const Texture2D &texture) {
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map[texture.wrap]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map[texture.wrap]);
+
+  std::cout << wrap_map_.size() << std::endl;
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
     float aniso = 0.0f;
     glBindTexture(GL_TEXTURE_2D, id);
@@ -605,7 +633,7 @@ unsigned int RenderSystem::create_texture(const Texture2D &texture) {
   }
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               format_map[texture.format],
+               format_map_[texture.format],
                texture.width(), texture.height(), 0,
                texture.format == Texture::Format::DEPTH ? GL_DEPTH_COMPONENT
                                                          : GL_RGBA,
@@ -633,15 +661,15 @@ RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                  wrap_map[texture->wrap]);
+                  wrap_map_[texture->wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                  wrap_map[texture->wrap]);
+                  wrap_map_[texture->wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                  wrap_map[texture->wrap]);
+                  wrap_map_[texture->wrap]);
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 format_map[texture->format],
+                 format_map_[texture->format],
                  texture->width(), texture->height(), 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, texture->data(i));
   }
