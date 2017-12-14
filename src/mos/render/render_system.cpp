@@ -16,38 +16,11 @@
 #include <mos/render/model.hpp>
 #include <mos/render/render_system.hpp>
 #include <mos/util.hpp>
-#include <vector>
 
 namespace mos {
 
-std::map<Texture::Format, GLuint> RenderSystem::format_map_{
-    {Texture::Format::R, GL_RED},
-    {Texture::Format::RG, GL_RG},
-    {Texture::Format::SRGB, GL_SRGB},
-    {Texture::Format::SRGBA, GL_SRGB_ALPHA},
-    {Texture::Format::RGB, GL_RGB},
-    {Texture::Format::RGBA, GL_RGBA},
-    {Texture::Format::DEPTH, GL_DEPTH_COMPONENT},
-    {Texture::Format::COMPRESSED_SRGB, GL_COMPRESSED_SRGB},
-    {Texture::Format::COMPRESSED_SRGBA, GL_COMPRESSED_SRGB_ALPHA},
-    {Texture::Format::COMPRESSED_RGB, GL_COMPRESSED_RGB},
-    {Texture::Format::COMPRESSED_RGBA, GL_COMPRESSED_RGBA},
-    {Texture::Format::R16F, GL_R16F},
-    {Texture::Format::RG16F, GL_RG16F},
-    {Texture::Format::RGB16F, GL_RGB16F},
-    {Texture::Format::RGBA16F, GL_RGBA16F},
-    {Texture::Format::R32F, GL_R32F},
-    {Texture::Format::RG32F, GL_RG32F},
-    {Texture::Format::RGB32F, GL_RGB32F},
-    {Texture::Format::RGBA32F, GL_RGBA32F}};
-
-std::map<Texture::Wrap, GLuint> RenderSystem::wrap_map_{
-    {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-    {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-    {Texture::Wrap::REPEAT, GL_REPEAT}};
-
-RenderSystem::RenderSystem(const glm::vec4 &color){
-  format_map_ = {
+RenderSystem::RenderSystem(const glm::vec4 &color):
+  format_map_{
       {Texture::Format::R, GL_RED},
       {Texture::Format::RG, GL_RG},
       {Texture::Format::SRGB, GL_SRGB},
@@ -66,12 +39,12 @@ RenderSystem::RenderSystem(const glm::vec4 &color){
       {Texture::Format::R32F, GL_R32F},
       {Texture::Format::RG32F, GL_RG32F},
       {Texture::Format::RGB32F, GL_RGB32F},
-      {Texture::Format::RGBA32F, GL_RGBA32F}};
-
-  wrap_map_ = {
+      {Texture::Format::RGBA32F, GL_RGBA32F}},
+  wrap_map_{
       {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture::Wrap::REPEAT, GL_REPEAT}};
+      {Texture::Wrap::REPEAT, GL_REPEAT}} {
+
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();

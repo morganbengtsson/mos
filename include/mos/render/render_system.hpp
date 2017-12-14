@@ -321,8 +321,9 @@ private:
   GLuint box_ebo;
   GLuint box_va;
 
-  static std::map<Texture::Wrap, GLuint> wrap_map_;
-  static std::map<Texture::Format, GLuint> format_map_;
+  //TODO: Static though, be aware initialization problem.
+  std::map<Texture::Wrap, GLuint> wrap_map_;
+  std::map<Texture::Format, GLuint> format_map_;
 };
 
 }
