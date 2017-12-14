@@ -171,7 +171,7 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
 
 void main() {
 
-    vec4 static_light = texture(material.light_map, fragment.light_map_uv);
+    vec3 static_light = texture(material.light_map, fragment.light_map_uv).rgb;
 
     vec3 normal = fragment.normal;
 
@@ -182,9 +182,7 @@ void main() {
         normal = normalize(mix(normal, tex_normal, amount));
     }
     vec4 tex_color = texture(material.albedo_map, fragment.uv);
-    vec4 albedo = vec4(1.0, 0.0, 1.0, 1.0); // Rename to albedo?
-    //TODO: Shouldnt it be tex_color.a * material.opacity?
-    albedo = vec4(mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a), 1.0);
+    vec3 albedo = mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a);
 
     vec4 metallic_map_color = texture(material.metallic_map, fragment.uv);
     float metallic = mix(material.metallic, metallic_map_color.r, metallic_map_color.a);
@@ -246,7 +244,7 @@ void main() {
 
     vec3 Lo = (kD * albedo.rgb / PI + specular) * radiance * NdotL;
 
-    vec4 diffuse_static = static_light * albedo;
+    vec3 diffuse_static = static_light * albedo;
 
     Lo.rgb *= spot_effect;
 
