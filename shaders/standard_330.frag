@@ -173,25 +173,26 @@ void main() {
 
     vec3 normal = fragment.normal;
 
-    vec3 tex_normal = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
-    tex_normal = normalize(fragment.tbn * tex_normal);
+    vec3 normal_from_map = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
+    normal_from_map = normalize(fragment.tbn * normal_from_map);
 
     float amount = texture(material.normal_map, fragment.uv).a;
     if (amount > 0.0f){
-        normal = normalize(mix(normal, tex_normal, amount));
+        normal = normalize(mix(normal, normal_from_map, amount));
     }
 
-    vec4 tex_color = texture(material.albedo_map, fragment.uv);
-    vec3 albedo = mix(material.albedo * material.opacity, tex_color.rgb, tex_color.a);
+    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
+    vec3 albedo = mix(material.albedo * material.opacity, albedo_from_map.rgb, albedo_from_map.a);
 
-    vec4 metallic_map_color = texture(material.metallic_map, fragment.uv);
-    float metallic = mix(material.metallic, metallic_map_color.r, metallic_map_color.a);
+    vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
+    float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
 
-    vec4 roughness_map_color = texture(material.roughness_map, fragment.uv);
-    float roughness = mix(material.roughness, roughness_map_color.r, roughness_map_color.a);
+    vec4 roughnesss_from_map = texture(material.roughness_map, fragment.uv);
+    float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
 
     float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
 
+    //TODO: Function
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
@@ -207,21 +208,17 @@ void main() {
         }
     }
 
-    vec3 surface_to_light = normalize(light.position - fragment.position);
-
-    float cos_dir = dot(surface_to_light, -light.direction);
-    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+    vec3 diffuse_static = static_light * albedo;
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
     vec3 radiance = light.color * attenuation;
 
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo.rgb, metallic);
+    F0 = mix(F0, albedo, metallic);
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
-
     vec3 L = normalize(light.position - fragment.position);
     vec3 H = normalize(V + L);
 
@@ -240,41 +237,39 @@ void main() {
 
     float NdotL = max(dot(N, L), 0.0);
 
-    vec3 Lo = (kD * albedo.rgb / PI + specular) * radiance * NdotL;
+    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL;
 
-    vec3 diffuse_static = static_light * albedo;
-
+    float cos_dir = dot(L, -light.direction);
+    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
     Lo.rgb *= spot_effect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-    float current_depth = shadow_map_uv.z;
-    float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, current_depth);
+    float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, shadow_map_uv.z);
 
     Lo.rgb *= shadow;
 
-    vec2 t_size = textureSize(environment.texture, 0);
+    vec2 environment_texture_size = textureSize(environment.texture, 0);
     vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
-    vec3 cr = vec3(corrected_r.x, corrected_r.z, corrected_r.y);
-    vec3 cn = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
+    vec3 cube_r = vec3(corrected_r.x, corrected_r.z, corrected_r.y);
+    vec3 cube_n = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
 
-    float maxsize = max(t_size.x, t_size.x);
+    float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = log2(maxsize) + 1;
     float mip_level = material.roughness * num_levels * 3.0;
 
     vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
-
     vec3 kS_env = F_env;
     vec3 kD_env = 1.0 - kS_env;
     kD_env *= 1.0 - metallic;
 
-    vec3 filtered = textureLod(environment.texture, cr, mip_level).rgb;
+    vec3 filtered = textureLod(environment.texture, cube_r, mip_level).rgb;
     vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y);
 
-    vec3 irradiance = textureLod(environment.texture, cn, 20.0).rgb;
+    vec3 irradiance = textureLod(environment.texture, cube_n, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo;
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
