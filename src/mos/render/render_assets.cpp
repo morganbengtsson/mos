@@ -105,7 +105,7 @@ Material RenderAssets::material(const std::string &path) {
       auto diffuse_map = read_texture("albedo_map");
       auto normal_map = read_texture("normal_map");
       if (normal_map) {
-        normal_map->format = Texture::Format::RGB;
+        normal_map->format = Texture::Format::RGBA;
       }
       auto light_map = read_texture("light_map");
       auto metallic_map = read_texture("metallic_map");
