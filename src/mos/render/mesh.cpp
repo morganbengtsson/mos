@@ -2,7 +2,9 @@
 #include <mos/render/mesh.hpp>
 #include <mos/util.hpp>
 #include <glm/gtx/normal.hpp>
+#include <glm/gtx/io.hpp>
 #include <algorithm>
+#include <glm/gtx/io.hpp>
 
 namespace mos {
 
@@ -38,7 +40,6 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
     elements_.assign(elements.begin(), elements.end());
 
     calculate_tangents();
-
   } else {
     throw std::runtime_error("File extension not supported.");
   }

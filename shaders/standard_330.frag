@@ -48,10 +48,10 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
+    mat3 tbn;
     vec4 proj_coords[max_decals];
     vec4 proj_shadow;
     vec3 camera_to_surface;
-    mat3 tbn;
 };
 
 uniform Material material;
@@ -166,13 +166,29 @@ void main() {
 
     vec3 normal = fragment.normal;
 
-    vec3 normal_from_map = normalize(texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0));
+    vec3 normal_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
     normal_from_map = normalize(fragment.tbn * normal_from_map);
 
     float amount = texture(material.normal_map, fragment.uv).a;
     if (amount > 0.0f){
         normal = normalize(mix(normal, normal_from_map, amount));
     }
+
+    /*
+    vec3 tangentNormal = texture(material.normal_map, fragment.uv).xyz * 2.0 - 1.0;
+
+    vec3 Q1  = dFdx(fragment.position);
+    vec3 Q2  = dFdy(fragment.position);
+    vec2 st1 = dFdx(fragment.uv);
+    vec2 st2 = dFdy(fragment.uv);
+
+    vec3 N2   = normalize(fragment.normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N2, T));
+    mat3 TBN = mat3(T, B, N2);
+    */
+
+    //normal = normalize(TBN * tangentNormal);
 
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo * material.opacity, albedo_from_map.rgb, albedo_from_map.a);
@@ -186,6 +202,7 @@ void main() {
     float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
 
     //TODO: Function
+    /*
     for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
@@ -199,7 +216,7 @@ void main() {
                 normal = normalize(mix(normal, decal_normal, amount));
             }
         }
-    }
+    }*/
 
     vec3 diffuse_static = static_light * albedo;
 
@@ -267,7 +284,8 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color = vec4(Lo.rgb + diffuse_static.rgb + ambient, material.opacity);
+    color.rgb = Lo + diffuse_static + ambient;
+    color.a = material.opacity;
 
     //Fog
     float distance = distance(fragment.position, camera.position);

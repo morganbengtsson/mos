@@ -7,10 +7,10 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     vec2 light_map_uv;
+    mat3 tbn;
     vec4 proj_coords[max_decals];
     vec4 proj_shadow;
     vec3 camera_to_surface;
-    mat3 tbn;
 };
 
 struct Camera {
@@ -52,10 +52,11 @@ void main() {
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.proj_shadow = pos_ls;
 
+    /*
     for (int i = 0; i < max_decals; i++){
         vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
         fragment.proj_coords[i] = pos_d;
-    }
+    }*/
 
     fragment.uv = uv;
     fragment.light_map_uv = light_map_uv;
