@@ -227,6 +227,7 @@ public:
   void apply_transform(const glm::mat4 &transform);
 
   void calculate_normals();
+  void calculate_tangents();
 
 private:
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);

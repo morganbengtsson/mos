@@ -15,7 +15,7 @@ public:
   /**
    * @brief Environment constructor.
    * @param texture Is the environment texture.
-   * @param box Describes how big the environment is. For normal correction.
+   * @param box Describes how big the environment is, for parallax correction.
    */
   EnvironmentLight(const SharedTextureCube & texture = nullptr,
               const RenderBox &box = RenderBox(glm::vec3(0.0f), glm::vec3(50.0f)));
