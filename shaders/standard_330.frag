@@ -197,7 +197,7 @@ void main() {
     float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
 
     vec4 roughnesss_from_map = texture(material.roughness_map, fragment.uv);
-    float roughness = mix(material.roughness, roughnesss_from_map.r, 1.0);
+    float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
 
     float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
 
@@ -268,7 +268,7 @@ void main() {
 
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = log2(maxsize) + 1;
-    float mip_level = material.roughness * num_levels * 3.0;
+    float mip_level = roughness * num_levels * 3.0;
 
     vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
     vec3 kS_env = F_env;
@@ -292,4 +292,5 @@ void main() {
     float fog_att = fog_attenuation(distance, fog);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
+
 }
