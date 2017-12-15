@@ -2,6 +2,7 @@
 #include <stdexcept>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <map>
 
 namespace mos {
 std::atomic_uint Texture::current_id_;
@@ -37,18 +38,8 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
     int bpp;
     unsigned char * pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, 0);
     layers_.push_back(Data(pixels, pixels + (width_ * height_ * bpp)));
-    if (bpp == 1){
-      format = Format::R;
-    }
-    if (bpp == 2){
-      format = Format::RG;
-    }
-    if(bpp == 3){
-      format = Format::SRGB;
-    }
-    else {
-      format = Format::SRGBA;
-    }
+    std::map<int, Format> bpp_map{{1, Format::R}, {2, Format::RG}, {3, Format::SRGB}, {4, Format::SRGBA}};
+    format = bpp_map[bpp];
   }
 }
 
