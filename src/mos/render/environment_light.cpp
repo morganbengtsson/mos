@@ -2,7 +2,10 @@
 
 namespace mos {
 
-EnvironmentLight::EnvironmentLight(const SharedTextureCube &texture, const RenderBox &box) : texture(texture), box(box) {
+EnvironmentLight::EnvironmentLight(const SharedTextureCube &texture,
+                                   const RenderBox &box,
+                                   const float strength)
+    : texture(texture), box(box), strength(strength) {
 }
 
 }

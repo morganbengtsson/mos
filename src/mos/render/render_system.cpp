@@ -916,6 +916,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                glm::value_ptr(environment.box.position));
   glUniform3fv(uniforms.environment_extent, 1,
                glm::value_ptr(environment.box.extent));
+  glUniform1fv(uniforms.environment_strength, 1,
+               &environment.strength);
 
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
@@ -1114,6 +1116,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       environment_position(
           glGetUniformLocation(program, "environment.position")),
       environment_extent(glGetUniformLocation(program, "environment.extent")),
+      environment_strength(glGetUniformLocation(program, "environment.strength")),
 
       material_albedo_map(
           glGetUniformLocation(program, "material.albedo_map")),

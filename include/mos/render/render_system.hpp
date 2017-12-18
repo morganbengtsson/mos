@@ -234,6 +234,7 @@ private:
     GLint environment_map;
     GLint environment_position;
     GLint environment_extent;
+    GLint environment_strength;
 
     GLint material_albedo_map;
     GLint material_light_map;

@@ -34,6 +34,7 @@ struct Camera {
 struct Environment {
     vec3 position;
     vec3 extent;
+    float strength;
     samplerCube texture;
 };
 
@@ -277,10 +278,10 @@ void main() {
 
     vec3 filtered = textureLod(environment.texture, cube_r, mip_level).rgb;
     vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
-    vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y);
+    vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environment.strength;
 
     vec3 irradiance = textureLod(environment.texture, cube_n, 20.0).rgb;
-    vec3 diffuse_environment = irradiance * albedo;
+    vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
