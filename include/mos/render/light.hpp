@@ -26,7 +26,8 @@ public:
   explicit Light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 2.0f),
                  const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
                  const float angle = glm::half_pi<float>(),
-                 const glm::vec3 &color = glm::vec3(0.0f));
+                 const glm::vec3 &color = glm::vec3(0.0f),
+                 const float strength = 100.0f);
   virtual ~Light();
 
   /**
@@ -35,10 +36,10 @@ public:
    */
   void angle(const float angle);
 
-   /**
-   * @brief get spot angle.
-   * @return angle of the spotlight.
-   */
+  /**
+  * @brief get spot angle.
+  * @return angle of the spotlight.
+  */
   float angle() const;
 
   /**
@@ -75,6 +76,11 @@ public:
    * @brief diffuse_color
    */
   glm::vec3 color;
+
+  /**
+   * @brief strength of the lamp in watts.
+   */
+  float strength;
 
   /**
    * @brief Camera to render shadow map from.

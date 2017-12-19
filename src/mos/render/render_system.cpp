@@ -952,7 +952,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
-  glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light.color));
+  auto light_color = light.color * light.strength;
+  glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
 
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
                      &light.camera.view[0][0]);
