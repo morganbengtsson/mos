@@ -1154,7 +1154,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
 
   for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
     auto decals_uniform_name =
-        "decal_materials[" + std::to_string(i) + "].diffuse_map";
+        "decal_materials[" + std::to_string(i) + "].albedo_map";
     decal_material_diffuse_maps[i] =
         glGetUniformLocation(program, decals_uniform_name.c_str());
 
