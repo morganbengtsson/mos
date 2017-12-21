@@ -886,32 +886,35 @@ void RenderSystem::render(const Model &model, const Decals &decals,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
   glUniform1i(uniforms.brdf_lut, 12);
 
-  //for (int i = 0; i < decals.size(); i++) {
-  // Uses two texture units
-  auto &decal = decals[0];
-  load(decal.material.albedo_map);
-  glActiveTexture(GL_TEXTURE13);
-  glBindTexture(GL_TEXTURE_2D,
-                decal.material.albedo_map
-                ? textures_[decal.material.albedo_map->id()]
-                : black_texture_);
-  glUniform1i(uniforms.decal_material_diffuse_maps[0], 13);
+  int texture_unit = 0;
+  for (int i = 0; i < decals.size(); i++) {
+    auto &decal = decals[i];
+    load(decal.material.albedo_map);
+    load(decal.material.normal_map);
+    glActiveTexture(GL_TEXTURE13 + i + texture_unit);
+    glBindTexture(GL_TEXTURE_2D,
+                  decal.material.albedo_map
+                  ? textures_[decal.material.albedo_map->id()]
+                  : black_texture_);
+    glUniform1i(uniforms.decal_material_diffuse_maps[0], 13 + i + texture_unit);
+    texture_unit++;
 
-  /*
-if (decal.material.normal_map) {
-  load(decal.material.normal_map);
-}
-glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit + 2));
-glBindTexture(GL_TEXTURE_2D,
-              decal.material.normal_map
-              ? textures_[decal.material.normal_map->id()]
-              : black_texture_);
-glUniform1i(uniforms.decal_material_normal_maps[i], texture_unit + 2);*/
 
-  const glm::mat4 decal_mvp = bias * decal.projection * decal.view *
-      parent_transform * model.transform;
-  glUniformMatrix4fv(uniforms.decal_mvps[0], 1, GL_FALSE, &decal_mvp[0][0]);
-  //}
+    if (decal.material.normal_map) {
+      load(decal.material.normal_map);
+    }
+    glActiveTexture(GLenum(GL_TEXTURE13 + i + texture_unit));
+    glBindTexture(GL_TEXTURE_2D,
+                  decal.material.normal_map
+                  ? textures_[decal.material.normal_map->id()]
+                  : black_texture_);
+    glUniform1i(uniforms.decal_material_normal_maps[i], 13 + i + texture_unit);
+    texture_unit++;
+
+    const glm::mat4 decal_mvp = bias * decal.projection * decal.view *
+        parent_transform * model.transform;
+    glUniformMatrix4fv(uniforms.decal_mvps[i], 1, GL_FALSE, &decal_mvp[0][0]);
+  }
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));

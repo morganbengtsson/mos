@@ -214,7 +214,7 @@ void main() {
             decal_normal = normalize(fragment.tbn * decal_normal);
             float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
             if (amount > 0.0f){
-                //normal = normalize(mix(normal, decal_normal, amount));
+                normal = normalize(mix(normal, decal_normal, amount));
             }
         }
     }
