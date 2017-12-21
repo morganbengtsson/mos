@@ -7,3 +7,5 @@ mos::Decal::Decal(const glm::mat4 &projection,
     material.albedo_map->wrap = mos::Texture2D::Wrap::CLAMP_TO_BORDER;
   }
 }
+mos::Decal::Decal() {
+}

@@ -7,6 +7,7 @@
 namespace mos {
 class Decal {
 public:
+  Decal();
   Decal(const glm::mat4 &projection,
         const glm::mat4 &view,
         const mos::Material &material);
