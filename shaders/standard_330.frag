@@ -204,7 +204,7 @@ void main() {
 
     //TODO: Function
 
-    for (int i = 0; i < 1; i++){
+    for (int i = 0; i < 2; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
             vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
