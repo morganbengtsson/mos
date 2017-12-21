@@ -1,6 +1,6 @@
 #version 330 core
 
-const int max_decals = 1;
+const int max_decals = 20;
 
 struct Fragment {
     vec3 position;

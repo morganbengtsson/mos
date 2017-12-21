@@ -1,6 +1,6 @@
 #version 330
 
-const int max_decals = 1;
+const int max_decals = 20;
 const float PI = 3.14159265359;
 
 struct Material {
