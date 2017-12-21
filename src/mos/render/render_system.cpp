@@ -827,17 +827,16 @@ void RenderSystem::render(const Model &model, const Decals &decals,
                                    : black_texture_);
   glUniform1i(uniforms.material_albedo_map, 0);
 
-  for (int i = 0; i < decals.size(); i++) {
+  //for (int i = 0; i < decals.size(); i++) {
     // Uses two texture units
-    int texture_unit = 1 + i % 2;
-    auto &decal = decals[i];
+    auto &decal = decals[0];
     load(decal.material.albedo_map);
-    glActiveTexture(GLenum(GL_TEXTURE0 + texture_unit));
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.albedo_map
                       ? textures_[decal.material.albedo_map->id()]
                       : black_texture_);
-    glUniform1i(uniforms.decal_material_diffuse_maps[i], texture_unit);
+    glUniform1i(uniforms.decal_material_diffuse_maps[0], 1);
 
     /*
   if (decal.material.normal_map) {
@@ -852,8 +851,8 @@ void RenderSystem::render(const Model &model, const Decals &decals,
 
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view *
                                 parent_transform * model.transform;
-    glUniformMatrix4fv(uniforms.decal_mvps[i], 1, GL_FALSE, &decal_mvp[0][0]);
-  }
+    glUniformMatrix4fv(uniforms.decal_mvps[0], 1, GL_FALSE, &decal_mvp[0][0]);
+  //}
 
   // Shadowmap
   if (light.shadow_map) {

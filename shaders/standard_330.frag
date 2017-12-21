@@ -1,6 +1,6 @@
 #version 330
 
-const int max_decals = 20;
+const int max_decals = 1;
 const float PI = 3.14159265359;
 
 struct Material {
@@ -203,8 +203,8 @@ void main() {
     float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
 
     //TODO: Function
-    /*
-    for (int i = 0; i < max_decals; i++){
+
+    for (int i = 0; i < 1; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
             vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
@@ -214,10 +214,10 @@ void main() {
             decal_normal = normalize(fragment.tbn * decal_normal);
             float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
             if (amount > 0.0f){
-                normal = normalize(mix(normal, decal_normal, amount));
+                //normal = normalize(mix(normal, decal_normal, amount));
             }
         }
-    }*/
+    }
 
     vec3 diffuse_static = static_light * albedo;
 

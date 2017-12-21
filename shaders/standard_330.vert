@@ -1,6 +1,6 @@
 #version 330 core
 
-const int max_decals = 20;
+const int max_decals = 1;
 
 struct Fragment {
     vec3 position;
@@ -52,11 +52,11 @@ void main() {
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.proj_shadow = pos_ls;
 
-    /*
+
     for (int i = 0; i < max_decals; i++){
         vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
         fragment.proj_coords[i] = pos_d;
-    }*/
+    }
 
     fragment.uv = uv;
     fragment.light_map_uv = light_map_uv;
