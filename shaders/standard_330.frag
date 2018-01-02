@@ -1,6 +1,6 @@
 #version 330
 
-const int max_decals = 20;
+const int max_decals = 10;
 const float PI = 3.14159265359;
 
 struct Material {
@@ -204,21 +204,24 @@ void main() {
 
     //TODO: Function
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < max_decals; i++){
         if (fragment.proj_coords[i].w > 0.0){
             vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
-            vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
-            albedo.rgb = mix(albedo.rgb, decal.rgb, decal.a);
 
-            vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
-            decal_normal = normalize(fragment.tbn * decal_normal);
-            float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
-            if (amount > 0.0f){
-                normal = normalize(mix(normal, decal_normal, amount));
+            //TODO: Do nicer
+            if (d_uv.x < 1.0 && d_uv.x > 0.0 && d_uv.y < 1.0 && d_uv.y > 0.0) {
+                vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
+                albedo.rgb = mix(albedo.rgb, decal.rgb, decal.a);
+
+                vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
+                decal_normal = normalize(fragment.tbn * decal_normal);
+                float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
+                if (amount > 0.0f){
+                    normal = normalize(mix(normal, decal_normal, amount));
+                }
             }
         }
     }
-
     vec3 diffuse_static = static_light * albedo;
 
     float light_fragment_distance = distance(light.position, fragment.position);

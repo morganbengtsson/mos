@@ -887,7 +887,6 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
 
 
   for(int i = 0; i < decals.size(); i++) {
-
     auto & decal = decals[i];
     load(decal.material.albedo_map);
     load(decal.material.normal_map);

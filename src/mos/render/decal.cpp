@@ -6,6 +6,9 @@ mos::Decal::Decal(const glm::mat4 &projection,
   if (material.albedo_map) {
     material.albedo_map->wrap = mos::Texture2D::Wrap::CLAMP_TO_BORDER;
   }
+  if (material.normal_map ) {
+    material.normal_map->wrap = mos::Texture2D::Wrap::CLAMP_TO_EDGE;
+  }
 }
 mos::Decal::Decal() {
 }
