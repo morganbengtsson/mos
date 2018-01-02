@@ -40,8 +40,8 @@ add_subdirectory(externals/openal-soft)
 include_directories(externals/openal-soft/include)
 
 #Optional
-add_subdirectory(externals/Optional)
-include_directories(externals/Optional)
+#add_subdirectory(externals/Optional)
+#include_directories(externals/Optional)
 
 #Optional
 add_subdirectory(externals/filesystem)
@@ -92,6 +92,6 @@ externals/openal-soft/include
 externals/stb
 externals/objload
 externals/glm
-externals/Optional
+#externals/Optional
 externals/filesystem
 externals/json/src)

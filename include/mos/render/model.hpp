@@ -2,7 +2,7 @@
 #define MOS_MODEL_H
 
 #include <memory>
-#include <optional.hpp>
+#include <experimental/optional>
 #include <mos/render/material.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/texture_2d.hpp>
