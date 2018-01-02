@@ -1,21 +1,11 @@
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 3.1.0)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 
 #add_definitions(-DAL_LIBTYPE_STATIC)
 
-# No binaries in source dir
-if(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
-	message(FATAL_ERROR "Source and binary directories must be different")
-endif(CMAKE_CURRENT_SOURCE_DIR EQUAL CMAKE_CURRENT_BINARY_DIR)
-
-# C++ 11
-if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel") AND UNIX))
-	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
-	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-	set(CMAKE_CXX_FLAGS "-std=c++11")
-endif()
+set(CMAKE_CXX_STANDARD 14)
 
 #Copy HRT files for OpenAL
 file(COPY externals/openal-soft/hrtf/default-48000.mhr DESTINATION ${CMAKE_BINARY_DIR})
