@@ -885,19 +885,21 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
   glUniform1i(uniforms.brdf_lut, 8);
 
-  /*
+
   for(int i = 0; i < decals.size(); i++) {
+
     auto & decal = decals[i];
     load(decal.material.albedo_map);
     load(decal.material.normal_map);
-    glActiveTexture(GLenum(GL_TEXTURE9 + i));
+
+    glActiveTexture(GL_TEXTURE0 + 9 + i);
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.albedo_map
                   ? textures_[decal.material.albedo_map->id()]
                   : black_texture_);
-    glUniform1i(uniforms.decal_material_diffuse_maps[0], 9 + i);
+    glUniform1i(uniforms.decal_material_diffuse_maps[i], 9 + i);
 
-    glActiveTexture(GLenum(GL_TEXTURE19 + i));
+    glActiveTexture(GL_TEXTURE0 + 19 + i);
     glBindTexture(GL_TEXTURE_2D,
                   decal.material.normal_map
                   ? textures_[decal.material.normal_map->id()]
@@ -907,7 +909,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
     const glm::mat4 decal_mvp = bias * decal.projection * decal.view *
         parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.decal_mvps[i], 1, GL_FALSE, &decal_mvp[0][0]);
-  }*/
+  }
 
   glUniform3fv(uniforms.environment_position, 1,
                glm::value_ptr(environment.box.position));
