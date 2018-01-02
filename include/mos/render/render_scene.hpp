@@ -21,7 +21,7 @@ class RenderScene {
 public:
   using Models = std::vector<mos::Model>;
   using RenderBoxes = std::vector<mos::RenderBox>;
-  using Decals = std::vector<mos::Decal>;
+  using Decals = std::array<mos::Decal, 10>;
   using ParticleClouds = std::vector<mos::Particles>;
 
   /**

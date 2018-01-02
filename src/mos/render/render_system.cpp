@@ -798,7 +798,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
   }
 }
 
-void RenderSystem::render(const Model &model, const Decals &decals,
+void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
                           const glm::mat4 &parent_transform,
                           const RenderCamera &camera, const Light &light,
                           const EnvironmentLight &environment, const Fog &fog,
