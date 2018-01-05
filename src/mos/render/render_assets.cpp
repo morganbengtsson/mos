@@ -6,6 +6,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/io.hpp>
 #include <mos/util.hpp>
+#include <iostream>
 
 namespace mos {
 using namespace std;
