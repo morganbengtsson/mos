@@ -62,7 +62,8 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     auto c = bary.z / (bary.x + bary.y + bary.z);
 
     n = a * v0_.normal + b * v1_.normal + c * v2_.normal;
-    n = bary.x * v0_.normal + bary.y * v1_.normal + (1.0f - bary.x - bary.y)* v2_.normal;
+
+    n = glm::normalize(n);
 
     std::cout << "Nv " << n << std::endl;
 
