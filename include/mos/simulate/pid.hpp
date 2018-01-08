@@ -5,7 +5,7 @@ namespace mos {
 template <class T>
 class Pid {
 public:
-  Pid(const float Kp = 1.0f, const float Ki = 0.0f, const float Kd = 0.1f) : Kp(Kp), Ki(Ki), Kd(Kd), prev_error(0.0f) {
+  Pid(const T & error, const float Kp = 1.0f, const float Ki = 0.0f, const float Kd = 0.1f) : Kp(Kp), Ki(Ki), Kd(Kd), prev_error(error){
   }
   T get(const T error, float dt) {
     P = error;
