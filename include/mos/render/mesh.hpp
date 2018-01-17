@@ -191,6 +191,7 @@ public:
   void apply_transform(const glm::mat4 &transform);
 
   void calculate_normals();
+  void calculate_flat_normals();
   void calculate_tangents();
 
   Vertices vertices;

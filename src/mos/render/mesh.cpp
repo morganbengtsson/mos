@@ -229,4 +229,30 @@ void Mesh::calculate_tangents() {
     }
   }
 }
+void Mesh::calculate_flat_normals() {
+  if (indices.size() == 0) {
+    for (int i = 0; i < vertices.size(); i += 3) {
+      auto &v0 = vertices[i];
+      auto &v1 = vertices[i + 1];
+      auto &v2 = vertices[i + 2];
+
+      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
+      v0.normal = normal;
+      v1.normal = normal;
+      v2.normal = normal;
+    }
+  }
+  else {
+    for (int i = 0; i < indices.size(); i += 3) {
+      auto &v0 = vertices[indices[i]];
+      auto &v1 = vertices[indices[i + 1]];
+      auto &v2 = vertices[indices[i + 2]];
+
+      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
+      v0.normal = normal;
+      v1.normal = normal;
+      v2.normal = normal;
+    }
+  }
+}
 }
