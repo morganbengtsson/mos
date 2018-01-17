@@ -13,8 +13,8 @@ Navmesh2::Navmesh2(const Mesh &mesh, const glm::mat4 &transform)
 std::experimental::optional<Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   //for (auto &face : faces_) {
-  for (int i = 0; i < elements_.size(); i+=3){
-    Face2 face(vertices_[elements_[i]], vertices_[elements_[i+1]], vertices_[elements_[i+2]]);
+  for (int i = 0; i < indices.size(); i+=3){
+    Face2 face(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       return intersection;
@@ -28,8 +28,8 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
                               const glm::vec3 &direction) {
   OptionalIntersection closest;
   //for (auto &face : faces_) {
-  for (int i = 0; i < elements_.size(); i+=3){
-    Face2 face(vertices_[elements_[i]], vertices_[elements_[i+1]], vertices_[elements_[i+2]]);
+  for (int i = 0; i < indices.size(); i+=3){
+    Face2 face(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
@@ -43,6 +43,19 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
 }
 
 Navmesh2::~Navmesh2() {}
+void Navmesh2::calculate_normals() {
+  for (int i = 0; i < indices.size(); i += 3) {
+    //TODO: Generalize
+    auto &v0 = vertices[indices[i]];
+    auto &v1 = vertices[indices[i + 1]];
+    auto &v2 = vertices[indices[i + 2]];
+
+    auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
+    v0.normal = normal;
+    v1.normal = normal;
+    v2.normal = normal;
+  }
+}
 
 Face2::Face2(Vertex &v0, Vertex &v1, Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
