@@ -3,6 +3,8 @@
 #include <mos/util.hpp>
 #include <glm/gtx/normal.hpp>
 #include <glm/gtx/io.hpp>
+#include <array>
+#include <map>
 #include <algorithm>
 #include <glm/gtx/io.hpp>
 
@@ -174,6 +176,16 @@ void Mesh::calculate_tangents(mos::Vertex &v0,
   v1.tangent = tangent;
   v2.tangent = tangent;
 }
+
+struct Triangle{
+  Vertex &v0;
+  Vertex &v1;
+  Vertex &v2;
+  glm::vec3 normal() const {
+    return glm::triangleNormal(v0.position, v1.position, v2.position);
+  }
+};
+
 void Mesh::calculate_normals() {
   if (indices.size() == 0) {
     for (int i = 0; i < vertices.size(); i += 3) {
@@ -189,6 +201,30 @@ void Mesh::calculate_normals() {
     }
   }
   else {
+    //TODO: Slow brute force, improve?
+    using P = std::pair<int, std::vector<Triangle>>;
+    std::map<int, std::vector<Triangle>> triangle_map;
+    for (int i = 0; i < indices.size(); i += 3) {
+      std::array<int, 3> tri{indices[i], indices[i + 1], indices[i + 2]};
+      Triangle t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
+      for (auto i0 : tri) {
+        if (triangle_map.find(i0) == triangle_map.end()) {
+          triangle_map.insert(P(i0, std::vector<Triangle>{t}));
+        } else {
+          triangle_map[i0].push_back(t);
+        }
+      }
+    }
+    for (auto p : triangle_map){
+      auto & v = vertices[p.first];
+      glm::vec3 normal = glm::vec3(0.0f);
+      for (auto & neighbour : p.second){
+        normal += neighbour.normal();
+      }
+      v.normal = glm::normalize(normal);
+    }
+
+    /*
     for (std::vector<int>::const_iterator i = indices.begin(); i != indices.end(); std::advance(i, 3))
     {
       glm::vec3 v[3] = { vertices[*i].position, vertices[*(i+1)].position, vertices[*(i+2)].position };
@@ -204,7 +240,7 @@ void Mesh::calculate_normals() {
     }
     for (auto & vertex : vertices){
       vertex.normal = glm::normalize(vertex.normal);
-    }
+    }*/
   }
 }
 
