@@ -12,7 +12,9 @@ Navmesh2::Navmesh2(const Mesh &mesh, const glm::mat4 &transform)
 
 std::experimental::optional<Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
-  for (auto &face : faces_) {
+  //for (auto &face : faces_) {
+  for (int i = 0; i < elements_.size(); i+=3){
+    Face2 face(vertices_[elements_[i]], vertices_[elements_[i+1]], vertices_[elements_[i+2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       return intersection;
@@ -23,9 +25,11 @@ Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
 
 Navmesh2::OptionalIntersection
 Navmesh2::closest_intersection(const glm::vec3 &origin,
-                              const glm::vec3 direction) {
+                              const glm::vec3 &direction) {
   OptionalIntersection closest;
-  for (auto &face : faces_) {
+  //for (auto &face : faces_) {
+  for (int i = 0; i < elements_.size(); i+=3){
+    Face2 face(vertices_[elements_[i]], vertices_[elements_[i+1]], vertices_[elements_[i+2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
@@ -40,7 +44,7 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
 
 Navmesh2::~Navmesh2() {}
 
-Face2::Face2(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+Face2::Face2(Vertex &v0, Vertex &v1, Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
 std::experimental::optional<Vertex>
@@ -55,13 +59,14 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     auto t = glm::normalize(v0_.position - v1_.position); // Is this correct?
 
     std::cout << "Nt " << n << std::endl;
+    std::cout << "V " << v0_.position << v1_.position << v2_.position << std::endl;
 
     //Document this?
     auto a = bary.x / (bary.x + bary.y + bary.z);
     auto b = bary.y / (bary.x + bary.y + bary.z);
     auto c = bary.z / (bary.x + bary.y + bary.z);
 
-    n = a * v0_.normal + b * v1_.normal + c * v2_.normal;
+    //n = a * v0_.normal + b * v1_.normal + c * v2_.normal;
 
     n = glm::normalize(n);
 

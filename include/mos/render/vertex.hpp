@@ -20,11 +20,11 @@ public:
    * Constructs a vertex. Probably the smallest primitive in this context.
    *
    */
-  explicit Vertex(const glm::vec3 position = glm::vec3(0.0f),
-                  const glm::vec3 normal = glm::vec3(0.0f),
-                  const glm::vec3 tangent = glm::vec3(0.0f),
-                  const glm::vec2 uv = glm::vec2(0.0f),
-                  const glm::vec2 uv_lightmap = glm::vec2(0.0f));
+  explicit Vertex(const glm::vec3 & position = glm::vec3(0.0f),
+                  const glm::vec3 & normal = glm::vec3(0.0f),
+                  const glm::vec3 & tangent = glm::vec3(0.0f),
+                  const glm::vec2 & uv = glm::vec2(0.0f),
+                  const glm::vec2 & uv_lightmap = glm::vec2(0.0f));
 
   /**
    * @brief Destructor.

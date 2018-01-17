@@ -229,7 +229,7 @@ public:
   void calculate_normals();
   void calculate_tangents();
 
-private:
+public:
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
   static std::atomic_uint current_id;
   unsigned int id_;

@@ -2,8 +2,8 @@
 
 namespace mos {
 
-Vertex::Vertex(const glm::vec3 position, const glm::vec3 normal, const glm::vec3 tangent,
-               const glm::vec2 uv, const glm::vec2 uv_lightmap)
+Vertex::Vertex(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec3 &tangent,
+               const glm::vec2 &uv, const glm::vec2 &uv_lightmap)
     : position(position), normal(normal), tangent(tangent), uv(uv), uv_lightmap(uv_lightmap) {}
 
 Vertex::~Vertex() {}
