@@ -28,7 +28,7 @@ public:
   /**
    * @brief Elements/indices container.
    */
-  using Elements = std::vector<int>;
+  using Indices = std::vector<int>;
 
   template <class Tv, class Te>
   /**
@@ -43,8 +43,8 @@ public:
    */
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te elements_begin, Te elements_end)
-      : valid_(false), vertices_(vertices_begin, vertices_end),
-        elements_(elements_begin, elements_end), id_(current_id++) {}
+      : valid_(false), vertices(vertices_begin, vertices_end),
+        indices(elements_begin, elements_end), id_(current_id++) {}
 
   /**
    * @brief Mesh constructor
@@ -99,13 +99,13 @@ public:
    * @brief elements_begin
    * @return Iterator to first element.
    */
-  Elements::const_iterator elements_begin() const;
+  Indices::const_iterator elements_begin() const;
 
   /**
    * @brief elements_end
    * @return Iterator to last element.
    */
-  Elements::const_iterator elements_end() const;
+  Indices::const_iterator elements_end() const;
 
   /**
    * @brief vertices_begin
@@ -123,13 +123,13 @@ public:
    * @brief elements_begin
    * @return Iterator to first element.
    */
-  Elements::iterator elements_begin();
+  Indices::iterator elements_begin();
 
   /**
    * @brief elements_end
    * @return Iterator to last element.
    */
-  Elements::iterator elements_end();
+  Indices::iterator elements_end();
 
   /**
    * @return A unique identifier.
@@ -160,7 +160,7 @@ public:
 
   template<class T>
   void append(T begin, T end){
-    vertices_.insert(vertices_.end(), begin, end);
+    vertices.insert(vertices.end(), begin, end);
     invalidate();
   }
 
@@ -171,45 +171,9 @@ public:
   void add(const int element);
 
   void pop_front(const int num) {
-    vertices_.erase(vertices_.begin(), vertices_.begin() + num);
+    vertices.erase(vertices.begin(), vertices.begin() + num);
     valid_ = false;
   }
-
-  /**
-   * @brief vertices
-   * @return const reference of Vertices.
-   */
-  const Vertices &vertices();
-
-  /**
-   * @brief elements
-   * @return const reference of Elements.
-   */
-  const Elements &elements();
-
-  /**
-   * @brief vertices_data
-   * @return cosnt Vertex array.
-   */
-  const Vertex *vertices_data() const;
-
-  /**
-   * @brief vertices_size
-   * @return Number of vertices.
-   */
-  Vertices::size_type vertices_size() const;
-
-  /**
-   * @brief elements_data
-   * @return const int array.
-   */
-  const int *elements_data() const;
-
-  /**
-   * @brief elements_size
-   * @return Number of elements.
-   */
-  Elements::size_type elements_size() const;
 
   /**
    * @brief Get a copy of positions.
@@ -229,12 +193,13 @@ public:
   void calculate_normals();
   void calculate_tangents();
 
-public:
+  Vertices vertices;
+  Indices indices;
+private:
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
   static std::atomic_uint current_id;
   unsigned int id_;
-  Vertices vertices_;
-  Elements elements_;
+
   bool valid_;
 };
 }

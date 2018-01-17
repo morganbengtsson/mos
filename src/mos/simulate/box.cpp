@@ -17,7 +17,7 @@ Box Box::create_from_model(const Model &model, const glm::mat4 &transform) {
   std::function<void(const Model &, const glm::mat4 &, std::vector<Vertex> &)>
       create = [&](const Model &m, const glm::mat4 &t, std::vector<Vertex> &v) {
     if (m.mesh != nullptr) {
-      for (auto &v0 : m.mesh->vertices()) {
+      for (auto &v0 : m.mesh->vertices) {
         auto vt0 = v0;
         vt0.position = glm::vec3(t * m.transform * glm::vec4(v0.position, 1.0f));
         v.push_back(vt0);

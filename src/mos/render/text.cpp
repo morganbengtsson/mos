@@ -78,7 +78,7 @@ void Text::diffuse(const glm::vec3 &diffuse) {
 }
 
 float Text::width() const {
-  if (model_.mesh->vertices_size() > 2){
+  if (model_.mesh->vertices.size() > 2){
     glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
     glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end() - 2)->position);
     return glm::distance(p1, p2);

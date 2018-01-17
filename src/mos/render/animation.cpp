@@ -15,9 +15,9 @@ Animation::Animation(
       time_(0.0f), frame_rate_(frame_rate) {
   std::cout << keyframes_.size() << std::endl;
   for (auto & p : keyframes_){
-    std::cout << p.first << " " << p.second->vertices_size() << std::endl;
+    std::cout << p.first << " " << p.second->vertices.size() << std::endl;
   }
-  std::cout << mesh_->vertices_size() << std::endl << "----\n";
+  std::cout << mesh_->vertices.size() << std::endl << "----\n";
 }
 
 Animation::Animation(

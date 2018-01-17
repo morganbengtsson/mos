@@ -26,18 +26,18 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
     is.read((char *)&num_vertices, sizeof(int));
     is.read((char *)&num_indices, sizeof(int));
 
-    auto vertices = std::vector<mos::Vertex>(num_vertices);
-    auto elements = std::vector<int>(num_indices);
+    auto input_vertices = std::vector<mos::Vertex>(num_vertices);
+    auto input_indices = std::vector<int>(num_indices);
 
-    if (vertices.size() > 0) {
-      is.read((char *)&vertices[0], vertices.size() * sizeof(Vertex));
+    if (input_vertices.size() > 0) {
+      is.read((char *)&input_vertices[0], input_vertices.size() * sizeof(Vertex));
     }
 
-    if (elements.size() > 0) {
-      is.read((char *)&elements[0], elements.size() * sizeof(int));
+    if (input_indices.size() > 0) {
+      is.read((char *)&input_indices[0], input_indices.size() * sizeof(int));
     }
-    vertices_.assign(vertices.begin(), vertices.end());
-    elements_.assign(elements.begin(), elements.end());
+    vertices.assign(input_vertices.begin(), input_vertices.end());
+    indices.assign(input_indices.begin(), input_indices.end());
 
     calculate_tangents();
   } else {
@@ -62,36 +62,36 @@ SharedMesh Mesh::load(const std::string &path) {
 }
 
 Mesh::Vertices::iterator Mesh::begin() {
-  return vertices_.begin();
+  return vertices.begin();
 }
 
 Mesh::Vertices::iterator Mesh::end() {
-  return vertices_.end();
+  return vertices.end();
 }
 
 Mesh::Vertices::const_iterator Mesh::vertices_begin() const {
-  return vertices_.begin();
+  return vertices.begin();
 }
 
 Mesh::Vertices::const_iterator Mesh::vertices_end() const {
-  return vertices_.end();
+  return vertices.end();
 }
 
-Mesh::Elements::const_iterator Mesh::elements_begin() const {
-  return elements_.begin();
+Mesh::Indices::const_iterator Mesh::elements_begin() const {
+  return indices.begin();
 }
 
-Mesh::Elements::const_iterator Mesh::elements_end() const {
-  return elements_.end();
+Mesh::Indices::const_iterator Mesh::elements_end() const {
+  return indices.end();
 }
 
-Mesh::Vertices::iterator Mesh::vertices_begin() { return vertices_.begin(); }
+Mesh::Vertices::iterator Mesh::vertices_begin() { return vertices.begin(); }
 
-Mesh::Vertices::iterator Mesh::vertices_end() { return vertices_.end(); }
+Mesh::Vertices::iterator Mesh::vertices_end() { return vertices.end(); }
 
-Mesh::Elements::iterator Mesh::elements_begin() { return elements_.begin(); }
+Mesh::Indices::iterator Mesh::elements_begin() { return indices.begin(); }
 
-Mesh::Elements::iterator Mesh::elements_end() { return elements_.end(); }
+Mesh::Indices::iterator Mesh::elements_end() { return indices.end(); }
 
 unsigned int Mesh::id() const { return id_; }
 
@@ -100,39 +100,23 @@ bool Mesh::valid() const { return valid_; }
 void Mesh::invalidate() { valid_ = false; }
 
 void Mesh::clear() {
-  vertices_.clear();
-  elements_.clear();
+  vertices.clear();
+  indices.clear();
 }
 
 void Mesh::add(const Vertex& vertex) {
-  vertices_.push_back(vertex);
+  vertices.push_back(vertex);
   valid_ = false;
 }
 
 void Mesh::add(const int element) {
-  elements_.push_back(element);
+  indices.push_back(element);
   valid_ = false;
-}
-
-const Mesh::Vertices &Mesh::vertices() { return vertices_; }
-
-const Mesh::Elements &Mesh::elements() { return elements_; }
-
-const Vertex *Mesh::vertices_data() const { return vertices_.data(); }
-
-Mesh::Vertices::size_type Mesh::vertices_size() const {
-  return vertices_.size();
-}
-
-const int *Mesh::elements_data() const { return elements_.data(); }
-
-Mesh::Vertices::size_type Mesh::elements_size() const {
-  return elements_.size();
 }
 
 Mesh::Positions Mesh::positions() const {
   Positions pos;
-  std::transform(vertices_.begin(), vertices_.end(), std::back_inserter(pos), [](const Vertex &vertex){
+  std::transform(vertices.begin(), vertices.end(), std::back_inserter(pos), [](const Vertex &vertex){
     return vertex.position;
   });
   return pos;
@@ -157,7 +141,7 @@ void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
 }
 
 void Mesh::apply_transform(const glm::mat4 &transform) {
-  for (auto &vertex : vertices_) {
+  for (auto &vertex : vertices) {
     vertex.position = glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
   }
 }
@@ -191,12 +175,12 @@ void Mesh::calculate_tangents(mos::Vertex &v0,
   v2.tangent = tangent;
 }
 void Mesh::calculate_normals() {
-  if (elements_.size() == 0) {
-    for (int i = 0; i < vertices_.size(); i += 3) {
+  if (indices.size() == 0) {
+    for (int i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
-      auto &v0 = vertices_[i];
-      auto &v1 = vertices_[i + 1];
-      auto &v2 = vertices_[i + 2];
+      auto &v0 = vertices[i];
+      auto &v1 = vertices[i + 1];
+      auto &v2 = vertices[i + 2];
 
       auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
       v0.normal = normal;
@@ -205,9 +189,9 @@ void Mesh::calculate_normals() {
     }
   }
   else {
-    for (std::vector<int>::const_iterator i = elements_.begin(); i != elements_.end(); std::advance(i, 3))
+    for (std::vector<int>::const_iterator i = indices.begin(); i != indices.end(); std::advance(i, 3))
     {
-      glm::vec3 v[3] = { vertices_[*i].position, vertices_[*(i+1)].position, vertices_[*(i+2)].position };
+      glm::vec3 v[3] = { vertices[*i].position, vertices[*(i+1)].position, vertices[*(i+2)].position };
       glm::vec3 normal = glm::cross(v[1] - v[0], v[2] - v[0]);
 
       for (int j = 0; j < 3; ++j)
@@ -215,31 +199,31 @@ void Mesh::calculate_normals() {
         glm::vec3 a = v[(j+1) % 3] - v[j];
         glm::vec3 b = v[(j+2) % 3] - v[j];
         float weight =  glm::acos(glm::dot(a, b) / (a.length() * b.length()));
-        vertices_[*(i+j)].normal += weight * normal;
+        vertices[*(i+j)].normal += weight * normal;
       }
     }
-    for (auto & vertex : vertices_){
+    for (auto & vertex : vertices){
       vertex.normal = glm::normalize(vertex.normal);
     }
   }
 }
 
 void Mesh::calculate_tangents() {
-  if (elements_.size() == 0) {
-    for (int i = 0; i < vertices_.size(); i += 3) {
+  if (indices.size() == 0) {
+    for (int i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
-      auto &v0 = vertices_[i];
-      auto &v1 = vertices_[i + 1];
-      auto &v2 = vertices_[i + 2];
+      auto &v0 = vertices[i];
+      auto &v1 = vertices[i + 1];
+      auto &v2 = vertices[i + 2];
 
       calculate_tangents(v0, v1, v2);
     }
   }
   else{
-    for (int i = 0; i < elements_.size(); i += 3) {
-      auto &v0 = vertices_[elements_[i]];
-      auto &v1 = vertices_[elements_[i + 1]];
-      auto &v2 = vertices_[elements_[i + 2]];
+    for (int i = 0; i < indices.size(); i += 3) {
+      auto &v0 = vertices[indices[i]];
+      auto &v1 = vertices[indices[i + 1]];
+      auto &v2 = vertices[indices[i + 2]];
 
       calculate_tangents(v0, v1, v2);
     }

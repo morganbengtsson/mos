@@ -350,8 +350,8 @@ void RenderSystem::load(const Model &model) {
       glGenBuffers(1, &array_buffer);
       glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
       glBufferData(GL_ARRAY_BUFFER,
-                   model.mesh->vertices_size() * sizeof(Vertex),
-                   model.mesh->vertices_data(), GL_STATIC_DRAW);
+                   model.mesh->vertices.size() * sizeof(Vertex),
+                   model.mesh->vertices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       array_buffers_.insert({model.mesh->id(), array_buffer});
     }
@@ -361,8 +361,8 @@ void RenderSystem::load(const Model &model) {
       glGenBuffers(1, &element_array_buffer);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   model.mesh->elements_size() * sizeof(unsigned int),
-                   model.mesh->elements_data(), GL_STATIC_DRAW);
+                   model.mesh->indices.size() * sizeof(unsigned int),
+                   model.mesh->indices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
     }
@@ -402,8 +402,8 @@ void RenderSystem::load(const Model &model) {
 
   if (model.mesh && !model.mesh->valid()) {
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
-    glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices_size() * sizeof(Vertex),
-                 model.mesh->vertices_data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
+                 model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     /*
@@ -969,7 +969,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glUniform1fv(uniforms.fog_attenuation_factor, 1,
                &fog.attenuation_factor);
 
-  const int num_elements = model.mesh ? model.mesh->elements_size() : 0;
+  const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
   int draw_type = GL_TRIANGLES;
   if (draw == RenderScene::Draw::LINES) {
     draw_type = GL_LINES;
@@ -980,7 +980,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
     if (num_elements > 0) {
       glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
     } else {
-      glDrawArrays(draw_type, 0, model.mesh->vertices_size());
+      glDrawArrays(draw_type, 0, model.mesh->vertices.size());
     }
   }
   for (const auto &child : model.models) {
