@@ -71,9 +71,6 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     auto n = glm::triangleNormal(v0_.position, v1_.position, v2_.position);
     auto t = glm::normalize(v0_.position - v1_.position); // Is this correct?
 
-    std::cout << "Nt " << n << std::endl;
-    std::cout << "V " << v0_.position << v1_.position << v2_.position << std::endl;
-
     //Document this?
     auto a = bary.x / (bary.x + bary.y + bary.z);
     auto b = bary.y / (bary.x + bary.y + bary.z);
@@ -83,7 +80,6 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
 
     n = glm::normalize(n);
 
-    std::cout << "Nv " << n << std::endl;
 
 
     //auto uv = (v0_.uv + v1_.uv + v2_.uv) / 3.0f;
