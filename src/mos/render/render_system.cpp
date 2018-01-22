@@ -1101,21 +1101,25 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
 }
 void RenderSystem::render_environment(const RenderScene &scene) {
   if (frame_buffers_.find(scene.environment.target.id()) == frame_buffers_.end()) {
-
-    //TODO: Create if not exists
-    auto texture_id = texture_cubes_[scene.environment.texture->id()];
-
-    for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
-        clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-        auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
-        render_scene(*c_it, scene, resolution);
-    }
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    GLuint frame_buffer_id;
+    glGenFramebuffers(1, &frame_buffer_id);
   }
+
+  GLuint frame_buffer_id = frame_buffers_[scene.environment.target.id()];
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+  //TODO: Create if not exists
+  auto texture_id = texture_cubes_[scene.environment.texture->id()];
+
+  for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
+    clear(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
+    render_scene(*c_it, scene, resolution);
+  }
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
