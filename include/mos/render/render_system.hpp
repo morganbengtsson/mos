@@ -89,30 +89,9 @@ public:
                      Ts scenes_end,
                      const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                      const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
-    //render_target(target);
-
-    /*
-    if (target.texture_cube) {
-      auto texture_id = texture_cubes_[target.texture_cube->id()];
-        for (auto it = scenes_begin; it != scenes_end; it++) {
-          for (auto c_it = it->cameras.begin(); c_it != it->cameras.end(); c_it++){
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(it->cameras.begin(), c_it), texture_id, 0);
-            clear(color);
-          render_scene(*c_it, *it, glm::vec2(target.width(), target.height()));
-        }
-      }
-      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-      glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-      glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-    }
-     */
-    //else {
-    //Shadows
-
     for (auto it = scenes_begin; it != scenes_end; it++) {
-        render_shadow_map(*it);
-        render_environment(*it);
+      render_shadow_map(*it);
+      render_environment(*it);
     }
 
     clear(color);
