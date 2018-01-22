@@ -92,7 +92,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       render_shadow_map(*it);
-      render_environment(*it);
+      //render_environment(*it);
       render_scene(it->camera, *it, resolution);
     }
   }

@@ -286,7 +286,8 @@ void main() {
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
     color.rgb = Lo + diffuse_static + ambient;
-    color.a = material.opacity + albedo_from_map.a;
+    //color.a = material.opacity * albedo_from_map.a;
+    color.a = material.opacity;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
