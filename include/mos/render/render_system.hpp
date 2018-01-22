@@ -116,10 +116,7 @@ public:
 
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
-      for (auto &camera : it->cameras) {
-        render_scene(camera, *it, resolution);
-      }
-    //}
+        render_scene(it->camera, *it, resolution);
     }
   }
 

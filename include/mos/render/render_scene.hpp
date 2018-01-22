@@ -36,32 +36,26 @@ public:
 
   RenderScene();
 
-  template <class T, class Tc>
-  RenderScene(T begin, T end, Tc cameras_begin, Tc cameras_end, const Light &light = Light(),
-        const mos::Fog &fog_linear = Fog(),
-        const Shader &shader = Shader::STANDARD,
-        const Draw &draw = Draw::TRIANGLES)
-      : models(begin, end), cameras(cameras_begin, cameras_end), light(light), fog(fog_linear), shader(shader), draw(draw) {}
-
-  template <class T>
-  RenderScene(T begin, T end, const std::initializer_list<RenderCamera> &cameras, const Light &light = Light(),
+  template<class T>
+  RenderScene(T begin, T end, const RenderCamera &camera,
+              const Light &light = Light(),
               const mos::Fog &fog_linear = Fog(),
               const Shader &shader = Shader::STANDARD,
               const Draw &draw = Draw::TRIANGLES)
-      : models(begin, end), cameras(cameras.begin(), cameras.end()), light(light), fog(fog_linear), shader(shader), draw(draw) {}
+      : models(begin, end), camera(camera), light(light), fog(fog_linear), shader(shader), draw(draw) {}
 
   RenderScene(const std::initializer_list<Model> &models,
-              const std::initializer_list<RenderCamera> &cameras,
-        const mos::Light &light = Light(), const mos::Fog &fog = Fog(),
-        const Shader &shader = Shader::STANDARD,
-        const Draw &draw = Draw::TRIANGLES);
+              const RenderCamera &camera,
+              const mos::Light &light = Light(),
+              const mos::Fog &fog = Fog(),
+              const Shader &shader = Shader::STANDARD,
+              const Draw &draw = Draw::TRIANGLES);
   Models models;
   Decals decals;
-  //Particles particles;
-  ParticleClouds  particle_clouds;
+  ParticleClouds particle_clouds;
   RenderBoxes render_boxes;
   Light light;
-  std::vector<RenderCamera> cameras;
+  RenderCamera camera;
   Fog fog;
   Shader shader;
   Draw draw;
