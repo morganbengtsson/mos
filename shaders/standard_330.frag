@@ -267,9 +267,6 @@ void main() {
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
 
-    vec3 cube_r = vec3(corrected_r.x, corrected_r.z, corrected_r.y);
-    vec3 cube_n = vec3(corrected_normal.x, corrected_normal.z, corrected_normal.y);
-
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = log2(maxsize) + 1;
     float mip_level = roughness * num_levels * 3.0;
@@ -279,11 +276,11 @@ void main() {
     vec3 kD_env = 1.0 - kS_env;
     kD_env *= 1.0 - metallic;
 
-    vec3 filtered = textureLod(environment.texture, cube_r, mip_level).rgb;
+    vec3 filtered = textureLod(environment.texture, corrected_r, mip_level).rgb;
     vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environment.strength;
 
-    vec3 irradiance = textureLod(environment.texture, cube_n, 20.0).rgb;
+    vec3 irradiance = textureLod(environment.texture, corrected_normal, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
