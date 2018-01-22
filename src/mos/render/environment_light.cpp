@@ -3,9 +3,10 @@
 namespace mos {
 
 EnvironmentLight::EnvironmentLight(const SharedTextureCube &texture,
-                                   const RenderBox &box,
+                                   const glm::vec3 &position,
+                                   const glm::vec3 &extent,
                                    const float strength)
-    : texture(texture), box(box), strength(strength) {
+    : texture(texture), box(RenderBox(position, extent)), strength(strength), camera(position) {
 }
 
 }

@@ -2,6 +2,8 @@
 #define MOS_ENVIRONMENT_HPP
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/render_box.hpp>
+#include <mos/render/render_target.hpp>
+#include <mos/render/render_cube_camera.hpp>
 namespace mos {
 /**
 * @brief Class for environmental lighting.
@@ -18,10 +20,13 @@ public:
    * @param box Describes how big the environment is, for parallax correction.
    */
   EnvironmentLight(const SharedTextureCube &texture = nullptr,
-                   const RenderBox &box = RenderBox(glm::vec3(0.0f), glm::vec3(50.0f)),
+                   const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
+                   const glm::vec3 &extent = glm::vec3(50.0f),
                    const float strength = 1.0f);
   SharedTextureCube texture;
   RenderBox box;
+  RenderTarget target;
+  RenderCubeCamera camera;
   float strength;
 };
 }

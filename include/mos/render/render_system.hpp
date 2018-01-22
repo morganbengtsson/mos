@@ -145,6 +145,8 @@ private:
 
   void render_shadow_map(const RenderScene &render_scene);
 
+  void render_environment(const RenderScene &render_scene);
+
   /**
    * @brief Updates render state of model.
    * @param model
