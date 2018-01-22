@@ -1124,7 +1124,6 @@ void RenderSystem::render_environment(const RenderScene &scene) {
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("Framebuffer incomplete.");
     }
-
     frame_buffers_.insert({scene.environment.target.id(), frame_buffer_id});
   }
 
@@ -1140,10 +1139,11 @@ void RenderSystem::render_environment(const RenderScene &scene) {
     auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
     render_scene(*c_it, scene, resolution);
   }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
