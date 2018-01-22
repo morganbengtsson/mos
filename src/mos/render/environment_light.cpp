@@ -6,7 +6,7 @@ EnvironmentLight::EnvironmentLight(const SharedTextureCube &texture,
                                    const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength)
-    : texture(texture), box(RenderBox(position, extent)), strength(strength), camera(position) {
+    : texture(texture), box(RenderBox(position, extent)), strength(strength), cube_camera(position) {
 }
 
 }

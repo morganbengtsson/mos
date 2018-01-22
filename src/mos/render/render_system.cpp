@@ -1105,12 +1105,12 @@ void RenderSystem::render_environment(const RenderScene &render_scene) {
     //TODO: Create if not exists
     auto texture_id = texture_cubes_[render_scene.environment.texture->id()];
 
-    for (auto c_it = it->cameras.begin(); c_it != it->cameras.end(); c_it++){
+    for (auto c_it = render_scene.environment.cube_camera.cameras.begin(); c_it != render_scene.environment.cube_camera.cameras.end(); c_it++){
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(it->cameras.begin(), c_it), texture_id, 0);
-        clear(color);
-        render_scene(*c_it, *it, glm::vec2(target.width(), target.height()));
-      }
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(render_scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
+        clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        auto r = glm::vec2(render_scene.environment.texture->width(), render_scene.environment.texture->height());
+        render_scene(*c_it, render_scene,r);
     }
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);

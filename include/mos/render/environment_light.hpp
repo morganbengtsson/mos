@@ -26,7 +26,7 @@ public:
   SharedTextureCube texture;
   RenderBox box;
   RenderTarget target;
-  RenderCubeCamera camera;
+  RenderCubeCamera cube_camera;
   float strength;
 };
 }
