@@ -43,7 +43,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
   wrap_map_{
       {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture::Wrap::REPEAT, GL_REPEAT}}, environment_texture_cube_(512, 512, false, Texture::Format::RGB){
+      {Texture::Wrap::REPEAT, GL_REPEAT}} {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();

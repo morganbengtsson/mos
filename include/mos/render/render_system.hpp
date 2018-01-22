@@ -302,9 +302,6 @@ private:
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
-
-  TextureCube environment_texture_cube_;
-  RenderTarget environment_target_;
 };
 
 }
