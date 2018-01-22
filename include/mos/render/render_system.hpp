@@ -89,14 +89,11 @@ public:
                      Ts scenes_end,
                      const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
                      const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
-    for (auto it = scenes_begin; it != scenes_end; it++) {
-      render_shadow_map(*it);
-      render_environment(*it);
-    }
-
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
-        render_scene(it->camera, *it, resolution);
+      render_shadow_map(*it);
+      //render_environment(*it);
+      render_scene(it->camera, *it, resolution);
     }
   }
 
