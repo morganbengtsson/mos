@@ -18,4 +18,14 @@ RenderCubeCamera::RenderCubeCamera(const glm::vec3 &position,
 glm::vec3 RenderCubeCamera::position() const {
     return cameras[0].position();
 }
+RenderCubeCamera::RenderCubeCamera(const RenderCubeCamera &camera) : projection(camera.projection), up(camera.up), cameras(camera.cameras){
+}
+
+RenderCubeCamera &RenderCubeCamera::operator=(const RenderCubeCamera &other) {
+  //TODO: Implement swap
+  projection = other.projection;
+  up = other.up;
+  cameras = other.cameras;
+  return *this;
+}
 }

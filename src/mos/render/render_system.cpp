@@ -1099,18 +1099,18 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
                glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void RenderSystem::render_environment(const RenderScene &render_scene) {
-  if (frame_buffers_.find(render_scene.environment.target.id()) == frame_buffers_.end()) {
+void RenderSystem::render_environment(const RenderScene &scene) {
+  if (frame_buffers_.find(scene.environment.target.id()) == frame_buffers_.end()) {
 
     //TODO: Create if not exists
-    auto texture_id = texture_cubes_[render_scene.environment.texture->id()];
+    auto texture_id = texture_cubes_[scene.environment.texture->id()];
 
-    for (auto c_it = render_scene.environment.cube_camera.cameras.begin(); c_it != render_scene.environment.cube_camera.cameras.end(); c_it++){
+    for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(render_scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
         clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-        auto r = glm::vec2(render_scene.environment.texture->width(), render_scene.environment.texture->height());
-        render_scene(*c_it, render_scene,r);
+        auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
+        render_scene(*c_it, scene, resolution);
     }
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
