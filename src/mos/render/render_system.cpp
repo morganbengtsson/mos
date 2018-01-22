@@ -45,7 +45,6 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
       {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
       {Texture::Wrap::REPEAT, GL_REPEAT}}, environment_texture_cube_(512, 512, false, Texture::Format::RGB){
 
-
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
 
