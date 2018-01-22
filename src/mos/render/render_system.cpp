@@ -1108,7 +1108,9 @@ void RenderSystem::render_environment(const RenderScene &scene) {
     GLuint texture_id = create_texture_cube(scene.environment.texture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
-    texture_cubes_.insert({scene.environment.texture->id(), texture_id});
+    //texture_cubes_.insert({scene.environment.texture->id(), texture_id});
+
+    texture_cubes_ = {{scene.environment.texture->id(), texture_id}};
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -1135,7 +1137,7 @@ void RenderSystem::render_environment(const RenderScene &scene) {
   for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
-    clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
     render_scene(*c_it, scene, resolution);
   }
