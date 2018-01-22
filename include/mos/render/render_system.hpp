@@ -111,6 +111,7 @@ public:
     //Shadows
 
     for (auto it = scenes_begin; it != scenes_end; it++) {
+        render_environment(*it);
         render_shadow_map(*it);
     }
 
