@@ -808,7 +808,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-  load(environment.texture);
+  //load(environment.texture);
   load(model);
 
   const glm::mat4 mv = camera.view * parent_transform * model.transform;
@@ -1120,6 +1120,7 @@ void RenderSystem::render_environment(const RenderScene &scene) {
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
