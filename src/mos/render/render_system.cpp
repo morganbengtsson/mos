@@ -447,16 +447,6 @@ void RenderSystem::unload(const Model &model) {
   unload(model.material.light_map);
 }
 
-void RenderSystem::load(const SharedTextureCube &texture) {
-  if (texture) { // TODO: maybe just send in the texture reference.
-    if (texture_cubes_.find(texture->id()) == texture_cubes_.end()) {
-      GLuint gl_id = create_texture_cube(texture);
-      texture_cubes_.insert({texture->id(), gl_id});
-    }
-  }
-}
-
-
 void RenderSystem::unload(const SharedTextureCube &texture) {
   if (texture) {
     if (texture_cubes_.find(texture->id()) != textures_.end()) {

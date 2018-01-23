@@ -286,7 +286,7 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color.rgb = Lo + diffuse_static + ambient + material.emission * material.albedo;
+    color.rgb = Lo + diffuse_static + ambient + material.emission * albedo;
     //color.a = material.opacity * albedo_from_map.a;
     color.a = material.opacity;
 

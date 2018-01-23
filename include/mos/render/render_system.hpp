@@ -68,12 +68,6 @@ public:
   void unload(const SharedTexture2D &texture);
 
   /**
-   * @brief Load a texture into renderer memory.
-   * @param texture The texture.
-   */
-  void load(const SharedTextureCube &texture);
-
-  /**
    * @brief unload a texture from renderer memory.
    * @param texture The texture.
    */
