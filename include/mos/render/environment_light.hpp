@@ -13,6 +13,7 @@ namespace mos {
 * so it should match the current lit scene as close as possible.
 */
 class EnvironmentLight {
+  friend class RenderSystem;
 public:
   /**
    * @brief Environment constructor.
@@ -20,16 +21,19 @@ public:
    * @param box Describes how big the environment is, for parallax correction.
    */
   EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
-                   const glm::vec3 &extent = glm::vec3(50.0f),
-                   const float strength = 1.0f);
+      const glm::vec3 &extent = glm::vec3(50.0f),
+      const float strength = 1.0f,
+      const glm::uvec2 resolution = glm::uvec2(128, 128));
   EnvironmentLight(const EnvironmentLight &light);
-  EnvironmentLight& operator=(const EnvironmentLight &other);
+  EnvironmentLight &operator=(const EnvironmentLight &other);
 
-  TextureCube texture;
   RenderBox box;
+  float strength;
+
+private:
   RenderTarget target;
   RenderCubeCamera cube_camera;
-  float strength;
+  TextureCube texture;
 };
 }
 
