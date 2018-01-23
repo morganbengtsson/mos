@@ -19,14 +19,13 @@ public:
    * @param texture Is the environment texture.
    * @param box Describes how big the environment is, for parallax correction.
    */
-  EnvironmentLight(const SharedTextureCube &texture = nullptr,
-                   const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
+  EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
                    const glm::vec3 &extent = glm::vec3(50.0f),
                    const float strength = 1.0f);
   EnvironmentLight(const EnvironmentLight &light);
   EnvironmentLight& operator=(const EnvironmentLight &other);
 
-  SharedTextureCube texture;
+  TextureCube texture;
   RenderBox box;
   RenderTarget target;
   RenderCubeCamera cube_camera;

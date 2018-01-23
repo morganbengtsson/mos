@@ -257,7 +257,7 @@ private:
   unsigned int create_texture(const SharedTexture2D &texture);
   unsigned int create_texture(const Texture2D &texture);
 
-  unsigned int create_texture_cube(const SharedTextureCube &texture);
+  unsigned int create_texture_cube(const TextureCube &texture);
 
   unsigned int
   create_texture_and_pbo(const SharedTexture2D &texture);

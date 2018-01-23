@@ -613,29 +613,29 @@ unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
 }
 
 unsigned int
-RenderSystem::create_texture_cube(const SharedTextureCube &texture) {
+RenderSystem::create_texture_cube(const TextureCube &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
-  GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+  GLfloat sampling = texture.mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                  wrap_map_[texture->wrap]);
+                  wrap_map_[texture.wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                  wrap_map_[texture->wrap]);
+                  wrap_map_[texture.wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                  wrap_map_[texture->wrap]);
+                  wrap_map_[texture.wrap]);
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 format_map_[texture->format].internal_format,
-                 texture->width(), texture->height(), 0, format_map_[texture->format].format,
-                 GL_UNSIGNED_BYTE, texture->data(i));
+                 format_map_[texture.format].internal_format,
+                 texture.width(), texture.height(), 0, format_map_[texture.format].format,
+                 GL_UNSIGNED_BYTE, texture.data(i));
   }
-  if (texture->mipmaps) {
+  if (texture.mipmaps) {
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   };
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -843,12 +843,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glUniform1i(uniforms.material_normal_map, 3);
 
   glActiveTexture(GL_TEXTURE4);
-  glBindTexture(GL_TEXTURE_CUBE_MAP,
-                environment.texture
-                    ? environment.texture
-                          ? texture_cubes_[environment.texture->id()]
-                          : black_texture_
-                    : black_texture_);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment.texture.id()]);
   glUniform1i(uniforms.environment_map, 4);
 
   glActiveTexture(GL_TEXTURE5);
@@ -1101,14 +1096,14 @@ void RenderSystem::render_environment(const RenderScene &scene) {
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
     //texture_cubes_.insert({scene.environment.texture->id(), texture_id});
 
-    texture_cubes_ = {{scene.environment.texture->id(), texture_id}};
+    texture_cubes_ = {{scene.environment.texture.id(), texture_id}};
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          scene.environment.texture->width(),
-                          scene.environment.texture->height());
+                          scene.environment.texture.width(),
+                          scene.environment.texture.height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -1123,13 +1118,13 @@ void RenderSystem::render_environment(const RenderScene &scene) {
   GLuint frame_buffer_id = frame_buffers_[scene.environment.target.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-  auto texture_id = texture_cubes_[scene.environment.texture->id()];
+  auto texture_id = texture_cubes_[scene.environment.texture.id()];
 
   for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
     clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    auto resolution = glm::vec2(scene.environment.texture->width(), scene.environment.texture->height());
+    auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
     render_scene(*c_it, scene, resolution);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
