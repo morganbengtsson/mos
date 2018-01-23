@@ -118,6 +118,7 @@ Material RenderAssets::material(const std::string &path) {
       auto opacity = value["opacity"];
       auto roughness = value["roughness"];
       auto metallic = value["metallic"];
+      auto emission = value["emission"];
       return Material(diffuse_map,
                       normal_map,
                       metallic_map,
@@ -127,7 +128,8 @@ Material RenderAssets::material(const std::string &path) {
                       diffuse,
                       opacity,
                       roughness,
-                      metallic);
+                      metallic,
+                      emission);
     } else {
       throw std::runtime_error(path.substr(path.find_last_of(".")) +
           " file format is not supported.");

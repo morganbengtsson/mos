@@ -220,6 +220,7 @@ private:
     GLint material_roughness;
     GLint material_metallic;
     GLint material_opacity;
+    GLint material_emission;
 
     GLint camera_resolution;
     GLint camera_position;

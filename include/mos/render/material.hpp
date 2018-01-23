@@ -37,12 +37,14 @@ public:
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
-                    const float metallic = 0.0f);
+                    const float metallic = 0.0f,
+                    const float emission = 0.0f);
 
   explicit Material(const glm::vec3 &diffuse,
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
-                    const float metallic = 0.0f);
+                    const float metallic = 0.0f,
+  const float emission = 0.0f);
 
   virtual ~Material();
 
@@ -65,6 +67,11 @@ public:
    * @brief metallic
     */
   float metallic;
+
+  /**
+  * @brief emission
+   */
+  float emission;
 
   /**
   * @brief Texture of the material.

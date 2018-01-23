@@ -942,6 +942,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glUniform1fv(uniforms.material_metallic, 1,
                &model.material.metallic);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
+  glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
 
   // Camera in world space
   glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));
@@ -1178,6 +1179,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       material_metallic(
           glGetUniformLocation(program, "material.metallic")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),
+      material_emission(glGetUniformLocation(program, "material.emission")),
 
       camera_position(glGetUniformLocation(program, "camera.position")),
       camera_resolution(glGetUniformLocation(program, "camera.resolution")),
