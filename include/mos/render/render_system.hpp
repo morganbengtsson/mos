@@ -93,7 +93,7 @@ public:
     for (auto it = scenes_begin; it != scenes_end; it++) {
       render_shadow_map(*it);
       //TODO: Render if no data in environment texture.
-      //render_environment(*it);
+      render_environment(*it);
       render_scene(it->camera, *it, resolution);
     }
   }
