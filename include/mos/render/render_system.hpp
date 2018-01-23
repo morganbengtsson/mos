@@ -294,6 +294,7 @@ private:
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
+  std::map<RenderScene::Draw, GLuint> draw_map_;
 };
 
 }

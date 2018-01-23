@@ -43,7 +43,11 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
   wrap_map_{
       {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture::Wrap::REPEAT, GL_REPEAT}} {
+      {Texture::Wrap::REPEAT, GL_REPEAT}},
+  draw_map_{{RenderScene::Draw::LINES, GL_LINES},
+            {RenderScene::Draw::POINTS, GL_POINTS},
+            {RenderScene::Draw::TRIANGLES, GL_TRIANGLES}}
+{
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
@@ -955,12 +959,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
                &fog.attenuation_factor);
 
   const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
-  int draw_type = GL_TRIANGLES;
-  if (draw == RenderScene::Draw::LINES) {
-    draw_type = GL_LINES;
-  } else if (draw == RenderScene::Draw::POINTS) {
-    draw_type = GL_POINTS;
-  }
+  const int draw_type = draw_map_[draw];
   if (model.mesh) {
     if (num_elements > 0) {
       glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
