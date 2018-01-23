@@ -6,19 +6,15 @@
 #include <mos/render/render_cube_camera.hpp>
 namespace mos {
 /**
-* @brief Class for environmental lighting.
+* @brief Class for real time environment light.
 *
-* Contains a texture cube for environmentual lighting, both specular and diffuse.
-* The diffuse/blurred lighting is computed by shaders. The box is used for parallax correction,
-* so it should match the current lit scene as close as possible.
 */
 class EnvironmentLight {
   friend class RenderSystem;
 public:
   /**
    * @brief Environment constructor.
-   * @param texture Is the environment texture.
-   * @param box Describes how big the environment is, for parallax correction.
+   * @param extent Describes how big the environment is, for parallax correction.
    */
   EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
       const glm::vec3 &extent = glm::vec3(50.0f),
