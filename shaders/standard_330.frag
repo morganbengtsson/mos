@@ -176,22 +176,6 @@ void main() {
         normal = normalize(mix(normal, normal_from_map, amount));
     }
 
-    /*
-    vec3 tangentNormal = texture(material.normal_map, fragment.uv).xyz * 2.0 - 1.0;
-
-    vec3 Q1  = dFdx(fragment.position);
-    vec3 Q2  = dFdy(fragment.position);
-    vec2 st1 = dFdx(fragment.uv);
-    vec2 st2 = dFdy(fragment.uv);
-
-    vec3 N2   = normalize(fragment.normal);
-    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
-    vec3 B  = -normalize(cross(N2, T));
-    mat3 TBN = mat3(T, B, N2);
-    */
-
-    //normal = normalize(TBN * tangentNormal);
-
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo * material.opacity, albedo_from_map.rgb, albedo_from_map.a);
 
