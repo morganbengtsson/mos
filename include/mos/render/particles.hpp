@@ -126,6 +126,10 @@ public:
    */
   void sort(const glm::vec3 &position);
 
+  Particle& operator[](size_t index);
+
+  const Particle& operator[](size_t index) const;
+
   //TODO: Texture array for animation
   /**
    * @brief texture for quad

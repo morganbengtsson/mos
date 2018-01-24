@@ -39,4 +39,11 @@ void Particles::sort(const glm::vec3 &position) {
             });
 }
 
+Particle &Particles::operator[](size_t index) {
+  return particles_[index];
+}
+const Particle &Particles::operator[](size_t index) const {
+  return particles_[index];
+}
+
 }
