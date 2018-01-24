@@ -589,7 +589,6 @@ unsigned int RenderSystem::create_texture(const Texture2D &texture) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
 
-  std::cout << wrap_map_.size() << std::endl;
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
   if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {

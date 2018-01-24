@@ -47,7 +47,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   glfwSetScrollCallback(window_, scroll_callback);
   glfwSetWindowPosCallback(window_, position_callback);
 
-  glfwSwapInterval(1);
+  glfwSwapInterval(0);
 
   hand_cursor_ = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
   arrow_cursor_ = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
