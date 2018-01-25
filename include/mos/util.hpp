@@ -7,6 +7,7 @@
 #include <json.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <chrono>
 
 namespace mos {
 
@@ -26,6 +27,12 @@ std::vector<std::string> split(const std::string &s, char delim);
 glm::mat4 jsonarray_to_mat4(const nlohmann::json &array);
 
 glm::vec3 position(const glm::mat4 &mat);
+
+inline int now_ms(){
+  using namespace std::chrono;
+  auto now = system_clock::now();
+  return duration_cast<milliseconds>(now.time_since_epoch()).count();
+}
 
 
 }
