@@ -28,11 +28,7 @@ glm::mat4 jsonarray_to_mat4(const nlohmann::json &array);
 
 glm::vec3 position(const glm::mat4 &mat);
 
-inline int now_ms(){
-  using namespace std::chrono;
-  auto now = system_clock::now();
-  return duration_cast<milliseconds>(now.time_since_epoch()).count();
-}
+int now_ms();
 
 
 }

@@ -54,6 +54,7 @@ struct Fragment {
     vec4 proj_coords[max_decals];
     vec4 proj_shadow;
     vec3 camera_to_surface;
+    float ao;
 };
 
 uniform Material material;
@@ -271,6 +272,7 @@ void main() {
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
     color.rgb = Lo + diffuse_static + ambient + material.emission * albedo;
+    color.rgb *= fragment.ao;
     //color.a = material.opacity * albedo_from_map.a;
     color.a = material.opacity;
 

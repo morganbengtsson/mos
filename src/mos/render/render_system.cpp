@@ -391,6 +391,10 @@ void RenderSystem::load(const Model &model) {
     glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
                                                          sizeof(glm::vec2)));
+    // AO
+    glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
+                              sizeof(glm::vec2) + sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                  element_array_buffers_.at(model.mesh->id()));
@@ -399,6 +403,7 @@ void RenderSystem::load(const Model &model) {
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
     glEnableVertexAttribArray(4);
+    glEnableVertexAttribArray(5);
     glBindVertexArray(0);
     vertex_arrays_.insert({model.mesh->id(), vertex_array});
   }

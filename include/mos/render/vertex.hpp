@@ -24,7 +24,8 @@ public:
                   const glm::vec3 & normal = glm::vec3(0.0f),
                   const glm::vec3 & tangent = glm::vec3(0.0f),
                   const glm::vec2 & uv = glm::vec2(0.0f),
-                  const glm::vec2 & uv_lightmap = glm::vec2(0.0f));
+                  const glm::vec2 & uv_lightmap = glm::vec2(0.0f),
+                  const float ao = 1.0f);
 
   /**
    * @brief Destructor.
@@ -96,7 +97,13 @@ public:
   /**
    * @brief Texture coordinate for the lightmap.
    */
+  [[deprecated]]
   glm::vec2 uv_lightmap;
+
+   /**
+   * @brief Ambient occlusion.
+   */
+  float ao;
 };
 }
 
