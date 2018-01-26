@@ -868,6 +868,10 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
 
 
   glActiveTexture(GL_TEXTURE7);
+  if (model.material.ambient_occlusion_map){
+    std::cout << model.name() << std::endl;
+    std::cout << "has map!" << std::endl;
+  }
   glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                ? textures_[model.material.ambient_occlusion_map->id()]
                                : white_texture_);
@@ -936,6 +940,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
                &model.material.metallic);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
   glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
+  glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
   // Camera in world space
   glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));
@@ -1108,6 +1113,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
           glGetUniformLocation(program, "material.metallic")),
       material_opacity(glGetUniformLocation(program, "material.opacity")),
       material_emission(glGetUniformLocation(program, "material.emission")),
+      material_ambient_occlusion(glGetUniformLocation(program, "material.ambient_occlusion")),
 
       camera_position(glGetUniformLocation(program, "camera.position")),
       camera_resolution(glGetUniformLocation(program, "camera.resolution")),

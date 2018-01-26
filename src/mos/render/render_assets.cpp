@@ -111,19 +111,19 @@ Material RenderAssets::material(const std::string &path) {
       auto light_map = read_texture("light_map");
       auto metallic_map = read_texture("metallic_map");
       auto roughness_map = read_texture("roughness_map");
-
-      //auto ambient_occlusion_map = read_texture("ambient_occlusion_map");
+      auto ambient_occlusion_map = read_texture("ambient_occlusion_map");
 
       auto diffuse = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
       auto opacity = value["opacity"];
       auto roughness = value["roughness"];
       auto metallic = value["metallic"];
       auto emission = value["emission"];
+      auto ambient_occlusion = value["ambient_occlusion"];
       return Material(diffuse_map,
                       normal_map,
                       metallic_map,
                       roughness_map,
-                      nullptr,
+                      ambient_occlusion_map,
                       light_map,
                       diffuse,
                       opacity,

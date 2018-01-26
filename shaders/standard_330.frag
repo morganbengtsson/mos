@@ -9,6 +9,7 @@ struct Material {
     float metallic;
     float opacity;
     float emission;
+    float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D light_map;
     sampler2D normal_map;
@@ -186,7 +187,8 @@ void main() {
     vec4 roughnesss_from_map = texture(material.roughness_map, fragment.uv);
     float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
 
-    float ambient_occlusion = texture(material.ambient_occlusion_map, fragment.uv).r;
+    float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
+    float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     //TODO: Function
 

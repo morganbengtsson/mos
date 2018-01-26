@@ -8,8 +8,8 @@
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {
-  class Material;
-  using SharedMaterial = std::shared_ptr<Material>;
+class Material;
+using SharedMaterial = std::shared_ptr<Material>;
 
 /**
  * @brief The Material class
@@ -38,13 +38,15 @@ public:
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
                     const float metallic = 0.0f,
-                    const float emission = 0.0f);
+                    const float emission = 0.0f,
+                    const float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &diffuse,
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
                     const float metallic = 0.0f,
-  const float emission = 0.0f);
+                    const float emission = 0.0f,
+                    const float ambient_occlusion = 1.0f);
 
   virtual ~Material();
 
@@ -72,6 +74,11 @@ public:
   * @brief emission
    */
   float emission;
+
+  /**
+  * @brief Ambient occlusion
+   */
+  float ambient_occlusion;
 
   /**
   * @brief Texture of the material.
