@@ -868,10 +868,6 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
 
 
   glActiveTexture(GL_TEXTURE7);
-  if (model.material.ambient_occlusion_map){
-    std::cout << model.name() << std::endl;
-    std::cout << "has map!" << std::endl;
-  }
   glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                ? textures_[model.material.ambient_occlusion_map->id()]
                                : white_texture_);
