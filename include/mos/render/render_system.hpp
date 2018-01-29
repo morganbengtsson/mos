@@ -86,7 +86,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       render_shadow_map(*it);
-      render_environment(*it);
+      render_environment(*it, color);
       render_scene(it->camera, *it, resolution);
     }
   }
@@ -116,7 +116,7 @@ private:
 
   void render_shadow_map(const RenderScene &render_scene);
 
-  void render_environment(const RenderScene &render_scene);
+  void render_environment(const RenderScene &render_scene, const glm::vec4 &clear_color);
 
   /**
    * @brief Updates render state of model.

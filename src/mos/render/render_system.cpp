@@ -68,6 +68,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
   // glEnable(GL_TEXTURE_CUBE_MAP);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
@@ -1029,7 +1032,7 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
                glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void RenderSystem::render_environment(const RenderScene &scene) {
+void RenderSystem::render_environment(const RenderScene &scene, const glm::vec4 &clear_color) {
   if (frame_buffers_.find(scene.environment.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1067,7 +1070,7 @@ void RenderSystem::render_environment(const RenderScene &scene) {
   for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
-    clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    clear(clear_color);
     auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
     render_scene(*c_it, scene, resolution);
   }
