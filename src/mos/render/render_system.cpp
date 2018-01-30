@@ -947,7 +947,7 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
-  auto light_color = light.color * light.strength;
+  auto light_color = light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
   glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
 
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
