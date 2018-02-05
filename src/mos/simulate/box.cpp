@@ -4,10 +4,8 @@
 
 namespace mos {
 
-std::atomic_uint Box::current_id_;
-
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
-    : extent(extent), position(position), id_(current_id_++) {}
+    : extent(extent), position(position){}
 
 Box::Box() {}
 
@@ -173,16 +171,12 @@ void Box::transform(const glm::mat4 &transform) {
 
 float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
 
-unsigned int Box::id() const {
-  return id_;
-}
-
 glm::vec3 Box::size() const {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
                    glm::abs(max().z - min().z));
 }
 std::ostream &operator<<(std::ostream &os, const Box &box) {
-  os << "Box object " << " id_: " << box.id_ << " extent: " << box.extent << " position: " << box.position << std::endl;
+  os << "Box object " << " extent: " << box.extent << " position: " << box.position << std::endl;
   return os;
 }
 

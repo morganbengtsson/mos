@@ -189,12 +189,6 @@ public:
   float volume() const;
 
   /**
-   * @brief id
-   * @return
-   */
-  unsigned int id() const;
-
-  /**
    * @brief Size of box.
    * @return size in x, y and z directions.
    */
@@ -208,10 +202,20 @@ public:
    */
   friend std::ostream &operator<<(std::ostream &os, const Box &box);
 
+  /**
+   * @brief Check if box is equal.
+   * @param other Boxs
+   * @return
+   */
   bool operator==(const Box &other) const {
     return position == other.position && extent == other.extent;
   }
 
+  /**
+   * @brief Check if box is not equal.
+   * @param other Box
+   * @return
+   */
   bool operator!=(const Box &other) const {
     return position != other.position || extent != other.extent;
   }
@@ -227,11 +231,6 @@ public:
   glm::vec3 position;
 
 private:
-  [[deprecated]]
-  static std::atomic_uint current_id_;
-  [[deprecated]]
-  unsigned int id_;
-
   template<class T>
   std::pair<glm::vec3, glm::vec3> min_max_positions(T begin, T end) const {
     std::pair<glm::vec3, glm::vec3> m;
