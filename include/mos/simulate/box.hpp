@@ -46,7 +46,7 @@ struct BoxIntersection {
 class Box {
 public:
   using OptionalIntersection = std::experimental::optional<glm::vec3>;
-  template <class T> Box(const T &positions, const glm::mat4 &transform) {
+  template<class T> Box(const T &positions, const glm::mat4 &transform) {
     std::vector<glm::vec3> transformed;
 
     position = glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
@@ -63,7 +63,7 @@ public:
     position = min_max.first + extent;
   }
 
-  template <class VertexIt>
+  template<class VertexIt>
   /**
    * @brief Box constructor.
    * @param begin Vertex iterator.
@@ -103,8 +103,7 @@ public:
   Box();
 
   static Box create_from_model(const Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
-  static Box create_from_min_max(const glm::vec3& min, const glm::vec3 &max);
-
+  static Box create_from_min_max(const glm::vec3 &min, const glm::vec3 &max);
 
   /**
    * @brief min
@@ -158,6 +157,26 @@ public:
    */
   OptionalIntersection intersection(const Box &other) const;
 
+  bool intersect2(const Box &other) const {
+    auto mmax = max();
+    auto mmin = min();
+    auto other_min = other.min();
+    auto other_max = other.max();
+    if (mmax.x < other_min.x)
+      return false;
+    if (mmin.x > other_max.x)
+      return false;
+    if (mmax.y < other_min.y)
+      return false;
+    if (mmin.y > other_max.y)
+      return false;
+    if (mmax.z < other_min.z)
+      return false;
+    if (mmin.z > other_max.z)
+      return false;
+    return true; // boxes overlap
+  }
+
   /**
    * @brief Set the box transform, only uses position elements.
    * @param transform
@@ -189,12 +208,12 @@ public:
    */
   friend std::ostream &operator<<(std::ostream &os, const Box &box);
 
-  bool operator ==(const Box &other) const {
+  bool operator==(const Box &other) const {
     return position == other.position && extent == other.extent;
   }
 
-  bool operator !=(const Box &other) const {
-    return position != other.position && extent != other.extent;
+  bool operator!=(const Box &other) const {
+    return position != other.position || extent != other.extent;
   }
 
   /**
@@ -213,7 +232,7 @@ private:
   [[deprecated]]
   unsigned int id_;
 
-  template <class T>
+  template<class T>
   std::pair<glm::vec3, glm::vec3> min_max_positions(T begin, T end) const {
     std::pair<glm::vec3, glm::vec3> m;
     auto x_extremes = std::minmax_element(
