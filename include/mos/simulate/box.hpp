@@ -45,7 +45,6 @@ struct BoxIntersection {
  */
 class Box {
 public:
-  using OptionalIntersection = std::experimental::optional<glm::vec3>;
   template<class T> Box(const T &positions, const glm::mat4 &transform) {
     std::vector<glm::vec3> transformed;
 
@@ -132,30 +131,6 @@ public:
    * @return
    */
   bool intersects(const Ray &ray) const;
-
-  /**
-   * @brief intersects
-   * @param other
-   * @return
-   */
-  [[deprecated]]
-  std::experimental::optional<BoxIntersection>
-  intersects(const Box &other) const;
-
-  /**
-   * @brief Simple intersect method.
-   * @param other
-   * @return
-   */
-  [[deprecated]]
-  glm::vec3 intersects_simple(const Box &other);
-
-  /**
-   * @brief intersection
-   * @param other
-   * @return
-   */
-  OptionalIntersection intersection(const Box &other) const;
 
   bool intersect2(const Box &other) const {
     auto mmax = max();
