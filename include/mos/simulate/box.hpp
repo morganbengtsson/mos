@@ -189,6 +189,14 @@ public:
    */
   friend std::ostream &operator<<(std::ostream &os, const Box &box);
 
+  bool operator ==(const Box &other) const {
+    return position == other.position && extent == other.extent;
+  }
+
+  bool operator !=(const Box &other) const {
+    return position != other.position && extent != other.extent;
+  }
+
   /**
    * @brief extent
    */
@@ -200,7 +208,9 @@ public:
   glm::vec3 position;
 
 private:
+  [[deprecated]]
   static std::atomic_uint current_id_;
+  [[deprecated]]
   unsigned int id_;
 
   template <class T>

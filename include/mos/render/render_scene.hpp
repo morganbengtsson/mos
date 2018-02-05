@@ -37,16 +37,26 @@ public:
   RenderScene();
 
   template<class T>
-  RenderScene(T begin, T end, const RenderCamera &camera,
+  RenderScene(T begin,
+              T end,
+              const RenderCamera &camera,
               const Light &light = Light(),
+              const EnvironmentLight &environment_light = EnvironmentLight(),
               const mos::Fog &fog_linear = Fog(),
               const Shader &shader = Shader::STANDARD,
               const Draw &draw = Draw::TRIANGLES)
-      : models(begin, end), camera(camera), light(light), fog(fog_linear), shader(shader), draw(draw) {}
+      : models(begin, end),
+        camera(camera),
+        light(light),
+        environment(environment_light),
+        fog(fog_linear),
+        shader(shader),
+        draw(draw) {}
 
   RenderScene(const std::initializer_list<Model> &models,
               const RenderCamera &camera,
-              const mos::Light &light = Light(),
+              const Light &light = Light(),
+              const EnvironmentLight &environment_light = EnvironmentLight(),
               const mos::Fog &fog = Fog(),
               const Shader &shader = Shader::STANDARD,
               const Draw &draw = Draw::TRIANGLES);
