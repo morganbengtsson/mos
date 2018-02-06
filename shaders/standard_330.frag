@@ -275,8 +275,9 @@ void main() {
 
     color.rgb = Lo + diffuse_static + ambient + material.emission * albedo;
     color.rgb *= fragment.ao;
-    //color.a = material.opacity * albedo_from_map.a;
-    color.a = material.opacity;
+    color.a = material.opacity * albedo_from_map.a;
+    //color.a = material.opcaity;
+    color.a = albedo_from_map.a;
 
     //Fog
     float distance = distance(fragment.position, camera.position);
