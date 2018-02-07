@@ -40,12 +40,6 @@ public:
   void text(const std::string &text);
 
   /**
-   * @brief intensity
-   * @param ambient
-   */
-  void ambient(const glm::vec3 &ambient);
-
-  /**
    * @brief text
    * @return Current text
    */
@@ -110,12 +104,6 @@ public:
    * @return
    */
   mos::Model model() const;
-
-  /**
-   * @brief Set color of diffuse material.
-   * @param diffuse
-   */
-  void diffuse(const glm::vec3 &diffuse);
 
   /**
    * @brief spacing between characters

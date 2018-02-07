@@ -73,10 +73,6 @@ void Text::text(const std::string &text) {
   }
 }
 
-void Text::diffuse(const glm::vec3 &diffuse) {
-  model_.material.albedo = diffuse;
-}
-
 float Text::width() const {
   if (model_.mesh->vertices.size() > 2){
     glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
@@ -119,7 +115,6 @@ glm::mat4 Text::transform() const {
 }
 
 Model Text::model() const { return model_; }
-
 
 
 Text &Text::operator=(const std::string &input) {
