@@ -1,6 +1,7 @@
 #include <mos/render/text.hpp>
 #include <mos/util.hpp>
 #include <glm/glm.hpp>
+#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
@@ -45,28 +46,30 @@ void Text::text(const std::string &text) {
         float rect_h = -character.rect_h;
         float rect_w = character.rect_w;
 
+        float z = index / 2000.0f;
         model_.mesh->add(
-            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
+            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
 
         model_.mesh->add(Vertex(
-            glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
+            glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
 
-        model_.mesh->add(Vertex(glm::vec3(index + offset_x, offset_y + line_index, 0.0f),
+        model_.mesh->add(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v1), glm::vec2(u1, v1)));
         model_.mesh->add(
-            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, 0.0f),
+            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
 
         model_.mesh->add(Vertex(glm::vec3(index + rect_w + offset_x,
-                                          rect_h + offset_y + line_index, 0.0f),
+                                          rect_h + offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v2), glm::vec2(u2, v2)));
         model_.mesh->add(Vertex(
-            glm::vec3(index + rect_w + offset_x, offset_y + line_index, 0.0f),
+            glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
 
         index += character.advance + spacing;
+        std::cout << z << std::endl;
       }
       line_index += line_height;
     }
