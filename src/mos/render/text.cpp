@@ -69,7 +69,6 @@ void Text::text(const std::string &text) {
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
 
         index += character.advance + spacing;
-        std::cout << z << std::endl;
       }
       line_index += line_height;
     }
