@@ -6,4 +6,7 @@ AudioScene::AudioScene(
     const AudioListener &listener)
     : AudioScene(buffer_sources.begin(), buffer_sources.end(),
                  stream_sources.begin(), stream_sources.end(), listener) {}
+
+AudioScene::AudioScene() {
+}
 }

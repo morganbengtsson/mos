@@ -41,6 +41,8 @@ public:
              const std::initializer_list<AudioStreamSource> stream_sources,
              const AudioListener &listener);
 
+  AudioScene();
+
   /**
    * @brief buffer_sources to update.
    */
