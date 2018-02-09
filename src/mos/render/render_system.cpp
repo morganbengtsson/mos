@@ -196,6 +196,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
 
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
   brdf_lut_texture.format = Texture::Format::RGB;
+  brdf_lut_texture.wrap = Texture::Wrap::CLAMP_TO_EDGE;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
 }
 
