@@ -1,5 +1,5 @@
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef MOS_BUTTON_HPP
+#define MOS_BUTTON_HPP
 
 #include <functional>
 #include <mos/render/model.hpp>
@@ -31,4 +31,4 @@ private:
   std::function<void()> click_callback_;
 };
 }
-#endif // BUTTON_HPP
+#endif // MOS_BUTTON_HPP

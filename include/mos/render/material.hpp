@@ -38,14 +38,14 @@ public:
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
                     const float metallic = 0.0f,
-                    const float emission = 0.0f,
+                    const glm::vec3 emission = glm::vec3(0.0f),
                     const float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &diffuse,
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
                     const float metallic = 0.0f,
-                    const float emission = 0.0f,
+                    const glm::vec3 &emission = glm::vec3(0.0f),
                     const float ambient_occlusion = 1.0f);
 
   virtual ~Material();
@@ -73,7 +73,9 @@ public:
   /**
   * @brief emission
    */
-  float emission;
+  glm::vec3 emission;
+
+  float emission_strength;
 
   /**
   * @brief Ambient occlusion
