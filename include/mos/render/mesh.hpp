@@ -124,7 +124,7 @@ public:
   Vertices vertices;
   Indices indices;
 private:
-  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified_;
+  TimePoint modified_;
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
   static std::atomic_uint current_id_;
   unsigned int id_;
