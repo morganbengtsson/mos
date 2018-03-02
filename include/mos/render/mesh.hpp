@@ -10,8 +10,8 @@
 #include <chrono>
 
 namespace mos {
-  class Mesh;
-  using SharedMesh = std::shared_ptr<Mesh>;
+class Mesh;
+using SharedMesh = std::shared_ptr<Mesh>;
 /**
  * Describes the geometric data to be rendered. Contains vertices
  * and indices, for vertex order.
@@ -19,6 +19,8 @@ namespace mos {
 class Mesh {
 public:
   using Positions = std::vector<glm::vec3>;
+  using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+
   /**
    * @brief Vertices container.
    */
@@ -29,7 +31,7 @@ public:
    */
   using Indices = std::vector<int>;
 
-  template <class Tv, class Te>
+  template<class Tv, class Te>
   /**
    * @brief Mesh constructor.
    * @param vertices_begin Iterator to first vertex.
@@ -52,8 +54,8 @@ public:
    * @param vertices
    * @param elements
    */
-  Mesh(std::initializer_list<Vertex> vertices,
-       std::initializer_list<int> elements);
+  Mesh(const std::initializer_list<Vertex> &vertices,
+       const std::initializer_list<int> &elements);
 
   /**
    * @brief Mesh constructor from file.
@@ -87,7 +89,7 @@ public:
   /**
    * @return Time when modified.
    */
-  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified() const;
+  TimePoint modified() const;
 
   /**
    * @brief invalidates the mesh, hence the data is updated.

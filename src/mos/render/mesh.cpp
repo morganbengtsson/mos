@@ -12,8 +12,8 @@ namespace mos {
 
 std::atomic_uint Mesh::current_id_;
 
-Mesh::Mesh(std::initializer_list<Vertex> vertices,
-           std::initializer_list<int> elements)
+Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
+           const std::initializer_list<int> &elements)
   : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
@@ -252,7 +252,7 @@ void Mesh::calculate_flat_normals() {
     }
   }
 }
-std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> Mesh::modified() const {
+Mesh::TimePoint Mesh::modified() const {
   return modified_;
 }
 }
