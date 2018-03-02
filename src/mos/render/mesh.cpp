@@ -94,7 +94,6 @@ void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
     it->position = glm::mix(it1->position, it2->position, amount);
     it->normal = glm::mix(it1->normal, it2->normal, amount);
     it->uv = glm::mix(it1->uv, it2->uv, amount);
-    it->uv_lightmap = glm::mix(it1->uv_lightmap, it2->uv_lightmap, amount);
 
     it++;
     it1++;

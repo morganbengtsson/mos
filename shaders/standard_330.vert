@@ -6,7 +6,6 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    vec2 light_map_uv;
     mat3 tbn;
     vec4 proj_coords[max_decals];
     vec4 proj_shadow;
@@ -41,8 +40,7 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec3 tangent;
 layout(location = 3) in vec2 uv;
-layout(location = 4) in vec2 light_map_uv;
-layout(location = 5) in float ao;
+layout(location = 4) in float ao;
 out Fragment fragment;
 
 void main() {
@@ -61,7 +59,6 @@ void main() {
 
     fragment.ao = ao;
     fragment.uv = uv;
-    fragment.light_map_uv = light_map_uv;
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normalize(normal_matrix * normal);
     fragment.camera_to_surface = normalize(camera.position - fragment.position);

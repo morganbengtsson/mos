@@ -85,11 +85,8 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     //auto uv = (v0_.uv + v1_.uv + v2_.uv) / 3.0f;
     auto uv = a * v0_.uv + b * v1_.uv + c * v2_.uv;
 
-    //auto uv_l = (v0_.uv_lightmap + v1_.uv_lightmap + v2_.uv_lightmap) / 3.0f;
-    auto uv_l = a * v0_.uv_lightmap + b * v1_.uv_lightmap + c * v2_.uv_lightmap;
-
     //auto uv_l = bary.x * v0_.uv_lightmap + bary.y * v1_.uv_lightmap + bary.z * v2_.uv_lightmap;
-    auto v = Vertex(p, n, t, uv, uv_l);
+    auto v = Vertex(p, n, t, uv);
     return std::experimental::optional<Vertex>(v);
   } else {
     return std::experimental::optional<Vertex>();

@@ -50,7 +50,6 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    vec2 light_map_uv;
     mat3 tbn;
     vec4 proj_coords[max_decals];
     vec4 proj_shadow;
@@ -165,9 +164,6 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
 }
 
 void main() {
-
-    vec3 static_light = texture(material.light_map, fragment.light_map_uv).rgb;
-
     vec3 normal = fragment.normal;
 
     vec3 normal_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
@@ -210,7 +206,6 @@ void main() {
             }
         }
     }
-    vec3 diffuse_static = static_light * albedo;
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
@@ -273,7 +268,7 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color.rgb = Lo + diffuse_static + ambient + material.emission;
+    color.rgb = Lo + ambient + material.emission;
     color.rgb *= fragment.ao;
     color.a = clamp(material.opacity + albedo_from_map.a, 0.0, 1.0);
 
