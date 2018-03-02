@@ -418,16 +418,15 @@ void RenderSystem::load(const Model &model) {
                  model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    /*
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-  element_array_buffers_[model.mesh->id()]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               model.mesh->elements_size() * sizeof (unsigned int),
-               model.mesh->elements_data(),
-               GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  */
-    //model.mesh->valid_ = true;
+    if (model.mesh->indices.size() > 0) {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[model.mesh->id()].id);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                   model.mesh->indices.size() * sizeof(unsigned int),
+                   model.mesh->indices.data(),
+                   GL_DYNAMIC_DRAW);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
   }
   load(model.material.albedo_map);
   load(model.material.normal_map);
