@@ -17,7 +17,7 @@ Mesh::Mesh(std::initializer_list<Vertex> vertices,
   : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
-Mesh::Mesh(const std::string &path) : id_(current_id_++){
+Mesh::Mesh(const std::string &path) : id_(current_id_++) {
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
@@ -42,12 +42,15 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++){
     indices.assign(input_indices.begin(), input_indices.end());
 
     calculate_tangents();
+    invalidate();
   } else {
     throw std::runtime_error("File extension not supported.");
   }
 }
 
-Mesh::Mesh() : valid_(false), id_(current_id_++) {}
+Mesh::Mesh() : id_(current_id_++) {
+  invalidate();
+}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(),
@@ -97,10 +100,7 @@ Mesh::Indices::iterator Mesh::elements_end() { return indices.end(); }
 
 unsigned int Mesh::id() const { return id_; }
 
-bool Mesh::valid() const { return valid_; }
-
 void Mesh::invalidate() {
-  valid_ = false;
   modified_ = std::chrono::system_clock::now();
 }
 
@@ -111,12 +111,12 @@ void Mesh::clear() {
 
 void Mesh::add(const Vertex& vertex) {
   vertices.push_back(vertex);
-  valid_ = false;
+  invalidate();
 }
 
 void Mesh::add(const int element) {
   indices.push_back(element);
-  valid_ = false;
+  invalidate();
 }
 
 Mesh::Positions Mesh::positions() const {

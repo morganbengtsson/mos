@@ -7,19 +7,21 @@ namespace mos {
 //TODO: Inherit from abstract mesh?
 std::atomic_uint Particles::current_id_(10000);
 
-Particles::Particles() : valid_(false), id_(current_id_++) {}
+Particles::Particles() : id_(current_id_++) {
+  invalidate();
+}
 
 Particles::~Particles() {}
 
 unsigned int Particles::id() const { return id_; }
 
-bool Particles::valid() const { return valid_; }
-
-void Particles::invalidate() { valid_ = false; }
+void Particles::invalidate() {
+  modified_ = std::chrono::system_clock::now();
+}
 
 void Particles::add(const Particle particle) {
   particles_.push_back(particle);
-  valid_ = false;
+  invalidate();
 }
 
 Particle Particles::back() { return particles_.back(); }

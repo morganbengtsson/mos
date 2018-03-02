@@ -4,6 +4,7 @@
 #include <vector>
 #include <atomic>
 #include <mos/render/texture_2d.hpp>
+#include <chrono>
 #include "particle.hpp"
 
 namespace mos {
@@ -25,8 +26,8 @@ public:
    * @param begin First particle iterator.
    * @param end Last particle iterator.
    */
-  Particles(T begin, T end)
-      : valid_(false) {
+  Particles(T begin, T end) {
+    invalidate();
     particles_.assign(begin, end);
   }
 
@@ -111,11 +112,6 @@ public:
   unsigned int id() const;
 
   /**
-   * @brief valid
-   */
-  bool valid() const;
-
-  /**
    * @brief invalidate
    */
   void invalidate();
@@ -137,10 +133,10 @@ public:
   SharedTexture2D emission_map;
 
 private:
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified_;
   Parts particles_;
   static std::atomic_uint current_id_;
   unsigned int id_;
-  bool valid_;
 };
 }
 

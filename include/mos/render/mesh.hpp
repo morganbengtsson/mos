@@ -44,8 +44,10 @@ public:
    */
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te elements_begin, Te elements_end)
-      : valid_(false), vertices(vertices_begin, vertices_end),
-        indices(elements_begin, elements_end), id_(current_id_++) {}
+      : vertices(vertices_begin, vertices_end),
+        indices(elements_begin, elements_end), id_(current_id_++) {
+    invalidate();
+  }
 
   /**
    * @brief Mesh constructor
@@ -173,7 +175,7 @@ public:
 
   void pop_front(const int num) {
     vertices.erase(vertices.begin(), vertices.begin() + num);
-    valid_ = false;
+    invalidate();
   }
 
   /**
@@ -202,7 +204,6 @@ private:
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
   static std::atomic_uint current_id_;
   unsigned int id_;
-  bool valid_;
 };
 }
 

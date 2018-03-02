@@ -108,6 +108,12 @@ public:
   */
 
 private:
+  struct ArrayBuffer{
+    GLuint id; // TODO const?
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
+  };
+
+
    /**
    * @brief models_batch rendering.
    * @param render_scene
@@ -277,7 +283,7 @@ private:
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
   std::unordered_map<unsigned int, GLuint> textures_;
   std::unordered_map<unsigned int, GLuint> texture_cubes_;
-  std::unordered_map<unsigned int, GLuint> array_buffers_;
+  std::unordered_map<unsigned int, ArrayBuffer> array_buffers_;
   std::unordered_map<unsigned int, GLuint> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 

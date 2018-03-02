@@ -230,7 +230,7 @@ RenderSystem::~RenderSystem() {
   }
 
   for (auto &ab : array_buffers_) {
-    glDeleteBuffers(1, &ab.second);
+    glDeleteBuffers(1, &ab.second.id);
   }
 
   for (auto &eab : element_array_buffers_) {
@@ -353,14 +353,14 @@ void RenderSystem::load(const Model &model) {
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
     if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
-      unsigned int array_buffer;
-      glGenBuffers(1, &array_buffer);
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
+      unsigned int array_buffer_id;
+      glGenBuffers(1, &array_buffer_id);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffer_id);
       glBufferData(GL_ARRAY_BUFFER,
                    model.mesh->vertices.size() * sizeof(Vertex),
                    model.mesh->vertices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({model.mesh->id(), array_buffer});
+      array_buffers_.insert({model.mesh->id(), ArrayBuffer{array_buffer_id, model.mesh->modified_}});
     }
     if (element_array_buffers_.find(model.mesh->id()) ==
         element_array_buffers_.end()) {
@@ -373,7 +373,7 @@ void RenderSystem::load(const Model &model) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()));
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()).id);
     // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
@@ -412,8 +412,8 @@ void RenderSystem::load(const Model &model) {
     vertex_arrays_.insert({model.mesh->id(), vertex_array});
   }
 
-  if (model.mesh && !model.mesh->valid()) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()]);
+  if (model.mesh && (model.mesh->modified_ > array_buffers_[model.mesh->id()].modified)){
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()].id);
     glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
                  model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -427,7 +427,7 @@ void RenderSystem::load(const Model &model) {
                GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   */
-    model.mesh->valid_ = true;
+    //model.mesh->valid_ = true;
   }
   load(model.material.albedo_map);
   load(model.material.normal_map);
@@ -444,8 +444,8 @@ void RenderSystem::unload(const Model &model) {
     vertex_arrays_.erase(model.mesh->id());
 
     if (array_buffers_.find(model.mesh->id()) != array_buffers_.end()) {
-      auto abo_id = array_buffers_[model.mesh->id()];
-      glDeleteBuffers(1, &abo_id);
+      auto abo = array_buffers_[model.mesh->id()];
+      glDeleteBuffers(1, &abo.id);
       array_buffers_.erase(model.mesh->id());
     }
     if (element_array_buffers_.find(model.mesh->id()) !=
@@ -507,7 +507,7 @@ void RenderSystem::clear_buffers() {
   textures_.clear();
 
   for (auto &ab : array_buffers_) {
-    glDeleteBuffers(1, &ab.second);
+    glDeleteBuffers(1, &ab.second.id);
   }
   array_buffers_.clear();
 
@@ -751,9 +751,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
         glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                      particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        array_buffers_.insert({particles.id(), array_buffer});
+        array_buffers_.insert({particles.id(), ArrayBuffer{array_buffer, particles.modified_}});
       }
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -767,7 +767,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
       glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()]);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
     glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                  particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
