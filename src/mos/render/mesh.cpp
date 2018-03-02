@@ -99,7 +99,10 @@ unsigned int Mesh::id() const { return id_; }
 
 bool Mesh::valid() const { return valid_; }
 
-void Mesh::invalidate() { valid_ = false; }
+void Mesh::invalidate() {
+  valid_ = false;
+  modified_ = std::chrono::system_clock::now();
+}
 
 void Mesh::clear() {
   vertices.clear();
