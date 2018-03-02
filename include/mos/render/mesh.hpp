@@ -13,12 +13,10 @@ namespace mos {
   class Mesh;
   using SharedMesh = std::shared_ptr<Mesh>;
 /**
- * A class that describes the geometric data to be rendered. Contains vertices
- * and elements, for vertex order, when rendering.
+ * Describes the geometric data to be rendered. Contains vertices
+ * and indices, for vertex order.
  */
 class Mesh {
-  friend class RenderSystem;
-
 public:
   using Positions = std::vector<glm::vec3>;
   /**
@@ -85,6 +83,11 @@ public:
    * @return A unique identifier.
    */
   unsigned int id() const;
+
+  /**
+   * @return Time when modified.
+   */
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified() const;
 
   /**
    * @brief invalidates the mesh, hence the data is updated.

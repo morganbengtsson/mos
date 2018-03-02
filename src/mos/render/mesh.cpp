@@ -252,4 +252,7 @@ void Mesh::calculate_flat_normals() {
     }
   }
 }
+std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> Mesh::modified() const {
+  return modified_;
+}
 }
