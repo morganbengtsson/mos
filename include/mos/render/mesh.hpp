@@ -95,6 +95,7 @@ public:
    * @brief invalidates the mesh, hence the data is updated.
    *
    */
+  //TODO: Automatic when moodified
   void invalidate();
 
   /**
