@@ -234,7 +234,7 @@ RenderSystem::~RenderSystem() {
   }
 
   for (auto &eab : element_array_buffers_) {
-    glDeleteBuffers(1, &eab.second);
+    glDeleteBuffers(1, &eab.second.id);
   }
 
   for (auto &va : vertex_arrays_) {
@@ -360,18 +360,18 @@ void RenderSystem::load(const Model &model) {
                    model.mesh->vertices.size() * sizeof(Vertex),
                    model.mesh->vertices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({model.mesh->id(), ArrayBuffer{array_buffer_id, model.mesh->modified_}});
+      array_buffers_.insert({model.mesh->id(), Buffer{array_buffer_id, model.mesh->modified_}});
     }
     if (element_array_buffers_.find(model.mesh->id()) ==
         element_array_buffers_.end()) {
-      unsigned int element_array_buffer;
-      glGenBuffers(1, &element_array_buffer);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer);
+      unsigned int element_array_buffer_id;
+      glGenBuffers(1, &element_array_buffer_id);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer_id);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                    model.mesh->indices.size() * sizeof(unsigned int),
                    model.mesh->indices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_array_buffers_.insert({model.mesh->id(), element_array_buffer});
+      element_array_buffers_.insert({model.mesh->id(), Buffer{element_array_buffer_id, model.mesh->modified_}});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()).id);
     // Position
@@ -401,7 +401,7 @@ void RenderSystem::load(const Model &model) {
                               sizeof(glm::vec2) + sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 element_array_buffers_.at(model.mesh->id()));
+                 element_array_buffers_.at(model.mesh->id()).id);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -450,8 +450,8 @@ void RenderSystem::unload(const Model &model) {
     }
     if (element_array_buffers_.find(model.mesh->id()) !=
         element_array_buffers_.end()) {
-      auto ebo_id = element_array_buffers_[model.mesh->id()];
-      glDeleteBuffers(1, &ebo_id);
+      auto ebo = element_array_buffers_[model.mesh->id()];
+      glDeleteBuffers(1, &ebo.id);
       element_array_buffers_.erase(model.mesh->id());
     }
   }
@@ -512,7 +512,7 @@ void RenderSystem::clear_buffers() {
   array_buffers_.clear();
 
   for (auto &eab : element_array_buffers_) {
-    glDeleteBuffers(1, &eab.second);
+    glDeleteBuffers(1, &eab.second.id);
   }
   element_array_buffers_.clear();
 }
@@ -751,7 +751,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
         glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
                      particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        array_buffers_.insert({particles.id(), ArrayBuffer{array_buffer, particles.modified_}});
+        array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.modified_}});
       }
       glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
