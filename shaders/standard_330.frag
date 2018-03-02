@@ -11,7 +11,6 @@ struct Material {
     vec3 emission;
     float ambient_occlusion;
     sampler2D albedo_map;
-    sampler2D light_map;
     sampler2D normal_map;
     sampler2D metallic_map;
     sampler2D roughness_map;

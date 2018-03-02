@@ -208,7 +208,6 @@ private:
     GLint environment_strength;
 
     GLint material_albedo_map;
-    GLint material_light_map;
     GLint material_normal_map;
     GLint material_metallic_map;
     GLint material_roughness_map;

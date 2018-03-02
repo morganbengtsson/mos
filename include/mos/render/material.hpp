@@ -33,7 +33,6 @@ public:
                     const SharedTexture2D &metallic_map = SharedTexture2D(),
                     const SharedTexture2D &roughness_map = SharedTexture2D(),
                     const SharedTexture2D &ambient_occlusion_map = SharedTexture2D(),
-                    const SharedTexture2D &light_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     const float opacity = 1.0f,
                     const float roughness = 0.0f,
@@ -106,11 +105,6 @@ public:
   * @brief Ambnient occlusion map for the material.
   */
   SharedTexture2D ambient_occlusion_map;
-
-  /**
-  * @brief Light map for the material.
-  */
-  SharedTexture2D light_map;
 
 };
 }

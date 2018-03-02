@@ -108,7 +108,6 @@ Material RenderAssets::material(const std::string &path) {
       if (normal_map) {
         normal_map->format = Texture::Format::RGBA;
       }
-      auto light_map = read_texture("light_map");
       auto metallic_map = read_texture("metallic_map");
       auto roughness_map = read_texture("roughness_map");
       auto ambient_occlusion_map = read_texture("ambient_occlusion_map");
@@ -124,7 +123,6 @@ Material RenderAssets::material(const std::string &path) {
                       metallic_map,
                       roughness_map,
                       ambient_occlusion_map,
-                      light_map,
                       diffuse,
                       opacity,
                       roughness,
