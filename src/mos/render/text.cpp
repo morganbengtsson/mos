@@ -47,24 +47,24 @@ void Text::text(const std::string &text) {
         float rect_w = character.rect_w;
 
         float z = index / 2000.0f;
-        model_.mesh->add(
+        model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
 
-        model_.mesh->add(Vertex(
+        model_.mesh->vertices.push_back(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
 
-        model_.mesh->add(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
+        model_.mesh->vertices.push_back(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v1), glm::vec2(u1, v1)));
-        model_.mesh->add(
+        model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2), glm::vec2(u1, v2)));
 
-        model_.mesh->add(Vertex(glm::vec3(index + rect_w + offset_x,
+        model_.mesh->vertices.push_back(Vertex(glm::vec3(index + rect_w + offset_x,
                                           rect_h + offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v2), glm::vec2(u2, v2)));
-        model_.mesh->add(Vertex(
+        model_.mesh->vertices.push_back(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1), glm::vec2(u2, v1)));
 
@@ -78,8 +78,8 @@ void Text::text(const std::string &text) {
 
 float Text::width() const {
   if (model_.mesh->vertices.size() > 2){
-    glm::vec2 p1 = glm::vec2(model_.mesh->vertices_begin()->position);
-    glm::vec2 p2 = glm::vec2((model_.mesh->vertices_end() - 2)->position);
+    glm::vec2 p1 = glm::vec2(model_.mesh->vertices.begin()->position);
+    glm::vec2 p2 = glm::vec2((model_.mesh->vertices.end() - 2)->position);
     return glm::distance(p1, p2);
   }
   else {

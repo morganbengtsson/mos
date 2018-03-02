@@ -7,8 +7,8 @@ namespace mos {
 Navmesh::Navmesh() {}
 
 Navmesh::Navmesh(const Mesh &mesh, const glm::mat4 &transform)
-    : Navmesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(),
-              mesh.elements_end(), transform) {}
+    : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
+              mesh.indices.end(), transform) {}
 
 std::experimental::optional<Intersection>
 Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {

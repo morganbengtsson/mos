@@ -53,8 +53,8 @@ Mesh::Mesh() : id_(current_id_++) {
 }
 
 Mesh::Mesh(const Mesh &mesh)
-    : Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(),
-           mesh.elements_end()) {}
+    : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
+           mesh.indices.end()) {}
 
 Mesh::~Mesh() {}
 
@@ -65,38 +65,6 @@ SharedMesh Mesh::load(const std::string &path) {
     return std::make_shared<Mesh>(path);
   }
 }
-
-Mesh::Vertices::iterator Mesh::begin() {
-  return vertices.begin();
-}
-
-Mesh::Vertices::iterator Mesh::end() {
-  return vertices.end();
-}
-
-Mesh::Vertices::const_iterator Mesh::vertices_begin() const {
-  return vertices.begin();
-}
-
-Mesh::Vertices::const_iterator Mesh::vertices_end() const {
-  return vertices.end();
-}
-
-Mesh::Indices::const_iterator Mesh::elements_begin() const {
-  return indices.begin();
-}
-
-Mesh::Indices::const_iterator Mesh::elements_end() const {
-  return indices.end();
-}
-
-Mesh::Vertices::iterator Mesh::vertices_begin() { return vertices.begin(); }
-
-Mesh::Vertices::iterator Mesh::vertices_end() { return vertices.end(); }
-
-Mesh::Indices::iterator Mesh::elements_begin() { return indices.begin(); }
-
-Mesh::Indices::iterator Mesh::elements_end() { return indices.end(); }
 
 unsigned int Mesh::id() const { return id_; }
 
@@ -109,16 +77,6 @@ void Mesh::clear() {
   indices.clear();
 }
 
-void Mesh::add(const Vertex& vertex) {
-  vertices.push_back(vertex);
-  invalidate();
-}
-
-void Mesh::add(const int element) {
-  indices.push_back(element);
-  invalidate();
-}
-
 Mesh::Positions Mesh::positions() const {
   Positions pos;
   std::transform(vertices.begin(), vertices.end(), std::back_inserter(pos), [](const Vertex &vertex){
@@ -128,11 +86,11 @@ Mesh::Positions Mesh::positions() const {
 }
 
 void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
-  auto it = vertices_begin();
-  auto it1 = mesh1.vertices_begin();
-  auto it2 = mesh2.vertices_begin();
+  auto it = vertices.begin();
+  auto it1 = mesh1.vertices.begin();
+  auto it2 = mesh2.vertices.begin();
 
-  while (it != vertices_end()) {
+  while (it != vertices.end()) {
     it->position = glm::mix(it1->position, it2->position, amount);
     it->normal = glm::mix(it1->normal, it2->normal, amount);
     it->uv = glm::mix(it1->uv, it2->uv, amount);

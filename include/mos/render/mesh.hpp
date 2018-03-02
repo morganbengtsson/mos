@@ -74,8 +74,6 @@ public:
    */
   Mesh(const Mesh &mesh);
 
-
-
   /**
    * @brief ~Mesh destructor.
    */
@@ -83,66 +81,10 @@ public:
 
   static SharedMesh load(const std::string &path);
 
-  Vertices::iterator begin();
-  Vertices::iterator end();
-
-  /**
-   * @brief vertices_begin
-   * @return Iterator to first Vertex.
-   */
-  Vertices::const_iterator vertices_begin() const;
-
-  /**
-   * @brief vertices_end
-   * @return Iteartor to last vertex.
-   */
-  Vertices::const_iterator vertices_end() const;
-
-  /**
-   * @brief elements_begin
-   * @return Iterator to first element.
-   */
-  Indices::const_iterator elements_begin() const;
-
-  /**
-   * @brief elements_end
-   * @return Iterator to last element.
-   */
-  Indices::const_iterator elements_end() const;
-
-  /**
-   * @brief vertices_begin
-   * @return Iterator to first vertex.
-   */
-  Vertices::iterator vertices_begin();
-
-  /**
-   * @brief vertices_end
-   * @return Iterator to last vertex.
-   */
-  Vertices::iterator vertices_end();
-
-  /**
-   * @brief elements_begin
-   * @return Iterator to first element.
-   */
-  Indices::iterator elements_begin();
-
-  /**
-   * @brief elements_end
-   * @return Iterator to last element.
-   */
-  Indices::iterator elements_end();
-
   /**
    * @return A unique identifier.
    */
   unsigned int id() const;
-
-  /**
-   * @brief Tells the renderer if the mesh has been updated.
-   */
-  bool valid() const;
 
   /**
    * @brief invalidates the mesh, hence the data is updated.
@@ -154,29 +96,6 @@ public:
    * @brief Clear the whole mesh.
    */
   void clear();
-
-  /**
-   * @brief Add a vertex.
-   * @param vertex
-   */
-  void add(const Vertex& vertex);
-
-  template<class T>
-  void append(T begin, T end){
-    vertices.insert(vertices.end(), begin, end);
-    invalidate();
-  }
-
-  /**
-   * @brief Add an element
-   * @param element
-   */
-  void add(const int element);
-
-  void pop_front(const int num) {
-    vertices.erase(vertices.begin(), vertices.begin() + num);
-    invalidate();
-  }
 
   /**
    * @brief Get a copy of positions.
