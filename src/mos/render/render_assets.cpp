@@ -117,7 +117,7 @@ Material RenderAssets::material(const std::string &path) {
       auto opacity = value["opacity"];
       auto roughness = value["roughness"];
       auto metallic = value["metallic"];
-      auto emission = value["emission"];
+      auto emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
       auto ambient_occlusion = value["ambient_occlusion"];
       return Material(diffuse_map,
                       normal_map,

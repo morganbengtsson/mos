@@ -938,7 +938,8 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glUniform1fv(uniforms.material_metallic, 1,
                &model.material.metallic);
   glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-  glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
+  auto emission = model.material.emission_strength * model.material.emission;
+  glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
   glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
   // Camera in world space

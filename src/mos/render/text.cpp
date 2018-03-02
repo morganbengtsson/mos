@@ -13,7 +13,7 @@ Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
       font_(font), spacing(spacing) {
   model_.material.albedo = glm::vec3(1.0f);
   model_.material.opacity = 0.0f;
-  model_.material.emission = 1.0f;
+  model_.material.emission = glm::vec3(1.0f);
   model_.material.albedo_map = font.texture;
   text(txt);
 }
