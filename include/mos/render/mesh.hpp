@@ -44,7 +44,7 @@ public:
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te elements_begin, Te elements_end)
       : valid_(false), vertices(vertices_begin, vertices_end),
-        indices(elements_begin, elements_end), id_(current_id++) {}
+        indices(elements_begin, elements_end), id_(current_id_++) {}
 
   /**
    * @brief Mesh constructor
@@ -198,7 +198,7 @@ public:
   Indices indices;
 private:
   void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
-  static std::atomic_uint current_id;
+  static std::atomic_uint current_id_;
   unsigned int id_;
 
   bool valid_;

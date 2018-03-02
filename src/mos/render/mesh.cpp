@@ -10,14 +10,14 @@
 
 namespace mos {
 
-std::atomic_uint Mesh::current_id;
+std::atomic_uint Mesh::current_id_;
 
 Mesh::Mesh(std::initializer_list<Vertex> vertices,
            std::initializer_list<int> elements)
   : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
-Mesh::Mesh(const std::string &path) : id_(current_id++){
+Mesh::Mesh(const std::string &path) : id_(current_id_++){
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
@@ -47,7 +47,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id++){
   }
 }
 
-Mesh::Mesh() : valid_(false), id_(current_id++) {}
+Mesh::Mesh() : valid_(false), id_(current_id_++) {}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices_begin(), mesh.vertices_end(), mesh.elements_begin(),
