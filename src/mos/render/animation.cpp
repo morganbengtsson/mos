@@ -6,7 +6,8 @@
 #include <filesystem/path.h>
 
 namespace mos {
-  using namespace nlohmann;
+namespace gfx {
+using namespace nlohmann;
 Animation::Animation(
     const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
     const unsigned int frame_rate)
@@ -14,7 +15,7 @@ Animation::Animation(
       mesh_(std::make_shared<mos::Mesh>(*keyframes_.begin()->second)),
       time_(0.0f), frame_rate_(frame_rate) {
   std::cout << keyframes_.size() << std::endl;
-  for (auto & p : keyframes_){
+  for (auto &p : keyframes_) {
     std::cout << p.first << " " << p.second->vertices.size() << std::endl;
   }
   std::cout << mesh_->vertices.size() << std::endl << "----\n";
@@ -22,7 +23,7 @@ Animation::Animation(
 
 Animation::Animation(
     std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>>
-        keyframes,
+    keyframes,
     const unsigned int frame_rate)
     : keyframes_(keyframes.begin(), keyframes.end()),
       mesh_(std::make_shared<mos::Mesh>(*keyframes_.begin()->second)),
@@ -61,8 +62,8 @@ void Animation::update(const float dt) {
   auto next_frame = keyframes_.upper_bound(frame());
   auto previous_frame = next_frame;
   previous_frame--;
-  auto amount = (float)((time_ * frame_rate_) - previous_frame->first) /
-                (float)(next_frame->first - previous_frame->first);
+  auto amount = (float) ((time_ * frame_rate_) - previous_frame->first) /
+      (float) (next_frame->first - previous_frame->first);
 
   mesh_->mix(*previous_frame->second, *next_frame->second, amount);
 }
@@ -70,5 +71,5 @@ void Animation::update(const float dt) {
 std::shared_ptr<Mesh> Animation::mesh() { return mesh_; }
 
 Animation::Animation() {}
-
+}
 }

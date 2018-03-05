@@ -1,17 +1,17 @@
-#ifndef MOS_ANIMATION_HPP
-#define MOS_ANIMATION_HPP
+#ifndef MOS_GFX_ANIMATION_HPP
+#define MOS_GFX_ANIMATION_HPP
 
 #include <initializer_list>
 #include <map>
 #include <memory>
-#include <mos/render/mesh.hpp>
 #include <utility>
+#include <mos/render/mesh.hpp>
 
 namespace mos {
+namespace gfx {
 
 /**
- * @brief The Animation class
- * Describes an animation in form of keys and Meshes. Interpolates between them.
+ * @brief Keyframe animation, interpolation between meshes.
  */
 class Animation {
 public:
@@ -26,8 +26,8 @@ public:
    * @param keyframes Map of keys and shared Meshes
    */
   Animation(std::initializer_list<
-                std::pair<unsigned int, std::shared_ptr<Mesh const>>>
-                keyframes,
+      std::pair<unsigned int, std::shared_ptr<Mesh const>>>
+            keyframes,
             const unsigned int frame_rate = 30);
 
   /**
@@ -78,5 +78,6 @@ private:
   unsigned int frame_rate_;
 };
 }
+}
 
-#endif // MOS_ANIMATION_HPP
+#endif // MOS_GFX_ANIMATION_HPP
