@@ -15,48 +15,6 @@ public:
 
   ~Vertex();
 
-  /**
-   * @brief operator +
-   * @param vertex
-   * @return
-   */
-  Vertex operator+(const Vertex &vertex) const;
-
-  /**
-   * @brief operator -
-   * @param vertex
-   * @return
-   */
-  Vertex operator-(const Vertex &vertex) const;
-
-  /**
-   * @brief operator *
-   * @param vertex
-   * @return
-   */
-  Vertex operator*(const Vertex &vertex) const;
-
-  /**
-   * @brief operator *
-   * @param number
-   * @return
-   */
-  Vertex operator*(const float number) const;
-
-  /**
-   * @brief operator /
-   * @param number
-   * @return
-   */
-  Vertex operator/(const float number) const;
-
-  /**
-   * @brief operator /
-   * @param vertex
-   * @return
-   */
-  Vertex operator/(const Vertex &vertex) const;
-
   glm::vec3 position;
 
   glm::vec3 normal;
