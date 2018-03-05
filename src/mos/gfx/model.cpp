@@ -23,10 +23,6 @@ Model::Models::iterator Model::begin() { return models.begin(); }
 
 Model::Models::iterator Model::end() { return models.end(); }
 
-glm::vec4 Model::color() const {
-  return glm::vec4(material.albedo, material.opacity);
-}
-
 glm::vec3 Model::position() const {
   return glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
 }
