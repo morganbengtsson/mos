@@ -6,14 +6,12 @@
 
 namespace mos {
 namespace gfx {
+
 /** Real time environment light. */
 class EnvironmentLight {
   friend class Renderer;
 public:
-  /**
-   * @brief Environment constructor.
-   * @param extent Describes how big the environment is, for parallax correction.
-   */
+  /** @param extent Describes how big the environment is, for parallax/box correction. */
   EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
                    const glm::vec3 &extent = glm::vec3(50.0f),
                    const float strength = 1.0f,
@@ -23,7 +21,6 @@ public:
 
   Box box;
   float strength;
-
 private:
   Target target;
   CubeCamera cube_camera;
