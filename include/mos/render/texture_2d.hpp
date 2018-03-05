@@ -1,5 +1,4 @@
-#ifndef MOS_TEXTURE2D_H
-#define MOS_TEXTURE2D_H
+#pragma once
 
 #include <atomic>
 #include <string>
@@ -9,6 +8,7 @@
 #include <mos/render/texture.hpp>
 
 namespace mos {
+namespace gfx {
 
 class Texture2D;
 using SharedTexture2D = std::shared_ptr<Texture2D>;
@@ -53,13 +53,12 @@ public:
   virtual ~Texture2D();
 
   static SharedTexture2D load(const std::string &path,
-                            const bool mipmaps = true,
-                            const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
+                              const bool mipmaps = true,
+                              const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
   Texture2D(const std::string &path,
             const bool mipmaps = true,
             const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 };
 }
-
-#endif /* MOS_TEXTURE_H */
+}

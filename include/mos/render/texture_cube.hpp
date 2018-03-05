@@ -1,5 +1,4 @@
-#ifndef MOS_TEXTURECUBE_HPP
-#define MOS_TEXTURECUBE_HPP
+#pragma once
 
 #include <mos/render/texture_2d.hpp>
 #include <mos/render/texture.hpp>
@@ -7,6 +6,7 @@
 #include <string>
 
 namespace mos {
+namespace gfx {
 class TextureCube;
 class Texture;
 using SharedTextureCube = std::shared_ptr<TextureCube>;
@@ -17,6 +17,5 @@ public:
               const bool mipmaps = true,
               const Format &format = Format::RGB);
 };
-
 }
-#endif //MOS_TEXTURECUBE_HPP
+}

@@ -1,5 +1,4 @@
-#ifndef MOS_RENDERER_H
-#define MOS_RENDERER_H
+#pragma once
 
 #include <GL/glew.h>
 #include <experimental/optional>
@@ -19,9 +18,9 @@
 #include <mos/render/fog.hpp>
 #include <mos/render/render_box.hpp>
 #include <mos/render/decal.hpp>
-#include "texture.hpp"
 
 namespace mos {
+namespace gfx {
 
 /**
  * @brief Render geometry.
@@ -77,7 +76,6 @@ public:
                      const glm::vec4 &color = glm::vec4(.0f),
                      const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
-
   template<class Ts>
   void render_scenes(Ts scenes_begin,
                      Ts scenes_end,
@@ -112,10 +110,10 @@ private:
     GLuint id; // TODO const?
     std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
   };
-   /**
-   * @brief models_batch rendering.
-   * @param render_scene
-   */
+  /**
+  * @brief models_batch rendering.
+  * @param render_scene
+  */
   void render_scene(const RenderCamera &camera, const RenderScene &render_scene, const glm::vec2 &resolution);
 
   void render_shadow_map(const RenderScene &render_scene);
@@ -291,7 +289,7 @@ private:
   GLuint box_ebo;
   GLuint box_va;
 
-  struct FormatPair{
+  struct FormatPair {
     GLuint internal_format;
     GLuint format;
   };
@@ -300,6 +298,5 @@ private:
   std::map<Texture::Format, FormatPair> format_map_;
   std::map<RenderScene::Draw, GLuint> draw_map_;
 };
-
 }
-#endif /* MOS_RENDERER_H */
+}

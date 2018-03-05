@@ -1,13 +1,10 @@
-#ifndef MOS_CHARACTER_H
-#define MOS_CHARACTER_H
+#pragma once
 
 namespace mos {
-
+namespace gfx {
 /**
- * @brief The Character struct
+ * @brief Measurements of a character, for text rendering.
  *
- * Describes measurements of a character. Used by the Text object
- * for text rendering.
  */
 struct Character {
   /**
@@ -44,5 +41,4 @@ struct Character {
   float rect_h;
 };
 }
-
-#endif /* MOS_CHARACTER_H */
+}

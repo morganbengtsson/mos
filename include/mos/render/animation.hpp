@@ -1,5 +1,4 @@
-#ifndef MOS_GFX_ANIMATION_HPP
-#define MOS_GFX_ANIMATION_HPP
+#pragma once
 
 #include <initializer_list>
 #include <map>
@@ -79,5 +78,3 @@ private:
 };
 }
 }
-
-#endif // MOS_GFX_ANIMATION_HPP

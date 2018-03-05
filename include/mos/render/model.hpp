@@ -1,5 +1,4 @@
-#ifndef MOS_MODEL_H
-#define MOS_MODEL_H
+#pragma once
 
 #include <memory>
 #include <experimental/optional>
@@ -9,7 +8,8 @@
 #include <json.hpp>
 
 namespace mos {
-  using namespace nlohmann;
+namespace gfx {
+using namespace nlohmann;
 /**
  * A class that gathers what is needed to render an object. A Mesh, a Texture2D
  * , a Texture2D lightmap, a Texture2D normalmap and a Material.
@@ -107,7 +107,6 @@ public:
    */
   glm::mat4 transform;
 
-
   /**
    * @brief Children.
    */
@@ -117,5 +116,4 @@ private:
   std::string name_;
 };
 }
-
-#endif /* MOS_MODEL_H */
+}

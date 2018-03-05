@@ -1,9 +1,9 @@
-#ifndef MOS_ASSETS_H
-#define MOS_ASSETS_H
+#pragma once
 
-#include <json.hpp>
 #include <map>
 #include <memory>
+#include <unordered_map>
+#include <json.hpp>
 #include <mos/render/animation.hpp>
 #include <mos/render/character.hpp>
 #include <mos/render/font.hpp>
@@ -11,9 +11,9 @@
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/texture_2d.hpp>
-#include <unordered_map>
 
 namespace mos {
+namespace gfx {
 /**
  * An asset class that manages heavy resources such as Textures, meshes, sounds
  * and sound streams.
@@ -47,7 +47,6 @@ public:
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
 
   using SharedMaterial = std::shared_ptr<mos::Material>;
-
 
   /**
    * Constructor for the asset manager.
@@ -89,7 +88,7 @@ public:
    * @param path
    * @return fShared pointer to Material object.
    */
-   Material material(const std::string &path);
+  Material material(const std::string &path);
 
   /**
    * Loads a *.obj or *.mesh file into a mesh object, and caches it internally.
@@ -108,10 +107,7 @@ public:
    */
   SharedTexture2D
   texture(const std::string &path, const bool mipmaps = true,
-                 const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
-
-
-
+          const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
   /**
     * @brief Remove all unused assets.
@@ -119,11 +115,10 @@ public:
   void clear_unused();
 
 private:
-  // Model model(rapidjson::Value &value);
   Model model_value(const std::string &base_path, const nlohmann::json &value);
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;
 };
 }
-#endif /* MOS_ASSETS_H */
+}

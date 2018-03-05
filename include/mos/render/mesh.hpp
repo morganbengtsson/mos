@@ -1,15 +1,15 @@
-#ifndef MOS_MESH_H
-#define MOS_MESH_H
+#pragma once
 
 #include <vector>
 #include <initializer_list>
 #include <string>
 #include <atomic>
 #include <memory>
-#include <mos/render/vertex.hpp>
 #include <chrono>
+#include <mos/render/vertex.hpp>
 
 namespace mos {
+namespace gfx {
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
 /**
@@ -131,5 +131,4 @@ private:
   unsigned int id_;
 };
 }
-
-#endif /* MOS_MESH_H */
+}

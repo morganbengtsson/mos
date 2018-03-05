@@ -1,5 +1,4 @@
-#ifndef MOS_PARTICLES_H
-#define MOS_PARTICLES_H
+#pragma once
 
 #include <vector>
 #include <atomic>
@@ -8,6 +7,7 @@
 #include "particle.hpp"
 
 namespace mos {
+namespace gfx {
 
 /**
 *@brief The Particles class
@@ -20,7 +20,7 @@ public:
    */
   Particles();
 
-  template <class T>
+  template<class T>
   /**
    * @brief Particles constructor
    * @param begin First particle iterator.
@@ -65,7 +65,7 @@ public:
    */
   Parts::iterator end() { return particles_.end(); }
 
-  template <class T>
+  template<class T>
   /**
    * @brief Assign new particles.
    * @param begin Iterator to first particle.
@@ -122,9 +122,9 @@ public:
    */
   void sort(const glm::vec3 &position);
 
-  Particle& operator[](size_t index);
+  Particle &operator[](size_t index);
 
-  const Particle& operator[](size_t index) const;
+  const Particle &operator[](size_t index) const;
 
   //TODO: Texture array for animation
   /**
@@ -139,5 +139,4 @@ private:
   unsigned int id_;
 };
 }
-
-#endif /* MOS_PARTICLES_H */
+}

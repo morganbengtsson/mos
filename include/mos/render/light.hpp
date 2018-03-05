@@ -1,5 +1,4 @@
-#ifndef MOS_LIGHT_H
-#define MOS_LIGHT_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -8,6 +7,7 @@
 #include <mos/render/render_target.hpp>
 
 namespace mos {
+namespace gfx {
 
 /**
 * @brief The Light class
@@ -31,7 +31,7 @@ public:
   virtual ~Light();
 
   /**
-   * @brief Set spot anagle.
+   * @brief Set spot angle.
    * @param angle of the spotlight.
    */
   void angle(const float angle);
@@ -103,5 +103,6 @@ private:
   float angle_;
 };
 }
+}
 
-#endif /* MOS_LIGHT_H */
+#endif /* MOS_GFX_LIGHT_H */

@@ -1,9 +1,9 @@
-#ifndef MOS_CAMERA_H
-#define MOS_CAMERA_H
+#pragma once
 
 #include <glm/glm.hpp>
 
 namespace mos {
+namespace gfx {
 
 /**
  * @brief The Camera class
@@ -20,9 +20,9 @@ public:
    * @param resolution Render resolution.
    */
   RenderCamera(const glm::vec3 &position,
-         const glm::vec3 &center,
-         const glm::mat4 &projection,
-         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+               const glm::vec3 &center,
+               const glm::mat4 &projection,
+               const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
   /**
    * @brief up
@@ -93,5 +93,4 @@ private:
   glm::vec3 position_;
 };
 }
-
-#endif // MOS_CAMERA_H
+}

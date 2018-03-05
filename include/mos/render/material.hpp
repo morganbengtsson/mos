@@ -1,5 +1,4 @@
-#ifndef MOS_MATERIAL_H
-#define MOS_MATERIAL_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <string>
@@ -8,6 +7,7 @@
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {
+namespace gfx {
 class Material;
 using SharedMaterial = std::shared_ptr<Material>;
 
@@ -108,5 +108,5 @@ public:
 
 };
 }
+}
 
-#endif /* MOS_MATERIAL_H */

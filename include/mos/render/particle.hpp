@@ -1,12 +1,12 @@
-#ifndef MOS_PARTICLE_H
-#define MOS_PARTICLE_H
+#pragma once
 
 #include <glm/glm.hpp>
 
 namespace mos {
+namespace gfx {
 
 /**
- * @brief The Particle struct
+ * @brief Particle used in particle system.
  */
 struct Particle {
 
@@ -42,4 +42,5 @@ struct Particle {
   float size;
 };
 }
-#endif /* MOS_PARTICLE_H */
+}
+

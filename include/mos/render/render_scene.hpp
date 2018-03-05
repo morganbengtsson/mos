@@ -1,5 +1,4 @@
-#ifndef MOS_RENDER_SCENE_HPP
-#define MOS_RENDER_SCENE_HPP
+#pragma once
 
 #include <vector>
 #include <initializer_list>
@@ -16,13 +15,14 @@
 #include <mos/render/environment_light.hpp>
 
 namespace mos {
+namespace gfx {
 
 class RenderScene {
 public:
-  using Models = std::vector<mos::Model>;
-  using RenderBoxes = std::vector<mos::RenderBox>;
-  using Decals = std::array<mos::Decal, 10>;
-  using ParticleClouds = std::vector<mos::Particles>;
+  using Models = std::vector<Model>;
+  using RenderBoxes = std::vector<RenderBox>;
+  using Decals = std::array<Decal, 10>;
+  using ParticleClouds = std::vector<Particles>;
 
   /**
    * @brief The Shader enum
@@ -42,7 +42,7 @@ public:
               const RenderCamera &camera,
               const Light &light = Light(),
               const EnvironmentLight &environment_light = EnvironmentLight(),
-              const mos::Fog &fog_linear = Fog(),
+              const Fog &fog_linear = Fog(),
               const Shader &shader = Shader::STANDARD,
               const Draw &draw = Draw::TRIANGLES)
       : models(begin, end),
@@ -57,7 +57,7 @@ public:
               const RenderCamera &camera,
               const Light &light = Light(),
               const EnvironmentLight &environment_light = EnvironmentLight(),
-              const mos::Fog &fog = Fog(),
+              const Fog &fog = Fog(),
               const Shader &shader = Shader::STANDARD,
               const Draw &draw = Draw::TRIANGLES);
   Models models;
@@ -72,5 +72,4 @@ public:
   EnvironmentLight environment;
 };
 }
-
-#endif // MOS_RENDER_SCENE_HPP
+}

@@ -1,16 +1,15 @@
-#ifndef MOS_TEXT_H
-#define MOS_TEXT_H
+#pragma once
 
 #include <mos/render/model.hpp>
 #include <mos/render/mesh.hpp>
 #include <mos/render/character.hpp>
 #include <mos/render/font.hpp>
-
 #include <map>
 #include <memory>
 #include <string>
 
 namespace mos {
+namespace gfx {
 
 /**
  * A special Model class for text rendering.
@@ -103,7 +102,7 @@ public:
    * @brief model
    * @return
    */
-  mos::Model model() const;
+  Model model() const;
 
   /**
    * @brief spacing between characters
@@ -115,20 +114,19 @@ public:
    * @param text
    * @return
    */
-  mos::Text &operator=(const std::string &text);
+  Text &operator=(const std::string &text);
 
   /**
    * @brief operator +=
    * @param text
    * @return
    */
-  mos::Text &operator+=(const std::string &text);
+  Text &operator+=(const std::string &text);
 
 private:
-  mos::Model model_;
+  Model model_;
   std::string text_;
   Font font_;
 };
 }
-
-#endif /* MOS_TEXT_H */
+}

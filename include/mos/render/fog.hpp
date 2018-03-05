@@ -1,9 +1,8 @@
-#ifndef FOG_LINEAR_HPP
-#define FOG_LINEAR_HPP
-
+#pragma once
 #include <glm/glm.hpp>
 
 namespace mos {
+namespace gfx {
 /**
  * @brief Physically based fog, with exponential falloff.
  */
@@ -14,7 +13,7 @@ public:
    * @param attenuation_factor represents how dense exponential fog.
    */
   Fog(const glm::vec3 &color,
-            const float attenuation_factor = 0.0f);
+      const float attenuation_factor = 0.0f);
   /**
    *
    * @param color_near is the color of the near plane.
@@ -33,5 +32,5 @@ public:
 
 };
 }
+}
 
-#endif // FOG_LINEAR_HPP

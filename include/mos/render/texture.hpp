@@ -1,5 +1,4 @@
-#ifndef MOS_TEXTURE_HPP
-#define MOS_TEXTURE_HPP
+#pragma once
 
 #include <vector>
 #include <atomic>
@@ -7,6 +6,7 @@
 #include <memory>
 
 namespace mos {
+namespace gfx {
 class Texture;
 using SharedTexture = std::shared_ptr<Texture>;
 class Texture {
@@ -78,5 +78,4 @@ private:
   std::vector<Data> layers_;
 };
 }
-
-#endif //MOS_TEXTURE_HPP
+}

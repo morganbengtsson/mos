@@ -1,12 +1,11 @@
-#ifndef MOS_FONT_HPP
-#define MOS_FONT_HPP
-
+#pragma once
 #include <map>
 #include <memory>
 #include <mos/render/character.hpp>
 #include <mos/render/texture_2d.hpp>
 
 namespace mos {
+namespace gfx {
 /**
  * @brief Represents a bitmap font.
  */
@@ -40,5 +39,5 @@ private:
   float descender_;
 };
 }
+}
 
-#endif // MOS_FONT_HPP

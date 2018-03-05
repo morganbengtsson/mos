@@ -1,5 +1,4 @@
-#ifndef MOS_RENDER_TARGET_HPP
-#define MOS_RENDER_TARGET_HPP
+#pragma once
 
 #include <memory>
 #include <atomic>
@@ -9,8 +8,9 @@
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {
-  class RenderTarget;
-  using OptTarget = std::experimental::optional<RenderTarget>;
+namespace gfx {
+class RenderTarget;
+using OptTarget = std::experimental::optional<RenderTarget>;
 /**
  * @brief The RenderTarget class
  *
@@ -36,4 +36,4 @@ private:
   static std::atomic_uint current_id_;
 };
 }
-#endif // MOS_RENDER_TARGET_HPP
+}
