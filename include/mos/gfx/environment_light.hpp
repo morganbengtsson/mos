@@ -6,10 +6,7 @@
 
 namespace mos {
 namespace gfx {
-/**
-* @brief Class for real time environment light.
-*
-*/
+/** Real time environment light. */
 class EnvironmentLight {
   friend class Renderer;
 public:

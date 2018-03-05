@@ -5,9 +5,8 @@
 
 namespace mos {
 namespace gfx {
-/**
- * @brief Decal projection.
- */
+
+/** Decal projection. */
 class Decal {
 public:
   Decal();
