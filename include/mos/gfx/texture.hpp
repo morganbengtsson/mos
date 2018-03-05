@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <atomic>
 #include <initializer_list>
@@ -7,6 +6,8 @@
 
 namespace mos {
 namespace gfx {
+
+/** Texture base */
 class Texture;
 using SharedTexture = std::shared_ptr<Texture>;
 class Texture {
