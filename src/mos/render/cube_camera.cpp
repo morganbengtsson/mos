@@ -1,4 +1,4 @@
-#include <mos/render/render_cube_camera.hpp>
+#include <mos/render/cube_camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 namespace mos {
 namespace gfx {

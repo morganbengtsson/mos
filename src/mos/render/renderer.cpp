@@ -14,7 +14,7 @@
 #include <memory>
 #include <mos/render/mesh.hpp>
 #include <mos/render/model.hpp>
-#include <mos/render/render_system.hpp>
+#include <mos/render/renderer.hpp>
 #include <mos/util.hpp>
 
 namespace mos {

@@ -1,4 +1,4 @@
-#include <mos/render/render_box.hpp>
+#include <mos/render/box.hpp>
 namespace mos {
 namespace gfx {
 RenderBox::RenderBox(const glm::vec3 &position, const glm::vec3 &extent)

@@ -1,4 +1,4 @@
-#include <mos/render/render_scene.hpp>
+#include <mos/render/scene.hpp>
 namespace mos {
 namespace gfx {
 RenderScene::RenderScene() {}

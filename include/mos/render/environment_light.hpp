@@ -1,8 +1,8 @@
 #pragma once
 #include <mos/render/texture_cube.hpp>
-#include <mos/render/render_box.hpp>
-#include <mos/render/render_target.hpp>
-#include <mos/render/render_cube_camera.hpp>
+#include <mos/render/box.hpp>
+#include <mos/render/target.hpp>
+#include <mos/render/cube_camera.hpp>
 
 namespace mos {
 namespace gfx {

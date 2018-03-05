@@ -5,18 +5,18 @@
 #include <initializer_list>
 #include <unordered_map>
 #include <array>
-#include <mos/render/render_scene.hpp>
+#include <mos/render/scene.hpp>
 #include <mos/render/texture_2d.hpp>
 #include <mos/render/texture_cube.hpp>
 #include <mos/render/model.hpp>
 #include <mos/render/text.hpp>
 #include <mos/render/particles.hpp>
 #include <mos/render/light.hpp>
-#include <mos/render/render_target.hpp>
-#include <mos/render/render_camera.hpp>
+#include <mos/render/target.hpp>
+#include <mos/render/camera.hpp>
 #include <mos/render/environment_light.hpp>
 #include <mos/render/fog.hpp>
-#include <mos/render/render_box.hpp>
+#include <mos/render/box.hpp>
 #include <mos/render/decal.hpp>
 
 namespace mos {

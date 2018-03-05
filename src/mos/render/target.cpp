@@ -1,4 +1,4 @@
-#include <mos/render/render_target.hpp>
+#include <mos/render/target.hpp>
 #include <mos/render/texture_cube.hpp>
 
 namespace mos {

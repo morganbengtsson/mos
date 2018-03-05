@@ -1,4 +1,4 @@
-#include <mos/render/render_assets.hpp>
+#include <mos/render/assets.hpp>
 #include <cstring>
 #include <filesystem/path.h>
 #include <fstream>

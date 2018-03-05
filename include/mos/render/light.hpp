@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <mos/render/texture_2d.hpp>
-#include <mos/render/render_camera.hpp>
-#include <mos/render/render_target.hpp>
+#include <mos/render/camera.hpp>
+#include <mos/render/target.hpp>
 
 namespace mos {
 namespace gfx {

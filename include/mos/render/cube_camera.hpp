@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <array>
-#include <mos/render/render_camera.hpp>
+#include <mos/render/camera.hpp>
 
 namespace mos {
 namespace gfx {
