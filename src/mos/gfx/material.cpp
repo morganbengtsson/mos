@@ -16,7 +16,7 @@ Material::Material(const SharedTexture2D &albedo_map,
                    const float opacity,
                    const float roughness,
                    const float metallic,
-                   const glm::vec3 emission,
+                   const glm::vec3 &emission,
                    const float ambient_occlusion)
     : albedo_map(albedo_map), normal_map(normal_map), metallic_map(metallic_map), roughness_map(roughness_map),
       ambient_occlusion_map(ambient_occlusion_map), emission_strength(0.0f),
