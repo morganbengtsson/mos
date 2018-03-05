@@ -1,6 +1,6 @@
 #include <mos/simulate/box.hpp>
 #include <glm/gtx/component_wise.hpp>
-#include <mos/render/model.hpp>
+#include <mos/gfx/model.hpp>
 
 namespace mos {
 

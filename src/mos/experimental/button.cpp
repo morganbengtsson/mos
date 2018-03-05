@@ -1,9 +1,11 @@
-#include <mos/experimental/button.hpp>
+#include <mos/gfx/exp/button.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
+namespace gfx {
+namespace exp {
 
-Button::Button(const gfx::Text &text, const State &s)
+Button::Button(const Text &text, const State &s)
     : text_(text), padding_(text_.height() / 4.0f),
       light_material_(glm::vec3(1.0f), 0.8f),
       dark_material_(glm::vec3(0.01f), 0.8f) {
@@ -60,4 +62,6 @@ void Button::click_callback(const Callback &callback) {
 }
 
 void Button::click() { click_callback_(); }
+}
+}
 }

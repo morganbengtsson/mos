@@ -9,7 +9,7 @@
 #include <iostream>
 #include <glm/gtx/io.hpp>
 #include <mos/simulate/intersection.hpp>
-#include <mos/render/mesh.hpp>
+#include <mos/gfx/mesh.hpp>
 
 namespace mos {
 

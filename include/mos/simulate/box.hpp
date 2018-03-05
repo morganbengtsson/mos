@@ -12,9 +12,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/io.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <mos/render/vertex.hpp>
+#include <mos/gfx/vertex.hpp>
 #include <mos/simulate/ray.hpp>
-#include <mos/render/model.hpp>
+#include <mos/gfx/model.hpp>
 
 namespace mos {
 

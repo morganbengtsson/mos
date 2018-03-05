@@ -1,8 +1,10 @@
-#include <mos/experimental/menu.hpp>
+#include <mos/gfx/exp/menu.hpp>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
+namespace gfx {
+namespace exp {
 
 Menu::Menu() {}
 
@@ -26,11 +28,13 @@ gfx::Model Menu::model() {
 
 Button &Menu::selected() {
   auto it = std::find_if(buttons_.begin(), buttons_.end(),
-                         [](mos::Button &button) { return button.selected(); });
+                         [](Button &button) { return button.selected(); });
   return *it;
 }
 
 void Menu::select_next() { select_next(buttons_.begin(), buttons_.end()); }
 
 void Menu::select_previos() { select_next(buttons_.rbegin(), buttons_.rend()); }
+}
+}
 }
