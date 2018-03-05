@@ -1,5 +1,4 @@
 #pragma once
-
 #include <memory>
 #include <atomic>
 #include <experimental/optional>
@@ -11,26 +10,14 @@ namespace mos {
 namespace gfx {
 class Target;
 using OptTarget = std::experimental::optional<Target>;
-/**
- * @brief The RenderTarget class
- *
- * Represents a rendertarget, with asociated texture. For off screen rendering.
- */
+
+/** Rendertarget,for off screen rendering. */
 class Target {
 public:
-
-  /**
-   * @brief Target
-   * @param resolution
-   */
   Target();
 
-  /**
-   * @brief unique id
-   * @return id
-   */
+  /** Unique id */
   unsigned int id() const;
-
 private:
   unsigned int id_;
   static std::atomic_uint current_id_;
