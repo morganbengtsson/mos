@@ -6,7 +6,7 @@
 #include <mos/audio/audio_stream.hpp>
 
 namespace mos {
-    using SharedAudioBuffer = std::shared_ptr<AudioBuffer>;
+    using SharedBuffer = std::shared_ptr<AudioBuffer>;
     using SharedAudioStream = std::shared_ptr<AudioStream>;
 }
 
