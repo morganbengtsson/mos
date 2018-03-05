@@ -10,7 +10,7 @@ namespace mos {
 namespace gfx {
 
 /** Keyframe animation, interpolation between meshes. */
-class Animation {
+class Animation final {
 public:
   Animation();
   Animation(const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,

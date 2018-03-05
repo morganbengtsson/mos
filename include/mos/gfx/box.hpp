@@ -4,11 +4,12 @@
 
 namespace mos {
 namespace gfx {
+
 /** Bounding box for rendering. */
-class Box {
+class Box final {
 public:
   Box(const glm::vec3 &position,
-            const glm::vec3 &extent);
+      const glm::vec3 &extent);
   glm::vec3 position;
   glm::vec3 extent;
   glm::vec3 size() const;

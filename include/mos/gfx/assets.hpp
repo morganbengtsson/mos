@@ -23,7 +23,7 @@ public:
   using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
   using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
- using SharedMaterial = std::shared_ptr<Material>;
+  using SharedMaterial = std::shared_ptr<Material>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
   Assets(const std::string directory = "assets/");
