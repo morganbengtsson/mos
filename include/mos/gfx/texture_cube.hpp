@@ -1,15 +1,16 @@
 #pragma once
-
-#include <mos/gfx/texture_2d.hpp>
-#include <mos/gfx/texture.hpp>
 #include <vector>
 #include <string>
+#include <mos/gfx/texture_2d.hpp>
+#include <mos/gfx/texture.hpp>
 
 namespace mos {
 namespace gfx {
 class TextureCube;
 class Texture;
 using SharedTextureCube = std::shared_ptr<TextureCube>;
+
+/** Cube map texture, for environments. */
 class TextureCube final : public Texture {
 public:
   TextureCube(const int width,

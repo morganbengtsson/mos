@@ -1,5 +1,4 @@
 #pragma once
-
 #include <glm/glm.hpp>
 
 namespace mos {
@@ -8,15 +7,6 @@ namespace gfx {
 /** The vertex structure, supported by the renderer. */
 class Vertex final {
 public:
-  /*!
-   * @brief Vertex constructor
-   * @param position
-   * @param normal
-   * @param uv
-   *
-   * Constructs a vertex. Probably the smallest primitive in this context.
-   *
-   */
   explicit Vertex(const glm::vec3 &position = glm::vec3(0.0f),
                   const glm::vec3 &normal = glm::vec3(0.0f),
                   const glm::vec3 &tangent = glm::vec3(0.0f),
@@ -67,29 +57,14 @@ public:
    */
   Vertex operator/(const Vertex &vertex) const;
 
-  /**
-   * @brief position
-   */
   glm::vec3 position;
 
-  /**
-   * @brief normal
-   */
   glm::vec3 normal;
 
-  /**
-   * @brief tangent
-   */
   glm::vec3 tangent;
 
-  /**
-   * @brief Texture cordinate for color.
-   */
   glm::vec2 uv;
 
-  /**
-  * @brief Ambient occlusion.
-  */
   float ao;
 };
 }
