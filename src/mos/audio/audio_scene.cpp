@@ -1,4 +1,4 @@
-#include <mos/audio/audio_scene.hpp>
+#include <mos/aud/audio_scene.hpp>
 namespace mos {
 AudioScene::AudioScene(
     const std::initializer_list<mos::AudioBufferSource> buffer_sources,
