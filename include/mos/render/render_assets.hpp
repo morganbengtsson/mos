@@ -46,7 +46,7 @@ public:
   */
   using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
 
-  using SharedMaterial = std::shared_ptr<mos::Material>;
+  using SharedMaterial = std::shared_ptr<Material>;
 
   /**
    * Constructor for the asset manager.

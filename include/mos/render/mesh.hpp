@@ -126,7 +126,7 @@ public:
   Indices indices;
 private:
   TimePoint modified_;
-  void calculate_tangents(mos::Vertex &v0, mos::Vertex &v1, mos::Vertex &v2);
+  void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
   static std::atomic_uint current_id_;
   unsigned int id_;
 };

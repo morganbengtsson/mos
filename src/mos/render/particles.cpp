@@ -2,6 +2,7 @@
 #include <algorithm>
 
 namespace mos {
+namespace gfx {
 
 //TODO: Why 10000?
 //TODO: Inherit from abstract mesh?
@@ -34,7 +35,7 @@ void Particles::clear() { particles_.clear(); }
 
 void Particles::sort(const glm::vec3 &position) {
   std::sort(particles_.begin(), particles_.end(),
-            [&](const mos::Particle &a, const mos::Particle &b) -> bool {
+            [&](const Particle &a, const Particle &b) -> bool {
               auto a_distance1 = glm::distance(a.position, position);
               auto b_distance1 = glm::distance(b.position, position);
               return a_distance1 > b_distance1;
@@ -48,4 +49,5 @@ const Particle &Particles::operator[](size_t index) const {
   return particles_[index];
 }
 
+}
 }

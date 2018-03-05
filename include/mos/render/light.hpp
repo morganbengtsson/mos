@@ -105,4 +105,3 @@ private:
 }
 }
 
-#endif /* MOS_GFX_LIGHT_H */

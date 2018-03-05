@@ -1,8 +1,7 @@
 #include <mos/render/light.hpp>
 #include <glm/gtx/transform.hpp>
-
 namespace mos {
-
+namespace gfx {
 Light::Light(const glm::vec3 &position,
              const glm::vec3 &center,
              const float angle,
@@ -11,9 +10,9 @@ Light::Light(const glm::vec3 &position,
     : color(color), angle_(angle),
       camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
              glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength),
-      shadow_map(mos::SharedTexture2D(new mos::Texture2D(
-          512, 512, mos::Texture::Format::RG32F,
-          mos::Texture::Wrap::CLAMP_TO_BORDER, true))) {}
+      shadow_map(SharedTexture2D(new Texture2D(
+          512, 512, Texture::Format::RG32F,
+          Texture::Wrap::CLAMP_TO_BORDER, true))) {}
 
 Light::~Light() {}
 
@@ -44,5 +43,6 @@ glm::vec3 Light::center() const {
 
 glm::vec3 Light::direction() const {
   return camera.direction();
+}
 }
 }

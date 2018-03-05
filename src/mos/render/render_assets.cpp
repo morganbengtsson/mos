@@ -9,8 +9,7 @@
 #include <iostream>
 
 namespace mos {
-using namespace std;
-using namespace glm;
+namespace gfx {
 using namespace nlohmann;
 
 RenderAssets::RenderAssets(const std::string directory) : directory_(directory) {}
@@ -30,7 +29,7 @@ Model RenderAssets::model_value(const std::string &base_path, const json &value)
 
   auto transform = jsonarray_to_mat4(value["transform"]);
 
-  auto created_model = mos::Model(
+  auto created_model = Model(
       name, mesh(base_path + mesh_name),
       transform,
       material(base_path + material_name));
@@ -49,7 +48,7 @@ Model RenderAssets::model(const std::string &path) {
   return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc);
 }
 
-Animation RenderAssets::animation(const string &path) {
+Animation RenderAssets::animation(const std::string &path) {
   auto doc = json::parse(mos::text(directory_ + path));
   auto frame_rate = doc["frame_rate"];
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
@@ -150,6 +149,6 @@ void RenderAssets::clear_unused() {
       ++it;
     }
   }
-
+}
 }
 }

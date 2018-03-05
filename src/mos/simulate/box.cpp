@@ -9,11 +9,11 @@ Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
 
 Box::Box() {}
 
-Box Box::create_from_model(const Model &model, const glm::mat4 &transform) {
-  std::vector<mos::Vertex> all_vertices;
+Box Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) {
+  std::vector<gfx::Vertex> all_vertices;
 
-  std::function<void(const Model &, const glm::mat4 &, std::vector<Vertex> &)>
-      create = [&](const Model &m, const glm::mat4 &t, std::vector<Vertex> &v) {
+  std::function<void(const gfx::Model &, const glm::mat4 &, std::vector<gfx::Vertex> &)>
+      create = [&](const gfx::Model &m, const glm::mat4 &t, std::vector<gfx::Vertex> &v) {
     if (m.mesh != nullptr) {
       for (auto &v0 : m.mesh->vertices) {
         auto vt0 = v0;

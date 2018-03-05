@@ -10,9 +10,9 @@ class Button {
 public:
   using Callback = std::function<void()>;
   enum class State { IDLE, SELECTED, CLICKED };
-  Button(const Text &text, const State &state = State::IDLE);
+  Button(const gfx::Text &text, const State &state = State::IDLE);
   ~Button();
-  Model model();
+  gfx::Model model();
   bool selected();
   void state(const State &state);
   float height() const;
@@ -22,12 +22,12 @@ public:
   void click();
 
 private:
-  Text text_;
-  Model rectangle_;
+  gfx::Text text_;
+  gfx::Model rectangle_;
   float padding_;
   State state_;
-  mos::Material light_material_;
-  mos::Material dark_material_;
+  mos::gfx::Material light_material_;
+  mos::gfx::Material dark_material_;
   std::function<void()> click_callback_;
 };
 }

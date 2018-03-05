@@ -1,5 +1,6 @@
 #include <mos/render/render_scene.hpp>
 namespace mos {
+namespace gfx {
 RenderScene::RenderScene() {}
 
 RenderScene::RenderScene(const std::initializer_list<Model> &models,
@@ -18,4 +19,5 @@ RenderScene::RenderScene(const std::initializer_list<Model> &models,
                   shader,
                   draw) {}
 
+}
 }

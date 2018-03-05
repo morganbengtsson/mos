@@ -1,7 +1,6 @@
 #include <mos/render/environment_light.hpp>
-
 namespace mos {
-
+namespace gfx {
 EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength,
@@ -16,8 +15,7 @@ EnvironmentLight::EnvironmentLight(const EnvironmentLight &light) :
     box(light.box),
     strength(light.strength),
     cube_camera(light.cube_camera),
-    target(light.target)
-    {}
+    target(light.target) {}
 EnvironmentLight &EnvironmentLight::operator=(const EnvironmentLight &other) {
   texture = other.texture;
   box = other.box;
@@ -26,5 +24,5 @@ EnvironmentLight &EnvironmentLight::operator=(const EnvironmentLight &other) {
   target = other.target;
   return *this;
 }
-
+}
 }

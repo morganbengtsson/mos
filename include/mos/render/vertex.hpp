@@ -1,13 +1,11 @@
-#ifndef MOS_VERTEX_H
-#define MOS_VERTEX_H
+#pragma once
 
 #include <glm/glm.hpp>
 
 namespace mos {
+namespace gfx {
 
-/*!
- * The vertex structure, supported by the renderer.
- */
+/** The vertex structure, supported by the renderer. */
 class Vertex {
 public:
   /*!
@@ -19,10 +17,10 @@ public:
    * Constructs a vertex. Probably the smallest primitive in this context.
    *
    */
-  explicit Vertex(const glm::vec3 & position = glm::vec3(0.0f),
-                  const glm::vec3 & normal = glm::vec3(0.0f),
-                  const glm::vec3 & tangent = glm::vec3(0.0f),
-                  const glm::vec2 & uv = glm::vec2(0.0f),
+  explicit Vertex(const glm::vec3 &position = glm::vec3(0.0f),
+                  const glm::vec3 &normal = glm::vec3(0.0f),
+                  const glm::vec3 &tangent = glm::vec3(0.0f),
+                  const glm::vec2 &uv = glm::vec2(0.0f),
                   const float ao = 1.0f);
 
   /**
@@ -92,11 +90,11 @@ public:
    */
   glm::vec2 uv;
 
-   /**
-   * @brief Ambient occlusion.
-   */
+  /**
+  * @brief Ambient occlusion.
+  */
   float ao;
 };
 }
+}
 
-#endif /* MOS_VERTEX_H */

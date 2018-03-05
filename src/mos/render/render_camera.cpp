@@ -1,7 +1,7 @@
 #include <mos/render/render_camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
 namespace mos {
+namespace gfx {
   RenderCamera::RenderCamera() {
   }
 
@@ -48,6 +48,5 @@ void RenderCamera::update_view() { view = glm::lookAt(position_, center_, up_); 
 float RenderCamera::aspect_ratio() const {
   return projection[1][1] / projection[0][0];
 }
-
-
+}
 }

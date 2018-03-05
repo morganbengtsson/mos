@@ -1,8 +1,8 @@
 #include <filesystem/path.h>
 #include <mos/render/model.hpp>
 #include <mos/util.hpp>
-
 namespace mos {
+namespace gfx {
 
 Model::Model() {}
 
@@ -34,5 +34,6 @@ void Model::position(const glm::vec3 &position) {
   transform[3][0] = position[0];
   transform[3][1] = position[1];
   transform[3][2] = position[2];
+}
 }
 }

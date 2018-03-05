@@ -18,36 +18,36 @@
 #include <mos/util.hpp>
 
 namespace mos {
+namespace gfx {
 
-RenderSystem::RenderSystem(const glm::vec4 &color):
-  format_map_{
-      {Texture::Format::R, {GL_RED, GL_RED}},
-      {Texture::Format::RG, {GL_RG, GL_RG}},
-      {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
-      {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
-      {Texture::Format::RGB, {GL_RGB, GL_RGB}},
-      {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}},
-      {Texture::Format::DEPTH, {GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT}},
-      {Texture::Format::COMPRESSED_SRGB, {GL_COMPRESSED_SRGB, GL_RGB}},
-      {Texture::Format::COMPRESSED_SRGBA, {GL_COMPRESSED_SRGB_ALPHA, GL_RGBA}},
-      {Texture::Format::COMPRESSED_RGB, {GL_COMPRESSED_RGB, GL_RGB}},
-      {Texture::Format::COMPRESSED_RGBA, {GL_COMPRESSED_RGBA, GL_RGBA}},
-      {Texture::Format::R16F, {GL_R16F, GL_R}},
-      {Texture::Format::RG16F, {GL_RG16F, GL_RG}},
-      {Texture::Format::RGB16F, {GL_RGB16F, GL_RGB}},
-      {Texture::Format::RGBA16F, {GL_RGBA16F, GL_RGBA}},
-      {Texture::Format::R32F, {GL_R32F, GL_R}},
-      {Texture::Format::RG32F, {GL_RG32F, GL_RG}},
-      {Texture::Format::RGB32F, {GL_RGB32F, GL_RGB}},
-      {Texture::Format::RGBA32F, {GL_RGBA32F, GL_RGBA}}},
-  wrap_map_{
-      {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-      {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-      {Texture::Wrap::REPEAT, GL_REPEAT}},
-  draw_map_{{RenderScene::Draw::LINES, GL_LINES},
-            {RenderScene::Draw::POINTS, GL_POINTS},
-            {RenderScene::Draw::TRIANGLES, GL_TRIANGLES}}
-{
+RenderSystem::RenderSystem(const glm::vec4 &color) :
+    format_map_{
+        {Texture::Format::R, {GL_RED, GL_RED}},
+        {Texture::Format::RG, {GL_RG, GL_RG}},
+        {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
+        {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
+        {Texture::Format::RGB, {GL_RGB, GL_RGB}},
+        {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}},
+        {Texture::Format::DEPTH, {GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT}},
+        {Texture::Format::COMPRESSED_SRGB, {GL_COMPRESSED_SRGB, GL_RGB}},
+        {Texture::Format::COMPRESSED_SRGBA, {GL_COMPRESSED_SRGB_ALPHA, GL_RGBA}},
+        {Texture::Format::COMPRESSED_RGB, {GL_COMPRESSED_RGB, GL_RGB}},
+        {Texture::Format::COMPRESSED_RGBA, {GL_COMPRESSED_RGBA, GL_RGBA}},
+        {Texture::Format::R16F, {GL_R16F, GL_R}},
+        {Texture::Format::RG16F, {GL_RG16F, GL_RG}},
+        {Texture::Format::RGB16F, {GL_RGB16F, GL_RGB}},
+        {Texture::Format::RGBA16F, {GL_RGBA16F, GL_RGBA}},
+        {Texture::Format::R32F, {GL_R32F, GL_R}},
+        {Texture::Format::RG32F, {GL_RG32F, GL_RG}},
+        {Texture::Format::RGB32F, {GL_RGB32F, GL_RGB}},
+        {Texture::Format::RGBA32F, {GL_RGBA32F, GL_RGBA}}},
+    wrap_map_{
+        {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
+        {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
+        {Texture::Wrap::REPEAT, GL_REPEAT}},
+    draw_map_{{RenderScene::Draw::LINES, GL_LINES},
+              {RenderScene::Draw::POINTS, GL_POINTS},
+              {RenderScene::Draw::TRIANGLES, GL_TRIANGLES}} {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
@@ -133,9 +133,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
 
   // Render boxes
   float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0,  -0.5, 0.5,  -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5,  1.0,  0.5,  0.5,  0.5, 1.0,  -0.5, 0.5, 0.5, 1.0,
+      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
+      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
+      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
   };
 
   glGenBuffers(1, &box_vbo);
@@ -161,7 +161,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color):
                         GL_FALSE, // take our values as-is
                         0,        // no extra data between each position
                         0         // offset of first element
-                        );
+  );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
   glBindVertexArray(0);
@@ -262,7 +262,7 @@ void RenderSystem::add_box_program(const std::string &name,
 
   box_programs_.insert(
       {name, BoxProgramData{program, glGetUniformLocation(
-                                         program, "model_view_projection"),
+          program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
 }
 
@@ -309,11 +309,11 @@ void RenderSystem::add_particle_program(const std::string name,
 
   particle_programs_.insert(ParticleProgramPair(
       name, ParticleProgramData{
-                program, glGetUniformLocation(program, "model_view_projection"),
-                glGetUniformLocation(program, "model_view"),
-                glGetUniformLocation(program, "projection"),
-                glGetUniformLocation(program, "tex"),
-                glGetUniformLocation(program, "resolution")}));
+          program, glGetUniformLocation(program, "model_view_projection"),
+          glGetUniformLocation(program, "model_view"),
+          glGetUniformLocation(program, "projection"),
+          glGetUniformLocation(program, "tex"),
+          glGetUniformLocation(program, "resolution")}));
 }
 
 void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
@@ -406,7 +406,7 @@ void RenderSystem::load(const Model &model) {
     vertex_arrays_.insert({model.mesh->id(), vertex_array});
   }
 
-  if (model.mesh && (model.mesh->modified() > array_buffers_[model.mesh->id()].modified)){
+  if (model.mesh && (model.mesh->modified() > array_buffers_[model.mesh->id()].modified)) {
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()].id);
     glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
                  model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
@@ -716,7 +716,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
     glm::mat4 mvp = camera.projection * camera.view * transform *
-                    glm::scale(glm::mat4(1.0f), size);
+        glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
@@ -724,9 +724,9 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *)(4 * sizeof(GLuint)));
+                   (GLvoid *) (4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *)(8 * sizeof(GLuint)));
+                   (GLvoid *) (8 * sizeof(GLuint)));
   }
 
   for (auto &particles : render_scene.particle_clouds) {
@@ -750,7 +750,7 @@ void RenderSystem::render_scene(const RenderCamera &camera,
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
       glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                                           sizeof(glm::vec4)));
+                                sizeof(glm::vec4)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableVertexAttribArray(0);
       glEnableVertexAttribArray(1);
@@ -775,8 +775,8 @@ void RenderSystem::render_scene(const RenderCamera &camera,
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                     ? textures_[particles.emission_map->id()]
-                                     : black_texture_);
+                                 ? textures_[particles.emission_map->id()]
+                                 : black_texture_);
     glUniform1i(uniforms2.texture, 10);
 
     glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -815,8 +815,8 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
 
   glActiveTexture(GLenum(GL_TEXTURE0));
   glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                   ? textures_[model.material.albedo_map->id()]
-                                   : black_texture_);
+                               ? textures_[model.material.albedo_map->id()]
+                               : black_texture_);
   glUniform1i(uniforms.material_albedo_map, 0);
 
 
@@ -835,8 +835,8 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
 
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                   ? textures_[model.material.normal_map->id()]
-                                   : black_texture_);
+                               ? textures_[model.material.normal_map->id()]
+                               : black_texture_);
   glUniform1i(uniforms.material_normal_map, 2);
 
   glActiveTexture(GL_TEXTURE3);
@@ -855,7 +855,6 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
                                : black_texture_);
   glUniform1i(uniforms.material_roughness_map, 5);
 
-
   glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                ? textures_[model.material.ambient_occlusion_map->id()]
@@ -866,9 +865,8 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
   glUniform1i(uniforms.brdf_lut, 7);
 
-
-  for(int i = 0; i < decals.size(); i++) {
-    auto & decal = decals[i];
+  for (int i = 0; i < decals.size(); i++) {
+    auto &decal = decals[i];
     load(decal.material.albedo_map);
     load(decal.material.normal_map);
 
@@ -906,13 +904,13 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
   const glm::mat4 depth_bias_mvp = bias * light.camera.projection *
-                                   light.camera.view * parent_transform *
-                                   model.transform;
+      light.camera.view * parent_transform *
+      model.transform;
   glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                      &depth_bias_mvp[0][0]);
 
   glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
-                                                  glm::mat3(model.transform));
+      glm::mat3(model.transform));
   normal_matrix =
       glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
   glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
@@ -934,7 +932,8 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
                glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
-  auto light_color = light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+  auto light_color =
+      light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
   glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
 
   glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
@@ -1012,7 +1011,7 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   clear(glm::vec4(0.0f));
   auto shadow_scene = scene;
-  shadow_scene.shader = mos::RenderScene::Shader::DEPTH;
+  shadow_scene.shader = RenderScene::Shader::DEPTH;
 
   render_scene(scene.light.camera,
                shadow_scene,
@@ -1054,9 +1053,11 @@ void RenderSystem::render_environment(const RenderScene &scene, const glm::vec4 
 
   auto texture_id = texture_cubes_[scene.environment.texture.id()];
 
-  for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end(); c_it++){
+  for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end();
+       c_it++) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
+                           GL_TEXTURE_CUBE_MAP_POSITIVE_X
+                               + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
     clear(clear_color);
     auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
     render_scene(*c_it, scene, resolution);
@@ -1070,7 +1071,7 @@ void RenderSystem::render_environment(const RenderScene &scene, const glm::vec4 
 
 RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
-                            program, "model_view_projection")),
+    program, "model_view_projection")),
       model_view_matrix(glGetUniformLocation(program, "model_view")),
       model_matrix(glGetUniformLocation(program, "model")),
       view_matrix(glGetUniformLocation(program, "view")),
@@ -1114,7 +1115,7 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
       fog_attenuation_factor(
           glGetUniformLocation(program, "fog.attenuation_factor")),
       brdf_lut(
-          glGetUniformLocation(program, "brdf_lut")){
+          glGetUniformLocation(program, "brdf_lut")) {
 
   for (int i = 0; i < decal_material_diffuse_maps.size(); i++) {
     auto decals_uniform_name =
@@ -1132,5 +1133,6 @@ RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
     decal_mvps[i] =
         glGetUniformLocation(program, decal_mvps_uniform_name.c_str());
   }
+}
 }
 }

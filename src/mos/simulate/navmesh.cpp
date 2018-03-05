@@ -6,7 +6,7 @@ namespace mos {
 
 Navmesh::Navmesh() {}
 
-Navmesh::Navmesh(const Mesh &mesh, const glm::mat4 &transform)
+Navmesh::Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform)
     : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
               mesh.indices.end(), transform) {}
 

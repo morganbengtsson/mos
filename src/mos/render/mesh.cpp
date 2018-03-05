@@ -9,12 +9,13 @@
 #include <glm/gtx/io.hpp>
 
 namespace mos {
+namespace gfx {
 
 std::atomic_uint Mesh::current_id_;
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
            const std::initializer_list<int> &elements)
-  : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
+    : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
 Mesh::Mesh(const std::string &path) : id_(current_id_++) {
@@ -25,18 +26,18 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
     }
     int num_vertices;
     int num_indices;
-    is.read((char *)&num_vertices, sizeof(int));
-    is.read((char *)&num_indices, sizeof(int));
+    is.read((char *) &num_vertices, sizeof(int));
+    is.read((char *) &num_indices, sizeof(int));
 
-    auto input_vertices = std::vector<mos::Vertex>(num_vertices);
+    auto input_vertices = std::vector<Vertex>(num_vertices);
     auto input_indices = std::vector<int>(num_indices);
 
     if (input_vertices.size() > 0) {
-      is.read((char *)&input_vertices[0], input_vertices.size() * sizeof(Vertex));
+      is.read((char *) &input_vertices[0], input_vertices.size() * sizeof(Vertex));
     }
 
     if (input_indices.size() > 0) {
-      is.read((char *)&input_indices[0], input_indices.size() * sizeof(int));
+      is.read((char *) &input_indices[0], input_indices.size() * sizeof(int));
     }
     vertices.assign(input_vertices.begin(), input_vertices.end());
     indices.assign(input_indices.begin(), input_indices.end());
@@ -79,7 +80,7 @@ void Mesh::clear() {
 
 Mesh::Positions Mesh::positions() const {
   Positions pos;
-  std::transform(vertices.begin(), vertices.end(), std::back_inserter(pos), [](const Vertex &vertex){
+  std::transform(vertices.begin(), vertices.end(), std::back_inserter(pos), [](const Vertex &vertex) {
     return vertex.position;
   });
   return pos;
@@ -108,9 +109,9 @@ void Mesh::apply_transform(const glm::mat4 &transform) {
   }
 }
 
-void Mesh::calculate_tangents(mos::Vertex &v0,
-                              mos::Vertex &v1,
-                              mos::Vertex &v2) {
+void Mesh::calculate_tangents(Vertex &v0,
+                              Vertex &v1,
+                              Vertex &v2) {
   auto pos1 = v0.position;
   auto pos2 = v1.position;
   auto pos3 = v2.position;
@@ -137,7 +138,7 @@ void Mesh::calculate_tangents(mos::Vertex &v0,
   v2.tangent = tangent;
 }
 
-struct Triangle{
+struct Triangle {
   Vertex &v0;
   Vertex &v1;
   Vertex &v2;
@@ -159,8 +160,7 @@ void Mesh::calculate_normals() {
       v1.normal = normal;
       v2.normal = normal;
     }
-  }
-  else {
+  } else {
     //TODO: Slow brute force, improve?
     using P = std::pair<int, std::vector<Triangle>>;
     std::map<int, std::vector<Triangle>> triangle_map;
@@ -175,10 +175,10 @@ void Mesh::calculate_normals() {
         }
       }
     }
-    for (auto p : triangle_map){
-      auto & v = vertices[p.first];
+    for (auto p : triangle_map) {
+      auto &v = vertices[p.first];
       glm::vec3 normal = glm::vec3(0.0f);
-      for (auto & neighbour : p.second){
+      for (auto &neighbour : p.second) {
         normal += neighbour.normal();
       }
       v.normal = glm::normalize(normal);
@@ -214,8 +214,7 @@ void Mesh::calculate_tangents() {
 
       calculate_tangents(v0, v1, v2);
     }
-  }
-  else{
+  } else {
     for (int i = 0; i < indices.size(); i += 3) {
       auto &v0 = vertices[indices[i]];
       auto &v1 = vertices[indices[i + 1]];
@@ -237,8 +236,7 @@ void Mesh::calculate_flat_normals() {
       v1.normal = normal;
       v2.normal = normal;
     }
-  }
-  else {
+  } else {
     for (int i = 0; i < indices.size(); i += 3) {
       auto &v0 = vertices[indices[i]];
       auto &v1 = vertices[indices[i + 1]];
@@ -253,5 +251,6 @@ void Mesh::calculate_flat_normals() {
 }
 Mesh::TimePoint Mesh::modified() const {
   return modified_;
+}
 }
 }

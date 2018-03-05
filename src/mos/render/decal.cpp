@@ -1,14 +1,18 @@
 #include <mos/render/decal.hpp>
-mos::Decal::Decal(const glm::mat4 &projection,
+namespace mos {
+namespace gfx {
+Decal::Decal(const glm::mat4 &projection,
                   const glm::mat4 &view,
-                  const mos::Material &material)
+                  const Material &material)
     : projection(projection), view(view), material(material) {
   if (material.albedo_map) {
-    material.albedo_map->wrap = mos::Texture2D::Wrap::CLAMP_TO_BORDER;
+    material.albedo_map->wrap = Texture2D::Wrap::CLAMP_TO_BORDER;
   }
-  if (material.normal_map ) {
-    material.normal_map->wrap = mos::Texture2D::Wrap::CLAMP_TO_EDGE;
+  if (material.normal_map) {
+    material.normal_map->wrap = Texture2D::Wrap::CLAMP_TO_EDGE;
   }
 }
-mos::Decal::Decal() {
+Decal::Decal() {
+}
+}
 }

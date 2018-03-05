@@ -80,7 +80,7 @@ public:
 
     std::vector<glm::vec3> positions;
     std::transform(
-        begin, end, std::back_inserter(positions), [&](const Vertex &vertex) {
+        begin, end, std::back_inserter(positions), [&](const gfx::Vertex &vertex) {
           return glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
         });
 
@@ -101,7 +101,7 @@ public:
    */
   Box();
 
-  static Box create_from_model(const Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
+  static Box create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
   static Box create_from_min_max(const glm::vec3 &min, const glm::vec3 &max);
 
   /**

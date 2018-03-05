@@ -13,8 +13,8 @@ Menu::~Menu() {}
 
 void Menu::add(const Button &button) { buttons_.push_back(button); }
 
-Model Menu::model() {
-  mos::Model out;
+gfx::Model Menu::model() {
+  gfx::Model out;
   for (int i = 0; i < buttons_.size(); i++) {
     auto model = buttons_[i].model();
     model.transform = glm::translate(

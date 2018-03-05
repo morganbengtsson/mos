@@ -1,6 +1,7 @@
 #include <mos/render/vertex.hpp>
 
 namespace mos {
+namespace gfx {
 
 Vertex::Vertex(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec3 &tangent,
                const glm::vec2 &uv, const float ao)
@@ -34,5 +35,6 @@ Vertex Vertex::operator/(const float number) const {
 Vertex Vertex::operator/(const Vertex &vertex) const {
   return Vertex(position / vertex.position, normal / vertex.normal, tangent / vertex.tangent,
                 uv / vertex.uv, ao / vertex.ao);
+}
 }
 }

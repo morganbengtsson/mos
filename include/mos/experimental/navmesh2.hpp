@@ -15,20 +15,20 @@ namespace mos {
 
 class Face2 {
 public:
-  Face2(Vertex &v0, Vertex &v1, Vertex &v2);
-  std::experimental::optional<Vertex>
+  Face2(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
+  std::experimental::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 public :
-  Vertex v0_;
-  Vertex v1_;
-  Vertex v2_;
+  gfx::Vertex v0_;
+  gfx::Vertex v1_;
+  gfx::Vertex v2_;
 };
 
 class Navmesh2 {
 public:
-  using OptionalIntersection = std::experimental::optional<Vertex>;
+  using OptionalIntersection = std::experimental::optional<gfx::Vertex>;
   Navmesh2();
-  Navmesh2(const Mesh &mesh, const glm::mat4 &transform);
+  Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
   template <class Tv, class Te>
   Navmesh2(Tv vertices_begin, Tv vertices_end, Te elements_begin,
@@ -40,16 +40,16 @@ public:
           glm::vec4(vertex.position, 1.0f));
     }
   }
-  std::experimental::optional<Vertex>
+  std::experimental::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 
-  std::experimental::optional<Vertex>
+  std::experimental::optional<gfx::Vertex>
   closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
   void calculate_normals();
 
   ~Navmesh2();
 
-  std::vector<Vertex> vertices;
+  std::vector<gfx::Vertex> vertices;
   std::vector<int> indices;
 };
 }

@@ -29,7 +29,7 @@ class Navmesh {
 public:
   using OptionalIntersection = std::experimental::optional<Intersection>;
   Navmesh();
-  Navmesh(const Mesh &mesh, const glm::mat4 &transform);
+  Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
   template <class Tv, class Te>
   Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
@@ -37,7 +37,7 @@ public:
       : elements_(elements_begin, elements_end) {
 
     std::transform(vertices_begin, vertices_end, std::back_inserter(positions_),
-                   [&](const Vertex &vertex) {
+                   [&](const gfx::Vertex &vertex) {
                      return glm::vec3(transform *
                                       glm::vec4(vertex.position, 1.0f));
                    });

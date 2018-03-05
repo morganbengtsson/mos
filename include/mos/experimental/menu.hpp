@@ -13,7 +13,7 @@ public:
   Menu();
   Menu(const std::initializer_list<Button> &buttons);
   void add(const Button &button);
-  mos::Model model();
+  mos::gfx::Model model();
   Button &selected();
   void select_next();
   void select_previos();

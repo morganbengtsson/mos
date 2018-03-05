@@ -3,17 +3,17 @@
 
 namespace mos {
 
-Button::Button(const Text &text, const State &s)
+Button::Button(const gfx::Text &text, const State &s)
     : text_(text), padding_(text_.height() / 4.0f),
       light_material_(glm::vec3(1.0f), 0.8f),
       dark_material_(glm::vec3(0.01f), 0.8f) {
-  mos::Vertex v1({0.0f, -1.0f, 0.0f});
-  mos::Vertex v2({0.0f, 0.0f, 0.0f});
-  mos::Vertex v3({1.0f, 0.0f, 0.0f});
-  mos::Vertex v4({1.0f, -1.0f, 0.0f});
+  mos::gfx::Vertex v1({0.0f, -1.0f, 0.0f});
+  mos::gfx::Vertex v2({0.0f, 0.0f, 0.0f});
+  mos::gfx::Vertex v3({1.0f, 0.0f, 0.0f});
+  mos::gfx::Vertex v4({1.0f, -1.0f, 0.0f});
 
-  mos::Mesh mesh({v1, v2, v3, v4}, {0, 2, 1, 0, 3, 2});
-  rectangle_.mesh = std::make_shared<Mesh>(mesh);
+  mos::gfx::Mesh mesh({v1, v2, v3, v4}, {0, 2, 1, 0, 3, 2});
+  rectangle_.mesh = std::make_shared<gfx::Mesh>(mesh);
   rectangle_.transform = glm::scale(
       glm::mat4(1.0f), glm::vec3(text_.width() + padding_ * 2.0f,
                                  text_.height() + padding_ * 2.0f, 1.0f));
@@ -26,8 +26,8 @@ Button::Button(const Text &text, const State &s)
 
 Button::~Button() {}
 
-Model Button::model() {
-  mos::Model out;
+gfx::Model Button::model() {
+  mos::gfx::Model out;
   out.models.push_back(rectangle_);
   out.models.push_back(text_.model());
   return out;

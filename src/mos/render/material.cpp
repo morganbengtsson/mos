@@ -3,8 +3,8 @@
 #include <json.hpp>
 #include <mos/util.hpp>
 #include <filesystem/path.h>
-
 namespace mos {
+namespace gfx {
 using namespace nlohmann;
 Material::Material(const SharedTexture2D &albedo_map,
                    const SharedTexture2D &normal_map,
@@ -35,5 +35,6 @@ Material::Material(const glm::vec3 &albedo,
     : albedo(albedo), opacity(opacity), roughness(roughness), metallic(metallic), emission(emission),
       ambient_occlusion(ambient_occlusion), emission_strength(0.0f) {
 
+}
 }
 }

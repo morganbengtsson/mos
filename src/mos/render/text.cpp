@@ -3,9 +3,8 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
-
 namespace mos {
-
+namespace gfx {
 Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
            const float spacing)
     : model_("Text", std::make_shared<Mesh>(Mesh()),
@@ -129,5 +128,5 @@ Text &Text::operator+=(const std::string &input) {
   text(text() + input);
   return *this;
 }
-
+}
 }

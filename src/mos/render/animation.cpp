@@ -12,7 +12,7 @@ Animation::Animation(
     const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
     const unsigned int frame_rate)
     : keyframes_(keyframes.begin(), keyframes.end()),
-      mesh_(std::make_shared<mos::Mesh>(*keyframes_.begin()->second)),
+      mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
       time_(0.0f), frame_rate_(frame_rate) {
   std::cout << keyframes_.size() << std::endl;
   for (auto &p : keyframes_) {
@@ -26,7 +26,7 @@ Animation::Animation(
     keyframes,
     const unsigned int frame_rate)
     : keyframes_(keyframes.begin(), keyframes.end()),
-      mesh_(std::make_shared<mos::Mesh>(*keyframes_.begin()->second)),
+      mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
       time_(0.0f), frame_rate_(frame_rate) {}
 
 Animation::~Animation() {}

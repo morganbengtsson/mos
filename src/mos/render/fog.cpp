@@ -1,6 +1,6 @@
 #include <mos/render/fog.hpp>
-
 namespace mos {
+namespace gfx {
 Fog::Fog(const glm::vec3 &color,
          const float attenuation_factor) : Fog(color,
                                                color,
@@ -12,4 +12,5 @@ Fog::Fog(const glm::vec3 &color_near,
                                            attenuation_factor(attenuation_factor) {}
 
 Fog::~Fog() {}
+}
 }
