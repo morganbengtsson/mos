@@ -9,10 +9,8 @@
 namespace mos {
 namespace gfx {
 
-/**
-*@brief The Particles class
-*/
-class Particles {
+/** Particles for rendering. */
+class Particles final {
 public:
   friend class Renderer;
   /**

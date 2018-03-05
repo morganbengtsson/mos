@@ -13,7 +13,7 @@ namespace gfx {
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
 /** Geometric data description. Vertices and optional indices for rendering. */
-class Mesh {
+class Mesh final {
 public:
   using Vertices = std::vector<Vertex>;
   using Positions = std::vector<glm::vec3>;

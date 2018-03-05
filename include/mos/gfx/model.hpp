@@ -11,7 +11,7 @@ namespace gfx {
 
 using namespace nlohmann;
 /** Gathers what is needed to render an object. A Mesh, a Material and a transformation. */
-class Model {
+class Model final {
 public:
   using Models = std::vector<Model>;
 
