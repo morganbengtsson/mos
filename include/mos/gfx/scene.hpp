@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <initializer_list>
 #include <mos/gfx/model.hpp>
@@ -17,34 +16,31 @@
 namespace mos {
 namespace gfx {
 
+/** Scene for rendering. */
 class Scene {
 public:
   using Models = std::vector<Model>;
-  using RenderBoxes = std::vector<Box>;
+  using Boxes = std::vector<Box>;
   using Decals = std::array<Decal, 10>;
   using ParticleClouds = std::vector<Particles>;
 
-  /**
-   * @brief The Shader enum
-   */
+  /** Shader to use enum */
   enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT, DEPTH };
 
-  /**
-   * @brief How to draw the models.
-   */
+  /** Draw method for scene. */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
   Scene();
 
   template<class T>
   Scene(T begin,
-              T end,
-              const Camera &camera,
-              const Light &light = Light(),
-              const EnvironmentLight &environment_light = EnvironmentLight(),
-              const Fog &fog_linear = Fog(),
-              const Shader &shader = Shader::STANDARD,
-              const Draw &draw = Draw::TRIANGLES)
+        T end,
+        const Camera &camera,
+        const Light &light = Light(),
+        const EnvironmentLight &environment_light = EnvironmentLight(),
+        const Fog &fog_linear = Fog(),
+        const Shader &shader = Shader::STANDARD,
+        const Draw &draw = Draw::TRIANGLES)
       : models(begin, end),
         camera(camera),
         light(light),
@@ -54,16 +50,16 @@ public:
         draw(draw) {}
 
   Scene(const std::initializer_list<Model> &models,
-              const Camera &camera,
-              const Light &light = Light(),
-              const EnvironmentLight &environment_light = EnvironmentLight(),
-              const Fog &fog = Fog(),
-              const Shader &shader = Shader::STANDARD,
-              const Draw &draw = Draw::TRIANGLES);
+        const Camera &camera,
+        const Light &light = Light(),
+        const EnvironmentLight &environment_light = EnvironmentLight(),
+        const Fog &fog = Fog(),
+        const Shader &shader = Shader::STANDARD,
+        const Draw &draw = Draw::TRIANGLES);
   Models models;
   Decals decals;
   ParticleClouds particle_clouds;
-  RenderBoxes render_boxes;
+  Boxes boxes;
   Light light;
   Camera camera;
   Fog fog;

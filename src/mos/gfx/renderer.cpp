@@ -711,7 +711,7 @@ void Renderer::render_scene(const Camera &camera,
   glUseProgram(uniforms.program);
   glBindVertexArray(box_va);
 
-  for (auto &box : render_scene.render_boxes) {
+  for (auto &box : render_scene.boxes) {
     glm::vec3 size = box.size();
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
