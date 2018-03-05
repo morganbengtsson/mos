@@ -1,5 +1,4 @@
 #pragma once
-
 #include <GL/glew.h>
 #include <experimental/optional>
 #include <initializer_list>
@@ -22,54 +21,30 @@
 namespace mos {
 namespace gfx {
 
-/**
- * @brief Render geometry.
- * Talks to OpenGL, and renders Model objects.
- */
-class Renderer {
+/** Render geometry/models with OpenGL. */
+class Renderer final{
 public:
-  /**
-   * @brief Renderer constructor.
-   * Inits the renderer, in this implementation also creates a
-   * valid OpenGL context with GLEW.
-   */
+  /** Inits the renderer, creates an OpenGL context with GLEW. */
   Renderer(const glm::vec4 &color = glm::vec4(.0f));
-  /**
-   * @brief Renderer destructor.
-   * Deletes all allocated GPU memory. Textures, Shaders, Buffers.
-   */
+
   ~Renderer();
 
-  /**
-   * @brief load a model into renderers own memory.
-   * @param model
-   */
+  /** Loads a model into renderers own memory. */
   void load(const Model &model);
 
-  /**
-   * @brief unload a model from renderers own memory.
-   * @param model
-   */
+  /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
 
-  /**
-   * @brief Load a texture into renderer memory.
-   * @param texture The texture.
-   */
+  /** Loads a shared texture into renderer memory. */
   void load(const SharedTexture2D &texture);
 
+  /** Loads a texture into renderer memory. */
   void load(const Texture2D &texture);
 
-  /**
-   * @brief unload a texture from renderer memory.
-   * @param texture The texture.
-   */
+  /** Unloads a shared texture from renderer memory. */
   void unload(const SharedTexture2D &texture);
 
-  /**
-   * @brief unload a texture from renderer memory.
-   * @param texture The texture.
-   */
+  /** Unloads a shared texture cube from renderer memory.*/
   void unload(const SharedTextureCube &texture);
 
   void render_scenes(const std::initializer_list<Scene> &scenes_init,
@@ -89,9 +64,7 @@ public:
     }
   }
 
-  /**
-   * @brief Clear all internal buffers.
-   */
+  /** Clear all internal buffers/memory. */
   void clear_buffers();
 
   /*
@@ -120,15 +93,6 @@ private:
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 
-  /**
-   * @brief Updates render state of model.
-   * @param model
-   * @param transform Additional transform matrix.
-   * @param view View matrix of the camera
-   * @param projection Projection matrix of the camera
-   * @param program_name Either "text" or "standard"
-   * @param light One dynamic light to use.
-   */
   void render(const Model &model,
               const Scene::Decals &decals,
               const glm::mat4 &transform,
@@ -140,22 +104,10 @@ private:
               const Scene::Shader &shader,
               const Scene::Draw &draw);
 
-  /**
-   * @brief render_target
-   * @param target
-   */
-  void render_target(const Target &target);
-
-  /**
-   * @brief clear
-   * @param color
-   */
+  /** Clear color and depth. */
   void clear(const glm::vec4 &color);
 
-  /**
-   * @brief The ParticleProgramData struct, uniforms for the particle shader
-   * program.
-   */
+  /** Uniforms for the particle shader program. */
   struct ParticleProgramData {
     GLuint program;
     GLint mvp;
@@ -165,10 +117,7 @@ private:
     GLint resolution;
   };
 
-  /**
-   * @brief The BoxProgramData struct, uniforms for the bounding box shader
-   * program.
-   */
+  /** Uniforms for the bounding box shader program. */
   struct BoxProgramData {
     GLuint program;
     GLint mvp;
@@ -180,9 +129,7 @@ private:
     GLint mvp;
   };
 
-  /**
-   * @brief The VertexProgramData struct, uniforms for the standard shader.
-   */
+  /** Uniforms for the standard shader. */
   class VertexProgramData {
   public:
     //TODO make all const
