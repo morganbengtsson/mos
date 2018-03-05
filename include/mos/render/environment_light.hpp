@@ -11,7 +11,7 @@ namespace gfx {
 *
 */
 class EnvironmentLight {
-  friend class RenderSystem;
+  friend class Renderer;
 public:
   /**
    * @brief Environment constructor.
@@ -24,12 +24,12 @@ public:
   EnvironmentLight(const EnvironmentLight &light);
   EnvironmentLight &operator=(const EnvironmentLight &other);
 
-  RenderBox box;
+  Box box;
   float strength;
 
 private:
-  RenderTarget target;
-  RenderCubeCamera cube_camera;
+  Target target;
+  CubeCamera cube_camera;
   TextureCube texture;
 };
 }

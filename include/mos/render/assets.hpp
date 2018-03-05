@@ -19,7 +19,7 @@ namespace gfx {
  * and sound streams.
  * Caches most things internally, so nothing is loaded twice.
  */
-class RenderAssets final {
+class Assets final {
 public:
   /**
    * @brief Container for meshes.
@@ -55,18 +55,18 @@ public:
    * @param directory The directory where the assets exist, relative to the run
    *directory, default is "assets/"
    */
-  RenderAssets(const std::string directory = "assets/");
+  Assets(const std::string directory = "assets/");
 
   /**
    * @brief Assets non copyable.
    * @param assets
    */
-  RenderAssets(const RenderAssets &assets) = delete; // Not copyable.
+  Assets(const Assets &assets) = delete; // Not copyable.
 
   /**
    * @brief Destructor
    */
-  ~RenderAssets();
+  ~Assets();
 
   /**
    * @brief Loads a full Model from a *.model file.

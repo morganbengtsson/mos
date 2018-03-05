@@ -8,9 +8,9 @@ namespace gfx {
 /**
  * @brief The Camera class
  */
-class RenderCamera {
+class Camera {
 public:
-  RenderCamera();
+  Camera();
   /**
    * @brief Camera
    * @param eye Where the camera is located.
@@ -19,7 +19,7 @@ public:
    * @param up Up direction.
    * @param resolution Render resolution.
    */
-  RenderCamera(const glm::vec3 &position,
+  Camera(const glm::vec3 &position,
                const glm::vec3 &center,
                const glm::mat4 &projection,
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));

@@ -5,9 +5,9 @@
 namespace mos {
 namespace gfx {
 /** Bounding box for rendering. */
-class RenderBox {
+class Box {
 public:
-  RenderBox(const glm::vec3 &position,
+  Box(const glm::vec3 &position,
             const glm::vec3 &extent);
   glm::vec3 position;
   glm::vec3 extent;

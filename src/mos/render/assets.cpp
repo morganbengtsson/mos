@@ -12,11 +12,11 @@ namespace mos {
 namespace gfx {
 using namespace nlohmann;
 
-RenderAssets::RenderAssets(const std::string directory) : directory_(directory) {}
+Assets::Assets(const std::string directory) : directory_(directory) {}
 
-RenderAssets::~RenderAssets() {}
+Assets::~Assets() {}
 
-Model RenderAssets::model_value(const std::string &base_path, const json &value) {
+Model Assets::model_value(const std::string &base_path, const json &value) {
   auto name = value.value("name", "");
   auto mesh_name = std::string("");
   if (!value["mesh"].is_null()) {
@@ -40,7 +40,7 @@ Model RenderAssets::model_value(const std::string &base_path, const json &value)
   return created_model;
 }
 
-Model RenderAssets::model(const std::string &path) {
+Model Assets::model(const std::string &path) {
   std::cout << "Loading : " << path << std::endl;
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
@@ -48,7 +48,7 @@ Model RenderAssets::model(const std::string &path) {
   return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc);
 }
 
-Animation RenderAssets::animation(const std::string &path) {
+Animation Assets::animation(const std::string &path) {
   auto doc = json::parse(mos::text(directory_ + path));
   auto frame_rate = doc["frame_rate"];
   std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
@@ -62,7 +62,7 @@ Animation RenderAssets::animation(const std::string &path) {
   return animation;
 }
 
-std::shared_ptr<Mesh> RenderAssets::mesh(const std::string &path) {
+std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (meshes_.find(path) == meshes_.end()) {
     meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
   }
@@ -70,7 +70,7 @@ std::shared_ptr<Mesh> RenderAssets::mesh(const std::string &path) {
 }
 
 std::shared_ptr<Texture2D>
-RenderAssets::texture(const std::string &path,
+Assets::texture(const std::string &path,
                       const bool mipmaps,
                       const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
@@ -83,7 +83,7 @@ RenderAssets::texture(const std::string &path,
   }
 }
 
-Material RenderAssets::material(const std::string &path) {
+Material Assets::material(const std::string &path) {
   if (path.empty()) {
     return Material();
   } else {
@@ -134,7 +134,7 @@ Material RenderAssets::material(const std::string &path) {
   }
 }
 
-void RenderAssets::clear_unused() {
+void Assets::clear_unused() {
   for (auto it = textures_.begin(); it != textures_.end();) {
     if (it->second.use_count() <= 1) {
       textures_.erase(it++);

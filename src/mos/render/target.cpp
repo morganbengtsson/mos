@@ -4,11 +4,11 @@
 namespace mos {
 namespace gfx {
 
-std::atomic_uint RenderTarget::current_id_;
+std::atomic_uint Target::current_id_;
 
-unsigned int RenderTarget::id() const { return id_; }
+unsigned int Target::id() const { return id_; }
 
-RenderTarget::RenderTarget() :
+Target::Target() :
     id_(current_id_++) {
 }
 }

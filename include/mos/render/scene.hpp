@@ -17,10 +17,10 @@
 namespace mos {
 namespace gfx {
 
-class RenderScene {
+class Scene {
 public:
   using Models = std::vector<Model>;
-  using RenderBoxes = std::vector<RenderBox>;
+  using RenderBoxes = std::vector<Box>;
   using Decals = std::array<Decal, 10>;
   using ParticleClouds = std::vector<Particles>;
 
@@ -34,12 +34,12 @@ public:
    */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
-  RenderScene();
+  Scene();
 
   template<class T>
-  RenderScene(T begin,
+  Scene(T begin,
               T end,
-              const RenderCamera &camera,
+              const Camera &camera,
               const Light &light = Light(),
               const EnvironmentLight &environment_light = EnvironmentLight(),
               const Fog &fog_linear = Fog(),
@@ -53,8 +53,8 @@ public:
         shader(shader),
         draw(draw) {}
 
-  RenderScene(const std::initializer_list<Model> &models,
-              const RenderCamera &camera,
+  Scene(const std::initializer_list<Model> &models,
+              const Camera &camera,
               const Light &light = Light(),
               const EnvironmentLight &environment_light = EnvironmentLight(),
               const Fog &fog = Fog(),
@@ -65,7 +65,7 @@ public:
   ParticleClouds particle_clouds;
   RenderBoxes render_boxes;
   Light light;
-  RenderCamera camera;
+  Camera camera;
   Fog fog;
   Shader shader;
   Draw draw;

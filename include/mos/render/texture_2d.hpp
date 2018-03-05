@@ -18,7 +18,7 @@ using SharedTexture2D = std::shared_ptr<Texture2D>;
  * Describes a texture in two dimension. Contains iterable chars as data.
  */
 class Texture2D final : public Texture {
-  friend class RenderSystem;
+  friend class Renderer;
 public:
   template<class T>
   /**

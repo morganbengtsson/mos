@@ -14,7 +14,7 @@ namespace gfx {
 */
 class Particles {
 public:
-  friend class RenderSystem;
+  friend class Renderer;
   /**
    * @brief Particles constructor.
    */

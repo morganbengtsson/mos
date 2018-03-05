@@ -26,19 +26,19 @@ namespace gfx {
  * @brief Render geometry.
  * Talks to OpenGL, and renders Model objects.
  */
-class RenderSystem {
+class Renderer {
 public:
   /**
    * @brief Renderer constructor.
    * Inits the renderer, in this implementation also creates a
    * valid OpenGL context with GLEW.
    */
-  RenderSystem(const glm::vec4 &color = glm::vec4(.0f));
+  Renderer(const glm::vec4 &color = glm::vec4(.0f));
   /**
    * @brief Renderer destructor.
    * Deletes all allocated GPU memory. Textures, Shaders, Buffers.
    */
-  ~RenderSystem();
+  ~Renderer();
 
   /**
    * @brief load a model into renderers own memory.
@@ -72,7 +72,7 @@ public:
    */
   void unload(const SharedTextureCube &texture);
 
-  void render_scenes(const std::initializer_list<RenderScene> &scenes_init,
+  void render_scenes(const std::initializer_list<Scene> &scenes_init,
                      const glm::vec4 &color = glm::vec4(.0f),
                      const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
@@ -114,11 +114,11 @@ private:
   * @brief models_batch rendering.
   * @param render_scene
   */
-  void render_scene(const RenderCamera &camera, const RenderScene &render_scene, const glm::vec2 &resolution);
+  void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
-  void render_shadow_map(const RenderScene &render_scene);
+  void render_shadow_map(const Scene &render_scene);
 
-  void render_environment(const RenderScene &render_scene, const glm::vec4 &clear_color);
+  void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 
   /**
    * @brief Updates render state of model.
@@ -130,21 +130,21 @@ private:
    * @param light One dynamic light to use.
    */
   void render(const Model &model,
-              const RenderScene::Decals &decals,
+              const Scene::Decals &decals,
               const glm::mat4 &transform,
-              const RenderCamera &camera,
+              const Camera &camera,
               const Light &light,
               const EnvironmentLight &environment,
               const Fog &fog,
               const glm::vec2 &resolution,
-              const RenderScene::Shader &shader,
-              const RenderScene::Draw &draw);
+              const Scene::Shader &shader,
+              const Scene::Draw &draw);
 
   /**
    * @brief render_target
    * @param target
    */
-  void render_target(const RenderTarget &target);
+  void render_target(const Target &target);
 
   /**
    * @brief clear
@@ -235,11 +235,11 @@ private:
     GLint brdf_lut;
   };
 
-  using VertexProgramPair = std::pair<RenderScene::Shader, VertexProgramData>;
+  using VertexProgramPair = std::pair<Scene::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgramData>;
 
-  void add_vertex_program(const RenderScene::Shader shader,
+  void add_vertex_program(const Scene::Shader shader,
                           const std::string vertex_shader_source,
                           const std::string fragment_shader_source,
                           const std::string &vert_file_name = "",
@@ -268,7 +268,7 @@ private:
 
   void create_depth_program();
 
-  std::map<RenderScene::Shader, VertexProgramData> vertex_programs_;
+  std::map<Scene::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
   DepthProgramData depth_program_;
@@ -296,7 +296,7 @@ private:
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
-  std::map<RenderScene::Draw, GLuint> draw_map_;
+  std::map<Scene::Draw, GLuint> draw_map_;
 };
 }
 }

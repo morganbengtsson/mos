@@ -20,7 +20,7 @@
 namespace mos {
 namespace gfx {
 
-RenderSystem::RenderSystem(const glm::vec4 &color) :
+Renderer::Renderer(const glm::vec4 &color) :
     format_map_{
         {Texture::Format::R, {GL_RED, GL_RED}},
         {Texture::Format::RG, {GL_RG, GL_RG}},
@@ -45,9 +45,9 @@ RenderSystem::RenderSystem(const glm::vec4 &color) :
         {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
-    draw_map_{{RenderScene::Draw::LINES, GL_LINES},
-              {RenderScene::Draw::POINTS, GL_POINTS},
-              {RenderScene::Draw::TRIANGLES, GL_TRIANGLES}} {
+    draw_map_{{Scene::Draw::LINES, GL_LINES},
+              {Scene::Draw::POINTS, GL_POINTS},
+              {Scene::Draw::TRIANGLES, GL_TRIANGLES}} {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
@@ -83,37 +83,37 @@ RenderSystem::RenderSystem(const glm::vec4 &color) :
   std::string standard_frag = "standard_330.frag";
   std::string standard_vert_source = text(shader_path + standard_vert);
   std::string standard_frag_source = text(shader_path + standard_frag);
-  add_vertex_program(RenderScene::Shader::STANDARD, standard_vert_source,
+  add_vertex_program(Scene::Shader::STANDARD, standard_vert_source,
                      standard_frag_source, standard_vert, standard_frag);
 
   std::string text_vert = "text_330.vert";
   std::string text_frag = "text_330.frag";
   std::string text_vert_source = text(shader_path + text_vert);
   std::string text_frag_source = text(shader_path + text_frag);
-  add_vertex_program(RenderScene::Shader::TEXT, text_vert_source,
+  add_vertex_program(Scene::Shader::TEXT, text_vert_source,
                      text_frag_source, text_vert, text_frag);
 
   std::string depth_vert = "depth_330.vert";
   std::string depth_frag = "depth_330.frag";
   std::string depth_vert_source = text(shader_path + depth_vert);
   std::string depth_frag_source = text(shader_path + depth_frag);
-  add_vertex_program(RenderScene::Shader::DEPTH, depth_vert_source,
+  add_vertex_program(Scene::Shader::DEPTH, depth_vert_source,
                      depth_frag_source, depth_vert, depth_frag);
 
   std::string effect_vert = "effect_330.vert";
   std::string effect_frag = "effect_330.frag";
-  add_vertex_program(RenderScene::Shader::EFFECT,
+  add_vertex_program(Scene::Shader::EFFECT,
                      text(shader_path + effect_vert),
                      text(shader_path + effect_frag), effect_vert, effect_frag);
 
   std::string blur_vert = "blur_330.vert";
   std::string blur_frag = "blur_330.frag";
-  add_vertex_program(RenderScene::Shader::BLUR, text(shader_path + blur_vert),
+  add_vertex_program(Scene::Shader::BLUR, text(shader_path + blur_vert),
                      text(shader_path + blur_frag), blur_vert, blur_frag);
 
   std::string crt_vert = "crt_330.vert";
   std::string crt_frag = "crt_330.frag";
-  add_vertex_program(RenderScene::Shader::CRT, text(shader_path + crt_vert),
+  add_vertex_program(Scene::Shader::CRT, text(shader_path + crt_vert),
                      text(shader_path + crt_frag), crt_vert, crt_frag);
 
   std::string particles_vert = "particles_330.vert";
@@ -200,7 +200,7 @@ RenderSystem::RenderSystem(const glm::vec4 &color) :
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
 }
 
-RenderSystem::~RenderSystem() {
+Renderer::~Renderer() {
   for (auto &vp : vertex_programs_) {
     glDeleteProgram(vp.second.program);
   }
@@ -242,7 +242,7 @@ RenderSystem::~RenderSystem() {
   }
 }
 
-void RenderSystem::add_box_program(const std::string &name,
+void Renderer::add_box_program(const std::string &name,
                                    const std::string &vs_source,
                                    const std::string &fs_source,
                                    const std::string &vs_file,
@@ -266,7 +266,7 @@ void RenderSystem::add_box_program(const std::string &name,
                             glGetUniformLocation(program, "model_view")}});
 }
 
-void RenderSystem::create_depth_program() {
+void Renderer::create_depth_program() {
   auto vert_source = text("assets/shaders/depth_330.vert");
   auto frag_source = text("assets/shaders/depth_330.frag");
 
@@ -287,7 +287,7 @@ void RenderSystem::create_depth_program() {
       program, glGetUniformLocation(program, "model_view_projection")};
 }
 
-void RenderSystem::add_particle_program(const std::string name,
+void Renderer::add_particle_program(const std::string name,
                                         const std::string vs_source,
                                         const std::string fs_source,
                                         const std::string &vs_file,
@@ -316,7 +316,7 @@ void RenderSystem::add_particle_program(const std::string name,
           glGetUniformLocation(program, "resolution")}));
 }
 
-void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
+void Renderer::add_vertex_program(const Scene::Shader shader,
                                       const std::string vertex_shader_source,
                                       const std::string fragment_shader_source,
                                       const std::string &vert_file_name,
@@ -345,7 +345,7 @@ void RenderSystem::add_vertex_program(const RenderScene::Shader shader,
       VertexProgramPair(shader, VertexProgramData(program)));
 }
 
-void RenderSystem::load(const Model &model) {
+void Renderer::load(const Model &model) {
   if (model.mesh &&
       vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
     unsigned int vertex_array;
@@ -429,7 +429,7 @@ void RenderSystem::load(const Model &model) {
   load(model.material.ambient_occlusion_map);
 }
 
-void RenderSystem::unload(const Model &model) {
+void Renderer::unload(const Model &model) {
   if (vertex_arrays_.find(model.mesh->id()) != vertex_arrays_.end()) {
     auto va_id = vertex_arrays_[model.mesh->id()];
     glDeleteVertexArrays(1, &va_id);
@@ -451,7 +451,7 @@ void RenderSystem::unload(const Model &model) {
   unload(model.material.normal_map);
 }
 
-void RenderSystem::unload(const SharedTextureCube &texture) {
+void Renderer::unload(const SharedTextureCube &texture) {
   if (texture) {
     if (texture_cubes_.find(texture->id()) != textures_.end()) {
       auto gl_id = texture_cubes_[texture->id()];
@@ -461,14 +461,14 @@ void RenderSystem::unload(const SharedTextureCube &texture) {
   }
 }
 
-void RenderSystem::load(const Texture2D &texture) {
+void Renderer::load(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
     GLuint gl_id = create_texture(texture);
     textures_.insert({texture.id(), gl_id});
   }
 }
 
-void RenderSystem::load(const SharedTexture2D &texture) {
+void Renderer::load(const SharedTexture2D &texture) {
 #ifdef STREAM_TEXTURES
   if (textures_.find(texture->id()) == textures_.end()) {
     GLuint gl_id = create_texture_and_pbo(texture);
@@ -481,7 +481,7 @@ void RenderSystem::load(const SharedTexture2D &texture) {
 #endif
 }
 
-void RenderSystem::unload(const SharedTexture2D &texture) {
+void Renderer::unload(const SharedTexture2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) != textures_.end()) {
       auto gl_id = textures_[texture->id()];
@@ -491,7 +491,7 @@ void RenderSystem::unload(const SharedTexture2D &texture) {
   }
 }
 
-void RenderSystem::clear_buffers() {
+void Renderer::clear_buffers() {
   for (auto &texture : textures_) {
     glDeleteTextures(1, &texture.second);
   }
@@ -508,7 +508,7 @@ void RenderSystem::clear_buffers() {
   element_array_buffers_.clear();
 }
 
-unsigned int RenderSystem::create_shader(const std::string &source,
+unsigned int Renderer::create_shader(const std::string &source,
                                          const unsigned int type) {
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
@@ -524,7 +524,7 @@ unsigned int RenderSystem::create_shader(const std::string &source,
   return id;
 }
 
-bool RenderSystem::check_shader(const unsigned int shader,
+bool Renderer::check_shader(const unsigned int shader,
                                 const std::string &name) {
   if (!shader) {
     return false;
@@ -554,7 +554,7 @@ bool RenderSystem::check_shader(const unsigned int shader,
   return true;
 }
 
-bool RenderSystem::check_program(const unsigned int program) {
+bool Renderer::check_program(const unsigned int program) {
   if (!program) {
     return false;
   }
@@ -576,7 +576,7 @@ bool RenderSystem::check_program(const unsigned int program) {
   return true;
 }
 
-unsigned int RenderSystem::create_texture(const Texture2D &texture) {
+unsigned int Renderer::create_texture(const Texture2D &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
@@ -611,12 +611,12 @@ unsigned int RenderSystem::create_texture(const Texture2D &texture) {
   return id;
 }
 
-unsigned int RenderSystem::create_texture(const SharedTexture2D &texture) {
+unsigned int Renderer::create_texture(const SharedTexture2D &texture) {
   return create_texture(*texture);
 }
 
 unsigned int
-RenderSystem::create_texture_cube(const TextureCube &texture) {
+Renderer::create_texture_cube(const TextureCube &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_CUBE_MAP, id);
@@ -646,7 +646,7 @@ RenderSystem::create_texture_cube(const TextureCube &texture) {
 }
 
 unsigned int
-RenderSystem::create_texture_and_pbo(const SharedTexture2D &texture) {
+Renderer::create_texture_and_pbo(const SharedTexture2D &texture) {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   GLuint texture_id;
 
@@ -695,8 +695,8 @@ if(texture->mipmaps) {
   return texture_id;
 }
 
-void RenderSystem::render_scene(const RenderCamera &camera,
-                                const RenderScene &render_scene,
+void Renderer::render_scene(const Camera &camera,
+                                const Scene &render_scene,
                                 const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
@@ -790,13 +790,13 @@ void RenderSystem::render_scene(const RenderCamera &camera,
   }
 }
 
-void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
+void Renderer::render(const Model &model, const Scene::Decals &decals,
                           const glm::mat4 &parent_transform,
-                          const RenderCamera &camera, const Light &light,
+                          const Camera &camera, const Light &light,
                           const EnvironmentLight &environment, const Fog &fog,
                           const glm::vec2 &resolution,
-                          const RenderScene::Shader &shader,
-                          const RenderScene::Draw &draw) {
+                          const Scene::Shader &shader,
+                          const Scene::Draw &draw) {
   // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -967,19 +967,19 @@ void RenderSystem::render(const Model &model, const RenderScene::Decals &decals,
   }
 }
 
-void RenderSystem::clear(const glm::vec4 &color) {
+void Renderer::clear(const glm::vec4 &color) {
   glClearDepthf(1.0f);
   glClearColor(color.r, color.g, color.b, color.a);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RenderSystem::render_scenes(
-    const std::initializer_list<RenderScene> &batches_init,
+void Renderer::render_scenes(
+    const std::initializer_list<Scene> &batches_init,
     const glm::vec4 &color, const glm::ivec2 &resolution) {
   render_scenes(batches_init.begin(), batches_init.end(), color, resolution);
 }
 
-void RenderSystem::render_shadow_map(const RenderScene &scene) {
+void Renderer::render_shadow_map(const Scene &scene) {
   if (frame_buffers_.find(scene.light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1011,14 +1011,14 @@ void RenderSystem::render_shadow_map(const RenderScene &scene) {
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   clear(glm::vec4(0.0f));
   auto shadow_scene = scene;
-  shadow_scene.shader = RenderScene::Shader::DEPTH;
+  shadow_scene.shader = Scene::Shader::DEPTH;
 
   render_scene(scene.light.camera,
                shadow_scene,
                glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void RenderSystem::render_environment(const RenderScene &scene, const glm::vec4 &clear_color) {
+void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
   if (frame_buffers_.find(scene.environment.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1069,7 +1069,7 @@ void RenderSystem::render_environment(const RenderScene &scene, const glm::vec4 
 
 }
 
-RenderSystem::VertexProgramData::VertexProgramData(const GLuint program)
+Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
     program, "model_view_projection")),
       model_view_matrix(glGetUniformLocation(program, "model_view")),

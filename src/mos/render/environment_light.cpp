@@ -6,7 +6,7 @@ EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
                                    const float strength,
                                    const glm::uvec2 resolution)
     : texture(resolution.x, resolution.y),
-      box(RenderBox(position, extent)),
+      box(Box(position, extent)),
       strength(strength),
       cube_camera(position) {
 }

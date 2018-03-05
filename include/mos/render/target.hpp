@@ -9,21 +9,21 @@
 
 namespace mos {
 namespace gfx {
-class RenderTarget;
-using OptTarget = std::experimental::optional<RenderTarget>;
+class Target;
+using OptTarget = std::experimental::optional<Target>;
 /**
  * @brief The RenderTarget class
  *
  * Represents a rendertarget, with asociated texture. For off screen rendering.
  */
-class RenderTarget {
+class Target {
 public:
 
   /**
    * @brief Target
    * @param resolution
    */
-  RenderTarget();
+  Target();
 
   /**
    * @brief unique id

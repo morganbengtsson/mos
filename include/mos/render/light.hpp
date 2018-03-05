@@ -85,7 +85,7 @@ public:
   /**
    * @brief Camera to render shadow map from.
    */
-  RenderCamera camera;
+  Camera camera;
 
   /**
   * @brief Shadowmap if used.
@@ -95,7 +95,7 @@ public:
   /**
    * Render target for the
    */
-  RenderTarget target;
+  Target target;
 private:
   /**
   * @brief angle.

@@ -1,16 +1,16 @@
 #include <mos/render/scene.hpp>
 namespace mos {
 namespace gfx {
-RenderScene::RenderScene() {}
+Scene::Scene() {}
 
-RenderScene::RenderScene(const std::initializer_list<Model> &models,
-                         const RenderCamera &camera,
+Scene::Scene(const std::initializer_list<Model> &models,
+                         const Camera &camera,
                          const Light &light,
                          const EnvironmentLight &environment_light,
                          const Fog &fog,
                          const Shader &shader,
                          const Draw &draw)
-    : RenderScene(models.begin(),
+    : Scene(models.begin(),
                   models.end(),
                   camera,
                   light,

@@ -6,7 +6,7 @@ namespace mos {
 namespace gfx {
 
 /** The vertex structure, supported by the renderer. */
-class Vertex {
+class Vertex final {
 public:
   /*!
    * @brief Vertex constructor
@@ -23,9 +23,6 @@ public:
                   const glm::vec2 &uv = glm::vec2(0.0f),
                   const float ao = 1.0f);
 
-  /**
-   * @brief Destructor.
-  */
   ~Vertex();
 
   /**

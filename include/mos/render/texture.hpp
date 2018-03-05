@@ -10,7 +10,7 @@ namespace gfx {
 class Texture;
 using SharedTexture = std::shared_ptr<Texture>;
 class Texture {
-  friend class RenderSystem;
+  friend class Renderer;
 public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
