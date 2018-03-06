@@ -4,7 +4,7 @@
 #include <thread>
 
 #include <mos/aud/buffer_source.hpp>
-#include <mos/aud/player.hpp>
+#include <mos/aud/renderer.hpp>
 
 #ifdef MOS_EFX
 
