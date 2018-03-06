@@ -7,6 +7,7 @@
 #include <memory>
 #include <chrono>
 #include <mos/gfx/vertex.hpp>
+#include <mos/gfx/vertices.hpp>
 
 namespace mos {
 namespace gfx {
@@ -15,7 +16,6 @@ using SharedMesh = std::shared_ptr<Mesh>;
 /** Geometric data description. Vertices and optional indices for rendering. */
 class Mesh final {
 public:
-  using Vertices = std::vector<Vertex>;
   using Positions = std::vector<glm::vec3>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
   using Indices = std::vector<int>;
