@@ -24,7 +24,6 @@ public:
        Te elements_begin, Te elements_end)
       : vertices(vertices_begin, vertices_end),
         indices(elements_begin, elements_end), id_(current_id_++) {
-    invalidate();
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
@@ -43,13 +42,6 @@ public:
 
   /** @return Unique identifier. */
   unsigned int id() const;
-
-  /** @return Time point when modified. */
-  TimePoint modified() const;
-
-  /** Invalidates the mesh, hence the data is updated. */
-  //TODO: Automatic when modified
-  void invalidate();
 
   /** Erease all vertices and indices. */
   void clear();
@@ -70,7 +62,6 @@ public:
   Container<Vertex> vertices;
   Container<int> indices;
 private:
-  TimePoint modified_;
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
   static std::atomic_uint current_id_;
   unsigned int id_;

@@ -71,7 +71,6 @@ void Text::text(const std::string &text) {
       }
       line_index += line_height;
     }
-    model_.mesh->invalidate();
   }
 }
 

@@ -359,7 +359,7 @@ void Renderer::load(const Model &model) {
                    model.mesh->vertices.size() * sizeof(Vertex),
                    model.mesh->vertices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({model.mesh->id(), Buffer{array_buffer_id, model.mesh->modified()}});
+      array_buffers_.insert({model.mesh->id(), Buffer{array_buffer_id, model.mesh->vertices.modified()}});
     }
     if (element_array_buffers_.find(model.mesh->id()) ==
         element_array_buffers_.end()) {
@@ -370,7 +370,7 @@ void Renderer::load(const Model &model) {
                    model.mesh->indices.size() * sizeof(unsigned int),
                    model.mesh->indices.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_array_buffers_.insert({model.mesh->id(), Buffer{element_array_buffer_id, model.mesh->modified()}});
+      element_array_buffers_.insert({model.mesh->id(), Buffer{element_array_buffer_id, model.mesh->indices.modified()}});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()).id);
     // Position
@@ -406,13 +406,14 @@ void Renderer::load(const Model &model) {
     vertex_arrays_.insert({model.mesh->id(), vertex_array});
   }
 
-  if (model.mesh && (model.mesh->modified() > array_buffers_[model.mesh->id()].modified)) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()].id);
-    glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
-                 model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    if (model.mesh->indices.size() > 0) {
+  if (model.mesh) {
+    if(model.mesh->vertices.size() > 0 && model.mesh->vertices.modified() > array_buffers_[model.mesh->id()].modified) {
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()].id);
+      glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
+                   model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    if (model.mesh->indices.size() > 0 && model.mesh->indices.modified() > element_array_buffers_[model.mesh->id()].modified) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[model.mesh->id()].id);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                    model.mesh->indices.size() * sizeof(unsigned int),

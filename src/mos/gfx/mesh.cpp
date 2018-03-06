@@ -43,14 +43,12 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
     indices.assign(input_indices.begin(), input_indices.end());
 
     calculate_tangents();
-    invalidate();
   } else {
     throw std::runtime_error("File extension not supported.");
   }
 }
 
 Mesh::Mesh() : id_(current_id_++) {
-  invalidate();
 }
 
 Mesh::Mesh(const Mesh &mesh)
@@ -68,10 +66,6 @@ SharedMesh Mesh::load(const std::string &path) {
 }
 
 unsigned int Mesh::id() const { return id_; }
-
-void Mesh::invalidate() {
-  modified_ = std::chrono::system_clock::now();
-}
 
 void Mesh::clear() {
   vertices.clear();
@@ -100,7 +94,6 @@ void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
     it1++;
     it2++;
   }
-  invalidate();
 }
 
 void Mesh::apply_transform(const glm::mat4 &transform) {
@@ -248,9 +241,6 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   }
-}
-Mesh::TimePoint Mesh::modified() const {
-  return modified_;
 }
 }
 }
