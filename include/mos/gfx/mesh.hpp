@@ -18,7 +18,6 @@ class Mesh final {
 public:
   using Positions = std::vector<glm::vec3>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
-  using Indices = std::vector<int>;
 
   template<class Tv, class Te>
   Mesh(const Tv vertices_begin, const Tv vertices_end,
@@ -69,7 +68,7 @@ public:
   void calculate_tangents();
 
   Container<Vertex> vertices;
-  Indices indices;
+  Container<int> indices;
 private:
   TimePoint modified_;
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);

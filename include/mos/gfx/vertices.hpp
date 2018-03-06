@@ -40,7 +40,7 @@ public:
   typename Cont::reference back(){
     return data_.back();
   }
-  const Vertex * data() const noexcept{
+  const T * data() const noexcept{
     return data_.data();
   }
   void clear(){
