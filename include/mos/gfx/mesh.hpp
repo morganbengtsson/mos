@@ -7,7 +7,7 @@
 #include <memory>
 #include <chrono>
 #include <mos/gfx/vertex.hpp>
-#include <mos/gfx/vertices.hpp>
+#include <mos/gfx/container.hpp>
 
 namespace mos {
 namespace gfx {
