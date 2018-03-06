@@ -3,8 +3,8 @@
 #include <iostream>
 #include <thread>
 
-#include <mos/audio/audio_buffer_source.hpp>
-#include <mos/audio/audio_system.hpp>
+#include <mos/aud/buffer_source.hpp>
+#include <mos/aud/player.hpp>
 
 #ifdef MOS_EFX
 
@@ -91,8 +91,9 @@ void init_efx() {
 
 #endif // MOS_EFX
 namespace mos {
+namespace aud {
 
-AudioSystem::AudioSystem()
+Player::Player()
     : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0),
       reverb_slot(0), lowpass_filter1(0), lowpass_filter2(0) {
   ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
@@ -161,10 +162,10 @@ AudioSystem::AudioSystem()
   alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f); // 0.01f
 #endif
 
-  listener(AudioListener());
+  listener(Listener());
 }
 
-AudioSystem::~AudioSystem() {
+Player::~Player() {
   for (auto &thread : stream_threads) {
     thread.second.running = false;
     thread.second.thread.join();
@@ -181,7 +182,7 @@ AudioSystem::~AudioSystem() {
   alcCloseDevice(device_);
 }
 
-void AudioSystem::buffer_source(const AudioBufferSource &buffer_source) {
+void Player::buffer_source(const BufferSource &buffer_source) {
   if (sources_.find(buffer_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -260,7 +261,7 @@ void AudioSystem::buffer_source(const AudioBufferSource &buffer_source) {
   }
 }
 
-void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
+void Player::stream_source(const StreamSource &stream_source) {
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -336,7 +337,7 @@ void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
                     ALint processed = 0;
                     alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
                     while (processed-- &&
-                           (stream_threads[stream->id()].running)) {
+                        (stream_threads[stream->id()].running)) {
                       ALuint buffer = 0;
                       alSourceUnqueueBuffers(al_source, 1, &buffer);
                       auto samples = stream->read();
@@ -364,8 +365,8 @@ void AudioSystem::stream_source(const AudioStreamSource &stream_source) {
   }
 }
 
-AudioListener AudioSystem::listener() const {
-  AudioListener listener;
+Listener Player::listener() const {
+  Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);
 
@@ -384,7 +385,7 @@ AudioListener AudioSystem::listener() const {
   return listener;
 }
 
-void AudioSystem::listener(const AudioListener &listener) {
+void Player::listener(const Listener &listener) {
   alListener3f(AL_POSITION, listener.position.x, listener.position.y,
                listener.position.z);
 
@@ -393,12 +394,12 @@ void AudioSystem::listener(const AudioListener &listener) {
 
   float orientation[6] = {listener.direction.x, listener.direction.y,
                           listener.direction.z, listener.up.x,
-                          listener.up.y,        listener.up.z};
+                          listener.up.y, listener.up.z};
   alListenerfv(AL_ORIENTATION, orientation);
   alListenerf(AL_GAIN, listener.gain);
 }
 
-void AudioSystem::render_scene(const AudioScene &batch) {
+void Player::play_scene(const Scene &batch) {
   listener(batch.listener);
   for (const auto &bs : batch.buffer_sources) {
     buffer_source(bs);
@@ -408,7 +409,7 @@ void AudioSystem::render_scene(const AudioScene &batch) {
   }
 }
 
-void AudioSystem::clear() {
+void Player::clear() {
   for (auto &thread : stream_threads) {
     thread.second.running = false;
     thread.second.thread.join();
@@ -425,4 +426,5 @@ void AudioSystem::clear() {
   buffers_.clear();
 }
 
+}
 }

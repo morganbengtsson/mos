@@ -1,17 +1,19 @@
-#include <mos/audio/audio_source.hpp>
+#include <mos/aud/source.hpp>
 
 namespace mos {
+namespace aud {
 
-std::atomic_uint AudioSource::current_id_;
+std::atomic_uint Source::current_id_;
 
-AudioSource::AudioSource(const glm::vec3 &position, const glm::vec3 &velocity,
+Source::Source(const glm::vec3 &position, const glm::vec3 &velocity,
                          const float pitch, const float gain, const bool loop,
                          const bool playing, const float obstructed)
     : position(position), velocity(velocity), pitch(pitch), gain(gain),
       loop(loop), playing(playing), obstructed(obstructed), id_(current_id_++) {
 }
 
-AudioSource::~AudioSource() {}
+Source::~Source() {}
 
-unsigned int AudioSource::id() const { return id_; }
+unsigned int Source::id() const { return id_; }
+}
 }

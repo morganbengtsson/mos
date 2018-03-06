@@ -1,12 +1,12 @@
 #pragma once
 #include <memory>
-#include <mos/aud/buffer.hpp>
-#include <mos/aud/stream.hpp>
 
 namespace mos {
 namespace aud {
+class Buffer;
+class Stream;
 using SharedBuffer = std::shared_ptr<Buffer>;
-using SharedAudioStream = std::shared_ptr<Stream>;
+using SharedStream = std::shared_ptr<Stream>;
 }
 }
 
