@@ -68,7 +68,7 @@ public:
 
   void calculate_tangents();
 
-  Vertices vertices;
+  Container<Vertex> vertices;
   Indices indices;
 private:
   TimePoint modified_;
