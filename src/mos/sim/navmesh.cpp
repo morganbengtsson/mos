@@ -1,8 +1,9 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/normal.hpp>
-#include <mos/simulate/navmesh.hpp>
+#include <mos/sim/navmesh.hpp>
 
 namespace mos {
+namespace sim {
 
 Navmesh::Navmesh() {}
 
@@ -55,5 +56,6 @@ Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   } else {
     return std::experimental::optional<Intersection>();
   }
+}
 }
 }

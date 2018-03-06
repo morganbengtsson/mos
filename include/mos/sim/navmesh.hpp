@@ -1,6 +1,4 @@
-#ifndef MOS_NAVMESH_HPP
-#define MOS_NAVMESH_HPP
-
+#pragma once
 #include <vector>
 #include <array>
 #include <glm/glm.hpp>
@@ -8,10 +6,11 @@
 #include <experimental/optional>
 #include <iostream>
 #include <glm/gtx/io.hpp>
-#include <mos/simulate/intersection.hpp>
+#include <mos/sim/intersection.hpp>
 #include <mos/gfx/mesh.hpp>
 
 namespace mos {
+namespace sim {
 
 class Face {
 public:
@@ -31,7 +30,7 @@ public:
   Navmesh();
   Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
-  template <class Tv, class Te>
+  template<class Tv, class Te>
   Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
           Te elements_end, const glm::mat4 &transform)
       : elements_(elements_begin, elements_end) {
@@ -39,7 +38,7 @@ public:
     std::transform(vertices_begin, vertices_end, std::back_inserter(positions_),
                    [&](const gfx::Vertex &vertex) {
                      return glm::vec3(transform *
-                                      glm::vec4(vertex.position, 1.0f));
+                         glm::vec4(vertex.position, 1.0f));
                    });
 
     if (elements_.empty()) {
@@ -79,5 +78,4 @@ private:
   std::vector<int> elements_;
 };
 }
-
-#endif // MOS_NAVMESH_HPP
+}

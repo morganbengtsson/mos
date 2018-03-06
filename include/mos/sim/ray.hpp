@@ -1,8 +1,9 @@
-#ifndef RAY_HPP
-#define RAY_HPP
-
+#pragma once
 #include <glm/glm.hpp>
-namespace mos{
+
+namespace mos {
+namespace sim {
+
 class Ray {
 public:
   Ray(const glm::vec3 &origin,
@@ -14,4 +15,4 @@ private:
   glm::vec3 direction_;
 };
 }
-#endif // RAY_HPP
+}

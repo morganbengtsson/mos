@@ -1,9 +1,8 @@
-#ifndef INTERSECTION_HPP
-#define INTERSECTION_HPP
-
+#pragma once
 #include <glm/glm.hpp>
 
 namespace mos {
+namespace sim {
 class Intersection {
 public:
   Intersection(const glm::vec3 &position, const glm::vec3 &normal);
@@ -12,5 +11,4 @@ public:
   glm::vec3 normal;
 };
 }
-
-#endif // INTERSECTION_HPP
+}

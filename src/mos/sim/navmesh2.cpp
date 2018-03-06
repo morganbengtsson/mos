@@ -1,20 +1,21 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/normal.hpp>
-#include <mos/experimental/navmesh2.hpp>
+#include <mos/sim/navmesh2.hpp>
 
 namespace mos {
+namespace sim {
 
 Navmesh2::Navmesh2() {}
 
 Navmesh2::Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform)
     : Navmesh2(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
-              mesh.indices.end(), transform) {}
+               mesh.indices.end(), transform) {}
 
 std::experimental::optional<gfx::Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   //for (auto &face : faces_) {
-  for (int i = 0; i < indices.size(); i+=3){
-    Face2 face(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]]);
+  for (int i = 0; i < indices.size(); i += 3) {
+    Face2 face(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       return intersection;
@@ -25,11 +26,11 @@ Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
 
 Navmesh2::OptionalIntersection
 Navmesh2::closest_intersection(const glm::vec3 &origin,
-                              const glm::vec3 &direction) {
+                               const glm::vec3 &direction) {
   OptionalIntersection closest;
   //for (auto &face : faces_) {
-  for (int i = 0; i < indices.size(); i+=3){
-    Face2 face(vertices[indices[i]], vertices[indices[i+1]], vertices[indices[i+2]]);
+  for (int i = 0; i < indices.size(); i += 3) {
+    Face2 face(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
@@ -91,5 +92,6 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   } else {
     return std::experimental::optional<gfx::Vertex>();
   }
+}
 }
 }

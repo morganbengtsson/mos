@@ -1,7 +1,8 @@
 #include <iostream>
-#include <mos/experimental/window.hpp>
+#include <mos/io/window.hpp>
 
 namespace mos {
+namespace io {
 
 Window::ErrorFunc Window::error_func;
 Window::PosFunc Window::pos_func;
@@ -141,11 +142,12 @@ glm::dvec2 Window::cursor_position() const {
 }
 
 float Window::dpi() const {
-  GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+  GLFWmonitor *monitor = glfwGetPrimaryMonitor();
   int widthMM, heightMM;
   glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
-  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+  const GLFWvidmode *mode = glfwGetVideoMode(monitor);
   const double dpi = mode->width / (widthMM / 25.4);
   return dpi;
+}
 }
 }

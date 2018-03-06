@@ -1,11 +1,13 @@
-#include <mos/simulate/box.hpp>
+#include <mos/sim/box.hpp>
 #include <glm/gtx/component_wise.hpp>
 #include <mos/gfx/model.hpp>
+#include <mos/sim/ray.hpp>
 
 namespace mos {
+namespace sim {
 
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
-    : extent(extent), position(position){}
+    : extent(extent), position(position) {}
 
 Box::Box() {}
 
@@ -26,7 +28,7 @@ Box Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) 
     }
   };
   create(model, transform, all_vertices);
-  return mos::Box(all_vertices.begin(), all_vertices.end(), glm::mat4(1.0f));
+  return Box(all_vertices.begin(), all_vertices.end(), glm::mat4(1.0f));
 }
 
 Box Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max) {
@@ -97,6 +99,5 @@ std::ostream &operator<<(std::ostream &os, const Box &box) {
   os << "Box object " << " extent: " << box.extent << " position: " << box.position << std::endl;
   return os;
 }
-
-
+}
 }

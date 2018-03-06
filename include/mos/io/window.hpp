@@ -1,12 +1,12 @@
-#ifndef MOS_WINDOW_HPP
-#define MOS_WINDOW_HPP
-
+#pragma once
 #include <GLFW/glfw3.h>
 #include <functional>
 #include <glm/glm.hpp>
 #include <string>
 
 namespace mos {
+namespace io {
+
 class Window {
 public:
   enum class CursorMode : int {
@@ -23,11 +23,11 @@ public:
   ~Window();
 
   using ErrorFunc =
-      std::function<void(const int error, const std::string &description)>;
+  std::function<void(const int error, const std::string &description)>;
   using PosFunc = std::function<void(const glm::vec2 &position)>;
   using SizeFunc = std::function<void(const glm::vec2 &size)>;
   using ClickFunc =
-      std::function<void(const int button, const int action, const int mods)>;
+  std::function<void(const int button, const int action, const int mods)>;
   using MouseFunc = std::function<void(const glm::dvec2 &position)>;
   using ScrollFunc = std::function<void(const glm::dvec2 &offset)>;
   using KeyFunc = std::function<void(const int key, const int scancode,
@@ -72,4 +72,5 @@ private:
   const float max_pause_ = 0.2f;
 };
 }
-#endif // MOS_WINDOW_HPP
+}
+

@@ -1,6 +1,4 @@
-#ifndef MOS_BOX_HPP
-#define MOS_BOX_HPP
-
+#pragma once
 #include <array>
 #include <utility>
 #include <algorithm>
@@ -13,36 +11,22 @@
 #include <glm/gtx/io.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <mos/gfx/vertex.hpp>
-#include <mos/simulate/ray.hpp>
+#include <mos/sim/ray.hpp>
 #include <mos/gfx/model.hpp>
 
 namespace mos {
+namespace sim {
 
-/**
- * @brief The BoxIntersection struct
- * Data from a box box intersection.
- *
- */
+/** Data from a box to box intersection. */
 struct BoxIntersection {
   BoxIntersection(const glm::vec3 &normal, const float distance)
       : normal(normal), distance(distance) {}
 
-  /**
-   * @brief Normal of the intersection.
-   */
   glm::vec3 normal;
-  /**
-   * @brief Distance of the intersection.
-   */
   float distance;
 };
 
-/**
- * @brief The Box class
- *
- * Axis aligned bounding box class. Used for colission detection and sound
- *obstruction.
- */
+/** Axis aligned bounding box. Used for colission detection and sound obstruction. */
 class Box {
 public:
   template<class T> Box(const T &positions, const glm::mat4 &transform) {
@@ -63,16 +47,7 @@ public:
   }
 
   template<class VertexIt>
-  /**
-   * @brief Box constructor.
-   * @param begin Vertex iterator.
-   * @param end Vertex iterator.
-   * @param transform Location of the box.
-   * @param obstruction Obstruction factor for sound.
-   *
-   * Constructor for an AABB box, created from vertices.
-   *
-   */
+  /** Create a box from vertices and a transform. */
   Box(VertexIt begin, VertexIt end, const glm::mat4 &transform) {
     glm::vec3 min, max;
 
@@ -89,47 +64,19 @@ public:
     position = min_max.first + extent;
   }
 
-  /**
-   * @brief Box
-   * @param extent
-   * @param position
-   */
   Box(const glm::vec3 &extent, const glm::vec3 &position);
 
-  /**
-   * @brief Box default constructor.
-   */
   Box();
 
   static Box create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
   static Box create_from_min_max(const glm::vec3 &min, const glm::vec3 &max);
 
-  /**
-   * @brief min
-   * @return Min corner.
-   */
   glm::vec3 min() const;
 
-  /**
-   * @brief max
-   * @return Max corner.
-   */
   glm::vec3 max() const;
 
-  /**
-   * @brief Intersection with ray
-   * @param origin
-   * @param direction
-
-   * @return
-   */
   bool intersects(const glm::vec3 &origin, const glm::vec3 &direction) const;
 
-  /**
-   * @brief intersect
-   * @param ray
-   * @return
-   */
   bool intersects(const Ray &ray) const;
 
   bool intersect2(const Box &other) const {
@@ -152,57 +99,24 @@ public:
     return true; // boxes overlap
   }
 
-  /**
-   * @brief Set the box transform, only uses position elements.
-   * @param transform
-   */
   void transform(const glm::mat4 &transform);
 
-  /**
-   * @brief Get box volume.
-   */
+  /** Get box volume. */
   float volume() const;
 
-  /**
-   * @brief Size of box.
-   * @return size in x, y and z directions.
-   */
   glm::vec3 size() const;
 
-  /**
-   *
-   * @param os
-   * @param box
-   * @return
-   */
   friend std::ostream &operator<<(std::ostream &os, const Box &box);
 
-  /**
-   * @brief Check if box is equal.
-   * @param other Boxs
-   * @return
-   */
   bool operator==(const Box &other) const {
     return position == other.position && extent == other.extent;
   }
 
-  /**
-   * @brief Check if box is not equal.
-   * @param other Box
-   * @return
-   */
   bool operator!=(const Box &other) const {
     return position != other.position || extent != other.extent;
   }
 
-  /**
-   * @brief extent
-   */
   glm::vec3 extent;
-
-  /**
-   * @brief position
-   */
   glm::vec3 position;
 
 private:
@@ -232,4 +146,4 @@ private:
   }
 };
 }
-#endif // MOS_BOX_HPP
+}

@@ -9,7 +9,6 @@
 namespace mos {
 namespace aud {
 
-
 /** Audio 16bit integer buffer. */
 class Buffer final {
   friend class Renderer;
