@@ -83,10 +83,8 @@ private:
     GLuint id; // TODO const?
     std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
   };
-  /**
-  * @brief models_batch rendering.
-  * @param render_scene
-  */
+
+  /** Models_batch rendering. */
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
   void render_shadow_map(const Scene &render_scene);

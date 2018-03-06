@@ -13,7 +13,7 @@ using SharedBuffer = std::shared_ptr<Buffer>;
 
 /** Audio 16bit integer buffer. */
 class Buffer final {
-  friend class AudioSystem;
+  friend class Player;
 public:
   using Samples = std::vector<short>;
 

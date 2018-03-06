@@ -2,9 +2,9 @@
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>
-#include <mos/aud/audio_types.hpp>
-#include <mos/aud/audio_buffer.hpp>
-#include <mos/aud/audio_source.hpp>
+#include <mos/aud/types.hpp>
+#include <mos/aud/buffer.hpp>
+#include <mos/aud/source.hpp>
 
 namespace mos {
 namespace aud {
