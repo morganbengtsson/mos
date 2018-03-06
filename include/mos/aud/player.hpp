@@ -17,19 +17,19 @@ namespace mos {
 namespace aud {
 
 /** Audio system. Uses OpenAL for Windows/Linux/OSX. */
-class Player final {
+class Renderer final {
 public:
-  Player();
+  Renderer();
 
-  Player(const Player &audio) = delete;
+  Renderer(const Renderer &audio) = delete;
 
-  ~Player();
+  ~Renderer();
 
   /** Get listener data. */
   Listener listener() const;
 
   /** Render and play audio scene. */
-  void play_scene(const Scene &batch);
+  void render(const Scene &scene);
 
   /** Clear buffers */
   void clear();

@@ -93,7 +93,7 @@ void init_efx() {
 namespace mos {
 namespace aud {
 
-Player::Player()
+Renderer::Renderer()
     : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0),
       reverb_slot(0), lowpass_filter1(0), lowpass_filter2(0) {
   ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
@@ -165,7 +165,7 @@ Player::Player()
   listener(Listener());
 }
 
-Player::~Player() {
+Renderer::~Renderer() {
   for (auto &thread : stream_threads) {
     thread.second.running = false;
     thread.second.thread.join();
@@ -182,7 +182,7 @@ Player::~Player() {
   alcCloseDevice(device_);
 }
 
-void Player::buffer_source(const BufferSource &buffer_source) {
+void Renderer::buffer_source(const BufferSource &buffer_source) {
   if (sources_.find(buffer_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -261,7 +261,7 @@ void Player::buffer_source(const BufferSource &buffer_source) {
   }
 }
 
-void Player::stream_source(const StreamSource &stream_source) {
+void Renderer::stream_source(const StreamSource &stream_source) {
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -365,7 +365,7 @@ void Player::stream_source(const StreamSource &stream_source) {
   }
 }
 
-Listener Player::listener() const {
+Listener Renderer::listener() const {
   Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);
@@ -385,7 +385,7 @@ Listener Player::listener() const {
   return listener;
 }
 
-void Player::listener(const Listener &listener) {
+void Renderer::listener(const Listener &listener) {
   alListener3f(AL_POSITION, listener.position.x, listener.position.y,
                listener.position.z);
 
@@ -399,17 +399,17 @@ void Player::listener(const Listener &listener) {
   alListenerf(AL_GAIN, listener.gain);
 }
 
-void Player::play_scene(const Scene &batch) {
-  listener(batch.listener);
-  for (const auto &bs : batch.buffer_sources) {
+void Renderer::render(const Scene &scene) {
+  listener(scene.listener);
+  for (const auto &bs : scene.buffer_sources) {
     buffer_source(bs);
   }
-  for (auto &ss : batch.stream_sources) {
+  for (auto &ss : scene.stream_sources) {
     stream_source(ss);
   }
 }
 
-void Player::clear() {
+void Renderer::clear() {
   for (auto &thread : stream_threads) {
     thread.second.running = false;
     thread.second.thread.join();

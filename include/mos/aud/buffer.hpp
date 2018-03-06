@@ -12,7 +12,7 @@ namespace aud {
 
 /** Audio 16bit integer buffer. */
 class Buffer final {
-  friend class Player;
+  friend class Renderer;
 public:
   using Samples = std::vector<short>;
 
