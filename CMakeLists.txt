@@ -63,7 +63,6 @@ externals/glew-cmake/include
 externals/glfw/include
 externals/openal-soft/include
 externals/stb
-externals/objload
 externals/glm
 externals/filesystem
 externals/json/src)
