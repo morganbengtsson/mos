@@ -740,10 +740,10 @@ void Renderer::render_scene(const Camera &camera,
         unsigned int array_buffer;
         glGenBuffers(1, &array_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-        glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
-                     particles.data(), GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
+                     particles.particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.modified_}});
+        array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.particles.modified()}});
       }
       glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
@@ -760,8 +760,8 @@ void Renderer::render_scene(const Camera &camera,
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
-    glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle),
-                 particles.data(), GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
+                 particles.particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glm::mat4 mv = camera.view;
@@ -786,7 +786,7 @@ void Renderer::render_scene(const Camera &camera,
     glUniform2fv(uniforms2.resolution, 1, glm::value_ptr(resolution));
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDrawArrays(GL_POINTS, 0, particles.size());
+    glDrawArrays(GL_POINTS, 0, particles.particles.size());
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
 }
