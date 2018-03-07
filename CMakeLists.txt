@@ -54,7 +54,7 @@ include_directories(include)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
-target_link_libraries(${PROJECT_NAME} openal)
+target_link_libraries(${PROJECT_NAME} OpenAL)
 target_link_libraries(${PROJECT_NAME} libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} stb)
@@ -71,6 +71,8 @@ externals/json/src)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
+
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 #Copy shader files to assets and brdfLUT to assets
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

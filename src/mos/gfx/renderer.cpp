@@ -1095,7 +1095,7 @@ Renderer::VertexProgramData::VertexProgramData(const GLuint program)
       material_albedo_map(
           glGetUniformLocation(program, "material.albedo_map")),
       material_emission_map(
-          glGetUniformLocation(program, "material.albedo_map")),
+          glGetUniformLocation(program, "material.emission_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
       material_metallic_map(glGetUniformLocation(program, "material.metallic_map")),
       material_roughness_map(glGetUniformLocation(program, "material.roughness_map")),

@@ -25,6 +25,7 @@ Material::Material(const SharedTexture2D &albedo_map,
       metallic_map(metallic_map),
       roughness_map(roughness_map),
       ambient_occlusion_map(ambient_occlusion_map), emission_strength(1.0f),
+
       albedo(albedo), opacity(opacity), emission(emission),
       roughness(roughness),
       metallic(metallic), ambient_occlusion(ambient_occlusion) {
