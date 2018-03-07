@@ -424,6 +424,7 @@ void Renderer::load(const Model &model) {
 
   }
   load(model.material.albedo_map);
+  load(model.material.emission_map);
   load(model.material.normal_map);
   load(model.material.metallic_map);
   load(model.material.roughness_map);
@@ -1092,6 +1093,8 @@ Renderer::VertexProgramData::VertexProgramData(const GLuint program)
       environment_strength(glGetUniformLocation(program, "environment.strength")),
 
       material_albedo_map(
+          glGetUniformLocation(program, "material.albedo_map")),
+      material_emission_map(
           glGetUniformLocation(program, "material.albedo_map")),
       material_normal_map(glGetUniformLocation(program, "material.normal_map")),
       material_metallic_map(glGetUniformLocation(program, "material.metallic_map")),
