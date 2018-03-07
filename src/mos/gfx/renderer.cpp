@@ -839,7 +839,7 @@ void Renderer::render(const Model &model, const Scene::Decals &decals,
   glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                ? textures_[model.material.emission_map->id()]
                                : black_texture_);
-  glUniform1i(uniforms.environment_map, 2);
+  glUniform1i(uniforms.material_emission_map, 2);
 
   glActiveTexture(GL_TEXTURE3);
   glBindTexture(GL_TEXTURE_2D, model.material.normal_map
