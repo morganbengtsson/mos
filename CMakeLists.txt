@@ -3,8 +3,6 @@ project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 
-#add_definitions(-DAL_LIBTYPE_STATIC)
-
 set(CMAKE_CXX_STANDARD 14)
 
 #Copy HRT files for OpenAL
@@ -39,15 +37,11 @@ set(ALSOFT_HRTF_DEFS OFF)
 add_subdirectory(externals/openal-soft)
 include_directories(externals/openal-soft/include)
 
-#Optional
-#add_subdirectory(externals/Optional)
-#include_directories(externals/Optional)
-
-#Optional
+# Filesystem
 add_subdirectory(externals/filesystem)
 include_directories(externals/filesystem)
 
-#glm
+# glm
 include_directories(externals/glm)
 add_subdirectory(externals/glm)
 
@@ -65,23 +59,12 @@ file(GLOB_RECURSE EXP_HEADER include/mos/exp/*.hpp)
 file(GLOB VERTEX_SHADERS shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS shaders/*.geom)
-#add_subdirectory(src/mos)
+
 include_directories(include)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
-#Include what you use (CMAKE 3.3)
-#find_program(iwyu_path NAMES include-what-you-use iwyu)
-#if(NOT iwyu_path)
-#  message(FATAL_ERROR "Could not find the program include-what-you-use")
-#endif()
-#set_property(TARGET mos PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
-
-if(WIN32)
-    target_link_libraries(mos OpenAL32)
-else()
-    target_link_libraries(mos openal)
-endif()
+target_link_libraries(mos OpenAL)
 target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(mos glfw ${GLFW_LIBRARIES})
 target_link_libraries(mos stb)
@@ -92,6 +75,5 @@ externals/openal-soft/include
 externals/stb
 externals/objload
 externals/glm
-#externals/Optional
 externals/filesystem
 externals/json/src)
