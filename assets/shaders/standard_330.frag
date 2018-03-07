@@ -11,6 +11,7 @@ struct Material {
     vec3 emission;
     float ambient_occlusion;
     sampler2D albedo_map;
+    sampler2D emission_map;
     sampler2D normal_map;
     sampler2D metallic_map;
     sampler2D roughness_map;
@@ -267,7 +268,10 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
-    color.rgb = Lo + ambient + material.emission;
+    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a);
+
+    color.rgb = Lo + ambient + emission;
     color.rgb *= fragment.ao;
     color.a = clamp(material.opacity + albedo_from_map.a, 0.0, 1.0);
 
