@@ -5,16 +5,6 @@ add_definitions(-DGLEW_STATIC)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#Copy HRT files for OpenAL
-file(COPY externals/openal-soft/hrtf/default-48000.mhr DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY externals/openal-soft/hrtf/default-44100.mhr DESTINATION ${CMAKE_BINARY_DIR})
-
-#Copy shader files to assets
-file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR}/assets)
-
-#Copy brdf LUT etc
-file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
-
 # GLEW
 set(glew-cmake_BUILD_SHARED OFF)
 add_subdirectory(externals/glew-cmake)
@@ -64,10 +54,10 @@ include_directories(include)
 add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
-target_link_libraries(mos OpenAL)
-target_link_libraries(mos libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
-target_link_libraries(mos glfw ${GLFW_LIBRARIES})
-target_link_libraries(mos stb)
+target_link_libraries(${PROJECT_NAME} OpenAL)
+target_link_libraries(${PROJECT_NAME} libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} stb)
 target_include_directories(mos PUBLIC
 externals/glew-cmake/include
 externals/glfw/include
@@ -77,3 +67,13 @@ externals/objload
 externals/glm
 externals/filesystem
 externals/json/src)
+
+#Copy HRT files for OpenAL
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
+
+#Copy shader files to assets and brdfLUT to assets
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
