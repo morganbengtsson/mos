@@ -8,7 +8,7 @@
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/texture_cube.hpp>
 #include <mos/gfx/box.hpp>
-#include <mos/gfx/particles.hpp>
+#include <mos/gfx/particle_cloud.hpp>
 #include <mos/gfx/decal.hpp>
 #include <mos/gfx/cube_camera.hpp>
 #include <mos/gfx/environment_light.hpp>
@@ -22,7 +22,7 @@ public:
   using Models = std::vector<Model>;
   using Boxes = std::vector<Box>;
   using Decals = std::array<Decal, 10>;
-  using ParticleClouds = std::vector<Particles>;
+  using ParticleClouds = std::vector<ParticleCloud>;
 
   /** Shader to use enum */
   enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT, DEPTH };

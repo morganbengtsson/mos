@@ -9,7 +9,7 @@
 #include <mos/gfx/texture_cube.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/text.hpp>
-#include <mos/gfx/particles.hpp>
+#include <mos/gfx/particle_cloud.hpp>
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/camera.hpp>
