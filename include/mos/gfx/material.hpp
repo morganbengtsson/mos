@@ -14,6 +14,7 @@ using SharedMaterial = std::shared_ptr<Material>;
 class Material {
 public:
   explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
+                    const SharedTexture2D &emission_map = SharedTexture2D(),
                     const SharedTexture2D &normal_map = SharedTexture2D(),
                     const SharedTexture2D &metallic_map = SharedTexture2D(),
                     const SharedTexture2D &roughness_map = SharedTexture2D(),
@@ -44,6 +45,7 @@ public:
   float ambient_occlusion;
 
   SharedTexture2D albedo_map;
+  SharedTexture2D emission_map;
   SharedTexture2D normal_map;
   SharedTexture2D metallic_map;
   SharedTexture2D roughness_map;

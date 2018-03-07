@@ -8,6 +8,7 @@ namespace gfx {
 using namespace nlohmann;
 
 Material::Material(const SharedTexture2D &albedo_map,
+                   const SharedTexture2D &emission_map,
                    const SharedTexture2D &normal_map,
                    const SharedTexture2D &metallic_map,
                    const SharedTexture2D &roughness_map,
@@ -18,7 +19,11 @@ Material::Material(const SharedTexture2D &albedo_map,
                    const float metallic,
                    const glm::vec3 &emission,
                    const float ambient_occlusion)
-    : albedo_map(albedo_map), normal_map(normal_map), metallic_map(metallic_map), roughness_map(roughness_map),
+    : albedo_map(albedo_map),
+      emission_map(emission_map),
+      normal_map(normal_map),
+      metallic_map(metallic_map),
+      roughness_map(roughness_map),
       ambient_occlusion_map(ambient_occlusion_map), emission_strength(0.0f),
       albedo(albedo), opacity(opacity), emission(emission),
       roughness(roughness),

@@ -102,7 +102,8 @@ Material Assets::material(const std::string &path) {
         return tex;
       };
 
-      auto diffuse_map = read_texture("albedo_map");
+      auto albedo_map = read_texture("albedo_map");
+      auto emission_map = read_texture("emission_map");
       auto normal_map = read_texture("normal_map");
       if (normal_map) {
         normal_map->format = Texture::Format::RGBA;
@@ -117,7 +118,8 @@ Material Assets::material(const std::string &path) {
       auto metallic = value["metallic"];
       auto emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
       auto ambient_occlusion = value["ambient_occlusion"];
-      return Material(diffuse_map,
+      return Material(albedo_map,
+                      emission_map,
                       normal_map,
                       metallic_map,
                       roughness_map,
