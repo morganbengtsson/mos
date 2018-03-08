@@ -604,7 +604,7 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
                format_map_[texture.format].internal_format,
                texture.width(), texture.height(), 0,
                format_map_[texture.format].format,
-               GL_UNSIGNED_BYTE, texture.data());
+               GL_UNSIGNED_BYTE, texture.layers[0].data());
 
   if (texture.mipmaps) {
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -638,7 +638,7 @@ Renderer::create_texture_cube(const TextureCube &texture) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  format_map_[texture.format].internal_format,
                  texture.width(), texture.height(), 0, format_map_[texture.format].format,
-                 GL_UNSIGNED_BYTE, texture.data(i));
+                 GL_UNSIGNED_BYTE, texture.layers[i].data());
   }
   if (texture.mipmaps) {
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -670,13 +670,13 @@ Renderer::create_texture_and_pbo(const SharedTexture2D &texture) {
   GLuint buffer_id;
   glGenBuffers(1, &buffer_id);
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
-  glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->size(), nullptr,
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
                GL_STREAM_DRAW);
 
-  void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->size(),
+  void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-  memcpy(ptr, texture->data(), texture->size());
+  memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
   glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(texture->width()),

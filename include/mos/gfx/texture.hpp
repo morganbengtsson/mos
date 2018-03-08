@@ -43,7 +43,7 @@ public:
           const int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true) : layers_(begin, end),
+          const bool mipmaps = true) : layers(begin, end),
                                        width_(width), height_(height),
                                        format(format), wrap(wrap), mipmaps(mipmaps), id_(current_id_++) {};
 
@@ -67,17 +67,17 @@ public:
   int width() const;
   int height() const;
   int depth() const;
-  int size(const int layer = 0);
-  const unsigned char *data(const int layer = 0) const;
+
   bool mipmaps; // TODO: const
   Wrap wrap; // TODO: const
   Format format; // TODO: const
+  Container<Data> layers;
 private:
   static std::atomic_uint current_id_;
   int id_;
   int width_;
   int height_;
-  std::vector<Data> layers_;
+
 };
 }
 }

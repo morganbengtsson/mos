@@ -2,6 +2,7 @@
 #include <mos/gfx/vertex.hpp>
 #include <vector>
 #include <chrono>
+#include <initializer_list>
 
 namespace mos {
 namespace gfx {
@@ -16,10 +17,13 @@ public:
   Container(){
     invalidate();
   };
-  template<class It>
 
-  Container(It begin, It end) : data_(begin, end){
-    invalidate();
+  template<class It>
+  Container(const std::initializer_list<It> list): Container(list.begin(), list.end()){}
+
+  template<class It>
+  Container(It begin, It end) {
+    assign(begin, end);
   }
   template<class It>
 
@@ -42,6 +46,9 @@ public:
   }
   typename Cont::reference operator[](typename Cont::size_type pos){
     invalidate();
+    return data_[pos];
+  }
+  typename Cont::const_reference operator[](typename Cont::size_type pos) const {
     return data_[pos];
   }
   typename Cont::size_type size() const {

@@ -17,7 +17,7 @@ Texture::Texture(const int width,
                                        format(format),
                                        wrap(wrap),
                                        mipmaps(mipmaps),
-                                       layers_{Data()} {}
+                                       layers{Data()} {}
 
 Texture::Texture(const std::initializer_list<Texture::Data> &layers,
                  const int width,
@@ -38,7 +38,7 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
   for (auto &path : paths) {
     int bpp;
     unsigned char *pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, 0);
-    layers_.push_back(Data(pixels, pixels + (width_ * height_ * bpp)));
+    layers.push_back(Data(pixels, pixels + (width_ * height_ * bpp)));
     std::map<int, Format> bpp_map{{1, Format::R}, {2, Format::RG}, {3, Format::SRGB}, {4, Format::SRGBA}};
     format = bpp_map[bpp];
   }
@@ -54,13 +54,8 @@ int Texture::height() const {
   return height_;
 }
 int Texture::depth() const {
-  return layers_.size();
+  return layers.size();
 }
-int Texture::size(const int layer) {
-  return layers_[layer].size();
-}
-const unsigned char *Texture::data(const int layer) const {
-  return layers_[layer].data();
-}
+
 }
 }
