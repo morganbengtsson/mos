@@ -9,6 +9,10 @@ namespace gfx {
 
 /** Camera for environment rendering. */
 class CubeCamera {
+private:
+  void update_views();
+  glm::mat4 projection_;
+  glm::vec3 up_;
 public:
   CubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
              const float aspect_ratio = 1.0f);
@@ -17,10 +21,7 @@ public:
 
   glm::vec3 position() const;
   std::array<Camera, 6> cameras;
-private:
-  void update_views();
-  glm::mat4 projection_;
-  glm::vec3 up_;
+
 };
 }
 }
