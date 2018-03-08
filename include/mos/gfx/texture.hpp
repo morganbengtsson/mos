@@ -3,6 +3,7 @@
 #include <atomic>
 #include <initializer_list>
 #include <memory>
+#include <mos/gfx/container.hpp>
 
 namespace mos {
 namespace gfx {
