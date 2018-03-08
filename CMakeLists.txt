@@ -45,14 +45,14 @@ add_subdirectory(externals/json)
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
-file(GLOB_RECURSE EXP_HEADER include/mos/exp/*.hpp)
 file(GLOB VERTEX_SHADERS assets/shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS assets/shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS assets/shaders/*.geom)
+file(GLOB BRDF_LUT assets/brdfLUT.png)
 
 include_directories(include)
-add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
-${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
+add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
+${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 target_link_libraries(${PROJECT_NAME} OpenAL)
 target_link_libraries(${PROJECT_NAME} libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
@@ -67,7 +67,7 @@ externals/glm
 externals/filesystem
 externals/json/src)
 
-add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS})
+add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 #Copy HRT files for OpenAL
 add_custom_command(TARGET copy_resources POST_BUILD
