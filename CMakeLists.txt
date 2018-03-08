@@ -46,12 +46,12 @@ add_subdirectory(externals/json)
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
 file(GLOB_RECURSE EXP_HEADER include/mos/exp/*.hpp)
-file(GLOB VERTEX_SHADERS shaders/*.vert)
-file(GLOB FRAGMENT_SHADERS shaders/*.frag)
-file(GLOB GEOMETRY_SHADERS shaders/*.geom)
+file(GLOB VERTEX_SHADERS assets/shaders/*.vert)
+file(GLOB FRAGMENT_SHADERS assets/shaders/*.frag)
+file(GLOB GEOMETRY_SHADERS assets/shaders/*.geom)
 
 include_directories(include)
-add_library(mos STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
+add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${EXP_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS})
 
 target_link_libraries(${PROJECT_NAME} OpenAL)
@@ -67,14 +67,17 @@ externals/glm
 externals/filesystem
 externals/json/src)
 
+add_custom_target(copy_shaders DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS})
+
 #Copy HRT files for OpenAL
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET copy_shaders POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
 
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
-
 #Copy shader files to assets and brdfLUT to assets
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET copy_shaders POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+
+# Copy shaders on each build
+add_dependencies(${PROJECT_NAME} copy_shaders)
