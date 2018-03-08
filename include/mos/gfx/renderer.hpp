@@ -39,7 +39,7 @@ public:
   void load(const SharedTexture2D &texture);
 
   /** Loads a texture into renderer memory. */
-  void load(const Texture2D &texture);
+  void load_or_update(const Texture2D &texture);
 
   /** Unloads a shared texture from renderer memory. */
   void unload(const SharedTexture2D &texture);
@@ -222,7 +222,7 @@ private:
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
-  std::unordered_map<unsigned int, GLuint> textures_;
+  std::unordered_map<unsigned int, Buffer> textures_;
   std::unordered_map<unsigned int, GLuint> texture_cubes_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
