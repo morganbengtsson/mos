@@ -67,17 +67,17 @@ externals/glm
 externals/filesystem
 externals/json/src)
 
-add_custom_target(copy_shaders DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS})
+add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS})
 
 #Copy HRT files for OpenAL
-add_custom_command(TARGET copy_shaders POST_BUILD
+add_custom_command(TARGET copy_resources POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
 
 #Copy shader files to assets and brdfLUT to assets
-add_custom_command(TARGET copy_shaders POST_BUILD
+add_custom_command(TARGET copy_resources POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 
 # Copy shaders on each build
-add_dependencies(${PROJECT_NAME} copy_shaders)
+add_dependencies(${PROJECT_NAME} copy_resources)
