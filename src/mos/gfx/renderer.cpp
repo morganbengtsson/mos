@@ -481,6 +481,7 @@ void Renderer::load_or_update(const Texture2D &texture) {
         glGenerateMipmap(GL_TEXTURE_2D);
       }
       glBindTexture(GL_TEXTURE_2D, 0);
+      buffer.modified = texture.layers.modified();
     }
   }
 }
