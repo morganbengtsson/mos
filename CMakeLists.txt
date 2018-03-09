@@ -81,3 +81,16 @@ add_custom_command(TARGET copy_resources POST_BUILD
 
 # Copy shaders on each build
 add_dependencies(${PROJECT_NAME} copy_resources)
+
+
+file(GLOB ASSETS assets/*)
+
+add_custom_target(copy_assets DEPENDS ${ASSETS})
+
+#Copy assets
+add_custom_command(TARGET copy_assets POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+
+# Copy shaders on each build
+add_dependencies(${PROJECT_NAME} copy_assets)
