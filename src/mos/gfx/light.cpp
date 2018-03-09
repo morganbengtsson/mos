@@ -8,7 +8,7 @@ Light::Light(const glm::vec3 &position,
              const glm::vec3 &color,
              const float strength)
     : color(color), angle_(angle),
-      camera(position, center, glm::perspective(angle, 1.0f, 1.0f, 100.0f),
+      camera(position, center, glm::perspective(angle, 1.0f, 0.1f, 100.0f),
              glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength),
       shadow_map(SharedTexture2D(new Texture2D(
           512, 512, Texture::Format::RG32F,
