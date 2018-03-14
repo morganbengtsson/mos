@@ -12,6 +12,9 @@ public:
     P = error;
     I += P * dt;
     D = (P - prev_error) / dt;
+    if (dt == 0){
+      D = T(0);
+    }
 
     prev_error = error;
     return P * Kp + I * Ki + D * Kd;
