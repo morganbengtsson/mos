@@ -276,6 +276,14 @@ void main() {
     vec3 irradiance = textureLod(environment.texture, corrected_normal, 20.0).rgb;
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
+    //Temp
+    vec3 box_min = environment.position - environment.extent;
+    vec3 box_max = environment.position + environment.extent;
+    if (!in_box(box_min, box_max, fragment.position)){
+        specular_environment = vec3(0, 0, 0);
+        diffuse_environment = vec3(0, 0, 0);
+    }
+
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
