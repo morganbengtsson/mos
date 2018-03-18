@@ -95,6 +95,16 @@ vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir)
     return rdir;
 }
 
+bool in_box(const vec3 box_min, const vec3 box_max, const vec3 point)
+{
+    if(point.x > box_min.x && point.x < box_max.x &&
+    point.y > box_min.y && point.y < box_max.y &&
+    point.z > box_min.z && point.z < box_max.z) {
+        return true;
+    }
+    return false;
+}
+
 float linstep(float low, float high, float v){
     return clamp((v-low)/(high-low), 0.0, 1.0);
 }
