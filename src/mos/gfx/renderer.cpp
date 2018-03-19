@@ -16,6 +16,7 @@
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
+#include <future>
 
 namespace mos {
 namespace gfx {
@@ -527,23 +528,39 @@ void Renderer::load_async(const SharedTexture2D &texture) {
     void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                  (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-    std::memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
+    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async, [&] {
+      auto t = texture;
+      auto local_ptr = ptr;
+      std::memcpy(local_ptr, t->layers[0].data(), t->layers[0].size());
+    })}});
 
-    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
-                    texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
-                    (void*)0);
-
-    if (texture->mipmaps) {
-      glGenerateMipmap(GL_TEXTURE_2D);
-    };
-
-
-    glBindBuffer (GL_PIXEL_UNPACK_BUFFER, 0);
-    glDeleteBuffers(1, &buffer_id);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     glBindTexture(GL_TEXTURE_2D, 0);
+    glBindBuffer (GL_PIXEL_UNPACK_BUFFER, 0);
+
     textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
+  }
+  else if(test_buffers_.find(texture->id()) != test_buffers_.end()) {
+    if(test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+      auto buffer_id = test_buffers_.at(texture->id()).id;
+      auto texture_id = textures_.at(texture->id()).id;
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
+
+      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+      glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
+                      texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
+                      (void *) 0);
+
+      if (texture->mipmaps) {
+        glGenerateMipmap(GL_TEXTURE_2D);
+      };
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDeleteBuffers(1, &buffer_id);
+      test_buffers_.erase(texture->id());
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    }
   }
 }
 

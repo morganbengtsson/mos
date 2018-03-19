@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <unordered_map>
 #include <array>
+#include <future>
 #include <mos/gfx/scene.hpp>
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/texture_cube.hpp>
@@ -85,6 +86,11 @@ private:
   struct Buffer {
     GLuint id; // TODO const?
     std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
+  };
+
+  struct PixelBuffer {
+    GLuint id;
+    std::future<void> future;
   };
 
   /** Models_batch rendering. */
@@ -230,6 +236,7 @@ private:
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
+  std::unordered_map<unsigned int, PixelBuffer> test_buffers_;
 
   GLuint black_texture_;
   GLuint white_texture_;
