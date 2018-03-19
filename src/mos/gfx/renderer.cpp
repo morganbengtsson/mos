@@ -504,23 +504,19 @@ void Renderer::load_async(const SharedTexture2D &texture) {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
-    /*
+
     if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
       float aniso = 0.0f;
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-    }*/
+    }
 
     glTexImage2D(GL_TEXTURE_2D, 0,
                  format_map_[texture->format].internal_format,
                  texture->width(), texture->height(), 0,
                  format_map_[texture->format].format,
-                 GL_UNSIGNED_BYTE, texture->layers[0].data());
-
-    if (texture->mipmaps) {
-      glGenerateMipmap(GL_TEXTURE_2D);
-    };
+                 GL_UNSIGNED_BYTE, nullptr);
 
     GLuint buffer_id;
     glGenBuffers(1, &buffer_id);
@@ -531,14 +527,19 @@ void Renderer::load_async(const SharedTexture2D &texture) {
     void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                  (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-    memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
+    std::memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
+
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
+                    texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
+                    (void*)0);
+
+    if (texture->mipmaps) {
+      glGenerateMipmap(GL_TEXTURE_2D);
+    };
 
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(texture->width()),
-                    GLsizei(texture->height()), GL_RGBA, GL_UNSIGNED_BYTE,
-                    nullptr);
-
+    glBindBuffer (GL_PIXEL_UNPACK_BUFFER, 0);
     glDeleteBuffers(1, &buffer_id);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     glBindTexture(GL_TEXTURE_2D, 0);
