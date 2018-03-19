@@ -528,11 +528,9 @@ void Renderer::load_async(const SharedTexture2D &texture) {
     void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                  (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async, [&] {
-      auto t = texture;
-      auto local_ptr = ptr;
-      std::memcpy(local_ptr, t->layers[0].data(), t->layers[0].size());
-    })}});
+    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async, [](void* ptr, const SharedTexture2D texture) {
+      std::memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
+    }, ptr, texture)}});
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer (GL_PIXEL_UNPACK_BUFFER, 0);
