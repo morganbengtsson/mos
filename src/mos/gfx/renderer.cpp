@@ -423,7 +423,7 @@ void Renderer::load(const Model &model) {
     }
 
   }
-  load(model.material.albedo_map);
+  load_async(model.material.albedo_map);
   load(model.material.emission_map);
   load(model.material.normal_map);
   load(model.material.metallic_map);
@@ -486,17 +486,75 @@ void Renderer::load_or_update(const Texture2D &texture) {
   }
 }
 
-void Renderer::load(const SharedTexture2D &texture) {
-#ifdef STREAM_TEXTURES
+void Renderer::load_async(const SharedTexture2D &texture) {
   if (textures_.find(texture->id()) == textures_.end()) {
-    GLuint gl_id = create_texture_and_pbo(texture);
-    textures_.insert({texture->id(), gl_id});
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    GLuint texture_id;
+    glGenTextures(1, &texture_id);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+
+    GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+    if (texture->format == Texture::Format::DEPTH) {
+      sampling = GL_LINEAR;
+    }
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
+    if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
+      float aniso = 0.0f;
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 format_map_[texture->format].internal_format,
+                 texture->width(), texture->height(), 0,
+                 format_map_[texture->format].format,
+                 GL_UNSIGNED_BYTE, texture->layers[0].data());
+
+    if (texture->mipmaps) {
+      glGenerateMipmap(GL_TEXTURE_2D);
+    };
+    glBindTexture(GL_TEXTURE_2D, 0);
+    /*
+
+    if (texture->mipmaps) {
+      //glGenerateMipmap(GL_TEXTURE_2D);
+    };
+
+    GLuint buffer_id;
+    glGenBuffers(1, &buffer_id);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
+                 GL_STREAM_DRAW);
+
+    void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
+                                 (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+
+    memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(texture->width()),
+                    GLsizei(texture->height()), GL_RGBA, GL_UNSIGNED_BYTE,
+                    nullptr);
+
+    glDeleteBuffers(1, &buffer_id);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);*/
+    textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
   }
-#else
+}
+
+void Renderer::load(const SharedTexture2D &texture) {
   if (texture) {
     load_or_update(*texture);
   }
-#endif
 }
 
 void Renderer::unload(const SharedTexture2D &texture) {

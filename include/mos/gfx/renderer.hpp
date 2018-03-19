@@ -38,6 +38,9 @@ public:
   /** Loads a shared texture into renderer memory. */
   void load(const SharedTexture2D &texture);
 
+  /** Loads a shared texture into render memory, async. */
+  void load_async(const SharedTexture2D &texture);
+
   /** Loads a texture into renderer memory. */
   void load_or_update(const Texture2D &texture);
 
