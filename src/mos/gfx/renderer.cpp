@@ -424,7 +424,7 @@ void Renderer::load(const Model &model) {
     }
 
   }
-  load_async(model.material.albedo_map);
+  load(model.material.albedo_map);
   load(model.material.emission_map);
   load(model.material.normal_map);
   load(model.material.metallic_map);
@@ -495,10 +495,12 @@ void Renderer::load_async(const SharedTexture2D &texture) {
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
 
+    //TODO: Support for mipmaps, load them manually;
     GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
     if (texture->format == Texture::Format::DEPTH) {
       sampling = GL_LINEAR;
     }
+    sampling = GL_LINEAR;
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
@@ -551,7 +553,7 @@ void Renderer::load_async(const SharedTexture2D &texture) {
                       (void *) 0);
 
       if (texture->mipmaps) {
-        glGenerateMipmap(GL_TEXTURE_2D);
+        //glGenerateMipmap(GL_TEXTURE_2D);
       };
       glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
       glBindTexture(GL_TEXTURE_2D, 0);
