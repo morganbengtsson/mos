@@ -504,12 +504,13 @@ void Renderer::load_async(const SharedTexture2D &texture) {
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
+    /*
     if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
       float aniso = 0.0f;
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-    }
+    }*/
 
     glTexImage2D(GL_TEXTURE_2D, 0,
                  format_map_[texture->format].internal_format,
@@ -519,12 +520,6 @@ void Renderer::load_async(const SharedTexture2D &texture) {
 
     if (texture->mipmaps) {
       glGenerateMipmap(GL_TEXTURE_2D);
-    };
-    glBindTexture(GL_TEXTURE_2D, 0);
-    /*
-
-    if (texture->mipmaps) {
-      //glGenerateMipmap(GL_TEXTURE_2D);
     };
 
     GLuint buffer_id;
@@ -545,8 +540,8 @@ void Renderer::load_async(const SharedTexture2D &texture) {
                     nullptr);
 
     glDeleteBuffers(1, &buffer_id);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);*/
     textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
   }
 }
