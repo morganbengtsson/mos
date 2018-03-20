@@ -15,7 +15,9 @@ public:
                  const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
                  const float angle = glm::half_pi<float>(),
                  const glm::vec3 &color = glm::vec3(0.0f),
-                 const float strength = 100.0f);
+                 const float strength = 100.0f,
+                 const float near = 0.1f,
+                 const float far = 100.0f);
   virtual ~Light();
 
   /** Set spot angle, in radans. */

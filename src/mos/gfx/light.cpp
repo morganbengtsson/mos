@@ -6,9 +6,11 @@ Light::Light(const glm::vec3 &position,
              const glm::vec3 &center,
              const float angle,
              const glm::vec3 &color,
-             const float strength)
+             const float strength,
+             const float near,
+             const float far)
     : color(color), angle_(angle),
-      camera(position, center, glm::perspective(angle, 1.0f, 0.1f, 100.0f),
+      camera(position, center, glm::perspective(angle, 1.0f, near, far),
              glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength),
       shadow_map(SharedTexture2D(new Texture2D(
           512, 512, Texture::Format::RG32F,
@@ -26,7 +28,7 @@ glm::vec3 Light::position() const {
 
 void Light::angle(const float angle) {
   angle_ = angle;
-  camera.projection = glm::perspective(angle_, 1.0f, 1.0f, 100.0f);
+  camera.projection = glm::perspective(angle_, 1.0f, 0.1f, 100.0f);
 }
 
 float Light::angle() const {
