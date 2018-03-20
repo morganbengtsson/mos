@@ -51,6 +51,8 @@ public:
   Target target;
 private:
   float angle_;
+  float near_;
+  float far_;
 };
 }
 }
