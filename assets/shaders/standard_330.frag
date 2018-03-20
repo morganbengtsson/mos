@@ -118,7 +118,7 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     float d = compare - moments.x;
     float p_max = variance / (variance + d*d);
 
-    return clamp(max(p, p_max) - 0.6f, 0.0, 1.0);
+    return clamp((max(p, p_max) - 0.8) * 5, 0.0, 1.0);
 }
 
 float sample_shadow_map(sampler2D shadow_map, const vec2 uv, const float compare) {
