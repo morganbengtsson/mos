@@ -357,23 +357,7 @@ void Renderer::load(const Model &model) {
 }
 
 void Renderer::unload(const Model &model) {
-  if (vertex_arrays_.find(model.mesh->id()) != vertex_arrays_.end()) {
-    auto va_id = vertex_arrays_[model.mesh->id()];
-    glDeleteVertexArrays(1, &va_id);
-    vertex_arrays_.erase(model.mesh->id());
-
-    if (array_buffers_.find(model.mesh->id()) != array_buffers_.end()) {
-      auto abo = array_buffers_[model.mesh->id()];
-      glDeleteBuffers(1, &abo.id);
-      array_buffers_.erase(model.mesh->id());
-    }
-    if (element_array_buffers_.find(model.mesh->id()) !=
-        element_array_buffers_.end()) {
-      auto ebo = element_array_buffers_[model.mesh->id()];
-      glDeleteBuffers(1, &ebo.id);
-      element_array_buffers_.erase(model.mesh->id());
-    }
-  }
+  unload(model.mesh);
   unload(model.material.albedo_map);
   unload(model.material.normal_map);
 }
@@ -1108,7 +1092,23 @@ void Renderer::load(const Mesh &mesh) {
 }
 
 void Renderer::unload(const Mesh &mesh) {
+  if (vertex_arrays_.find(mesh.id()) != vertex_arrays_.end()) {
+    auto va_id = vertex_arrays_[mesh.id()];
+    glDeleteVertexArrays(1, &va_id);
+    vertex_arrays_.erase(mesh.id());
 
+    if (array_buffers_.find(mesh.id()) != array_buffers_.end()) {
+      auto abo = array_buffers_[mesh.id()];
+      glDeleteBuffers(1, &abo.id);
+      array_buffers_.erase(mesh.id());
+    }
+    if (element_array_buffers_.find(mesh.id()) !=
+        element_array_buffers_.end()) {
+      auto ebo = element_array_buffers_[mesh.id()];
+      glDeleteBuffers(1, &ebo.id);
+      element_array_buffers_.erase(mesh.id());
+    }
+  }
 }
 
 void Renderer::load(const SharedMesh &mesh) {
@@ -1118,7 +1118,9 @@ void Renderer::load(const SharedMesh &mesh) {
 }
 
 void Renderer::unload(const SharedMesh &mesh) {
-
+  if(mesh){
+    unload(*mesh);
+  }
 }
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
