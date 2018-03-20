@@ -23,7 +23,7 @@ namespace mos {
 namespace gfx {
 
 /** Render geometry/models with OpenGL. */
-class Renderer final{
+class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLEW. */
   Renderer(const glm::vec4 &color = glm::vec4(.0f));
@@ -35,6 +35,12 @@ public:
 
   /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
+
+  /** Load a mesh in to memory. */
+  void load(const Mesh &mesh);
+
+  /** Unloads a mesh from memory. */
+  void unload(const Mesh &mesh);
 
   /** Loads a shared texture into renderer memory. */
   void load(const SharedTexture2D &texture);
@@ -70,17 +76,6 @@ public:
 
   /** Clear all internal buffers/memory. */
   void clear_buffers();
-
-  /*
-   * For multisampled render target
-  void render_target_reset(unsigned int width, unsigned int height) {
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
-    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height,
-                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
-  */
 
 private:
   struct Buffer {

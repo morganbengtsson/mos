@@ -836,11 +836,10 @@ void Renderer::render(const Model &model, const Scene::Decals &decals,
                           const glm::vec2 &resolution,
                           const Scene::Shader &shader,
                           const Scene::Draw &draw) {
-  // glViewport(0, 0, camera.resolution.x, camera.resolution.y);
+
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-  //load(environment.texture);
   load(model);
 
   const glm::mat4 mv = camera.view * parent_transform * model.transform;
@@ -858,19 +857,10 @@ void Renderer::render(const Model &model, const Scene::Decals &decals,
                                : black_texture_);
   glUniform1i(uniforms.material_albedo_map, 0);
 
-
-  // Shadowmap
-  if (light.shadow_map) {
-    load(light.shadow_map);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures_[light.shadow_map->id()].id);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glUniform1i(uniforms.light_shadow_map, 1);
-  } else {
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, white_texture_);
-    glUniform1i(uniforms.light_shadow_map, 1);
-  }
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_[light.shadow_map->id()].id : white_texture_);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glUniform1i(uniforms.light_shadow_map, 1);
 
   glActiveTexture(GLenum(GL_TEXTURE2));
   glBindTexture(GL_TEXTURE_2D, model.material.emission_map
@@ -1111,6 +1101,12 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+}
+void Renderer::load(const Mesh &mesh) {
+
+}
+void Renderer::unload(const Mesh &mesh) {
 
 }
 
