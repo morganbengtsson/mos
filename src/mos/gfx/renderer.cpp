@@ -244,10 +244,10 @@ Renderer::~Renderer() {
 }
 
 void Renderer::add_box_program(const std::string &name,
-                                   const std::string &vs_source,
-                                   const std::string &fs_source,
-                                   const std::string &vs_file,
-                                   const std::string &fs_file) {
+                               const std::string &vs_source,
+                               const std::string &fs_source,
+                               const std::string &vs_file,
+                               const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -289,10 +289,10 @@ void Renderer::create_depth_program() {
 }
 
 void Renderer::add_particle_program(const std::string name,
-                                        const std::string vs_source,
-                                        const std::string fs_source,
-                                        const std::string &vs_file,
-                                        const std::string &fs_file) {
+                                    const std::string vs_source,
+                                    const std::string fs_source,
+                                    const std::string &vs_file,
+                                    const std::string &fs_file) {
   auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vs_file);
   auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
@@ -318,10 +318,10 @@ void Renderer::add_particle_program(const std::string name,
 }
 
 void Renderer::add_vertex_program(const Scene::Shader shader,
-                                      const std::string vertex_shader_source,
-                                      const std::string fragment_shader_source,
-                                      const std::string &vert_file_name,
-                                      const std::string &frag_file_name) {
+                                  const std::string vertex_shader_source,
+                                  const std::string fragment_shader_source,
+                                  const std::string &vert_file_name,
+                                  const std::string &frag_file_name) {
   auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, vert_file_name);
 
@@ -347,83 +347,7 @@ void Renderer::add_vertex_program(const Scene::Shader shader,
 }
 
 void Renderer::load(const Model &model) {
-  if (model.mesh &&
-      vertex_arrays_.find(model.mesh->id()) == vertex_arrays_.end()) {
-    unsigned int vertex_array;
-    glGenVertexArrays(1, &vertex_array);
-    glBindVertexArray(vertex_array);
-    if (array_buffers_.find(model.mesh->id()) == array_buffers_.end()) {
-      unsigned int array_buffer_id;
-      glGenBuffers(1, &array_buffer_id);
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffer_id);
-      glBufferData(GL_ARRAY_BUFFER,
-                   model.mesh->vertices.size() * sizeof(Vertex),
-                   model.mesh->vertices.data(), GL_STATIC_DRAW);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({model.mesh->id(), Buffer{array_buffer_id, model.mesh->vertices.modified()}});
-    }
-    if (element_array_buffers_.find(model.mesh->id()) ==
-        element_array_buffers_.end()) {
-      unsigned int element_array_buffer_id;
-      glGenBuffers(1, &element_array_buffer_id);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer_id);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   model.mesh->indices.size() * sizeof(unsigned int),
-                   model.mesh->indices.data(), GL_STATIC_DRAW);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_array_buffers_.insert({model.mesh->id(), Buffer{element_array_buffer_id, model.mesh->indices.modified()}});
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(model.mesh->id()).id);
-    // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-
-    // Normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
-
-    // Tangent
-    glVertexAttribPointer(
-        2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
-
-    // UV
-    glVertexAttribPointer(
-        3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
-
-    // AO
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                              sizeof(glm::vec2)));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 element_array_buffers_.at(model.mesh->id()).id);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    glEnableVertexAttribArray(4);
-    glBindVertexArray(0);
-    vertex_arrays_.insert({model.mesh->id(), vertex_array});
-  }
-
-  if (model.mesh) {
-    if(model.mesh->vertices.size() > 0 && model.mesh->vertices.modified() > array_buffers_[model.mesh->id()].modified) {
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[model.mesh->id()].id);
-      glBufferData(GL_ARRAY_BUFFER, model.mesh->vertices.size() * sizeof(Vertex),
-                   model.mesh->vertices.data(), GL_DYNAMIC_DRAW);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-    if (model.mesh->indices.size() > 0 && model.mesh->indices.modified() > element_array_buffers_[model.mesh->id()].modified) {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[model.mesh->id()].id);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   model.mesh->indices.size() * sizeof(unsigned int),
-                   model.mesh->indices.data(),
-                   GL_DYNAMIC_DRAW);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    }
-
-  }
+  load(model.mesh);
   load(model.material.albedo_map);
   load(model.material.emission_map);
   load(model.material.normal_map);
@@ -468,8 +392,7 @@ void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
     GLuint gl_id = create_texture(texture);
     textures_.insert({texture.id(), Buffer{gl_id, texture.layers.modified()}});
-  }
-  else {
+  } else {
     auto buffer = textures_[texture.id()];
     if (texture.layers.modified() > buffer.modified) {
       glBindTexture(GL_TEXTURE_2D, buffer.id);
@@ -478,7 +401,7 @@ void Renderer::load_or_update(const Texture2D &texture) {
                    texture.width(), texture.height(), 0,
                    format_map_[texture.format].format,
                    GL_UNSIGNED_BYTE, texture.layers[0].data());
-      if(texture.mipmaps) {
+      if (texture.mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
       }
       glBindTexture(GL_TEXTURE_2D, 0);
@@ -530,17 +453,22 @@ void Renderer::load_async(const SharedTexture2D &texture) {
     void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                  (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async, [](void* ptr, const SharedTexture2D texture) {
-      std::memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
-    }, ptr, texture)}});
+    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async,
+                                                                           [](void *ptr,
+                                                                              const SharedTexture2D texture) {
+                                                                             std::memcpy(ptr,
+                                                                                         texture->layers[0].data(),
+                                                                                         texture->layers[0].size());
+                                                                           },
+                                                                           ptr,
+                                                                           texture)}});
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindBuffer (GL_PIXEL_UNPACK_BUFFER, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
     textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
-  }
-  else if(test_buffers_.find(texture->id()) != test_buffers_.end()) {
-    if(test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+  } else if (test_buffers_.find(texture->id()) != test_buffers_.end()) {
+    if (test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
       auto buffer_id = test_buffers_.at(texture->id()).id;
       auto texture_id = textures_.at(texture->id()).id;
       glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -598,7 +526,7 @@ void Renderer::clear_buffers() {
 }
 
 unsigned int Renderer::create_shader(const std::string &source,
-                                         const unsigned int type) {
+                                     const unsigned int type) {
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
 
@@ -614,7 +542,7 @@ unsigned int Renderer::create_shader(const std::string &source,
 }
 
 bool Renderer::check_shader(const unsigned int shader,
-                                const std::string &name) {
+                            const std::string &name) {
   if (!shader) {
     return false;
   }
@@ -735,8 +663,8 @@ Renderer::create_texture_cube(const TextureCube &texture) {
 }
 
 void Renderer::render_scene(const Camera &camera,
-                                const Scene &render_scene,
-                                const glm::vec2 &resolution) {
+                            const Scene &render_scene,
+                            const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
@@ -830,12 +758,12 @@ void Renderer::render_scene(const Camera &camera,
 }
 
 void Renderer::render(const Model &model, const Scene::Decals &decals,
-                          const glm::mat4 &parent_transform,
-                          const Camera &camera, const Light &light,
-                          const EnvironmentLight &environment, const Fog &fog,
-                          const glm::vec2 &resolution,
-                          const Scene::Shader &shader,
-                          const Scene::Draw &draw) {
+                      const glm::mat4 &parent_transform,
+                      const Camera &camera, const Light &light,
+                      const EnvironmentLight &environment, const Fog &fog,
+                      const glm::vec2 &resolution,
+                      const Scene::Shader &shader,
+                      const Scene::Draw &draw) {
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -1104,9 +1032,92 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
 }
 void Renderer::load(const Mesh &mesh) {
+  if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
+    unsigned int vertex_array;
+    glGenVertexArrays(1, &vertex_array);
+    glBindVertexArray(vertex_array);
+    if (array_buffers_.find(mesh.id()) == array_buffers_.end()) {
+      unsigned int array_buffer_id;
+      glGenBuffers(1, &array_buffer_id);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffer_id);
+      glBufferData(GL_ARRAY_BUFFER,
+                   mesh.vertices.size() * sizeof(Vertex),
+                   mesh.vertices.data(), GL_STATIC_DRAW);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      array_buffers_.insert({mesh.id(), Buffer{array_buffer_id, mesh.vertices.modified()}});
+    }
+    if (element_array_buffers_.find(mesh.id()) ==
+        element_array_buffers_.end()) {
+      unsigned int element_array_buffer_id;
+      glGenBuffers(1, &element_array_buffer_id);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer_id);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                   mesh.indices.size() * sizeof(unsigned int),
+                   mesh.indices.data(), GL_STATIC_DRAW);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      element_array_buffers_.insert({mesh.id(), Buffer{element_array_buffer_id, mesh.indices.modified()}});
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
+    // Position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+    // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
+
+    // Tangent
+    glVertexAttribPointer(
+        2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
+
+    // UV
+    glVertexAttribPointer(
+        3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
+
+    // AO
+    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
+                              sizeof(glm::vec2)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+                 element_array_buffers_.at(mesh.id()).id);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
+    glBindVertexArray(0);
+    vertex_arrays_.insert({mesh.id(), vertex_array});
+  }
+
+  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_[mesh.id()].modified) {
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[mesh.id()].id);
+    glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
+                 mesh.vertices.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+  if (mesh.indices.size() > 0 && mesh.indices.modified() > element_array_buffers_[mesh.id()].modified) {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[mesh.id()].id);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 mesh.indices.size() * sizeof(unsigned int),
+                 mesh.indices.data(),
+                 GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+}
+
+void Renderer::unload(const Mesh &mesh) {
 
 }
-void Renderer::unload(const Mesh &mesh) {
+
+void Renderer::load(const SharedMesh &mesh) {
+  if (mesh){
+    load(*mesh);
+  }
+}
+
+void Renderer::unload(const SharedMesh &mesh) {
 
 }
 

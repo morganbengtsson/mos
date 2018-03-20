@@ -38,9 +38,11 @@ public:
 
   /** Load a mesh in to memory. */
   void load(const Mesh &mesh);
+  void load(const SharedMesh &mesh);
 
   /** Unloads a mesh from memory. */
   void unload(const Mesh &mesh);
+  void unload(const SharedMesh &mesh);
 
   /** Loads a shared texture into renderer memory. */
   void load(const SharedTexture2D &texture);
