@@ -110,7 +110,7 @@ float linstep(float low, float high, float v){
 }
 
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
-    vec2 moments = texture(light.shadow_map, uv).xy;
+    vec2 moments = texture(shadow_map, uv).xy;
 
     float p = step(compare, moments.x);
     float variance = max(moments.y - moments.x * moments.x, 0.000002);
@@ -119,6 +119,9 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     float p_max = variance / (variance + d*d);
 
     return clamp(max(p, p_max), 0.0, 1.0);
+}
+float sample_shadow_map(sampler2D shadow_map, const vec2 uv, const float compare) {
+    return float(texture(shadow_map, uv).x < compare);
 }
 
 float distribution_GGX(vec3 N, vec3 H, float roughness)
