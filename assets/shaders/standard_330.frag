@@ -114,7 +114,7 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
     for(float x = -1.5; x <= 1.5; ++x) {
         for(float y = -1.5; y <= 1.5; ++y) {
-            moments += textureLod(light.shadow_map, uv + vec2(x, y) * texelSize, 0).xy;
+            moments += texture(light.shadow_map, uv + vec2(x, y) * texelSize).xy;
         }
     }
     moments /= 16.0;
@@ -124,7 +124,7 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
 
     float d = compare - moments.x;
     float p_max = variance / (variance + d*d);
-   
+
     return clamp(max(p, p_max), 0.0, 1.0);
 }
 
