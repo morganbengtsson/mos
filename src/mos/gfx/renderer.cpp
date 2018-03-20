@@ -359,7 +359,11 @@ void Renderer::load(const Model &model) {
 void Renderer::unload(const Model &model) {
   unload(model.mesh);
   unload(model.material.albedo_map);
+  unload(model.material.emission_map);
   unload(model.material.normal_map);
+  unload(model.material.metallic_map);
+  unload(model.material.roughness_map);
+  unload(model.material.ambient_occlusion_map);
 }
 
 void Renderer::unload(const SharedTextureCube &texture) {
