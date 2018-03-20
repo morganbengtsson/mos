@@ -734,56 +734,6 @@ Renderer::create_texture_cube(const TextureCube &texture) {
   return id;
 }
 
-unsigned int
-Renderer::create_texture_and_pbo(const SharedTexture2D &texture) {
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  GLuint texture_id;
-
-  glGenTextures(1, &texture_id);
-  glBindTexture(GL_TEXTURE_2D, texture_id);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-#ifdef MOS_SRGB
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, texture->width(),
-               texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-#else
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width(), texture->height(),
-               0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-#endif
-
-  GLuint buffer_id;
-  glGenBuffers(1, &buffer_id);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
-  glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
-               GL_STREAM_DRAW);
-
-  void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
-                               (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-
-  memcpy(ptr, texture->layers[0].data(), texture->layers[0].size());
-  glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(texture->width()),
-                  GLsizei(texture->height()), GL_RGBA, GL_UNSIGNED_BYTE,
-                  nullptr);
-  glDeleteBuffers(1, &buffer_id);
-
-  /*
-if(texture->mipmaps) {
-    glGenerateMipmap(GL_TEXTURE_2D);
-};
-*/
-
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-
-  return texture_id;
-}
-
 void Renderer::render_scene(const Camera &camera,
                                 const Scene &render_scene,
                                 const glm::vec2 &resolution) {

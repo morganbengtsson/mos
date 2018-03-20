@@ -215,8 +215,6 @@ private:
 
   unsigned int create_texture_cube(const TextureCube &texture);
 
-  unsigned int
-  create_texture_and_pbo(const SharedTexture2D &texture);
   void add_box_program(const std::string &name, const std::string &vs_source,
                        const std::string &fs_source, const std::string &vs_file,
                        const std::string &fs_file);
