@@ -121,7 +121,7 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     return clamp(max(p, p_max), 0.0, 1.0);
 }
 float sample_shadow_map(sampler2D shadow_map, const vec2 uv, const float compare) {
-    return float(texture(shadow_map, uv).x < compare);
+    return float(texture(shadow_map, uv).x > (compare - 0.005));
 }
 
 float distribution_GGX(vec3 N, vec3 H, float roughness)
