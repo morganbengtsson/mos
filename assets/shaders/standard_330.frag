@@ -110,14 +110,7 @@ float linstep(float low, float high, float v){
 }
 
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
-    vec2 moments = vec2(0.0, 0.0);
-    vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
-    for(float x = -1.5; x <= 1.5; ++x) {
-        for(float y = -1.5; y <= 1.5; ++y) {
-            moments += texture(light.shadow_map, uv + vec2(x, y) * texelSize).xy;
-        }
-    }
-    moments /= 16.0;
+    vec2 moments = texture(light.shadow_map, uv).xy;
 
     float p = step(compare, moments.x);
     float variance = max(moments.y - moments.x * moments.x, 0.000002);
@@ -251,7 +244,15 @@ void main() {
     Lo.rgb *= spot_effect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
-    float shadow = sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy, shadow_map_uv.z);
+
+    float shadow = 0.0f;
+    vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+    for(float x = -1.5; x <= 1.5; ++x) {
+        for(float y = -1.5; y <= 1.5; ++y) {
+            shadow += sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
+        }
+    }
+    shadow /= 16;
 
     Lo.rgb *= shadow;
 
