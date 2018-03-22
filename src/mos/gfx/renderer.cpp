@@ -354,6 +354,9 @@ void Renderer::load(const Model &model) {
   load(model.material.metallic_map);
   load(model.material.roughness_map);
   load(model.material.ambient_occlusion_map);
+  for (auto & m : model.models){
+    load(m);
+  }
 }
 
 void Renderer::unload(const Model &model) {
@@ -364,6 +367,9 @@ void Renderer::unload(const Model &model) {
   unload(model.material.metallic_map);
   unload(model.material.roughness_map);
   unload(model.material.ambient_occlusion_map);
+  for (auto & m : model.models){
+    unload(m);
+  }
 }
 
 void Renderer::unload(const SharedTextureCube &texture) {
@@ -656,6 +662,7 @@ void Renderer::render_scene(const Camera &camera,
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
+    load(model);
     render(model, render_scene.decals, glm::mat4(1.0f), camera,
            render_scene.light, render_scene.environment, render_scene.fog,
            resolution, render_scene.shader, render_scene.draw);
@@ -755,8 +762,6 @@ void Renderer::render(const Model &model, const Scene::Decals &decals,
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
-
-  load(model);
 
   const glm::mat4 mv = camera.view * parent_transform * model.transform;
   const glm::mat4 mvp = camera.projection * mv;
