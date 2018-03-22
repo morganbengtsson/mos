@@ -101,6 +101,9 @@ private:
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 
+  void render_boxes(const Scene::Boxes & boxes, const mos::gfx::Camera &camera);
+  void render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution);
+
   void render_model(const Model &model,
                     const Scene::Decals &decals,
                     const glm::mat4 &transform,

@@ -366,16 +366,22 @@ void Renderer::load_async(const Model &model) {
   load_async(model.material.metallic_map);
   load_async(model.material.roughness_map);
   load_async(model.material.ambient_occlusion_map);
+  for (auto & m : model.models){
+    load_async(m);
+  }
 }
 
 void Renderer::load(const Model &model) {
   load(model.mesh);
-  load_async(model.material.albedo_map);
-  load_async(model.material.emission_map);
-  load_async(model.material.normal_map);
-  load_async(model.material.metallic_map);
-  load_async(model.material.roughness_map);
-  load_async(model.material.ambient_occlusion_map);
+  load(model.material.albedo_map);
+  load(model.material.emission_map);
+  load(model.material.normal_map);
+  load(model.material.metallic_map);
+  load(model.material.roughness_map);
+  load(model.material.ambient_occlusion_map);
+  for (auto & m : model.models){
+    load(m);
+  }
 }
 
 void Renderer::unload(const Model &model) {
@@ -386,6 +392,9 @@ void Renderer::unload(const Model &model) {
   unload(model.material.metallic_map);
   unload(model.material.roughness_map);
   unload(model.material.ambient_occlusion_map);
+  for (auto & m : model.models){
+    unload(m);
+  }
 }
 
 void Renderer::unload(const SharedTextureCube &texture) {
@@ -689,17 +698,22 @@ void Renderer::render_scene(const Camera &camera,
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
+    load(model);
     render_model(model, render_scene.decals, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
                  resolution, render_scene.shader, render_scene.draw);
   }
+  render_boxes(render_scene.boxes, camera);
+  render_particles(render_scene.particle_clouds, camera, resolution);
+}
 
+void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &camera) {
   auto &uniforms = box_programs_.at("box");
 
   glUseProgram(uniforms.program);
   glBindVertexArray(box_va);
 
-  for (auto &box : render_scene.boxes) {
+  for (auto &box : boxes) {
     glm::vec3 size = box.size();
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
@@ -716,9 +730,11 @@ void Renderer::render_scene(const Camera &camera,
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
                    (GLvoid *) (8 * sizeof(GLuint)));
   }
+  glBindVertexArray(0);
+}
 
-  for (auto &particles : render_scene.particle_clouds) {
-
+void Renderer::render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution) {
+  for (auto &particles : clouds) {
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
       glGenVertexArrays(1, &vertex_array);
@@ -788,8 +804,6 @@ void Renderer::render_model(const Model &model, const Scene::Decals &decals,
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
-
-  load(model);
 
   const glm::mat4 mv = camera.view * parent_transform * model.transform;
   const glm::mat4 mvp = camera.projection * mv;
@@ -1159,6 +1173,7 @@ void Renderer::unload(const SharedMesh &mesh) {
     unload(*mesh);
   }
 }
+
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
