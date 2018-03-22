@@ -346,6 +346,16 @@ void Renderer::add_vertex_program(const Scene::Shader shader,
       VertexProgramPair(shader, VertexProgramData(program)));
 }
 
+void Renderer::load_async(const Model &model) {
+  load(model.mesh);
+  load_async(model.material.albedo_map);
+  load_async(model.material.emission_map);
+  load_async(model.material.normal_map);
+  load_async(model.material.metallic_map);
+  load_async(model.material.roughness_map);
+  load_async(model.material.ambient_occlusion_map);
+}
+
 void Renderer::load(const Model &model) {
   load(model.mesh);
   load(model.material.albedo_map);
@@ -405,83 +415,85 @@ void Renderer::load_or_update(const Texture2D &texture) {
 }
 
 void Renderer::load_async(const SharedTexture2D &texture) {
-  if (textures_.find(texture->id()) == textures_.end()) {
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  if (texture) {
+    if (textures_.find(texture->id()) == textures_.end()) {
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    GLuint texture_id;
-    glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+      GLuint texture_id;
+      glGenTextures(1, &texture_id);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
 
-    //TODO: Support for mipmaps, load them manually;
-    GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-    if (texture->format == Texture::Format::DEPTH) {
+      //TODO: Support for mipmaps, load them manually;
+      GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+      if (texture->format == Texture::Format::DEPTH) {
+        sampling = GL_LINEAR;
+      }
       sampling = GL_LINEAR;
-    }
-    sampling = GL_LINEAR;
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
 
-    if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
-      float aniso = 0.0f;
-      glBindTexture(GL_TEXTURE_2D, texture_id);
-      glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-    }
+      if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
+        float aniso = 0.0f;
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+      }
 
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 format_map_[texture->format].internal_format,
-                 texture->width(), texture->height(), 0,
-                 format_map_[texture->format].format,
-                 GL_UNSIGNED_BYTE, nullptr);
+      glTexImage2D(GL_TEXTURE_2D, 0,
+                   format_map_[texture->format].internal_format,
+                   texture->width(), texture->height(), 0,
+                   format_map_[texture->format].format,
+                   GL_UNSIGNED_BYTE, nullptr);
 
-    GLuint buffer_id;
-    glGenBuffers(1, &buffer_id);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
-                 GL_STREAM_DRAW);
-
-    void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
-                                 (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-
-    test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async,
-                                                                           [](void *ptr,
-                                                                              const SharedTexture2D texture) {
-                                                                             std::memcpy(ptr,
-                                                                                         texture->layers[0].data(),
-                                                                                         texture->layers[0].size());
-                                                                           },
-                                                                           ptr,
-                                                                           texture)}});
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
-    textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
-  } else if (test_buffers_.find(texture->id()) != test_buffers_.end()) {
-    if (test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-      auto buffer_id = test_buffers_.at(texture->id()).id;
-      auto texture_id = textures_.at(texture->id()).id;
-      glBindTexture(GL_TEXTURE_2D, texture_id);
+      GLuint buffer_id;
+      glGenBuffers(1, &buffer_id);
       glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
+      glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
+                   GL_STREAM_DRAW);
 
-      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+      void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
+                                   (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
 
-      glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
-                      texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
-                      (void *) 0);
+      test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async,
+                                                                             [](void *ptr,
+                                                                                const SharedTexture2D texture) {
+                                                                               std::memcpy(ptr,
+                                                                                           texture->layers[0].data(),
+                                                                                           texture->layers[0].size());
+                                                                             },
+                                                                             ptr,
+                                                                             texture)}});
 
-      if (texture->mipmaps) {
-        //glGenerateMipmap(GL_TEXTURE_2D);
-      };
-      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
       glBindTexture(GL_TEXTURE_2D, 0);
-      glDeleteBuffers(1, &buffer_id);
-      test_buffers_.erase(texture->id());
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+      textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
+    } else if (test_buffers_.find(texture->id()) != test_buffers_.end()) {
+      if (test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+        auto buffer_id = test_buffers_.at(texture->id()).id;
+        auto texture_id = textures_.at(texture->id()).id;
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
+
+        glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
+                        texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
+                        (void *) 0);
+
+        if (texture->mipmaps) {
+          //glGenerateMipmap(GL_TEXTURE_2D);
+        };
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDeleteBuffers(1, &buffer_id);
+        test_buffers_.erase(texture->id());
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+      }
     }
   }
 }
@@ -663,9 +675,9 @@ void Renderer::render_scene(const Camera &camera,
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
     load(model);
-    render(model, render_scene.decals, glm::mat4(1.0f), camera,
-           render_scene.light, render_scene.environment, render_scene.fog,
-           resolution, render_scene.shader, render_scene.draw);
+    render_model(model, render_scene.decals, glm::mat4(1.0f), camera,
+                 render_scene.light, render_scene.environment, render_scene.fog,
+                 resolution, render_scene.shader, render_scene.draw);
   }
 
   auto &uniforms = box_programs_.at("box");
@@ -752,13 +764,13 @@ void Renderer::render_scene(const Camera &camera,
   }
 }
 
-void Renderer::render(const Model &model, const Scene::Decals &decals,
-                      const glm::mat4 &parent_transform,
-                      const Camera &camera, const Light &light,
-                      const EnvironmentLight &environment, const Fog &fog,
-                      const glm::vec2 &resolution,
-                      const Scene::Shader &shader,
-                      const Scene::Draw &draw) {
+void Renderer::render_model(const Model &model, const Scene::Decals &decals,
+                            const glm::mat4 &parent_transform,
+                            const Camera &camera, const Light &light,
+                            const EnvironmentLight &environment, const Fog &fog,
+                            const glm::vec2 &resolution,
+                            const Scene::Shader &shader,
+                            const Scene::Draw &draw) {
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -918,8 +930,8 @@ void Renderer::render(const Model &model, const Scene::Decals &decals,
     }
   }
   for (const auto &child : model.models) {
-    render(child, decals, parent_transform * model.transform, camera, light,
-           environment, fog, resolution, shader, draw);
+    render_model(child, decals, parent_transform * model.transform, camera, light,
+                 environment, fog, resolution, shader, draw);
   }
 }
 
@@ -929,10 +941,10 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::render_scenes(
+void Renderer::render(
     const std::initializer_list<Scene> &batches_init,
     const glm::vec4 &color, const glm::ivec2 &resolution) {
-  render_scenes(batches_init.begin(), batches_init.end(), color, resolution);
+  render(batches_init.begin(), batches_init.end(), color, resolution);
 }
 
 void Renderer::render_shadow_map(const Scene &scene) {

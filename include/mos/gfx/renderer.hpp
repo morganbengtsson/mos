@@ -32,6 +32,7 @@ public:
 
   /** Loads a model into renderers own memory. */
   void load(const Model &model);
+  void load_async(const Model &model);
 
   /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
@@ -59,15 +60,15 @@ public:
   /** Unloads a shared texture cube from renderer memory.*/
   void unload(const SharedTextureCube &texture);
 
-  void render_scenes(const std::initializer_list<Scene> &scenes_init,
-                     const glm::vec4 &color = glm::vec4(.0f),
-                     const glm::ivec2 &resolution = glm::ivec2(128, 128));
+  void render(const std::initializer_list<Scene> &scenes_init,
+              const glm::vec4 &color = glm::vec4(.0f),
+              const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
   template<class Ts>
-  void render_scenes(Ts scenes_begin,
-                     Ts scenes_end,
-                     const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-                     const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
+  void render(Ts scenes_begin,
+              Ts scenes_end,
+              const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+              const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       render_shadow_map(*it);
@@ -97,16 +98,16 @@ private:
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 
-  void render(const Model &model,
-              const Scene::Decals &decals,
-              const glm::mat4 &transform,
-              const Camera &camera,
-              const Light &light,
-              const EnvironmentLight &environment,
-              const Fog &fog,
-              const glm::vec2 &resolution,
-              const Scene::Shader &shader,
-              const Scene::Draw &draw);
+  void render_model(const Model &model,
+                    const Scene::Decals &decals,
+                    const glm::mat4 &transform,
+                    const Camera &camera,
+                    const Light &light,
+                    const EnvironmentLight &environment,
+                    const Fog &fog,
+                    const glm::vec2 &resolution,
+                    const Scene::Shader &shader,
+                    const Scene::Draw &draw);
 
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
