@@ -34,6 +34,9 @@ public:
   void load(const Model &model);
   void load_async(const Model &model);
 
+  void load(const Scene::Models & models);
+  void load_async(const Scene::Models &models);
+
   /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
 
@@ -64,6 +67,11 @@ public:
               const glm::vec4 &color = glm::vec4(.0f),
               const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
+  void render_async(const std::initializer_list<Scene> &scenes_init,
+              const glm::vec4 &color = glm::vec4(.0f),
+              const glm::ivec2 &resolution = glm::ivec2(128, 128));
+
+
   template<class Ts>
   void render(Ts scenes_begin,
               Ts scenes_end,
@@ -71,6 +79,21 @@ public:
               const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
+      load(it->models);
+      render_shadow_map(*it);
+      render_environment(*it, color);
+      render_scene(it->camera, *it, resolution);
+    }
+  }
+
+  template<class Ts>
+  void render_async(Ts scenes_begin,
+              Ts scenes_end,
+              const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
+              const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
+    clear(color);
+    for (auto it = scenes_begin; it != scenes_end; it++) {
+      load_async(it->models);
       render_shadow_map(*it);
       render_environment(*it, color);
       render_scene(it->camera, *it, resolution);

@@ -698,7 +698,6 @@ void Renderer::render_scene(const Camera &camera,
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(vertex_programs_[render_scene.shader].program);
   for (auto &model : render_scene.models) {
-    load(model);
     render_model(model, render_scene.decals, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
                  resolution, render_scene.shader, render_scene.draw);
@@ -972,9 +971,15 @@ void Renderer::clear(const glm::vec4 &color) {
 }
 
 void Renderer::render(
-    const std::initializer_list<Scene> &batches_init,
+    const std::initializer_list<Scene> &scenes_init,
     const glm::vec4 &color, const glm::ivec2 &resolution) {
-  render(batches_init.begin(), batches_init.end(), color, resolution);
+  render(scenes_init.begin(), scenes_init.end(), color, resolution);
+}
+
+void Renderer::render_async(const std::initializer_list<Scene> &scenes_init,
+                            const glm::vec4 &color,
+                            const glm::ivec2 &resolution) {
+  render_async(scenes_init.begin(), scenes_init.end(), color, resolution);
 }
 
 void Renderer::render_shadow_map(const Scene &scene) {
@@ -1173,7 +1178,16 @@ void Renderer::unload(const SharedMesh &mesh) {
     unload(*mesh);
   }
 }
-
+void Renderer::load(const Scene::Models &models) {
+  for (auto & model : models){
+    load(model);
+  }
+}
+void Renderer::load_async(const Scene::Models &models) {
+  for (auto & model : models){
+    load_async(model);
+  }
+}
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
