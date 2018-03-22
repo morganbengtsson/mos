@@ -199,6 +199,18 @@ Renderer::Renderer(const glm::vec4 &color) :
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP_TO_EDGE;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
+
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  glGenBuffers(1, &buffer_id_);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id_);
+  glBufferData(GL_PIXEL_UNPACK_BUFFER, 201326592, nullptr,
+               GL_STREAM_DRAW);
+
+
+  ptr_ = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, 201326592,
+                               (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
 
 Renderer::~Renderer() {
@@ -448,25 +460,16 @@ void Renderer::load_async(const SharedTexture2D &texture) {
                    format_map_[texture->format].format,
                    GL_UNSIGNED_BYTE, nullptr);
 
+      std::cout << texture->layers[0].size() << std::endl;
 
-      GLuint buffer_id;
-      glGenBuffers(1, &buffer_id);
-      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
-      glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
-                   GL_STREAM_DRAW);
-
-
-      void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
-                                   (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-
-      test_buffers_.insert({texture->id(), PixelBuffer{buffer_id, std::async(std::launch::async,
+      test_buffers_.insert({texture->id(), PixelBuffer{buffer_id_, std::async(std::launch::async,
                                                                              [](void *ptr,
                                                                                 const SharedTexture2D texture) {
                                                                                std::memcpy(ptr,
                                                                                            texture->layers[0].data(),
                                                                                            texture->layers[0].size());
                                                                              },
-                                                                             ptr,
+                                                                             ptr_,
                                                                              texture)}});
 
       frame_time = std::chrono::high_resolution_clock::now() - old_time;
@@ -483,7 +486,7 @@ void Renderer::load_async(const SharedTexture2D &texture) {
         auto buffer_id = test_buffers_.at(texture->id()).id;
         auto texture_id = textures_.at(texture->id()).id;
         glBindTexture(GL_TEXTURE_2D, texture_id);
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id_);
 
         glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
@@ -500,7 +503,7 @@ void Renderer::load_async(const SharedTexture2D &texture) {
         };
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glDeleteBuffers(1, &buffer_id);
+        //glDeleteBuffers(1, &buffer_id);
         test_buffers_.erase(texture->id());
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
         frame_time = std::chrono::high_resolution_clock::now() - old_time;

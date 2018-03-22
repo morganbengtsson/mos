@@ -81,6 +81,9 @@ public:
   void clear_buffers();
 
 private:
+  void * ptr_;
+  GLuint buffer_id_;
+
   struct Buffer {
     GLuint id; // TODO const?
     std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
