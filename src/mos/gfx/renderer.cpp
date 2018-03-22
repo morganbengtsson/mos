@@ -358,12 +358,12 @@ void Renderer::load_async(const Model &model) {
 
 void Renderer::load(const Model &model) {
   load(model.mesh);
-  load(model.material.albedo_map);
-  load(model.material.emission_map);
-  load(model.material.normal_map);
-  load(model.material.metallic_map);
-  load(model.material.roughness_map);
-  load(model.material.ambient_occlusion_map);
+  load_async(model.material.albedo_map);
+  load_async(model.material.emission_map);
+  load_async(model.material.normal_map);
+  load_async(model.material.metallic_map);
+  load_async(model.material.roughness_map);
+  load_async(model.material.ambient_occlusion_map);
 }
 
 void Renderer::unload(const Model &model) {
@@ -411,6 +411,11 @@ void Renderer::load_or_update(const Texture2D &texture) {
 void Renderer::load_async(const SharedTexture2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) == textures_.end()) {
+
+      std::chrono::duration<float> frame_time =
+          std::chrono::duration_cast<std::chrono::seconds>(std::chrono::seconds(0));
+      auto old_time = std::chrono::high_resolution_clock::now();
+
       glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
       GLuint texture_id;
@@ -443,11 +448,13 @@ void Renderer::load_async(const SharedTexture2D &texture) {
                    format_map_[texture->format].format,
                    GL_UNSIGNED_BYTE, nullptr);
 
+
       GLuint buffer_id;
       glGenBuffers(1, &buffer_id);
       glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
       glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->layers[0].size(), nullptr,
                    GL_STREAM_DRAW);
+
 
       void *ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, texture->layers[0].size(),
                                    (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
@@ -462,18 +469,27 @@ void Renderer::load_async(const SharedTexture2D &texture) {
                                                                              ptr,
                                                                              texture)}});
 
+      frame_time = std::chrono::high_resolution_clock::now() - old_time;
+      std::cout << "tc: " << std::fixed << frame_time.count() << std::endl;
+
       glBindTexture(GL_TEXTURE_2D, 0);
       glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
       textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
+
     } else if (test_buffers_.find(texture->id()) != test_buffers_.end()) {
       if (test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+
         auto buffer_id = test_buffers_.at(texture->id()).id;
         auto texture_id = textures_.at(texture->id()).id;
         glBindTexture(GL_TEXTURE_2D, texture_id);
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id);
 
         glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+        std::chrono::duration<float> frame_time =
+            std::chrono::duration_cast<std::chrono::seconds>(std::chrono::seconds(0));
+        auto old_time = std::chrono::high_resolution_clock::now();
 
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
                         texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
@@ -487,6 +503,8 @@ void Renderer::load_async(const SharedTexture2D &texture) {
         glDeleteBuffers(1, &buffer_id);
         test_buffers_.erase(texture->id());
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        frame_time = std::chrono::high_resolution_clock::now() - old_time;
+        std::cout << "tb: " << std::fixed << frame_time.count() << std::endl;
       }
     }
   }
