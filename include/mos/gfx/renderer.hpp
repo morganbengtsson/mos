@@ -72,9 +72,9 @@ public:
               const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
 
-  template<class Ts>
-  void render(Ts scenes_begin,
-              Ts scenes_end,
+  template<class It>
+  void render(It scenes_begin,
+              It scenes_end,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
               const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
     clear(color);
@@ -86,9 +86,9 @@ public:
     }
   }
 
-  template<class Ts>
-  void render_async(Ts scenes_begin,
-              Ts scenes_end,
+  template<class It>
+  void render_async(It scenes_begin,
+              It scenes_end,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
               const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
     clear(color);
