@@ -72,6 +72,10 @@ uniform sampler2D brdf_lut;
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 float fog_attenuation(const float dist, const Fog fog) {
     return 1.0 / exp(pow(dist * fog.attenuation_factor, 2.0));
 }
