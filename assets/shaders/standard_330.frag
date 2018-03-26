@@ -72,15 +72,11 @@ uniform sampler2D brdf_lut;
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float rand(vec2 co) {
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
 float fog_attenuation(const float dist, const Fog fog) {
     return 1.0 / exp(pow(dist * fog.attenuation_factor, 2.0));
 }
 
-vec3 parallax_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
+vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
     vec3 box_min = box_pos - box_extent;
     vec3 box_max = box_pos + box_extent;
     vec3 nrdir = normalize(dir);
@@ -105,9 +101,6 @@ bool in_box(const vec3 box_min, const vec3 box_max, const vec3 point)
     return false;
 }
 
-float linstep(float low, float high, float v){
-    return clamp((v-low)/(high-low), 0.0, 1.0);
-}
 
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     vec2 moments = texture(shadow_map, uv).xy;
@@ -261,9 +254,9 @@ void main() {
     Lo.rgb *= shadow;
 
     vec2 environment_texture_size = textureSize(environment.texture, 0);
-    vec3 corrected_normal = parallax_correct(environment.extent, environment.position,normal);
+    vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
-    vec3 corrected_r = parallax_correct(environment.extent, environment.position, r);
+    vec3 corrected_r = box_correct(environment.extent, environment.position, r);
 
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = log2(maxsize) + 1;
