@@ -253,11 +253,11 @@ void main() {
 
     Lo.rgb *= shadow;
 
-    vec2 environment_texture_size = textureSize(environment.texture, 0);
     vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = box_correct(environment.extent, environment.position, r);
 
+    vec2 environment_texture_size = textureSize(environment.texture, 0);
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = 1 + floor(log2(maxsize));
     float mip_level = roughness * num_levels * 3.0;
@@ -277,12 +277,9 @@ void main() {
     //Temp
     vec3 box_min = environment.position - environment.extent;
     vec3 box_max = environment.position + environment.extent;
-    if (!in_box(box_min, box_max, fragment.position)){
-        specular_environment = vec3(0, 0, 0);
-        diffuse_environment = vec3(0, 0, 0);
-    }
+    float in_environment = float(in_box(box_min, box_max, fragment.position));
 
-    vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion;
+    vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion * in_environment;
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a);
