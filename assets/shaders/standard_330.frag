@@ -259,7 +259,7 @@ void main() {
     vec3 corrected_r = box_correct(environment.extent, environment.position, r);
 
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
-    float num_levels = log2(maxsize) + 1;
+    float num_levels = 1 + floor(log2(maxsize));
     float mip_level = roughness * num_levels * 3.0;
 
     vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
@@ -271,7 +271,7 @@ void main() {
     vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environment.strength;
 
-    vec3 irradiance = textureLod(environment.texture, corrected_normal, 20.0).rgb;
+    vec3 irradiance = textureLod(environment.texture, corrected_normal, num_levels - 2).rgb;
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
     //Temp
