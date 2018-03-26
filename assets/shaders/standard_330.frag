@@ -272,6 +272,9 @@ void main() {
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environment.strength;
 
     vec3 irradiance = textureLod(environment.texture, corrected_normal, num_levels - 2).rgb;
+    irradiance += textureLod(environment.texture, corrected_normal, num_levels - 1).rgb;
+    irradiance += textureLod(environment.texture, corrected_normal, num_levels).rgb;
+    irradiance /= 3.0f;
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
     //Temp
