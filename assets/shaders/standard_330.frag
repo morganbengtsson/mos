@@ -186,6 +186,9 @@ void main() {
     float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
+    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a);
+
     //TODO: Function
 
     for (int i = 0; i < max_decals; i++){
@@ -233,12 +236,10 @@ void main() {
     kD *= 1.0 - metallic;
 
     float NdotL = max(dot(N, L), 0.0);
-
-    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL;
-
     float cos_dir = dot(L, -light.direction);
     float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
-    Lo.rgb *= spot_effect;
+
+    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
 
@@ -250,7 +251,6 @@ void main() {
         }
     }
     shadow /= 16;
-
     Lo.rgb *= shadow;
 
     vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
@@ -281,11 +281,7 @@ void main() {
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion * in_environment;
 
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a);
-
-    color.rgb = Lo + ambient + emission;
-    color.rgb *= fragment.ao;
+    color.rgb = (Lo + ambient + emission) * fragment.ao;
     color.a = clamp(material.opacity + albedo_from_map.a, 0.0, 1.0);
 
     //Fog
