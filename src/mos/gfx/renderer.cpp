@@ -754,10 +754,14 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds, const mos::
       glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3) +
                                 sizeof(glm::vec4)));
+      glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                            reinterpret_cast<const void *>(sizeof(glm::vec3) +
+                                sizeof(glm::vec4) + sizeof(float)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableVertexAttribArray(0);
       glEnableVertexAttribArray(1);
       glEnableVertexAttribArray(2);
+      glEnableVertexAttribArray(3);
       glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
