@@ -28,7 +28,7 @@ void Text::text(const std::string &text) {
     model_.mesh->clear();
 
     float line_index = 0.0f;
-    const float line_height = -0.5f;
+    const float line_height = -1.0f;
     for (auto & line : lines) {
       float index = 0.0f;
       for (auto & c : line) {
