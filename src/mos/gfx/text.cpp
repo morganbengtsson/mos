@@ -44,6 +44,7 @@ void Text::text(const std::string &text) {
         float offset_x = character.offset_x;
         float rect_h = -character.rect_h;
         float rect_w = character.rect_w;
+        float advance = character.advance;
 
         float z = index / 2000.0f;
         model_.mesh->vertices.push_back(
@@ -67,7 +68,7 @@ void Text::text(const std::string &text) {
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
 
-        index += character.advance + spacing;
+        index += advance + spacing;
       }
       line_index += line_height;
     }
