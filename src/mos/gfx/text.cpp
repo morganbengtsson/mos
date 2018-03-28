@@ -40,11 +40,11 @@ void Text::text(const std::string &text) {
         float v2 = ((character.rect_y + character.rect_h) /
                     ((float)model_.material.albedo_map->height()));
 
-        float offset_y = character.offset_y;
-        float offset_x = character.offset_x;
-        float rect_h = -character.rect_h;
-        float rect_w = character.rect_w;
-        float advance = character.advance;
+        float offset_y = character.offset_y / font_.height();
+        float offset_x = character.offset_x / font_.height();
+        float rect_h = -character.rect_h / font_.height();
+        float rect_w = character.rect_w / font_.height();
+        float advance = character.advance / font_.height();
 
         float z = index / 2000.0f;
         model_.mesh->vertices.push_back(
