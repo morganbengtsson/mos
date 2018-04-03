@@ -638,12 +638,12 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
-  if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
-    float aniso = 0.0f;
-    glBindTexture(GL_TEXTURE_2D, id);
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-  }
+  //if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
+  float aniso = 0.0f;
+  glBindTexture(GL_TEXTURE_2D, id);
+  glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+  //}
 
   glTexImage2D(GL_TEXTURE_2D, 0,
                format_map_[texture.format].internal_format,
