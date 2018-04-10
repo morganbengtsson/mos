@@ -24,7 +24,7 @@ Model::Models::iterator Model::begin() { return models.begin(); }
 Model::Models::iterator Model::end() { return models.end(); }
 
 glm::vec3 Model::position() const {
-  return glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
+  return glm::vec3(transform[3]);
 }
 
 void Model::position(const glm::vec3 &position) {
