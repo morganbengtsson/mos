@@ -48,7 +48,7 @@ Renderer::Renderer(const glm::vec4 &color) :
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     draw_map_{{Scene::Draw::LINES, GL_LINES},
               {Scene::Draw::POINTS, GL_POINTS},
-              {Scene::Draw::TRIANGLES, GL_TRIANGLES}} {
+              {Scene::Draw::TRIANGLES, GL_TRIANGLES}}, cube_camera_index_(0) {
 
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
@@ -1060,15 +1060,18 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
   auto texture_id = texture_cubes_[scene.environment.texture.id()];
 
-  for (auto c_it = scene.environment.cube_camera.cameras.begin(); c_it != scene.environment.cube_camera.cameras.end();
-       c_it++) {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X
-                               + std::distance(scene.environment.cube_camera.cameras.begin(), c_it), texture_id, 0);
-    clear(clear_color);
-    auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
-    render_scene(*c_it, scene, resolution);
-  }
+  auto cube_camera = scene.environment.cube_camera.cameras[cube_camera_index_];
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_, texture_id, 0);
+  clear(clear_color);
+  auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
+  render_scene(cube_camera, scene, resolution);
+
+  cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;
+  std::cout << cube_camera_index_ << std::endl;
+
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);

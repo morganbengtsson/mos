@@ -278,6 +278,8 @@ private:
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
   std::map<Scene::Draw, GLuint> draw_map_;
+
+  int cube_camera_index_;
 };
 }
 }
