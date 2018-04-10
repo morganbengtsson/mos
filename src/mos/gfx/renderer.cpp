@@ -1069,8 +1069,6 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
   render_scene(cube_camera, scene, resolution);
 
   cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;
-  std::cout << cube_camera_index_ << std::endl;
-
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
