@@ -1,6 +1,10 @@
 #include <mos/util.hpp>
 #include <fstream>
 #include <stdexcept>
+#include <glm/glm.hpp>
+#include <glm/gtx/projection.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <mos/sim/ray.hpp>
 
 std::string mos::text(const std::string path) {
   std::ifstream file(path);
@@ -44,4 +48,23 @@ int mos::now_ms() {
   using namespace std::chrono;
   auto now = system_clock::now();
   return duration_cast<milliseconds>(now.time_since_epoch()).count();
+}
+mos::sim::Ray mos::un_project(const glm::vec2 &position,
+                              const glm::mat4 &view,
+                              const glm::mat4 &projection,
+                              const glm::uvec2 &resolution) {
+    const auto position0 =
+        glm::unProject(glm::vec3(position.x,
+                                 resolution.y - position.y, 0.0f),
+                       view, projection,
+                       glm::vec4(0.0f, 0.0f, resolution.x, resolution.y));
+
+    const auto position1 =
+        glm::unProject(glm::vec3(position.x,
+                                 resolution.y - position.y, 1.0f),
+                       view, projection,
+                       glm::vec4(0.0f, 0.0f, resolution.x, resolution.y));
+
+    return mos::sim::Ray(position0, glm::normalize(position1 - position0));
+
 }

@@ -1,5 +1,4 @@
-#ifndef MOS_UTIL_H
-#define MOS_UTIL_H
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -7,6 +6,7 @@
 #include <json.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <mos/sim/ray.hpp>
 #include <chrono>
 
 namespace mos {
@@ -23,13 +23,14 @@ std::vector<std::string> &split(const std::string &s, char delim,
 
 std::vector<std::string> split(const std::string &s, char delim);
 
-
 glm::mat4 jsonarray_to_mat4(const nlohmann::json &array);
 
 glm::vec3 position(const glm::mat4 &mat);
 
 int now_ms();
 
-
+mos::sim::Ray un_project(const glm::vec2 &position,
+                         const glm::mat4 &view,
+                         const glm::mat4 &projection,
+                         const glm::uvec2 &resolution);
 }
-#endif /* MOS_UTIL_H */
