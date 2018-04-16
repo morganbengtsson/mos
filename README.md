@@ -15,7 +15,8 @@ The skeleton provides a minimal setup, for getting a window with some graphics a
 To use it in an existing project, it can also be added as a git submodule:
 
 ```bash
-git submodule add https://github.com/morganbengtsson/mos.git externals --init --recursive
+git submodule add https://github.com/morganbengtsson/mos.git
+git submodule update --init --recursive
 ```
 # Example
 
