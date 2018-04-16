@@ -1,21 +1,18 @@
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 
-MOS is a lightweight utility library for cross platform game development. 
+Mos is a lightweight cross platform game engine/library, written in C++. It includes components for physically based rendering,
+text rendering, collision detection, audio playback and asset management.
 
-It includes components for rendering, text rendering, colission detection, audio playback and asset management.
+A good way to get started is by cloning a CMake based project skeleton:
 
-OpenGL is used for graphics and OpenAL are used for audio. Together
-with smaller libraries for ogg decoding, png loading and math.
+```bash
+git clone --recurse-submodules https://github.com/morganbengtsson/mos-skeleton
+```
+The skeleton provides a minimal setup, for getting a window with some graphics and sound up and running.
 
-To add it to a project. Preferably use it as a git submodule:
+To use it in an existing project, the preferred way is to add it as a git submodule:
 
 ```bash
 git submodule add https://github.com/morganbengtsson/mos.git externals --init --recursive
 ```
 
-To see how a simple project setup looks like. The following repository can be cloned:
-
-
-```bash
-git clone --recurse-submodules https://github.com/morganbengtsson/mos-skeleton
-```
