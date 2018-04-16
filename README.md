@@ -1,4 +1,4 @@
-
+![Documentation build status](https://readthedocs.org/projects/mos/badge/?version=latest "Documentation build status")
 
 MOS is a lightweight utility library for cross platform game development. 
 
@@ -9,14 +9,13 @@ with smaller libraries for ogg decoding, png loading and math.
 
 To add it to a project. Preferably use it as a git submodule:
 
-.. code-block:: bash
-
-   git submodule add https://github.com/morganbengtsson/mos.git externals --init --recursive
-
+```bash
+git submodule add https://github.com/morganbengtsson/mos.git externals --init --recursive
+```
 
 To see how a simple project setup looks like. The following repository can be cloned:
 
-.. code-block:: bash
 
-   git clone --recurse-submodules https://github.com/morganbengtsson/mos-skeleton
-
+```bash
+git clone --recurse-submodules https://github.com/morganbengtsson/mos-skeleton
+```
