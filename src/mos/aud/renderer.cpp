@@ -317,7 +317,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
         stream_source.stream->id(),
         StreamThread{
             std::thread(
-                [&](ALuint al_source, SharedAudioStream stream,
+                [&](ALuint al_source, SharedStream stream,
                     const bool loop) {
 
                   ALuint buffers[4]; // TODO std array

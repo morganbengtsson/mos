@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include <mos/aud/types.hpp>
 #include <mos/aud/stream.hpp>
 #include <mos/aud/source.hpp>
 

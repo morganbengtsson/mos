@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/stream.hpp>
-#include <mos/aud/types.hpp>
 
 namespace mos {
 namespace aud {

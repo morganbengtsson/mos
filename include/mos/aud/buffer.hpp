@@ -4,10 +4,12 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <mos/aud/types.hpp>
 
 namespace mos {
 namespace aud {
+
+class Buffer;
+using SharedBuffer = std::shared_ptr<Buffer>;
 
 /** Audio 16bit integer buffer. */
 class Buffer final {
