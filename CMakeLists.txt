@@ -39,8 +39,7 @@ add_subdirectory(externals/glm)
 add_subdirectory(externals/stb)
 
 # Json
-include_directories(externals/json/src)
-add_subdirectory(externals/json)
+include_directories(externals/nlohmann_json_release)
 
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
@@ -65,7 +64,7 @@ externals/openal-soft/include
 externals/stb
 externals/glm
 externals/filesystem
-externals/json/src)
+externals/nlohmann_json_release)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
