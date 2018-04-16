@@ -46,6 +46,7 @@ public:
 
   bool valid() const;
 
+  //TODO: Deprecate and use modified time instead.
   void invalidate();
 
   /** Get number of channels. */

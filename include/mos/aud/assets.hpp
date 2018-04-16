@@ -9,6 +9,7 @@
 namespace mos {
 namespace aud {
 
+/** Handles heavy audio assets. */
 class Assets final {
 public:
   using BufferMap =
@@ -26,7 +27,7 @@ public:
   void clear_unused();
 private:
   const std::string directory_;
-  BufferMap sounds_;
+  BufferMap buffers_;
 };
 }
 }
