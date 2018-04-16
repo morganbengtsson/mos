@@ -5,7 +5,7 @@ import subprocess
 #Read the docs
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 #if read_the_docs_build:
-subprocess.call('cd ../; doxygen config.doxy', shell=True)
+subprocess.call('doxygen config.doxy', shell=True)
 
 # -- General configuration ------------------------------------------------
 
