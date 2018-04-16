@@ -7,6 +7,11 @@ It includes components for rendering, text rendering, colission detection, audio
 OpenGL is used for graphics and OpenAL are used for audio. Together
 with smaller libraries for ogg decoding, png loading and math.
 
+To add it to a project. Preferably use it as a git submodule:
+.. code-block:: bash
+
+   git submodule add https://
+
 .. |docs| image:: https://readthedocs.org/projects/mos/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
