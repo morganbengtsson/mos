@@ -1,4 +1,4 @@
-[![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](https://readthedocs.org/projects/mos/en/latest/?badge=latest)
+[![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 
 MOS is a lightweight utility library for cross platform game development. 
 
