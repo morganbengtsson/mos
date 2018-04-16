@@ -1,18 +1,24 @@
 [submodule "externals/glm"]
 	path = externals/glm
-	url = git://github.com/g-truc/glm.git	
+	url = git://github.com/g-truc/glm.git
+	shallow = true	
 [submodule "externals/openal-soft"]
 	path = externals/openal-soft
 	url = http://repo.or.cz/openal-soft.git
+	shallow = true
 [submodule "externals/glew-cmake"]
 	path = externals/glew-cmake
 	url = https://github.com/Perlmint/glew-cmake.git
+	shallow = true
 [submodule "externals/json"]
 	path = externals/json
 	url = https://github.com/nlohmann/json.git
+	shallow = true
 [submodule "externals/glfw"]
 	path = externals/glfw
 	url = https://github.com/glfw/glfw.git
+	shallow = true
 [submodule "externals/filesystem"]
 	path = externals/filesystem
 	url = https://github.com/wjakob/filesystem.git
+	shallow = true
