@@ -23,12 +23,8 @@ include_directories(externals/mos/include)
 target_link_libraries(${PROJECT_NAME} mos)
 ```
 
-A CMake based [project skeleton](https://github.com/morganbengtsson/mos-skeleton) is also available, for a minimal setup with working graphics and audio:
-
-```bash
-git clone --recurse-submodules https://github.com/morganbengtsson/mos-skeleton
-```
-The skeleton provides a minimal setup, for getting a window with some graphics and sound up and running.
+A CMake based [project skeleton](https://github.com/morganbengtsson/mos-skeleton) is also available, for a minimal setup
+with working graphics and audio:
 
 # Blender export scripts
 
