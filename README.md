@@ -1,3 +1,5 @@
+![Screenshot](https://github.com/morganbengtsson/mos-skeleton/blob/master/screenshot.png)
+
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 
 MOS is a lightweight cross platform game engine/library, written in modern C++. It includes components for 3D rendering
