@@ -3,7 +3,7 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <algorithm>
-#include <experimental/optional>
+#include <optional>
 #include <iostream>
 #include <glm/gtx/io.hpp>
 #include <mos/sim/intersection.hpp>
@@ -15,7 +15,7 @@ namespace sim {
 class Face {
 public:
   Face(const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2);
-  std::experimental::optional<Intersection>
+  std::optional<Intersection>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 
 private:
@@ -26,7 +26,7 @@ private:
 
 class Navmesh {
 public:
-  using OptionalIntersection = std::experimental::optional<Intersection>;
+  using OptionalIntersection = std::optional<Intersection>;
   Navmesh();
   Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
@@ -64,10 +64,10 @@ public:
       }
     }
   }
-  std::experimental::optional<Intersection>
+  std::optional<Intersection>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 
-  std::experimental::optional<Intersection>
+  std::optional<Intersection>
   closest_intersection(const glm::vec3 &origin, const glm::vec3 direction);
 
   ~Navmesh();

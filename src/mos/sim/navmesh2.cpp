@@ -11,7 +11,7 @@ Navmesh2::Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform)
     : Navmesh2(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
                mesh.indices.end(), transform) {}
 
-std::experimental::optional<gfx::Vertex>
+std::optional<gfx::Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   //for (auto &face : faces_) {
   for (int i = 0; i < indices.size(); i += 3) {
@@ -21,7 +21,7 @@ Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
       return intersection;
     }
   }
-  return std::experimental::optional<gfx::Vertex>();
+  return std::optional<gfx::Vertex>();
 }
 
 Navmesh2::OptionalIntersection
@@ -61,7 +61,7 @@ void Navmesh2::calculate_normals() {
 Face2::Face2(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
-std::experimental::optional<gfx::Vertex>
+std::optional<gfx::Vertex>
 Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   glm::vec3 bary;
   auto intersects =
@@ -88,9 +88,9 @@ Face2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
 
     //auto uv_l = bary.x * v0_.uv_lightmap + bary.y * v1_.uv_lightmap + bary.z * v2_.uv_lightmap;
     auto v = gfx::Vertex(p, n, t, uv);
-    return std::experimental::optional<gfx::Vertex>(v);
+    return std::optional<gfx::Vertex>(v);
   } else {
-    return std::experimental::optional<gfx::Vertex>();
+    return std::optional<gfx::Vertex>();
   }
 }
 }

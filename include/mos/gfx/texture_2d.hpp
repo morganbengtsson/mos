@@ -31,12 +31,12 @@ public:
   /** Load from file */
   static SharedTexture2D load(const std::string &path,
                               const bool mipmaps = true,
-                              const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
+                              const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 
   /** Create from file. */
   Texture2D(const std::string &path,
             const bool mipmaps = true,
-            const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
+            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 };
 }
 }

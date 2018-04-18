@@ -3,8 +3,7 @@ project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
 
-set(CMAKE_CXX_STANDARD 14)
-
+set(CMAKE_CXX_STANDARD 17)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE STRING "" FORCE)

@@ -4,7 +4,7 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <algorithm>
-#include <experimental/optional>
+#include <optional>
 #include <iostream>
 #include <glm/gtx/io.hpp>
 #include <mos/sim/intersection.hpp>
@@ -16,7 +16,7 @@ namespace sim {
 class Face2 {
 public:
   Face2(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
-  std::experimental::optional<gfx::Vertex>
+  std::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 public :
   gfx::Vertex v0_;
@@ -26,7 +26,7 @@ public :
 
 class Navmesh2 {
 public:
-  using OptionalIntersection = std::experimental::optional<gfx::Vertex>;
+  using OptionalIntersection = std::optional<gfx::Vertex>;
   Navmesh2();
   Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
@@ -40,10 +40,10 @@ public:
           glm::vec4(vertex.position, 1.0f));
     }
   }
-  std::experimental::optional<gfx::Vertex>
+  std::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 
-  std::experimental::optional<gfx::Vertex>
+  std::optional<gfx::Vertex>
   closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
   void calculate_normals();
 
