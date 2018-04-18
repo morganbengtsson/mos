@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,11 +33,11 @@ Renderer::Renderer(const glm::vec4 &color) :
         {Texture::Format::COMPRESSED_SRGBA, {GL_COMPRESSED_SRGB_ALPHA, GL_RGBA}},
         {Texture::Format::COMPRESSED_RGB, {GL_COMPRESSED_RGB, GL_RGB}},
         {Texture::Format::COMPRESSED_RGBA, {GL_COMPRESSED_RGBA, GL_RGBA}},
-        {Texture::Format::R16F, {GL_R16F, GL_R}},
+        {Texture::Format::R16F, {GL_R16F, GL_RED}},
         {Texture::Format::RG16F, {GL_RG16F, GL_RG}},
         {Texture::Format::RGB16F, {GL_RGB16F, GL_RGB}},
         {Texture::Format::RGBA16F, {GL_RGBA16F, GL_RGBA}},
-        {Texture::Format::R32F, {GL_R32F, GL_R}},
+        {Texture::Format::R32F, {GL_R32F, GL_RED}},
         {Texture::Format::RG32F, {GL_RG32F, GL_RG}},
         {Texture::Format::RGB32F, {GL_RGB32F, GL_RGB}},
         {Texture::Format::RGBA32F, {GL_RGBA32F, GL_RGBA}}},
@@ -50,20 +49,22 @@ Renderer::Renderer(const glm::vec4 &color) :
               {Scene::Draw::POINTS, GL_POINTS},
               {Scene::Draw::TRIANGLES, GL_TRIANGLES}}, cube_camera_index_(0) {
 
+  /*
   glewExperimental = GL_TRUE;
   GLenum err = glewInit();
 
   if (GLEW_OK != err) {
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+   */
+  //fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
   fprintf(stdout, "Max uniform locations: %s\n",
           glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-  glEnable(GL_POINT_SMOOTH);
+  //glEnable(GL_POINT_SMOOTH);
   glEnable(GL_FRAMEBUFFER_SRGB);
 
   // glEnable(GL_TEXTURE_CUBE_MAP);
@@ -456,12 +457,13 @@ void Renderer::load_async(const SharedTexture2D &texture) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
 
-      if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
-        float aniso = 0.0f;
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-      }
+      /*
+      float aniso = 0.0f;
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+       */
+
 
       glTexImage2D(GL_TEXTURE_2D, 0,
                    format_map_[texture->format].internal_format,
@@ -638,13 +640,12 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
-  //if (glewGetExtension("GL_EXT_texture_filter_anisotropic")) {
+  /*
   float aniso = 0.0f;
   glBindTexture(GL_TEXTURE_2D, id);
   glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-  //}
-
+   */
   glTexImage2D(GL_TEXTURE_2D, 0,
                format_map_[texture.format].internal_format,
                texture.width(), texture.height(), 0,

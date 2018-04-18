@@ -5,10 +5,6 @@ add_definitions(-DGLEW_STATIC)
 
 set(CMAKE_CXX_STANDARD 14)
 
-# GLEW
-set(glew-cmake_BUILD_SHARED OFF)
-add_subdirectory(externals/glew-cmake)
-include_directories(externals/glew_cmake/include)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE STRING "" FORCE)
@@ -26,6 +22,10 @@ set(ALSOFT_INSTALL OFF)
 set(ALSOFT_HRTF_DEFS OFF)
 add_subdirectory(externals/openal-soft)
 include_directories(externals/openal-soft/include)
+
+#glad
+add_subdirectory(externals/glad)
+include_directories(externals/glad/include)
 
 # Filesystem
 add_subdirectory(externals/filesystem)
@@ -54,11 +54,12 @@ add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 target_link_libraries(${PROJECT_NAME} OpenAL)
-target_link_libraries(${PROJECT_NAME} libglew_static ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} stb)
-target_include_directories(mos PUBLIC
-externals/glew-cmake/include
+target_link_libraries(${PROJECT_NAME} glad)
+target_include_directories(${PROJECT_NAME} PUBLIC
+externals/glad/include
 externals/glfw/include
 externals/openal-soft/include
 externals/stb

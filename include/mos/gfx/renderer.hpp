@@ -1,5 +1,5 @@
 #pragma once
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <experimental/optional>
 #include <initializer_list>
 #include <unordered_map>
