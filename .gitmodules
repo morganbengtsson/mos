@@ -6,10 +6,6 @@
 	path = externals/openal-soft
 	url = http://repo.or.cz/openal-soft.git
 	shallow = true
-[submodule "externals/glew-cmake"]
-	path = externals/glew-cmake
-	url = https://github.com/Perlmint/glew-cmake.git
-	shallow = true
 [submodule "externals/glfw"]
 	path = externals/glfw
 	url = https://github.com/glfw/glfw.git
