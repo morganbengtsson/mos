@@ -57,6 +57,7 @@ Renderer::Renderer(const glm::vec4 &color) :
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
    */
+
   //fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
   fprintf(stdout, "Max uniform locations: %s\n",

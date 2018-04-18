@@ -25,7 +25,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   // Context
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
   window_ = glfwCreateWindow(resolution.x, resolution.y, title.c_str(), nullptr,
@@ -40,6 +40,8 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   }
 
   glfwMakeContextCurrent(window_);
+
+  gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
   glfwSetKeyCallback(window_, key_callback);
   glfwSetWindowSizeCallback(window_, size_callback);
