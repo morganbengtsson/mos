@@ -1233,7 +1233,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
 
     clear(glm::vec4(0.0f));
 
-    render_scene(scene.camera,
+    render_scene(target.camera,
                  scene,
                  glm::ivec2(target.texture->width(), target.texture->height()));
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
