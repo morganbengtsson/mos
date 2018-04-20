@@ -1193,16 +1193,17 @@ void Renderer::load_async(const Scene::Models &models) {
   }
 }
 
-void Renderer::render_offscreen(const Scene &scene) {
+void Renderer::render_texture_target(const Scene &scene) {
   if (frame_buffers_.find(scene.texture_target.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    GLuint texture_id = create_texture(scene.light.shadow_map);
+    GLuint texture_id = create_texture(scene.texture_target.texture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
-    textures_.insert({scene.texture_target.texture->id(), Buffer{texture_id, scene.texture_target.texture->layers.modified()}});
+    textures_.insert({scene.texture_target.texture->id(),
+                      Buffer{texture_id, scene.texture_target.texture->layers.modified()}});
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -1223,12 +1224,22 @@ void Renderer::render_offscreen(const Scene &scene) {
   }
   auto fb = frame_buffers_[scene.texture_target.target.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
+
+  auto texture_id = textures_[scene.texture_target.texture->id()].id;
+
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_2D, texture_id, 0);
+
   clear(glm::vec4(0.0f));
 
   render_scene(scene.camera,
                scene,
                glm::ivec2(scene.texture_target.texture->width(), scene.texture_target.texture->height()));
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
