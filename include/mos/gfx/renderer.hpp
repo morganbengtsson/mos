@@ -82,6 +82,7 @@ public:
       load(it->models);
       render_shadow_map(*it);
       render_environment(*it, color);
+      render_offscreen(*it);
       render_scene(it->camera, *it, resolution);
     }
   }
@@ -117,7 +118,8 @@ private:
     std::future<void> future;
   };
 
-  /** Models_batch rendering. */
+  void render_offscreen(const Scene& scene);
+
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
   void render_shadow_map(const Scene &render_scene);
