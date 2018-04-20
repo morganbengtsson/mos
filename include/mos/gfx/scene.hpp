@@ -20,6 +20,7 @@ namespace gfx {
 /** Scene for rendering. */
 class Scene {
 public:
+  using TextureTargets = std::vector<TextureTarget>;
   using Models = std::vector<Model>;
   using Boxes = std::vector<Box>;
   using Decals = std::array<Decal, 10>;
@@ -67,7 +68,7 @@ public:
   Shader shader;
   Draw draw;
   EnvironmentLight environment;
-  TextureTarget texture_target;
+  TextureTargets texture_targets;
 };
 }
 }

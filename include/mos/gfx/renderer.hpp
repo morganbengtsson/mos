@@ -82,7 +82,7 @@ public:
       load(it->models);
       render_shadow_map(*it);
       render_environment(*it, color);
-      render_texture_target(*it);
+      render_texture_targets(*it);
       render_scene(it->camera, *it, resolution);
     }
   }
@@ -118,7 +118,7 @@ private:
     std::future<void> future;
   };
 
-  void render_texture_target(const Scene &scene);
+  void render_texture_targets(const Scene &scene);
 
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
