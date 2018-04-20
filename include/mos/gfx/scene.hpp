@@ -12,7 +12,7 @@
 #include <mos/gfx/decal.hpp>
 #include <mos/gfx/cube_camera.hpp>
 #include <mos/gfx/environment_light.hpp>
-#include <mos/gfx/offscreen.hpp>
+#include <mos/gfx/texture_target.hpp>
 
 namespace mos {
 namespace gfx {
@@ -67,7 +67,7 @@ public:
   Shader shader;
   Draw draw;
   EnvironmentLight environment;
-  Offscreen offscreen;
+  TextureTarget texture_target;
 };
 }
 }
