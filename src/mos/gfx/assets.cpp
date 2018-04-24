@@ -34,8 +34,8 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
       transform,
       material(base_path + material_name));
 
-  for (auto &m : value["models"]) {
-    created_model.models.push_back(model_value(base_path, m));
+  for (auto &m : value["children"]) {
+    created_model.models.push_back(model(base_path + std::string(m)));
   }
   return created_model;
 }
