@@ -12,6 +12,7 @@
 #include <mos/gfx/decal.hpp>
 #include <mos/gfx/cube_camera.hpp>
 #include <mos/gfx/environment_light.hpp>
+#include <mos/gfx/texture_target.hpp>
 
 namespace mos {
 namespace gfx {
@@ -19,6 +20,7 @@ namespace gfx {
 /** Scene for rendering. */
 class Scene {
 public:
+  using TextureTargets = std::vector<TextureTarget>;
   using Models = std::vector<Model>;
   using Boxes = std::vector<Box>;
   using Decals = std::array<Decal, 10>;
@@ -66,6 +68,7 @@ public:
   Shader shader;
   Draw draw;
   EnvironmentLight environment;
+  TextureTargets texture_targets;
 };
 }
 }

@@ -66,8 +66,8 @@ Renderer::Renderer(const glm::vec4 &color) :
   // glEnable(GL_TEXTURE_CUBE_MAP);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-  //glEnable(GL_CULL_FACE);
-  //glCullFace(GL_BACK);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
@@ -1190,6 +1190,56 @@ void Renderer::load(const Scene::Models &models) {
 void Renderer::load_async(const Scene::Models &models) {
   for (auto & model : models){
     load_async(model);
+  }
+}
+
+void Renderer::render_texture_targets(const Scene &scene) {
+  for (auto & target : scene.texture_targets) {
+    if (frame_buffers_.find(target.target.id()) == frame_buffers_.end()) {
+      GLuint frame_buffer_id;
+      glGenFramebuffers(1, &frame_buffer_id);
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+      GLuint texture_id = create_texture(target.texture);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, texture_id, 0);
+      textures_.insert({target.texture->id(),
+                        Buffer{texture_id, target.texture->layers.modified()}});
+
+      GLuint depthrenderbuffer_id;
+      glGenRenderbuffers(1, &depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                            target.texture->width(),
+                            target.texture->height());
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                GL_RENDERBUFFER, depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+      render_buffers.insert({target.target.id(), depthrenderbuffer_id});
+
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        throw std::runtime_error("Framebuffer incomplete.");
+      }
+
+      frame_buffers_.insert({target.target.id(), frame_buffer_id});
+    }
+    auto fb = frame_buffers_[target.target.id()];
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+
+    auto texture_id = textures_[target.texture->id()].id;
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, texture_id, 0);
+
+    clear(glm::vec4(0.0f));
+
+    render_scene(target.camera,
+                 scene,
+                 glm::ivec2(target.texture->width(), target.texture->height()));
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
 
