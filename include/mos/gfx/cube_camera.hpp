@@ -20,6 +20,7 @@ public:
   CubeCamera &operator=(const CubeCamera &other);
 
   glm::vec3 position() const;
+  void position(const glm::vec3 &position);
   std::array<Camera, 6> cameras;
 
 };

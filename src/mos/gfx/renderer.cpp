@@ -840,7 +840,7 @@ void Renderer::render_model(const Model &model, const Scene::Decals &decals,
   glUniform1i(uniforms.material_normal_map, 3);
 
   glActiveTexture(GL_TEXTURE4);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment.texture.id()]);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment.texture_.id()]);
   glUniform1i(uniforms.environment_map, 4);
 
   glActiveTexture(GL_TEXTURE5);
@@ -890,9 +890,9 @@ void Renderer::render_model(const Model &model, const Scene::Decals &decals,
   }
 
   glUniform3fv(uniforms.environment_position, 1,
-               glm::value_ptr(environment.box.position));
+               glm::value_ptr(environment.box_.position));
   glUniform3fv(uniforms.environment_extent, 1,
-               glm::value_ptr(environment.box.extent));
+               glm::value_ptr(environment.box_.extent));
   glUniform1fv(uniforms.environment_strength, 1,
                &environment.strength);
 
@@ -1025,46 +1025,46 @@ void Renderer::render_shadow_map(const Scene &scene) {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
-  if (frame_buffers_.find(scene.environment.target.id()) == frame_buffers_.end()) {
+  if (frame_buffers_.find(scene.environment.target_.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    GLuint texture_id = create_texture_cube(scene.environment.texture);
+    GLuint texture_id = create_texture_cube(scene.environment.texture_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
     //texture_cubes_.insert({scene.environment.texture->id(), texture_id});
 
-    texture_cubes_ = {{scene.environment.texture.id(), texture_id}};
+    texture_cubes_ = {{scene.environment.texture_.id(), texture_id}};
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          scene.environment.texture.width(),
-                          scene.environment.texture.height());
+                          scene.environment.texture_.width(),
+                          scene.environment.texture_.height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    render_buffers.insert({scene.environment.target.id(), depthrenderbuffer_id});
+    render_buffers.insert({scene.environment.target_.id(), depthrenderbuffer_id});
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("Framebuffer incomplete.");
     }
-    frame_buffers_.insert({scene.environment.target.id(), frame_buffer_id});
+    frame_buffers_.insert({scene.environment.target_.id(), frame_buffer_id});
   }
 
-  GLuint frame_buffer_id = frame_buffers_[scene.environment.target.id()];
+  GLuint frame_buffer_id = frame_buffers_[scene.environment.target_.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-  auto texture_id = texture_cubes_[scene.environment.texture.id()];
+  auto texture_id = texture_cubes_[scene.environment.texture_.id()];
 
-  auto cube_camera = scene.environment.cube_camera.cameras[cube_camera_index_];
+  auto cube_camera = scene.environment.cube_camera_.cameras[cube_camera_index_];
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_, texture_id, 0);
   clear(clear_color);
-  auto resolution = glm::vec2(scene.environment.texture.width(), scene.environment.texture.height());
+  auto resolution = glm::vec2(scene.environment.texture_.width(), scene.environment.texture_.height());
   render_scene(cube_camera, scene, resolution);
 
   cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;

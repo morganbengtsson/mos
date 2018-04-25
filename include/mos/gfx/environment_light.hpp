@@ -19,12 +19,25 @@ public:
   EnvironmentLight(const EnvironmentLight &light);
   EnvironmentLight &operator=(const EnvironmentLight &other);
 
-  Box box;
+  /** Set position. */
+  void position(const glm::vec3 &position);
+
+  /** Get position. */
+  glm::vec3 position() const;
+
+  /** Extent.*/
+  void extent(const glm::vec3 &extent);
+
+  /** Get extent. */
+  glm::vec3 extent() const;
+
+  /** Strength. */
   float strength;
 private:
-  Target target;
-  CubeCamera cube_camera;
-  TextureCube texture;
+  Box box_;
+  Target target_;
+  CubeCamera cube_camera_;
+  TextureCube texture_;
 };
 }
 }
