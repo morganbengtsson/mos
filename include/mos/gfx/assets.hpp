@@ -11,6 +11,7 @@
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/texture_2d.hpp>
+#include <mos/gfx/light.hpp>
 
 namespace mos {
 namespace gfx {
@@ -40,6 +41,9 @@ public:
 
   /** Loads a Material from a *.material file into a Material object. */
   Material material(const std::string &path);
+
+  /** Loads a Light from a *.light file into a Light object. */
+  Light light(const std::string &path);
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */
   SharedMesh mesh(const std::string &path);
