@@ -192,7 +192,7 @@ EnvironmentLight Assets::environment_light(const std::string &path) {
 
     auto extent = float(value["extent"]) * scale;
     auto strength = value.value("strength", 1.0f);
-    auto resolution = value.value("resolution", 32.0f);
+    auto resolution = value.value("resolution", 128.0f);
 
     return EnvironmentLight(position,
                  extent,
