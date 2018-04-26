@@ -1033,9 +1033,8 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     GLuint texture_id = create_texture_cube(scene.environment.texture_);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
-    //texture_cubes_.insert({scene.environment.texture->id(), texture_id});
 
-    texture_cubes_ = {{scene.environment.texture_.id(), texture_id}};
+    texture_cubes_ .insert_or_assign(scene.environment.texture_.id(), texture_id);
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);

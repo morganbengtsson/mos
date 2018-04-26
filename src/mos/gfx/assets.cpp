@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/io.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <mos/util.hpp>
 #include <iostream>
 
@@ -171,6 +172,38 @@ Light Assets::light(const std::string &path) {
   }
 }
 
+EnvironmentLight Assets::environment_light(const std::string &path) {
+  filesystem::path fpath = path;
+  auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
+
+  if (fpath.extension() == "environment_light") {
+    auto value = json::parse(mos::text(directory_ + fpath.str()));
+
+    auto transform = jsonarray_to_mat4(value["transform"]);
+
+    auto position = glm::vec3(transform[3]);
+
+    glm::vec3 scale;
+    glm::quat rotation;
+    glm::vec3 translation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(transform, scale, rotation, translation, skew, perspective);
+
+    auto extent = float(value["extent"]) * scale;
+    auto strength = value.value("strength", 1.0f);
+    auto resolution = value.value("resolution", 32.0f);
+
+    return EnvironmentLight(position,
+                 extent,
+                 strength,
+                 glm::uvec2(resolution));
+  } else {
+    throw std::runtime_error(path.substr(path.find_last_of(".")) +
+        " file format is not supported.");
+  }
+}
+
 void Assets::clear_unused() {
   for (auto it = textures_.begin(); it != textures_.end();) {
     if (it->second.use_count() <= 1) {
@@ -187,6 +220,7 @@ void Assets::clear_unused() {
     }
   }
 }
+
 
 }
 }

@@ -68,3 +68,6 @@ mos::sim::Ray mos::un_project(const glm::vec2 &position,
     return mos::sim::Ray(position0, glm::normalize(position1 - position0));
 
 }
+glm::vec3 mos::jsonarray_to_vec3(const nlohmann::json &array) {
+  return glm::vec3(array[0], array[1], array[2]);
+}

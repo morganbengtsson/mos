@@ -12,6 +12,7 @@
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/light.hpp>
+#include <mos/gfx/environment_light.hpp>
 
 namespace mos {
 namespace gfx {
@@ -44,6 +45,9 @@ public:
 
   /** Loads a Light from a *.light file into a Light object. */
   Light light(const std::string &path);
+
+  /** Loads a EnvironmentLight from a *.environment_light. */
+  EnvironmentLight environment_light(const std::string &path);
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */
   SharedMesh mesh(const std::string &path);

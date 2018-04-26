@@ -24,6 +24,7 @@ std::vector<std::string> &split(const std::string &s, char delim,
 std::vector<std::string> split(const std::string &s, char delim);
 
 glm::mat4 jsonarray_to_mat4(const nlohmann::json &array);
+glm::vec3 jsonarray_to_vec3(const nlohmann::json &array);
 
 glm::vec3 position(const glm::mat4 &mat);
 
