@@ -1065,7 +1065,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
   clear(clear_color);
   auto resolution = glm::vec2(scene.environment.texture_.width(), scene.environment.texture_.height());
   auto scene_copy = scene; // TODO: Nicer way to fix?
-  scene_copy.environment.strength = 0.0f;
+  scene_copy.environment.strength = 1.0f / 3.0f;
   render_scene(cube_camera, scene_copy, resolution);
 
   cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;

@@ -96,7 +96,7 @@ public:
     for (auto it = scenes_begin; it != scenes_end; it++) {
       load_async(it->models);
       render_shadow_map(*it);
-      render_environment(*it, color);
+      //render_environment(*it, color);
       render_scene(it->camera, *it, resolution);
     }
   }
