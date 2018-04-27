@@ -92,17 +92,6 @@ vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir){
     return rdir;
 }
 
-bool in_box(const vec3 box_min, const vec3 box_max, const vec3 point)
-{
-    if(point.x > box_min.x && point.x < box_max.x &&
-    point.y > box_min.y && point.y < box_max.y &&
-    point.z > box_min.z && point.z < box_max.z) {
-        return true;
-    }
-    return false;
-}
-
-
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare){
     vec2 moments = texture(shadow_map, uv).xy;
 
@@ -255,14 +244,13 @@ void main() {
     irradiance += textureLod(environment.texture, corrected_normal, num_levels - 1).rgb;
     irradiance += textureLod(environment.texture, corrected_normal, num_levels).rgb;
     irradiance /= 3.0f;
+
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
-    //Temp
-    vec3 box_min = environment.position - environment.extent;
-    vec3 box_max = environment.position + environment.extent;
-    float in_environment = float(in_box(box_min, box_max, fragment.position));
+    float fragment_environment_distance = distance(fragment.position, environment.position);
+    float environment_attenuation = 1.0 - smoothstep(environment.extent.x, environment.extent.x + 1.0f, fragment_environment_distance);
 
-    vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion * in_environment;
+    vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation;
 
     color.rgb = (Lo + ambient + emission) * fragment.ao;
     color.a = clamp(material.opacity + albedo_from_map.a, 0.0, 1.0);
