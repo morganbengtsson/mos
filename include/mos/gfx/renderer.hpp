@@ -17,7 +17,6 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/box.hpp>
-#include <mos/gfx/decal.hpp>
 
 namespace mos {
 namespace gfx {
@@ -130,7 +129,6 @@ private:
   void render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution);
 
   void render_model(const Model &model,
-                    const Scene::Decals &decals,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Light &light,

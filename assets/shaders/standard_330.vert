@@ -1,13 +1,10 @@
 #version 330 core
 
-const int max_decals = 10;
-
 struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4 proj_coords[max_decals];
     vec4 proj_shadow;
     vec3 camera_to_surface;
     float ao;
@@ -34,7 +31,6 @@ uniform mat4 depth_bias_model_view_projection;
 uniform mat4 model; // NOT SET!
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
-uniform mat4 decal_model_view_projections[max_decals];
 uniform mat3 normal_matrix;
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -51,11 +47,6 @@ void main() {
 
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
     fragment.proj_shadow = pos_ls;
-
-    for (int i = 0; i < max_decals; i++){
-        vec4 pos_d = decal_model_view_projections[i] * vec4(position, 1.0);
-        fragment.proj_coords[i] = pos_d;
-    }
 
     fragment.ao = ao;
     fragment.uv = uv;

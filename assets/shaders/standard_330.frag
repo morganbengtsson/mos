@@ -1,6 +1,5 @@
 #version 330
 
-const int max_decals = 10;
 const float PI = 3.14159265359;
 
 struct Material {
@@ -51,7 +50,6 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4 proj_coords[max_decals];
     vec4 proj_shadow;
     vec3 camera_to_surface;
     float ao;
@@ -59,7 +57,6 @@ struct Fragment {
 
 uniform Material material;
 uniform Light light;
-uniform Material decal_materials[max_decals];
 uniform Environment environment;
 uniform Camera camera;
 uniform Fog fog;
@@ -192,27 +189,6 @@ void main() {
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a);
-
-    //TODO: Function
-
-    for (int i = 0; i < max_decals; i++){
-        if (fragment.proj_coords[i].w > 0.0){
-            vec2 d_uv = fragment.proj_coords[i].xy / fragment.proj_coords[i].w;
-
-            //TODO: Do nicer
-            if (d_uv.x < 1.0 && d_uv.x > 0.0 && d_uv.y < 1.0 && d_uv.y > 0.0) {
-                vec4 decal = texture(decal_materials[i].albedo_map, d_uv);
-                albedo.rgb = mix(albedo.rgb, decal.rgb, decal.a);
-
-                vec3 decal_normal = normalize(texture(decal_materials[i].normal_map, d_uv).rgb * 2.0 - vec3(1.0));
-                decal_normal = normalize(fragment.tbn * decal_normal);
-                float amount = texture(decal_materials[i].normal_map, fragment.uv).a;
-                if (amount > 0.0f){
-                    normal = normalize(mix(normal, decal_normal, amount));
-                }
-            }
-        }
-    }
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
