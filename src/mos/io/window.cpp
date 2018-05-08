@@ -18,7 +18,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   }
   glfwSetErrorCallback(error_callback);
 
-  glfwWindowHint(GLFW_SAMPLES, 8);
+  //glfwWindowHint(GLFW_SAMPLES, 8);
   glfwWindowHint(GLFW_SRGB_CAPABLE, true);
   glfwWindowHint(GLFW_RESIZABLE, false);
 

@@ -177,15 +177,40 @@ Renderer::Renderer(const glm::vec4 &color) :
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  glGenBuffers(1, &buffer_id_);
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id_);
-  glBufferData(GL_PIXEL_UNPACK_BUFFER, 201326592, nullptr,
-               GL_STREAM_DRAW);
+  int width = 100;
+  int height = 100;
+  glGenFramebuffers(1, &read_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
 
+  glGenTextures(1, &multi_texture_);
 
-  ptr_ = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, 201326592,
-                               (GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8, width, height, GL_TRUE);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
+
+  glGenRenderbuffers(1, &multi_rbo_);
+  glBindRenderbuffer(GL_RENDERBUFFER, multi_rbo_);
+  glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, multi_rbo_);
+
+  glGenTextures(1, &screen_texture_);
+  glBindTexture(GL_TEXTURE_2D, screen_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, width, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glGenFramebuffers(1, &draw_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, draw_fbo_);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screen_texture_, 0);
+
+  // Always check that our framebuffer is ok
+  if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+    throw std::runtime_error("Framebuffer incomplete.");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 Renderer::~Renderer() {

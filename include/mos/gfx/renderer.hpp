@@ -82,8 +82,17 @@ public:
       render_shadow_map(*it);
       render_environment(*it, color);
       render_texture_targets(*it);
-      render_scene(it->camera, *it, resolution);
     }
+    glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
+    clear(color);
+    for (auto it = scenes_begin; it != scenes_end; it++) {
+      render_scene(it->camera, *it, glm::ivec2(100));
+    }
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, read_fbo_);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_fbo_);
+    glBlitFramebuffer(0, 0, 100, 100, 0, 0, 100, 100,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
   template<class It>
@@ -106,6 +115,12 @@ public:
 private:
   void * ptr_;
   GLuint buffer_id_;
+
+  GLuint draw_fbo_;
+  GLuint read_fbo_;
+  GLuint multi_texture_;
+  GLuint screen_texture_;
+  GLuint multi_rbo_;
 
   struct Buffer {
     GLuint id; // TODO const?
