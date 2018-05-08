@@ -132,8 +132,7 @@ private:
   GLuint draw_fbo_;
   GLuint read_fbo_;
   GLuint multi_texture_;
-  GLuint screen_texture_;
-  GLuint screen_depth_texture_;
+  GLuint multi_depth_texture_;
   GLuint multi_rbo_;
   GLuint quad_vao_;
   GLuint quad_vbo_;

@@ -189,22 +189,16 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
 
-  GLuint multi_texture_depth_;
+
   glGenRenderbuffers(1, &multi_rbo_);
   glBindRenderbuffer(GL_RENDERBUFFER, multi_rbo_);
   glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, multi_rbo_);
 
-  glGenTextures(1, &screen_texture_);
-  glBindTexture(GL_TEXTURE_2D, screen_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, resolution.x, resolution.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glGenTextures( 1, &screen_depth_texture_ );
-  glBindTexture( GL_TEXTURE_2D, screen_depth_texture_);
+  /*
+  glGenTextures( 1, &multi_depth_texture_ );
+  glBindTexture( GL_TEXTURE_2D, multi_depth_texture_);
   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
   glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -213,11 +207,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24,
                 resolution.x, resolution.y, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL );
 
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, multi_depth_texture_, 0);*/
+
   glBindTexture(GL_TEXTURE_2D, 0);
   glGenFramebuffers(1, &draw_fbo_);
   glBindFramebuffer(GL_FRAMEBUFFER, draw_fbo_);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screen_texture_, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screen_depth_texture_, 0);
 
   // Always check that our framebuffer is ok
   if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
