@@ -84,13 +84,6 @@ Renderer::Renderer(const glm::vec4 &color) :
   add_vertex_program(Scene::Shader::STANDARD, standard_vert_source,
                      standard_frag_source, standard_vert, standard_frag);
 
-  std::string text_vert = "text_330.vert";
-  std::string text_frag = "text_330.frag";
-  std::string text_vert_source = text(shader_path + text_vert);
-  std::string text_frag_source = text(shader_path + text_frag);
-  add_vertex_program(Scene::Shader::TEXT, text_vert_source,
-                     text_frag_source, text_vert, text_frag);
-
   std::string depth_vert = "depth_330.vert";
   std::string depth_frag = "depth_330.frag";
   std::string depth_vert_source = text(shader_path + depth_vert);
@@ -98,21 +91,6 @@ Renderer::Renderer(const glm::vec4 &color) :
   add_vertex_program(Scene::Shader::DEPTH, depth_vert_source,
                      depth_frag_source, depth_vert, depth_frag);
 
-  std::string effect_vert = "effect_330.vert";
-  std::string effect_frag = "effect_330.frag";
-  add_vertex_program(Scene::Shader::EFFECT,
-                     text(shader_path + effect_vert),
-                     text(shader_path + effect_frag), effect_vert, effect_frag);
-
-  std::string blur_vert = "blur_330.vert";
-  std::string blur_frag = "blur_330.frag";
-  add_vertex_program(Scene::Shader::BLUR, text(shader_path + blur_vert),
-                     text(shader_path + blur_frag), blur_vert, blur_frag);
-
-  std::string crt_vert = "crt_330.vert";
-  std::string crt_frag = "crt_330.frag";
-  add_vertex_program(Scene::Shader::CRT, text(shader_path + crt_vert),
-                     text(shader_path + crt_frag), crt_vert, crt_frag);
 
   std::string particles_vert = "particles_330.vert";
   std::string particles_frag = "particles_330.frag";
