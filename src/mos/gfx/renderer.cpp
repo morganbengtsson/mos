@@ -189,6 +189,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
 
+  GLuint multi_texture_depth_;
   glGenRenderbuffers(1, &multi_rbo_);
   glBindRenderbuffer(GL_RENDERBUFFER, multi_rbo_);
   glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y);
