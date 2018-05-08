@@ -121,6 +121,8 @@ private:
   GLuint multi_texture_;
   GLuint screen_texture_;
   GLuint multi_rbo_;
+  GLuint quad_vao_;
+  GLuint quad_vbo_;
 
   struct Buffer {
     GLuint id; // TODO const?

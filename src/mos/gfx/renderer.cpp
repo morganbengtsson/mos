@@ -211,6 +211,26 @@ Renderer::Renderer(const glm::vec4 &color) :
     throw std::runtime_error("Framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  float quad_vertices[] = {
+      -1.0f,  1.0f,  0.0f, 1.0f,
+      -1.0f, -1.0f,  0.0f, 0.0f,
+      1.0f, -1.0f,  1.0f, 0.0f,
+      -1.0f,  1.0f,  0.0f, 1.0f,
+      1.0f, -1.0f,  1.0f, 0.0f,
+      1.0f,  1.0f,  1.0f, 1.0f
+  };
+
+  glGenVertexArrays(1, &quad_vao_);
+  glGenBuffers(1, &quad_vbo_);
+  glBindVertexArray(quad_vao_);
+  glBindBuffer(GL_ARRAY_BUFFER, quad_vbo_);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 Renderer::~Renderer() {
