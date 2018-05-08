@@ -103,7 +103,7 @@ public:
     glBindVertexArray(quad_vao_);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, screen_texture_);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
     glUniform1i(quad_program_.quad_texture, 0);
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
