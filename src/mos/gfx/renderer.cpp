@@ -20,7 +20,7 @@
 namespace mos {
 namespace gfx {
 
-Renderer::Renderer(const glm::vec4 &color) :
+Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     format_map_{
         {Texture::Format::R, {GL_RED, GL_RED}},
         {Texture::Format::RG, {GL_RG, GL_RG}},
@@ -106,6 +106,7 @@ Renderer::Renderer(const glm::vec4 &color) :
   add_box_program("box", box_vert_source, box_frag_source, box_vert, box_frag);
 
   create_depth_program();
+  create_quad_program();
 
   // Render boxes
   float vertices[] = {
@@ -177,28 +178,26 @@ Renderer::Renderer(const glm::vec4 &color) :
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  int width = 100;
-  int height = 100;
   glGenFramebuffers(1, &read_fbo_);
   glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
 
   glGenTextures(1, &multi_texture_);
 
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_SRGB8_ALPHA8, width, height, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
 
   glGenRenderbuffers(1, &multi_rbo_);
   glBindRenderbuffer(GL_RENDERBUFFER, multi_rbo_);
-  glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+  glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, multi_rbo_);
 
   glGenTextures(1, &screen_texture_);
   glBindTexture(GL_TEXTURE_2D, screen_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, width, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, resolution.x, resolution.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,7 +211,7 @@ Renderer::Renderer(const glm::vec4 &color) :
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-  float quad_vertices[] = {
+  const float quad_vertices[] = {
       -1.0f,  1.0f,  0.0f, 1.0f,
       -1.0f, -1.0f,  0.0f, 0.0f,
       1.0f, -1.0f,  1.0f, 0.0f,
@@ -297,6 +296,29 @@ void Renderer::add_box_program(const std::string &name,
       {name, BoxProgramData{program, glGetUniformLocation(
           program, "model_view_projection"),
                             glGetUniformLocation(program, "model_view")}});
+}
+
+void Renderer::create_quad_program() {
+  auto vert_source = text("assets/shaders/quad_330.vert");
+  auto frag_source = text("assets/shaders/quad_330.frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, "quad_330.vert");
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, "quad_330.frag");
+
+  auto program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  glLinkProgram(program);
+  check_program(program);
+
+  quad_program_ = QuadProgramData{
+      program,
+      glGetUniformLocation(program, "quad_texture")};
 }
 
 void Renderer::create_depth_program() {
@@ -1242,6 +1264,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
+
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(

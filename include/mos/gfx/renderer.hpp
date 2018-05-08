@@ -25,7 +25,7 @@ namespace gfx {
 class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLEW. */
-  Renderer(const glm::vec4 &color = glm::vec4(.0f));
+  Renderer(const glm::vec4 &color, const glm::ivec2 &resolution);
 
   ~Renderer();
 
@@ -86,13 +86,25 @@ public:
     glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
-      render_scene(it->camera, *it, glm::ivec2(100));
+      render_scene(it->camera, *it, resolution);
     }
     glBindFramebuffer(GL_READ_FRAMEBUFFER, read_fbo_);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_fbo_);
-    glBlitFramebuffer(0, 0, 100, 100, 0, 0, 100, 100,
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y,
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    clear(color);
+
+    //RenderQuad
+    glUseProgram(quad_program_.program);
+
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, screen_texture_);
+    glUniform1i(quad_program_.quad_texture, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
   template<class It>
@@ -123,6 +135,8 @@ private:
   GLuint multi_rbo_;
   GLuint quad_vao_;
   GLuint quad_vbo_;
+
+
 
   struct Buffer {
     GLuint id; // TODO const?
@@ -173,6 +187,11 @@ private:
     GLuint program;
     GLint mvp;
     GLint mv;
+  };
+
+  struct QuadProgramData {
+    GLuint program;
+    GLint quad_texture;
   };
 
   struct DepthProgramData {
@@ -264,11 +283,14 @@ private:
                        const std::string &fs_file);
 
   void create_depth_program();
+  void create_quad_program();
 
   std::map<Scene::Shader, VertexProgramData> vertex_programs_;
   std::unordered_map<std::string, ParticleProgramData> particle_programs_;
   std::unordered_map<std::string, BoxProgramData> box_programs_;
   DepthProgramData depth_program_;
+
+  QuadProgramData quad_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
