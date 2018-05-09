@@ -177,30 +177,20 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  glGenFramebuffers(1, &read_fbo_);
-  glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
+  glGenFramebuffers(1, &multi_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
 
   glGenTextures(1, &multi_texture_);
-
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
   glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
-
-
-  glGenRenderbuffers(1, &multi_rbo_);
-  glBindRenderbuffer(GL_RENDERBUFFER, multi_rbo_);
-  glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y);
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, multi_rbo_);
-
 
   glGenTextures(1, &multi_depth_texture_);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
   glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y, true);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");

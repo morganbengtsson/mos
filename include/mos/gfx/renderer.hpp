@@ -83,7 +83,7 @@ public:
       render_environment(*it, color);
       render_texture_targets(*it);
     }
-    glBindFramebuffer(GL_FRAMEBUFFER, read_fbo_);
+    glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       render_scene(it->camera, *it, resolution);
@@ -124,10 +124,9 @@ private:
   void * ptr_;
   GLuint buffer_id_;
 
-  GLuint read_fbo_;
+  GLuint multi_fbo_;
   GLuint multi_texture_;
   GLuint multi_depth_texture_;
-  GLuint multi_rbo_;
   GLuint quad_vao_;
   GLuint quad_vbo_;
 
