@@ -79,7 +79,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       load(it->models);
-      render_shadow_map(it->light, it->models);
+      render_shadow_map(it->models, it->light);
       render_environment(*it, color);
       render_texture_targets(*it);
     }
@@ -111,7 +111,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       load_async(it->models);
-      render_shadow_map(it->light, it->models);
+      render_shadow_map(it->models, it->light);
       //render_environment(*it, color);
       render_scene(it->camera, *it, resolution);
     }
@@ -129,8 +129,6 @@ private:
   GLuint multi_depth_texture_;
   GLuint quad_vao_;
   GLuint quad_vbo_;
-
-
 
   struct Buffer {
     GLuint id; // TODO const?
@@ -153,18 +151,18 @@ private:
   };
 
   /** Uniforms for the bounding box shader program. */
-  struct BoxProgramData {
+  struct BoxProgram {
     GLuint program;
     GLint mvp;
     GLint mv;
   };
 
-  struct QuadProgramData {
+  struct QuadProgram {
     GLuint program;
     GLint quad_texture;
   };
 
-  struct DepthProgramData {
+  struct DepthProgram {
     GLuint program;
     GLint model_view_projection_matrix;
   };
@@ -227,7 +225,7 @@ private:
 
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
-  void render_shadow_map(const Light & light, const std::vector<Model> & models);
+  void render_shadow_map(const std::vector<Model> &models, const Light &light);
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 
@@ -248,14 +246,14 @@ private:
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,
-                          const DepthProgramData& program);
+                          const DepthProgram& program);
 
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
 
   using VertexProgramPair = std::pair<Scene::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
-  using BoxProgramPair = std::pair<std::string, BoxProgramData>;
+  using BoxProgramPair = std::pair<std::string, BoxProgram>;
 
   void add_vertex_program(const Scene::Shader shader,
                           const std::string vertex_shader_source,
@@ -288,9 +286,9 @@ private:
   std::map<Scene::Shader, VertexProgramData> vertex_programs_;
 
   ParticleProgramData particle_program_;
-  BoxProgramData box_program_;
-  DepthProgramData depth_program_;
-  QuadProgramData quad_program_;
+  BoxProgram box_program_;
+  DepthProgram depth_program_;
+  QuadProgram quad_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;

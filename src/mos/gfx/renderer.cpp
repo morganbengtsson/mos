@@ -279,7 +279,7 @@ void Renderer::add_box_program(const std::string &name,
   glLinkProgram(program);
   check_program(program);
 
-  box_program_ = BoxProgramData{program,
+  box_program_ = BoxProgram{program,
                                glGetUniformLocation(program, "model_view_projection"),
                                glGetUniformLocation(program, "model_view")};
 }
@@ -302,7 +302,7 @@ void Renderer::create_quad_program() {
   glLinkProgram(program);
   check_program(program);
 
-  quad_program_ = QuadProgramData{
+  quad_program_ = QuadProgram{
       program,
       glGetUniformLocation(program, "quad_texture")};
 }
@@ -324,7 +324,7 @@ void Renderer::create_depth_program() {
   glLinkProgram(program);
   check_program(program);
 
-  depth_program_ = DepthProgramData{
+  depth_program_ = DepthProgram{
       program, glGetUniformLocation(program, "model_view_projection")};
 }
 
@@ -989,7 +989,7 @@ void Renderer::render_async(const std::initializer_list<Scene> &scenes_init,
   render_async(scenes_init.begin(), scenes_init.end(), color, resolution);
 }
 
-void Renderer::render_shadow_map(const Light & light, const std::vector<Model> & models) {
+void Renderer::render_shadow_map(const std::vector<Model> &models, const Light &light) {
   if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1253,7 +1253,7 @@ void Renderer::render_model_depth(const Model &model,
                                   const glm::mat4 &transform,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
-                                  const DepthProgramData &program) {
+                                  const DepthProgram &program) {
 
   const glm::mat4 mv = camera.view * transform * model.transform;
   const glm::mat4 mvp = camera.projection * mv;
@@ -1262,9 +1262,7 @@ void Renderer::render_model_depth(const Model &model,
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
   };
 
-  const auto &uniforms = program;
-
-  glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+  glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
 
   const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
