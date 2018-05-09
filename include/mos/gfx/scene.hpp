@@ -24,9 +24,6 @@ public:
   using Boxes = std::vector<Box>;
   using ParticleClouds = std::vector<ParticleCloud>;
 
-  /** Draw method for scene. */
-  enum class Draw { TRIANGLES, LINES, POINTS };
-
   Scene();
 
   template<class T>
@@ -35,28 +32,24 @@ public:
         const Camera &camera,
         const Light &light = Light(),
         const EnvironmentLight &environment_light = EnvironmentLight(),
-        const Fog &fog_linear = Fog(),
-        const Draw &draw = Draw::TRIANGLES)
+        const Fog &fog_linear = Fog())
       : models(begin, end),
         camera(camera),
         light(light),
         environment(environment_light),
-        fog(fog_linear),
-        draw(draw) {}
+        fog(fog_linear){}
 
   Scene(const std::initializer_list<Model> &models,
         const Camera &camera,
         const Light &light = Light(),
         const EnvironmentLight &environment_light = EnvironmentLight(),
-        const Fog &fog = Fog(),
-        const Draw &draw = Draw::TRIANGLES);
+        const Fog &fog = Fog());
   Models models;
   ParticleClouds particle_clouds;
   Boxes boxes;
   Light light;
   Camera camera;
   Fog fog;
-  Draw draw;
   EnvironmentLight environment;
   TextureTargets texture_targets;
 };

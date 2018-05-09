@@ -45,10 +45,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     wrap_map_{
         {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-        {Texture::Wrap::REPEAT, GL_REPEAT}},
-    draw_map_{{Scene::Draw::LINES, GL_LINES},
-              {Scene::Draw::POINTS, GL_POINTS},
-              {Scene::Draw::TRIANGLES, GL_TRIANGLES}}, cube_camera_index_(0) {
+        {Texture::Wrap::REPEAT, GL_REPEAT}}, cube_camera_index_(0) {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -572,7 +569,7 @@ void Renderer::render_scene(const Camera &camera,
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
-                 resolution, standard_program_, render_scene.draw);
+                 resolution, standard_program_);
   }
   render_boxes(render_scene.boxes, camera);
   render_particles(render_scene.particle_clouds, camera, resolution);
@@ -672,8 +669,7 @@ void Renderer::render_model(const Model &model,
                             const Camera &camera, const Light &light,
                             const EnvironmentLight &environment, const Fog &fog,
                             const glm::vec2 &resolution,
-                            const StandardProgram &program,
-                            const Scene::Draw &draw) {
+                            const StandardProgram &program) {
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -800,17 +796,17 @@ void Renderer::render_model(const Model &model,
                &fog.attenuation_factor);
 
   const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
-  const int draw_type = draw_map_[draw];
+
   if (model.mesh) {
     if (num_elements > 0) {
-      glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
     } else {
-      glDrawArrays(draw_type, 0, model.mesh->vertices.size());
+      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices.size());
     }
   }
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, light,
-                 environment, fog, resolution, program, draw);
+                 environment, fog, resolution, program);
   }
 }
 
@@ -1109,12 +1105,11 @@ void Renderer::render_model_depth(const Model &model,
                      &mvp[0][0]);
 
   const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
-  const int draw_type = draw_map_[Scene::Draw::TRIANGLES];
   if (model.mesh) {
     if (num_elements > 0) {
-      glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
     } else {
-      glDrawArrays(draw_type, 0, model.mesh->vertices.size());
+      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices.size());
     }
   }
   for (const auto &child : model.models) {

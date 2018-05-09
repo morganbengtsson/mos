@@ -242,8 +242,7 @@ private:
                     const EnvironmentLight &environment,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const StandardProgram& program,
-                    const Scene::Draw &draw);
+                    const StandardProgram& program);
 
   void render_model_depth(const Model &model,
                           const glm::mat4 &transform,
@@ -295,7 +294,6 @@ private:
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
-  std::map<Scene::Draw, GLuint> draw_map_;
 
   int cube_camera_index_;
 };
