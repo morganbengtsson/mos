@@ -1021,14 +1021,6 @@ void Renderer::render_shadow_map(const Scene &scene) {
   auto fb = frame_buffers_[scene.light.target.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   clear(glm::vec4(0.0f));
-  auto shadow_scene = scene;
-  shadow_scene.shader = Scene::Shader::DEPTH;
-
-  /*
-  render_scene(scene.light.camera,
-               shadow_scene,
-               glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));*/
-
   auto resolution = glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height());
   glUseProgram(vertex_programs_[Scene::Shader::DEPTH].program);
   glViewport(0, 0, resolution.x, resolution.y);
