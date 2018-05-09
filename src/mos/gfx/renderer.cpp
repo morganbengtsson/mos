@@ -1022,12 +1022,10 @@ void Renderer::render_shadow_map(const Scene &scene) {
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   clear(glm::vec4(0.0f));
   auto resolution = glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height());
-  glUseProgram(vertex_programs_[Scene::Shader::DEPTH].program);
+  glUseProgram(depth_program_.program);
   glViewport(0, 0, resolution.x, resolution.y);
   for (auto &model : scene.models) {
-    render_model(model, glm::mat4(1.0f), scene.light.camera,
-                 scene.light, scene.environment, scene.fog,
-                 resolution, vertex_programs_[Scene::Shader::DEPTH], scene.draw);
+    render_model_depth(model, glm::mat4(1.0f), scene.light.camera, resolution, depth_program_);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -1250,38 +1248,12 @@ void Renderer::render_texture_targets(const Scene &scene) {
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
-void Renderer::create_depth_program2() {
-  std::string shader_path = "assets/shaders/";
-  std::string depth_vert = "depth_330.vert";
-  std::string depth_frag = "depth_330.frag";
-  std::string depth_vert_source = text(shader_path + depth_vert);
-  std::string depth_frag_source = text(shader_path + depth_frag);
-  auto vertex_shader = create_shader(depth_vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, depth_vert);
 
-  auto fragment_shader =
-      create_shader(depth_frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, depth_frag);
-
-  auto program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "normal");
-  glBindAttribLocation(program, 2, "tangent");
-  glBindAttribLocation(program, 3, "uv");
-
-  std::cout << "Linking program" << std::endl;
-  glLinkProgram(program);
-  check_program(program);
-  depth_program2_ = VertexProgramData(program);
-}
 void Renderer::render_model_depth(const Model &model,
                                   const glm::mat4 &transform,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
-                                  const Renderer::VertexProgramData &program) {
+                                  const DepthProgramData &program) {
 
   const glm::mat4 mv = camera.view * transform * model.transform;
   const glm::mat4 mvp = camera.projection * mv;
@@ -1294,18 +1266,6 @@ void Renderer::render_model_depth(const Model &model,
 
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.model_view_matrix, 1, GL_FALSE, &mv[0][0]);
-  glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);
-  auto model_matrix = transform * model.transform;
-  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
-
-  glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(transform) *
-      glm::mat3(model.transform));
-  normal_matrix =
-      glm::inverseTranspose(glm::mat3(transform * model.transform));
-  glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
-
-  glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
 
   const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
   const int draw_type = draw_map_[Scene::Draw::TRIANGLES];

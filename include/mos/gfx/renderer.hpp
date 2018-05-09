@@ -166,7 +166,7 @@ private:
 
   struct DepthProgramData {
     GLuint program;
-    GLint mvp;
+    GLint model_view_projection_matrix;
   };
 
   /** Uniforms for the standard shader. */
@@ -248,7 +248,7 @@ private:
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,
-                          const VertexProgramData& program);
+                          const DepthProgramData& program);
 
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
@@ -282,13 +282,11 @@ private:
                        const std::string &fs_source, const std::string &vs_file,
                        const std::string &fs_file);
 
-  void create_depth_program2();
   void create_depth_program();
   void create_quad_program();
 
   std::map<Scene::Shader, VertexProgramData> vertex_programs_;
 
-  VertexProgramData depth_program2_;
   ParticleProgramData particle_program_;
   BoxProgramData box_program_;
   DepthProgramData depth_program_;
