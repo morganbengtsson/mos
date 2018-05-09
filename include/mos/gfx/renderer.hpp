@@ -258,11 +258,11 @@ private:
   void link_program(const GLuint program,
                     const std::string& name);
 
-  BoxProgram create_box_program();
-  StandardProgram create_standard_program();
-  ParticleProgram create_particle_program();
-  DepthProgram create_depth_program();
-  QuadProgram create_quad_program();
+  void create_box_program();
+  void create_standard_program();
+  void create_particle_program();
+  void create_depth_program();
+  void create_quad_program();
 
   StandardProgram standard_program_;
   ParticleProgram particle_program_;
