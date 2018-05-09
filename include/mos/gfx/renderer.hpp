@@ -244,6 +244,12 @@ private:
                     const VertexProgramData& program,
                     const Scene::Draw &draw);
 
+  void render_model_depth(const Model &model,
+                          const glm::mat4 &transform,
+                          const Camera &camera,
+                          const glm::vec2 &resolution,
+                          const VertexProgramData& program);
+
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
 

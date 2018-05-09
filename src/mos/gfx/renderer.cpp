@@ -1277,6 +1277,49 @@ void Renderer::create_depth_program2() {
   check_program(program);
   depth_program2_ = VertexProgramData(program);
 }
+void Renderer::render_model_depth(const Model &model,
+                                  const glm::mat4 &transform,
+                                  const Camera &camera,
+                                  const glm::vec2 &resolution,
+                                  const Renderer::VertexProgramData &program) {
+
+  const glm::mat4 mv = camera.view * transform * model.transform;
+  const glm::mat4 mvp = camera.projection * mv;
+
+  if (model.mesh) {
+    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+  };
+
+  const auto &uniforms = program;
+
+  glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+                     &mvp[0][0]);
+  glUniformMatrix4fv(uniforms.model_view_matrix, 1, GL_FALSE, &mv[0][0]);
+  glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);
+  auto model_matrix = transform * model.transform;
+  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
+
+  glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(transform) *
+      glm::mat3(model.transform));
+  normal_matrix =
+      glm::inverseTranspose(glm::mat3(transform * model.transform));
+  glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
+
+  glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
+
+  const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
+  const int draw_type = draw_map_[Scene::Draw::TRIANGLES];
+  if (model.mesh) {
+    if (num_elements > 0) {
+      glDrawElements(draw_type, num_elements, GL_UNSIGNED_INT, 0);
+    } else {
+      glDrawArrays(draw_type, 0, model.mesh->vertices.size());
+    }
+  }
+  for (const auto &child : model.models) {
+    render_model_depth(child, transform * model.transform, camera, resolution, program);
+  }
+}
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
