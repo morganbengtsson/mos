@@ -141,7 +141,7 @@ private:
   };
 
   /** Uniforms for the particle shader program. */
-  struct ParticleProgramData {
+  struct ParticleProgram {
     GLuint program;
     GLint mvp;
     GLint mv;
@@ -258,14 +258,14 @@ private:
   void link_program(const GLuint program,
                     const std::string& name);
 
-  void create_box_program();
-  void create_standard_program();
-  void create_particle_program();
-  void create_depth_program();
-  void create_quad_program();
+  BoxProgram create_box_program();
+  StandardProgram create_standard_program();
+  ParticleProgram create_particle_program();
+  DepthProgram create_depth_program();
+  QuadProgram create_quad_program();
 
   StandardProgram vertex_program_;
-  ParticleProgramData particle_program_;
+  ParticleProgram particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;
   QuadProgram quad_program_;

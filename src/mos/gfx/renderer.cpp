@@ -322,7 +322,7 @@ void Renderer::create_particle_program() {
   link_program(program, "particle");
   check_program(program, "particle");
 
-  particle_program_ = ParticleProgramData{
+  particle_program_ = ParticleProgram{
           program,
           glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
