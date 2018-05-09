@@ -162,6 +162,8 @@ private:
   };
 
   struct QuadProgram {
+    QuadProgram();
+    ~QuadProgram();
     GLuint program;
     GLint quad_texture;
   };
@@ -262,8 +264,6 @@ private:
   static bool check_program(const unsigned int program, const std::string &name);
   static void link_program(const GLuint program,
                     const std::string& name);
-
-  void create_quad_program();
 
   StandardProgram standard_program_;
   ParticleProgram particle_program_;

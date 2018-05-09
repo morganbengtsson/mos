@@ -76,8 +76,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  create_quad_program();
-
   // Render boxes
   float vertices[] = {
       -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
@@ -229,31 +227,6 @@ Renderer::~Renderer() {
     glDeleteVertexArrays(1, &va.second);
   }
 }
-
-void Renderer::create_quad_program() {
-  std::string name = "quad_330";
-  auto vert_source = text("assets/shaders/" + name + ".vert");
-  auto frag_source = text("assets/shaders/" + name + ".frag");
-
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, "quad_330.vert");
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, "quad_330.frag");
-
-  auto program = glCreateProgram();
-
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "uv");
-  link_program(program, "quad");
-  check_program(program, "quad");
-
-  quad_program_ = QuadProgram{
-      program,
-      glGetUniformLocation(program, "quad_texture")};
-}
-
 
 void Renderer::load_async(const Model &model) {
   load(model.mesh);
@@ -1298,6 +1271,30 @@ Renderer::BoxProgram::BoxProgram() {
   mv =  glGetUniformLocation(program, "model_view");
 }
 Renderer::BoxProgram::~BoxProgram() {
+  glDeleteProgram(program);
+}
+Renderer::QuadProgram::QuadProgram() {
+  std::string name = "quad_330";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, "quad_330.vert");
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, "quad_330.frag");
+
+  program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  link_program(program, "quad");
+  check_program(program, "quad");
+
+  quad_texture = glGetUniformLocation(program, "quad_texture");
+}
+Renderer::QuadProgram::~QuadProgram() {
   glDeleteProgram(program);
 }
 }
