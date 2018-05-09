@@ -76,7 +76,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  create_standard_program();
   create_particle_program();
   create_box_program();
   create_quad_program();
@@ -252,8 +251,8 @@ void Renderer::create_box_program() {
   check_program(program, name);
 
   box_program_ = BoxProgram{program,
-                               glGetUniformLocation(program, "model_view_projection"),
-                               glGetUniformLocation(program, "model_view")};
+                            glGetUniformLocation(program, "model_view_projection"),
+                            glGetUniformLocation(program, "model_view")};
 }
 
 void Renderer::create_quad_program() {
@@ -300,39 +299,12 @@ void Renderer::create_particle_program() {
   check_program(program, "particle");
 
   particle_program_ = ParticleProgram{
-          program,
-          glGetUniformLocation(program, "model_view_projection"),
-          glGetUniformLocation(program, "model_view"),
-          glGetUniformLocation(program, "projection"),
-          glGetUniformLocation(program, "tex"),
-          glGetUniformLocation(program, "resolution")};
-}
-
-void Renderer::create_standard_program() {
-  std::string name = "standard_330";
-  std::string vert_source = text("assets/shaders/" + name + ".vert");
-  std::string frag_source = text("assets/shaders/" + name + ".frag");
-
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-
-  auto fragment_shader =
-      create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
-
-  auto program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "normal");
-  glBindAttribLocation(program, 2, "tangent");
-  glBindAttribLocation(program, 3, "uv");
-
-  link_program(program, name);
-  check_program(program, name);
-
-  standard_program_ = StandardProgram(program);
+      program,
+      glGetUniformLocation(program, "model_view_projection"),
+      glGetUniformLocation(program, "model_view"),
+      glGetUniformLocation(program, "projection"),
+      glGetUniformLocation(program, "tex"),
+      glGetUniformLocation(program, "resolution")};
 }
 
 void Renderer::load_async(const Model &model) {
@@ -542,7 +514,7 @@ unsigned int Renderer::create_shader(const std::string &source,
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
   std::string out = name;
-  if(!out.empty()){
+  if (!out.empty()) {
     out += " ";
   }
 
@@ -596,7 +568,7 @@ bool Renderer::check_program(const unsigned int program, const std::string &name
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(program, length, NULL, &buffer[0]);
-      std::cerr << "Link failure in" + name +" program" << std::endl;
+      std::cerr << "Link failure in" + name + " program" << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
     return false;
@@ -684,7 +656,7 @@ void Renderer::render_scene(const Camera &camera,
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
-                 resolution, standard_program_.program, render_scene.draw);
+                 resolution, standard_program_, render_scene.draw);
   }
   render_boxes(render_scene.boxes, camera);
   render_particles(render_scene.particle_clouds, camera, resolution);
@@ -1239,55 +1211,6 @@ void Renderer::link_program(const GLuint program, const std::string &name = "") 
   glLinkProgram(program);
 }
 
-Renderer::StandardProgram::StandardProgram(const GLuint program)
-    : program(program), model_view_projection_matrix(glGetUniformLocation(
-    program, "model_view_projection")),
-      model_view_matrix(glGetUniformLocation(program, "model_view")),
-      model_matrix(glGetUniformLocation(program, "model")),
-      view_matrix(glGetUniformLocation(program, "view")),
-      normal_matrix(glGetUniformLocation(program, "normal_matrix")),
-      depth_bias_mvp(
-          glGetUniformLocation(program, "depth_bias_model_view_projection")),
-      environment_map(glGetUniformLocation(program, "environment.texture")),
-      environment_position(
-          glGetUniformLocation(program, "environment.position")),
-      environment_extent(glGetUniformLocation(program, "environment.extent")),
-      environment_strength(glGetUniformLocation(program, "environment.strength")),
-
-      material_albedo_map(
-          glGetUniformLocation(program, "material.albedo_map")),
-      material_emission_map(
-          glGetUniformLocation(program, "material.emission_map")),
-      material_normal_map(glGetUniformLocation(program, "material.normal_map")),
-      material_metallic_map(glGetUniformLocation(program, "material.metallic_map")),
-      material_roughness_map(glGetUniformLocation(program, "material.roughness_map")),
-      material_ambient_occlusion_map(glGetUniformLocation(program, "material.ambient_occlusion_map")),
-
-      material_albedo(glGetUniformLocation(program, "material.albedo")),
-      material_roughness(
-          glGetUniformLocation(program, "material.roughness")),
-      material_metallic(
-          glGetUniformLocation(program, "material.metallic")),
-      material_opacity(glGetUniformLocation(program, "material.opacity")),
-      material_emission(glGetUniformLocation(program, "material.emission")),
-      material_ambient_occlusion(glGetUniformLocation(program, "material.ambient_occlusion")),
-
-      camera_position(glGetUniformLocation(program, "camera.position")),
-      camera_resolution(glGetUniformLocation(program, "camera.resolution")),
-      light_position(glGetUniformLocation(program, "light.position")),
-      light_color(glGetUniformLocation(program, "light.color")),
-      light_view(glGetUniformLocation(program, "light.view")),
-      light_projection(glGetUniformLocation(program, "light.projection")),
-      light_shadow_map(glGetUniformLocation(program, "light.shadow_map")),
-      light_angle(glGetUniformLocation(program, "light.angle")),
-      light_direction(glGetUniformLocation(program, "light.direction")),
-
-      fog_color_near(glGetUniformLocation(program, "fog.color_near")),
-      fog_color_far(glGetUniformLocation(program, "fog.color_far")),
-      fog_attenuation_factor(
-          glGetUniformLocation(program, "fog.attenuation_factor")),
-      brdf_lut(
-          glGetUniformLocation(program, "brdf_lut")) {}
 Renderer::DepthProgram::DepthProgram() {
   std::string name = "depth_330";
   auto vert_source = text("assets/shaders/" + name + ".vert");
@@ -1310,6 +1233,72 @@ Renderer::DepthProgram::DepthProgram() {
 }
 
 Renderer::DepthProgram::~DepthProgram() {
+  glDeleteProgram(program);
+}
+Renderer::StandardProgram::StandardProgram() {
+  std::string name = "standard_330";
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+
+  auto fragment_shader =
+      create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "normal");
+  glBindAttribLocation(program, 2, "tangent");
+  glBindAttribLocation(program, 3, "uv");
+
+  link_program(program, name);
+  check_program(program, name);
+
+  model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
+  model_view_matrix = (glGetUniformLocation(program, "model_view"));
+  model_matrix = glGetUniformLocation(program, "model");
+  view_matrix = glGetUniformLocation(program, "view");
+  normal_matrix = glGetUniformLocation(program, "normal_matrix");
+  depth_bias_mvp = glGetUniformLocation(program, "depth_bias_model_view_projection");
+  environment_map = glGetUniformLocation(program, "environment.texture");
+  environment_position = glGetUniformLocation(program, "environment.position");
+  environment_extent = glGetUniformLocation(program, "environment.extent");
+  environment_strength = glGetUniformLocation(program, "environment.strength");
+  material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
+  material_emission_map = glGetUniformLocation(program, "material.emission_map");
+  material_normal_map = glGetUniformLocation(program, "material.normal_map");
+  material_metallic_map = glGetUniformLocation(program, "material.metallic_map");
+  material_roughness_map = glGetUniformLocation(program, "material.roughness_map");
+  material_ambient_occlusion_map = glGetUniformLocation(program, "material.ambient_occlusion_map");
+  material_albedo = glGetUniformLocation(program, "material.albedo");
+  material_roughness = glGetUniformLocation(program, "material.roughness");
+  material_metallic = glGetUniformLocation(program, "material.metallic");
+  material_opacity = glGetUniformLocation(program, "material.opacity");
+  material_emission = glGetUniformLocation(program, "material.emission");
+  material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
+
+  camera_position = glGetUniformLocation(program, "camera.position");
+  camera_resolution = glGetUniformLocation(program, "camera.resolution");
+  light_position = glGetUniformLocation(program, "light.position");
+  light_color = glGetUniformLocation(program, "light.color");
+  light_view = glGetUniformLocation(program, "light.view");
+  light_projection = glGetUniformLocation(program, "light.projection");
+  light_shadow_map = glGetUniformLocation(program, "light.shadow_map");
+  light_angle = glGetUniformLocation(program, "light.angle");
+  light_direction = glGetUniformLocation(program, "light.direction");
+
+  fog_color_near = glGetUniformLocation(program, "fog.color_near");
+  fog_color_far = glGetUniformLocation(program, "fog.color_far");
+  fog_attenuation_factor = glGetUniformLocation(program, "fog.attenuation_factor");
+
+  brdf_lut = glGetUniformLocation(program, "brdf_lut");
+}
+Renderer::StandardProgram::~StandardProgram() {
   glDeleteProgram(program);
 }
 }

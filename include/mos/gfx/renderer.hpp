@@ -173,8 +173,8 @@ private:
   class StandardProgram {
   public:
     //TODO make all const
-    StandardProgram() {};
-    StandardProgram(const GLuint program);
+    StandardProgram();
+    ~StandardProgram();
     GLuint program;
     GLint model_view_projection_matrix;
     GLint model_view_matrix;
@@ -261,7 +261,6 @@ private:
                     const std::string& name);
 
   void create_box_program();
-  void create_standard_program();
   void create_particle_program();
   void create_quad_program();
 
