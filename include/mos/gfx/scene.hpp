@@ -24,9 +24,6 @@ public:
   using Boxes = std::vector<Box>;
   using ParticleClouds = std::vector<ParticleCloud>;
 
-  /** Shader to use enum */
-  enum class Shader { TEXT, STANDARD, EFFECT, BLUR, CRT, DEPTH };
-
   /** Draw method for scene. */
   enum class Draw { TRIANGLES, LINES, POINTS };
 
@@ -39,14 +36,12 @@ public:
         const Light &light = Light(),
         const EnvironmentLight &environment_light = EnvironmentLight(),
         const Fog &fog_linear = Fog(),
-        const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES)
       : models(begin, end),
         camera(camera),
         light(light),
         environment(environment_light),
         fog(fog_linear),
-        shader(shader),
         draw(draw) {}
 
   Scene(const std::initializer_list<Model> &models,
@@ -54,7 +49,6 @@ public:
         const Light &light = Light(),
         const EnvironmentLight &environment_light = EnvironmentLight(),
         const Fog &fog = Fog(),
-        const Shader &shader = Shader::STANDARD,
         const Draw &draw = Draw::TRIANGLES);
   Models models;
   ParticleClouds particle_clouds;
@@ -62,7 +56,6 @@ public:
   Light light;
   Camera camera;
   Fog fog;
-  Shader shader;
   Draw draw;
   EnvironmentLight environment;
   TextureTargets texture_targets;
