@@ -264,7 +264,7 @@ void Renderer::add_box_program(const std::string &name,
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
   glLinkProgram(program);
-  check_program(program);
+  check_program(program, "box");
 
   box_program_ = BoxProgram{program,
                                glGetUniformLocation(program, "model_view_projection"),
@@ -287,7 +287,7 @@ void Renderer::create_quad_program() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   glLinkProgram(program);
-  check_program(program);
+  check_program(program, "quad");
 
   quad_program_ = QuadProgram{
       program,
@@ -309,7 +309,7 @@ void Renderer::create_depth_program() {
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
   glLinkProgram(program);
-  check_program(program);
+  check_program(program, "depth");
 
   depth_program_ = DepthProgram{
       program, glGetUniformLocation(program, "model_view_projection")};
@@ -333,7 +333,7 @@ void Renderer::add_particle_program(const std::string name,
   glBindAttribLocation(program, 1, "color");
 
   glLinkProgram(program);
-  check_program(program);
+  check_program(program, "particle");
 
   particle_program_ = ParticleProgramData{
           program,
@@ -369,7 +369,7 @@ void Renderer::create_standard_program() {
 
   std::cout << "Linking program" << std::endl;
   glLinkProgram(program);
-  check_program(program);
+  check_program(program, vert_filename.filename());
 
   vertex_program_ = VertexProgramData(program);
 }
@@ -615,7 +615,7 @@ bool Renderer::check_shader(const unsigned int shader,
   return true;
 }
 
-bool Renderer::check_program(const unsigned int program) {
+bool Renderer::check_program(const unsigned int program, const std::string &name = "") {
   if (!program) {
     return false;
   }
@@ -629,7 +629,7 @@ bool Renderer::check_program(const unsigned int program) {
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(program, length, NULL, &buffer[0]);
-      std::cerr << "Link failure in program" << std::endl;
+      std::cerr << "Link failure in" + name +" program" << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
     return false;

@@ -265,7 +265,7 @@ private:
                              const unsigned int type);
   bool check_shader(const unsigned int shader, const std::string &name = "");
 
-  bool check_program(const unsigned int program);
+  bool check_program(const unsigned int program, const std::string &name);
 
   unsigned int create_texture(const SharedTexture2D &texture);
   unsigned int create_texture(const Texture2D &texture);
