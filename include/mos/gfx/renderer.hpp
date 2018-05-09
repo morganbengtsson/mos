@@ -142,30 +142,6 @@ private:
     std::future<void> future;
   };
 
-  void render_texture_targets(const Scene &scene);
-
-  void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
-
-  void render_shadow_map(const Scene &render_scene);
-
-  void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
-
-  void render_boxes(const Scene::Boxes & boxes, const mos::gfx::Camera &camera);
-  void render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution);
-
-  void render_model(const Model &model,
-                    const glm::mat4 &transform,
-                    const Camera &camera,
-                    const Light &light,
-                    const EnvironmentLight &environment,
-                    const Fog &fog,
-                    const glm::vec2 &resolution,
-                    const Scene::Shader &shader,
-                    const Scene::Draw &draw);
-
-  /** Clear color and depth. */
-  void clear(const glm::vec4 &color);
-
   /** Uniforms for the particle shader program. */
   struct ParticleProgramData {
     GLuint program;
@@ -246,6 +222,30 @@ private:
 
     GLint brdf_lut;
   };
+
+  void render_texture_targets(const Scene &scene);
+
+  void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
+
+  void render_shadow_map(const Scene &render_scene);
+
+  void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
+
+  void render_boxes(const Scene::Boxes & boxes, const mos::gfx::Camera &camera);
+  void render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution);
+
+  void render_model(const Model &model,
+                    const glm::mat4 &transform,
+                    const Camera &camera,
+                    const Light &light,
+                    const EnvironmentLight &environment,
+                    const Fog &fog,
+                    const glm::vec2 &resolution,
+                    const VertexProgramData& program,
+                    const Scene::Draw &draw);
+
+  /** Clear color and depth. */
+  void clear(const glm::vec4 &color);
 
   using VertexProgramPair = std::pair<Scene::Shader, VertexProgramData>;
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;

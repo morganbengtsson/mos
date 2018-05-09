@@ -729,7 +729,7 @@ void Renderer::render_scene(const Camera &camera,
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
-                 resolution, render_scene.shader, render_scene.draw);
+                 resolution, vertex_programs_[render_scene.shader], render_scene.draw);
   }
   render_boxes(render_scene.boxes, camera);
   render_particles(render_scene.particle_clouds, camera, resolution);
@@ -829,7 +829,7 @@ void Renderer::render_model(const Model &model,
                             const Camera &camera, const Light &light,
                             const EnvironmentLight &environment, const Fog &fog,
                             const glm::vec2 &resolution,
-                            const Scene::Shader &shader,
+                            const VertexProgramData &program,
                             const Scene::Draw &draw) {
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
@@ -842,7 +842,7 @@ void Renderer::render_model(const Model &model,
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
   };
 
-  const auto &uniforms = vertex_programs_.at(shader);
+  const auto &uniforms = program;
 
   glActiveTexture(GLenum(GL_TEXTURE0));
   glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
@@ -967,7 +967,7 @@ void Renderer::render_model(const Model &model,
   }
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, light,
-                 environment, fog, resolution, shader, draw);
+                 environment, fog, resolution, program, draw);
   }
 }
 
