@@ -736,9 +736,8 @@ void Renderer::render_scene(const Camera &camera,
 }
 
 void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &camera) {
-  auto &uniforms = box_program_;
 
-  glUseProgram(uniforms.program);
+  glUseProgram(box_program_.program);
   glBindVertexArray(box_va);
 
   for (auto &box : boxes) {
@@ -748,10 +747,9 @@ void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &c
     glm::mat4 mvp = camera.projection * camera.view * transform *
         glm::scale(glm::mat4(1.0f), size);
 
-    glUniformMatrix4fv(uniforms.mvp, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(uniforms.mv, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(box_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(box_program_.mv, 1, GL_FALSE, &mv[0][0]);
 
-    // glDrawArrays(GL_POINTS, 0, 16);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
                    (GLvoid *) (4 * sizeof(GLuint)));
@@ -804,9 +802,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
     glm::mat4 mv = camera.view;
     glm::mat4 mvp = camera.projection * camera.view;
 
-    auto &uniforms2 = particle_program_;
-
-    glUseProgram(uniforms2.program);
+    glUseProgram(particle_program_.program);
 
     glBindVertexArray(vertex_arrays_[particles.id()]);
 
@@ -815,12 +811,12 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
                                  ? textures_[particles.emission_map->id()].id
                                  : black_texture_);
-    glUniform1i(uniforms2.texture, 10);
+    glUniform1i(particle_program_.texture, 10);
 
-    glUniformMatrix4fv(uniforms2.mvp, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(uniforms2.mv, 1, GL_FALSE, &mv[0][0]);
-    glUniformMatrix4fv(uniforms2.p, 1, GL_FALSE, &camera.projection[0][0]);
-    glUniform2fv(uniforms2.resolution, 1, glm::value_ptr(resolution));
+    glUniformMatrix4fv(particle_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(particle_program_.mv, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(particle_program_.p, 1, GL_FALSE, &camera.projection[0][0]);
+    glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(resolution));
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
