@@ -255,14 +255,8 @@ private:
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgram>;
 
-  void create_standard_program();
-
-  void add_particle_program(const std::string name, const std::string vs_source,
-                            const std::string fs_source, const std::string &vs_file = "",
-                            const std::string &fs_file = "");
-
   unsigned int create_shader(const std::string &source,
-                             const unsigned int type);
+                             const unsigned int type, const std::string& name = "");
   bool check_shader(const unsigned int shader, const std::string &name = "");
 
   bool check_program(const unsigned int program, const std::string &name);
@@ -275,10 +269,9 @@ private:
 
   unsigned int create_texture_cube(const TextureCube &texture);
 
-  void add_box_program(const std::string &name, const std::string &vs_source,
-                       const std::string &fs_source, const std::string &vs_file,
-                       const std::string &fs_file);
-
+  void create_box_program();
+  void create_standard_program();
+  void create_particle_program();
   void create_depth_program();
   void create_quad_program();
 

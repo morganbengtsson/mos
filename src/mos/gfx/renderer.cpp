@@ -76,23 +76,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  std::string shader_path = "assets/shaders/";
-
   create_standard_program();
-
-  std::string particles_vert = "particles_330.vert";
-  std::string particles_frag = "particles_330.frag";
-  std::string particles_vert_source = text(shader_path + particles_vert);
-  std::string particles_frag_source = text(shader_path + particles_frag);
-  add_particle_program("particles", particles_vert_source,
-                       particles_frag_source, particles_vert, particles_frag);
-
-  std::string box_vert = "box_330.vert";
-  std::string box_frag = "box_330.frag";
-  std::string box_vert_source = text(shader_path + box_vert);
-  std::string box_frag_source = text(shader_path + box_frag);
-  add_box_program("box", box_vert_source, box_frag_source, box_vert, box_frag);
-
+  create_particle_program();
+  create_box_program();
   create_depth_program();
   create_quad_program();
 
@@ -248,15 +234,17 @@ Renderer::~Renderer() {
   }
 }
 
-void Renderer::add_box_program(const std::string &name,
-                               const std::string &vs_source,
-                               const std::string &fs_source,
-                               const std::string &vs_file,
-                               const std::string &fs_file) {
-  auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vs_file);
-  auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, fs_file);
+void Renderer::create_box_program() {
+  std::string shader_path = "assets/shaders/";
+  std::string box_vert = "box_330.vert";
+  std::string box_frag = "box_330.frag";
+  std::string box_vert_source = text(shader_path + box_vert);
+  std::string box_frag_source = text(shader_path + box_frag);
+
+  auto vertex_shader = create_shader(box_vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, box_vert);
+  auto fragment_shader = create_shader(box_frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, box_frag);
 
   auto program = glCreateProgram();
 
@@ -315,15 +303,16 @@ void Renderer::create_depth_program() {
       program, glGetUniformLocation(program, "model_view_projection")};
 }
 
-void Renderer::add_particle_program(const std::string name,
-                                    const std::string vs_source,
-                                    const std::string fs_source,
-                                    const std::string &vs_file,
-                                    const std::string &fs_file) {
-  auto vertex_shader = create_shader(vs_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vs_file);
-  auto fragment_shader = create_shader(fs_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, fs_file);
+void Renderer::create_particle_program() {
+  std::string shader_path = "assets/shaders/";
+  std::string particles_vert = "particles_330.vert";
+  std::string particles_frag = "particles_330.frag";
+  std::string particles_vert_source = text(shader_path + particles_vert);
+  std::string particles_frag_source = text(shader_path + particles_frag);
+  auto vertex_shader = create_shader(particles_vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, particles_vert);
+  auto fragment_shader = create_shader(particles_frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, particles_frag);
 
   auto program = glCreateProgram();
 
@@ -332,7 +321,7 @@ void Renderer::add_particle_program(const std::string name,
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
 
-  glLinkProgram(program);
+  link_program(program, "particle");
   check_program(program, "particle");
 
   particle_program_ = ParticleProgramData{
@@ -570,7 +559,8 @@ void Renderer::clear_buffers() {
 }
 
 unsigned int Renderer::create_shader(const std::string &source,
-                                     const unsigned int type) {
+                                     const unsigned int type,
+                                     const std::string &name) {
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
 
@@ -579,7 +569,12 @@ unsigned int Renderer::create_shader(const std::string &source,
       {GL_FRAGMENT_SHADER, "fragment shader"},
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
-  std::cout << "Compiling " << types[type] << std::endl;
+  std::string out = name;
+  if(!out.empty()){
+    out += " ";
+  }
+
+  std::cout << "Compiling " << out << types[type] << std::endl;
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
   return id;
