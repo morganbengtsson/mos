@@ -283,8 +283,7 @@ private:
   void create_depth_program();
   void create_quad_program();
 
-  std::map<Scene::Shader, VertexProgramData> vertex_programs_;
-
+  VertexProgramData vertex_program_;
   ParticleProgramData particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;

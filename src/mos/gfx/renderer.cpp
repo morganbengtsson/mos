@@ -84,13 +84,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   add_vertex_program(Scene::Shader::STANDARD, standard_vert_source,
                      standard_frag_source, standard_vert, standard_frag);
 
-  std::string depth_vert = "depth_330.vert";
-  std::string depth_frag = "depth_330.frag";
-  std::string depth_vert_source = text(shader_path + depth_vert);
-  std::string depth_frag_source = text(shader_path + depth_frag);
-  add_vertex_program(Scene::Shader::DEPTH, depth_vert_source,
-                     depth_frag_source, depth_vert, depth_frag);
-
   std::string particles_vert = "particles_330.vert";
   std::string particles_frag = "particles_330.frag";
   std::string particles_vert_source = text(shader_path + particles_vert);
@@ -225,10 +218,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 }
 
 Renderer::~Renderer() {
-  for (auto &vp : vertex_programs_) {
-    glDeleteProgram(vp.second.program);
-  }
 
+  glDeleteProgram(vertex_program_.program);
   glDeleteProgram(particle_program_.program);
   glDeleteProgram(box_program_.program);
 
@@ -382,8 +373,7 @@ void Renderer::add_vertex_program(const Scene::Shader shader,
   glLinkProgram(program);
   check_program(program);
 
-  vertex_programs_.insert(
-      VertexProgramPair(shader, VertexProgramData(program)));
+  vertex_program_ = VertexProgramData(program);
 }
 
 void Renderer::load_async(const Model &model) {
@@ -725,11 +715,11 @@ void Renderer::render_scene(const Camera &camera,
                             const Scene &render_scene,
                             const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
-  glUseProgram(vertex_programs_[render_scene.shader].program);
+  glUseProgram(vertex_program_.program);
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
-                 resolution, vertex_programs_[render_scene.shader], render_scene.draw);
+                 resolution, vertex_program_.program, render_scene.draw);
   }
   render_boxes(render_scene.boxes, camera);
   render_particles(render_scene.particle_clouds, camera, resolution);
