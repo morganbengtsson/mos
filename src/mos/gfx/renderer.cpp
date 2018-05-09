@@ -194,11 +194,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 }
 
 Renderer::~Renderer() {
-
-  glDeleteProgram(standard_program_.program);
-  glDeleteProgram(particle_program_.program);
-  glDeleteProgram(box_program_.program);
-
   for (auto &fb : frame_buffers_) {
     glDeleteFramebuffers(1, &fb.second);
   }
