@@ -154,10 +154,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glGenTextures(1, &multi_depth_texture_);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y, true);
+  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER,
-                         GL_DEPTH_STENCIL_ATTACHMENT,
+                         GL_DEPTH_ATTACHMENT,
                          GL_TEXTURE_2D_MULTISAMPLE,
                          multi_depth_texture_,
                          0);
@@ -1283,6 +1283,7 @@ Renderer::QuadProgram::QuadProgram() {
   check_program(program, "quad");
 
   quad_texture = glGetUniformLocation(program, "quad_texture");
+  quad_depth_texture = glGetUniformLocation(program, "quad_depth_texture");
 }
 Renderer::QuadProgram::~QuadProgram() {
   glDeleteProgram(program);

@@ -100,6 +100,11 @@ public:
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
     glUniform1i(quad_program_.quad_texture, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
+    glUniform1i(quad_program_.quad_depth_texture, 1);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
@@ -166,6 +171,7 @@ private:
     ~QuadProgram();
     GLuint program;
     GLint quad_texture;
+    GLint quad_depth_texture;
   };
 
   struct DepthProgram {
