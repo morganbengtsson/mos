@@ -276,11 +276,13 @@ private:
                        const std::string &fs_source, const std::string &vs_file,
                        const std::string &fs_file);
 
+  void create_depth_program2();
   void create_depth_program();
   void create_quad_program();
 
   std::map<Scene::Shader, VertexProgramData> vertex_programs_;
 
+  VertexProgramData depth_program2_;
   ParticleProgramData particle_program_;
   BoxProgramData box_program_;
   DepthProgramData depth_program_;

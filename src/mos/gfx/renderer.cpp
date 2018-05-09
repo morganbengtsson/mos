@@ -1248,6 +1248,33 @@ void Renderer::render_texture_targets(const Scene &scene) {
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
+void Renderer::create_depth_program2() {
+  std::string shader_path = "assets/shaders/";
+  std::string depth_vert = "depth_330.vert";
+  std::string depth_frag = "depth_330.frag";
+  std::string depth_vert_source = text(shader_path + depth_vert);
+  std::string depth_frag_source = text(shader_path + depth_frag);
+  auto vertex_shader = create_shader(depth_vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, depth_vert);
+
+  auto fragment_shader =
+      create_shader(depth_frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, depth_frag);
+
+  auto program = glCreateProgram();
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "normal");
+  glBindAttribLocation(program, 2, "tangent");
+  glBindAttribLocation(program, 3, "uv");
+
+  std::cout << "Linking program" << std::endl;
+  glLinkProgram(program);
+  check_program(program);
+  depth_program2_ = VertexProgramData(program);
+}
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
