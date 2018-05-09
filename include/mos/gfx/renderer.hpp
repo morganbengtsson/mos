@@ -280,10 +280,10 @@ private:
   void create_quad_program();
 
   std::map<Scene::Shader, VertexProgramData> vertex_programs_;
-  std::unordered_map<std::string, ParticleProgramData> particle_programs_;
-  std::unordered_map<std::string, BoxProgramData> box_programs_;
-  DepthProgramData depth_program_;
 
+  ParticleProgramData particle_program_;
+  BoxProgramData box_program_;
+  DepthProgramData depth_program_;
   QuadProgramData quad_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;

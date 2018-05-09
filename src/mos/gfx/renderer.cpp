@@ -190,7 +190,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
   glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y, true);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_DEPTH_STENCIL_ATTACHMENT,
+                         GL_TEXTURE_2D_MULTISAMPLE,
+                         multi_depth_texture_,
+                         0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");
@@ -225,13 +229,8 @@ Renderer::~Renderer() {
     glDeleteProgram(vp.second.program);
   }
 
-  for (auto &pp : particle_programs_) {
-    glDeleteProgram(pp.second.program);
-  }
-
-  for (auto &bp : box_programs_) {
-    glDeleteProgram(bp.second.program);
-  }
+  glDeleteProgram(particle_program_.program);
+  glDeleteProgram(box_program_.program);
 
   for (auto &fb : frame_buffers_) {
     glDeleteFramebuffers(1, &fb.second);
@@ -280,10 +279,9 @@ void Renderer::add_box_program(const std::string &name,
   glLinkProgram(program);
   check_program(program);
 
-  box_programs_.insert(
-      {name, BoxProgramData{program, glGetUniformLocation(
-          program, "model_view_projection"),
-                            glGetUniformLocation(program, "model_view")}});
+  box_program_ = BoxProgramData{program,
+                               glGetUniformLocation(program, "model_view_projection"),
+                               glGetUniformLocation(program, "model_view")};
 }
 
 void Renderer::create_quad_program() {
@@ -350,13 +348,13 @@ void Renderer::add_particle_program(const std::string name,
   glLinkProgram(program);
   check_program(program);
 
-  particle_programs_.insert(ParticleProgramPair(
-      name, ParticleProgramData{
-          program, glGetUniformLocation(program, "model_view_projection"),
+  particle_program_ = ParticleProgramData{
+          program,
+          glGetUniformLocation(program, "model_view_projection"),
           glGetUniformLocation(program, "model_view"),
           glGetUniformLocation(program, "projection"),
           glGetUniformLocation(program, "tex"),
-          glGetUniformLocation(program, "resolution")}));
+          glGetUniformLocation(program, "resolution")};
 }
 
 void Renderer::add_vertex_program(const Scene::Shader shader,
@@ -738,7 +736,7 @@ void Renderer::render_scene(const Camera &camera,
 }
 
 void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &camera) {
-  auto &uniforms = box_programs_.at("box");
+  auto &uniforms = box_program_;
 
   glUseProgram(uniforms.program);
   glBindVertexArray(box_va);
@@ -806,7 +804,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
     glm::mat4 mv = camera.view;
     glm::mat4 mvp = camera.projection * camera.view;
 
-    auto &uniforms2 = particle_programs_.at("particles");
+    auto &uniforms2 = particle_program_;
 
     glUseProgram(uniforms2.program);
 
