@@ -79,7 +79,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   create_standard_program();
   create_particle_program();
   create_box_program();
-  create_depth_program();
   create_quad_program();
 
   // Render boxes
@@ -279,28 +278,6 @@ void Renderer::create_quad_program() {
   quad_program_ = QuadProgram{
       program,
       glGetUniformLocation(program, "quad_texture")};
-}
-
-void Renderer::create_depth_program() {
-  std::string name = "depth_330";
-  auto vert_source = text("assets/shaders/" + name + ".vert");
-  auto frag_source = text("assets/shaders/" + name + ".frag");
-
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
-
-  auto program = glCreateProgram();
-
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glBindAttribLocation(program, 0, "position");
-  link_program(program, name);
-  check_program(program, name);
-
-  depth_program_ = DepthProgram{
-      program, glGetUniformLocation(program, "model_view_projection")};
 }
 
 void Renderer::create_particle_program() {
@@ -1311,5 +1288,29 @@ Renderer::StandardProgram::StandardProgram(const GLuint program)
           glGetUniformLocation(program, "fog.attenuation_factor")),
       brdf_lut(
           glGetUniformLocation(program, "brdf_lut")) {}
+Renderer::DepthProgram::DepthProgram() {
+  std::string name = "depth_330";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  link_program(program, name);
+  check_program(program, name);
+
+  model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
+}
+
+Renderer::DepthProgram::~DepthProgram() {
+  glDeleteProgram(program);
+}
 }
 }

@@ -163,6 +163,8 @@ private:
   };
 
   struct DepthProgram {
+    DepthProgram();
+    ~DepthProgram();
     GLuint program;
     GLint model_view_projection_matrix;
   };
@@ -261,7 +263,6 @@ private:
   void create_box_program();
   void create_standard_program();
   void create_particle_program();
-  void create_depth_program();
   void create_quad_program();
 
   StandardProgram standard_program_;
