@@ -79,7 +79,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       load(it->models);
-      render_shadow_map(*it);
+      render_shadow_map(it->light, it->models);
       render_environment(*it, color);
       render_texture_targets(*it);
     }
@@ -111,7 +111,7 @@ public:
     clear(color);
     for (auto it = scenes_begin; it != scenes_end; it++) {
       load_async(it->models);
-      render_shadow_map(*it);
+      render_shadow_map(it->light, it->models);
       //render_environment(*it, color);
       render_scene(it->camera, *it, resolution);
     }
@@ -227,7 +227,7 @@ private:
 
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
-  void render_shadow_map(const Scene &render_scene);
+  void render_shadow_map(const Light & light, const std::vector<Model> & models);
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 

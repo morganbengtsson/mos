@@ -989,43 +989,43 @@ void Renderer::render_async(const std::initializer_list<Scene> &scenes_init,
   render_async(scenes_init.begin(), scenes_init.end(), color, resolution);
 }
 
-void Renderer::render_shadow_map(const Scene &scene) {
-  if (frame_buffers_.find(scene.light.target.id()) == frame_buffers_.end()) {
+void Renderer::render_shadow_map(const Light & light, const std::vector<Model> & models) {
+  if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    GLuint texture_id = create_texture(scene.light.shadow_map);
+    GLuint texture_id = create_texture(light.shadow_map);
     glFramebufferTexture2D(GL_FRAMEBUFFER,
                            GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
-    textures_.insert({scene.light.shadow_map->id(), Buffer{texture_id, scene.light.shadow_map->layers.modified()}});
+    textures_.insert({light.shadow_map->id(), Buffer{texture_id, light.shadow_map->layers.modified()}});
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          scene.light.shadow_map->width(),
-                          scene.light.shadow_map->height());
+                          light.shadow_map->width(),
+                          light.shadow_map->height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    render_buffers.insert({scene.light.target.id(), depthrenderbuffer_id});
+    render_buffers.insert({light.target.id(), depthrenderbuffer_id});
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("Framebuffer incomplete.");
     }
 
-    frame_buffers_.insert({scene.light.target.id(), frame_buffer_id});
+    frame_buffers_.insert({light.target.id(), frame_buffer_id});
   }
-  auto fb = frame_buffers_[scene.light.target.id()];
+  auto fb = frame_buffers_[light.target.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   clear(glm::vec4(0.0f));
-  auto resolution = glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height());
+  auto resolution = glm::ivec2(light.shadow_map->width(), light.shadow_map->height());
   glUseProgram(depth_program_.program);
   glViewport(0, 0, resolution.x, resolution.y);
-  for (auto &model : scene.models) {
-    render_model_depth(model, glm::mat4(1.0f), scene.light.camera, resolution, depth_program_);
+  for (auto &model : models) {
+    render_model_depth(model, glm::mat4(1.0f), light.camera, resolution, depth_program_);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
