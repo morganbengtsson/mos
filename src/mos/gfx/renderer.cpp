@@ -1024,9 +1024,19 @@ void Renderer::render_shadow_map(const Scene &scene) {
   auto shadow_scene = scene;
   shadow_scene.shader = Scene::Shader::DEPTH;
 
+  /*
   render_scene(scene.light.camera,
                shadow_scene,
-               glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));
+               glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height()));*/
+
+  auto resolution = glm::ivec2(scene.light.shadow_map->width(), scene.light.shadow_map->height());
+  glUseProgram(vertex_programs_[Scene::Shader::DEPTH].program);
+  glViewport(0, 0, resolution.x, resolution.y);
+  for (auto &model : scene.models) {
+    render_model(model, glm::mat4(1.0f), scene.light.camera,
+                 scene.light, scene.environment, scene.fog,
+                 resolution, vertex_programs_[Scene::Shader::DEPTH], scene.draw);
+  }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
