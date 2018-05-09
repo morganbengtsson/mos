@@ -235,23 +235,22 @@ Renderer::~Renderer() {
 }
 
 void Renderer::create_box_program() {
-  filesystem::path vert_path = "assets/shaders/box_330.vert";
-  filesystem::path frag_path = "assets/shaders/box_330.frag";
-  std::string vert_source = text(vert_path.str());
-  std::string frag_source = text(frag_path.str());
+  std::string name = "box_330";
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
 
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vert_path.filename());
+  check_shader(vertex_shader, name);
   auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, frag_path.filename());
+  check_shader(fragment_shader, name);
 
   auto program = glCreateProgram();
 
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
-  link_program(program, vert_path.filename());
-  check_program(program, vert_path.filename());
+  link_program(program, name);
+  check_program(program, name);
 
   box_program_ = BoxProgram{program,
                                glGetUniformLocation(program, "model_view_projection"),
@@ -259,8 +258,9 @@ void Renderer::create_box_program() {
 }
 
 void Renderer::create_quad_program() {
-  auto vert_source = text("assets/shaders/quad_330.vert");
-  auto frag_source = text("assets/shaders/quad_330.frag");
+  std::string name = "quad_330";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
 
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
   check_shader(vertex_shader, "quad_330.vert");
@@ -282,36 +282,36 @@ void Renderer::create_quad_program() {
 }
 
 void Renderer::create_depth_program() {
-  auto vert_source = text("assets/shaders/depth_330.vert");
-  auto frag_source = text("assets/shaders/depth_330.frag");
+  std::string name = "depth_330";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
 
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, "depth_330.vert");
+  check_shader(vertex_shader, name);
   auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, "depth_330.frag");
+  check_shader(fragment_shader, name);
 
   auto program = glCreateProgram();
 
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
-  link_program(program, "depth");
-  check_program(program, "depth");
+  link_program(program, name);
+  check_program(program, name);
 
   depth_program_ = DepthProgram{
       program, glGetUniformLocation(program, "model_view_projection")};
 }
 
 void Renderer::create_particle_program() {
-  std::string path = "assets/shaders/";
-  std::string vert_filename = "particles_330.vert";
-  std::string frag_filename = "particles_330.frag";
-  std::string vert_source = text(path + vert_filename);
-  std::string frag_source = text(path + frag_filename);
+  std::string name = "particles_330";
+
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vert_filename);
+  check_shader(vertex_shader, name);
   auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, frag_filename);
+  check_shader(fragment_shader, name);
 
   auto program = glCreateProgram();
   glAttachShader(program, vertex_shader);
@@ -332,18 +332,16 @@ void Renderer::create_particle_program() {
 }
 
 void Renderer::create_standard_program() {
-  std::string path = "assets/shaders/";
-  filesystem::path vert_filename = "standard_330.vert";
-  filesystem::path frag_filename = "standard_330.frag";
-  std::string vert_source = text(path + vert_filename.str());
-  std::string frag_source = text(path + frag_filename.str());
+  std::string name = "standard_330";
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
 
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vert_filename.str());
+  check_shader(vertex_shader, name);
 
   auto fragment_shader =
       create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, frag_filename.str());
+  check_shader(fragment_shader, name);
 
   auto program = glCreateProgram();
   glAttachShader(program, vertex_shader);
@@ -354,8 +352,8 @@ void Renderer::create_standard_program() {
   glBindAttribLocation(program, 2, "tangent");
   glBindAttribLocation(program, 3, "uv");
 
-  link_program(program, vert_filename.filename());
-  check_program(program, vert_filename.filename());
+  link_program(program, name);
+  check_program(program, name);
 
   vertex_program_ = StandardProgram(program);
 }
