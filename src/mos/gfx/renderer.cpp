@@ -360,7 +360,7 @@ void Renderer::create_standard_program() {
   glLinkProgram(program);
   check_program(program, vert_filename.filename());
 
-  vertex_program_ = VertexProgramData(program);
+  vertex_program_ = StandardProgram(program);
 }
 
 void Renderer::load_async(const Model &model) {
@@ -812,7 +812,7 @@ void Renderer::render_model(const Model &model,
                             const Camera &camera, const Light &light,
                             const EnvironmentLight &environment, const Fog &fog,
                             const glm::vec2 &resolution,
-                            const VertexProgramData &program,
+                            const StandardProgram &program,
                             const Scene::Draw &draw) {
 
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
@@ -1267,7 +1267,7 @@ void Renderer::link_program(const GLuint program, const std::string &name = "") 
   glLinkProgram(program);
 }
 
-Renderer::VertexProgramData::VertexProgramData(const GLuint program)
+Renderer::StandardProgram::StandardProgram(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
     program, "model_view_projection")),
       model_view_matrix(glGetUniformLocation(program, "model_view")),

@@ -168,11 +168,11 @@ private:
   };
 
   /** Uniforms for the standard shader. */
-  class VertexProgramData {
+  class StandardProgram {
   public:
     //TODO make all const
-    VertexProgramData() {};
-    VertexProgramData(const GLuint program);
+    StandardProgram() {};
+    StandardProgram(const GLuint program);
     GLuint program;
     GLint model_view_projection_matrix;
     GLint model_view_matrix;
@@ -180,10 +180,6 @@ private:
     GLint view_matrix;
     GLint normal_matrix;
     GLint depth_bias_mvp;
-
-    std::array<GLint, 10> decal_mvps;
-    std::array<GLint, 10> decal_material_diffuse_maps;
-    std::array<GLint, 10> decal_material_normal_maps;
 
     GLint environment_map;
     GLint environment_position;
@@ -239,7 +235,7 @@ private:
                     const EnvironmentLight &environment,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const VertexProgramData& program,
+                    const StandardProgram& program,
                     const Scene::Draw &draw);
 
   void render_model_depth(const Model &model,
@@ -251,23 +247,16 @@ private:
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
 
-  using VertexProgramPair = std::pair<Scene::Shader, VertexProgramData>;
-  using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
-  using BoxProgramPair = std::pair<std::string, BoxProgram>;
+  unsigned int create_texture(const SharedTexture2D &texture);
+  unsigned int create_texture(const Texture2D &texture);
+  unsigned int create_texture_cube(const TextureCube &texture);
 
   unsigned int create_shader(const std::string &source,
                              const unsigned int type, const std::string& name = "");
   bool check_shader(const unsigned int shader, const std::string &name = "");
-
   bool check_program(const unsigned int program, const std::string &name);
-
   void link_program(const GLuint program,
                     const std::string& name);
-
-  unsigned int create_texture(const SharedTexture2D &texture);
-  unsigned int create_texture(const Texture2D &texture);
-
-  unsigned int create_texture_cube(const TextureCube &texture);
 
   void create_box_program();
   void create_standard_program();
@@ -275,7 +264,7 @@ private:
   void create_depth_program();
   void create_quad_program();
 
-  VertexProgramData vertex_program_;
+  StandardProgram vertex_program_;
   ParticleProgramData particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;
