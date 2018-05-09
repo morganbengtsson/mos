@@ -267,6 +267,9 @@ private:
 
   bool check_program(const unsigned int program, const std::string &name);
 
+  void link_program(const GLuint program,
+                    const std::string& name);
+
   unsigned int create_texture(const SharedTexture2D &texture);
   unsigned int create_texture(const Texture2D &texture);
 

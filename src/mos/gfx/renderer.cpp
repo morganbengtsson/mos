@@ -263,7 +263,7 @@ void Renderer::add_box_program(const std::string &name,
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
-  glLinkProgram(program);
+  link_program(program, "box");
   check_program(program, "box");
 
   box_program_ = BoxProgram{program,
@@ -1265,6 +1265,11 @@ void Renderer::render_model_depth(const Model &model,
   for (const auto &child : model.models) {
     render_model_depth(child, transform * model.transform, camera, resolution, program);
   }
+}
+
+void Renderer::link_program(const GLuint program, const std::string &name = "") {
+  std::cout << "Linking " + name + " program." << std::endl;
+  glLinkProgram(program);
 }
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
