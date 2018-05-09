@@ -264,7 +264,7 @@ private:
   DepthProgram create_depth_program();
   QuadProgram create_quad_program();
 
-  StandardProgram vertex_program_;
+  StandardProgram standard_program_;
   ParticleProgram particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;

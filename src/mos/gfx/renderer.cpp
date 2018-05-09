@@ -201,7 +201,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
 Renderer::~Renderer() {
 
-  glDeleteProgram(vertex_program_.program);
+  glDeleteProgram(standard_program_.program);
   glDeleteProgram(particle_program_.program);
   glDeleteProgram(box_program_.program);
 
@@ -355,7 +355,7 @@ void Renderer::create_standard_program() {
   link_program(program, name);
   check_program(program, name);
 
-  vertex_program_ = StandardProgram(program);
+  standard_program_ = StandardProgram(program);
 }
 
 void Renderer::load_async(const Model &model) {
@@ -703,11 +703,11 @@ void Renderer::render_scene(const Camera &camera,
                             const Scene &render_scene,
                             const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
-  glUseProgram(vertex_program_.program);
+  glUseProgram(standard_program_.program);
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.light, render_scene.environment, render_scene.fog,
-                 resolution, vertex_program_.program, render_scene.draw);
+                 resolution, standard_program_.program, render_scene.draw);
   }
   render_boxes(render_scene.boxes, camera);
   render_particles(render_scene.particle_clouds, camera, resolution);
