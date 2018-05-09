@@ -255,11 +255,7 @@ private:
   using ParticleProgramPair = std::pair<std::string, ParticleProgramData>;
   using BoxProgramPair = std::pair<std::string, BoxProgram>;
 
-  void add_vertex_program(const Scene::Shader shader,
-                          const std::string vertex_shader_source,
-                          const std::string fragment_shader_source,
-                          const std::string &vert_file_name = "",
-                          const std::string &frag_file_name = "");
+  void create_standard_program();
 
   void add_particle_program(const std::string name, const std::string vs_source,
                             const std::string fs_source, const std::string &vs_file = "",

@@ -16,6 +16,7 @@
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
 #include <future>
+#include <filesystem/path.h>
 
 namespace mos {
 namespace gfx {
@@ -77,12 +78,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   std::string shader_path = "assets/shaders/";
 
-  std::string standard_vert = "standard_330.vert";
-  std::string standard_frag = "standard_330.frag";
-  std::string standard_vert_source = text(shader_path + standard_vert);
-  std::string standard_frag_source = text(shader_path + standard_frag);
-  add_vertex_program(Scene::Shader::STANDARD, standard_vert_source,
-                     standard_frag_source, standard_vert, standard_frag);
+  create_standard_program();
 
   std::string particles_vert = "particles_330.vert";
   std::string particles_frag = "particles_330.frag";
@@ -348,17 +344,19 @@ void Renderer::add_particle_program(const std::string name,
           glGetUniformLocation(program, "resolution")};
 }
 
-void Renderer::add_vertex_program(const Scene::Shader shader,
-                                  const std::string vertex_shader_source,
-                                  const std::string fragment_shader_source,
-                                  const std::string &vert_file_name,
-                                  const std::string &frag_file_name) {
-  auto vertex_shader = create_shader(vertex_shader_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, vert_file_name);
+void Renderer::create_standard_program() {
+  std::string path = "assets/shaders/";
+  filesystem::path vert_filename = "standard_330.vert";
+  filesystem::path frag_filename = "standard_330.frag";
+  std::string vert_source = text(path + vert_filename.str());
+  std::string frag_source = text(path + frag_filename.str());
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, vert_filename.str());
 
   auto fragment_shader =
-      create_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, frag_file_name);
+      create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, frag_filename.str());
 
   auto program = glCreateProgram();
   glAttachShader(program, vertex_shader);
