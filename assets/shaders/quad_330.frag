@@ -14,6 +14,5 @@ void main() {
         average_color += texelFetch(quad_texture, ivec2(tmp), i).rgb;
     }
     color = vec4(average_color / 4.0, 1.0);
-    float v = texelFetch(quad_depth_texture, ivec2(tmp), 0).r;
-    color.rgb = vec3(v,v,v);
+    
 }
