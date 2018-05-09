@@ -49,7 +49,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
               {Scene::Draw::POINTS, GL_POINTS},
               {Scene::Draw::TRIANGLES, GL_TRIANGLES}}, cube_camera_index_(0) {
 
-  if(!gladLoadGL()) {
+  if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
     exit(-1);
   }
@@ -90,7 +90,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   std::string depth_frag_source = text(shader_path + depth_frag);
   add_vertex_program(Scene::Shader::DEPTH, depth_vert_source,
                      depth_frag_source, depth_vert, depth_frag);
-
 
   std::string particles_vert = "particles_330.vert";
   std::string particles_frag = "particles_330.frag";
@@ -197,27 +196,26 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, multi_rbo_);
 
 
-  /*
-  glGenTextures(1, &multi_depth_texture_ );
+  glGenTextures(1, &multi_depth_texture_);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE,4, GL_DEPTH_COMPONENT24,
-                resolution.x, resolution.y, GL_TRUE);
-  glFramebufferTexture2DMultisample(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_, 0);
-*/
+  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, resolution.x, resolution.y, true);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
+
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    std::cout << "ERROR::FRAMEBUFFER:: Intermediate framebuffer is not complete!" << std::endl;
+    throw std::runtime_error("Framebuffer incomplete");
   }
 
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   const float quad_vertices[] = {
-      -1.0f,  1.0f,  0.0f, 1.0f,
-      -1.0f, -1.0f,  0.0f, 0.0f,
-      1.0f, -1.0f,  1.0f, 0.0f,
-      -1.0f,  1.0f,  0.0f, 1.0f,
-      1.0f, -1.0f,  1.0f, 0.0f,
-      1.0f,  1.0f,  1.0f, 1.0f
+      -1.0f, 1.0f, 0.0f, 1.0f,
+      -1.0f, -1.0f, 0.0f, 0.0f,
+      1.0f, -1.0f, 1.0f, 0.0f,
+      -1.0f, 1.0f, 0.0f, 1.0f,
+      1.0f, -1.0f, 1.0f, 0.0f,
+      1.0f, 1.0f, 1.0f, 1.0f
   };
 
   glGenVertexArrays(1, &quad_vao_);
@@ -226,9 +224,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBindBuffer(GL_ARRAY_BUFFER, quad_vbo_);
   glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -408,7 +406,7 @@ void Renderer::load_async(const Model &model) {
   load_async(model.material.metallic_map);
   load_async(model.material.roughness_map);
   load_async(model.material.ambient_occlusion_map);
-  for (auto & m : model.models){
+  for (auto &m : model.models) {
     load_async(m);
   }
 }
@@ -421,7 +419,7 @@ void Renderer::load(const Model &model) {
   load(model.material.metallic_map);
   load(model.material.roughness_map);
   load(model.material.ambient_occlusion_map);
-  for (auto & m : model.models){
+  for (auto &m : model.models) {
     load(m);
   }
 }
@@ -434,7 +432,7 @@ void Renderer::unload(const Model &model) {
   unload(model.material.metallic_map);
   unload(model.material.roughness_map);
   unload(model.material.ambient_occlusion_map);
-  for (auto & m : model.models){
+  for (auto &m : model.models) {
     unload(m);
   }
 }
@@ -498,7 +496,6 @@ void Renderer::load_async(const SharedTexture2D &texture) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
 
-
       float aniso = 0.0f;
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
@@ -513,14 +510,14 @@ void Renderer::load_async(const SharedTexture2D &texture) {
       std::cout << texture->layers[0].size() << std::endl;
 
       test_buffers_.insert({texture->id(), PixelBuffer{buffer_id_, std::async(std::launch::async,
-                                                                             [](void *ptr,
-                                                                                const SharedTexture2D texture) {
-                                                                               std::memcpy(ptr,
-                                                                                           texture->layers[0].data(),
-                                                                                           texture->layers[0].size());
-                                                                             },
-                                                                             ptr_,
-                                                                             texture)}});
+                                                                              [](void *ptr,
+                                                                                 const SharedTexture2D texture) {
+                                                                                std::memcpy(ptr,
+                                                                                            texture->layers[0].data(),
+                                                                                            texture->layers[0].size());
+                                                                              },
+                                                                              ptr_,
+                                                                              texture)}});
 
       frame_time = std::chrono::high_resolution_clock::now() - old_time;
       std::cout << "tc: " << std::fixed << frame_time.count() << std::endl;
@@ -776,7 +773,9 @@ void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &c
   glBindVertexArray(0);
 }
 
-void Renderer::render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution) {
+void Renderer::render_particles(const Scene::ParticleClouds &clouds,
+                                const mos::gfx::Camera &camera,
+                                const glm::vec2 &resolution) {
   for (auto &particles : clouds) {
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
@@ -1013,7 +1012,8 @@ void Renderer::render_shadow_map(const Scene &scene) {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
     GLuint texture_id = create_texture(scene.light.shadow_map);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+    glFramebufferTexture2D(GL_FRAMEBUFFER,
+                           GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
     textures_.insert({scene.light.shadow_map->id(), Buffer{texture_id, scene.light.shadow_map->layers.modified()}});
 
@@ -1055,7 +1055,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
 
-    texture_cubes_ .insert_or_assign(scene.environment.texture_.id(), texture_id);
+    texture_cubes_.insert_or_assign(scene.environment.texture_.id(), texture_id);
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -1194,29 +1194,29 @@ void Renderer::unload(const Mesh &mesh) {
 }
 
 void Renderer::load(const SharedMesh &mesh) {
-  if (mesh){
+  if (mesh) {
     load(*mesh);
   }
 }
 
 void Renderer::unload(const SharedMesh &mesh) {
-  if(mesh){
+  if (mesh) {
     unload(*mesh);
   }
 }
 void Renderer::load(const Scene::Models &models) {
-  for (auto & model : models){
+  for (auto &model : models) {
     load(model);
   }
 }
 void Renderer::load_async(const Scene::Models &models) {
-  for (auto & model : models){
+  for (auto &model : models) {
     load_async(model);
   }
 }
 
 void Renderer::render_texture_targets(const Scene &scene) {
-  for (auto & target : scene.texture_targets) {
+  for (auto &target : scene.texture_targets) {
     if (frame_buffers_.find(target.target.id()) == frame_buffers_.end()) {
       GLuint frame_buffer_id;
       glGenFramebuffers(1, &frame_buffer_id);
@@ -1264,7 +1264,6 @@ void Renderer::render_texture_targets(const Scene &scene) {
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
-
 
 Renderer::VertexProgramData::VertexProgramData(const GLuint program)
     : program(program), model_view_projection_matrix(glGetUniformLocation(
