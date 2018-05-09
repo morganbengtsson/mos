@@ -76,7 +76,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  create_box_program();
   create_quad_program();
 
   // Render boxes
@@ -229,29 +228,6 @@ Renderer::~Renderer() {
   for (auto &va : vertex_arrays_) {
     glDeleteVertexArrays(1, &va.second);
   }
-}
-
-void Renderer::create_box_program() {
-  std::string name = "box_330";
-  std::string vert_source = text("assets/shaders/" + name + ".vert");
-  std::string frag_source = text("assets/shaders/" + name + ".frag");
-
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
-
-  auto program = glCreateProgram();
-
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glBindAttribLocation(program, 0, "position");
-  link_program(program, name);
-  check_program(program, name);
-
-  box_program_ = BoxProgram{program,
-                            glGetUniformLocation(program, "model_view_projection"),
-                            glGetUniformLocation(program, "model_view")};
 }
 
 void Renderer::create_quad_program() {
@@ -1298,6 +1274,30 @@ Renderer::ParticleProgram::ParticleProgram() {
   resolution = glGetUniformLocation(program, "resolution");
 }
 Renderer::ParticleProgram::~ParticleProgram() {
+  glDeleteProgram(program);
+}
+Renderer::BoxProgram::BoxProgram() {
+  std::string name = "box_330";
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  link_program(program, name);
+  check_program(program, name);
+
+  mvp = glGetUniformLocation(program, "model_view_projection"),
+  mv =  glGetUniformLocation(program, "model_view");
+}
+Renderer::BoxProgram::~BoxProgram() {
   glDeleteProgram(program);
 }
 }

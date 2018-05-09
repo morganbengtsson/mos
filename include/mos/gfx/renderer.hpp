@@ -154,7 +154,8 @@ private:
 
   /** Uniforms for the bounding box shader program. */
   struct BoxProgram {
-
+    BoxProgram();
+    ~BoxProgram();
     GLuint program;
     GLint mvp;
     GLint mv;
@@ -262,7 +263,6 @@ private:
   static void link_program(const GLuint program,
                     const std::string& name);
 
-  void create_box_program();
   void create_quad_program();
 
   StandardProgram standard_program_;
