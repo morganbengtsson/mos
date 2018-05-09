@@ -76,7 +76,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  create_particle_program();
   create_box_program();
   create_quad_program();
 
@@ -279,33 +278,6 @@ void Renderer::create_quad_program() {
       glGetUniformLocation(program, "quad_texture")};
 }
 
-void Renderer::create_particle_program() {
-  std::string name = "particles_330";
-
-  std::string vert_source = text("assets/shaders/" + name + ".vert");
-  std::string frag_source = text("assets/shaders/" + name + ".frag");
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
-
-  auto program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "color");
-
-  link_program(program, "particle");
-  check_program(program, "particle");
-
-  particle_program_ = ParticleProgram{
-      program,
-      glGetUniformLocation(program, "model_view_projection"),
-      glGetUniformLocation(program, "model_view"),
-      glGetUniformLocation(program, "projection"),
-      glGetUniformLocation(program, "tex"),
-      glGetUniformLocation(program, "resolution")};
-}
 
 void Renderer::load_async(const Model &model) {
   load(model.mesh);
@@ -1299,6 +1271,33 @@ Renderer::StandardProgram::StandardProgram() {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 Renderer::StandardProgram::~StandardProgram() {
+  glDeleteProgram(program);
+}
+Renderer::ParticleProgram::ParticleProgram() {
+  std::string name = "particles_330";
+
+  std::string vert_source = text("assets/shaders/" + name + ".vert");
+  std::string frag_source = text("assets/shaders/" + name + ".frag");
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "color");
+
+  link_program(program, "particle");
+  check_program(program, "particle");
+  mvp = glGetUniformLocation(program, "model_view_projection"),
+  mv = glGetUniformLocation(program, "model_view"),
+  p = glGetUniformLocation(program, "projection"),
+  texture = glGetUniformLocation(program, "tex"),
+  resolution = glGetUniformLocation(program, "resolution");
+}
+Renderer::ParticleProgram::~ParticleProgram() {
   glDeleteProgram(program);
 }
 }

@@ -142,6 +142,8 @@ private:
 
   /** Uniforms for the particle shader program. */
   struct ParticleProgram {
+    ParticleProgram();
+    ~ParticleProgram();
     GLuint program;
     GLint mvp;
     GLint mv;
@@ -152,6 +154,7 @@ private:
 
   /** Uniforms for the bounding box shader program. */
   struct BoxProgram {
+
     GLuint program;
     GLint mvp;
     GLint mv;
@@ -172,7 +175,6 @@ private:
   /** Uniforms for the standard shader. */
   class StandardProgram {
   public:
-    //TODO make all const
     StandardProgram();
     ~StandardProgram();
     GLuint program;
@@ -261,7 +263,6 @@ private:
                     const std::string& name);
 
   void create_box_program();
-  void create_particle_program();
   void create_quad_program();
 
   StandardProgram standard_program_;
