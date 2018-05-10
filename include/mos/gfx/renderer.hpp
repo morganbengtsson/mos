@@ -120,7 +120,6 @@ public:
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
       glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
       //Blur pass3
       glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo1_);
       glUseProgram(blur_program_.program);
@@ -148,7 +147,7 @@ public:
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, blur_texture0_);
     glUniform1i(bloom_program_.bright_color_texture, 1);
-    float strength = 0.3f;
+    float strength = 0.1f;
     glUniform1fv(bloom_program_.strength, 1, &strength);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
