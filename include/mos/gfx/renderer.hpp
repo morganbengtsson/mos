@@ -89,10 +89,9 @@ public:
       render_scene(it->camera, *it, resolution);
     }
 
+    //RenderQuad
     glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
     clear(color);
-
-    //RenderQuad
     glUseProgram(quad_program_.program);
 
     glBindVertexArray(quad_vao_);
@@ -107,6 +106,19 @@ public:
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
+    //Blur
+    glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
+    glUseProgram(blur_program_.program);
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, bright_texture_);
+    glUniform1i(blur_program_.color_texture, 0);
+    GLint horizontal = true;
+    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
     //Render to screen
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(bloom_program_.program);
@@ -118,7 +130,7 @@ public:
     glUniform1i(bloom_program_.color_texture, 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, bright_texture_);
+    glBindTexture(GL_TEXTURE_2D, blur_texture0_);
     glUniform1i(bloom_program_.bright_color_texture, 1);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -153,7 +165,8 @@ private:
   GLuint color_texture0_;
   GLuint bright_texture_;
 
-  GLuint blur_fbo_;
+  GLuint blur_fbo0_;
+  GLuint blur_fbo1_;
   GLuint blur_texture0_;
   GLuint blur_texture1_;
 
@@ -212,6 +225,7 @@ private:
     ~BlurProgram();
     GLuint program;
     GLint color_texture;
+    GLint horizontal;
   };
 
   struct DepthProgram {

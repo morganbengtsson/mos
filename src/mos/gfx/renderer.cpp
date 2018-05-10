@@ -197,8 +197,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   }
 
   //Blur
-  glGenFramebuffers(1, &blur_fbo_);
-  glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo_);
+  glGenFramebuffers(1, &blur_fbo0_);
+  glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
 
   glGenTextures(1, &blur_texture0_);
   glBindTexture(GL_TEXTURE_2D, blur_texture0_);
@@ -210,15 +210,22 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBindTexture(GL_TEXTURE_2D, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_texture0_, 0);
 
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+
+  glGenFramebuffers(1, &blur_fbo1_);
+  glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo1_);
+
   glGenTextures(1, &blur_texture1_);
-  glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+  glBindTexture(GL_TEXTURE_2D, blur_texture1_);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_texture0_, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_texture1_, 0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");
@@ -1390,6 +1397,7 @@ Renderer::BlurProgram::BlurProgram() {
   link_program(program, name);
   check_program(program, name);
   color_texture = glGetUniformLocation(program, "color_texture");
+  horizontal = glGetUniformLocation(program, "horizontal");
 }
 Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
