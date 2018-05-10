@@ -196,6 +196,34 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     throw std::runtime_error("Framebuffer incomplete");
   }
 
+  //Blur
+  glGenFramebuffers(1, &blur_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo_);
+
+  glGenTextures(1, &blur_texture0_);
+  glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_texture0_, 0);
+
+  glGenTextures(1, &blur_texture1_);
+  glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blur_texture0_, 0);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -1341,6 +1369,29 @@ Renderer::BloomProgram::BloomProgram() {
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
 }
 Renderer::BloomProgram::~BloomProgram() {
+  glDeleteProgram(program);
+}
+Renderer::BlurProgram::BlurProgram() {
+  std::string name = "blur";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  link_program(program, name);
+  check_program(program, name);
+  color_texture = glGetUniformLocation(program, "color_texture");
+}
+Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
 }
 }

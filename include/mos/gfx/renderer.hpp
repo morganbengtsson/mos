@@ -153,6 +153,10 @@ private:
   GLuint color_texture0_;
   GLuint bright_texture_;
 
+  GLuint blur_fbo_;
+  GLuint blur_texture0_;
+  GLuint blur_texture1_;
+
   GLuint quad_vao_;
   GLuint quad_vbo_;
 
@@ -201,6 +205,13 @@ private:
     GLuint program;
     GLint color_texture;
     GLint bright_color_texture;
+  };
+
+  struct BlurProgram {
+    BlurProgram();
+    ~BlurProgram();
+    GLuint program;
+    GLint color_texture;
   };
 
   struct DepthProgram {
@@ -305,6 +316,7 @@ private:
   DepthProgram depth_program_;
   QuadProgram quad_program_;
   BloomProgram bloom_program_;
+  BlurProgram blur_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
