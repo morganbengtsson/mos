@@ -98,11 +98,11 @@ public:
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
-    glUniform1i(quad_program_.quad_texture, 0);
+    glUniform1i(quad_program_.color_texture, 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-    glUniform1i(quad_program_.quad_depth_texture, 1);
+    glUniform1i(quad_program_.depth_texture, 1);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -222,12 +222,12 @@ private:
     GLint mv;
   };
 
-  struct QuadProgram {
-    QuadProgram();
-    ~QuadProgram();
+  struct MultisampleProgram {
+    MultisampleProgram();
+    ~MultisampleProgram();
     GLuint program;
-    GLint quad_texture;
-    GLint quad_depth_texture;
+    GLint color_texture;
+    GLint depth_texture;
   };
 
   struct BloomProgram {
@@ -347,7 +347,7 @@ private:
   ParticleProgram particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;
-  QuadProgram quad_program_;
+  MultisampleProgram quad_program_;
   BloomProgram bloom_program_;
   BlurProgram blur_program_;
 

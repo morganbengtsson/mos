@@ -1328,8 +1328,8 @@ Renderer::BoxProgram::BoxProgram() {
 Renderer::BoxProgram::~BoxProgram() {
   glDeleteProgram(program);
 }
-Renderer::QuadProgram::QuadProgram() {
-  std::string name = "quad_330";
+Renderer::MultisampleProgram::MultisampleProgram() {
+  std::string name = "multisample";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
@@ -1344,13 +1344,13 @@ Renderer::QuadProgram::QuadProgram() {
   glAttachShader(program, fragment_shader);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
-  link_program(program, "quad");
-  check_program(program, "quad");
+  link_program(program, name);
+  check_program(program, name);
 
-  quad_texture = glGetUniformLocation(program, "quad_texture");
-  quad_depth_texture = glGetUniformLocation(program, "quad_depth_texture");
+  color_texture = glGetUniformLocation(program, "quad_texture");
+  depth_texture = glGetUniformLocation(program, "quad_depth_texture");
 }
-Renderer::QuadProgram::~QuadProgram() {
+Renderer::MultisampleProgram::~MultisampleProgram() {
   glDeleteProgram(program);
 }
 
