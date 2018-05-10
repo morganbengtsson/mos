@@ -1288,5 +1288,30 @@ Renderer::QuadProgram::QuadProgram() {
 Renderer::QuadProgram::~QuadProgram() {
   glDeleteProgram(program);
 }
+Renderer::BrightnessProgram::BrightnessProgram() {
+  std::string name = "brightness";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  check_shader(vertex_shader, name);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  check_shader(fragment_shader, name);
+
+  program = glCreateProgram();
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  link_program(program, name);
+  check_program(program, name);
+
+  color_texture = glGetUniformLocation(program, "color_texture");
+  bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
+}
+Renderer::BrightnessProgram::~BrightnessProgram() {
+  glDeleteProgram(program);
+}
 }
 }
