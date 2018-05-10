@@ -132,6 +132,10 @@ private:
   GLuint multi_fbo_;
   GLuint multi_texture_;
   GLuint multi_depth_texture_;
+
+  GLuint color_fbo_;
+  GLuint color_texture_;
+
   GLuint quad_vao_;
   GLuint quad_vbo_;
 
