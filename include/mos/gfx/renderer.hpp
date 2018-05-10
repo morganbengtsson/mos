@@ -118,6 +118,8 @@ public:
     glUniform1i(brightness_program_.color_texture, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    //Render to screen
   }
 
   template<class It>
@@ -197,6 +199,13 @@ private:
   struct BrightnessProgram {
     BrightnessProgram();
     ~BrightnessProgram();
+    GLuint program;
+    GLint color_texture;
+  };
+
+  struct BloomProgram {
+    BloomProgram();
+    ~BloomProgram();
     GLuint program;
     GLint color_texture;
     GLint bright_color_texture;

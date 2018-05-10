@@ -1352,9 +1352,7 @@ Renderer::BrightnessProgram::BrightnessProgram() {
   glBindAttribLocation(program, 1, "uv");
   link_program(program, name);
   check_program(program, name);
-
   color_texture = glGetUniformLocation(program, "color_texture");
-  bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
 }
 Renderer::BrightnessProgram::~BrightnessProgram() {
   glDeleteProgram(program);
