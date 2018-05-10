@@ -42,7 +42,8 @@ out Fragment fragment;
 void main() {
     vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
     vec3 N = normalize(normal_matrix * normal);
-    vec3 B = cross(T, N);
+    T = normalize(T - dot(T, N) * N);
+    vec3 B = cross(N, T);
     fragment.tbn = mat3(T,B,N);
 
     vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
