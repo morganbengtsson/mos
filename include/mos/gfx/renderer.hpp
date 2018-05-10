@@ -150,7 +150,7 @@ private:
 
   GLuint bright_color_fbo_;
   GLuint bright_texture_;
-  GLuint color_texture_1;
+  GLuint color_texture1_;
 
   GLuint quad_vao_;
   GLuint quad_vbo_;
