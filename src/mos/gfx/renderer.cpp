@@ -1188,7 +1188,7 @@ void Renderer::link_program(const GLuint program, const std::string &name = "") 
 }
 
 Renderer::DepthProgram::DepthProgram() {
-  std::string name = "depth_330";
+  std::string name = "depth";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
@@ -1212,7 +1212,7 @@ Renderer::DepthProgram::~DepthProgram() {
   glDeleteProgram(program);
 }
 Renderer::StandardProgram::StandardProgram() {
-  std::string name = "standard_330";
+  std::string name = "standard";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
@@ -1278,8 +1278,7 @@ Renderer::StandardProgram::~StandardProgram() {
   glDeleteProgram(program);
 }
 Renderer::ParticleProgram::ParticleProgram() {
-  std::string name = "particles_330";
-
+  std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
   auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
@@ -1293,8 +1292,8 @@ Renderer::ParticleProgram::ParticleProgram() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
 
-  link_program(program, "particle");
-  check_program(program, "particle");
+  link_program(program, name);
+  check_program(program, name);
   mvp = glGetUniformLocation(program, "model_view_projection"),
   mv = glGetUniformLocation(program, "model_view"),
   p = glGetUniformLocation(program, "projection"),
@@ -1305,7 +1304,7 @@ Renderer::ParticleProgram::~ParticleProgram() {
   glDeleteProgram(program);
 }
 Renderer::BoxProgram::BoxProgram() {
-  std::string name = "box_330";
+  std::string name = "box";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
