@@ -108,7 +108,7 @@ public:
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // Render again
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, bright_color_fbo_);
     glUseProgram(brightness_program_.program);
 
     glBindVertexArray(quad_vao_);
@@ -120,6 +120,20 @@ public:
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     //Render to screen
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUseProgram(bloom_program_.program);
+
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, color_texture1_);
+    glUniform1i(bloom_program_.color_texture, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, bright_texture_);
+    glUniform1i(bloom_program_.bright_color_texture, 1);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
   template<class It>
