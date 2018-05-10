@@ -92,22 +92,22 @@ public:
     //RenderQuad
     glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
     clear(color);
-    glUseProgram(quad_program_.program);
+    glUseProgram(multisample_program_.program);
 
     glBindVertexArray(quad_vao_);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
-    glUniform1i(quad_program_.color_texture, 0);
+    glUniform1i(multisample_program_.color_texture, 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-    glUniform1i(quad_program_.depth_texture, 1);
+    glUniform1i(multisample_program_.depth_texture, 1);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glViewport(0, 0, resolution.x / 4, resolution.y / 4);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       //Blur pass2
       glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
       glUseProgram(blur_program_.program);
@@ -347,7 +347,7 @@ private:
   ParticleProgram particle_program_;
   BoxProgram box_program_;
   DepthProgram depth_program_;
-  MultisampleProgram quad_program_;
+  MultisampleProgram multisample_program_;
   BloomProgram bloom_program_;
   BlurProgram blur_program_;
 
