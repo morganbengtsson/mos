@@ -183,6 +183,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     throw std::runtime_error("Framebuffer incomplete");
   }
 
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

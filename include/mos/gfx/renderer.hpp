@@ -106,6 +106,18 @@ public:
     glUniform1i(quad_program_.quad_depth_texture, 1);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Render again
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUseProgram(brightness_program_.program);
+
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, color_texture_);
+    glUniform1i(brightness_program_.color_texture, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
   template<class It>
