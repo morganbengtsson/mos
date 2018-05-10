@@ -202,7 +202,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glGenTextures(1, &blur_texture0_);
   glBindTexture(GL_TEXTURE_2D, blur_texture0_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x / 4, resolution.y / 4, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -219,7 +219,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glGenTextures(1, &blur_texture1_);
   glBindTexture(GL_TEXTURE_2D, blur_texture1_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x / 4, resolution.y / 4, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1374,6 +1374,8 @@ Renderer::BloomProgram::BloomProgram() {
   check_program(program, name);
   color_texture = glGetUniformLocation(program, "color_texture");
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
+  strength = glGetUniformLocation(program, "strength");
+
 }
 Renderer::BloomProgram::~BloomProgram() {
   glDeleteProgram(program);

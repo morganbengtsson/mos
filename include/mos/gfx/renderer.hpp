@@ -106,6 +106,7 @@ public:
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
+    glViewport(0, 0, resolution.x / 4, resolution.y / 4);
     for (int i = 0; i < 10; i++) {
       //Blur pass2
       glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
@@ -133,6 +134,7 @@ public:
       glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
+    glViewport(0, 0, resolution.x, resolution.y);
     //Render to screen
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(bloom_program_.program);
@@ -146,6 +148,8 @@ public:
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, blur_texture0_);
     glUniform1i(bloom_program_.bright_color_texture, 1);
+    float strength = 0.3f;
+    glUniform1fv(bloom_program_.strength, 1, &strength);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
@@ -232,6 +236,7 @@ private:
     GLuint program;
     GLint color_texture;
     GLint bright_color_texture;
+    GLint strength;
   };
 
   struct BlurProgram {
