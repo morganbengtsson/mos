@@ -195,13 +195,6 @@ private:
     GLint quad_depth_texture;
   };
 
-  struct BrightnessProgram {
-    BrightnessProgram();
-    ~BrightnessProgram();
-    GLuint program;
-    GLint color_texture;
-  };
-
   struct BloomProgram {
     BloomProgram();
     ~BloomProgram();
@@ -311,7 +304,6 @@ private:
   BoxProgram box_program_;
   DepthProgram depth_program_;
   QuadProgram quad_program_;
-  BrightnessProgram brightness_program_;
   BloomProgram bloom_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
