@@ -179,24 +179,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBindTexture(GL_TEXTURE_2D, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture0_, 0);
 
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete");
-  }
-
-
-  glGenFramebuffers(1, &bright_color_fbo_);
-  glBindFramebuffer(GL_FRAMEBUFFER, bright_color_fbo_);
-
-  glGenTextures(1, &color_texture1_);
-  glBindTexture(GL_TEXTURE_2D, color_texture1_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture1_, 0);
-
   glGenTextures(1, &bright_texture_);
   glBindTexture(GL_TEXTURE_2D, bright_texture_);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
@@ -209,7 +191,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
   glDrawBuffers(2, attachments);
-
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");

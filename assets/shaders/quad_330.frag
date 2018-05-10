@@ -1,5 +1,6 @@
 #version 330
 layout(location = 0) out vec4 color;
+layout(location = 1) out vec4 bright_color;
 in vec2 frag_uv;
 
 uniform sampler2DMS quad_texture;
@@ -14,5 +15,6 @@ void main() {
         average_color += texelFetch(quad_texture, ivec2(tmp), i).rgb;
     }
     color = vec4(average_color / 4.0, 1.0);
+    bright_color.rgb = color.rgb * 2.0;
     
 }

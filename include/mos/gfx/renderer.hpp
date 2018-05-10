@@ -107,18 +107,6 @@ public:
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    // Render again
-    glBindFramebuffer(GL_FRAMEBUFFER, bright_color_fbo_);
-    glUseProgram(brightness_program_.program);
-
-    glBindVertexArray(quad_vao_);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, color_texture0_);
-    glUniform1i(brightness_program_.color_texture, 0);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
     //Render to screen
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glUseProgram(bloom_program_.program);
@@ -126,7 +114,7 @@ public:
     glBindVertexArray(quad_vao_);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, color_texture1_);
+    glBindTexture(GL_TEXTURE_2D, color_texture0_);
     glUniform1i(bloom_program_.color_texture, 0);
 
     glActiveTexture(GL_TEXTURE1);
@@ -163,10 +151,7 @@ private:
 
   GLuint color_fbo_;
   GLuint color_texture0_;
-
-  GLuint bright_color_fbo_;
   GLuint bright_texture_;
-  GLuint color_texture1_;
 
   GLuint quad_vao_;
   GLuint quad_vbo_;
