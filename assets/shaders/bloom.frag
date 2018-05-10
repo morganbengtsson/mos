@@ -6,5 +6,6 @@ uniform sampler2D color_texture;
 uniform sampler2D bright_color_texture;
 
 void main() {
-    color = vec4(texture(bright_color_texture, frag_uv).rgb, 1.0);
+    vec3 bloom = texture(bright_color_texture, frag_uv).rgb;
+    color = vec4(texture(color_texture, frag_uv).rgb + bloom, 1.0);
 }
