@@ -313,6 +313,7 @@ private:
   DepthProgram depth_program_;
   QuadProgram quad_program_;
   BrightnessProgram brightness_program_;
+  BloomProgram bloom_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
