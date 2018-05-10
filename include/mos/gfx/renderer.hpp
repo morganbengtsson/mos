@@ -89,7 +89,7 @@ public:
       render_scene(it->camera, *it, resolution);
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
     clear(color);
 
     //RenderQuad
