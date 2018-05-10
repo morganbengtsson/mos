@@ -114,7 +114,7 @@ public:
     glBindVertexArray(quad_vao_);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, color_texture_);
+    glBindTexture(GL_TEXTURE_2D, color_texture0_);
     glUniform1i(brightness_program_.color_texture, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -146,7 +146,11 @@ private:
   GLuint multi_depth_texture_;
 
   GLuint color_fbo_;
-  GLuint color_texture_;
+  GLuint color_texture0_;
+
+  GLuint bright_color_fbo_;
+  GLuint bright_texture_;
+  GLuint color_texture_1;
 
   GLuint quad_vao_;
   GLuint quad_vbo_;
