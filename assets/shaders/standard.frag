@@ -192,8 +192,8 @@ void main() {
     vec3 H = normalize(V + L);
 
     // Cook-Torrance BRDF
-    float NDF = distribution_GGX(N, H, material.roughness);
-    float G = geometry_smith(N, V, L, material.roughness);
+    float NDF = distribution_GGX(N, H, roughness);
+    float G = geometry_smith(N, V, L, roughness);
     vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
     vec3 nominator    = NDF * G * F;

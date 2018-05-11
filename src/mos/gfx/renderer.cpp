@@ -835,7 +835,8 @@ void Renderer::render_model(const Model &model,
   glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
   // Camera in world space
-  glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(camera.position()));
+  auto position = camera.position();
+  glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
 
   // Send light in world space
   glUniform3fv(uniforms.light_position, 1,
