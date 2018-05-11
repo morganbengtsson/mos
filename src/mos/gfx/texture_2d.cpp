@@ -11,7 +11,7 @@ Texture2D::Texture2D(const unsigned int width, const unsigned int height,
 
 Texture2D::~Texture2D() {}
 
-SharedTexture2D Texture2D::load(const std::string &path, const bool mipmaps, const Texture2D::Wrap &wrap) {
+SharedTexture2D Texture2D::load(const std::string &path, const bool color_data, const bool mipmaps, const Wrap &wrap) {
   if (path.empty() || path.back() == '/') {
     return SharedTexture2D();
   }

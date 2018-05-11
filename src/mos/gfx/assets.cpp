@@ -76,7 +76,7 @@ Assets::texture(const std::string &path,
                       const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, mipmaps, wrap)));
+      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, 0, mipmaps, wrap)));
     }
     return textures_.at(path);
   } else {
