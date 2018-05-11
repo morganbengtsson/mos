@@ -160,6 +160,7 @@ void main() {
     normal_from_map = normalize(fragment.tbn * normal_from_map);
 
     float amount = texture(material.normal_map, fragment.uv).a;
+
     if (amount > 0.0f){
         normal = normalize(mix(normal, normal_from_map, amount));
     }

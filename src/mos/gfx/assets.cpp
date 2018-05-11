@@ -107,7 +107,13 @@ Material Assets::material(const std::string &path) {
       auto emission_map = read_texture("emission_map");
       auto normal_map = read_texture("normal_map");
       if (normal_map) {
-        normal_map->format = Texture::Format::RGBA;
+        if (normal_map->format == Texture::Format::SRGB){
+          normal_map->format = Texture::Format::RGB;
+        }
+        else if (normal_map->format == Texture::Format::SRGBA){
+          normal_map->format = Texture::Format::RGBA;
+        }
+        //normal_map->format = normal_map->format == Texture::Format::SRGB ? Texture::Format::RGB : Texture::Format::RGBA;
       }
       auto metallic_map = read_texture("metallic_map");
       auto roughness_map = read_texture("roughness_map");
