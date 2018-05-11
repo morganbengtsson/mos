@@ -15,10 +15,13 @@ SharedTexture2D Texture2D::load(const std::string &path, const bool color_data, 
   if (path.empty() || path.back() == '/') {
     return SharedTexture2D();
   }
-  return std::make_shared<Texture2D>(path, mipmaps, wrap);
+  return std::make_shared<Texture2D>(path, color_data, mipmaps, wrap);
 }
 
-Texture2D::Texture2D(const std::string &path, const bool mipmaps, const Texture2D::Wrap &wrap)
-    : Texture({path}, wrap, mipmaps) {}
+Texture2D::Texture2D(const std::string &path,
+                     const bool color_data,
+                     const bool mipmaps,
+                     const Texture2D::Wrap &wrap)
+    : Texture({path}, color_data, wrap, mipmaps) {}
 }
 }

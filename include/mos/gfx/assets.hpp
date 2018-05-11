@@ -55,6 +55,7 @@ public:
   /** Loads Texture2D from a *.png file and caches it internally. */
   SharedTexture2D
   texture(const std::string &path,
+          const bool color_data = true,
           const bool mipmaps = true,
           const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 

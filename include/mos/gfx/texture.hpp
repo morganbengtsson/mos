@@ -61,7 +61,9 @@ public:
           const bool mipmaps = true);
 
   Texture(const std::initializer_list<std::string> &paths,
-          const Wrap &wrap, const bool mipmaps);
+          const bool color_data,
+          const Wrap &wrap,
+          const bool mipmaps);
 
   int id() const;
   int width() const;

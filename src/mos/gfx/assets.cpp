@@ -72,11 +72,12 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
 
 std::shared_ptr<Texture2D>
 Assets::texture(const std::string &path,
+                      const bool color_data,
                       const bool mipmaps,
                       const Texture2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, 0, mipmaps, wrap)));
+      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, color_data, mipmaps, wrap)));
     }
     return textures_.at(path);
   } else {
@@ -94,12 +95,12 @@ Material Assets::material(const std::string &path) {
     if (fpath.extension() == "material") {
       auto value = json::parse(mos::text(directory_ + fpath.str()));
 
-      auto read_texture = [&](const std::string &name) {
+      auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name = "";
         if (!value[name].is_null()) {
           file_name = value[name];
         }
-        auto tex = file_name.empty() ? texture("") : texture(base_path + file_name);
+        auto tex = file_name.empty() ? texture("") : texture(base_path + file_name, color_data);
         return tex;
       };
 

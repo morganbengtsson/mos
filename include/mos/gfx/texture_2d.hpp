@@ -23,7 +23,8 @@ public:
       : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps) {}
 
    Texture2D(const unsigned int width, const unsigned int height,
-            const Format &format = Format::RGBA, const Wrap &wrap = Wrap::REPEAT,
+            const Format &format = Format::SRGBA,
+             const Wrap &wrap = Wrap::REPEAT,
             const bool mipmaps = true);
 
   virtual ~Texture2D();
@@ -36,6 +37,7 @@ public:
 
   /** Create from file. */
   Texture2D(const std::string &path,
+            const bool color_data = true,
             const bool mipmaps = true,
             const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 };
