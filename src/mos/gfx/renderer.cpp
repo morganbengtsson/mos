@@ -492,11 +492,8 @@ unsigned int Renderer::create_shader(const std::string &source,
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
   std::string out = name;
-  if (!out.empty()) {
-    out += " ";
-  }
 
-  std::cout << "Compiling " << out << types[type] << std::endl;
+  std::cout << "Compiling " << name << types[type] << std::endl;
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
   return id;
@@ -1191,9 +1188,9 @@ Renderer::DepthProgram::DepthProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
   check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
   check_shader(fragment_shader, name);
 
   program = glCreateProgram();
@@ -1215,12 +1212,12 @@ Renderer::StandardProgram::StandardProgram() {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
 
   auto fragment_shader =
-      create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
+      create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
@@ -1280,10 +1277,10 @@ Renderer::ParticleProgram::ParticleProgram() {
   std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
@@ -1307,10 +1304,10 @@ Renderer::BoxProgram::BoxProgram() {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
 
@@ -1331,10 +1328,10 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, "quad_330.vert");
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, "quad_330.frag");
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
 
@@ -1345,8 +1342,8 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   link_program(program, name);
   check_program(program, name);
 
-  color_texture = glGetUniformLocation(program, "quad_texture");
-  depth_texture = glGetUniformLocation(program, "quad_depth_texture");
+  color_texture = glGetUniformLocation(program, "color_texture");
+  depth_texture = glGetUniformLocation(program, "depth_texture");
 }
 Renderer::MultisampleProgram::~MultisampleProgram() {
   glDeleteProgram(program);
@@ -1357,10 +1354,10 @@ Renderer::BloomProgram::BloomProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
 
@@ -1383,10 +1380,10 @@ Renderer::BlurProgram::BlurProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER);
-  check_shader(fragment_shader, name);
+  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
+  assert(check_shader(vertex_shader, name));
+  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
+  assert(check_shader(fragment_shader, name));
 
   program = glCreateProgram();
 

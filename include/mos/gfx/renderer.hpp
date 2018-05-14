@@ -336,8 +336,8 @@ private:
   unsigned int create_texture_cube(const TextureCube &texture);
 
   static unsigned int create_shader(const std::string &source,
-                             const unsigned int type, const std::string& name = "");
-  static bool check_shader(const unsigned int shader, const std::string &name = "");
+                             const unsigned int type, const std::string& name);
+  static bool check_shader(const unsigned int shader, const std::string &name);
   static bool check_program(const unsigned int program, const std::string &name);
   static void link_program(const GLuint program,
                     const std::string& name);
