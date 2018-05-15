@@ -25,25 +25,12 @@ public:
   using ParticleClouds = std::vector<ParticleCloud>;
 
   Scene();
-
-  template<class T>
-  Scene(T begin,
-        T end,
-        const Camera &camera,
-        const Light &light = Light(),
-        const EnvironmentLight &environment_light = EnvironmentLight(),
-        const Fog &fog_linear = Fog())
-      : models(begin, end),
-        camera(camera),
-        light(light),
-        environment(environment_light),
-        fog(fog_linear){}
-
-  Scene(const std::initializer_list<Model> &models,
+  Scene(const Models &models,
         const Camera &camera,
         const Light &light = Light(),
         const EnvironmentLight &environment_light = EnvironmentLight(),
         const Fog &fog = Fog());
+
   Models models;
   ParticleClouds particle_clouds;
   Boxes boxes;
