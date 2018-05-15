@@ -18,6 +18,8 @@ public:
   void push_back(const Model& model);
   Container::const_iterator begin() const;
   Container::const_iterator end() const;
+  Container::iterator begin();
+  Container::iterator end();
   Container::reference operator[](typename Container::size_type pos);
 private:
   std::vector<Model> models_;

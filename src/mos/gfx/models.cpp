@@ -23,6 +23,12 @@ Models::Container::const_iterator Models::end() const {
 Model &Models::operator[](unsigned long pos) {
   return models_[pos];
 }
+Models::Container::iterator Models::begin() {
+  return models_.begin();
+}
+Models::Container::iterator Models::end() {
+  return models_.end();
+}
 
 }
 }
