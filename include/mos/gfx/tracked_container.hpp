@@ -9,20 +9,20 @@ namespace gfx {
 
 /** Container with modified time stamp. */
 template<class T>
-class Container {
+class TrackedContainer {
 public:
   using Cont = std::vector<T>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
-  Container(){
+  TrackedContainer(){
     invalidate();
   };
 
   template<class It>
-  Container(const std::initializer_list<It> list): Container(list.begin(), list.end()){}
+  TrackedContainer(const std::initializer_list<It> list): TrackedContainer(list.begin(), list.end()){}
 
   template<class It>
-  Container(It begin, It end) {
+  TrackedContainer(It begin, It end) {
     assign(begin, end);
   }
   template<class It>

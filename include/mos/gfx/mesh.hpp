@@ -7,7 +7,7 @@
 #include <memory>
 #include <chrono>
 #include <mos/gfx/vertex.hpp>
-#include <mos/gfx/container.hpp>
+#include <mos/gfx/tracked_container.hpp>
 
 namespace mos {
 namespace gfx {
@@ -59,8 +59,8 @@ public:
 
   void calculate_tangents();
 
-  Container<Vertex> vertices;
-  Container<int> indices;
+  TrackedContainer<Vertex> vertices;
+  TrackedContainer<int> indices;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
   static std::atomic_uint current_id_;

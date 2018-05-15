@@ -4,7 +4,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <chrono>
 #include <mos/gfx/particle.hpp>
-#include <mos/gfx/container.hpp>
+#include <mos/gfx/tracked_container.hpp>
 
 namespace mos {
 namespace gfx {
@@ -31,7 +31,7 @@ public:
   SharedTexture2D emission_map;
 
   /** Particles. */
-  Container<Particle> particles;
+  TrackedContainer<Particle> particles;
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;

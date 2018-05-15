@@ -3,7 +3,7 @@
 #include <atomic>
 #include <initializer_list>
 #include <memory>
-#include <mos/gfx/container.hpp>
+#include <mos/gfx/tracked_container.hpp>
 
 namespace mos {
 namespace gfx {
@@ -73,7 +73,7 @@ public:
   bool mipmaps; // TODO: const
   Wrap wrap; // TODO: const
   Format format; // TODO: const
-  Container<Data> layers;
+  TrackedContainer<Data> layers;
 private:
   static std::atomic_uint current_id_;
   int id_;
