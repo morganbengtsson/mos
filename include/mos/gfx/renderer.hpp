@@ -77,24 +77,6 @@ public:
   void clear_buffers();
 
 private:
-  void * ptr_;
-  GLuint buffer_id_;
-
-  GLuint multi_fbo_;
-  GLuint multi_texture_;
-  GLuint multi_depth_texture_;
-
-  GLuint color_fbo_;
-  GLuint color_texture0_;
-  GLuint bright_texture_;
-
-  GLuint blur_fbo0_;
-  GLuint blur_fbo1_;
-  GLuint blur_texture0_;
-  GLuint blur_texture1_;
-
-  GLuint quad_vao_;
-  GLuint quad_vbo_;
 
   struct Buffer {
     GLuint id; // TODO const?
@@ -265,6 +247,25 @@ private:
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
   std::unordered_map<unsigned int, PixelBuffer> test_buffers_;
+
+  void * ptr_;
+  GLuint buffer_id_;
+
+  GLuint multi_fbo_;
+  GLuint multi_texture_;
+  GLuint multi_depth_texture_;
+
+  GLuint color_fbo_;
+  GLuint color_texture0_;
+  GLuint bright_texture_;
+
+  GLuint blur_fbo0_;
+  GLuint blur_fbo1_;
+  GLuint blur_texture0_;
+  GLuint blur_texture1_;
+
+  GLuint quad_vao_;
+  GLuint quad_vbo_;
 
   GLuint black_texture_;
   GLuint white_texture_;
