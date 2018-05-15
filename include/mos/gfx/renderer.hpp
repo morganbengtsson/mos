@@ -199,11 +199,12 @@ private:
   void render_shadow_map(const Models &models,
                          const Light &light);
 
-  void render_environment(const Scene &render_scene,
+  void render_environment(const Scene &scene,
                           const glm::vec4 &clear_color);
 
   void render_boxes(const Scene::Boxes & boxes,
                     const mos::gfx::Camera &camera);
+
   void render_particles(const Scene::ParticleClouds &clouds,
                         const mos::gfx::Camera &camera,
                         const glm::vec2 &resolution);

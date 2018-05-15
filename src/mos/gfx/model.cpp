@@ -15,14 +15,6 @@ Model::~Model() {}
 
 std::string Model::name() const { return name_; }
 
-Model::Models::const_iterator Model::begin() const { return models.begin(); }
-
-Model::Models::const_iterator Model::end() const { return models.end(); }
-
-Model::Models::iterator Model::begin() { return models.begin(); }
-
-Model::Models::iterator Model::end() { return models.end(); }
-
 glm::vec3 Model::position() const {
   return glm::vec3(transform[3]);
 }

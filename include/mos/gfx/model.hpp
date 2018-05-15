@@ -5,6 +5,7 @@
 #include <mos/gfx/material.hpp>
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/texture_2d.hpp>
+#include <mos/gfx/models.hpp>
 
 namespace mos {
 namespace gfx {
@@ -13,8 +14,6 @@ using namespace nlohmann;
 /** Gathers what is needed to render an object. A Mesh, a Material and a transformation. */
 class Model final {
 public:
-  using Models = std::vector<Model>;
-
   Model();
 
   Model(const std::string &name, const SharedMesh &mesh,
@@ -30,18 +29,6 @@ public:
 
   /** Set position. */
   void position(const glm::vec3 &position);
-
-  /** begin iterator for children. */
-  Models::const_iterator begin() const;
-
-  /** end iterator for children. */
-  Models::const_iterator end() const;
-
-  /** begin iterator for children. */
-  Models::iterator begin();
-
-  /** end iterator for children. */
-  Models::iterator end();
 
   SharedMesh mesh;
 

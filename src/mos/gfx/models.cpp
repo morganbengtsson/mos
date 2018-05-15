@@ -1,4 +1,5 @@
 #include <mos/gfx/models.hpp>
+#include <mos/gfx/model.hpp>
 
 namespace mos{
 namespace gfx{
@@ -18,6 +19,9 @@ Models::Container::const_iterator Models::begin() const {
 
 Models::Container::const_iterator Models::end() const {
   return models_.end();
+}
+Model &Models::operator[](unsigned long pos) {
+  return models_[pos];
 }
 
 }
