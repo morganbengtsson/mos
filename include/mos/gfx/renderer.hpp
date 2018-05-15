@@ -33,8 +33,8 @@ public:
   void load(const Model &model);
   void load_async(const Model &model);
 
-  void load(const Scene::Models & models);
-  void load_async(const Scene::Models &models);
+  void load(const Models & models);
+  void load_async(const Models &models);
 
   /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
@@ -306,7 +306,7 @@ private:
 
   void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
 
-  void render_shadow_map(const std::vector<Model> &models, const Light &light);
+  void render_shadow_map(const Models &models, const Light &light);
 
   void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
 

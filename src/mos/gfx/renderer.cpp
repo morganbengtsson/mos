@@ -891,7 +891,7 @@ void Renderer::render_async(const std::initializer_list<Scene> &scenes_init,
   render_async(scenes_init.begin(), scenes_init.end(), color, resolution);
 }
 
-void Renderer::render_shadow_map(const std::vector<Model> &models, const Light &light) {
+void Renderer::render_shadow_map(const Models &models, const Light &light) {
   if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1088,12 +1088,12 @@ void Renderer::unload(const SharedMesh &mesh) {
     unload(*mesh);
   }
 }
-void Renderer::load(const Scene::Models &models) {
+void Renderer::load(const Models &models) {
   for (auto &model : models) {
     load(model);
   }
 }
-void Renderer::load_async(const Scene::Models &models) {
+void Renderer::load_async(const Models &models) {
   for (auto &model : models) {
     load_async(model);
   }

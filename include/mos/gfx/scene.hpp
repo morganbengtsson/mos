@@ -12,6 +12,7 @@
 #include <mos/gfx/cube_camera.hpp>
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/texture_target.hpp>
+#include <mos/gfx/models.hpp>
 
 namespace mos {
 namespace gfx {
@@ -20,7 +21,6 @@ namespace gfx {
 class Scene {
 public:
   using TextureTargets = std::vector<TextureTarget>;
-  using Models = std::vector<Model>;
   using Boxes = std::vector<Box>;
   using ParticleClouds = std::vector<ParticleCloud>;
 
