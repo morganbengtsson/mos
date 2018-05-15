@@ -192,14 +192,21 @@ private:
 
   void render_texture_targets(const Scene &scene);
 
-  void render_scene(const Camera &camera, const Scene &render_scene, const glm::vec2 &resolution);
+  void render_scene(const Camera &camera,
+                    const Scene &render_scene,
+                    const glm::vec2 &resolution);
 
-  void render_shadow_map(const Models &models, const Light &light);
+  void render_shadow_map(const Models &models,
+                         const Light &light);
 
-  void render_environment(const Scene &render_scene, const glm::vec4 &clear_color);
+  void render_environment(const Scene &render_scene,
+                          const glm::vec4 &clear_color);
 
-  void render_boxes(const Scene::Boxes & boxes, const mos::gfx::Camera &camera);
-  void render_particles(const Scene::ParticleClouds &clouds, const mos::gfx::Camera &camera, const glm::vec2 &resolution);
+  void render_boxes(const Scene::Boxes & boxes,
+                    const mos::gfx::Camera &camera);
+  void render_particles(const Scene::ParticleClouds &clouds,
+                        const mos::gfx::Camera &camera,
+                        const glm::vec2 &resolution);
 
   void render_model(const Model &model,
                     const glm::mat4 &transform,
@@ -220,13 +227,21 @@ private:
   void clear(const glm::vec4 &color);
 
   unsigned int create_texture(const SharedTexture2D &texture);
+
   unsigned int create_texture(const Texture2D &texture);
+
   unsigned int create_texture_cube(const TextureCube &texture);
 
   static unsigned int create_shader(const std::string &source,
-                             const unsigned int type, const std::string& name);
-  static bool check_shader(const unsigned int shader, const std::string &name);
-  static bool check_program(const unsigned int program, const std::string &name);
+                             const unsigned int type,
+                                    const std::string& name);
+
+  static bool check_shader(const unsigned int shader,
+                           const std::string &name);
+
+  static bool check_program(const unsigned int program,
+                            const std::string &name);
+
   static void link_program(const GLuint program,
                     const std::string& name);
 
