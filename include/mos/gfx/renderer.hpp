@@ -17,6 +17,7 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/box.hpp>
+#include <mos/gfx/scenes.hpp>
 
 namespace mos {
 namespace gfx {
@@ -62,22 +63,11 @@ public:
   /** Unloads a shared texture cube from renderer memory.*/
   void unload(const SharedTextureCube &texture);
 
-  void render(const std::initializer_list<Scene> &scenes_init,
-              const glm::vec4 &color = glm::vec4(.0f),
-              const glm::ivec2 &resolution = glm::ivec2(128, 128));
-
-  void render_async(const std::initializer_list<Scene> &scenes_init,
-              const glm::vec4 &color = glm::vec4(.0f),
-              const glm::ivec2 &resolution = glm::ivec2(128, 128));
-
-
-  template<class It>
-  void render(It scenes_begin,
-              It scenes_end,
+  void render(const Scenes &scenes,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
               const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
     clear(color);
-    for (auto it = scenes_begin; it != scenes_end; it++) {
+    for (auto it = scenes.begin(); it != scenes.end(); it++) {
       load(it->models);
       render_shadow_map(it->models, it->light);
       render_environment(*it, color);
@@ -85,7 +75,7 @@ public:
     }
     glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
     clear(color);
-    for (auto it = scenes_begin; it != scenes_end; it++) {
+    for (auto it = scenes.begin(); it != scenes.end(); it++) {
       render_scene(it->camera, *it, resolution);
     }
 

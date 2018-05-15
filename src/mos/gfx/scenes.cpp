@@ -3,7 +3,7 @@
 namespace mos{
 namespace gfx{
 
-Scenes::Scenes(const std::initializer_list<Model> &scenes): scenes_(scenes.begin(), scenes.end()){
+Scenes::Scenes(const std::initializer_list<Scene> & scenes): scenes_(scenes){
 }
 
 void Scenes::push_back(const Scene &scene) {

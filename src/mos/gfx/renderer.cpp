@@ -879,17 +879,6 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::render(
-    const std::initializer_list<Scene> &scenes_init,
-    const glm::vec4 &color, const glm::ivec2 &resolution) {
-  render(scenes_init.begin(), scenes_init.end(), color, resolution);
-}
-
-void Renderer::render_async(const std::initializer_list<Scene> &scenes_init,
-                            const glm::vec4 &color,
-                            const glm::ivec2 &resolution) {
-  render_async(scenes_init.begin(), scenes_init.end(), color, resolution);
-}
 
 void Renderer::render_shadow_map(const Models &models, const Light &light) {
   if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
