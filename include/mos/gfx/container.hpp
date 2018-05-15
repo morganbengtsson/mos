@@ -65,8 +65,8 @@ public:
     data_.clear();
     invalidate();
   }
-  void push_back(const T &vertex){
-    data_.push_back(vertex);
+  void push_back(const T &item){
+    data_.push_back(item);
     invalidate();
   }
 

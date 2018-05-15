@@ -63,99 +63,15 @@ public:
   /** Unloads a shared texture cube from renderer memory.*/
   void unload(const SharedTextureCube &texture);
 
+  /** Render multiple scenes. */
   void render(const Scenes &scenes,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-              const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
-    clear(color);
-    for (auto it = scenes.begin(); it != scenes.end(); it++) {
-      load(it->models);
-      render_shadow_map(it->models, it->light);
-      render_environment(*it, color);
-      render_texture_targets(*it);
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
-    clear(color);
-    for (auto it = scenes.begin(); it != scenes.end(); it++) {
-      render_scene(it->camera, *it, resolution);
-    }
+              const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
-    //RenderQuad
-    glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
-    clear(color);
-    glUseProgram(multisample_program_.program);
-
-    glBindVertexArray(quad_vao_);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
-    glUniform1i(multisample_program_.color_texture, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-    glUniform1i(multisample_program_.depth_texture, 1);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    glViewport(0, 0, resolution.x / 4, resolution.y / 4);
-    for (int i = 0; i < 5; i++) {
-      //Blur pass2
-      glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
-      glUseProgram(blur_program_.program);
-      glBindVertexArray(quad_vao_);
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, i == 0 ? bright_texture_ : blur_texture1_);
-      glUniform1i(blur_program_.color_texture, 0);
-      GLint horizontal = false;
-      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-      glDrawArrays(GL_TRIANGLES, 0, 6);
-
-      //Blur pass3
-      glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo1_);
-      glUseProgram(blur_program_.program);
-      glBindVertexArray(quad_vao_);
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, blur_texture0_);
-      glUniform1i(blur_program_.color_texture, 0);
-      horizontal = true;
-      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-      glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    glViewport(0, 0, resolution.x, resolution.y);
-    //Render to screen
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glUseProgram(bloom_program_.program);
-
-    glBindVertexArray(quad_vao_);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, color_texture0_);
-    glUniform1i(bloom_program_.color_texture, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, blur_texture0_);
-    glUniform1i(bloom_program_.bright_color_texture, 1);
-    float strength = 0.1f;
-    glUniform1fv(bloom_program_.strength, 1, &strength);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-  }
-
-  template<class It>
-  void render_async(It scenes_begin,
-              It scenes_end,
+  /** Render multiple scenes, asynchronously. */
+  void render_async(const Scenes &scenes,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-              const glm::ivec2 &resolution = glm::ivec2(128, 128)) {
-    clear(color);
-    for (auto it = scenes_begin; it != scenes_end; it++) {
-      load_async(it->models);
-      render_shadow_map(it->models, it->light);
-      //render_environment(*it, color);
-      render_scene(it->camera, *it, resolution);
-    }
-  }
+              const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
   /** Clear all internal buffers/memory. */
   void clear_buffers();

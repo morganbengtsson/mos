@@ -189,7 +189,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBindTexture(GL_TEXTURE_2D, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bright_texture_, 0);
 
-  unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
   glDrawBuffers(2, attachments);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -879,7 +879,6 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-
 void Renderer::render_shadow_map(const Models &models, const Light &light) {
   if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
@@ -1171,6 +1170,92 @@ void Renderer::link_program(const GLuint program, const std::string &name = "") 
   std::cout << "Linking " + name + " program." << std::endl;
   glLinkProgram(program);
 }
+void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::ivec2 &resolution) {
+  clear(color);
+  for (auto it = scenes.begin(); it != scenes.end(); it++) {
+    load(it->models);
+    render_shadow_map(it->models, it->light);
+    render_environment(*it, color);
+    render_texture_targets(*it);
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
+  clear(color);
+  for (auto it = scenes.begin(); it != scenes.end(); it++) {
+    render_scene(it->camera, *it, resolution);
+  }
+
+  //RenderQuad
+  glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
+  clear(color);
+  glUseProgram(multisample_program_.program);
+
+  glBindVertexArray(quad_vao_);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
+  glUniform1i(multisample_program_.color_texture, 0);
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
+  glUniform1i(multisample_program_.depth_texture, 1);
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  glViewport(0, 0, resolution.x / 4, resolution.y / 4);
+  for (int i = 0; i < 5; i++) {
+    //Blur pass2
+    glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
+    glUseProgram(blur_program_.program);
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, i == 0 ? bright_texture_ : blur_texture1_);
+    glUniform1i(blur_program_.color_texture, 0);
+    GLint horizontal = false;
+    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    //Blur pass3
+    glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo1_);
+    glUseProgram(blur_program_.program);
+    glBindVertexArray(quad_vao_);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+    glUniform1i(blur_program_.color_texture, 0);
+    horizontal = true;
+    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+  }
+
+  glViewport(0, 0, resolution.x, resolution.y);
+  //Render to screen
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glUseProgram(bloom_program_.program);
+
+  glBindVertexArray(quad_vao_);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, color_texture0_);
+  glUniform1i(bloom_program_.color_texture, 0);
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+  glUniform1i(bloom_program_.bright_color_texture, 1);
+  float strength = 0.1f;
+  glUniform1fv(bloom_program_.strength, 1, &strength);
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+void Renderer::render_async(const Scenes &scenes, const glm::vec4 &color, const glm::ivec2 &resolution) {
+  clear(color);
+  for (auto it = scenes.begin(); it != scenes.end(); it++) {
+    load_async(it->models);
+    render_shadow_map(it->models, it->light);
+    //render_environment(*it, color);
+    render_scene(it->camera, *it, resolution);
+  }
+}
 
 Renderer::DepthProgram::DepthProgram() {
   std::string name = "depth";
@@ -1307,7 +1392,7 @@ Renderer::BoxProgram::BoxProgram() {
   check_program(program, name);
 
   mvp = glGetUniformLocation(program, "model_view_projection"),
-  mv =  glGetUniformLocation(program, "model_view");
+      mv = glGetUniformLocation(program, "model_view");
 }
 Renderer::BoxProgram::~BoxProgram() {
   glDeleteProgram(program);
