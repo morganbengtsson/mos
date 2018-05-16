@@ -17,7 +17,7 @@ public:
   };
 
   enum class Cursor {
-    HAND, ARROW
+    HAND, ARROW, CROSSHAIR
   };
 
   Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080});
@@ -56,6 +56,7 @@ private:
   GLFWwindow *window_;
   GLFWcursor *hand_cursor_;
   GLFWcursor *arrow_cursor_;
+  GLFWcursor *crosshair_cursor_;
 
   static void error_callback(int error, const char *description);
   static void position_callback(GLFWwindow *window, int x, int y);

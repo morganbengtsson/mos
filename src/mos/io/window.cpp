@@ -54,6 +54,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
 
   hand_cursor_ = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
   arrow_cursor_ = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+  crosshair_cursor_ = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
   error_func = [](int error, const std::string &description) {
     fputs(description.c_str(), stderr);
@@ -132,8 +133,11 @@ void Window::cursor_mode(const Window::CursorMode &mode) {
 void Window::cursor(const Window::Cursor &cursor) {
   if (cursor == Cursor::HAND) {
     glfwSetCursor(window_, hand_cursor_);
-  } else {
+  } else if (cursor == Cursor::ARROW){
     glfwSetCursor(window_, arrow_cursor_);
+  }
+  else if (cursor == Cursor::CROSSHAIR){
+    glfwSetCursor(window_, crosshair_cursor_);
   }
 }
 
