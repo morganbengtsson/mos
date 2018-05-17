@@ -630,7 +630,9 @@ void Renderer::render_scene(const Camera &camera,
   glUseProgram(standard_program_.program);
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
-                 render_scene.light, render_scene.environment, render_scene.fog,
+                 render_scene.light,
+                 render_scene.environment,
+                 render_scene.fog,
                  resolution, standard_program_);
   }
   render_boxes(render_scene.boxes, camera);
@@ -728,8 +730,10 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
 
 void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
-                            const Camera &camera, const Light &light,
-                            const EnvironmentLight &environment, const Fog &fog,
+                            const Camera &camera,
+                            const Light &light,
+                            const OptionalEnvironmentLight &environment,
+                            const Fog &fog,
                             const glm::vec2 &resolution,
                             const StandardProgram &program) {
 
@@ -768,9 +772,11 @@ void Renderer::render_model(const Model &model,
                                : black_texture_);
   glUniform1i(uniforms.material_normal_map, 3);
 
-  glActiveTexture(GL_TEXTURE4);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment.texture_.id()]);
-  glUniform1i(uniforms.environment_map, 4);
+  if (environment) {
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment->texture_.id()]);
+    glUniform1i(uniforms.environment_map, 4);
+  }
 
   glActiveTexture(GL_TEXTURE5);
   glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
@@ -794,12 +800,14 @@ void Renderer::render_model(const Model &model,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
   glUniform1i(uniforms.brdf_lut, 8);
 
-  glUniform3fv(uniforms.environment_position, 1,
-               glm::value_ptr(environment.box_.position));
-  glUniform3fv(uniforms.environment_extent, 1,
-               glm::value_ptr(environment.box_.extent));
-  glUniform1fv(uniforms.environment_strength, 1,
-               &environment.strength);
+  if (environment) {
+    glUniform3fv(uniforms.environment_position, 1,
+                 glm::value_ptr(environment->box_.position));
+    glUniform3fv(uniforms.environment_extent, 1,
+                 glm::value_ptr(environment->box_.extent));
+    glUniform1fv(uniforms.environment_strength, 1,
+                 &environment->strength);
+  }
 
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
@@ -920,54 +928,55 @@ void Renderer::render_shadow_map(const Models &models, const Light &light) {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
-  if (frame_buffers_.find(scene.environment.target_.id()) == frame_buffers_.end()) {
-    GLuint frame_buffer_id;
-    glGenFramebuffers(1, &frame_buffer_id);
+  if(scene.environment) {
+    if (frame_buffers_.find(scene.environment->target_.id()) == frame_buffers_.end()) {
+      GLuint frame_buffer_id;
+      glGenFramebuffers(1, &frame_buffer_id);
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+      GLuint texture_id = create_texture_cube(scene.environment->texture_);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
+
+      texture_cubes_.insert_or_assign(scene.environment->texture_.id(), texture_id);
+
+      GLuint depthrenderbuffer_id;
+      glGenRenderbuffers(1, &depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                            scene.environment->texture_.width(),
+                            scene.environment->texture_.height());
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                GL_RENDERBUFFER, depthrenderbuffer_id);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+      render_buffers.insert({scene.environment->target_.id(), depthrenderbuffer_id});
+
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        throw std::runtime_error("Framebuffer incomplete.");
+      }
+      frame_buffers_.insert({scene.environment->target_.id(), frame_buffer_id});
+    }
+
+    GLuint frame_buffer_id = frame_buffers_[scene.environment->target_.id()];
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    GLuint texture_id = create_texture_cube(scene.environment.texture_);
+    auto texture_id = texture_cubes_[scene.environment->texture_.id()];
+
+    auto cube_camera = scene.environment->cube_camera_.cameras[cube_camera_index_];
+
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture_id, 0);
+                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_, texture_id, 0);
+    clear(clear_color);
+    auto resolution = glm::vec2(scene.environment->texture_.width(), scene.environment->texture_.height());
+    render_scene(cube_camera, scene, resolution);
 
-    texture_cubes_.insert_or_assign(scene.environment.texture_.id(), texture_id);
+    cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;
 
-    GLuint depthrenderbuffer_id;
-    glGenRenderbuffers(1, &depthrenderbuffer_id);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          scene.environment.texture_.width(),
-                          scene.environment.texture_.height());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER, depthrenderbuffer_id);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    render_buffers.insert({scene.environment.target_.id(), depthrenderbuffer_id});
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-      throw std::runtime_error("Framebuffer incomplete.");
-    }
-    frame_buffers_.insert({scene.environment.target_.id(), frame_buffer_id});
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   }
-
-  GLuint frame_buffer_id = frame_buffers_[scene.environment.target_.id()];
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
-  auto texture_id = texture_cubes_[scene.environment.texture_.id()];
-
-  auto cube_camera = scene.environment.cube_camera_.cameras[cube_camera_index_];
-
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_, texture_id, 0);
-  clear(clear_color);
-  auto resolution = glm::vec2(scene.environment.texture_.width(), scene.environment.texture_.height());
-  render_scene(cube_camera, scene, resolution);
-
-  cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_;
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
 }
 void Renderer::load(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {

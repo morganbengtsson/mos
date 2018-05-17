@@ -7,6 +7,9 @@
 namespace mos {
 namespace gfx {
 
+class EnvironmentLight;
+using OptionalEnvironmentLight = std::optional<EnvironmentLight>;
+
 /** Real time environment light. */
 class EnvironmentLight {
   friend class Renderer;

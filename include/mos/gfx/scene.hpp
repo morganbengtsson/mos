@@ -28,8 +28,8 @@ public:
   Scene(const Models &models,
         const Camera &camera,
         const Light &light = Light(),
-        const EnvironmentLight &environment_light = EnvironmentLight(),
-        const Fog &fog = Fog());
+        const Fog &fog = Fog(),
+        const OptionalEnvironmentLight &environment_light = OptionalEnvironmentLight());
 
   Models models;
   ParticleClouds particle_clouds;
@@ -37,7 +37,7 @@ public:
   Light light;
   Camera camera;
   Fog fog;
-  EnvironmentLight environment;
+  OptionalEnvironmentLight environment;
   TextureTargets texture_targets;
 };
 }

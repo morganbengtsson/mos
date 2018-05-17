@@ -213,7 +213,7 @@ private:
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Light &light,
-                    const EnvironmentLight &environment,
+                    const OptionalEnvironmentLight &environment,
                     const Fog &fog,
                     const glm::vec2 &resolution,
                     const StandardProgram& program);
