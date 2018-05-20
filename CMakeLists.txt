@@ -12,7 +12,6 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE STRING "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE STRING "" FORCE)
 set(GLFW_USE_DWM_SWAP_INTERVAL ON)
 add_subdirectory(externals/glfw)
-include_directories(externals/glfw/include)
 
 #openal soft
 set(ALSOFT_EXAMPLES OFF CACHE STRING "" FORCE)
@@ -20,25 +19,18 @@ set(ALSOFT_UTILS OFF CACHE STRING "" FORCE)
 set(ALSOFT_INSTALL OFF)
 set(ALSOFT_HRTF_DEFS OFF)
 add_subdirectory(externals/openal-soft)
-include_directories(externals/openal-soft/include)
 
 #glad
 add_subdirectory(externals/glad)
-include_directories(externals/glad/include)
 
 # Filesystem
 add_subdirectory(externals/filesystem)
-include_directories(externals/filesystem)
 
 # glm
 include_directories(externals/glm)
-add_subdirectory(externals/glm)
 
 # stb
 add_subdirectory(externals/stb)
-
-# Json
-include_directories(externals/nlohmann_json_release)
 
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
@@ -57,14 +49,16 @@ target_link_libraries(${PROJECT_NAME} ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIE
 target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} stb)
 target_link_libraries(${PROJECT_NAME} glad)
-target_include_directories(${PROJECT_NAME} PUBLIC
-externals/glad/include
-externals/glfw/include
-externals/openal-soft/include
-externals/stb
-externals/glm
-externals/filesystem
-externals/nlohmann_json_release)
+target_include_directories(${PROJECT_NAME}
+PUBLIC
+    externals/glfw/include
+    externals/openal-soft/include
+    externals/glad/include
+    externals/glm
+    externals/nlohmann_json_release
+    externals/stb
+    externals/filesystem
+)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
