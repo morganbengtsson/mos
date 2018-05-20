@@ -20,7 +20,7 @@ public:
   Container::const_iterator end() const;
   Container::iterator begin();
   Container::iterator end();
-  Container::reference operator[](typename Container::size_type pos);
+  Model& operator[](unsigned long pos);
 private:
   std::vector<Model> models_;
 };

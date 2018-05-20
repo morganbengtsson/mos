@@ -36,7 +36,8 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
       material(base_path + material_name));
 
   for (auto &m : value["children"]) {
-    created_model.models.push_back(model(base_path + std::string(m)));
+	  std::string t = m;
+    created_model.models.push_back(model(base_path + t));
   }
   return created_model;
 }
@@ -158,7 +159,8 @@ Light Assets::light(const std::string &path) {
       auto position = glm::vec3(transform[3]);
       auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 
-      auto data_value = json::parse(mos::text(directory_ + std::string(value["light"])));
+	  std::string t = value["light"];
+      auto data_value = json::parse(mos::text(directory_ + t));
 
       auto color = glm::vec3(data_value["color"][0],
                              data_value["color"][1],
