@@ -19,8 +19,9 @@ The project is preferably used as a sub project with [CMake](https://cmake.org) 
 
 ```CMake
 add_subdirectory(externals/mos)
-include_directories(externals/mos/include)
 target_link_libraries(${PROJECT_NAME} mos)
+target_include_directories(${PROJECT_NAME} PUBLIC externals/mos/include)
+
 ```
 
 A CMake based [project skeleton](https://github.com/morganbengtsson/mos-skeleton) is also available, for a minimal setup
