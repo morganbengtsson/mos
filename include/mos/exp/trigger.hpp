@@ -8,16 +8,12 @@ template<typename T>
 /** Triggers when the value changes */
 class Trigger {
 public:
-  Trigger(const T& value, const std::function<void()>& on_change):
+  Trigger(const T& value):
       value_(value),
-      old_value_(value),
-      on_change_(on_change){}
+      old_value_(value){}
   T& operator=(const T& value){
     old_value_ = value_;
     value_ = value;
-    if(old_value_ != value_){
-      on_change_();
-    }
   }
   bool changed() const{ return old_value_ != value_;};
   operator T(){
@@ -26,7 +22,6 @@ public:
 private:
   T value_;
   T old_value_;
-  std::function<void()> on_change_;
 };
 
 }
