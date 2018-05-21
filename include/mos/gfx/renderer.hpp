@@ -147,9 +147,7 @@ private:
     ~StandardProgram();
     GLuint program;
     GLint model_view_projection_matrix;
-    GLint model_view_matrix;
     GLint model_matrix;
-    GLint view_matrix;
     GLint normal_matrix;
     GLint depth_bias_mvp;
 

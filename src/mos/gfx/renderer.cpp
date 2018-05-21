@@ -739,8 +739,7 @@ void Renderer::render_model(const Model &model,
   static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                               0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-  const glm::mat4 mv = camera.view * parent_transform * model.transform;
-  const glm::mat4 mvp = camera.projection * mv;
+  const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -810,8 +809,6 @@ void Renderer::render_model(const Model &model,
 
   glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
-  glUniformMatrix4fv(uniforms.model_view_matrix, 1, GL_FALSE, &mv[0][0]);
-  glUniformMatrix4fv(uniforms.view_matrix, 1, GL_FALSE, &camera.view[0][0]);
   auto model_matrix = parent_transform * model.transform;
   glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
@@ -1316,9 +1313,7 @@ Renderer::StandardProgram::StandardProgram() {
   check_program(program, name);
 
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
-  model_view_matrix = (glGetUniformLocation(program, "model_view"));
   model_matrix = glGetUniformLocation(program, "model");
-  view_matrix = glGetUniformLocation(program, "view");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   depth_bias_mvp = glGetUniformLocation(program, "depth_bias_model_view_projection");
   environment_map = glGetUniformLocation(program, "environment.texture");
