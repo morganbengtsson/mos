@@ -106,7 +106,6 @@ private:
     ~BoxProgram();
     GLuint program;
     GLint mvp;
-    GLint mv;
   };
 
   struct MultisampleProgram {

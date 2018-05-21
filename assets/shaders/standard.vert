@@ -28,9 +28,8 @@ struct Light {
 uniform Light light;
 uniform Camera camera;
 uniform mat4 depth_bias_model_view_projection;
-uniform mat4 model; // NOT SET!
+uniform mat4 model;
 uniform mat4 model_view_projection;
-uniform mat4 model_view;
 uniform mat3 normal_matrix;
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;

@@ -652,7 +652,6 @@ void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &c
         glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(box_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(box_program_.mv, 1, GL_FALSE, &mv[0][0]);
 
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
@@ -1402,8 +1401,7 @@ Renderer::BoxProgram::BoxProgram() {
   link_program(program, name);
   check_program(program, name);
 
-  mvp = glGetUniformLocation(program, "model_view_projection"),
-      mv = glGetUniformLocation(program, "model_view");
+  mvp = glGetUniformLocation(program, "model_view_projection");
 }
 Renderer::BoxProgram::~BoxProgram() {
   glDeleteProgram(program);
