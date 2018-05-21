@@ -862,15 +862,8 @@ void Renderer::render_model(const Model &model,
   glUniform1fv(uniforms.fog_attenuation_factor, 1,
                &fog.attenuation_factor);
 
-  const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
+  glDrawElements(GL_TRIANGLES, model.mesh->indices.size(), GL_UNSIGNED_INT, 0);
 
-  if (model.mesh) {
-    if (num_elements > 0) {
-      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
-    } else {
-      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices.size());
-    }
-  }
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, light,
                  environment, fog, resolution, program);
