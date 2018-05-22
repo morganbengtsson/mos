@@ -743,126 +743,126 @@ void Renderer::render_model(const Model &model,
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
-  };
 
-  const auto &uniforms = program;
+    const auto &uniforms = program;
 
-  glActiveTexture(GLenum(GL_TEXTURE0));
-  glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                               ? textures_[model.material.albedo_map->id()].id
-                               : black_texture_);
-  glUniform1i(uniforms.material_albedo_map, 0);
+    glActiveTexture(GLenum(GL_TEXTURE0));
+    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                 ? textures_[model.material.albedo_map->id()].id
+                                 : black_texture_);
+    glUniform1i(uniforms.material_albedo_map, 0);
 
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_[light.shadow_map->id()].id : white_texture_);
-  glGenerateMipmap(GL_TEXTURE_2D);
-  glUniform1i(uniforms.light_shadow_map, 1);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_[light.shadow_map->id()].id : white_texture_);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glUniform1i(uniforms.light_shadow_map, 1);
 
-  glActiveTexture(GLenum(GL_TEXTURE2));
-  glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                               ? textures_[model.material.emission_map->id()].id
-                               : black_texture_);
-  glUniform1i(uniforms.material_emission_map, 2);
+    glActiveTexture(GLenum(GL_TEXTURE2));
+    glBindTexture(GL_TEXTURE_2D, model.material.emission_map
+                                 ? textures_[model.material.emission_map->id()].id
+                                 : black_texture_);
+    glUniform1i(uniforms.material_emission_map, 2);
 
-  glActiveTexture(GL_TEXTURE3);
-  glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                               ? textures_[model.material.normal_map->id()].id
-                               : black_texture_);
-  glUniform1i(uniforms.material_normal_map, 3);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, model.material.normal_map
+                                 ? textures_[model.material.normal_map->id()].id
+                                 : black_texture_);
+    glUniform1i(uniforms.material_normal_map, 3);
 
-  if (environment) {
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment->texture_.id()]);
-    glUniform1i(uniforms.environment_map, 4);
+    if (environment) {
+      glActiveTexture(GL_TEXTURE4);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment->texture_.id()]);
+      glUniform1i(uniforms.environment_map, 4);
+    }
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
+                                 ? textures_[model.material.metallic_map->id()].id
+                                 : black_texture_);
+    glUniform1i(uniforms.material_metallic_map, 5);
+
+    glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
+                                 ? textures_[model.material.roughness_map->id()].id
+                                 : black_texture_);
+    glUniform1i(uniforms.material_roughness_map, 6);
+
+    glActiveTexture(GL_TEXTURE7);
+    glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
+                                 ? textures_[model.material.ambient_occlusion_map->id()].id
+                                 : white_texture_);
+    glUniform1i(uniforms.material_ambient_occlusion_map, 7);
+
+    glActiveTexture(GL_TEXTURE8);
+    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
+    glUniform1i(uniforms.brdf_lut, 8);
+
+    if (environment) {
+      glUniform3fv(uniforms.environment_position, 1,
+                   glm::value_ptr(environment->box_.position));
+      glUniform3fv(uniforms.environment_extent, 1,
+                   glm::value_ptr(environment->box_.extent));
+      glUniform1fv(uniforms.environment_strength, 1,
+                   &environment->strength);
+    }
+
+    glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+                       &mvp[0][0]);
+    auto model_matrix = parent_transform * model.transform;
+    glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
+
+    const glm::mat4 depth_bias_mvp = bias * light.camera.projection *
+        light.camera.view * parent_transform *
+        model.transform;
+    glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
+                       &depth_bias_mvp[0][0]);
+
+    glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
+        glm::mat3(model.transform));
+    normal_matrix =
+        glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
+    glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
+
+    glUniform3fv(uniforms.material_albedo, 1,
+                 glm::value_ptr(model.material.albedo));
+    glUniform1fv(uniforms.material_roughness, 1,
+                 &model.material.roughness);
+    glUniform1fv(uniforms.material_metallic, 1,
+                 &model.material.metallic);
+    glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
+    auto emission = model.material.emission_strength * model.material.emission;
+    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
+    glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
+
+    // Camera in world space
+    auto position = camera.position();
+    glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
+
+    // Send light in world space
+    glUniform3fv(uniforms.light_position, 1,
+                 glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
+    auto light_color =
+        light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+    glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
+
+    glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
+                       &light.camera.view[0][0]);
+    glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
+                       &light.camera.projection[0][0]);
+
+    auto light_angle = light.angle();
+    glUniform1fv(uniforms.light_angle, 1, &light_angle);
+    glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(light.direction()));
+
+    glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
+
+    glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
+    glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
+    glUniform1fv(uniforms.fog_attenuation_factor, 1,
+                 &fog.attenuation_factor);
+
+    glDrawElements(GL_TRIANGLES, model.mesh->indices.size(), GL_UNSIGNED_INT, 0);
   }
-
-  glActiveTexture(GL_TEXTURE5);
-  glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
-                               ? textures_[model.material.metallic_map->id()].id
-                               : black_texture_);
-  glUniform1i(uniforms.material_metallic_map, 5);
-
-  glActiveTexture(GL_TEXTURE6);
-  glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                               ? textures_[model.material.roughness_map->id()].id
-                               : black_texture_);
-  glUniform1i(uniforms.material_roughness_map, 6);
-
-  glActiveTexture(GL_TEXTURE7);
-  glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
-                               ? textures_[model.material.ambient_occlusion_map->id()].id
-                               : white_texture_);
-  glUniform1i(uniforms.material_ambient_occlusion_map, 7);
-
-  glActiveTexture(GL_TEXTURE8);
-  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
-  glUniform1i(uniforms.brdf_lut, 8);
-
-  if (environment) {
-    glUniform3fv(uniforms.environment_position, 1,
-                 glm::value_ptr(environment->box_.position));
-    glUniform3fv(uniforms.environment_extent, 1,
-                 glm::value_ptr(environment->box_.extent));
-    glUniform1fv(uniforms.environment_strength, 1,
-                 &environment->strength);
-  }
-
-  glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
-                     &mvp[0][0]);
-  auto model_matrix = parent_transform * model.transform;
-  glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
-
-  const glm::mat4 depth_bias_mvp = bias * light.camera.projection *
-      light.camera.view * parent_transform *
-      model.transform;
-  glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
-                     &depth_bias_mvp[0][0]);
-
-  glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
-      glm::mat3(model.transform));
-  normal_matrix =
-      glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
-  glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
-
-  glUniform3fv(uniforms.material_albedo, 1,
-               glm::value_ptr(model.material.albedo));
-  glUniform1fv(uniforms.material_roughness, 1,
-               &model.material.roughness);
-  glUniform1fv(uniforms.material_metallic, 1,
-               &model.material.metallic);
-  glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-  auto emission = model.material.emission_strength * model.material.emission;
-  glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
-  glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
-
-  // Camera in world space
-  auto position = camera.position();
-  glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
-
-  // Send light in world space
-  glUniform3fv(uniforms.light_position, 1,
-               glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
-  auto light_color =
-      light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
-  glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
-
-  glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
-                     &light.camera.view[0][0]);
-  glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
-                     &light.camera.projection[0][0]);
-
-  auto light_angle = light.angle();
-  glUniform1fv(uniforms.light_angle, 1, &light_angle);
-  glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(light.direction()));
-
-  glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
-
-  glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
-  glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
-  glUniform1fv(uniforms.fog_attenuation_factor, 1,
-               &fog.attenuation_factor);
-
-  glDrawElements(GL_TRIANGLES, model.mesh->indices.size(), GL_UNSIGNED_INT, 0);
 
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, light,
