@@ -907,7 +907,7 @@ void Renderer::render_shadow_map(const Models &models, const Light &light) {
   }
   auto fb = frame_buffers_[light.target.id()];
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
-  clear(glm::vec4(0.0f));
+  glClear(GL_DEPTH_BUFFER_BIT);
   auto resolution = glm::ivec2(light.shadow_map->width(), light.shadow_map->height());
   glUseProgram(depth_program_.program);
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1167,7 +1167,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   }
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
     render_shadow_map(it->models, it->light);
-    render_environment(*it, color);
+    //render_environment(*it, color);
     render_texture_targets(*it);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
