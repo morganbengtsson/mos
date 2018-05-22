@@ -963,7 +963,9 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    if (cube_camera_index_ == 0) {
+      glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    }
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   }
 }
