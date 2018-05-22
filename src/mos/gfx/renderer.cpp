@@ -1167,7 +1167,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   }
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
     render_shadow_map(it->models, it->light);
-    //render_environment(*it, color);
+    render_environment(*it, color);
     render_texture_targets(*it);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
