@@ -1142,24 +1142,14 @@ void Renderer::render_model_depth(const Model &model,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
                                   const DepthProgram &program) {
-
-  const glm::mat4 mv = camera.view * transform * model.transform;
-  const glm::mat4 mvp = camera.projection * mv;
+  const glm::mat4 mvp = camera.projection * camera.view * transform * model.transform;
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
-  };
-
-  glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
+    glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
-
-  const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
-  if (model.mesh) {
-    if (num_elements > 0) {
-      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
-    } else {
-      glDrawArrays(GL_TRIANGLES, 0, model.mesh->vertices.size());
-    }
+    const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
+    glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
   }
   for (const auto &child : model.models) {
     render_model_depth(child, transform * model.transform, camera, resolution, program);
