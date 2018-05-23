@@ -518,8 +518,7 @@ bool Renderer::check_shader(const unsigned int shader,
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in " << types[type] << " " << name
-                << " shader" << std::endl;
+      std::cerr << "Compile failure in " << (!name.empty() ? name + " " : "") << types[type] << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
     return false;
