@@ -43,7 +43,7 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
 }
 
 Model Assets::model(const std::string &path) {
-  std::cout << "Loading : " << path << std::endl;
+  std::cout << "Loading: " << path << std::endl;
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
 
