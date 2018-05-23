@@ -491,9 +491,7 @@ unsigned int Renderer::create_shader(const std::string &source,
       {GL_FRAGMENT_SHADER, "fragment shader"},
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
-  std::string out = name;
-
-  std::cout << "Compiling " << name << types[type] << std::endl;
+  std::cout << "Compiling " << (!name.empty() ? name + " " : "") << types[type] << std::endl;
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
   return id;
