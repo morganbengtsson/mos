@@ -61,6 +61,7 @@ public:
 
   /** Remove all unused assets. */
   void clear_unused();
+  std::string directory() const;
 private:
   Model model_value(const std::string &base_path, const nlohmann::json &value);
   const std::string directory_;

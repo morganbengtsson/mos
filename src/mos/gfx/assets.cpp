@@ -229,7 +229,9 @@ void Assets::clear_unused() {
     }
   }
 }
-
+std::string Assets::directory() const {
+  return directory_;
+}
 
 }
 }
