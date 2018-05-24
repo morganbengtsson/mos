@@ -307,55 +307,57 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-  if (stream_source.source.playing && (state != AL_PLAYING)) {
-    if (stream_threads.count(stream_source.stream->id())) {
-      stream_threads[stream_source.stream->id()].running = false;
-      stream_threads[stream_source.stream->id()].thread.join();
-      stream_threads.erase(stream_source.stream->id());
+  if(stream_source.stream) {
+    if (stream_source.source.playing && (state != AL_PLAYING)) {
+      if (stream_threads.count(stream_source.stream->id())) {
+        stream_threads[stream_source.stream->id()].running = false;
+        stream_threads[stream_source.stream->id()].thread.join();
+        stream_threads.erase(stream_source.stream->id());
+      }
+      stream_threads.insert(std::pair<unsigned int, StreamThread>(
+          stream_source.stream->id(),
+          StreamThread{
+              std::thread(
+                  [&](ALuint al_source, SharedStream stream,
+                      const bool loop) {
+
+                    ALuint buffers[4]; // TODO std array
+                    alGenBuffers(4, buffers);
+                    int size = stream->buffer_size;
+                    for (int i = 0; i < 4; i++) {
+                      alBufferData(
+                          buffers[i], AL_FORMAT_MONO16, stream->read().data(),
+                          size * sizeof(ALshort), stream->sample_rate());
+                      alSourceQueueBuffers(al_source, 1, &buffers[i]);
+                    }
+
+                    alSourcePlay(al_source);
+                    alSourcei(al_source, AL_STREAMING, AL_TRUE);
+
+                    while (stream_threads[stream->id()].running) {
+                      ALint processed = 0;
+                      alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
+                      while (processed-- &&
+                          (stream_threads[stream->id()].running)) {
+                        ALuint buffer = 0;
+                        alSourceUnqueueBuffers(al_source, 1, &buffer);
+                        auto samples = stream->read();
+                        alBufferData(buffer, AL_FORMAT_MONO16, samples.data(),
+                                     size * sizeof(ALshort),
+                                     stream->sample_rate());
+                        alSourceQueueBuffers(al_source, 1, &buffer);
+                      }
+                      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                      if (loop && stream->done()) {
+                        stream->seek_start();
+                      }
+                    }
+                    stream->seek_start();
+                    alDeleteBuffers(2, buffers);
+                  },
+                  al_source, stream_source.stream, stream_source.source.loop),
+              true}));
     }
-    stream_threads.insert(std::pair<unsigned int, StreamThread>(
-        stream_source.stream->id(),
-        StreamThread{
-            std::thread(
-                [&](ALuint al_source, SharedStream stream,
-                    const bool loop) {
-
-                  ALuint buffers[4]; // TODO std array
-                  alGenBuffers(4, buffers);
-                  int size = stream->buffer_size;
-                  for (int i = 0; i < 4; i++) {
-                    alBufferData(
-                        buffers[i], AL_FORMAT_MONO16, stream->read().data(),
-                        size * sizeof(ALshort), stream->sample_rate());
-                    alSourceQueueBuffers(al_source, 1, &buffers[i]);
-                  }
-
-                  alSourcePlay(al_source);
-                  alSourcei(al_source, AL_STREAMING, AL_TRUE);
-
-                  while (stream_threads[stream->id()].running) {
-                    ALint processed = 0;
-                    alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
-                    while (processed-- &&
-                        (stream_threads[stream->id()].running)) {
-                      ALuint buffer = 0;
-                      alSourceUnqueueBuffers(al_source, 1, &buffer);
-                      auto samples = stream->read();
-                      alBufferData(buffer, AL_FORMAT_MONO16, samples.data(),
-                                   size * sizeof(ALshort),
-                                   stream->sample_rate());
-                      alSourceQueueBuffers(al_source, 1, &buffer);
-                    }
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                    if (loop && stream->done()) {
-                      stream->seek_start();
-                    }
-                  }
-                  stream->seek_start();
-                  alDeleteBuffers(2, buffers);
-                },
-                al_source, stream_source.stream, stream_source.source.loop),
-            true}));
   }
 
   ALint al_type;
