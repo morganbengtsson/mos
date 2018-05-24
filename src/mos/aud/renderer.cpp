@@ -308,14 +308,14 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
   if (stream_source.source.playing && (state != AL_PLAYING)) {
-    if (stream_threads.count(stream_source.stream->id())) {
-      stream_threads[stream_source.stream->id()].running = false;
-      stream_threads[stream_source.stream->id()].thread.join();
-      stream_threads.erase(stream_source.stream->id());
+    if (stream_threads.count(stream_source.source.id())) {
+      stream_threads[stream_source.source.id()].running = false;
+      stream_threads[stream_source.source.id()].thread.join();
+      stream_threads.erase(stream_source.source.id());
     }
     if (stream_source.stream) {
       stream_threads.insert(std::pair<unsigned int, StreamThread>(
-          stream_source.stream->id(),
+          stream_source.source.id(),
           StreamThread{
               std::thread(
                   [&](ALuint al_source, SharedStream stream,
@@ -334,11 +334,11 @@ void Renderer::stream_source(const StreamSource &stream_source) {
                     alSourcePlay(al_source);
                     alSourcei(al_source, AL_STREAMING, AL_TRUE);
 
-                    while (stream_threads[stream->id()].running) {
+                    while (stream_threads[stream_source.source.id()].running) {
                       ALint processed = 0;
                       alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
                       while (processed-- &&
-                          (stream_threads[stream->id()].running)) {
+                          (stream_threads[stream_source.source.id()].running)) {
                         ALuint buffer = 0;
                         alSourceUnqueueBuffers(al_source, 1, &buffer);
                         auto samples = stream->read();
