@@ -307,13 +307,13 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-  if(stream_source.stream) {
-    if (stream_source.source.playing && (state != AL_PLAYING)) {
-      if (stream_threads.count(stream_source.stream->id())) {
-        stream_threads[stream_source.stream->id()].running = false;
-        stream_threads[stream_source.stream->id()].thread.join();
-        stream_threads.erase(stream_source.stream->id());
-      }
+  if (stream_source.source.playing && (state != AL_PLAYING)) {
+    if (stream_threads.count(stream_source.stream->id())) {
+      stream_threads[stream_source.stream->id()].running = false;
+      stream_threads[stream_source.stream->id()].thread.join();
+      stream_threads.erase(stream_source.stream->id());
+    }
+    if (stream_source.stream) {
       stream_threads.insert(std::pair<unsigned int, StreamThread>(
           stream_source.stream->id(),
           StreamThread{
