@@ -22,7 +22,7 @@ public:
   Container::iterator end();
   Model& operator[](unsigned long pos);
 private:
-  std::vector<Model> models_;
+  Container models_;
 };
 
 }
