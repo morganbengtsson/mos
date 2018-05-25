@@ -36,8 +36,10 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
       material(base_path + material_name));
 
   for (auto &m : value["children"]) {
-	  std::string t = m;
-    created_model.models.push_back(model(base_path + t));
+    filesystem::path t = std::string(m);
+    if(t.extension() == "model") {
+      created_model.models.push_back(model(base_path + t.str()));
+    }
   }
   return created_model;
 }
