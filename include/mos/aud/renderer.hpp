@@ -44,12 +44,6 @@ private:
   /** Update internal buffer source representation. */
   void buffer_source(const BufferSource &buffer_source);
 
-
-  struct StreamThread {
-    std::thread thread;
-    bool running;
-  };
-
   ALCdevice *device_;
   ALCcontext *context_;
 
@@ -70,7 +64,6 @@ private:
   Buffers buffers_;
   Filters filters_;
 
-  std::unordered_map<unsigned int, StreamThread> stream_threads;
 };
 }
 }

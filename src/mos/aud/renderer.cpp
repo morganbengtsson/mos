@@ -166,10 +166,6 @@ Renderer::Renderer()
 }
 
 Renderer::~Renderer() {
-  for (auto &thread : stream_threads) {
-    thread.second.running = false;
-    thread.second.thread.join();
-  }
   for (auto source : sources_) {
     alSourceStop(source.second);
     alDeleteSources(1, &source.second);
@@ -394,10 +390,6 @@ void Renderer::render(const Scene &scene) {
 }
 
 void Renderer::clear() {
-  for (auto &thread : stream_threads) {
-    thread.second.running = false;
-    thread.second.thread.join();
-  }
   for (auto source : sources_) {
     alSourceStop(source.second);
     alDeleteSources(1, &source.second);
@@ -405,7 +397,6 @@ void Renderer::clear() {
   for (auto buffer : buffers_) {
     alDeleteBuffers(1, &buffer.second);
   }
-  stream_threads.clear();
   sources_.clear();
   buffers_.clear();
 }
