@@ -2,11 +2,12 @@
 namespace mos {
 namespace aud {
 Scene::Scene(
-    const std::initializer_list<BufferSource> &buffer_sources,
-    const std::initializer_list<StreamSource> &stream_sources,
+    const BufferSources &buffer_sources,
+    const StreamSources &stream_sources,
     const Listener &listener)
-    : Scene(buffer_sources.begin(), buffer_sources.end(),
-            stream_sources.begin(), stream_sources.end(), listener) {}
+    : buffer_sources(buffer_sources),
+      stream_sources(stream_sources),
+      listener(listener) {}
 
 Scene::Scene() {
 }
