@@ -307,10 +307,13 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
-  ALuint buffers[4]; // TODO std array
+  ALint processed = 0;
+  alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
+  ALuint buffer = 0;
+
   if(stream_source.stream) {
     if (stream_source.source.playing && (state != AL_PLAYING)) {
-
+      ALuint buffers[4]; // TODO std array
       alGenBuffers(4, buffers);
       int size = stream_source.stream->buffer_size;
       for (int i = 0; i < 4; i++) {
@@ -323,11 +326,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
       alSourcei(al_source, AL_STREAMING, AL_TRUE);
     }
 
-
-    ALint processed = 0;
-    alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
     while (processed--) {
-      ALuint buffer = 0;
       alSourceUnqueueBuffers(al_source, 1, &buffer);
       auto samples = stream_source.stream->read();
       int size = stream_source.stream->buffer_size;
@@ -347,6 +346,10 @@ void Renderer::stream_source(const StreamSource &stream_source) {
 
   if (!stream_source.source.playing && (state == AL_PLAYING)) {
     alSourceStop(al_source);
+    ALint count;
+    alGetSourcei(al_source, AL_BUFFERS_QUEUED, &count);
+    alSourceUnqueueBuffers(al_source, count, &buffer);
+    std::cout << count << std::endl;
   }
 }
 
