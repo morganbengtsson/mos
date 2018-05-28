@@ -14,7 +14,7 @@ namespace gfx {
 std::atomic_uint Mesh::current_id_;
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
-           const std::initializer_list<int> &elements)
+           const std::initializer_list<std::array<int, 3>> &elements)
     : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
 }
 
@@ -40,7 +40,9 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
       is.read((char *) &input_indices[0], input_indices.size() * sizeof(int));
     }
     vertices.assign(input_vertices.begin(), input_vertices.end());
-    indices.assign(input_indices.begin(), input_indices.end());
+    for (int i = 0; i < input_indices.size(); i += 3) {
+      triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
+    }
 
     calculate_tangents();
   } else {
@@ -52,8 +54,8 @@ Mesh::Mesh() : id_(current_id_++) {
 }
 
 Mesh::Mesh(const Mesh &mesh)
-    : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
-           mesh.indices.end()) {}
+    : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
+           mesh.triangles.end()) {}
 
 Mesh::~Mesh() {}
 
@@ -69,7 +71,7 @@ unsigned int Mesh::id() const { return id_; }
 
 void Mesh::clear() {
   vertices.clear();
-  indices.clear();
+  triangles.clear();
 }
 
 Mesh::Positions Mesh::positions() const {
@@ -141,7 +143,7 @@ struct Triangle {
 };
 
 void Mesh::calculate_normals() {
-  if (indices.size() == 0) {
+  if (triangles.size() == 0) {
     for (int i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
       auto &v0 = vertices[i];
@@ -157,8 +159,8 @@ void Mesh::calculate_normals() {
     //TODO: Slow brute force, improve?
     using P = std::pair<int, std::vector<Triangle>>;
     std::map<int, std::vector<Triangle>> triangle_map;
-    for (int i = 0; i < indices.size(); i += 3) {
-      std::array<int, 3> tri{indices[i], indices[i + 1], indices[i + 2]};
+    for (int i = 0; i < triangles.size(); i++) {
+      std::array<int, 3> tri{triangles[i][0], triangles[i][1], triangles[i][2]};
       Triangle t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
       for (auto i0 : tri) {
         if (triangle_map.find(i0) == triangle_map.end()) {
@@ -198,7 +200,7 @@ void Mesh::calculate_normals() {
 }
 
 void Mesh::calculate_tangents() {
-  if (indices.size() == 0) {
+  if (triangles.size() == 0) {
     for (int i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
       auto &v0 = vertices[i];
@@ -208,17 +210,17 @@ void Mesh::calculate_tangents() {
       calculate_tangents(v0, v1, v2);
     }
   } else {
-    for (int i = 0; i < indices.size(); i += 3) {
-      auto &v0 = vertices[indices[i]];
-      auto &v1 = vertices[indices[i + 1]];
-      auto &v2 = vertices[indices[i + 2]];
+    for (int i = 0; i < triangles.size(); i++) {
+      auto &v0 = vertices[triangles[i][0]];
+      auto &v1 = vertices[triangles[i][1]];
+      auto &v2 = vertices[triangles[i][2]];
 
       calculate_tangents(v0, v1, v2);
     }
   }
 }
 void Mesh::calculate_flat_normals() {
-  if (indices.size() == 0) {
+  if (triangles.size() == 0) {
     for (int i = 0; i < vertices.size(); i += 3) {
       auto &v0 = vertices[i];
       auto &v1 = vertices[i + 1];
@@ -230,10 +232,10 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   } else {
-    for (int i = 0; i < indices.size(); i += 3) {
-      auto &v0 = vertices[indices[i]];
-      auto &v1 = vertices[indices[i + 1]];
-      auto &v2 = vertices[indices[i + 2]];
+    for (int i = 0; i < triangles.size(); i++) {
+      auto &v0 = vertices[triangles[i][0]];
+      auto &v1 = vertices[triangles[i][1]];
+      auto &v2 = vertices[triangles[i][2]];
 
       auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
       v0.normal = normal;

@@ -8,14 +8,14 @@ namespace sim {
 Navmesh2::Navmesh2() {}
 
 Navmesh2::Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform)
-    : Navmesh2(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
-               mesh.indices.end(), transform) {}
+    : Navmesh2(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
+               mesh.triangles.end(), transform) {}
 
 std::optional<gfx::Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   //for (auto &face : faces_) {
-  for (int i = 0; i < indices.size(); i += 3) {
-    Face2 face(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
+  for (int i = 0; i < triangles.size(); i++) {
+    Face2 face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       return intersection;
@@ -29,8 +29,8 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
                                const glm::vec3 &direction) {
   OptionalIntersection closest;
   //for (auto &face : faces_) {
-  for (int i = 0; i < indices.size(); i += 3) {
-    Face2 face(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]]);
+  for (int i = 0; i < triangles.size(); i++) {
+    Face2 face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
@@ -45,11 +45,11 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
 
 Navmesh2::~Navmesh2() {}
 void Navmesh2::calculate_normals() {
-  for (int i = 0; i < indices.size(); i += 3) {
+  for (int i = 0; i < triangles.size(); i++) {
     //TODO: Generalize
-    auto &v0 = vertices[indices[i]];
-    auto &v1 = vertices[indices[i + 1]];
-    auto &v2 = vertices[indices[i + 2]];
+    auto &v0 = vertices[triangles[i][0]];
+    auto &v1 = vertices[triangles[i][1]];
+    auto &v2 = vertices[triangles[i][2]];
 
     auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
     v0.normal = normal;

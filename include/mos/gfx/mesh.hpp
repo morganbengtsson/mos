@@ -11,6 +11,7 @@
 
 namespace mos {
 namespace gfx {
+
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
 /** Geometric data description. Vertices and optional indices for rendering. */
@@ -23,11 +24,11 @@ public:
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te elements_begin, Te elements_end)
       : vertices(vertices_begin, vertices_end),
-        indices(elements_begin, elements_end), id_(current_id_++) {
+        triangles(elements_begin, elements_end), id_(current_id_++) {
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
-       const std::initializer_list<int> &elements);
+       const std::initializer_list<std::array<int,3>> &elements);
 
   /** Load from *.mesh file. @param path Full path*/
   Mesh(const std::string &path);
@@ -60,7 +61,7 @@ public:
   void calculate_tangents();
 
   TrackedContainer<Vertex> vertices;
-  TrackedContainer<int> indices;
+  TrackedContainer<std::array<int, 3>> triangles;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
   static std::atomic_uint current_id_;

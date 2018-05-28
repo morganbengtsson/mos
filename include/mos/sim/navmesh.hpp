@@ -33,7 +33,7 @@ public:
   template<class Tv, class Te>
   Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
           Te elements_end, const glm::mat4 &transform)
-      : elements_(elements_begin, elements_end) {
+      : triangles_(elements_begin, elements_end) {
 
     std::transform(vertices_begin, vertices_end, std::back_inserter(positions_),
                    [&](const gfx::Vertex &vertex) {
@@ -41,7 +41,7 @@ public:
                          glm::vec4(vertex.position, 1.0f));
                    });
 
-    if (elements_.empty()) {
+    if (triangles_.empty()) {
       for (auto it = positions_.begin(); it != positions_.end();) {
         auto &v0 = *it;
         it++;
@@ -53,12 +53,12 @@ public:
       }
 
     } else {
-      for (auto it = elements_.begin(); it != elements_.end();) {
-        auto &v0 = positions_[*it];
+      for (auto it = triangles_.begin(); it != triangles_.end();) {
+        auto &v0 = positions_[it->at(0)];
         it++;
-        auto &v1 = positions_[*it];
+        auto &v1 = positions_[it->at(1)];
         it++;
-        auto &v2 = positions_[*it];
+        auto &v2 = positions_[it->at(2)];
         it++;
         faces_.push_back(Face(v0, v1, v2));
       }
@@ -75,7 +75,7 @@ public:
 private:
   std::vector<Face> faces_;
   std::vector<glm::vec3> positions_;
-  std::vector<int> elements_;
+  std::vector<std::array<int, 3>> triangles_;
 };
 }
 }

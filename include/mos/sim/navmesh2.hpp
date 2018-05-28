@@ -33,7 +33,7 @@ public:
   template<class Tv, class Te>
   Navmesh2(Tv vertices_begin, Tv vertices_end, Te elements_begin,
            Te elements_end, const glm::mat4 &transform)
-      : indices(elements_begin, elements_end), vertices(vertices_begin, vertices_end) {
+      : triangles(elements_begin, elements_end), vertices(vertices_begin, vertices_end) {
 
     for (auto &vertex : vertices) {
       vertex.position = glm::vec3(transform *
@@ -50,7 +50,7 @@ public:
   ~Navmesh2();
 
   std::vector<gfx::Vertex> vertices;
-  std::vector<int> indices;
+  std::vector<std::array<int, 3>> triangles;
 };
 }
 }

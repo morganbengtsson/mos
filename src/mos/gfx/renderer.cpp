@@ -858,7 +858,7 @@ void Renderer::render_model(const Model &model,
     glUniform1fv(uniforms.fog_attenuation_factor, 1,
                  &fog.attenuation_factor);
 
-    glDrawElements(GL_TRIANGLES, model.mesh->indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
   }
 
   for (const auto &child : model.models) {
@@ -987,10 +987,10 @@ void Renderer::load(const Mesh &mesh) {
       glGenBuffers(1, &element_array_buffer_id);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer_id);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   mesh.indices.size() * sizeof(unsigned int),
-                   mesh.indices.data(), GL_STATIC_DRAW);
+                   mesh.triangles.size() * 3 * sizeof(unsigned int),
+                   mesh.triangles.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_array_buffers_.insert({mesh.id(), Buffer{element_array_buffer_id, mesh.indices.modified()}});
+      element_array_buffers_.insert({mesh.id(), Buffer{element_array_buffer_id, mesh.triangles.modified()}});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
     // Position
@@ -1032,11 +1032,11 @@ void Renderer::load(const Mesh &mesh) {
                  mesh.vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-  if (mesh.indices.size() > 0 && mesh.indices.modified() > element_array_buffers_[mesh.id()].modified) {
+  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_[mesh.id()].modified) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[mesh.id()].id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh.indices.size() * sizeof(unsigned int),
-                 mesh.indices.data(),
+                 mesh.triangles.size() * 3 * sizeof(unsigned int),
+                 mesh.triangles.data(),
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
@@ -1145,7 +1145,7 @@ void Renderer::render_model_depth(const Model &model,
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
     glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
                      &mvp[0][0]);
-    const int num_elements = model.mesh ? model.mesh->indices.size() : 0;
+    const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
     glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
   }
   for (const auto &child : model.models) {

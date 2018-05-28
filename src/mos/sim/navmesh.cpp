@@ -8,8 +8,8 @@ namespace sim {
 Navmesh::Navmesh() {}
 
 Navmesh::Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform)
-    : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.indices.begin(),
-              mesh.indices.end(), transform) {}
+    : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
+              mesh.triangles.end(), transform) {}
 
 std::optional<Intersection>
 Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
