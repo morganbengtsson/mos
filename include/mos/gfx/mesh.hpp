@@ -14,6 +14,7 @@ namespace gfx {
 
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
+using Triangle = std::array<int, 3>;
 /** Geometric data description. Vertices and optional indices for rendering. */
 class Mesh final {
 public:
@@ -22,13 +23,13 @@ public:
 
   template<class Tv, class Te>
   Mesh(const Tv vertices_begin, const Tv vertices_end,
-       Te elements_begin, Te elements_end)
+       Te triangles_begin, Te triangles_end)
       : vertices(vertices_begin, vertices_end),
-        triangles(elements_begin, elements_end), id_(current_id_++) {
+        triangles(triangles_begin, triangles_end), id_(current_id_++) {
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
-       const std::initializer_list<std::array<int,3>> &elements);
+       const std::initializer_list<Triangle> &triangles);
 
   /** Load from *.mesh file. @param path Full path*/
   Mesh(const std::string &path);
@@ -61,7 +62,7 @@ public:
   void calculate_tangents();
 
   TrackedContainer<Vertex> vertices;
-  TrackedContainer<std::array<int, 3>> triangles;
+  TrackedContainer<Triangle> triangles;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
   static std::atomic_uint current_id_;

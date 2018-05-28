@@ -14,8 +14,8 @@ namespace gfx {
 std::atomic_uint Mesh::current_id_;
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
-           const std::initializer_list<std::array<int, 3>> &elements)
-    : Mesh(vertices.begin(), vertices.end(), elements.begin(), elements.end()) {
+           const std::initializer_list<Triangle> &triangles)
+    : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
 }
 
 Mesh::Mesh(const std::string &path) : id_(current_id_++) {
@@ -43,7 +43,6 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
     for (int i = 0; i < input_indices.size(); i += 3) {
       triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
     }
-
     calculate_tangents();
   } else {
     throw std::runtime_error("File extension not supported.");
@@ -133,7 +132,8 @@ void Mesh::calculate_tangents(Vertex &v0,
   v2.tangent = tangent;
 }
 
-struct Triangle {
+//TODO: Remove?
+struct Face {
   Vertex &v0;
   Vertex &v1;
   Vertex &v2;
@@ -157,14 +157,14 @@ void Mesh::calculate_normals() {
     }
   } else {
     //TODO: Slow brute force, improve?
-    using P = std::pair<int, std::vector<Triangle>>;
-    std::map<int, std::vector<Triangle>> triangle_map;
+    using P = std::pair<int, std::vector<Face>>;
+    std::map<int, std::vector<Face>> triangle_map;
     for (int i = 0; i < triangles.size(); i++) {
       std::array<int, 3> tri{triangles[i][0], triangles[i][1], triangles[i][2]};
-      Triangle t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
+      Face t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
       for (auto i0 : tri) {
         if (triangle_map.find(i0) == triangle_map.end()) {
-          triangle_map.insert(P(i0, std::vector<Triangle>{t}));
+          triangle_map.insert(P(i0, std::vector<Face>{t}));
         } else {
           triangle_map[i0].push_back(t);
         }
