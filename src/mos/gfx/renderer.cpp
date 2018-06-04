@@ -339,7 +339,7 @@ void Renderer::load_or_update(const Texture2D &texture) {
     GLuint gl_id = create_texture(texture);
     textures_.insert({texture.id(), Buffer{gl_id, texture.layers.modified()}});
   } else {
-    auto buffer = textures_[texture.id()];
+    auto buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer.modified) {
       glBindTexture(GL_TEXTURE_2D, buffer.id);
       glTexImage2D(GL_TEXTURE_2D, 0,
@@ -456,7 +456,7 @@ void Renderer::load(const SharedTexture2D &texture) {
 void Renderer::unload(const SharedTexture2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) != textures_.end()) {
-      auto gl_id = textures_[texture->id()].id;
+      auto gl_id = textures_.at(texture->id()).id;
       glDeleteTextures(1, &gl_id);
       textures_.erase(texture->id());
     }
@@ -709,7 +709,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                 ? textures_[particles.emission_map->id()].id
+                                 ? textures_.at(particles.emission_map->id()).id
                                  : black_texture_);
     glUniform1i(particle_program_.texture, 10);
 
@@ -745,48 +745,48 @@ void Renderer::render_model(const Model &model,
 
     glActiveTexture(GLenum(GL_TEXTURE0));
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                 ? textures_[model.material.albedo_map->id()].id
+                                 ? textures_.at(model.material.albedo_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_albedo_map, 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_[light.shadow_map->id()].id : white_texture_);
+    glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_.at(light.shadow_map->id()).id : white_texture_);
     glGenerateMipmap(GL_TEXTURE_2D);
     glUniform1i(uniforms.light_shadow_map, 1);
 
     glActiveTexture(GLenum(GL_TEXTURE2));
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                 ? textures_[model.material.emission_map->id()].id
+                                 ? textures_.at(model.material.emission_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_emission_map, 2);
 
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                 ? textures_[model.material.normal_map->id()].id
+                                 ? textures_.at(model.material.normal_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_normal_map, 3);
 
     if (environment) {
       glActiveTexture(GL_TEXTURE4);
-      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_[environment->texture_.id()]);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment->texture_.id()));
       glUniform1i(uniforms.environment_map, 4);
     }
 
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
-                                 ? textures_[model.material.metallic_map->id()].id
+                                 ? textures_.at(model.material.metallic_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_metallic_map, 5);
 
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                                 ? textures_[model.material.roughness_map->id()].id
+                                 ? textures_.at(model.material.roughness_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_roughness_map, 6);
 
     glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
-                                 ? textures_[model.material.ambient_occlusion_map->id()].id
+                                 ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
     glUniform1i(uniforms.material_ambient_occlusion_map, 7);
 
@@ -1117,7 +1117,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
     auto fb = frame_buffers_[target.target.id()];
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
 
-    auto texture_id = textures_[target.texture->id()].id;
+    auto texture_id = textures_.at(target.texture->id()).id;
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
