@@ -327,7 +327,7 @@ void Renderer::unload(const Model &model) {
 void Renderer::unload(const SharedTextureCube &texture) {
   if (texture) {
     if (texture_cubes_.find(texture->id()) != texture_cubes_.end()) {
-      auto gl_id = texture_cubes_[texture->id()];
+      auto gl_id = texture_cubes_.at(texture->id());
       glDeleteTextures(1, &gl_id);
       texture_cubes_.erase(texture->id());
     }
@@ -676,7 +676,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.particles.modified()}});
       }
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -694,7 +694,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
       glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[particles.id()].id);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
     glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
                  particles.particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -704,7 +704,7 @@ void Renderer::render_particles(const Scene::ParticleClouds &clouds,
 
     glUseProgram(particle_program_.program);
 
-    glBindVertexArray(vertex_arrays_[particles.id()]);
+    glBindVertexArray(vertex_arrays_.at(particles.id()));
 
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
@@ -902,7 +902,7 @@ void Renderer::render_shadow_map(const Models &models, const Light &light) {
 
     frame_buffers_.insert({light.target.id(), frame_buffer_id});
   }
-  auto fb = frame_buffers_[light.target.id()];
+  auto fb = frame_buffers_.at(light.target.id());
   glBindFramebuffer(GL_FRAMEBUFFER, fb);
   glClear(GL_DEPTH_BUFFER_BIT);
   auto resolution = glm::ivec2(light.shadow_map->width(), light.shadow_map->height());
@@ -943,10 +943,10 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       frame_buffers_.insert({scene.environment->target_.id(), frame_buffer_id});
     }
 
-    GLuint frame_buffer_id = frame_buffers_[scene.environment->target_.id()];
+    GLuint frame_buffer_id = frame_buffers_.at(scene.environment->target_.id());
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    auto texture_id = texture_cubes_[scene.environment->texture_.id()];
+    auto texture_id = texture_cubes_.at(scene.environment->texture_.id());
 
     auto cube_camera = scene.environment->cube_camera_.cameras[cube_camera_index_];
 
@@ -1026,14 +1026,14 @@ void Renderer::load(const Mesh &mesh) {
     vertex_arrays_.insert({mesh.id(), vertex_array});
   }
 
-  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_[mesh.id()].modified) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_[mesh.id()].id);
+  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id()).modified) {
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
     glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
                  mesh.vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_[mesh.id()].modified) {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_[mesh.id()].id);
+  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id()).modified) {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id()).id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  mesh.triangles.size() * 3 * sizeof(unsigned int),
                  mesh.triangles.data(),
@@ -1044,18 +1044,18 @@ void Renderer::load(const Mesh &mesh) {
 
 void Renderer::unload(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) != vertex_arrays_.end()) {
-    auto va_id = vertex_arrays_[mesh.id()];
+    auto va_id = vertex_arrays_.at(mesh.id());
     glDeleteVertexArrays(1, &va_id);
     vertex_arrays_.erase(mesh.id());
 
     if (array_buffers_.find(mesh.id()) != array_buffers_.end()) {
-      auto abo = array_buffers_[mesh.id()];
+      auto abo = array_buffers_.at(mesh.id());
       glDeleteBuffers(1, &abo.id);
       array_buffers_.erase(mesh.id());
     }
     if (element_array_buffers_.find(mesh.id()) !=
         element_array_buffers_.end()) {
-      auto ebo = element_array_buffers_[mesh.id()];
+      auto ebo = element_array_buffers_.at(mesh.id());
       glDeleteBuffers(1, &ebo.id);
       element_array_buffers_.erase(mesh.id());
     }
@@ -1114,7 +1114,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
 
       frame_buffers_.insert({target.target.id(), frame_buffer_id});
     }
-    auto fb = frame_buffers_[target.target.id()];
+    auto fb = frame_buffers_.at(target.target.id());
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
 
     auto texture_id = textures_.at(target.texture->id()).id;
