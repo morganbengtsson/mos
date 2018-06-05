@@ -285,19 +285,6 @@ Renderer::~Renderer() {
   }
 }
 
-void Renderer::load_async(const Model &model) {
-  load(model.mesh);
-  load_async(model.material.albedo_map);
-  load_async(model.material.emission_map);
-  load_async(model.material.normal_map);
-  load_async(model.material.metallic_map);
-  load_async(model.material.roughness_map);
-  load_async(model.material.ambient_occlusion_map);
-  for (auto &m : model.models) {
-    load_async(m);
-  }
-}
-
 void Renderer::load(const Model &model) {
   load(model.mesh);
   load(model.material.albedo_map);
@@ -352,97 +339,6 @@ void Renderer::load_or_update(const Texture2D &texture) {
       }
       glBindTexture(GL_TEXTURE_2D, 0);
       buffer.modified = texture.layers.modified();
-    }
-  }
-}
-
-void Renderer::load_async(const SharedTexture2D &texture) {
-  if (texture) {
-    if (textures_.find(texture->id()) == textures_.end()) {
-
-      std::chrono::duration<float> frame_time =
-          std::chrono::duration_cast<std::chrono::seconds>(std::chrono::seconds(0));
-      auto old_time = std::chrono::high_resolution_clock::now();
-
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-      GLuint texture_id;
-      glGenTextures(1, &texture_id);
-      glBindTexture(GL_TEXTURE_2D, texture_id);
-
-      //TODO: Support for mipmaps, load them manually;
-      GLfloat sampling = texture->mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-      if (texture->format == Texture::Format::DEPTH) {
-        sampling = GL_LINEAR;
-      }
-      sampling = GL_LINEAR;
-
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture->wrap));
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture->wrap));
-
-      float aniso = 0.0f;
-      glBindTexture(GL_TEXTURE_2D, texture_id);
-      glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-
-      glTexImage2D(GL_TEXTURE_2D, 0,
-                   format_map_[texture->format].internal_format,
-                   texture->width(), texture->height(), 0,
-                   format_map_[texture->format].format,
-                   GL_UNSIGNED_BYTE, nullptr);
-
-      std::cout << texture->layers[0].size() << std::endl;
-
-      test_buffers_.insert({texture->id(), PixelBuffer{buffer_id_, std::async(std::launch::async,
-                                                                              [](void *ptr,
-                                                                                 const SharedTexture2D texture) {
-                                                                                std::memcpy(ptr,
-                                                                                            texture->layers[0].data(),
-                                                                                            texture->layers[0].size());
-                                                                              },
-                                                                              ptr_,
-                                                                              texture)}});
-
-      frame_time = std::chrono::high_resolution_clock::now() - old_time;
-      std::cout << "tc: " << std::fixed << frame_time.count() << std::endl;
-
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
-      textures_.insert({texture->id(), Buffer{texture_id, texture->layers.modified()}});
-
-    } else if (test_buffers_.find(texture->id()) != test_buffers_.end()) {
-      if (test_buffers_.at(texture->id()).future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-
-        auto buffer_id = test_buffers_.at(texture->id()).id;
-        auto texture_id = textures_.at(texture->id()).id;
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_id_);
-
-        glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-
-        std::chrono::duration<float> frame_time =
-            std::chrono::duration_cast<std::chrono::seconds>(std::chrono::seconds(0));
-        auto old_time = std::chrono::high_resolution_clock::now();
-
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->width(),
-                        texture->height(), format_map_[texture->format].format, GL_UNSIGNED_BYTE,
-                        (void *) 0);
-
-        if (texture->mipmaps) {
-          //glGenerateMipmap(GL_TEXTURE_2D);
-        };
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        //glDeleteBuffers(1, &buffer_id);
-        test_buffers_.erase(texture->id());
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-        frame_time = std::chrono::high_resolution_clock::now() - old_time;
-        std::cout << "tb: " << std::fixed << frame_time.count() << std::endl;
-      }
     }
   }
 }
@@ -1078,11 +974,6 @@ void Renderer::load(const Models &models) {
     load(model);
   }
 }
-void Renderer::load_async(const Models &models) {
-  for (auto &model : models) {
-    load_async(model);
-  }
-}
 
 void Renderer::render_texture_targets(const Scene &scene) {
   for (auto &target : scene.texture_targets) {
@@ -1235,15 +1126,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1fv(bloom_program_.strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
-}
-void Renderer::render_async(const Scenes &scenes, const glm::vec4 &color, const glm::ivec2 &resolution) {
-  clear(color);
-  for (auto it = scenes.begin(); it != scenes.end(); it++) {
-    load_async(it->models);
-    render_shadow_map(it->models, it->light);
-    //render_environment(*it, color);
-    render_scene(it->camera, *it, resolution);
-  }
 }
 
 Renderer::DepthProgram::DepthProgram() {

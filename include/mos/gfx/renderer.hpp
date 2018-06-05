@@ -32,10 +32,8 @@ public:
 
   /** Loads a model into renderers own memory. */
   void load(const Model &model);
-  void load_async(const Model &model);
 
   void load(const Models & models);
-  void load_async(const Models &models);
 
   /** Unloads a model from renderers own memory. */
   void unload(const Model &model);
@@ -51,9 +49,6 @@ public:
   /** Loads a shared texture into renderer memory. */
   void load(const SharedTexture2D &texture);
 
-  /** Loads a shared texture into render memory, async. */
-  void load_async(const SharedTexture2D &texture);
-
   /** Loads a texture into renderer memory. */
   void load_or_update(const Texture2D &texture);
 
@@ -65,11 +60,6 @@ public:
 
   /** Render multiple scenes. */
   void render(const Scenes &scenes,
-              const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-              const glm::ivec2 &resolution = glm::ivec2(128, 128));
-
-  /** Render multiple scenes, asynchronously. */
-  void render_async(const Scenes &scenes,
               const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
               const glm::ivec2 &resolution = glm::ivec2(128, 128));
 
