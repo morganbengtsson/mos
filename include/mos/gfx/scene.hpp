@@ -13,13 +13,14 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/texture_target.hpp>
 #include <mos/gfx/models.hpp>
-#include <mos/gfx/texture_targets.hpp>
+#include <mos/gfx/container.hpp>
 
 namespace mos {
 namespace gfx {
 
 using ParticleClouds = Container<ParticleCloud>;
 using TextureTargets = Container<TextureTarget>;
+using Boxes = Container<Box>;
 
 /** Scene for rendering. */
 class Scene {
@@ -34,7 +35,7 @@ public:
         const OptionalEnvironmentLight &environment_light = OptionalEnvironmentLight());
 
   Models models;
-  Container<ParticleCloud> particle_clouds;
+  ParticleClouds particle_clouds;
   Boxes boxes;
   Light light;
   Camera camera;
