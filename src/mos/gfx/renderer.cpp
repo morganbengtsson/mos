@@ -460,11 +460,6 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
 
-  float aniso = 0.0f;
-  glBindTexture(GL_TEXTURE_2D, id);
-  glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-
   glTexImage2D(GL_TEXTURE_2D, 0,
                format_map_[texture.format].internal_format,
                texture.width(), texture.height(), 0,
@@ -498,10 +493,6 @@ Renderer::create_texture_cube(const TextureCube &texture) {
                   wrap_map_[texture.wrap]);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
                   wrap_map_[texture.wrap]);
-
-  float aniso = 0.0f;
-  glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
 
   for (int i = 0; i < 6; i++) {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
