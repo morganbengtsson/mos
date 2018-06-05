@@ -13,6 +13,7 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/texture_target.hpp>
 #include <mos/gfx/models.hpp>
+#include <mos/gfx/texture_targets.hpp>
 
 namespace mos {
 namespace gfx {
@@ -20,7 +21,6 @@ namespace gfx {
 /** Scene for rendering. */
 class Scene {
 public:
-  using TextureTargets = std::vector<TextureTarget>;
   using Boxes = std::vector<Box>;
   using ParticleClouds = std::vector<ParticleCloud>;
 
