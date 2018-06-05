@@ -21,6 +21,5 @@ public:
 private:
   Container buffer_sources_;
 };
-
 }
 }

@@ -248,9 +248,8 @@ void main() {
 
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
 
-    //TODO: Maybe not necessary
-    float fragment_environment_distance = distance(fragment.position, environment.position + environment.extent);
-    float environment_attenuation = 1.0 / (1.0 + 0.1*fragment_environment_distance + 0.01*fragment_environment_distance*fragment_environment_distance);
+    float fragment_environment_distance = distance(fragment.position, environment.position);
+    float environment_attenuation = clamp(1.0 / exp(fragment_environment_distance / environment.extent.x), 0.0, 1.0);
 
     vec3 ambient = (kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation;
 
