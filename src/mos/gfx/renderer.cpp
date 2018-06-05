@@ -546,7 +546,7 @@ void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &c
   glBindVertexArray(0);
 }
 
-void Renderer::render_particles(const Scene::ParticleClouds &clouds,
+void Renderer::render_particles(const ParticleClouds &clouds,
                                 const mos::gfx::Camera &camera,
                                 const glm::vec2 &resolution) {
   for (auto &particles : clouds) {

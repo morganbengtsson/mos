@@ -18,11 +18,13 @@
 namespace mos {
 namespace gfx {
 
+using ParticleClouds = Container<ParticleCloud>;
+using TextureTargets = Container<TextureTarget>;
+
 /** Scene for rendering. */
 class Scene {
 public:
   using Boxes = std::vector<Box>;
-  using ParticleClouds = std::vector<ParticleCloud>;
 
   Scene();
   Scene(const Models &models,
@@ -32,13 +34,13 @@ public:
         const OptionalEnvironmentLight &environment_light = OptionalEnvironmentLight());
 
   Models models;
-  ParticleClouds particle_clouds;
+  Container<ParticleCloud> particle_clouds;
   Boxes boxes;
   Light light;
   Camera camera;
   Fog fog;
   OptionalEnvironmentLight environment;
-  Container<TextureTarget> texture_targets;
+  TextureTargets texture_targets;
 };
 }
 }

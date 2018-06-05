@@ -192,7 +192,7 @@ private:
   void render_boxes(const Scene::Boxes & boxes,
                     const mos::gfx::Camera &camera);
 
-  void render_particles(const Scene::ParticleClouds &clouds,
+  void render_particles(const ParticleClouds &clouds,
                         const mos::gfx::Camera &camera,
                         const glm::vec2 &resolution);
 
