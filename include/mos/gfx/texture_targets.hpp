@@ -7,21 +7,25 @@
 namespace mos {
 namespace gfx {
 
-class TextureTargets {
+template <class T>
+class Container {
 public:
-  using Container = std::vector<TextureTarget>;
+  using Items = std::vector<T>;
   template<class It>
-  TextureTargets(It begin, It end) : texture_targets_(begin, end){};
-  TextureTargets(const std::initializer_list<TextureTargets> &);
-  TextureTargets();
-  void push_back(const TextureTarget& texture_target);
-  Container::const_iterator begin() const;
-  Container::const_iterator end() const;
-  Container::iterator begin();
-  Container::iterator end();
-  TextureTarget& operator[](unsigned long pos);
+  Container(It begin, It end) : items_(begin, end){};
+  Container(const std::initializer_list<T> &list):items_(list.begin(), list.end()){};
+  Container(){};
+  typename Items::const_iterator begin() const{
+    return items_.begin();
+  };
+  typename Items::const_iterator end() const{
+    return items_.end();
+  }
+  typename Items::const_reference operator[](unsigned long pos){
+    return items_[pos];
+  }
 private:
-  Container texture_targets_;
+  Items items_;
 };
 }
 }

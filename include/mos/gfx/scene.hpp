@@ -38,7 +38,7 @@ public:
   Camera camera;
   Fog fog;
   OptionalEnvironmentLight environment;
-  TextureTargets texture_targets;
+  Container<TextureTarget> texture_targets;
 };
 }
 }

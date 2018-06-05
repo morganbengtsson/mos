@@ -11,7 +11,7 @@ namespace gfx {
 template<class T>
 class TrackedContainer {
 public:
-  using Cont = std::vector<T>;
+  using Items = std::vector<T>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   TrackedContainer(){
@@ -28,45 +28,45 @@ public:
   template<class It>
 
   void assign(It begin, It end){
-    data_.assign(begin, end);
+    items_.assign(begin, end);
     invalidate();
   }
-  typename Cont::iterator begin() {
-    return data_.begin();
+  typename Items::iterator begin() {
+    return items_.begin();
   }
-  typename Cont::iterator end() {
+  typename Items::iterator end() {
     invalidate();
-    return data_.end();
+    return items_.end();
   }
-  typename Cont::const_iterator begin() const {
-    return data_.begin();
+  typename Items::const_iterator begin() const {
+    return items_.begin();
   }
-  typename Cont::const_iterator end() const {
-    return data_.end();
+  typename Items::const_iterator end() const {
+    return items_.end();
   }
-  typename Cont::reference operator[](typename Cont::size_type pos){
+  typename Items::reference operator[](typename Items::size_type pos){
     invalidate();
-    return data_[pos];
+    return items_[pos];
   }
-  typename Cont::const_reference operator[](typename Cont::size_type pos) const {
-    return data_[pos];
+  typename Items::const_reference operator[](typename Items::size_type pos) const {
+    return items_[pos];
   }
-  typename Cont::size_type size() const {
-    return data_.size();
+  typename Items::size_type size() const {
+    return items_.size();
   }
-  typename Cont::reference back() {
+  typename Items::reference back() {
     invalidate();
-    return data_.back();
+    return items_.back();
   }
   const T * data() const noexcept {
-    return data_.data();
+    return items_.data();
   }
   void clear(){
-    data_.clear();
+    items_.clear();
     invalidate();
   }
   void push_back(const T &item){
-    data_.push_back(item);
+    items_.push_back(item);
     invalidate();
   }
 
@@ -78,7 +78,7 @@ private:
   void invalidate() {
     modified_ = std::chrono::system_clock::now();
   }
-  std::vector<T> data_;
+  Items items_;
   TimePoint modified_;
 };
 
