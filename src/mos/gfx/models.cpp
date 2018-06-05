@@ -13,20 +13,20 @@ void Models::push_back(const Model &model) {
 
 Models::Models() {}
 
-Models::Container::const_iterator Models::begin() const {
+Models::Items::const_iterator Models::begin() const {
   return models_.begin();
 }
 
-Models::Container::const_iterator Models::end() const {
+Models::Items::const_iterator Models::end() const {
   return models_.end();
 }
 Model &Models::operator[](unsigned long pos) {
   return models_[pos];
 }
-Models::Container::iterator Models::begin() {
+Models::Items::iterator Models::begin() {
   return models_.begin();
 }
-Models::Container::iterator Models::end() {
+Models::Items::iterator Models::end() {
   return models_.end();
 }
 

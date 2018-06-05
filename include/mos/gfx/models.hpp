@@ -10,19 +10,19 @@ class Model;
 
 class Models {
 public:
-  using Container = std::vector<Model>;
+  using Items = std::vector<Model>;
   template<class It>
   Models(It begin, It end) : models_(begin, end){};
   Models(const std::initializer_list<Model> &models);
   Models();
   void push_back(const Model& model);
-  Container::const_iterator begin() const;
-  Container::const_iterator end() const;
-  Container::iterator begin();
-  Container::iterator end();
+  Items::const_iterator begin() const;
+  Items::const_iterator end() const;
+  Items::iterator begin();
+  Items::iterator end();
   Model& operator[](unsigned long pos);
 private:
-  Container models_;
+  Items models_;
 };
 
 }
