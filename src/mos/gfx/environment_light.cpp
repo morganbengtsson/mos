@@ -10,20 +10,7 @@ EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
       strength(strength),
       cube_camera_(position) {
 }
-EnvironmentLight::EnvironmentLight(const EnvironmentLight &light) :
-    texture_(light.texture_),
-    box_(light.box_),
-    strength(light.strength),
-    cube_camera_(light.cube_camera_),
-    target_(light.target_) {}
-EnvironmentLight &EnvironmentLight::operator=(const EnvironmentLight &other) {
-  texture_ = other.texture_;
-  box_ = other.box_;
-  strength = other.strength;
-  cube_camera_ = other.cube_camera_;
-  target_ = other.target_;
-  return *this;
-}
+
 void EnvironmentLight::position(const glm::vec3 &position) {
   box_.position = position;
   cube_camera_.position(position);

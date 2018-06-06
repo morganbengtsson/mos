@@ -19,8 +19,6 @@ public:
                    const glm::vec3 &extent = glm::vec3(50.0f),
                    const float strength = 1.0f,
                    const glm::uvec2 resolution = glm::uvec2(128, 128));
-  EnvironmentLight(const EnvironmentLight &light);
-  EnvironmentLight &operator=(const EnvironmentLight &other);
 
   /** Set position. */
   void position(const glm::vec3 &position);
