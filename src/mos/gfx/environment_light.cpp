@@ -1,6 +1,7 @@
 #include <mos/gfx/environment_light.hpp>
 namespace mos {
 namespace gfx {
+
 EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength,

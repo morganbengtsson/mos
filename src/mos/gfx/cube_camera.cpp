@@ -50,17 +50,6 @@ glm::vec3 CubeCamera::position() const {
   return cameras[0].position();
 }
 
-CubeCamera::CubeCamera(const CubeCamera &camera)
-    : projection_(camera.projection_), up_(camera.up_), cameras(camera.cameras) {
-}
-
-CubeCamera &CubeCamera::operator=(const CubeCamera &other) {
-  //TODO: Implement swap
-  projection_ = other.projection_;
-  up_ = other.up_;
-  cameras = other.cameras;
-  return *this;
-}
 void CubeCamera::position(const glm::vec3 &position) {
   for (auto & camera : cameras) {
     camera.position(position);

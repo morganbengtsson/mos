@@ -16,8 +16,6 @@ private:
 public:
   CubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
              const float aspect_ratio = 1.0f);
-  CubeCamera(const CubeCamera &camera);
-  CubeCamera &operator=(const CubeCamera &other);
 
   glm::vec3 position() const;
   void position(const glm::vec3 &position);
