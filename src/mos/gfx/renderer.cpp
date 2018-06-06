@@ -638,7 +638,7 @@ void Renderer::render_model(const Model &model,
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_.at(light.shadow_map->id()).id : white_texture_);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
     glUniform1i(uniforms.light_shadow_map, 1);
 
     glActiveTexture(GLenum(GL_TEXTURE2));
@@ -799,6 +799,10 @@ void Renderer::render_shadow_map(const Models &models, const Light &light) {
     render_model_depth(model, glm::mat4(1.0f), light.camera, resolution, depth_program_);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  //Generate mipmaps
+  glBindTexture(GL_TEXTURE_2D, textures_.at(light.shadow_map->id()).id);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
   if (scene.environment) {
@@ -1051,6 +1055,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   }
   glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
   clear(color);
+
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
     render_scene(it->camera, *it, resolution);
   }
