@@ -58,6 +58,8 @@ public:
   /** Get model. */
   Model model() const;
 
+  void emissive(const bool emissive);
+
   float spacing;
 
   Text &operator=(const std::string &text);

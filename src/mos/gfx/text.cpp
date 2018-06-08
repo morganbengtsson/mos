@@ -130,5 +130,15 @@ Text &Text::operator+=(const std::string &input) {
   text(text() + input);
   return *this;
 }
+void Text::emissive(const bool emissive) {
+  if (emissive){
+    model_.material.emission_map = font_.texture;
+    model_.material.albedo_map = nullptr;
+  }
+  else {
+    model_.material.albedo_map = font_.texture;
+    model_.material.emission_map = nullptr;
+  }
+}
 }
 }
