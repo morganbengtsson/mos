@@ -8,8 +8,7 @@ namespace gfx {
 using namespace nlohmann;
 Font::Font(const Font::CharMap &characters, const SharedTexture2D &texture,
            const float height, const float ascender, const float descender)
-    : characters(characters), texture(texture), height_(height),
-      ascender_(ascender), descender_(descender) {
+    : characters(characters), texture(texture), height_(height) {
   texture->wrap = Texture2D::Wrap::CLAMP_TO_EDGE;
 }
 
