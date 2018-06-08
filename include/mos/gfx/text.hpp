@@ -19,6 +19,7 @@ public:
   Text(const std::string &text,
        const Font &font,
        const glm::mat4 &transform = glm::mat4(1.0f),
+       const bool emissive = false,
        const float spacing = 0.0f);
 
   virtual ~Text();
