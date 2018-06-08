@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/io.hpp>
+
 namespace mos {
 namespace gfx {
 Text::Text(const std::string &txt, const Font &font, const glm::mat4 &transform,
@@ -49,7 +51,6 @@ void Text::text(const std::string &text) {
 
         float z = index / 2000.0f;
 
-        //TODO: Optimize to four vertices
         model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
@@ -63,18 +64,11 @@ void Text::text(const std::string &text) {
 
         model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
 
-        model_.mesh->vertices.push_back(
-            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
-                   glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
-
         model_.mesh->vertices.push_back(Vertex(glm::vec3(index + rect_w + offset_x,
                                           rect_h + offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
-        model_.mesh->vertices.push_back(Vertex(
-            glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
-            glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
 
-        model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
+        model_.mesh->triangles.push_back({triangle_index - 3, triangle_index++, triangle_index -3});
 
         index += advance + spacing;
       }
