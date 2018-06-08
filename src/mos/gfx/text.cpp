@@ -29,6 +29,7 @@ void Text::text(const std::string &text) {
 
     float line_index = 0.0f;
     const float line_height = -1.0f;
+    int triangle_index = 0;
     for (auto & line : lines) {
       float index = 0.0f;
       for (auto & c : line) {
@@ -47,6 +48,8 @@ void Text::text(const std::string &text) {
         float advance = character.advance / font_.height();
 
         float z = index / 2000.0f;
+
+        //TODO: Optimize to four vertices
         model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
@@ -57,6 +60,9 @@ void Text::text(const std::string &text) {
 
         model_.mesh->vertices.push_back(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
                                 glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
+
+        model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
+
         model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
                    glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
@@ -67,6 +73,8 @@ void Text::text(const std::string &text) {
         model_.mesh->vertices.push_back(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+
+        model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
 
         index += advance + spacing;
       }

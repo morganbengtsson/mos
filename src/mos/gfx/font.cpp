@@ -16,32 +16,26 @@ Font::Font(const Font::CharMap &characters, const SharedTexture2D &texture,
 Font::Font(const std::string &path) {
   filesystem::path fpath = path;
   auto doc = json::parse(text(fpath.str()));
-  for (auto &c : doc["chars"]) {
+  for (auto &c : doc["symbols"]) {
     Character character;
-    character.offset_x = c["offset_x"];
-    character.offset_y = c["offset_y"];
-    character.advance = c["advance"];
-    character.rect_w = c["rect_w"];
-    std::string id = c["id"];
-    character.id = id[0];
-    character.rect_x = c["rect_x"];
-    character.rect_y = c["rect_y"];
-    character.rect_h = c["rect_h"];
+    character.offset_x = c["xoffset"];
+    character.offset_y = c["yoffset"];
+    character.advance = c["xadvance"];
+    character.rect_w = c["width"];
+    int id = c["id"];
+    character.id = char(id);
+    character.rect_x = c["x"];
+    character.rect_y = c["y"];
+    character.rect_h = c["height"];
     characters.insert(std::pair<char, Character>(character.id, character));
   }
-  height_ = doc["metrics"]["height"];
-  ascender_ = doc["metrics"]["ascender"];
-  descender_ = doc["metrics"]["descender"];
-  std::string texture_name = doc["texture"]["file"];
+  height_ = doc["config"]["charHeight"];
+  std::string texture_name = doc["config"]["textureFile"];
   texture = Texture2D::load(fpath.parent_path().str() + "/" + texture_name);
 }
 
 Font::~Font() {}
 
 float Font::height() const { return height_; }
-
-float Font::ascender() const { return ascender_; }
-
-float Font::descender() const { return descender_; }
 }
 }
