@@ -34,18 +34,18 @@ void Text::text(const std::string &text) {
       float index = 0.0f;
       for (auto & c : line) {
         auto character = font_.characters.at(c);
-        float u1 = character.rect_x / ((float)model_.material.albedo_map->width());
-        float u2 = (character.rect_x + character.rect_w) /
-                   (float)model_.material.albedo_map->width();
-        float v1 = character.rect_y / ((float)model_.material.albedo_map->height());
-        float v2 = ((character.rect_y + character.rect_h) /
-                    ((float)model_.material.albedo_map->height()));
+        float u1 = character.x / ((float)font_.texture->width());
+        float u2 = (character.x + character.width) /
+                   (float)font_.texture->width();
+        float v1 = character.y / ((float)font_.texture->height());
+        float v2 = ((character.y + character.height) /
+                    ((float)font_.texture->height()));
 
-        float offset_y = -character.offset_y / font_.height();
-        float offset_x = character.offset_x / font_.height();
-        float rect_h = -character.rect_h / font_.height();
-        float rect_w = character.rect_w / font_.height();
-        float advance = character.advance / font_.height();
+        float offset_y = -(character.y_offset - font_.base()) / font_.height();
+        float offset_x = character.x_offset / font_.height();
+        float rect_h = -character.height / font_.height();
+        float rect_w = character.width / font_.height();
+        float advance = character.x_advance / font_.height();
 
         float z = index / 2000.0f;
 

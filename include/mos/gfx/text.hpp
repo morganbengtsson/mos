@@ -16,7 +16,8 @@ public:
   using CharMap = std::map<char, Character>;
   using TexPtr = std::shared_ptr<Texture2D>;
 
-  Text(const std::string &text, const Font &font,
+  Text(const std::string &text,
+       const Font &font,
        const glm::mat4 &transform = glm::mat4(1.0f),
        const float spacing = 0.0f);
 

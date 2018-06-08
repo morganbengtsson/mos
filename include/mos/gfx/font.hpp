@@ -21,9 +21,11 @@ public:
   Font(const std::string &path);
   ~Font();
   float height() const;
+  float base() const;
   SharedTexture2D texture;
   CharMap characters;
 private:
+  float base_;
   float height_;
 };
 }

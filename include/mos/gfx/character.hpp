@@ -5,13 +5,13 @@ namespace gfx {
 
 /** Measurements of a character, for text rendering. */
 struct Character {
-  float offset_x;
-  float offset_y;
-  float advance;
-  float rect_w;
-  float rect_x;
-  float rect_y;
-  float rect_h;
+  float x_offset;
+  float y_offset;
+  float x_advance;
+  float width;
+  float x;
+  float y;
+  float height;
   char id;
 };
 }

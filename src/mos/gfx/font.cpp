@@ -17,17 +17,18 @@ Font::Font(const std::string &path) {
   auto doc = json::parse(text(fpath.str()));
   for (auto &c : doc["symbols"]) {
     Character character;
-    character.offset_x = c["xoffset"];
-    character.offset_y = c["yoffset"];
-    character.advance = c["xadvance"];
-    character.rect_w = c["width"];
+    character.x_offset = c["xoffset"];
+    character.y_offset = c["yoffset"];
+    character.x_advance = c["xadvance"];
+    character.width = c["width"];
     int id = c["id"];
     character.id = char(id);
-    character.rect_x = c["x"];
-    character.rect_y = c["y"];
-    character.rect_h = c["height"];
+    character.x = c["x"];
+    character.y = c["y"];
+    character.height = c["height"];
     characters.insert(std::pair<char, Character>(character.id, character));
   }
+  base_ = doc["config"]["base"];
   height_ = doc["config"]["charHeight"];
   std::string texture_name = doc["config"]["textureFile"];
   texture = Texture2D::load(fpath.parent_path().str() + "/" + texture_name);
@@ -36,5 +37,6 @@ Font::Font(const std::string &path) {
 Font::~Font() {}
 
 float Font::height() const { return height_; }
+float Font::base() const { return base_; }
 }
 }
