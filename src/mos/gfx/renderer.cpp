@@ -1077,7 +1077,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  glViewport(0, 0, resolution.x / 4, resolution.y / 4);
+  glViewport(0, 0, resolution.x, resolution.y);
   for (int i = 0; i < 5; i++) {
     //Blur pass2
     glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
