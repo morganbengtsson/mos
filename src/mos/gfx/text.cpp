@@ -136,6 +136,7 @@ Text &Text::operator+=(const std::string &input) {
 void Text::emissive(const bool emissive) {
   if (emissive){
     model_.material.emission_map = font_.texture;
+    model_.material.emission_strength = 1.0f;
     model_.material.albedo_map = nullptr;
   }
   else {
