@@ -1091,29 +1091,17 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     //Blur pass3
-    glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo1_);
+    horizontal = (i % 2 == 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_fbo1_ : blur_fbo0_);
     glUseProgram(blur_program_.program);
     glBindVertexArray(quad_vao_);
-
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, blur_texture0_);
+    glBindTexture(GL_TEXTURE_2D, horizontal ? blur_texture0_ : blur_texture1_);
     glUniform1i(blur_program_.color_texture, 0);
-    horizontal = true;
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    //Blur pass2
-    glBindFramebuffer(GL_FRAMEBUFFER, blur_fbo0_);
-    glUseProgram(blur_program_.program);
-    glBindVertexArray(quad_vao_);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, blur_texture1_);
-    glUniform1i(blur_program_.color_texture, 0);
-    GLint horizontal = false;
-    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
