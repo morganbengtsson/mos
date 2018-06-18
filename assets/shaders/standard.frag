@@ -8,6 +8,7 @@ struct Material {
     float metallic;
     float opacity;
     vec3 emission;
+    float emission_strength;
     float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D emission_map;
@@ -178,7 +179,7 @@ void main() {
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission * material.opacity, emission_from_map.rgb, emission_from_map.a);
+    vec3 emission = mix(material.emission * material.opacity, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);

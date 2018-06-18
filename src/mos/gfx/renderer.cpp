@@ -714,8 +714,8 @@ void Renderer::render_model(const Model &model,
     glUniform1fv(uniforms.material_metallic, 1,
                  &model.material.metallic);
     glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-    auto emission = model.material.emission_strength * model.material.emission;
-    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
+    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(model.material.emission));
+    glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
     // Camera in world space
@@ -1191,6 +1191,7 @@ Renderer::StandardProgram::StandardProgram() {
   material_metallic = glGetUniformLocation(program, "material.metallic");
   material_opacity = glGetUniformLocation(program, "material.opacity");
   material_emission = glGetUniformLocation(program, "material.emission");
+  material_emission_strength = glGetUniformLocation(program, "material.emission_strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
 
   camera_position = glGetUniformLocation(program, "camera.position");
