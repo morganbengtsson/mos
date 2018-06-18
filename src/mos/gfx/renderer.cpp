@@ -1090,7 +1090,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   for (int i = 0; i < 5; i++) {
-    //Blur pass3
     horizontal = (i % 2 == 0);
     glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_fbo1_ : blur_fbo0_);
     glUseProgram(blur_program_.program);
