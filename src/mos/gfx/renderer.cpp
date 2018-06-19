@@ -707,14 +707,16 @@ void Renderer::render_model(const Model &model,
         glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
     glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
+    auto albedo = model.material.albedo_map ? glm::vec3(0.0f) : model.material.albedo;
     glUniform3fv(uniforms.material_albedo, 1,
-                 glm::value_ptr(model.material.albedo));
+                 glm::value_ptr(albedo));
     glUniform1fv(uniforms.material_roughness, 1,
                  &model.material.roughness);
     glUniform1fv(uniforms.material_metallic, 1,
                  &model.material.metallic);
     glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(model.material.emission));
+    auto emission = model.material.emission_map ? glm::vec3(0.0f) : model.material.emission;
+    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
     glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 

@@ -167,7 +167,7 @@ void main() {
     }
 
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
-    vec3 albedo = mix(material.albedo * material.opacity, albedo_from_map.rgb, albedo_from_map.a);
+    vec3 albedo = mix(material.albedo, albedo_from_map.rgb, albedo_from_map.a);
 
     vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
     float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
@@ -179,7 +179,7 @@ void main() {
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission * material.opacity, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
+    vec3 emission = mix(material.emission, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
 
     float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
@@ -259,7 +259,7 @@ void main() {
     vec3 ambient = clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
 
     color.rgb = (Lo + ambient + emission) * fragment.ao;
-    color.a = clamp(material.opacity + albedo_from_map.a + emission_from_map.a, 0.0, 1.0);
+    color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
