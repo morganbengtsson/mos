@@ -707,16 +707,18 @@ void Renderer::render_model(const Model &model,
         glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
     glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-    auto albedo = model.material.albedo_map ? glm::vec3(0.0f) : model.material.albedo;
-    glUniform3fv(uniforms.material_albedo, 1,
+    glm::vec4 albedo = glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
+    glUniform4fv(uniforms.material_albedo, 1,
                  glm::value_ptr(albedo));
+    glm::vec4 emission = glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
+    glUniform4fv(uniforms.material_emission, 1,
+                 glm::value_ptr(emission));
     glUniform1fv(uniforms.material_roughness, 1,
                  &model.material.roughness);
     glUniform1fv(uniforms.material_metallic, 1,
                  &model.material.metallic);
     glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-    auto emission = model.material.emission_map ? glm::vec3(0.0f) : model.material.emission;
-    glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(emission));
+
     glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
