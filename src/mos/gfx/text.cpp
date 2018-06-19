@@ -16,7 +16,7 @@ Text::Text(const std::string &txt,
              transform),
       font_(font), spacing(spacing) {
   model_.material.albedo = glm::vec3(1.0f);
-  model_.material.opacity = 0.0f;
+  model_.material.opacity = 0.5f;
   model_.material.emission = glm::vec3(1.0f);
   emissive(emiss);
   text(txt);
