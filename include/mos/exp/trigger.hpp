@@ -16,7 +16,7 @@ public:
     value_ = value;
   }
   bool changed() const{ return old_value_ != value_;};
-  operator T(){
+  operator T() const{
     return value_;
   }
 private:
