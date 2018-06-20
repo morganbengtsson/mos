@@ -61,6 +61,8 @@ public:
 
   void emissive(const bool emissive);
 
+  void factor(const glm::vec3& factor);
+
   float spacing;
 
   Text &operator=(const std::string &text);

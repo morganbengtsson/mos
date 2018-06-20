@@ -144,5 +144,8 @@ void Text::emissive(const bool emissive) {
     model_.material.emission_map = nullptr;
   }
 }
+void Text::factor(const glm::vec3 &factor) {
+  model_.material.factor = factor;
+}
 }
 }
