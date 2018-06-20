@@ -68,6 +68,9 @@ public:
   /** Set opacity of text. */
   void opacity(const float &opacity);
 
+  /** Set emission strength */
+  void emission_strength(const float &strength);
+
   float spacing;
 
   Text &operator=(const std::string &text);

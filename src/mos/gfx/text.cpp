@@ -150,5 +150,8 @@ void Text::factor(const glm::vec3 &factor) {
 void Text::opacity(const float &opacity) {
   model_.material.opacity = opacity;
 }
+void Text::emission_strength(const float &strength) {
+  model_.material.emission_strength = strength;
+}
 }
 }
