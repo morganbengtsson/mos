@@ -39,6 +39,7 @@ public:
 
   glm::vec3 albedo;
   glm::vec3 emission;
+  glm::vec3 factor;
   float opacity;
   float roughness;
   float metallic;

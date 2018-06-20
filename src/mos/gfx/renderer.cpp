@@ -721,6 +721,7 @@ void Renderer::render_model(const Model &model,
 
     glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
+    glUniform3fv(uniforms.material_factor, 1, glm::value_ptr(model.material.factor));
 
     // Camera in world space
     auto position = camera.position();
@@ -1195,6 +1196,7 @@ Renderer::StandardProgram::StandardProgram() {
   material_emission = glGetUniformLocation(program, "material.emission");
   material_emission_strength = glGetUniformLocation(program, "material.emission_strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
+  material_factor = glGetUniformLocation(program, "material.factor");
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
