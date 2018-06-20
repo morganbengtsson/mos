@@ -59,9 +59,14 @@ public:
   /** Get model. */
   Model model() const;
 
+  /** Set if the text is emissive. */
   void emissive(const bool emissive);
 
+  /** Set the color multiplier for the text*/
   void factor(const glm::vec3& factor);
+
+  /** Set opacity of text. */
+  void opacity(const float &opacity);
 
   float spacing;
 
