@@ -11,14 +11,14 @@ public:
   Trigger(const T& value):
       value_(value),
       old_value_(value){}
-  T& operator=(const T& value){
+  T operator=(const T& value){
     old_value_ = value_;
     value_ = value;
-    return this->value_;
+    return *this;
   }
-  T& operator-=(const T& value){
+  T operator-=(const T& value){
     *this = *this - value;
-    return this->value_;
+    return *this;
   }
   bool changed() const{ return old_value_ != value_;};
   operator T() const {
