@@ -14,9 +14,14 @@ public:
   T& operator=(const T& value){
     old_value_ = value_;
     value_ = value;
+    return this->value_;
+  }
+  T& operator-=(const T& value){
+    *this = *this - value;
+    return this->value_;
   }
   bool changed() const{ return old_value_ != value_;};
-  operator T() const{
+  operator T() const {
     return value_;
   }
 private:
