@@ -44,7 +44,7 @@ public:
   Material material(const std::string &path);
 
   /** Loads a Light from a *.light file into a Light object. */
-  Light light(const std::string &path);
+  Light light(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Loads a EnvironmentLight from a *.environment_light. */
   EnvironmentLight environment_light(const std::string &path);

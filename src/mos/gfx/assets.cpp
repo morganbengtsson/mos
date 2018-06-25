@@ -147,7 +147,7 @@ Material Assets::material(const std::string &path) {
   }
 }
 
-Light Assets::light(const std::string &path) {
+Light Assets::light(const std::string &path, const glm::mat4 &parent_transform) {
   if (path.empty()) {
     return Light();
   } else {
@@ -157,7 +157,7 @@ Light Assets::light(const std::string &path) {
     if (fpath.extension() == "light") {
       auto value = json::parse(mos::text(directory_ + fpath.str()));
 
-      auto transform = jsonarray_to_mat4(value["transform"]);
+      auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
       auto position = glm::vec3(transform[3]);
       auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 
