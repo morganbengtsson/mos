@@ -183,14 +183,14 @@ Light Assets::light(const std::string &path, const glm::mat4 &parent_transform) 
   }
 }
 
-EnvironmentLight Assets::environment_light(const std::string &path) {
+EnvironmentLight Assets::environment_light(const std::string &path, const glm::mat4 &parent_transform) {
   filesystem::path fpath = path;
   auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
 
   if (fpath.extension() == "environment_light") {
     auto value = json::parse(mos::text(directory_ + fpath.str()));
 
-    auto transform = jsonarray_to_mat4(value["transform"]);
+    auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
 
     auto position = glm::vec3(transform[3]);
 
