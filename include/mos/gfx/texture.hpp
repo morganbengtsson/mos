@@ -3,7 +3,7 @@
 #include <atomic>
 #include <initializer_list>
 #include <memory>
-#include <mos/gfx/tracked_container.hpp>
+#include <mos/core/tracked_container.hpp>
 
 namespace mos {
 namespace gfx {

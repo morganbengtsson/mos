@@ -1,11 +1,9 @@
 #pragma once
-#include <mos/gfx/vertex.hpp>
 #include <vector>
 #include <chrono>
 #include <initializer_list>
 
 namespace mos {
-namespace gfx {
 
 /** Container with modified time stamp. */
 template<class T>
@@ -81,6 +79,4 @@ private:
   Items items_;
   TimePoint modified_;
 };
-
-}
 }

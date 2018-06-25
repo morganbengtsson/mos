@@ -4,7 +4,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <chrono>
 #include <mos/gfx/particle.hpp>
-#include <mos/gfx/tracked_container.hpp>
+#include <mos/core/tracked_container.hpp>
 
 namespace mos {
 namespace gfx {
