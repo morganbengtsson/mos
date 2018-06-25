@@ -10,7 +10,6 @@ namespace gfx {
 /** Camera for environment rendering. */
 class CubeCamera {
 private:
-  void update_views();
   glm::mat4 projection_;
   glm::vec3 up_;
 public:

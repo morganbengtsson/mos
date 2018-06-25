@@ -17,15 +17,6 @@
 namespace mos {
 namespace sim {
 
-/** Data from a box to box intersection. */
-struct BoxIntersection {
-  BoxIntersection(const glm::vec3 &normal, const float distance)
-      : normal(normal), distance(distance) {}
-
-  glm::vec3 normal;
-  float distance;
-};
-
 /** Axis aligned bounding box. Used for colission detection and sound obstruction. */
 class Box {
 public:

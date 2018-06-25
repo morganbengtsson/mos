@@ -29,8 +29,6 @@ Animation::Animation(
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
       time_(0.0f), frame_rate_(frame_rate) {}
 
-Animation::~Animation() {}
-
 Animation::Animation(const std::string &path) {
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(fpath.str()));
@@ -69,7 +67,5 @@ void Animation::update(const float dt) {
 }
 
 std::shared_ptr<Mesh> Animation::mesh() { return mesh_; }
-
-Animation::Animation() {}
 }
 }
