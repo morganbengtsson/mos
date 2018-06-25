@@ -35,7 +35,7 @@ public:
   ~Assets();
 
   /** Loads a Model from a *.model file.*/
-  Model model(const std::string &path);
+  Model model(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Loads an animation from meshes specified in *.animation file. */
   Animation animation(const std::string &path);
@@ -63,7 +63,7 @@ public:
   void clear_unused();
   std::string directory() const;
 private:
-  Model model_value(const std::string &base_path, const nlohmann::json &value);
+  Model model_value(const std::string &base_path, const nlohmann::json &value, const glm::mat4 &parent_transform);
   const std::string directory_;
   MeshMap meshes_;
   TextureMap textures_;

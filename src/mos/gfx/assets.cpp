@@ -17,7 +17,7 @@ Assets::Assets(const std::string directory) : directory_(directory) {}
 
 Assets::~Assets() {}
 
-Model Assets::model_value(const std::string &base_path, const json &value) {
+Model Assets::model_value(const std::string &base_path, const json &value, const glm::mat4 &parent_transform) {
   auto name = value.value("name", "");
   auto mesh_name = std::string("");
   if (!value["mesh"].is_null()) {
@@ -28,7 +28,7 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
     material_name = value.value("material", "");
   }
 
-  auto transform = jsonarray_to_mat4(value["transform"]);
+  auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
 
   auto created_model = Model(
       name, mesh(base_path + mesh_name),
@@ -44,12 +44,12 @@ Model Assets::model_value(const std::string &base_path, const json &value) {
   return created_model;
 }
 
-Model Assets::model(const std::string &path) {
+Model Assets::model(const std::string &path, const glm::mat4 &parent_transform) {
   std::cout << "Loading: " << path << std::endl;
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
 
-  return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc);
+  return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc, parent_transform);
 }
 
 Animation Assets::animation(const std::string &path) {
