@@ -11,5 +11,15 @@ glm::vec3 Box::size() const {
 
 glm::vec3 Box::min() const { return position - extent; }
 glm::vec3 Box::max() const { return position + extent; }
+bool Box::inside(const glm::vec3 &point) const {
+  auto mi = min();
+  auto ma = max();
+  return (mi.x <= point.x
+      && point.x <= ma.x
+      && mi.y <= point.y
+      && point.y <= ma.y
+      && mi.z <= point.z
+      && point.z <= ma.z);
+}
 }
 }

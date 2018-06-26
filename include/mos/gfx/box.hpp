@@ -15,6 +15,7 @@ public:
   glm::vec3 size() const;
   glm::vec3 min() const;
   glm::vec3 max() const;
+  bool inside(const glm::vec3 &point) const;
 };
 }
 }

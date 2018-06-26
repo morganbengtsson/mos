@@ -32,6 +32,9 @@ public:
   /** Get extent. */
   glm::vec3 extent() const;
 
+  /** Check if a point is inside the environment light box. */
+  bool inside(const glm::vec3 &point) const;
+
   /** Strength. */
   float strength;
 private:

@@ -25,5 +25,8 @@ void EnvironmentLight::extent(const glm::vec3 &extent) {
 glm::vec3 EnvironmentLight::extent() const {
   return box_.extent;
 }
+bool EnvironmentLight::inside(const glm::vec3 &point) const {
+  return box_.inside(point);
+}
 }
 }
