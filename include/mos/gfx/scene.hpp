@@ -13,7 +13,7 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/texture_target.hpp>
 #include <mos/gfx/models.hpp>
-#include <mos/gfx/container.hpp>
+#include <mos/core/container.hpp>
 
 namespace mos {
 namespace gfx {

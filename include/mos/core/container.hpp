@@ -11,17 +11,17 @@ class Container {
 public:
   using Items = std::vector<T>;
 
-  TrackedContainer() = default;
+  Container() = default;
 
   template<class It>
-  TrackedContainer(const std::initializer_list<It> list): TrackedContainer(list.begin(), list.end()){}
+  Container(const std::initializer_list<It> list): Container(list.begin(), list.end()){}
 
   template<class It>
-  TrackedContainer(It begin, It end) {
+  Container(It begin, It end) {
     assign(begin, end);
   }
-  template<class It>
 
+  template<class It>
   void assign(It begin, It end){
     items_.assign(begin, end);
   }
