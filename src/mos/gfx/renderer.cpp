@@ -1206,12 +1206,12 @@ Renderer::StandardProgram::StandardProgram() {
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
-  light_position = glGetUniformLocation(program, "light.position");
-  light_color = glGetUniformLocation(program, "light.color");
-  light_view = glGetUniformLocation(program, "light.view");
-  light_projection = glGetUniformLocation(program, "light.projection");
-  light_angle = glGetUniformLocation(program, "light.angle");
-  light_direction = glGetUniformLocation(program, "light.direction");
+  light_position = glGetUniformLocation(program, "lights[0].position");
+  light_color = glGetUniformLocation(program, "lights[0].color");
+  light_view = glGetUniformLocation(program, "lights[0].view");
+  light_projection = glGetUniformLocation(program, "lights[0].projection");
+  light_angle = glGetUniformLocation(program, "lights[0].angle");
+  light_direction = glGetUniformLocation(program, "lights[0].direction");
 
   shadow_map = glGetUniformLocation(program, "shadow_map");
 

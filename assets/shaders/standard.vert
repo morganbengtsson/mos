@@ -24,7 +24,7 @@ struct Light {
     vec3 direction;
 };
 
-uniform Light light;
+uniform Light[2] lights;
 uniform Camera camera;
 uniform mat4[2] depth_bias_model_view_projection;
 uniform mat4 model;
