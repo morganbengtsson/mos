@@ -184,16 +184,18 @@ void main() {
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
 
-    float light_fragment_distance = distance(lights[0].position, fragment.position);
+    Light light = lights[0];
+
+    float light_fragment_distance = distance(light.position, fragment.position);
     float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-    vec3 radiance = lights[0].color * attenuation;
+    vec3 radiance = light.color * attenuation;
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
-    vec3 L = normalize(lights[0].position - fragment.position);
+    vec3 L = normalize(light.position - fragment.position);
     vec3 H = normalize(V + L);
 
     // Cook-Torrance BRDF
@@ -209,9 +211,11 @@ void main() {
     vec3 kD = vec3(1.0) - kS;
     kD *= 1.0 - metallic;
 
+
+
     float NdotL = max(dot(N, L), 0.0);
-    float cos_dir = dot(L, -lights[0].direction);
-    float spot_effect = smoothstep(cos(lights[0].angle / 2.0), cos(lights[0].angle / 2.0 - 0.1), cos_dir);
+    float cos_dir = dot(L, -light.direction);
+    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
     vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 

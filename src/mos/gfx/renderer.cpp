@@ -726,21 +726,22 @@ void Renderer::render_model(const Model &model,
     auto position = camera.position();
     glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
 
-    // Send light in world space
-    glUniform3fv(uniforms.light_position, 1,
-                 glm::value_ptr(glm::vec3(glm::vec4(lights[0].position(), 1.0f))));
-    auto light_color =
-        lights[0].color * lights[0].strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
-    glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
+    for (int i = 0; i < lights.size(); i++) {
+      glUniform3fv(uniforms.lights[i].position, 1,
+                   glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
+      auto light_color =
+          lights[i].color * lights[i].strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+      glUniform3fv(uniforms.lights[i].color, 1, glm::value_ptr(light_color));
 
-    glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
-                       &lights[0].camera.view[0][0]);
-    glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
-                       &lights[0].camera.projection[0][0]);
+      glUniformMatrix4fv(uniforms.lights[i].view, 1, GL_FALSE,
+                         &lights[i].camera.view[0][0]);
+      glUniformMatrix4fv(uniforms.lights[i].projection, 1, GL_FALSE,
+                         &lights[i].camera.projection[0][0]);
 
-    auto light_angle = lights[0].angle();
-    glUniform1fv(uniforms.light_angle, 1, &light_angle);
-    glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(lights[0].direction()));
+      auto light_angle = lights[i].angle();
+      glUniform1fv(uniforms.lights[i].angle, 1, &light_angle);
+      glUniform3fv(uniforms.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
+    }
 
     glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
 
@@ -1206,12 +1207,14 @@ Renderer::StandardProgram::StandardProgram() {
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
-  light_position = glGetUniformLocation(program, "lights[0].position");
-  light_color = glGetUniformLocation(program, "lights[0].color");
-  light_view = glGetUniformLocation(program, "lights[0].view");
-  light_projection = glGetUniformLocation(program, "lights[0].projection");
-  light_angle = glGetUniformLocation(program, "lights[0].angle");
-  light_direction = glGetUniformLocation(program, "lights[0].direction");
+  for (int i = 0; i < lights.size();i++) {
+    lights[i].position = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
+    lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
+    lights[i].projection = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
+    lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights[i].direction = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
+  }
 
   shadow_map = glGetUniformLocation(program, "shadow_map");
 

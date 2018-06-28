@@ -165,13 +165,18 @@ private:
     GLint camera_resolution;
     GLint camera_position;
 
-    GLint light_position;
-    GLint light_color;
-    GLint light_view;
-    GLint light_projection;
-    GLint shadow_map;
-    GLint light_angle;
-    GLint light_direction;
+    struct LightUniforms{
+      GLint position;
+      GLint color;
+      GLint view;
+      GLint projection;
+      GLint angle;
+      GLint direction;
+    };
+
+    GLuint shadow_map;
+
+    std::array<LightUniforms, 2> lights;
 
     GLint fog_color_near;
     GLint fog_color_far;
