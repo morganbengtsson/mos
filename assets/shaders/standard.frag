@@ -184,55 +184,57 @@ void main() {
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
 
-    Light light = lights[0];
-
-    float light_fragment_distance = distance(light.position, fragment.position);
-    float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-    vec3 radiance = light.color * attenuation;
+    vec3 N = normalize(normal);
+    vec3 V = normalize(camera.position - fragment.position);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
-    vec3 N = normalize(normal);
-    vec3 V = normalize(camera.position - fragment.position);
-    vec3 L = normalize(light.position - fragment.position);
-    vec3 H = normalize(V + L);
+    vec3 Lo = vec3(0.0, 0.0, 0.0);
+    for(int i = 0; i < 2; i++) {
+      Light light = lights[i];
 
-    // Cook-Torrance BRDF
-    float NDF = distribution_GGX(N, H, roughness);
-    float G = geometry_smith(N, V, L, roughness);
-    vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+      float light_fragment_distance = distance(light.position, fragment.position);
+      float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+      vec3 radiance = light.color * attenuation;
 
-    vec3 nominator    = NDF * G * F;
-    float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
-    vec3 specular = nominator / denominator;
+      vec3 L = normalize(light.position - fragment.position);
+      vec3 H = normalize(V + L);
 
-    vec3 kS = F;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
+      // Cook-Torrance BRDF
+      float NDF = distribution_GGX(N, H, roughness);
+      float G = geometry_smith(N, V, L, roughness);
+      vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
+      vec3 nominator    = NDF * G * F;
+      float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+      vec3 specular = nominator / denominator;
 
+      vec3 kS = F;
+      vec3 kD = vec3(1.0) - kS;
+      kD *= 1.0 - metallic;
 
-    float NdotL = max(dot(N, L), 0.0);
-    float cos_dir = dot(L, -light.direction);
-    float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+      float NdotL = max(dot(N, L), 0.0);
+      float cos_dir = dot(L, -light.direction);
+      float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
+      Lo += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 
-    float shadow = 0.0f;
+      float shadow = 0.0f;
 
-    for (int i = 0; i < 2; i++){
-      vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-      vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
-      for(float x = -3; x <= 3; x += 2) {
-          for(float y = -3; y <= 3; y += 2) {
-              shadow += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
-          }
+      for (int i = 0; i < 2; i++){
+        vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+        vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
+        for(float x = -3; x <= 3; x += 2) {
+            for(float y = -3; y <= 3; y += 2) {
+                shadow += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
+            }
+        }
+        shadow /= 16;
       }
-      shadow /= 16;
+      shadow = 1.0f;
+      Lo.rgb *= shadow;
     }
-    shadow = 1.0f;
-    Lo.rgb *= shadow;
 
     vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
