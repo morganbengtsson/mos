@@ -57,7 +57,7 @@ struct Fragment {
 
 uniform Material material;
 uniform Light[2] lights;
-uniform sampler2D shadow_map;
+uniform sampler2D[2] shadow_maps;
 
 uniform Environment environment;
 uniform samplerCube environment_map;
@@ -219,16 +219,19 @@ void main() {
 
     vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 
-    vec3 shadow_map_uv = fragment.proj_shadow[0].xyz / fragment.proj_shadow[0].w;
-
     float shadow = 0.0f;
-    vec2 texelSize = 1.0 / textureSize(shadow_map, 0);
-    for(float x = -3; x <= 3; x += 2) {
-        for(float y = -3; y <= 3; y += 2) {
-            shadow += sample_variance_shadow_map(shadow_map, shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
-        }
+
+    for (int i = 0; i < 2; i++){
+      vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+      vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
+      for(float x = -3; x <= 3; x += 2) {
+          for(float y = -3; y <= 3; y += 2) {
+              shadow += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
+          }
+      }
+      shadow /= 16;
     }
-    shadow /= 16;
+    shadow = 1.0f;
     Lo.rgb *= shadow;
 
     vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
