@@ -13,6 +13,7 @@
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/texture_target.hpp>
 #include <mos/gfx/models.hpp>
+#include <mos/gfx/lights.hpp>
 #include <mos/core/container.hpp>
 
 namespace mos {
@@ -30,14 +31,14 @@ public:
   Scene();
   Scene(const Models &models,
         const Camera &camera,
-        const Light &light = Light(),
+        const Lights &lights = Lights(),
         const Fog &fog = Fog(),
         const OptionalEnvironmentLight &environment_light = OptionalEnvironmentLight());
 
   Models models;
   ParticleClouds particle_clouds;
   Boxes boxes;
-  Light light;
+  Lights lights;
   Camera camera;
   Fog fog;
   OptionalEnvironmentLight environment;

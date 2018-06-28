@@ -18,6 +18,7 @@
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/box.hpp>
 #include <mos/gfx/scenes.hpp>
+#include <mos/gfx/lights.hpp>
 
 namespace mos {
 namespace gfx {
@@ -185,8 +186,8 @@ private:
                     const Scene &render_scene,
                     const glm::vec2 &resolution);
 
-  void render_shadow_map(const Models &models,
-                         const Light &light);
+  void render_shadow_maps(const Models &models,
+                          const Lights &lights);
 
   void render_environment(const Scene &scene,
                           const glm::vec4 &clear_color);
@@ -201,7 +202,7 @@ private:
   void render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
-                    const Light &light,
+                    const Lights &lights,
                     const OptionalEnvironmentLight &environment,
                     const Fog &fog,
                     const glm::vec2 &resolution,

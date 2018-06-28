@@ -514,7 +514,7 @@ void Renderer::render_scene(const Camera &camera,
   glUseProgram(standard_program_.program);
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
-                 render_scene.light,
+                 render_scene.lights,
                  render_scene.environment,
                  render_scene.fog,
                  resolution, standard_program_);
@@ -614,7 +614,7 @@ void Renderer::render_particles(const ParticleClouds &clouds,
 void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera,
-                            const Light &light,
+                            const Lights &lights,
                             const OptionalEnvironmentLight &environment,
                             const Fog &fog,
                             const glm::vec2 &resolution,
@@ -637,8 +637,7 @@ void Renderer::render_model(const Model &model,
     glUniform1i(uniforms.material_albedo_map, 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_.at(light.shadow_map->id()).id : white_texture_);
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, lights[0].shadow_map ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
     glUniform1i(uniforms.shadow_map, 1);
 
     glActiveTexture(GLenum(GL_TEXTURE2));
@@ -695,8 +694,8 @@ void Renderer::render_model(const Model &model,
     auto model_matrix = parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
-    const glm::mat4 depth_bias_mvp = bias * light.camera.projection *
-        light.camera.view * parent_transform *
+    const glm::mat4 depth_bias_mvp = bias * lights[0].camera.projection *
+        lights[0].camera.view * parent_transform *
         model.transform;
     glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
                        &depth_bias_mvp[0][0]);
@@ -729,19 +728,19 @@ void Renderer::render_model(const Model &model,
 
     // Send light in world space
     glUniform3fv(uniforms.light_position, 1,
-                 glm::value_ptr(glm::vec3(glm::vec4(light.position(), 1.0f))));
+                 glm::value_ptr(glm::vec3(glm::vec4(lights[0].position(), 1.0f))));
     auto light_color =
-        light.color * light.strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+        lights[0].color * lights[0].strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
     glUniform3fv(uniforms.light_color, 1, glm::value_ptr(light_color));
 
     glUniformMatrix4fv(uniforms.light_view, 1, GL_FALSE,
-                       &light.camera.view[0][0]);
+                       &lights[0].camera.view[0][0]);
     glUniformMatrix4fv(uniforms.light_projection, 1, GL_FALSE,
-                       &light.camera.projection[0][0]);
+                       &lights[0].camera.projection[0][0]);
 
-    auto light_angle = light.angle();
+    auto light_angle = lights[0].angle();
     glUniform1fv(uniforms.light_angle, 1, &light_angle);
-    glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(light.direction()));
+    glUniform3fv(uniforms.light_direction, 1, glm::value_ptr(lights[0].direction()));
 
     glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
 
@@ -754,7 +753,7 @@ void Renderer::render_model(const Model &model,
   }
 
   for (const auto &child : model.models) {
-    render_model(child, parent_transform * model.transform, camera, light,
+    render_model(child, parent_transform * model.transform, camera, lights,
                  environment, fog, resolution, program);
   }
 }
@@ -765,7 +764,8 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::render_shadow_map(const Models &models, const Light &light) {
+void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
+  auto &light = lights[0];
   if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
     GLuint frame_buffer_id;
     glGenFramebuffers(1, &frame_buffer_id);
@@ -1054,7 +1054,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     load(scene.models);
   }
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
-    render_shadow_map(it->models, it->light);
+    render_shadow_maps(it->models, it->lights);
     render_environment(*it, color);
     render_texture_targets(*it);
   }
