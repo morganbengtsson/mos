@@ -174,7 +174,7 @@ private:
       GLint direction;
     };
 
-    GLuint shadow_map;
+    std::array<GLuint, 2> shadow_maps;
 
     std::array<LightUniforms, 2> lights;
 

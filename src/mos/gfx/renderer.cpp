@@ -638,47 +638,51 @@ void Renderer::render_model(const Model &model,
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, lights[0].shadow_map ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
-    glUniform1i(uniforms.shadow_map, 1);
+    glUniform1i(uniforms.shadow_maps[0], 1);
 
-    glActiveTexture(GLenum(GL_TEXTURE2));
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, lights[1].shadow_map ? textures_.at(lights[1].shadow_map->id()).id : white_texture_);
+    glUniform1i(uniforms.shadow_maps[1], 2);
+
+    glActiveTexture(GLenum(GL_TEXTURE3));
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                  ? textures_.at(model.material.emission_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_emission_map, 2);
+    glUniform1i(uniforms.material_emission_map, 3);
 
-    glActiveTexture(GL_TEXTURE3);
+    glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                  ? textures_.at(model.material.normal_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_normal_map, 3);
+    glUniform1i(uniforms.material_normal_map, 4);
 
     if (environment) {
-      glActiveTexture(GL_TEXTURE4);
+      glActiveTexture(GL_TEXTURE5);
       glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment->texture_.id()));
-      glUniform1i(uniforms.environment_map, 4);
+      glUniform1i(uniforms.environment_map, 5);
     }
 
-    glActiveTexture(GL_TEXTURE5);
+    glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                  ? textures_.at(model.material.metallic_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_metallic_map, 5);
+    glUniform1i(uniforms.material_metallic_map, 6);
 
-    glActiveTexture(GL_TEXTURE6);
+    glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                  ? textures_.at(model.material.roughness_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_roughness_map, 6);
+    glUniform1i(uniforms.material_roughness_map, 7);
 
-    glActiveTexture(GL_TEXTURE7);
+    glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
-    glUniform1i(uniforms.material_ambient_occlusion_map, 7);
+    glUniform1i(uniforms.material_ambient_occlusion_map, 8);
 
-    glActiveTexture(GL_TEXTURE8);
+    glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
-    glUniform1i(uniforms.brdf_lut, 8);
+    glUniform1i(uniforms.brdf_lut, 9);
 
     if (environment) {
       glUniform3fv(uniforms.environment_position, 1,
