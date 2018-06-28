@@ -50,7 +50,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4 proj_shadow;
+    vec4[2] proj_shadow;
     vec3 camera_to_surface;
     float ao;
 };
@@ -215,7 +215,7 @@ void main() {
 
     vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 
-    vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
+    vec3 shadow_map_uv = fragment.proj_shadow[0].xyz / fragment.proj_shadow[0].w;
 
     float shadow = 0.0f;
     vec2 texelSize = 1.0 / textureSize(shadow_map, 0);

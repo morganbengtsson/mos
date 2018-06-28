@@ -5,7 +5,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4 proj_shadow;
+    vec4[2] proj_shadow;
     vec3 camera_to_surface;
     float ao;
 };
@@ -44,8 +44,8 @@ void main() {
     vec3 B = cross(N, T);
     fragment.tbn = mat3(T,B,N);
 
-    vec4 pos_ls = depth_bias_model_view_projection[0] * vec4(position, 1.0);
-    fragment.proj_shadow = pos_ls;
+    fragment.proj_shadow[0] = depth_bias_model_view_projection[0] * vec4(position, 1.0);
+    fragment.proj_shadow[1] = depth_bias_model_view_projection[1] * vec4(position, 1.0);
 
     fragment.ao = ao;
     fragment.uv = uv;
