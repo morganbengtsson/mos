@@ -168,7 +168,7 @@ private:
     GLint light_color;
     GLint light_view;
     GLint light_projection;
-    GLint light_shadow_map;
+    GLint shadow_map;
     GLint light_angle;
     GLint light_direction;
 

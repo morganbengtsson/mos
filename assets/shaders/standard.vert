@@ -22,7 +22,6 @@ struct Light {
     mat4 projection;
     float angle;
     vec3 direction;
-    sampler2D shadow_map;
 };
 
 uniform Light light;

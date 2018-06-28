@@ -639,7 +639,7 @@ void Renderer::render_model(const Model &model,
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, light.shadow_map ? textures_.at(light.shadow_map->id()).id : white_texture_);
     //glGenerateMipmap(GL_TEXTURE_2D);
-    glUniform1i(uniforms.light_shadow_map, 1);
+    glUniform1i(uniforms.shadow_map, 1);
 
     glActiveTexture(GLenum(GL_TEXTURE2));
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
@@ -1179,10 +1179,13 @@ Renderer::StandardProgram::StandardProgram() {
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   depth_bias_mvp = glGetUniformLocation(program, "depth_bias_model_view_projection");
-  environment_map = glGetUniformLocation(program, "environment.texture");
+
+  environment_map = glGetUniformLocation(program, "environment_map");
+
   environment_position = glGetUniformLocation(program, "environment.position");
   environment_extent = glGetUniformLocation(program, "environment.extent");
   environment_strength = glGetUniformLocation(program, "environment.strength");
+
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
   material_emission_map = glGetUniformLocation(program, "material.emission_map");
   material_normal_map = glGetUniformLocation(program, "material.normal_map");
@@ -1200,13 +1203,15 @@ Renderer::StandardProgram::StandardProgram() {
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
+
   light_position = glGetUniformLocation(program, "light.position");
   light_color = glGetUniformLocation(program, "light.color");
   light_view = glGetUniformLocation(program, "light.view");
   light_projection = glGetUniformLocation(program, "light.projection");
-  light_shadow_map = glGetUniformLocation(program, "light.shadow_map");
   light_angle = glGetUniformLocation(program, "light.angle");
   light_direction = glGetUniformLocation(program, "light.direction");
+
+  shadow_map = glGetUniformLocation(program, "shadow_map");
 
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
   fog_color_far = glGetUniformLocation(program, "fog.color_far");

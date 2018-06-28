@@ -26,7 +26,6 @@ struct Light {
     mat4 projection;
     float angle;
     vec3 direction;
-    sampler2D shadow_map;
 };
 
 struct Camera {
@@ -38,7 +37,6 @@ struct Environment {
     vec3 position;
     vec3 extent;
     float strength;
-    samplerCube texture;
 };
 
 struct Fog {
@@ -59,7 +57,11 @@ struct Fragment {
 
 uniform Material material;
 uniform Light light;
+uniform sampler2D shadow_map;
+
 uniform Environment environment;
+uniform samplerCube environment_map;
+
 uniform Camera camera;
 uniform Fog fog;
 uniform mat4 model;
@@ -216,10 +218,10 @@ void main() {
     vec3 shadow_map_uv = fragment.proj_shadow.xyz / fragment.proj_shadow.w;
 
     float shadow = 0.0f;
-    vec2 texelSize = 1.0 / textureSize(light.shadow_map, 0);
+    vec2 texelSize = 1.0 / textureSize(shadow_map, 0);
     for(float x = -3; x <= 3; x += 2) {
         for(float y = -3; y <= 3; y += 2) {
-            shadow += sample_variance_shadow_map(light.shadow_map, shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
+            shadow += sample_variance_shadow_map(shadow_map, shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
         }
     }
     shadow /= 16;
@@ -229,7 +231,7 @@ void main() {
     vec3 r = -reflect(fragment.camera_to_surface, normal);
     vec3 corrected_r = box_correct(environment.extent, environment.position, r);
 
-    vec2 environment_texture_size = textureSize(environment.texture, 0);
+    vec2 environment_texture_size = textureSize(environment_map, 0);
     float maxsize = max(environment_texture_size.x, environment_texture_size.x);
     float num_levels = 1 + floor(log2(maxsize));
     float mip_level = roughness * num_levels * 3.0;
@@ -239,13 +241,13 @@ void main() {
     vec3 kD_env = 1.0 - kS_env;
     kD_env *= 1.0 - metallic;
 
-    vec3 filtered = textureLod(environment.texture, corrected_r, mip_level).rgb;
+    vec3 filtered = textureLod(environment_map, corrected_r, mip_level).rgb;
     vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environment.strength;
 
-    vec3 irradiance = textureLod(environment.texture, corrected_normal, num_levels - 2).rgb;
-    irradiance += textureLod(environment.texture, corrected_normal, num_levels - 1).rgb;
-    irradiance += textureLod(environment.texture, corrected_normal, num_levels).rgb;
+    vec3 irradiance = textureLod(environment_map, corrected_normal, num_levels - 2).rgb;
+    irradiance += textureLod(environment_map, corrected_normal, num_levels - 1).rgb;
+    irradiance += textureLod(environment_map, corrected_normal, num_levels).rgb;
     irradiance /= 3.0f;
 
     vec3 diffuse_environment = irradiance * albedo * environment.strength;
