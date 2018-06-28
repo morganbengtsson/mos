@@ -140,7 +140,7 @@ private:
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
-    GLint depth_bias_mvp;
+    std::array<GLint,2> depth_bias_mvp;
 
     GLint environment_map;
     GLint environment_position;

@@ -697,7 +697,7 @@ void Renderer::render_model(const Model &model,
     const glm::mat4 depth_bias_mvp = bias * lights[0].camera.projection *
         lights[0].camera.view * parent_transform *
         model.transform;
-    glUniformMatrix4fv(uniforms.depth_bias_mvp, 1, GL_FALSE,
+    glUniformMatrix4fv(uniforms.depth_bias_mvp[0], 1, GL_FALSE,
                        &depth_bias_mvp[0][0]);
 
     glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
@@ -1178,7 +1178,9 @@ Renderer::StandardProgram::StandardProgram() {
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
-  depth_bias_mvp = glGetUniformLocation(program, "depth_bias_model_view_projection");
+  for (int i = 0; i < 2; i++) {
+    depth_bias_mvp[i] = glGetUniformLocation(program, std::string("depth_bias_model_view_projection[" + std::to_string(i) +"]").c_str());
+  }
 
   environment_map = glGetUniformLocation(program, "environment_map");
 

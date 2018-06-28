@@ -26,7 +26,7 @@ struct Light {
 
 uniform Light light;
 uniform Camera camera;
-uniform mat4 depth_bias_model_view_projection;
+uniform mat4[2] depth_bias_model_view_projection;
 uniform mat4 model;
 uniform mat4 model_view_projection;
 uniform mat3 normal_matrix;
@@ -44,7 +44,7 @@ void main() {
     vec3 B = cross(N, T);
     fragment.tbn = mat3(T,B,N);
 
-    vec4 pos_ls = depth_bias_model_view_projection * vec4(position, 1.0);
+    vec4 pos_ls = depth_bias_model_view_projection[0] * vec4(position, 1.0);
     fragment.proj_shadow = pos_ls;
 
     fragment.ao = ao;
