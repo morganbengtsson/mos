@@ -698,12 +698,6 @@ void Renderer::render_model(const Model &model,
     auto model_matrix = parent_transform * model.transform;
     glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 
-    const glm::mat4 depth_bias_mvp = bias * lights[0].camera.projection *
-        lights[0].camera.view * parent_transform *
-        model.transform;
-    glUniformMatrix4fv(uniforms.depth_bias_mvp[0], 1, GL_FALSE,
-                       &depth_bias_mvp[0][0]);
-
     glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
         glm::mat3(model.transform));
     normal_matrix =
@@ -731,6 +725,12 @@ void Renderer::render_model(const Model &model,
     glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
 
     for (int i = 0; i < lights.size(); i++) {
+      const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
+          lights[i].camera.view * parent_transform *
+          model.transform;
+      glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
+                         &depth_bias_mvp[0][0]);
+
       glUniform3fv(uniforms.lights[i].position, 1,
                    glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
       auto light_color =
@@ -1185,7 +1185,7 @@ Renderer::StandardProgram::StandardProgram() {
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (int i = 0; i < 2; i++) {
-    depth_bias_mvp[i] = glGetUniformLocation(program, std::string("depth_bias_model_view_projection[" + std::to_string(i) +"]").c_str());
+    depth_bias_mvps[i] = glGetUniformLocation(program, std::string("depth_bias_model_view_projections[" + std::to_string(i) +"]").c_str());
   }
 
   environment_map = glGetUniformLocation(program, "environment_map");
@@ -1220,7 +1220,7 @@ Renderer::StandardProgram::StandardProgram() {
     lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
     lights[i].direction = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
-    shadow_maps[i] = glGetUniformLocation(program, std::string("shadow_map[" + std::to_string(i) + "]").c_str());
+    shadow_maps[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }
 
   fog_color_near = glGetUniformLocation(program, "fog.color_near");

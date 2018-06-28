@@ -67,7 +67,6 @@ uniform Fog fog;
 uniform mat4 model;
 uniform mat4 model_view;
 uniform mat4 view;
-uniform mat4 depth_bias_model_view_projection;
 uniform sampler2D brdf_lut;
 
 in Fragment fragment;
@@ -191,6 +190,8 @@ void main() {
     F0 = mix(F0, albedo, metallic);
 
     vec3 Lo = vec3(0.0, 0.0, 0.0);
+    float shadow = 0.0f;
+
     for(int i = 0; i < 2; i++) {
       Light light = lights[i];
 
@@ -220,21 +221,19 @@ void main() {
 
       Lo += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
 
-      float shadow = 0.0f;
-
-      for (int i = 0; i < 2; i++){
-        vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-        vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
-        for(float x = -3; x <= 3; x += 2) {
-            for(float y = -3; y <= 3; y += 2) {
-                shadow += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
-            }
-        }
-        shadow /= 16;
+      vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+      vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
+      float s = 0.0;
+      for(float x = -3; x <= 3; x += 2) {
+          for(float y = -3; y <= 3; y += 2) {
+              s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
+          }
       }
-      shadow = 1.0f;
-      Lo.rgb *= shadow;
+      s /= 16;
+      shadow += s * spot_effect;
     }
+
+    Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
     vec3 corrected_normal = box_correct(environment.extent, environment.position,normal);
     vec3 r = -reflect(fragment.camera_to_surface, normal);
