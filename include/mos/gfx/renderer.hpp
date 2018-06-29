@@ -292,7 +292,7 @@ private:
   int cube_camera_index_;
 
   /** Shadow map. */
-  std::array<SharedTexture2D, 2> shadow_maps;
+  std::array<Texture2D, 2> shadow_maps;
 
   /** Target for shadow map rendering. */
   std::array<Target, 2> targets;

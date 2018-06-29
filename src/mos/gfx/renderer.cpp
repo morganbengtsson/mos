@@ -45,13 +45,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_(0),
-    shadow_maps{
-        SharedTexture2D(new Texture2D(
+    shadow_maps{Texture2D(
             512, 512, Texture::Format::RG32F,
-            Texture::Wrap::CLAMP_TO_BORDER, true)),
-        SharedTexture2D(new Texture2D(
+            Texture::Wrap::CLAMP_TO_BORDER, true),Texture2D(
             512, 512, Texture::Format::RG32F,
-            Texture::Wrap::CLAMP_TO_BORDER, true))}
+            Texture::Wrap::CLAMP_TO_BORDER, true)}
 {
 
   if (!gladLoadGL()) {
@@ -91,14 +89,14 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     glFramebufferTexture2D(GL_FRAMEBUFFER,
                            GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
-    textures_.insert({shadow_maps[i]->id(), Buffer{texture_id, shadow_maps[i]->layers.modified()}});
+    textures_.insert({shadow_maps[i].id(), Buffer{texture_id, shadow_maps[i].layers.modified()}});
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          shadow_maps[i]->width(),
-                          shadow_maps[i]->height());
+                          shadow_maps[i].width(),
+                          shadow_maps[i].height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, depthrenderbuffer_id);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -676,11 +674,11 @@ void Renderer::render_model(const Model &model,
 
     glActiveTexture(GL_TEXTURE1);
     //glBindTexture(GL_TEXTURE_2D, shadow_maps[0] ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[0]->id()).id);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[0].id()).id);
     glUniform1i(uniforms.shadow_maps[0], 1);
 
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[1]->id()).id);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[1].id()).id);
     glUniform1i(uniforms.shadow_maps[1], 2);
 
     glActiveTexture(GLenum(GL_TEXTURE3));
@@ -815,7 +813,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
     auto frame_buffer = frame_buffers_.at(targets[i].id());
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glClear(GL_DEPTH_BUFFER_BIT);
-    auto resolution = glm::ivec2(shadow_maps[i]->width(), shadow_maps[i]->height());
+    auto resolution = glm::ivec2(shadow_maps[i].width(), shadow_maps[i].height());
     glUseProgram(depth_program_.program);
     glViewport(0, 0, resolution.x, resolution.y);
     for (auto &model : models) {
@@ -823,7 +821,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //Generate mipmaps
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[i]->id()).id);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[i].id()).id);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
   }
