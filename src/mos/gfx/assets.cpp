@@ -207,8 +207,7 @@ EnvironmentLight Assets::environment_light(const std::string &path, const glm::m
 
     return EnvironmentLight(position,
                  extent,
-                 strength,
-                 glm::uvec2(resolution));
+                 strength);
   } else {
     throw std::runtime_error(path.substr(path.find_last_of(".")) +
         " file format is not supported.");
