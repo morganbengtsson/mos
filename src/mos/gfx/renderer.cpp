@@ -1209,10 +1209,10 @@ Renderer::StandardProgram::StandardProgram() {
   }
 
   for (int i = 0; i < lights.size(); i++) {
-    environment_maps[i].map = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].map").c_str());
-    environment_maps[i].position = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].position").c_str());
-    environment_maps[i].extent = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].extent").c_str());
-    environment_maps[i].strength = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].strength").c_str());
+    environment_maps[i].map = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
+    environment_maps[i].position = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
+    environment_maps[i].extent = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
+    environment_maps[i].strength = glGetUniformLocation(program, std::string("environmens[" + std::to_string(i) + "].strength").c_str());
   }
 
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");

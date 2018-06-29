@@ -59,8 +59,8 @@ uniform Material material;
 uniform Light[2] lights;
 uniform sampler2D[2] shadow_maps;
 
-uniform Environment environment;
-uniform samplerCube environment_map;
+uniform Environment[2] environments;
+uniform samplerCube[2] environment_maps;
 
 uniform Camera camera;
 uniform Fog fog;
