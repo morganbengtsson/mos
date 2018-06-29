@@ -44,7 +44,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
-    cube_camera_index_(0),
+    cube_camera_index_({0, 0}),
     shadow_maps_targets{ShadowMapTarget{Texture2D(
         512, 512, Texture::Format::RG32F,
         Texture::Wrap::CLAMP_TO_BORDER, true), Target()},
@@ -867,20 +867,20 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
     auto texture_id = texture_cubes_.at(environment_maps_targets[i].environment_map.id());
 
-    auto cube_camera = scene.environment_lights[i].cube_camera_.cameras[cube_camera_index_];
+    auto cube_camera = scene.environment_lights[i].cube_camera_.cameras[cube_camera_index_[i]];
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_, texture_id, 0);
+                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
     clear(clear_color);
     auto resolution = glm::vec2(environment_maps_targets[i].environment_map.width(),
                                 environment_maps_targets[i].environment_map.height());
     render_scene(cube_camera, scene, resolution);
 
-    cube_camera_index_ = cube_camera_index_ >= 5 ? 0 : ++cube_camera_index_; //TODO PROBLEM
+    cube_camera_index_[i] = cube_camera_index_[i] >= 5 ? 0 : ++cube_camera_index_[i]; //TODO PROBLEM
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-    if (cube_camera_index_ == 0) {
+    if (cube_camera_index_[i] == 0) {
       glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
     }
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -1208,11 +1208,11 @@ Renderer::StandardProgram::StandardProgram() {
                                                               + "]").c_str());
   }
 
-  for (int i = 0; i < lights.size(); i++) {
+  for (int i = 0; i < environment_maps.size(); i++) {
     environment_maps[i].map = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
     environment_maps[i].position = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
     environment_maps[i].extent = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
-    environment_maps[i].strength = glGetUniformLocation(program, std::string("environmens[" + std::to_string(i) + "].strength").c_str());
+    environment_maps[i].strength = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
   }
 
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");

@@ -292,7 +292,7 @@ private:
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
 
-  int cube_camera_index_;
+  std::array<int,2> cube_camera_index_;
 
   struct ShadowMapTarget{
     Texture2D shadow_map;
