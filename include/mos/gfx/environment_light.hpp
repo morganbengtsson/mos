@@ -39,9 +39,7 @@ public:
   float strength;
 private:
   Box box_;
-  Target target_;
   CubeCamera cube_camera_;
-  TextureCube texture_;
 };
 }
 }

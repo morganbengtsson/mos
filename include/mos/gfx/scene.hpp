@@ -21,6 +21,7 @@ namespace gfx {
 
 using ParticleClouds = Container<ParticleCloud>;
 using TextureTargets = Container<TextureTarget>;
+using EnvironmentLights = std::array<EnvironmentLight, 2>;
 using Boxes = Container<Box>;
 
 /** Scene for rendering. */
@@ -33,7 +34,7 @@ public:
         const Camera &camera,
         const Lights &lights = Lights(),
         const Fog &fog = Fog(),
-        const OptionalEnvironmentLight &environment_light = OptionalEnvironmentLight());
+        const EnvironmentLights &environment_lights = EnvironmentLights());
 
   Models models;
   ParticleClouds particle_clouds;
@@ -41,7 +42,7 @@ public:
   Lights lights;
   Camera camera;
   Fog fog;
-  OptionalEnvironmentLight environment;
+  EnvironmentLights environment_lights;
   TextureTargets texture_targets;
 };
 }

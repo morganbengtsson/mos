@@ -142,10 +142,14 @@ private:
     GLint normal_matrix;
     std::array<GLint,2> depth_bias_mvps;
 
-    GLint environment_map;
-    GLint environment_position;
-    GLint environment_extent;
-    GLint environment_strength;
+    struct EnvironmentUniforms{
+      GLint map;
+      GLint position;
+      GLint extent;
+      GLint strength;
+    };
+    std::array<EnvironmentUniforms, 2> environment_maps;
+
 
     GLint material_albedo_map;
     GLint material_emission_map;
@@ -165,7 +169,7 @@ private:
     GLint camera_resolution;
     GLint camera_position;
 
-    struct LightUniforms{
+    struct LightUniforms {
       GLint position;
       GLint color;
       GLint view;
@@ -175,7 +179,6 @@ private:
     };
 
     std::array<GLuint, 2> shadow_maps;
-
     std::array<LightUniforms, 2> lights;
 
     GLint fog_color_near;
@@ -208,7 +211,7 @@ private:
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Lights &lights,
-                    const OptionalEnvironmentLight &environment,
+                    const EnvironmentLights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
                     const StandardProgram& program);
@@ -298,6 +301,14 @@ private:
 
   /** Shadow map targets. */
   std::array<ShadowMapTarget, 2> shadow_maps_targets;
+
+  struct EnvironmentMapTarget {
+    TextureCube environment_map;
+    Target target;
+  };
+
+  /** Environment map targets. */
+  std::array<EnvironmentMapTarget, 2> environment_maps_targets;
 };
 }
 }

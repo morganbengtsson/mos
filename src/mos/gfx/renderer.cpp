@@ -50,7 +50,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         Texture::Wrap::CLAMP_TO_BORDER, true), Target()},
                 ShadowMapTarget{Texture2D(
                     512, 512, Texture::Format::RG32F,
-                    Texture::Wrap::CLAMP_TO_BORDER, true), Target()}} {
+                    Texture::Wrap::CLAMP_TO_BORDER, true), Target()}},
+environment_maps_targets{EnvironmentMapTarget{TextureCube(128, 128), Target()},
+                         EnvironmentMapTarget{TextureCube(128, 128), Target()}}{
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -551,7 +553,7 @@ void Renderer::render_scene(const Camera &camera,
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.lights,
-                 render_scene.environment,
+                 render_scene.environment_lights,
                  render_scene.fog,
                  resolution, standard_program_);
   }
@@ -651,7 +653,7 @@ void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera,
                             const Lights &lights,
-                            const OptionalEnvironmentLight &environment,
+                            const EnvironmentLights &environment_lights,
                             const Fog &fog,
                             const glm::vec2 &resolution,
                             const StandardProgram &program) {
@@ -693,33 +695,37 @@ void Renderer::render_model(const Model &model,
                                  : black_texture_);
     glUniform1i(uniforms.material_normal_map, 4);
 
-    if (environment) {
-      glActiveTexture(GL_TEXTURE5);
-      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment->texture_.id()));
-      glUniform1i(uniforms.environment_map, 5);
-    }
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_lights[0]->texture_.id()));
+    glUniform1i(uniforms.environment_maps[0].map, 5);
 
     glActiveTexture(GL_TEXTURE6);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_lights[1]->texture_.id()));
+    glUniform1i(uniforms.environment_maps[1].map, 6);
+
+
+    glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                  ? textures_.at(model.material.metallic_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_metallic_map, 6);
+    glUniform1i(uniforms.material_metallic_map, 7);
 
-    glActiveTexture(GL_TEXTURE7);
+    glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                  ? textures_.at(model.material.roughness_map->id()).id
                                  : black_texture_);
-    glUniform1i(uniforms.material_roughness_map, 7);
+    glUniform1i(uniforms.material_roughness_map, 8);
 
-    glActiveTexture(GL_TEXTURE8);
+    glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
-    glUniform1i(uniforms.material_ambient_occlusion_map, 8);
+    glUniform1i(uniforms.material_ambient_occlusion_map, 9);
 
-    glActiveTexture(GL_TEXTURE9);
+    glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
-    glUniform1i(uniforms.brdf_lut, 9);
+    glUniform1i(uniforms.brdf_lut, 10);
 
     if (environment) {
       glUniform3fv(uniforms.environment_position, 1,
@@ -1202,11 +1208,12 @@ Renderer::StandardProgram::StandardProgram() {
                                                               + "]").c_str());
   }
 
-  environment_map = glGetUniformLocation(program, "environment_map");
-
-  environment_position = glGetUniformLocation(program, "environment.position");
-  environment_extent = glGetUniformLocation(program, "environment.extent");
-  environment_strength = glGetUniformLocation(program, "environment.strength");
+  for (int i = 0; i < lights.size(); i++) {
+    environment_maps[i].map = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].map").c_str());
+    environment_maps[i].position = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].position").c_str());
+    environment_maps[i].extent = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].extent").c_str());
+    environment_maps[i].strength = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "].strength").c_str());
+  }
 
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
   material_emission_map = glGetUniformLocation(program, "material.emission_map");
