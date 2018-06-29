@@ -15,8 +15,6 @@
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
-#include <future>
-#include <filesystem/path.h>
 
 namespace mos {
 namespace gfx {
@@ -45,7 +43,16 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     wrap_map_{
         {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
-        {Texture::Wrap::REPEAT, GL_REPEAT}}, cube_camera_index_(0) {
+        {Texture::Wrap::REPEAT, GL_REPEAT}},
+    cube_camera_index_(0),
+    shadow_maps{
+        SharedTexture2D(new Texture2D(
+            512, 512, Texture::Format::RG32F,
+            Texture::Wrap::CLAMP_TO_BORDER, true)),
+        SharedTexture2D(new Texture2D(
+            512, 512, Texture::Format::RG32F,
+            Texture::Wrap::CLAMP_TO_BORDER, true))}
+{
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -704,10 +711,12 @@ void Renderer::render_model(const Model &model,
         glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
     glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-    glm::vec4 albedo = glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
+    glm::vec4 albedo =
+        glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
     glUniform4fv(uniforms.material_albedo, 1,
                  glm::value_ptr(albedo));
-    glm::vec4 emission = glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
+    glm::vec4 emission =
+        glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
     glUniform4fv(uniforms.material_emission, 1,
                  glm::value_ptr(emission));
     glUniform1fv(uniforms.material_roughness, 1,
@@ -1041,7 +1050,7 @@ void Renderer::render_model_depth(const Model &model,
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
     glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
-                     &mvp[0][0]);
+                       &mvp[0][0]);
     const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
     glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
   }
@@ -1185,7 +1194,9 @@ Renderer::StandardProgram::StandardProgram() {
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (int i = 0; i < 2; i++) {
-    depth_bias_mvps[i] = glGetUniformLocation(program, std::string("depth_bias_model_view_projections[" + std::to_string(i) +"]").c_str());
+    depth_bias_mvps[i] = glGetUniformLocation(program,
+                                              std::string("depth_bias_model_view_projections[" + std::to_string(i)
+                                                              + "]").c_str());
   }
 
   environment_map = glGetUniformLocation(program, "environment_map");
@@ -1212,13 +1223,16 @@ Renderer::StandardProgram::StandardProgram() {
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
-  for (int i = 0; i < lights.size();i++) {
-    lights[i].position = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
+  for (int i = 0; i < lights.size(); i++) {
+    lights[i].position =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
     lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights[i].projection = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
+    lights[i].projection =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
     lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights[i].direction = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
+    lights[i].direction =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
     shadow_maps[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }

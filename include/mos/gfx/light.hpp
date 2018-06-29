@@ -45,10 +45,6 @@ public:
   /** Camera for shadow map rendering. */
   Camera camera;
 
-  SharedTexture2D shadow_map;
-
-  /** Target for shadow map rendering. */
-  Target target;
 private:
   float angle_;
   float near_;

@@ -11,10 +11,7 @@ Light::Light(const glm::vec3 &position,
              const float far)
     : color(color), angle_(angle),
       camera(position, center, glm::perspective(angle, 1.0f, near, far),
-             glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength),
-      shadow_map(SharedTexture2D(new Texture2D(
-          512, 512, Texture::Format::RG32F,
-          Texture::Wrap::CLAMP_TO_BORDER, true))), near_(near), far_(far) {}
+             glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength), near_(near), far_(far) {}
 
 Light::~Light() {}
 

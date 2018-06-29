@@ -290,6 +290,12 @@ private:
   std::map<Texture::Format, FormatPair> format_map_;
 
   int cube_camera_index_;
+
+  /** Shadow map. */
+  std::array<SharedTexture2D, 2> shadow_maps;
+
+  /** Target for shadow map rendering. */
+  std::array<Target, 2> targets;
 };
 }
 }
