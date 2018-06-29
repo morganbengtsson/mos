@@ -80,6 +80,37 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
+  // Shadow maps
+  for (int i = 0; i < shadow_maps.size(); i++) {
+
+    GLuint frame_buffer_id;
+    glGenFramebuffers(1, &frame_buffer_id);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+
+    GLuint texture_id = create_texture(shadow_maps[i]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,
+                           GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, texture_id, 0);
+    textures_.insert({shadow_maps[i]->id(), Buffer{texture_id, shadow_maps[i]->layers.modified()}});
+
+    GLuint depthrenderbuffer_id;
+    glGenRenderbuffers(1, &depthrenderbuffer_id);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                          shadow_maps[i]->width(),
+                          shadow_maps[i]->height());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                              GL_RENDERBUFFER, depthrenderbuffer_id);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    render_buffers.insert({targets[i].id(), depthrenderbuffer_id});
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+      throw std::runtime_error("Framebuffer incomplete.");
+    }
+
+    frame_buffers_.insert({targets[i].id(), frame_buffer_id});
+  }
+
   // Render boxes
   float vertices[] = {
       -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
@@ -644,11 +675,12 @@ void Renderer::render_model(const Model &model,
     glUniform1i(uniforms.material_albedo_map, 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, lights[0].shadow_map ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
+    //glBindTexture(GL_TEXTURE_2D, shadow_maps[0] ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[0]->id()).id);
     glUniform1i(uniforms.shadow_maps[0], 1);
 
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, lights[1].shadow_map ? textures_.at(lights[1].shadow_map->id()).id : white_texture_);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[1]->id()).id);
     glUniform1i(uniforms.shadow_maps[1], 2);
 
     glActiveTexture(GLenum(GL_TEXTURE3));
@@ -779,47 +811,19 @@ void Renderer::clear(const glm::vec4 &color) {
 }
 
 void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
-  for (auto &light : lights) {
-    if (frame_buffers_.find(light.target.id()) == frame_buffers_.end()) {
-      GLuint frame_buffer_id;
-      glGenFramebuffers(1, &frame_buffer_id);
-      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
-      GLuint texture_id = create_texture(light.shadow_map);
-      glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, texture_id, 0);
-      textures_.insert({light.shadow_map->id(), Buffer{texture_id, light.shadow_map->layers.modified()}});
-
-      GLuint depthrenderbuffer_id;
-      glGenRenderbuffers(1, &depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            light.shadow_map->width(),
-                            light.shadow_map->height());
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
-      render_buffers.insert({light.target.id(), depthrenderbuffer_id});
-
-      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        throw std::runtime_error("Framebuffer incomplete.");
-      }
-
-      frame_buffers_.insert({light.target.id(), frame_buffer_id});
-    }
-    auto fb = frame_buffers_.at(light.target.id());
-    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+  for (int i = 0; i < shadow_maps.size(); i++) {
+    auto frame_buffer = frame_buffers_.at(targets[i].id());
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glClear(GL_DEPTH_BUFFER_BIT);
-    auto resolution = glm::ivec2(light.shadow_map->width(), light.shadow_map->height());
+    auto resolution = glm::ivec2(shadow_maps[i]->width(), shadow_maps[i]->height());
     glUseProgram(depth_program_.program);
     glViewport(0, 0, resolution.x, resolution.y);
     for (auto &model : models) {
-      render_model_depth(model, glm::mat4(1.0f), light.camera, resolution, depth_program_);
+      render_model_depth(model, glm::mat4(1.0f), lights[i].camera, resolution, depth_program_);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //Generate mipmaps
-    glBindTexture(GL_TEXTURE_2D, textures_.at(light.shadow_map->id()).id);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps[i]->id()).id);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
   }
