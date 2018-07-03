@@ -27,14 +27,13 @@ using Boxes = Container<Box>;
 /** Scene for rendering. */
 class Scene {
 public:
-  using Boxes = std::vector<Box>;
-
   Scene();
   Scene(const Models &models,
         const Camera &camera,
         const Lights &lights = Lights(),
         const Fog &fog = Fog(),
-        const EnvironmentLights &environment_lights = EnvironmentLights());
+        const EnvironmentLights &environment_lights = EnvironmentLights(),
+        const Boxes &boxes = Boxes());
 
   Models models;
   ParticleClouds particle_clouds;

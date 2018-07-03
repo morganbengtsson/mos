@@ -13,6 +13,9 @@ public:
   Scenes(It begin, It end) : scenes_(begin, end){};
   Scenes(const std::initializer_list<Scene>& scenes);
   Scenes();
+  Container::const_reference operator[](typename Container::size_type pos) const {
+    return scenes_[pos];
+  }
   void push_back(const Scene& scene);
   Container::const_iterator begin() const;
   Container::const_iterator end() const;

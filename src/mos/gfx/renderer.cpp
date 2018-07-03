@@ -589,7 +589,7 @@ void Renderer::render_scene(const Camera &camera,
   render_particles(render_scene.particle_clouds, camera, resolution);
 }
 
-void Renderer::render_boxes(const Scene::Boxes &boxes, const mos::gfx::Camera &camera) {
+void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
 
   glUseProgram(box_program_.program);
   glBindVertexArray(box_va);
@@ -1077,11 +1077,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   for (auto &scene : scenes) {
     load(scene.models);
   }
-  for (auto it = scenes.begin(); it != scenes.end(); it++) {
-    render_shadow_maps(it->models, it->lights);
-    render_environment(*it, color);
-    render_texture_targets(*it);
-  }
+  //for (auto it = scenes.begin(); it != scenes.end(); it++) {
+    render_shadow_maps(scenes[0].models, scenes[0].lights);
+    render_environment(scenes[0], color);
+    render_texture_targets(scenes[0]);
+  //}
   glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
   clear(color);
 
