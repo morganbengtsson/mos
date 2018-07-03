@@ -67,6 +67,9 @@ Animation Assets::animation(const std::string &path) {
 }
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
+  if (path.empty()){
+    return SharedMesh(nullptr);
+  }
   if (meshes_.find(path) == meshes_.end()) {
     meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
   }
@@ -84,7 +87,7 @@ Assets::texture(const std::string &path,
     }
     return textures_.at(path);
   } else {
-    return std::shared_ptr<Texture2D>(nullptr);
+    return SharedTexture2D(nullptr);
   }
 }
 
