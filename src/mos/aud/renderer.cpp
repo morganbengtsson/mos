@@ -225,14 +225,15 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
 
 #ifdef MOS_EFX
   auto al_filter = filters_[buffer_source.source.id()];
-  float ob = buffer_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
+  auto error = buffer_source.source.obstructed - al_gain;
+  float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
+  auto error_hf = buffer_source.source.obstructed - al_gain_hf;
+  float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
@@ -292,18 +293,15 @@ void Renderer::stream_source(const StreamSource &stream_source) {
 
 #ifdef MOS_EFX
   auto al_filter = filters_[stream_source.source.id()];
-  float ob = stream_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
-  ob = 0.1f;
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
+  auto error = stream_source.source.obstructed - al_gain;
+  float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
-
-  gain = 0.1f;
-  gain_hf = 0.1f;
+  auto error_hf = stream_source.source.obstructed - al_gain_hf;
+  float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(al_filter, AL_LOWPASS_GAIN , gain);      // 0.5f
