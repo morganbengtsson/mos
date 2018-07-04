@@ -8,10 +8,11 @@ namespace gfx {
 /** Bounding box for rendering. */
 class Box final {
 public:
-  Box(const glm::vec3 &position,
+  Box(const glm::mat4 &transform,
       const glm::vec3 &extent);
-  glm::vec3 position;
+  glm::mat4 transform;
   glm::vec3 extent;
+  glm::vec3 position() const;
   glm::vec3 size() const;
   glm::vec3 min() const;
   glm::vec3 max() const;

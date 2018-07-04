@@ -1,4 +1,5 @@
 #include <mos/gfx/environment_light.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 namespace mos {
 namespace gfx {
 
@@ -6,17 +7,17 @@ EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength)
     :
-      box_(Box(position, extent)),
+      box_(glm::translate(glm::mat4(1.0f), position), extent),
       strength(strength),
       cube_camera_(position) {
 }
 
 void EnvironmentLight::position(const glm::vec3 &position) {
-  box_.position = position;
+  box_.transform[3] = glm::vec4(position, 0.0f);
   cube_camera_.position(position);
 }
 glm::vec3 EnvironmentLight::position() const {
-  return box_.position;
+  return glm::vec3(box_.transform[3]);
 }
 void EnvironmentLight::extent(const glm::vec3 &extent) {
   box_.extent = extent;
