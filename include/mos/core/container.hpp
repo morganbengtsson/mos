@@ -25,6 +25,12 @@ public:
   void assign(It begin, It end){
     items_.assign(begin, end);
   }
+
+  template<class It>
+  typename Items::iterator insert(typename Items::const_iterator pos, It begin, It end){
+    return items_.insert(pos, begin, end);
+  }
+
   typename Items::iterator begin() {
     return items_.begin();
   }
@@ -55,6 +61,7 @@ public:
   void clear() {
     items_.clear();
   }
+
   void push_back(const T &item){
     items_.push_back(item);
   }
