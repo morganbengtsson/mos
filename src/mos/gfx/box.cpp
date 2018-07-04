@@ -24,5 +24,10 @@ bool Box::inside(const glm::vec3 &point) const {
 glm::vec3 Box::position() const {
   return glm::vec3(transform[3]);
 }
+
+Box::Box() :
+    transform(glm::mat4(1.0f)),
+    extent(0.0f) {
+}
 }
 }
