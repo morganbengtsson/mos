@@ -596,7 +596,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
 
   for (auto &box : boxes) {
     glm::vec3 size = box.size();
-    glm::mat4 transform = glm::translate(glm::mat4(1.0f), box.position);
+    glm::mat4 transform = box.transform;
     glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
     glm::mat4 mvp = camera.projection * camera.view * transform *
         glm::scale(glm::mat4(1.0f), size);
@@ -756,7 +756,7 @@ void Renderer::render_model(const Model &model,
 
     for (int i = 0; i < environment_lights.size(); i++) {
       glUniform3fv(uniforms.environment_maps[i].position, 1,
-                   glm::value_ptr(environment_lights[i].box_.position));
+                   glm::value_ptr(environment_lights[i].box_.position()));
       glUniform3fv(uniforms.environment_maps[i].extent, 1,
                    glm::value_ptr(environment_lights[i].box_.extent));
       glUniform1fv(uniforms.environment_maps[i].strength, 1,
