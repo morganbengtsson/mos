@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.1.0)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLEW_STATIC)
+add_definitions(-DMOS_EFX)
 
 set(CMAKE_CXX_STANDARD 17)
 
