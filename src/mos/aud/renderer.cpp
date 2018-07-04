@@ -94,7 +94,7 @@ namespace mos {
 namespace aud {
 
 Renderer::Renderer()
-    : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0),
+    : reverb_properties(EFX_REVERB_PRESET_FACTORY_SMALLROOM), reverb_effect(0),
       reverb_slot(0), lowpass_filter1(0), lowpass_filter2(0) {
   ALCint contextAttr[] = {ALC_FREQUENCY, 44100, 0};
   device_ = alcOpenDevice(NULL);
