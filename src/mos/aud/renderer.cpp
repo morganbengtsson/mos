@@ -227,12 +227,12 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   auto al_filter = filters_[buffer_source.source.id()];
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = buffer_source.source.obstructed - al_gain;
+  auto error = (1.0f - buffer_source.source.obstructed) - al_gain;
   float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = buffer_source.source.obstructed - al_gain_hf;
+  auto error_hf = (1.0f - buffer_source.source.obstructed) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -240,8 +240,6 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
-
-  // sound_source.source.obstructed = 0.0f;
 
   ALenum state;
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
@@ -295,12 +293,12 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   auto al_filter = filters_[stream_source.source.id()];
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = stream_source.source.obstructed - al_gain;
+  auto error = (1.0f - stream_source.source.obstructed) - al_gain;
   float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = stream_source.source.obstructed - al_gain_hf;
+  auto error_hf = (1.0f - stream_source.source.obstructed) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
