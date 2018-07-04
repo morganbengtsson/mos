@@ -179,6 +179,10 @@ Renderer::~Renderer() {
 }
 
 void Renderer::buffer_source(const BufferSource &buffer_source) {
+
+  //TODO: HACK, replace this!
+  float dt = 1.0f / 60.0f;
+
   if (sources_.find(buffer_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -189,7 +193,7 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
                AL_FILTER_NULL);
     ALuint al_filter;
     alGenFilters(1, &al_filter);
-    filters_.insert(SourcePair(sound_source.source.id(), al_filter));
+    filters_.insert(SourcePair(buffer_source.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
@@ -220,8 +224,8 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
              buffer_source.source.velocity.y, buffer_source.source.velocity.z);
 
 #ifdef MOS_EFX
-  auto al_filter = filters_[sound_source.source.id()];
-  float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
+  auto al_filter = filters_[buffer_source.source.id()];
+  float ob = buffer_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
   float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
@@ -258,6 +262,9 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
 }
 
 void Renderer::stream_source(const StreamSource &stream_source) {
+
+  float dt = 1.0f / 60.0f; // TODO: REMOVE HACK
+
   if (sources_.find(stream_source.source.id()) == sources_.end()) {
     ALuint al_source;
     alGenSources(1, &al_source);
@@ -268,7 +275,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
                AL_FILTER_NULL);
     ALuint al_filter;
     alGenFilters(1, &al_filter);
-    filters_.insert(SourcePair(sound_source.source.id(), al_filter));
+    filters_.insert(SourcePair(stream_source.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
     alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
@@ -284,8 +291,9 @@ void Renderer::stream_source(const StreamSource &stream_source) {
              stream_source.source.velocity.y, stream_source.source.velocity.z);
 
 #ifdef MOS_EFX
-  auto al_filter = filters_[sound_source.source.id()];
-  float ob = sound_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
+  auto al_filter = filters_[stream_source.source.id()];
+  float ob = stream_source.source.obstructed >= 1.0f ? -1.0f : 1.0f;
+  ob = 0.1f;
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
   float gain = glm::clamp(al_gain + dt * ob, 0.5f, 1.0f);
@@ -293,6 +301,9 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
   float gain_hf = glm::clamp(al_gain_hf + dt * ob, 0.01f, 1.0f);
+
+  gain = 0.1f;
+  gain_hf = 0.1f;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(al_filter, AL_LOWPASS_GAIN , gain);      // 0.5f
