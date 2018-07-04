@@ -227,12 +227,12 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   auto al_filter = filters_[buffer_source.source.id()];
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = (1.0f - buffer_source.source.obstructed) - al_gain;
+  auto error = glm::clamp((1.0f - buffer_source.source.obstructed), 0.0f, 1.0f) - al_gain;
   float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = (1.0f - buffer_source.source.obstructed) - al_gain_hf;
+  auto error_hf = glm::clamp((1.0f - buffer_source.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -293,12 +293,12 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   auto al_filter = filters_[stream_source.source.id()];
   ALfloat al_gain;
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = (1.0f - stream_source.source.obstructed) - al_gain;
+  auto error = glm::clamp((1.0f - stream_source.source.obstructed), 0.0f, 1.0f) - al_gain;
   float gain = al_gain + error * dt;
 
   ALfloat al_gain_hf;
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = (1.0f - stream_source.source.obstructed) - al_gain_hf;
+  auto error_hf = glm::clamp((1.0f - stream_source.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
