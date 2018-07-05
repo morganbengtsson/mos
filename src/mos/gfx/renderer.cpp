@@ -1262,7 +1262,6 @@ Renderer::StandardProgram::StandardProgram() {
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
   fog_color_far = glGetUniformLocation(program, "fog.color_far");
   fog_attenuation_factor = glGetUniformLocation(program, "fog.attenuation_factor");
-
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 Renderer::StandardProgram::~StandardProgram() {
