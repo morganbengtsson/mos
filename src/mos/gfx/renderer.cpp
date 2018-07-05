@@ -48,11 +48,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     shadow_maps_targets{ShadowMapTarget{Texture2D(
         512, 512, Texture::Format::RG32F,
         Texture::Wrap::CLAMP_TO_BORDER, true), Target()},
-                ShadowMapTarget{Texture2D(
-                    512, 512, Texture::Format::RG32F,
-                    Texture::Wrap::CLAMP_TO_BORDER, true), Target()}},
-environment_maps_targets{EnvironmentMapTarget{TextureCube(128, 128), Target()},
-                         EnvironmentMapTarget{TextureCube(128, 128), Target()}}{
+                        ShadowMapTarget{Texture2D(
+                            512, 512, Texture::Format::RG32F,
+                            Texture::Wrap::CLAMP_TO_BORDER, true), Target()}},
+    environment_maps_targets{EnvironmentMapTarget{TextureCube(128, 128), Target()},
+                             EnvironmentMapTarget{TextureCube(128, 128), Target()}} {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -119,7 +119,8 @@ environment_maps_targets{EnvironmentMapTarget{TextureCube(128, 128), Target()},
     glFramebufferTexture2D(GL_FRAMEBUFFER,
                            GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
-    textures_.insert({shadow_maps_targets[i].shadow_map.id(), Buffer{texture_id, shadow_maps_targets[i].shadow_map.layers.modified()}});
+    textures_.insert({shadow_maps_targets[i].shadow_map.id(),
+                      Buffer{texture_id, shadow_maps_targets[i].shadow_map.layers.modified()}});
 
     GLuint depthrenderbuffer_id;
     glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -578,6 +579,18 @@ void Renderer::render_scene(const Camera &camera,
                             const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(standard_program_.program);
+  glUniform1i(standard_program_.material_albedo_map, 0);
+  glUniform1i(standard_program_.shadow_maps[0], 1);
+  glUniform1i(standard_program_.shadow_maps[1], 2);
+  glUniform1i(standard_program_.material_emission_map, 3);
+  glUniform1i(standard_program_.material_normal_map, 4);
+  glUniform1i(standard_program_.environment_maps[0].map, 5);
+  glUniform1i(standard_program_.environment_maps[1].map, 6);
+  glUniform1i(standard_program_.material_metallic_map, 7);
+  glUniform1i(standard_program_.material_roughness_map, 8);
+  glUniform1i(standard_program_.material_ambient_occlusion_map, 9);
+  glUniform1i(standard_program_.brdf_lut, 10);
+
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.lights,
@@ -700,10 +713,10 @@ void Renderer::render_model(const Model &model,
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                  ? textures_.at(model.material.albedo_map->id()).id
                                  : black_texture_);
+
     glUniform1i(uniforms.material_albedo_map, 0);
 
     glActiveTexture(GL_TEXTURE1);
-    //glBindTexture(GL_TEXTURE_2D, shadow_maps[0] ? textures_.at(lights[0].shadow_map->id()).id : white_texture_);
     glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[0].shadow_map.id()).id);
     glUniform1i(uniforms.shadow_maps[0], 1);
 
@@ -722,7 +735,6 @@ void Renderer::render_model(const Model &model,
                                  ? textures_.at(model.material.normal_map->id()).id
                                  : black_texture_);
     glUniform1i(uniforms.material_normal_map, 4);
-
 
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
@@ -1078,9 +1090,9 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     load(scene.models);
   }
   //for (auto it = scenes.begin(); it != scenes.end(); it++) {
-    render_shadow_maps(scenes[0].models, scenes[0].lights);
-    render_environment(scenes[0], color);
-    render_texture_targets(scenes[0]);
+  render_shadow_maps(scenes[0].models, scenes[0].lights);
+  render_environment(scenes[0], color);
+  render_texture_targets(scenes[0]);
   //}
   glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
   clear(color);
@@ -1209,10 +1221,14 @@ Renderer::StandardProgram::StandardProgram() {
   }
 
   for (int i = 0; i < environment_maps.size(); i++) {
-    environment_maps[i].map = glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
-    environment_maps[i].position = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
-    environment_maps[i].extent = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
-    environment_maps[i].strength = glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
+    environment_maps[i].map =
+        glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
+    environment_maps[i].position =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
+    environment_maps[i].extent =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
+    environment_maps[i].strength =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
   }
 
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
