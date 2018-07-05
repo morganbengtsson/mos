@@ -709,7 +709,7 @@ void Renderer::render_model(const Model &model,
 
     const auto &uniforms = program;
 
-    glActiveTexture(GLenum(GL_TEXTURE0));
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                  ? textures_.at(model.material.albedo_map->id()).id
                                  : black_texture_);
@@ -720,7 +720,7 @@ void Renderer::render_model(const Model &model,
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[1].shadow_map.id()).id);
 
-    glActiveTexture(GLenum(GL_TEXTURE3));
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                  ? textures_.at(model.material.emission_map->id()).id
                                  : black_texture_);
