@@ -224,6 +224,8 @@ private:
 
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
+  void clear_depth();
+  void clear_color(const glm::vec4 &color);
 
   unsigned int create_texture(const SharedTexture2D &texture);
 

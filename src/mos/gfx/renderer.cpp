@@ -841,6 +841,16 @@ void Renderer::clear(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Renderer::clear_depth() {
+  glClearDepthf(1.0f);
+  glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Renderer::clear_color(const glm::vec4 &color) {
+  glClearColor(color.r, color.g, color.b, color.a);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
   for (int i = 0; i < shadow_maps_targets.size(); i++) {
     auto frame_buffer = frame_buffers_.at(shadow_maps_targets[i].target.id());
@@ -871,7 +881,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
-    clear(clear_color);
+    clear_depth();
     auto resolution = glm::vec2(environment_maps_targets[i].environment_map.width(),
                                 environment_maps_targets[i].environment_map.height());
     render_scene(cube_camera, scene, resolution);
@@ -1073,7 +1083,6 @@ void Renderer::link_program(const GLuint program, const std::string &name = "") 
   glLinkProgram(program);
 }
 void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::ivec2 &resolution) {
-  clear(color);
   for (auto &scene : scenes) {
     load(scene.models);
   }
@@ -1088,10 +1097,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
     render_scene(it->camera, *it, resolution);
   }
-
   //RenderQuad
   glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
-  clear(color);
   glUseProgram(multisample_program_.program);
 
   glBindVertexArray(quad_vao_);
@@ -1150,6 +1157,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
+
 
 Renderer::DepthProgram::DepthProgram() {
   std::string name = "depth";
