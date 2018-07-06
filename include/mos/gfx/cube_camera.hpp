@@ -14,7 +14,7 @@ private:
   glm::vec3 up_;
 public:
   CubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
-             const float aspect_ratio = 1.0f);
+             const float aspect_ratio = 1.0f, const float near = 0.1, const float far = 100.0f);
 
   glm::vec3 position() const;
   void position(const glm::vec3 &position);
