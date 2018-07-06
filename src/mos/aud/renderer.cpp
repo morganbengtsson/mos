@@ -217,7 +217,7 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   ALuint al_source = sources_.at(buffer_source.source.id());
   alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
   alSourcef(al_source, AL_PITCH, buffer_source.source.pitch);
-  alSourcef(al_source, AL_GAIN, buffer_source.source.gain);
+  //alSourcef(al_source, AL_GAIN, buffer_source.source.gain);
   alSource3f(al_source, AL_POSITION, buffer_source.source.position.x,
              buffer_source.source.position.y, buffer_source.source.position.z);
   alSource3f(al_source, AL_VELOCITY, buffer_source.source.velocity.x,
@@ -234,6 +234,8 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
   auto error_hf = glm::clamp((1.0f - buffer_source.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
+
+  alSourcef(al_source, AL_GAIN, gain * buffer_source.source.gain);
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
@@ -283,7 +285,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   ALuint al_source = sources_.at(stream_source.source.id());
   alSourcei(al_source, AL_LOOPING, stream_source.source.loop);
   alSourcef(al_source, AL_PITCH, stream_source.source.pitch);
-  alSourcef(al_source, AL_GAIN, stream_source.source.gain);
+  //alSourcef(al_source, AL_GAIN, stream_source.source.gain);
   alSource3f(al_source, AL_POSITION, stream_source.source.position.x,
              stream_source.source.position.y, stream_source.source.position.z);
   alSource3f(al_source, AL_VELOCITY, stream_source.source.velocity.x,
@@ -300,6 +302,8 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
   auto error_hf = glm::clamp((1.0f - stream_source.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
+
+  alSourcef(al_source, AL_GAIN, gain * stream_source.source.gain);
 
   alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alFilterf(al_filter, AL_LOWPASS_GAIN , gain);      // 0.5f
