@@ -575,7 +575,7 @@ Renderer::create_texture_cube(const TextureCube &texture) {
 }
 
 void Renderer::render_scene(const Camera &camera,
-                            const Scene &render_scene,
+                            const Scene &scene,
                             const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(standard_program_.program);
@@ -608,15 +608,53 @@ void Renderer::render_scene(const Camera &camera,
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[1].environment_map.id()));
 
-  for (auto &model : render_scene.models) {
+
+  for (int i = 0; i < scene.environment_lights.size(); i++) {
+    glUniform3fv(standard_program_.environment_maps[i].position, 1,
+                 glm::value_ptr(scene.environment_lights[i].box_.position()));
+    glUniform3fv(standard_program_.environment_maps[i].extent, 1,
+                 glm::value_ptr(scene.environment_lights[i].box_.extent));
+    glUniform1fv(standard_program_.environment_maps[i].strength, 1,
+                 &scene.environment_lights[i].strength);
+  }
+
+  // Camera in world space
+  auto position = camera.position();
+  glUniform3fv(standard_program_.camera_position, 1, glm::value_ptr(position));
+
+  for (int i = 0; i < scene.lights.size(); i++) {
+    glUniform3fv(standard_program_.lights[i].position, 1,
+                 glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
+    auto light_color =
+        scene.lights[i].color * scene.lights[i].strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+    glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(light_color));
+
+    glUniformMatrix4fv(standard_program_.lights[i].view, 1, GL_FALSE,
+                       &scene.lights[i].camera.view[0][0]);
+    glUniformMatrix4fv(standard_program_.lights[i].projection, 1, GL_FALSE,
+                       &scene.lights[i].camera.projection[0][0]);
+
+    auto light_angle = scene.lights[i].angle();
+    glUniform1fv(standard_program_.lights[i].angle, 1, &light_angle);
+    glUniform3fv(standard_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+  }
+
+  glUniform2fv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));
+
+  glUniform3fv(standard_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
+  glUniform3fv(standard_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
+  glUniform1fv(standard_program_.fog_attenuation_factor, 1,
+               &scene.fog.attenuation_factor);
+
+  for (auto &model : scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
-                 render_scene.lights,
-                 render_scene.environment_lights,
-                 render_scene.fog,
+                 scene.lights,
+                 scene.environment_lights,
+                 scene.fog,
                  resolution, standard_program_);
   }
-  render_boxes(render_scene.boxes, camera);
-  render_particles(render_scene.particle_clouds, camera, resolution);
+  render_boxes(scene.boxes, camera);
+  render_particles(scene.particle_clouds, camera, resolution);
 }
 
 void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
@@ -716,9 +754,6 @@ void Renderer::render_model(const Model &model,
                             const glm::vec2 &resolution,
                             const StandardProgram &program) {
 
-  static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
-                              0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
-
   const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
   if (model.mesh) {
@@ -756,14 +791,15 @@ void Renderer::render_model(const Model &model,
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
 
+    static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
+                                0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-    for (int i = 0; i < environment_lights.size(); i++) {
-      glUniform3fv(uniforms.environment_maps[i].position, 1,
-                   glm::value_ptr(environment_lights[i].box_.position()));
-      glUniform3fv(uniforms.environment_maps[i].extent, 1,
-                   glm::value_ptr(environment_lights[i].box_.extent));
-      glUniform1fv(uniforms.environment_maps[i].strength, 1,
-                   &environment_lights[i].strength);
+    for (int i = 0; i < lights.size(); i++) {
+      const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
+          lights[i].camera.view * parent_transform *
+          model.transform;
+      glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
+                         &depth_bias_mvp[0][0]);
     }
 
     glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
@@ -794,40 +830,6 @@ void Renderer::render_model(const Model &model,
     glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
     glUniform3fv(uniforms.material_factor, 1, glm::value_ptr(model.material.factor));
-
-    // Camera in world space
-    auto position = camera.position();
-    glUniform3fv(uniforms.camera_position, 1, glm::value_ptr(position));
-
-    for (int i = 0; i < lights.size(); i++) {
-      const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
-          lights[i].camera.view * parent_transform *
-          model.transform;
-      glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
-                         &depth_bias_mvp[0][0]);
-
-      glUniform3fv(uniforms.lights[i].position, 1,
-                   glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
-      auto light_color =
-          lights[i].color * lights[i].strength / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
-      glUniform3fv(uniforms.lights[i].color, 1, glm::value_ptr(light_color));
-
-      glUniformMatrix4fv(uniforms.lights[i].view, 1, GL_FALSE,
-                         &lights[i].camera.view[0][0]);
-      glUniformMatrix4fv(uniforms.lights[i].projection, 1, GL_FALSE,
-                         &lights[i].camera.projection[0][0]);
-
-      auto light_angle = lights[i].angle();
-      glUniform1fv(uniforms.lights[i].angle, 1, &light_angle);
-      glUniform3fv(uniforms.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
-    }
-
-    glUniform2fv(uniforms.camera_resolution, 1, glm::value_ptr(resolution));
-
-    glUniform3fv(uniforms.fog_color_near, 1, glm::value_ptr(fog.color_near));
-    glUniform3fv(uniforms.fog_color_far, 1, glm::value_ptr(fog.color_far));
-    glUniform1fv(uniforms.fog_attenuation_factor, 1,
-                 &fog.attenuation_factor);
 
     glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
   }

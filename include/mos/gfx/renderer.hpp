@@ -191,7 +191,7 @@ private:
   void render_texture_targets(const Scene &scene);
 
   void render_scene(const Camera &camera,
-                    const Scene &render_scene,
+                    const Scene &scene,
                     const glm::vec2 &resolution);
 
   void render_shadow_maps(const Models &models,
