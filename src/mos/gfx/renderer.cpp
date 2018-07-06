@@ -593,6 +593,21 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.material_ambient_occlusion_map, 10);
 
 
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[0].shadow_map.id()).id);
+
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[1].shadow_map.id()).id);
+
+  glActiveTexture(GL_TEXTURE3);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
+
+  glActiveTexture(GL_TEXTURE4);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[1].environment_map.id()));
+
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  render_scene.lights,
@@ -711,21 +726,6 @@ void Renderer::render_model(const Model &model,
 
     const auto &uniforms = program;
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[0].shadow_map.id()).id);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[1].shadow_map.id()).id);
-
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
-
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[1].environment_map.id()));
-
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                  ? textures_.at(model.material.albedo_map->id()).id
@@ -755,7 +755,6 @@ void Renderer::render_model(const Model &model,
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
-
 
 
     for (int i = 0; i < environment_lights.size(); i++) {
