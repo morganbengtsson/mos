@@ -579,17 +579,19 @@ void Renderer::render_scene(const Camera &camera,
                             const glm::vec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(standard_program_.program);
-  glUniform1i(standard_program_.material_albedo_map, 0);
+  glUniform1i(standard_program_.brdf_lut, 0);
   glUniform1i(standard_program_.shadow_maps[0], 1);
   glUniform1i(standard_program_.shadow_maps[1], 2);
-  glUniform1i(standard_program_.material_emission_map, 3);
-  glUniform1i(standard_program_.material_normal_map, 4);
-  glUniform1i(standard_program_.environment_maps[0].map, 5);
-  glUniform1i(standard_program_.environment_maps[1].map, 6);
-  glUniform1i(standard_program_.material_metallic_map, 7);
-  glUniform1i(standard_program_.material_roughness_map, 8);
-  glUniform1i(standard_program_.material_ambient_occlusion_map, 9);
-  glUniform1i(standard_program_.brdf_lut, 10);
+  glUniform1i(standard_program_.environment_maps[0].map, 3);
+  glUniform1i(standard_program_.environment_maps[1].map, 4);
+
+  glUniform1i(standard_program_.material_albedo_map, 5);
+  glUniform1i(standard_program_.material_emission_map, 6);
+  glUniform1i(standard_program_.material_normal_map, 7);
+  glUniform1i(standard_program_.material_metallic_map, 8);
+  glUniform1i(standard_program_.material_roughness_map, 9);
+  glUniform1i(standard_program_.material_ambient_occlusion_map, 10);
+
 
   for (auto &model : render_scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
@@ -710,9 +712,7 @@ void Renderer::render_model(const Model &model,
     const auto &uniforms = program;
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                 ? textures_.at(model.material.albedo_map->id()).id
-                                 : black_texture_);
+    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[0].shadow_map.id()).id);
@@ -721,38 +721,42 @@ void Renderer::render_model(const Model &model,
     glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[1].shadow_map.id()).id);
 
     glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[1].environment_map.id()));
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                 ? textures_.at(model.material.albedo_map->id()).id
+                                 : black_texture_);
+
+    glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                  ? textures_.at(model.material.emission_map->id()).id
                                  : black_texture_);
 
-    glActiveTexture(GL_TEXTURE4);
+    glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                  ? textures_.at(model.material.normal_map->id()).id
                                  : black_texture_);
 
-    glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
-
-    glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[1].environment_map.id()));
-
-    glActiveTexture(GL_TEXTURE7);
+    glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                  ? textures_.at(model.material.metallic_map->id()).id
                                  : black_texture_);
 
-    glActiveTexture(GL_TEXTURE8);
+    glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                  ? textures_.at(model.material.roughness_map->id()).id
                                  : black_texture_);
 
-    glActiveTexture(GL_TEXTURE9);
+    glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
                                  : white_texture_);
 
-    glActiveTexture(GL_TEXTURE10);
-    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
+
 
     for (int i = 0; i < environment_lights.size(); i++) {
       glUniform3fv(uniforms.environment_maps[i].position, 1,
