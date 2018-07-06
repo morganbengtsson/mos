@@ -20,6 +20,7 @@ public:
   Items::const_iterator end() const;
   Items::iterator begin();
   Items::iterator end();
+  Items::size_type size() const;
   Model& operator[](unsigned long pos);
 private:
   Items models_;

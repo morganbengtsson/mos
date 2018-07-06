@@ -29,6 +29,9 @@ Models::Items::iterator Models::begin() {
 Models::Items::iterator Models::end() {
   return models_.end();
 }
+unsigned long Models::size() const {
+  return models_.size();
+}
 
 }
 }
