@@ -37,6 +37,9 @@ public:
 
   glm::vec3 direction() const;
 
+  /** Set near and far plane. **/
+  void near_far(const float near, const float far);
+
   glm::vec3 color;
 
   /** Strength of the lamp in watts. */

@@ -43,5 +43,12 @@ glm::vec3 Light::center() const {
 glm::vec3 Light::direction() const {
   return camera.direction();
 }
+
+void Light::near_far(const float near, const float far) {
+  near_ = near;
+  far_ = far;
+  camera.projection = glm::perspective(angle_, 1.0f, near_, far_);
+
+}
 }
 }
