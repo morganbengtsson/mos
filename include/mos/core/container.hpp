@@ -43,7 +43,7 @@ public:
   typename Items::const_iterator end() const {
     return items_.end();
   }
-  typename void assign(const std::initializer_list<T>& list){
+  void assign(const std::initializer_list<T>& list){
     items_.assign(list);
   }
   typename Items::reference operator[](typename Items::size_type pos){
