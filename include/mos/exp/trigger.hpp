@@ -30,6 +30,7 @@ public:
   bool changed() const{ return old_value_ != value_;};
 
   T old_value() const { return old_value_; };
+  T delta() const {return value_ - old_value_;};
 private:
   T value_;
   T old_value_;
