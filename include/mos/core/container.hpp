@@ -43,6 +43,9 @@ public:
   typename Items::const_iterator end() const {
     return items_.end();
   }
+  void assign(const std::initializer_list<T>& list){
+    items_.assign(list);
+  }
   typename Items::reference operator[](typename Items::size_type pos){
     return items_[pos];
   }
