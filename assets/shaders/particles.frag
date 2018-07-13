@@ -11,5 +11,4 @@ void main() {
     color = vec4(gl_PointCoord, 1.0, 1.0);
     vec4 tex_color = texture(tex, gl_PointCoord);
     color = vec4(tex_color.r, tex_color.g, tex_color.b, tex_color.a * fragment_color.a * fragment_opacity);
-    color.rgb = vec3(fragment_opacity, fragment_opacity, fragment_opacity);
 }
