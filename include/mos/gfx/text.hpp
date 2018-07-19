@@ -71,13 +71,16 @@ public:
   /** Set emission strength */
   void emission_strength(const float &strength);
 
+  /** Get the font. */
+  Font font() const;
+
   float spacing;
 
   Text &operator=(const std::string &text);
 
   Text &operator+=(const std::string &text);
 
-public:
+private:
   Model model_;
   std::string text_;
   Font font_;

@@ -163,5 +163,8 @@ void Text::opacity(const float &opacity) {
 void Text::emission_strength(const float &strength) {
   model_.material.emission_strength = strength;
 }
+Font Text::font() const {
+  return font_;
+}
 }
 }
