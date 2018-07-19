@@ -77,7 +77,7 @@ public:
 
   Text &operator+=(const std::string &text);
 
-private:
+public:
   Model model_;
   std::string text_;
   Font font_;
