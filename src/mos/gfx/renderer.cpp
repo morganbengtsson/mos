@@ -869,7 +869,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //Generate mipmaps
-    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[i].target.id()).id);
+    glBindTexture(GL_TEXTURE_2D, textures_.at(shadow_maps_targets[i].shadow_map.id()).id);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
   }
