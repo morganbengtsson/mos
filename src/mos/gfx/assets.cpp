@@ -19,26 +19,26 @@ Assets::~Assets() {}
 
 Model Assets::model_value(const std::string &base_path, const json &value, const glm::mat4 &parent_transform) {
   auto name = value.value("name", "");
-  auto mesh_name = std::string("");
+  auto mesh_path = std::string("");
   if (!value["mesh"].is_null()) {
-    mesh_name = value.value("mesh", "");
+    mesh_path = value.value("mesh", "");
   }
-  std::string material_name = "";
+  std::string material_path = "";
   if (!value["material"].is_null()) {
-    material_name = value.value("material", "");
+    material_path = value.value("material", "");
   }
 
   auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
 
   auto created_model = Model(
-      name, mesh(base_path + mesh_name),
+      name, mesh(mesh_path),
       transform,
-      material(base_path + material_name));
+      material(material_path));
 
   for (auto &m : value["children"]) {
     filesystem::path t = std::string(m);
     if(t.extension() == "model") {
-      created_model.models.push_back(model(base_path + t.str()));
+      created_model.models.push_back(model(t.str()));
     }
   }
   return created_model;
