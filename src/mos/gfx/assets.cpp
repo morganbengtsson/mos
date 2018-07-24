@@ -49,7 +49,7 @@ Model Assets::model(const std::string &path, const glm::mat4 &parent_transform) 
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
 
-  return model_value(fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/", doc, parent_transform);
+  return model_value("", doc, parent_transform);
 }
 
 Animation Assets::animation(const std::string &path) {
@@ -106,7 +106,7 @@ Material Assets::material(const std::string &path) {
         if (!value[name].is_null()) {
           file_name = value[name];
         }
-        auto tex = file_name.empty() ? texture("") : texture(base_path + file_name, color_data);
+        auto tex = file_name.empty() ? texture("") : texture(file_name, color_data);
         return tex;
       };
 
