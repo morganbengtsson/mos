@@ -52,7 +52,7 @@ struct Fragment {
     mat3 tbn;
     vec4[2] proj_shadow;
     vec3 camera_to_surface;
-    float ao;
+    float weight;
 };
 
 uniform Material material;
@@ -168,7 +168,7 @@ void main() {
         normal = normalize(mix(normal, normal_from_map, amount));
     }
 
-    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
+    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv); //TODO: use fragment.weight in 3D texture
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
 
     vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
@@ -272,7 +272,7 @@ void main() {
 
       ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
     }
-    color.rgb = (Lo + ambient + emission) * material.factor * fragment.ao;
+    color.rgb = (Lo + ambient + emission) * material.factor;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

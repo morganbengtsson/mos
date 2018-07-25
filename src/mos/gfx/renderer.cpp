@@ -945,7 +945,7 @@ void Renderer::load(const Mesh &mesh) {
         3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
         reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
 
-    // AO
+    // Weight
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
                               sizeof(glm::vec2)));
