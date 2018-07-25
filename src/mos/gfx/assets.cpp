@@ -17,7 +17,7 @@ Assets::Assets(const std::string directory) : directory_(directory) {}
 
 Assets::~Assets() {}
 
-Model Assets::model_value(const std::string &base_path, const json &value, const glm::mat4 &parent_transform) {
+Model Assets::model_value(const json &value, const glm::mat4 &parent_transform) {
   auto name = value.value("name", "");
   auto mesh_path = std::string("");
   if (!value["mesh"].is_null()) {
@@ -49,7 +49,7 @@ Model Assets::model(const std::string &path, const glm::mat4 &parent_transform) 
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(directory_ + path));
 
-  return model_value("", doc, parent_transform);
+  return model_value(doc, parent_transform);
 }
 
 Animation Assets::animation(const std::string &path) {
@@ -96,8 +96,6 @@ Material Assets::material(const std::string &path) {
     return Material();
   } else {
     filesystem::path fpath = path;
-    auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
-
     if (fpath.extension() == "material") {
       auto value = json::parse(mos::text(directory_ + fpath.str()));
 
@@ -155,8 +153,6 @@ Light Assets::light(const std::string &path, const glm::mat4 &parent_transform) 
     return Light();
   } else {
     filesystem::path fpath = path;
-    auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
-
     if (fpath.extension() == "light") {
       auto value = json::parse(mos::text(directory_ + fpath.str()));
 
@@ -188,7 +184,6 @@ Light Assets::light(const std::string &path, const glm::mat4 &parent_transform) 
 
 EnvironmentLight Assets::environment_light(const std::string &path, const glm::mat4 &parent_transform) {
   filesystem::path fpath = path;
-  auto base_path = fpath.parent_path().empty() ? "" : fpath.parent_path().str() + "/";
 
   if (fpath.extension() == "environment_light") {
     auto value = json::parse(mos::text(directory_ + fpath.str()));
