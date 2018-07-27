@@ -297,9 +297,13 @@ private:
   std::array<int,2> cube_camera_index_;
 
   struct ShadowMapTarget {
+    ShadowMapTarget();
+    ~ShadowMapTarget();
+    const int resolution;
     GLuint shadow_map;
     GLuint frame_buffer;
   };
+
   GLuint shadow_render_buffer_;
 
   /** Shadow maps. */

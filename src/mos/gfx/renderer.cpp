@@ -1401,5 +1401,13 @@ Renderer::BlurProgram::BlurProgram() {
 Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
 }
+
+Renderer::ShadowMapTarget::ShadowMapTarget() {
+
+}
+Renderer::ShadowMapTarget::~ShadowMapTarget() {
+
+}
+
 }
 }
