@@ -1438,7 +1438,8 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
   }
 }
 Renderer::EnvironmentMapTarget::~EnvironmentMapTarget() {
-
+  glDeleteTextures(1, &texture);
+  glDeleteFramebuffers(1, &frame_buffer);
 }
 }
 }
