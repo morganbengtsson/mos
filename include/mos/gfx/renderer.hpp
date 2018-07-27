@@ -296,13 +296,14 @@ private:
 
   std::array<int,2> cube_camera_index_;
 
-  struct ShadowMapTarget{
-    Texture2D shadow_map;
-    Target target;
+  struct ShadowMapTarget {
+    GLuint shadow_map;
+    GLuint frame_buffer;
   };
+  GLuint shadow_render_buffer_;
 
-  /** Shadow map targets. */
-  std::array<ShadowMapTarget, 2> shadow_maps_targets;
+  /** Shadow maps. */
+  std::array<ShadowMapTarget, 2> shadow_maps_;
 
   struct EnvironmentMapTarget {
     TextureCube environment_map;
