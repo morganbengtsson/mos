@@ -1,5 +1,4 @@
 #include <mos/gfx/target.hpp>
-#include <mos/gfx/texture_cube.hpp>
 
 namespace mos {
 namespace gfx {

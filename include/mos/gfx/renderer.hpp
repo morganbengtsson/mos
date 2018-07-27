@@ -7,7 +7,6 @@
 #include <future>
 #include <mos/gfx/scene.hpp>
 #include <mos/gfx/texture_2d.hpp>
-#include <mos/gfx/texture_cube.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/text.hpp>
 #include <mos/gfx/particle_cloud.hpp>
@@ -55,9 +54,6 @@ public:
 
   /** Unloads a shared texture from renderer memory. */
   void unload(const SharedTexture2D &texture);
-
-  /** Unloads a shared texture cube from renderer memory.*/
-  void unload(const SharedTextureCube &texture);
 
   /** Render multiple scenes. */
   void render(const Scenes &scenes,
@@ -231,8 +227,6 @@ private:
 
   unsigned int create_texture(const Texture2D &texture);
 
-  unsigned int create_texture_cube(const TextureCube &texture);
-
   static unsigned int create_shader(const std::string &source,
                              const unsigned int type,
                                     const std::string& name);
@@ -258,7 +252,6 @@ private:
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
   std::unordered_map<unsigned int, Buffer> textures_;
-  std::unordered_map<unsigned int, GLuint> texture_cubes_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;

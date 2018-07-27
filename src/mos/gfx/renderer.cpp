@@ -316,16 +316,6 @@ void Renderer::unload(const Model &model) {
   }
 }
 
-void Renderer::unload(const SharedTextureCube &texture) {
-  if (texture) {
-    if (texture_cubes_.find(texture->id()) != texture_cubes_.end()) {
-      auto gl_id = texture_cubes_.at(texture->id());
-      glDeleteTextures(1, &gl_id);
-      texture_cubes_.erase(texture->id());
-    }
-  }
-}
-
 void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
     GLuint gl_id = create_texture(texture);
@@ -480,36 +470,6 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
 
 unsigned int Renderer::create_texture(const SharedTexture2D &texture) {
   return create_texture(*texture);
-}
-
-unsigned int
-Renderer::create_texture_cube(const TextureCube &texture) {
-  GLuint id;
-  glGenTextures(1, &id);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-
-  GLfloat sampling = texture.mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, sampling);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, sampling);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                  wrap_map_[texture.wrap]);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                  wrap_map_[texture.wrap]);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                  wrap_map_[texture.wrap]);
-
-  for (int i = 0; i < 6; i++) {
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 format_map_[texture.format].internal_format,
-                 texture.width(), texture.height(), 0, format_map_[texture.format].format,
-                 GL_UNSIGNED_BYTE, texture.layers[i].data());
-  }
-  if (texture.mipmaps) {
-    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-  };
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-  return id;
 }
 
 void Renderer::render_scene(const Camera &camera,

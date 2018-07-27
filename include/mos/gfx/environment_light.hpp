@@ -1,5 +1,4 @@
 #pragma once
-#include <mos/gfx/texture_cube.hpp>
 #include <mos/gfx/box.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/cube_camera.hpp>

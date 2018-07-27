@@ -6,7 +6,6 @@
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/target.hpp>
-#include <mos/gfx/texture_cube.hpp>
 #include <mos/gfx/box.hpp>
 #include <mos/gfx/particle_cloud.hpp>
 #include <mos/gfx/cube_camera.hpp>

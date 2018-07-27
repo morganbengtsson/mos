@@ -3,7 +3,6 @@
 #include <string>
 #include <memory>
 #include <mos/gfx/texture_2d.hpp>
-#include <mos/gfx/texture_cube.hpp>
 
 namespace mos {
 namespace gfx {
