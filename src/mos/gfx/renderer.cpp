@@ -1361,12 +1361,19 @@ Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
 }
 
-Renderer::ShadowMapTarget::ShadowMapTarget(const ShadowMapRenderBuffer & render_buffer) {
-  glGenFramebuffers(1, &frame_buffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
+Renderer::ShadowMapTarget::ShadowMapTarget(const ShadowMapRenderBuffer & render_buffer) :
+frame_buffer([](){
+  GLuint id;
+  glGenFramebuffers(1, &id);
+  glBindFramebuffer(GL_FRAMEBUFFER, id);
+  return id;
+}()),
+texture([](){
+  GLuint id;
+  glGenTextures(1, &id);
+  glBindTexture(GL_TEXTURE_2D, id);
+  return id;
+}()){
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1403,8 +1410,12 @@ Renderer::ShadowMapTarget::~ShadowMapTarget() {
 }
 
 Renderer::ShadowMapRenderBuffer::ShadowMapRenderBuffer(const int resolution) :
-resolution(resolution) {
-  glGenRenderbuffers(1, &render_buffer);
+resolution(resolution),
+render_buffer([](){
+  GLuint id;
+  glGenRenderbuffers(1, &id);
+  return id;
+}()){
   glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                         resolution,

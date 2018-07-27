@@ -300,15 +300,15 @@ private:
   struct ShadowMapRenderBuffer {
     ShadowMapRenderBuffer(const int resolution);
     ~ShadowMapRenderBuffer();
-    GLuint render_buffer;
+    const GLuint render_buffer;
     const int resolution;
   };
 
   struct ShadowMapTarget {
     ShadowMapTarget(const ShadowMapRenderBuffer &render_buffer);
     ~ShadowMapTarget();
-    GLuint texture;
-    GLuint frame_buffer;
+    const GLuint texture;
+    const GLuint frame_buffer;
   };
 
   /** Shadow maps. */
