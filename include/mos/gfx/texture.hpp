@@ -15,27 +15,14 @@ class Texture {
   friend class Renderer;
 public:
   using Data = std::vector<unsigned char>;
-  enum class Wrap { REPEAT, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
+  enum class Wrap { REPEAT, CLAMP };
   enum class Format {
     R,
     RG,
     RGB,
     RGBA,
     SRGB,
-    SRGBA,
-    DEPTH,
-    COMPRESSED_RGB,
-    COMPRESSED_RGBA,
-    COMPRESSED_SRGB,
-    COMPRESSED_SRGBA,
-    R16F,
-    RG16F,
-    RGB16F,
-    RGBA16F,
-    R32F,
-    RG32F,
-    RGB32F,
-    RGBA32F
+    SRGBA
   };
   template<class T>
   Texture(T begin, T end,

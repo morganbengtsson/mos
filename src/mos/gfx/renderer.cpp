@@ -26,23 +26,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
         {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
         {Texture::Format::RGB, {GL_RGB, GL_RGB}},
-        {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}},
-        {Texture::Format::DEPTH, {GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT}},
-        {Texture::Format::COMPRESSED_SRGB, {GL_COMPRESSED_SRGB, GL_RGB}},
-        {Texture::Format::COMPRESSED_SRGBA, {GL_COMPRESSED_SRGB_ALPHA, GL_RGBA}},
-        {Texture::Format::COMPRESSED_RGB, {GL_COMPRESSED_RGB, GL_RGB}},
-        {Texture::Format::COMPRESSED_RGBA, {GL_COMPRESSED_RGBA, GL_RGBA}},
-        {Texture::Format::R16F, {GL_R16F, GL_RED}},
-        {Texture::Format::RG16F, {GL_RG16F, GL_RG}},
-        {Texture::Format::RGB16F, {GL_RGB16F, GL_RGB}},
-        {Texture::Format::RGBA16F, {GL_RGBA16F, GL_RGBA}},
-        {Texture::Format::R32F, {GL_R32F, GL_RED}},
-        {Texture::Format::RG32F, {GL_RG32F, GL_RG}},
-        {Texture::Format::RGB32F, {GL_RGB32F, GL_RGB}},
-        {Texture::Format::RGBA32F, {GL_RGBA32F, GL_RGBA}}},
+        {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}},
     wrap_map_{
-        {Texture::Wrap::CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE},
-        {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
+        {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
     shadow_maps_render_buffer_(512),
@@ -63,14 +49,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-  //glEnable(GL_POINT_SMOOTH);
   glEnable(GL_FRAMEBUFFER_SRGB);
 
-  // glEnable(GL_TEXTURE_CUBE_MAP);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-
-  //glEnable(GL_CULL_FACE);
-  //glCullFace(GL_BACK);
 
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);
@@ -143,7 +124,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
   brdf_lut_texture.format = Texture::Format::RGB;
-  brdf_lut_texture.wrap = Texture::Wrap::CLAMP_TO_EDGE;
+  brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -445,9 +426,6 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
   glBindTexture(GL_TEXTURE_2D, id);
 
   GLfloat sampling = texture.mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-  if (texture.format == Texture::Format::DEPTH) {
-    sampling = GL_LINEAR;
-  }
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
