@@ -105,6 +105,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   // Shadow maps
   // TODO: Move stuff to constructor
+  glGenRenderbuffers(1, &shadow_render_buffer_);
+  glBindRenderbuffer(GL_RENDERBUFFER, shadow_render_buffer_);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                        ShadowMapTarget::resolution,
+                        ShadowMapTarget::resolution);
   for (int i = 0; i < shadow_maps_.size(); i++) {
     glGenFramebuffers(1, &shadow_maps_[i].frame_buffer);
     glBindFramebuffer(GL_FRAMEBUFFER, shadow_maps_[i].frame_buffer);
@@ -120,7 +125,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
     glTexImage2D(GL_TEXTURE_2D, 0,
                  GL_RG32F,
-                 512, 512,
+                 ShadowMapTarget::resolution, ShadowMapTarget::resolution,
                  0,
                  GL_RG,
                  GL_UNSIGNED_BYTE,
@@ -132,11 +137,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
                            GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, shadow_maps_[i].shadow_map, 0);
 
-    glGenRenderbuffers(1, &shadow_render_buffer_);
-    glBindRenderbuffer(GL_RENDERBUFFER, shadow_render_buffer_);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                          512,
-                          512);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
                               GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, shadow_render_buffer_);
@@ -1402,7 +1402,9 @@ Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
 }
 
-Renderer::ShadowMapTarget::ShadowMapTarget() {
+const int Renderer::ShadowMapTarget::resolution(512);
+
+Renderer::ShadowMapTarget::ShadowMapTarget(){
 
 }
 Renderer::ShadowMapTarget::~ShadowMapTarget() {
