@@ -45,7 +45,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
-    shadow_maps_(),
+    shadow_maps_render_buffer_(512),
+    shadow_maps_{ShadowMapTarget(shadow_maps_render_buffer_),
+                 ShadowMapTarget(shadow_maps_render_buffer_)},
     environment_maps_targets{EnvironmentMapTarget{TextureCube(128, 128), Target()},
                              EnvironmentMapTarget{TextureCube(128, 128), Target()}} {
 
@@ -101,49 +103,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
       throw std::runtime_error("Framebuffer incomplete.");
     }
     frame_buffers_.insert({environment_maps_targets[i].target.id(), frame_buffer_id});
-  }
-
-  // Shadow maps
-  // TODO: Move stuff to constructor
-  glGenRenderbuffers(1, &shadow_render_buffer_);
-  glBindRenderbuffer(GL_RENDERBUFFER, shadow_render_buffer_);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                        ShadowMapTarget::resolution,
-                        ShadowMapTarget::resolution);
-  for (int i = 0; i < shadow_maps_.size(); i++) {
-    glGenFramebuffers(1, &shadow_maps_[i].frame_buffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, shadow_maps_[i].frame_buffer);
-
-    glGenTextures(1, &shadow_maps_[i].shadow_map);
-    glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].shadow_map);
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RG32F,
-                 ShadowMapTarget::resolution, ShadowMapTarget::resolution,
-                 0,
-                 GL_RG,
-                 GL_UNSIGNED_BYTE,
-                 nullptr);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER,
-                           GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D, shadow_maps_[i].shadow_map, 0);
-
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER, shadow_render_buffer_);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-      throw std::runtime_error("Framebuffer incomplete.");
-    }
   }
 
   // Render boxes
@@ -602,10 +561,10 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].shadow_map);
+  glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
 
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].shadow_map);
+  glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
 
   glActiveTexture(GL_TEXTURE3);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_cubes_.at(environment_maps_targets[0].environment_map.id()));
@@ -874,7 +833,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //Generate mipmaps
-    glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].shadow_map);
+    glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
   }
@@ -1402,14 +1361,57 @@ Renderer::BlurProgram::~BlurProgram() {
   glDeleteProgram(program);
 }
 
-const int Renderer::ShadowMapTarget::resolution(512);
+Renderer::ShadowMapTarget::ShadowMapTarget(const ShadowMapRenderBuffer & render_buffer) {
+  glGenFramebuffers(1, &frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-Renderer::ShadowMapTarget::ShadowMapTarget(){
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
 
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               GL_RG32F,
+               render_buffer.resolution,
+               render_buffer.resolution,
+               0,
+               GL_RG,
+               GL_UNSIGNED_BYTE,
+               nullptr);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_2D, texture, 0);
+
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER,
+                            GL_DEPTH_ATTACHMENT,
+                            GL_RENDERBUFFER, render_buffer.render_buffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete.");
+  }
 }
 Renderer::ShadowMapTarget::~ShadowMapTarget() {
-
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &texture);
 }
 
+Renderer::ShadowMapRenderBuffer::ShadowMapRenderBuffer(const int resolution) :
+resolution(resolution) {
+  glGenRenderbuffers(1, &render_buffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                        resolution,
+                        resolution);
+}
+Renderer::ShadowMapRenderBuffer::~ShadowMapRenderBuffer() {
+  glDeleteRenderbuffers(1, &render_buffer);
+}
 }
 }

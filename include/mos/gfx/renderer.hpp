@@ -296,16 +296,23 @@ private:
 
   std::array<int,2> cube_camera_index_;
 
+
+  struct ShadowMapRenderBuffer {
+    ShadowMapRenderBuffer(const int resolution);
+    ~ShadowMapRenderBuffer();
+    GLuint render_buffer;
+    const int resolution;
+  };
+
   struct ShadowMapTarget {
-    ShadowMapTarget();
+    ShadowMapTarget(const ShadowMapRenderBuffer &render_buffer);
     ~ShadowMapTarget();
-    static const int resolution;
-    GLuint shadow_map;
+    GLuint texture;
     GLuint frame_buffer;
   };
-  GLuint shadow_render_buffer_;
 
   /** Shadow maps. */
+  ShadowMapRenderBuffer shadow_maps_render_buffer_;
   std::array<ShadowMapTarget, 2> shadow_maps_;
 
   struct EnvironmentMapTarget {
