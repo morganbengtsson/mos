@@ -293,31 +293,31 @@ private:
   struct RenderBuffer {
     RenderBuffer(const int resolution);
     ~RenderBuffer();
-    const GLuint render_buffer;
-    const int resolution;
+    GLuint render_buffer;
+    int resolution;
   };
 
   struct ShadowMapTarget {
     ShadowMapTarget(const RenderBuffer &render_buffer);
     ~ShadowMapTarget();
-    const GLuint texture;
-    const GLuint frame_buffer;
+    GLuint texture;
+    GLuint frame_buffer;
   };
 
   /** Shadow maps. */
-  RenderBuffer shadow_maps_render_buffer_;
-  std::array<ShadowMapTarget, 2> shadow_maps_;
+  const RenderBuffer shadow_maps_render_buffer_;
+  const std::array<ShadowMapTarget, 2> shadow_maps_;
 
   struct EnvironmentMapTarget {
     EnvironmentMapTarget(const RenderBuffer &render_buffer);
     ~EnvironmentMapTarget();
-    const GLuint texture;
-    const GLuint frame_buffer;
+    GLuint texture;
+    GLuint frame_buffer;
   };
 
   /** Environment map targets. */
-  RenderBuffer environment_render_buffer_;
-  std::array<EnvironmentMapTarget, 2> environment_maps_targets;
+  const RenderBuffer environment_render_buffer_;
+  const std::array<EnvironmentMapTarget, 2> environment_maps_targets;
 };
 }
 }
