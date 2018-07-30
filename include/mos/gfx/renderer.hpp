@@ -271,10 +271,22 @@ private:
 
   const MultiTarget multi_target_;
 
+  struct BlurTarget {
+    BlurTarget(const glm::vec2 &resolution);
+    ~BlurTarget();
+    GLuint frame_buffer;
+    GLuint texture;
+  };
+
+  const BlurTarget blur_target0_;
+  const BlurTarget blur_target1_;
+
+/*
   GLuint blur_fbo0_;
   GLuint blur_fbo1_;
   GLuint blur_texture0_;
   GLuint blur_texture1_;
+*/
 
   GLuint quad_vao_;
   GLuint quad_vbo_;
