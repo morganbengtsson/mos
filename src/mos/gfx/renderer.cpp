@@ -46,7 +46,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     environment_render_buffer_(128),
     environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
                              EnvironmentMapTarget(environment_render_buffer_)},
-    quad_() {
+    quad_(),
+    black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_NEAREST, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data()),
+    white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_NEAREST, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data())
+{
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -69,39 +72,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-
-  // Empty texture
-  glGenTextures(1, &black_texture_);
-  glBindTexture(GL_TEXTURE_2D, black_texture_);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  auto data = std::array<unsigned char, 4>{0, 0, 0, 0};
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               data.data());
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glGenTextures(1, &white_texture_);
-  glBindTexture(GL_TEXTURE_2D, white_texture_);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  auto data_white = std::array<unsigned char, 4>{255, 255, 255, 255};
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-               data_white.data());
-  glBindTexture(GL_TEXTURE_2D, 0);
-
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
-
 }
 
 Renderer::~Renderer() {
@@ -460,7 +434,7 @@ void Renderer::render_particles(const ParticleClouds &clouds,
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
                                  ? textures_.at(particles.emission_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
     glUniformMatrix4fv(particle_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
@@ -493,32 +467,32 @@ void Renderer::render_model(const Model &model,
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                  ? textures_.at(model.material.albedo_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                  ? textures_.at(model.material.emission_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                  ? textures_.at(model.material.normal_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                  ? textures_.at(model.material.metallic_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                  ? textures_.at(model.material.roughness_map->id()).id
-                                 : black_texture_);
+                                 : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                  ? textures_.at(model.material.ambient_occlusion_map->id()).id
-                                 : white_texture_);
+                                 : white_texture_.texture);
 
     static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);

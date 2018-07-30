@@ -311,8 +311,8 @@ private:
     GLuint texture;
   };
 
-  GLuint black_texture_;
-  GLuint white_texture_;
+  const DataTexture black_texture_;
+  const DataTexture white_texture_;
   GLuint brdf_lut_texture_;
 
   struct FormatPair {
