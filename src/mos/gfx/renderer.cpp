@@ -36,7 +36,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
-    multi_target_(resolution),
+    standard_target_(resolution),
     shadow_maps_render_buffer_(512),
     shadow_maps_{ShadowMapTarget(shadow_maps_render_buffer_),
                  ShadowMapTarget(shadow_maps_render_buffer_)},
@@ -132,10 +132,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete");
-  }
 
   glGenFramebuffers(1, &color_fbo_);
   glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
@@ -947,12 +943,13 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   render_environment(scenes[0], color);
   render_texture_targets(scenes[0]);
   //}
-  glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
   clear(color);
 
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
     render_scene(it->camera, *it, resolution);
   }
+
   //RenderQuad
   glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
   glUseProgram(multisample_program_.program);
@@ -960,11 +957,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_vao_);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_target_.texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.texture);
   glUniform1i(multisample_program_.color_texture, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_target_.depth_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
   glUniform1i(multisample_program_.depth_texture, 1);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1337,7 +1334,7 @@ Renderer::EnvironmentMapTarget::~EnvironmentMapTarget() {
   glDeleteFramebuffers(1, &frame_buffer);
 }
 
-Renderer::MultiTarget::MultiTarget(const glm::vec2 &resolution) {
+Renderer::StandardTarget::StandardTarget(const glm::vec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1362,7 +1359,7 @@ Renderer::MultiTarget::MultiTarget(const glm::vec2 &resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
-Renderer::MultiTarget::~MultiTarget() {
+Renderer::StandardTarget::~StandardTarget() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
   glDeleteTextures(1, &depth_texture);
