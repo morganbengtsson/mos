@@ -179,13 +179,14 @@ private:
   };
 
   struct TextureBuffer2D {
-    TextureBuffer2D(const GLint internal_format,
-                    const GLint external_format,
-                    const GLint width,
-                    const GLint height,
-                    const GLint filter,
-                    const GLint wrap,
-                    const void * data);
+    TextureBuffer2D(const Texture2D &texture_2d);
+    TextureBuffer2D(const GLuint internal_format,
+                    const GLuint external_format,
+                    const int width,
+                    const int height,
+                    const GLuint wrap,
+                    const void *data,
+                    const bool mipmaps);
     ~TextureBuffer2D();
     GLuint texture;
   };

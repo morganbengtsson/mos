@@ -60,8 +60,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
                              EnvironmentMapTarget(environment_render_buffer_)},
     quad_(),
-    black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_NEAREST, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data()),
-    white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_NEAREST, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data())
+    black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
+    white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true)
 {
 
   if (!gladLoadGL()) {
@@ -1361,15 +1361,17 @@ Renderer::Box::Box() {
 Renderer::Box::~Box() {
 
 }
-Renderer::TextureBuffer2D::TextureBuffer2D(const GLint internal_format,
-                                   const GLint external_format,
-                                   const GLint width,
-                                   const GLint height,
-                                   const GLint filter,
-                                   const GLint wrap,
-                                   const void *data) {
+Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
+                                   const GLuint external_format,
+                                   const int width,
+                                   const int height,
+                                   const GLuint wrap,
+                                   const void *data,
+                                   const bool mipmaps) {
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
+
+  auto filter = mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
@@ -1380,10 +1382,15 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLint internal_format,
       internal_format,
                width, height, 0,
                external_format, GL_UNSIGNED_BYTE, data);
+  if (mipmaps) {
+    glGenerateMipmap(GL_TEXTURE_2D);
+  };
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 Renderer::TextureBuffer2D::~TextureBuffer2D() {
   glDeleteTextures(1, &texture);
 }
+Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) : TextureBuffer2D(format_convert(texture_2d.format).internal_format
+, format_convert(texture_2d.format).format, texture_2d.width(), texture_2d.height(), wrap_convert(texture_2d.wrap), texture_2d.layers[0].data(), texture_2d.mipmaps){}
 }
 }
