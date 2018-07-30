@@ -64,10 +64,26 @@ public:
   void clear_buffers();
 
 private:
+  using TimePoint =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   struct Buffer {
     GLuint id;
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
+    TimePoint modified;
+  };
+
+  struct TextureBuffer2D {
+    TextureBuffer2D(const Texture2D &texture_2d);
+    TextureBuffer2D(const GLuint internal_format,
+                    const GLuint external_format,
+                    const int width,
+                    const int height,
+                    const GLuint wrap,
+                    const void *data,
+                    const bool mipmaps,
+                    const TimePoint &modified = std::chrono::system_clock::now());
+    ~TextureBuffer2D();
+    GLuint texture;
+    TimePoint modified;
   };
 
   /** Uniforms for the particle shader program. */
@@ -176,19 +192,6 @@ private:
     GLint fog_attenuation_factor;
 
     GLint brdf_lut;
-  };
-
-  struct TextureBuffer2D {
-    TextureBuffer2D(const Texture2D &texture_2d);
-    TextureBuffer2D(const GLuint internal_format,
-                    const GLuint external_format,
-                    const int width,
-                    const int height,
-                    const GLuint wrap,
-                    const void *data,
-                    const bool mipmaps);
-    ~TextureBuffer2D();
-    GLuint texture;
   };
 
   void render_texture_targets(const Scene &scene);

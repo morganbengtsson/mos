@@ -1346,7 +1346,8 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
                                    const int height,
                                    const GLuint wrap,
                                    const void *data,
-                                   const bool mipmaps) {
+                                   const bool mipmaps,
+                                   const TimePoint &modified) : modified(modified){
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
