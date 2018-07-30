@@ -281,8 +281,19 @@ private:
   const BlurTarget blur_target0_;
   const BlurTarget blur_target1_;
 
+  struct Quad {
+    Quad();
+    ~Quad();
+    GLuint vertex_array;
+    GLuint buffer;
+  };
+
+  const Quad quad_;
+
+  /*
   GLuint quad_vao_;
   GLuint quad_vbo_;
+  */
 
   GLuint black_texture_;
   GLuint white_texture_;
@@ -302,9 +313,8 @@ private:
 
   std::array<int,2> cube_camera_index_;
 
-
   struct RenderBuffer {
-    RenderBuffer(const int resolution);
+    explicit RenderBuffer(const int resolution);
     ~RenderBuffer();
     GLuint render_buffer;
     int resolution;

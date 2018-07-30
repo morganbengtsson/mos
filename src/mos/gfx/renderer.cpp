@@ -45,7 +45,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
                  ShadowMapTarget(shadow_maps_render_buffer_)},
     environment_render_buffer_(128),
     environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
-                             EnvironmentMapTarget(environment_render_buffer_)} {
+                             EnvironmentMapTarget(environment_render_buffer_)},
+                             quad_(){
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -136,25 +137,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
 
-  const float quad_vertices[] = {
-      -1.0f, 1.0f, 0.0f, 1.0f,
-      -1.0f, -1.0f, 0.0f, 0.0f,
-      1.0f, -1.0f, 1.0f, 0.0f,
-      -1.0f, 1.0f, 0.0f, 1.0f,
-      1.0f, -1.0f, 1.0f, 0.0f,
-      1.0f, 1.0f, 1.0f, 1.0f
-  };
 
-  glGenVertexArrays(1, &quad_vao_);
-  glGenBuffers(1, &quad_vbo_);
-  glBindVertexArray(quad_vao_);
-  glBindBuffer(GL_ARRAY_BUFFER, quad_vbo_);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 Renderer::~Renderer() {
@@ -889,7 +872,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
   glUseProgram(multisample_program_.program);
 
-  glBindVertexArray(quad_vao_);
+  glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.texture);
@@ -905,7 +888,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glBindFramebuffer(GL_FRAMEBUFFER, blur_target0_.frame_buffer);
   glUseProgram(blur_program_.program);
-  glBindVertexArray(quad_vao_);
+  glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
   glUniform1i(blur_program_.color_texture, 0);
@@ -917,7 +900,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     horizontal = (i % 2 == 0);
     glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target1_.frame_buffer : blur_target0_.frame_buffer);
     glUseProgram(blur_program_.program);
-    glBindVertexArray(quad_vao_);
+    glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
     glUniform1i(blur_program_.color_texture, 0);
@@ -931,7 +914,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glUseProgram(bloom_program_.program);
 
-  glBindVertexArray(quad_vao_);
+  glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.color_texture);
@@ -1362,6 +1345,30 @@ Renderer::BlurTarget::BlurTarget(const glm::vec2 &resolution) {
 Renderer::BlurTarget::~BlurTarget() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
+}
+Renderer::Quad::Quad() {
+  static const float quad_vertices[] = {
+      -1.0f, 1.0f, 0.0f, 1.0f,
+      -1.0f, -1.0f, 0.0f, 0.0f,
+      1.0f, -1.0f, 1.0f, 0.0f,
+      -1.0f, 1.0f, 0.0f, 1.0f,
+      1.0f, -1.0f, 1.0f, 0.0f,
+      1.0f, 1.0f, 1.0f, 1.0f
+  };
+  glGenVertexArrays(1, &vertex_array);
+  glGenBuffers(1, &buffer);
+  glBindVertexArray(vertex_array);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+Renderer::Quad::~Quad() {
+  glDeleteBuffers(1, &buffer);
+  glDeleteVertexArrays(1, &vertex_array);
 }
 }
 }
