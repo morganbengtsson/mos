@@ -74,6 +74,7 @@ private:
   struct TextureBuffer2D {
   public:
     explicit TextureBuffer2D(const Texture2D &texture_2d);
+    TextureBuffer2D(){};
     TextureBuffer2D(const GLuint internal_format,
                     const GLuint external_format,
                     const int width,
@@ -323,7 +324,7 @@ private:
 
   const TextureBuffer2D black_texture_;
   const TextureBuffer2D white_texture_;
-  GLuint brdf_lut_texture_;
+  TextureBuffer2D brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
 

@@ -88,7 +88,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
-  brdf_lut_texture_ = create_texture(brdf_lut_texture).texture; //TODO
+  brdf_lut_texture_ = TextureBuffer2D(brdf_lut_texture); //TODO
 }
 
 Renderer::~Renderer() {
@@ -280,7 +280,7 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.material_ambient_occlusion_map, 10);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_);
+  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
