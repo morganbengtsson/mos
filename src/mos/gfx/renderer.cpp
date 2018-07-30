@@ -145,10 +145,9 @@ void Renderer::unload(const Model &model) {
 
 void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    auto buffer = create_texture(texture);
-    textures_.insert({texture.id(), buffer});
+    textures_.insert({texture.id(), TextureBuffer2D(texture)});
   } else {
-    auto buffer = textures_.at(texture.id());
+    auto & buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer.modified) {
       glBindTexture(GL_TEXTURE_2D, buffer.texture);
       glTexImage2D(GL_TEXTURE_2D, 0,
@@ -709,10 +708,12 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
       auto buffer = create_texture(target.texture);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, buffer.texture, 0);
+
       textures_.insert({target.texture->id(),
-                        buffer});
+                        TextureBuffer2D(*target.texture)});
+
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, textures_.at(target.texture->id()).texture, 0);
 
       GLuint depthrenderbuffer_id;
       glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -1360,6 +1361,7 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 Renderer::TextureBuffer2D::~TextureBuffer2D() {
+  std::cout << "Delete: " << texture << std::endl;
   //glDeleteTextures(1, &texture);
 }
 Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) :

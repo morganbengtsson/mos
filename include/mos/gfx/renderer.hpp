@@ -72,7 +72,8 @@ private:
   };
 
   struct TextureBuffer2D {
-    TextureBuffer2D(const Texture2D &texture_2d);
+  public:
+    explicit TextureBuffer2D(const Texture2D &texture_2d);
     TextureBuffer2D(const GLuint internal_format,
                     const GLuint external_format,
                     const int width,
@@ -82,6 +83,10 @@ private:
                     const bool mipmaps,
                     const TimePoint &modified = std::chrono::system_clock::now());
     ~TextureBuffer2D();
+    TextureBuffer2D (TextureBuffer2D && other) = default;
+    TextureBuffer2D & operator=(TextureBuffer2D &&) = default;
+    TextureBuffer2D( const TextureBuffer2D& ) = delete;
+    TextureBuffer2D& operator=( const TextureBuffer2D& ) = delete;
     GLuint texture;
     TimePoint modified;
   };
