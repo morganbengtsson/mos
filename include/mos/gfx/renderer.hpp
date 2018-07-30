@@ -281,13 +281,6 @@ private:
   const BlurTarget blur_target0_;
   const BlurTarget blur_target1_;
 
-/*
-  GLuint blur_fbo0_;
-  GLuint blur_fbo1_;
-  GLuint blur_texture0_;
-  GLuint blur_texture1_;
-*/
-
   GLuint quad_vao_;
   GLuint quad_vbo_;
 
