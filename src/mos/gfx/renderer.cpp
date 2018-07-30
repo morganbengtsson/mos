@@ -24,17 +24,30 @@ const std::map<const unsigned int, std::string> Renderer::shader_types_{
     {GL_FRAGMENT_SHADER, "fragment shader"},
     {GL_GEOMETRY_SHADER, "geometry shader"}};
 
+GLuint wrap_convert(const Texture::Wrap & wrap){
+  const std::map<Texture::Wrap, GLuint> wrap_map{
+      {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::REPEAT, GL_REPEAT}};
+  return wrap_map.at(wrap);
+}
+
+struct FormatPair {
+  GLuint internal_format;
+  GLuint format;
+};
+
+FormatPair format_convert(const Texture::Format &format) {
+  const std::map<Texture::Format, FormatPair> format_map {
+      {Texture::Format::R, {GL_RED, GL_RED}},
+      {Texture::Format::RG, {GL_RG, GL_RG}},
+      {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
+      {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
+      {Texture::Format::RGB, {GL_RGB, GL_RGB}},
+      {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
+  return format_map.at(format);
+}
+
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
-    format_map_{
-        {Texture::Format::R, {GL_RED, GL_RED}},
-        {Texture::Format::RG, {GL_RG, GL_RG}},
-        {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
-        {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
-        {Texture::Format::RGB, {GL_RGB, GL_RGB}},
-        {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}},
-    wrap_map_{
-        {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
-        {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
     standard_target_(resolution),
     multi_target_(resolution),
@@ -143,9 +156,9 @@ void Renderer::load_or_update(const Texture2D &texture) {
     if (texture.layers.modified() > buffer.modified) {
       glBindTexture(GL_TEXTURE_2D, buffer.id);
       glTexImage2D(GL_TEXTURE_2D, 0,
-                   format_map_[texture.format].internal_format,
+                   format_convert(texture.format).internal_format,
                    texture.width(), texture.height(), 0,
-                   format_map_[texture.format].format,
+                   format_convert(texture.format).format,
                    GL_UNSIGNED_BYTE, texture.layers[0].data());
       if (texture.mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -248,7 +261,7 @@ bool Renderer::check_program(const unsigned int program, const std::string &name
   return true;
 }
 
-unsigned int Renderer::create_texture(const Texture2D &texture) {
+GLuint Renderer::create_texture(const Texture2D &texture) {
   GLuint id;
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
@@ -258,13 +271,13 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_map_.at(texture.wrap));
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_map_.at(texture.wrap));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_convert(texture.wrap));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_convert(texture.wrap));
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-               format_map_[texture.format].internal_format,
+               format_convert(texture.format).internal_format,
                texture.width(), texture.height(), 0,
-               format_map_[texture.format].format,
+               format_convert(texture.format).format,
                GL_UNSIGNED_BYTE, texture.layers[0].data());
 
   if (texture.mipmaps) {
@@ -274,7 +287,7 @@ unsigned int Renderer::create_texture(const Texture2D &texture) {
   return id;
 }
 
-unsigned int Renderer::create_texture(const SharedTexture2D &texture) {
+GLuint Renderer::create_texture(const SharedTexture2D &texture) {
   return create_texture(*texture);
 }
 
@@ -1348,7 +1361,7 @@ Renderer::Box::Box() {
 Renderer::Box::~Box() {
 
 }
-Renderer::DataTexture::DataTexture(const GLint internal_format,
+Renderer::Texture2DBuffer::Texture2DBuffer(const GLint internal_format,
                                    const GLint external_format,
                                    const GLint width,
                                    const GLint height,
@@ -1369,7 +1382,7 @@ Renderer::DataTexture::DataTexture(const GLint internal_format,
                external_format, GL_UNSIGNED_BYTE, data);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-Renderer::DataTexture::~DataTexture() {
+Renderer::Texture2DBuffer::~Texture2DBuffer() {
   glDeleteTextures(1, &texture);
 }
 }

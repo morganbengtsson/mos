@@ -178,6 +178,18 @@ private:
     GLint brdf_lut;
   };
 
+  struct Texture2DBuffer {
+    Texture2DBuffer(const GLint internal_format,
+                    const GLint external_format,
+                    const GLint width,
+                    const GLint height,
+                    const GLint filter,
+                    const GLint wrap,
+                    const void * data);
+    ~Texture2DBuffer();
+    GLuint texture;
+  };
+
   void render_texture_targets(const Scene &scene);
 
   void render_scene(const Camera &camera,
@@ -217,9 +229,9 @@ private:
   void clear_depth();
   void clear_color(const glm::vec4 &color);
 
-  unsigned int create_texture(const SharedTexture2D &texture);
+  GLuint create_texture(const SharedTexture2D &texture);
 
-  unsigned int create_texture(const Texture2D &texture);
+  GLuint create_texture(const Texture2D &texture);
 
   static unsigned int create_shader(const std::string &source,
                                     const unsigned int type,
@@ -299,30 +311,10 @@ private:
 
   const Box box;
 
-  struct DataTexture {
-    DataTexture(const GLint internal_format,
-        const GLint external_format,
-        const GLint width,
-        const GLint height,
-        const GLint filter,
-        const GLint wrap,
-        const void * data);
-    ~DataTexture();
-    GLuint texture;
-  };
 
-  const DataTexture black_texture_;
-  const DataTexture white_texture_;
+  const Texture2DBuffer black_texture_;
+  const Texture2DBuffer white_texture_;
   GLuint brdf_lut_texture_;
-
-  struct FormatPair {
-    GLuint internal_format;
-    GLuint format;
-  };
-
-  //TODO: Static though, be aware initialization problem.
-  std::map<Texture::Wrap, GLuint> wrap_map_;
-  std::map<Texture::Format, FormatPair> format_map_;
 
   std::array<int,2> cube_camera_index_;
 
