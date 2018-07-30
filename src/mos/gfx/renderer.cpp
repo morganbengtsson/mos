@@ -69,43 +69,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   clear(color);
 
-  // Render boxes
-  float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
-  };
-
-  glGenBuffers(1, &box_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, box_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  unsigned int elements[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 4, 1, 5, 2, 6, 3, 7};
-
-  glGenBuffers(1, &box_ebo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
-               GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glGenVertexArrays(1, &box_va);
-  glBindVertexArray(box_va);
-  glBindBuffer(GL_ARRAY_BUFFER, box_vbo);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, // attribute
-                        4, // number of elements per vertex, here (x,y,z,w)
-                        GL_FLOAT, // the type of each element
-                        GL_FALSE, // take our values as-is
-                        0,        // no extra data between each position
-                        0         // offset of first element
-  );
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, box_ebo);
-  glBindVertexArray(0);
 
   // Empty texture
-
   glGenTextures(1, &black_texture_);
   glBindTexture(GL_TEXTURE_2D, black_texture_);
 
@@ -425,7 +390,7 @@ void Renderer::render_scene(const Camera &camera,
 void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
 
   glUseProgram(box_program_.program);
-  glBindVertexArray(box_va);
+  glBindVertexArray(box.vertex_array);
 
   for (auto &box : boxes) {
     glm::vec3 size = box.size();
@@ -1369,6 +1334,46 @@ Renderer::Quad::Quad() {
 Renderer::Quad::~Quad() {
   glDeleteBuffers(1, &buffer);
   glDeleteVertexArrays(1, &vertex_array);
+}
+Renderer::Box::Box() {
+  // Render boxes
+  float vertices[] = {
+      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
+      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
+      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
+  };
+
+  glGenBuffers(1, &buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  unsigned int elements[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 4, 1, 5, 2, 6, 3, 7};
+
+  glGenBuffers(1, &element_buffer);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
+               GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glGenVertexArrays(1, &vertex_array);
+  glBindVertexArray(vertex_array);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, // attribute
+                        4, // number of elements per vertex, here (x,y,z,w)
+                        GL_FLOAT, // the type of each element
+                        GL_FALSE, // take our values as-is
+                        0,        // no extra data between each position
+                        0         // offset of first element
+  );
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+  glBindVertexArray(0);
+
+}
+Renderer::Box::~Box() {
+
 }
 }
 }

@@ -290,17 +290,26 @@ private:
 
   const Quad quad_;
 
+  struct Box {
+    Box();
+    ~Box();
+    GLuint buffer;
+    GLuint element_buffer;
+    GLuint vertex_array;
+  };
+
+  const Box box;
+
   /*
-  GLuint quad_vao_;
-  GLuint quad_vbo_;
-  */
+  GLuint box_vbo;
+  GLuint box_ebo;
+  GLuint box_va;
+   */
 
   GLuint black_texture_;
   GLuint white_texture_;
   GLuint brdf_lut_texture_;
-  GLuint box_vbo;
-  GLuint box_ebo;
-  GLuint box_va;
+
 
   struct FormatPair {
     GLuint internal_format;
