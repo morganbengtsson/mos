@@ -66,13 +66,8 @@ public:
 private:
 
   struct Buffer {
-    GLuint id; // TODO const?
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
-  };
-
-  struct PixelBuffer {
     GLuint id;
-    std::future<void> future;
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> modified;
   };
 
   /** Uniforms for the particle shader program. */
@@ -228,8 +223,8 @@ private:
   unsigned int create_texture(const Texture2D &texture);
 
   static unsigned int create_shader(const std::string &source,
-                             const unsigned int type,
-                                    const std::string& name);
+                                    const unsigned int type,
+                                    const std::string &name);
 
   static bool check_shader(const unsigned int shader,
                            const std::string &name);
@@ -240,13 +235,13 @@ private:
   static void link_program(const GLuint program,
                     const std::string& name);
 
-  StandardProgram standard_program_;
-  ParticleProgram particle_program_;
-  BoxProgram box_program_;
-  DepthProgram depth_program_;
-  MultisampleProgram multisample_program_;
-  BloomProgram bloom_program_;
-  BlurProgram blur_program_;
+  const StandardProgram standard_program_;
+  const ParticleProgram particle_program_;
+  const BoxProgram box_program_;
+  const DepthProgram depth_program_;
+  const MultisampleProgram multisample_program_;
+  const BloomProgram bloom_program_;
+  const BlurProgram blur_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
@@ -283,6 +278,7 @@ private:
     GLuint internal_format;
     GLuint format;
   };
+
   //TODO: Static though, be aware initialization problem.
   std::map<Texture::Wrap, GLuint> wrap_map_;
   std::map<Texture::Format, FormatPair> format_map_;
@@ -318,6 +314,9 @@ private:
   /** Environment map targets. */
   const RenderBuffer environment_render_buffer_;
   const std::array<EnvironmentMapTarget, 2> environment_maps_targets;
+
+  static const std::map<const unsigned int, std::string> shader_types_;
+
 };
 }
 }

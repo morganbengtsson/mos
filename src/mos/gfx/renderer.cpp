@@ -19,6 +19,11 @@
 namespace mos {
 namespace gfx {
 
+const std::map<const unsigned int, std::string> Renderer::shader_types_{
+{GL_VERTEX_SHADER, "vertex shader"},
+{GL_FRAGMENT_SHADER, "fragment shader"},
+{GL_GEOMETRY_SHADER, "geometry shader"}};
+
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     format_map_{
         {Texture::Format::R, {GL_RED, GL_RED}},
@@ -358,12 +363,7 @@ unsigned int Renderer::create_shader(const std::string &source,
   auto const *chars = source.c_str();
   auto id = glCreateShader(type);
 
-  std::map<unsigned int, std::string> types{
-      {GL_VERTEX_SHADER, "vertex shader"},
-      {GL_FRAGMENT_SHADER, "fragment shader"},
-      {GL_GEOMETRY_SHADER, "geometry shader"}};
-
-  std::cout << "Compiling " << (!name.empty() ? name + " " : "") << types[type] << std::endl;
+  std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types_.at(type) << std::endl;
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
   return id;
@@ -377,10 +377,6 @@ bool Renderer::check_shader(const unsigned int shader,
   GLint status;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
-  std::map<unsigned int, std::string> types{
-      {GL_VERTEX_SHADER, "vertex shader"},
-      {GL_FRAGMENT_SHADER, "fragment shader"},
-      {GL_GEOMETRY_SHADER, "geometry shader"}};
   GLint type;
   glGetShaderiv(shader, GL_SHADER_TYPE, &type);
 
@@ -390,7 +386,7 @@ bool Renderer::check_shader(const unsigned int shader,
     if (length > 0) {
       std::vector<char> buffer(length);
       glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in " << (!name.empty() ? name + " " : "") << types[type] << std::endl;
+      std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types_.at(type) << std::endl;
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
     return false;
