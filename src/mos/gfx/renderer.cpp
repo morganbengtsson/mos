@@ -262,29 +262,8 @@ bool Renderer::check_program(const unsigned int program, const std::string &name
 }
 
 GLuint Renderer::create_texture(const Texture2D &texture) {
-  GLuint id;
-  glGenTextures(1, &id);
-  glBindTexture(GL_TEXTURE_2D, id);
-
-  GLfloat sampling = texture.mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
-
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_convert(texture.wrap));
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_convert(texture.wrap));
-
-  glTexImage2D(GL_TEXTURE_2D, 0,
-               format_convert(texture.format).internal_format,
-               texture.width(), texture.height(), 0,
-               format_convert(texture.format).format,
-               GL_UNSIGNED_BYTE, texture.layers[0].data());
-
-  if (texture.mipmaps) {
-    glGenerateMipmap(GL_TEXTURE_2D);
-  };
-  glBindTexture(GL_TEXTURE_2D, 0);
-  return id;
+  auto buffer = TextureBuffer2D(texture);
+  return buffer.texture;
 }
 
 GLuint Renderer::create_texture(const SharedTexture2D &texture) {
@@ -1388,9 +1367,15 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 Renderer::TextureBuffer2D::~TextureBuffer2D() {
-  glDeleteTextures(1, &texture);
+  //glDeleteTextures(1, &texture);
 }
-Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) : TextureBuffer2D(format_convert(texture_2d.format).internal_format
-, format_convert(texture_2d.format).format, texture_2d.width(), texture_2d.height(), wrap_convert(texture_2d.wrap), texture_2d.layers[0].data(), texture_2d.mipmaps){}
+Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) :
+TextureBuffer2D(format_convert(texture_2d.format).internal_format
+, format_convert(texture_2d.format).format,
+texture_2d.width(),
+texture_2d.height(),
+wrap_convert(texture_2d.wrap),
+texture_2d.layers[0].data(),
+texture_2d.mipmaps){}
 }
 }
