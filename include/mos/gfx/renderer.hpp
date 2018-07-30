@@ -71,10 +71,9 @@ private:
     TimePoint modified;
   };
 
-  struct TextureBuffer2D {
+  class TextureBuffer2D {
   public:
     explicit TextureBuffer2D(const Texture2D &texture_2d);
-    TextureBuffer2D(){};
     TextureBuffer2D(const GLuint internal_format,
                     const GLuint external_format,
                     const int width,
@@ -86,10 +85,11 @@ private:
     ~TextureBuffer2D();
     TextureBuffer2D (TextureBuffer2D && other) = default;
     TextureBuffer2D & operator=(TextureBuffer2D &&) = default;
-    TextureBuffer2D( const TextureBuffer2D& ) = delete;
-    TextureBuffer2D& operator=( const TextureBuffer2D& ) = delete;
     GLuint texture;
     TimePoint modified;
+  private:
+    TextureBuffer2D(const TextureBuffer2D& ) = delete;
+    TextureBuffer2D & operator=(const TextureBuffer2D& ) = delete;
   };
 
   /** Uniforms for the particle shader program. */
@@ -267,7 +267,7 @@ private:
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
-  std::unordered_map<unsigned int, TextureBuffer2D> textures_;
+  std::unordered_map<unsigned int, std::shared_ptr<TextureBuffer2D>> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
