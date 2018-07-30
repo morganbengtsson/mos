@@ -20,9 +20,9 @@ namespace mos {
 namespace gfx {
 
 const std::map<const unsigned int, std::string> Renderer::shader_types_{
-{GL_VERTEX_SHADER, "vertex shader"},
-{GL_FRAGMENT_SHADER, "fragment shader"},
-{GL_GEOMETRY_SHADER, "geometry shader"}};
+    {GL_VERTEX_SHADER, "vertex shader"},
+    {GL_FRAGMENT_SHADER, "fragment shader"},
+    {GL_GEOMETRY_SHADER, "geometry shader"}};
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     format_map_{
@@ -46,7 +46,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     environment_render_buffer_(128),
     environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
                              EnvironmentMapTarget(environment_render_buffer_)},
-                             quad_(){
+    quad_() {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -101,7 +101,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
-
 
 }
 
@@ -1374,6 +1373,30 @@ Renderer::Box::Box() {
 }
 Renderer::Box::~Box() {
 
+}
+Renderer::DataTexture::DataTexture(const GLint internal_format,
+                                   const GLint external_format,
+                                   const GLint width,
+                                   const GLint height,
+                                   const GLint filter,
+                                   const GLint wrap,
+                                   const void *data) {
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+
+  glTexImage2D(GL_TEXTURE_2D, 0,
+      internal_format,
+               width, height, 0,
+               external_format, GL_UNSIGNED_BYTE, data);
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+Renderer::DataTexture::~DataTexture() {
+  glDeleteTextures(1, &texture);
 }
 }
 }

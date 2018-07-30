@@ -299,6 +299,18 @@ private:
 
   const Box box;
 
+  struct DataTexture {
+    DataTexture(const GLint internal_format,
+        const GLint external_format,
+        const GLint width,
+        const GLint height,
+        const GLint filter,
+        const GLint wrap,
+        const void * data);
+    ~DataTexture();
+    GLuint texture;
+  };
+
   GLuint black_texture_;
   GLuint white_texture_;
   GLuint brdf_lut_texture_;
