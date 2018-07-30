@@ -141,7 +141,6 @@ private:
     };
     std::array<EnvironmentUniforms, 2> environment_maps;
 
-
     GLint material_albedo_map;
     GLint material_emission_map;
     GLint material_normal_map;
@@ -300,16 +299,9 @@ private:
 
   const Box box;
 
-  /*
-  GLuint box_vbo;
-  GLuint box_ebo;
-  GLuint box_va;
-   */
-
   GLuint black_texture_;
   GLuint white_texture_;
   GLuint brdf_lut_texture_;
-
 
   struct FormatPair {
     GLuint internal_format;
