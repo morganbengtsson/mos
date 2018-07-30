@@ -37,6 +37,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
     standard_target_(resolution),
+    multi_target_(resolution),
     shadow_maps_render_buffer_(512),
     shadow_maps_{ShadowMapTarget(shadow_maps_render_buffer_),
                  ShadowMapTarget(shadow_maps_render_buffer_)},
@@ -132,36 +133,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
-
-  glGenFramebuffers(1, &color_fbo_);
-  glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
-
-  glGenTextures(1, &color_texture0_);
-  glBindTexture(GL_TEXTURE_2D, color_texture0_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture0_, 0);
-
-  glGenTextures(1, &bright_texture_);
-  glBindTexture(GL_TEXTURE_2D, bright_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bright_texture_, 0);
-
-  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-  glDrawBuffers(2, attachments);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete");
-  }
 
   //Blur
   glGenFramebuffers(1, &blur_fbo0_);
@@ -951,7 +922,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   }
 
   //RenderQuad
-  glBindFramebuffer(GL_FRAMEBUFFER, color_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
   glUseProgram(multisample_program_.program);
 
   glBindVertexArray(quad_vao_);
@@ -972,7 +943,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUseProgram(blur_program_.program);
   glBindVertexArray(quad_vao_);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, bright_texture_);
+  glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
   glUniform1i(blur_program_.color_texture, 0);
   GLint horizontal = false;
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
@@ -999,7 +970,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_vao_);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, color_texture0_);
+  glBindTexture(GL_TEXTURE_2D, multi_target_.color_texture);
   glUniform1i(bloom_program_.color_texture, 0);
 
   glActiveTexture(GL_TEXTURE1);
@@ -1363,6 +1334,42 @@ Renderer::StandardTarget::~StandardTarget() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
   glDeleteTextures(1, &depth_texture);
+}
+Renderer::MultiTarget::MultiTarget(const glm::vec2 &resolution) {
+  glGenFramebuffers(1, &frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+  glGenTextures(1, &color_texture);
+  glBindTexture(GL_TEXTURE_2D, color_texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
+
+  glGenTextures(1, &bright_texture);
+  glBindTexture(GL_TEXTURE_2D, bright_texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bright_texture, 0);
+
+  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, attachments);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+}
+Renderer::MultiTarget::~MultiTarget() {
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &color_texture);
+  glDeleteTextures(1, &bright_texture);
 }
 }
 }

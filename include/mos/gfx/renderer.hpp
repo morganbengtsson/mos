@@ -261,9 +261,15 @@ private:
 
   const StandardTarget standard_target_;
 
-  GLuint color_fbo_;
-  GLuint color_texture0_;
-  GLuint bright_texture_;
+  struct MultiTarget {
+    MultiTarget(const glm::vec2 &resolution);
+    ~MultiTarget();
+    GLuint frame_buffer;
+    GLuint color_texture;
+    GLuint bright_texture;
+  };
+
+  const MultiTarget multi_target_;
 
   GLuint blur_fbo0_;
   GLuint blur_fbo1_;
