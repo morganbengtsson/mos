@@ -233,9 +233,9 @@ private:
   void clear_depth();
   void clear_color(const glm::vec4 &color);
 
-  GLuint create_texture(const SharedTexture2D &texture);
+  TextureBuffer2D create_texture(const SharedTexture2D &texture);
 
-  GLuint create_texture(const Texture2D &texture);
+  TextureBuffer2D create_texture(const Texture2D &texture);
 
   static unsigned int create_shader(const std::string &source,
                                     const unsigned int type,
@@ -261,7 +261,7 @@ private:
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
-  std::unordered_map<unsigned int, Buffer> textures_;
+  std::unordered_map<unsigned int, TextureBuffer2D> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;

@@ -88,7 +88,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   auto brdf_lut_texture = Texture2D("assets/brdfLUT.png", false);
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
-  brdf_lut_texture_ = create_texture(brdf_lut_texture);
+  brdf_lut_texture_ = create_texture(brdf_lut_texture).texture; //TODO
 }
 
 Renderer::~Renderer() {
@@ -102,10 +102,6 @@ Renderer::~Renderer() {
 
   for (auto &pb : pixel_buffers_) {
     glDeleteBuffers(1, &pb.second);
-  }
-
-  for (auto &t : textures_) {
-    glDeleteTextures(1, &t.second.id);
   }
 
   for (auto &ab : array_buffers_) {
@@ -149,12 +145,12 @@ void Renderer::unload(const Model &model) {
 
 void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    GLuint gl_id = create_texture(texture);
-    textures_.insert({texture.id(), Buffer{gl_id, texture.layers.modified()}});
+    auto buffer = create_texture(texture);
+    textures_.insert({texture.id(), buffer});
   } else {
     auto buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer.modified) {
-      glBindTexture(GL_TEXTURE_2D, buffer.id);
+      glBindTexture(GL_TEXTURE_2D, buffer.texture);
       glTexImage2D(GL_TEXTURE_2D, 0,
                    format_convert(texture.format).internal_format,
                    texture.width(), texture.height(), 0,
@@ -178,7 +174,7 @@ void Renderer::load(const SharedTexture2D &texture) {
 void Renderer::unload(const SharedTexture2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) != textures_.end()) {
-      auto gl_id = textures_.at(texture->id()).id;
+      auto gl_id = textures_.at(texture->id()).texture;
       glDeleteTextures(1, &gl_id);
       textures_.erase(texture->id());
     }
@@ -186,9 +182,6 @@ void Renderer::unload(const SharedTexture2D &texture) {
 }
 
 void Renderer::clear_buffers() {
-  for (auto &texture : textures_) {
-    glDeleteTextures(1, &texture.second.id);
-  }
   textures_.clear();
 
   for (auto &ab : array_buffers_) {
@@ -261,12 +254,11 @@ bool Renderer::check_program(const unsigned int program, const std::string &name
   return true;
 }
 
-GLuint Renderer::create_texture(const Texture2D &texture) {
-  auto buffer = TextureBuffer2D(texture);
-  return buffer.texture;
+Renderer::TextureBuffer2D Renderer::create_texture(const Texture2D &texture) {
+  return TextureBuffer2D(texture);
 }
 
-GLuint Renderer::create_texture(const SharedTexture2D &texture) {
+Renderer::TextureBuffer2D Renderer::create_texture(const SharedTexture2D &texture) {
   return create_texture(*texture);
 }
 
@@ -425,7 +417,7 @@ void Renderer::render_particles(const ParticleClouds &clouds,
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                 ? textures_.at(particles.emission_map->id()).id
+                                 ? textures_.at(particles.emission_map->id()).texture
                                  : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
@@ -458,32 +450,32 @@ void Renderer::render_model(const Model &model,
 
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                 ? textures_.at(model.material.albedo_map->id()).id
+                                 ? textures_.at(model.material.albedo_map->id()).texture
                                  : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                 ? textures_.at(model.material.emission_map->id()).id
+                                 ? textures_.at(model.material.emission_map->id()).texture
                                  : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE7);
     glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                 ? textures_.at(model.material.normal_map->id()).id
+                                 ? textures_.at(model.material.normal_map->id()).texture
                                  : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
-                                 ? textures_.at(model.material.metallic_map->id()).id
+                                 ? textures_.at(model.material.metallic_map->id()).texture
                                  : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE9);
     glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                                 ? textures_.at(model.material.roughness_map->id()).id
+                                 ? textures_.at(model.material.roughness_map->id()).texture
                                  : black_texture_.texture);
 
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
-                                 ? textures_.at(model.material.ambient_occlusion_map->id()).id
+                                 ? textures_.at(model.material.ambient_occlusion_map->id()).texture
                                  : white_texture_.texture);
 
     static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
@@ -716,11 +708,11 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      GLuint texture_id = create_texture(target.texture);
+      auto buffer = create_texture(target.texture);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, texture_id, 0);
+                             GL_TEXTURE_2D, buffer.texture, 0);
       textures_.insert({target.texture->id(),
-                        Buffer{texture_id, target.texture->layers.modified()}});
+                        buffer});
 
       GLuint depthrenderbuffer_id;
       glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -742,7 +734,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
     auto fb = frame_buffers_.at(target.target.id());
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
 
-    auto texture_id = textures_.at(target.texture->id()).id;
+    auto texture_id = textures_.at(target.texture->id()).texture;
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
