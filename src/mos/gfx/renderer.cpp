@@ -1361,7 +1361,7 @@ Renderer::Box::Box() {
 Renderer::Box::~Box() {
 
 }
-Renderer::Texture2DBuffer::Texture2DBuffer(const GLint internal_format,
+Renderer::TextureBuffer2D::TextureBuffer2D(const GLint internal_format,
                                    const GLint external_format,
                                    const GLint width,
                                    const GLint height,
@@ -1382,7 +1382,7 @@ Renderer::Texture2DBuffer::Texture2DBuffer(const GLint internal_format,
                external_format, GL_UNSIGNED_BYTE, data);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-Renderer::Texture2DBuffer::~Texture2DBuffer() {
+Renderer::TextureBuffer2D::~TextureBuffer2D() {
   glDeleteTextures(1, &texture);
 }
 }

@@ -178,15 +178,15 @@ private:
     GLint brdf_lut;
   };
 
-  struct Texture2DBuffer {
-    Texture2DBuffer(const GLint internal_format,
+  struct TextureBuffer2D {
+    TextureBuffer2D(const GLint internal_format,
                     const GLint external_format,
                     const GLint width,
                     const GLint height,
                     const GLint filter,
                     const GLint wrap,
                     const void * data);
-    ~Texture2DBuffer();
+    ~TextureBuffer2D();
     GLuint texture;
   };
 
@@ -312,8 +312,8 @@ private:
   const Box box;
 
 
-  const Texture2DBuffer black_texture_;
-  const Texture2DBuffer white_texture_;
+  const TextureBuffer2D black_texture_;
+  const TextureBuffer2D white_texture_;
   GLuint brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
