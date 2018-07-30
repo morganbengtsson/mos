@@ -36,6 +36,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
         {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
         {Texture::Wrap::REPEAT, GL_REPEAT}},
     cube_camera_index_({0, 0}),
+    multi_target_(resolution),
     shadow_maps_render_buffer_(512),
     shadow_maps_{ShadowMapTarget(shadow_maps_render_buffer_),
                  ShadowMapTarget(shadow_maps_render_buffer_)},
@@ -131,27 +132,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   brdf_lut_texture.format = Texture::Format::RGB;
   brdf_lut_texture.wrap = Texture::Wrap::CLAMP;
   brdf_lut_texture_ = create_texture(brdf_lut_texture);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-  glGenFramebuffers(1, &multi_fbo_);
-  glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
-
-  glGenTextures(1, &multi_texture_);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, multi_texture_, 0);
-
-  glGenTextures(1, &multi_depth_texture_);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
-  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER,
-                         GL_DEPTH_ATTACHMENT,
-                         GL_TEXTURE_2D_MULTISAMPLE,
-                         multi_depth_texture_,
-                         0);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");
@@ -967,7 +947,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   render_environment(scenes[0], color);
   render_texture_targets(scenes[0]);
   //}
-  glBindFramebuffer(GL_FRAMEBUFFER, multi_fbo_);
+  glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
   clear(color);
 
   for (auto it = scenes.begin(); it != scenes.end(); it++) {
@@ -980,11 +960,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_vao_);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_texture_);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_target_.texture);
   glUniform1i(multisample_program_.color_texture, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_depth_texture_);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, multi_target_.depth_texture);
   glUniform1i(multisample_program_.depth_texture, 1);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1355,6 +1335,37 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
 Renderer::EnvironmentMapTarget::~EnvironmentMapTarget() {
   glDeleteTextures(1, &texture);
   glDeleteFramebuffers(1, &frame_buffer);
+}
+
+Renderer::MultiTarget::MultiTarget(const glm::vec2 &resolution) {
+  glGenFramebuffers(1, &frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture, 0);
+
+  glGenTextures(1, &depth_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
+  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_DEPTH_ATTACHMENT,
+                         GL_TEXTURE_2D_MULTISAMPLE,
+                         depth_texture,
+                         0);
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete.");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+Renderer::MultiTarget::~MultiTarget() {
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &texture);
+  glDeleteTextures(1, &depth_texture);
 }
 }
 }

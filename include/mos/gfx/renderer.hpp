@@ -251,9 +251,15 @@ private:
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  GLuint multi_fbo_;
-  GLuint multi_texture_;
-  GLuint multi_depth_texture_;
+  struct MultiTarget{
+    MultiTarget(const glm::vec2 &resolution);
+    ~MultiTarget();
+    GLuint frame_buffer;
+    GLuint texture;
+    GLuint depth_texture;
+  };
+
+  const MultiTarget multi_target_;
 
   GLuint color_fbo_;
   GLuint color_texture0_;
