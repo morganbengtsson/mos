@@ -787,6 +787,8 @@ Renderer::DepthProgram::DepthProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
 
   model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
@@ -813,6 +815,8 @@ Renderer::StandardProgram::StandardProgram() {
   glBindAttribLocation(program, 3, "uv");
 
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
 
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
@@ -889,6 +893,8 @@ Renderer::ParticleProgram::ParticleProgram() {
   glBindAttribLocation(program, 1, "color");
 
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
   mvp = glGetUniformLocation(program, "model_view_projection"),
   mv = glGetUniformLocation(program, "model_view"),
@@ -913,6 +919,8 @@ Renderer::BoxProgram::BoxProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
 
   mvp = glGetUniformLocation(program, "model_view_projection");
@@ -935,6 +943,8 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
 
   color_texture = glGetUniformLocation(program, "color_texture");
@@ -959,6 +969,8 @@ Renderer::BloomProgram::BloomProgram() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
   color_texture = glGetUniformLocation(program, "color_texture");
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
@@ -983,6 +995,8 @@ Renderer::BlurProgram::BlurProgram() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
   check(name);
   color_texture = glGetUniformLocation(program, "color_texture");
   horizontal = glGetUniformLocation(program, "horizontal");
@@ -1333,7 +1347,7 @@ void Renderer::Program::check(const std::string& name) {
       std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
     }
   }
-  assert(!status);
+  assert(status);
 }
 void Renderer::Program::link(const std::string& name) {
   std::cout << "Linking: " + name + " program." << std::endl;
