@@ -101,10 +101,9 @@ private:
   };
 
   /** Uniforms for the particle shader program. */
-  struct ParticleProgram {
+  struct ParticleProgram : public Program {
     ParticleProgram();
     ~ParticleProgram();
-    GLuint program;
     GLint mvp;
     GLint mv;
     GLint p;
@@ -113,57 +112,51 @@ private:
   };
 
   /** Uniforms for the bounding box shader program. */
-  struct BoxProgram {
+  struct BoxProgram : public Program {
     BoxProgram();
     ~BoxProgram();
-    GLuint program;
     GLint mvp;
   };
 
-  struct MultisampleProgram {
+  struct MultisampleProgram : public Program {
     MultisampleProgram();
     ~MultisampleProgram();
-    GLuint program;
     GLint color_texture;
     GLint depth_texture;
   };
 
-  struct BloomProgram {
+  struct BloomProgram : public Program {
     BloomProgram();
     ~BloomProgram();
-    GLuint program;
     GLint color_texture;
     GLint bright_color_texture;
     GLint strength;
   };
 
-  struct BlurProgram {
+  struct BlurProgram : public Program {
     BlurProgram();
     ~BlurProgram();
-    GLuint program;
     GLint color_texture;
     GLint horizontal;
   };
 
-  struct DepthProgram {
+  struct DepthProgram : public Program {
     DepthProgram();
     ~DepthProgram();
-    GLuint program;
     GLint model_view_projection_matrix;
   };
 
   /** Uniforms for the standard shader. */
-  class StandardProgram {
+  class StandardProgram : public Program {
   public:
     StandardProgram();
     ~StandardProgram();
-    GLuint program;
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
     std::array<GLint,2> depth_bias_mvps;
 
-    struct EnvironmentUniforms{
+    struct EnvironmentUniforms {
       GLint map;
       GLint position;
       GLint extent;
