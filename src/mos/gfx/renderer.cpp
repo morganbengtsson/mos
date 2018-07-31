@@ -141,7 +141,7 @@ void Renderer::unload(const Model &model) {
 
 void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    textures_.insert({texture.id(), std::make_shared<TextureBuffer2D>(texture)});
+    textures_.insert({texture.id(), std::make_unique<TextureBuffer2D>(texture)});
   } else {
     auto & buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer->modified) {
@@ -706,7 +706,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
       auto buffer = create_texture(target.texture);
 
       textures_.insert({target.texture->id(),
-                        std::make_shared<TextureBuffer2D>(*target.texture)});
+                        std::make_unique<TextureBuffer2D>(*target.texture)});
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_2D, textures_.at(target.texture->id())->texture, 0);

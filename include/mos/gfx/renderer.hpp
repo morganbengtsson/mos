@@ -267,7 +267,7 @@ private:
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, GLuint> pixel_buffers_;
-  std::unordered_map<unsigned int, std::shared_ptr<TextureBuffer2D>> textures_;
+  std::unordered_map<unsigned int, std::unique_ptr<TextureBuffer2D>> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
