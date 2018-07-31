@@ -267,7 +267,7 @@ private:
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  struct StandardTarget{
+  struct StandardTarget {
     StandardTarget(const glm::vec2 &resolution);
     ~StandardTarget();
     GLuint frame_buffer;
