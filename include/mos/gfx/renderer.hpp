@@ -239,10 +239,6 @@ private:
   void clear_depth();
   void clear_color(const glm::vec4 &color);
 
-  TextureBuffer2D create_texture(const SharedTexture2D &texture);
-
-  TextureBuffer2D create_texture(const Texture2D &texture);
-
   static unsigned int create_shader(const std::string &source,
                                     const unsigned int type,
                                     const std::string &name);
@@ -321,10 +317,9 @@ private:
 
   const Box box;
 
-
   const TextureBuffer2D black_texture_;
   const TextureBuffer2D white_texture_;
-  TextureBuffer2D brdf_lut_texture_;
+  const TextureBuffer2D brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
 

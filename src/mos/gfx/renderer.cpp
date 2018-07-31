@@ -249,14 +249,6 @@ bool Renderer::check_program(const unsigned int program, const std::string &name
   return true;
 }
 
-Renderer::TextureBuffer2D Renderer::create_texture(const Texture2D &texture) {
-  return TextureBuffer2D(texture);
-}
-
-Renderer::TextureBuffer2D Renderer::create_texture(const SharedTexture2D &texture) {
-  return create_texture(*texture);
-}
-
 void Renderer::render_scene(const Camera &camera,
                             const Scene &scene,
                             const glm::vec2 &resolution) {
@@ -703,7 +695,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      auto buffer = create_texture(target.texture);
+      auto buffer = TextureBuffer2D(*target.texture);
 
       textures_.insert({target.texture->id(),
                         std::make_unique<TextureBuffer2D>(*target.texture)});
