@@ -83,13 +83,8 @@ private:
                     const bool mipmaps,
                     const TimePoint &modified = std::chrono::system_clock::now());
     ~TextureBuffer2D();
-    TextureBuffer2D (TextureBuffer2D && other) = default;
-    TextureBuffer2D & operator=(TextureBuffer2D &&) = default;
     GLuint texture;
     TimePoint modified;
-  private:
-    TextureBuffer2D(const TextureBuffer2D& ) = delete;
-    TextureBuffer2D & operator=(const TextureBuffer2D& ) = delete;
   };
 
   /** Uniforms for the particle shader program. */

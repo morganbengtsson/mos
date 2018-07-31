@@ -1349,7 +1349,6 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 Renderer::TextureBuffer2D::~TextureBuffer2D() {
-  std::cout << "Delete: " << texture << std::endl;
   glDeleteTextures(1, &texture);
 }
 Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) :
