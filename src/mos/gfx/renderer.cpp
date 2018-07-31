@@ -1374,6 +1374,23 @@ Renderer::Shader::Shader(const std::string &source,
   std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
+
+  assert(!id);
+
+  GLint status;
+  glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+
+  if (status == GL_FALSE) {
+    int length;
+    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+    if (length > 0) {
+      std::vector<char> buffer(length);
+      glGetShaderInfoLog(id, length, NULL, &buffer[0]);
+      std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
+      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+    }
+  }
+  assert(status);
 }
 Renderer::Shader::~Shader() {
   glDeleteShader(id);
