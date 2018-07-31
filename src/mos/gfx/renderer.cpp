@@ -190,28 +190,6 @@ void Renderer::clear_buffers() {
   element_array_buffers_.clear();
 }
 
-bool Renderer::check_program(const unsigned int program, const std::string &name = "") {
-  if (!program) {
-    return false;
-  }
-
-  GLint status;
-  glGetShaderiv(program, GL_LINK_STATUS, &status);
-
-  if (status == GL_FALSE) {
-    int length;
-    glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
-    if (length > 0) {
-      std::vector<char> buffer(length);
-      glGetShaderInfoLog(program, length, NULL, &buffer[0]);
-      std::cerr << "Link failure in" + name + " program" << std::endl;
-      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
-    }
-    return false;
-  }
-  return true;
-}
-
 void Renderer::render_scene(const Camera &camera,
                             const Scene &scene,
                             const glm::vec2 &resolution) {
@@ -722,10 +700,6 @@ void Renderer::render_model_depth(const Model &model,
   }
 }
 
-void Renderer::link_program(const GLuint program, const std::string &name = "") {
-  std::cout << "Linking " + name + " program." << std::endl;
-  glLinkProgram(program);
-}
 void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::ivec2 &resolution) {
   for (auto &scene : scenes) {
     load(scene.models);
@@ -816,8 +790,8 @@ Renderer::DepthProgram::DepthProgram() {
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
 
   model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
 }
@@ -842,8 +816,8 @@ Renderer::StandardProgram::StandardProgram() {
   glBindAttribLocation(program, 2, "tangent");
   glBindAttribLocation(program, 3, "uv");
 
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
 
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
@@ -918,8 +892,8 @@ Renderer::ParticleProgram::ParticleProgram() {
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
 
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
   mvp = glGetUniformLocation(program, "model_view_projection"),
   mv = glGetUniformLocation(program, "model_view"),
   p = glGetUniformLocation(program, "projection"),
@@ -942,8 +916,8 @@ Renderer::BoxProgram::BoxProgram() {
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
 
   mvp = glGetUniformLocation(program, "model_view_projection");
 }
@@ -964,8 +938,8 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
 
   color_texture = glGetUniformLocation(program, "color_texture");
   depth_texture = glGetUniformLocation(program, "depth_texture");
@@ -988,8 +962,8 @@ Renderer::BloomProgram::BloomProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
   color_texture = glGetUniformLocation(program, "color_texture");
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
   strength = glGetUniformLocation(program, "strength");
@@ -1012,8 +986,8 @@ Renderer::BlurProgram::BlurProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
-  link_program(program, name);
-  check_program(program, name);
+  link(name);
+  check(name);
   color_texture = glGetUniformLocation(program, "color_texture");
   horizontal = glGetUniformLocation(program, "horizontal");
 }
@@ -1344,10 +1318,30 @@ Renderer::Shader::~Shader() {
 }
 Renderer::Program::Program() {
   program = glCreateProgram();
-
+  assert(program);
 }
 Renderer::Program::~Program() {
   glDeleteProgram(program);
+}
+void Renderer::Program::check(const std::string& name) {
+  GLint status;
+  glGetShaderiv(program, GL_LINK_STATUS, &status);
+
+  if (status == GL_FALSE) {
+    int length;
+    glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
+    if (length > 0) {
+      std::vector<char> buffer(length);
+      glGetShaderInfoLog(program, length, NULL, &buffer[0]);
+      std::cerr << "Link failure in" + name + " program" << std::endl;
+      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+    }
+  }
+  assert(!status);
+}
+void Renderer::Program::link(const std::string& name) {
+  std::cout << "Linking: " + name + " program." << std::endl;
+  glLinkProgram(program);
 }
 }
 }

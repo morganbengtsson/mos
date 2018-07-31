@@ -98,6 +98,8 @@ private:
     Program();
     ~Program();
     GLuint program;
+    void check(const std::string &name);
+    void link(const std::string &name);
   };
 
   /** Uniforms for the particle shader program. */
@@ -239,12 +241,6 @@ private:
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
-
-  static bool check_program(const unsigned int program,
-                            const std::string &name);
-
-  static void link_program(const GLuint program,
-                    const std::string& name);
 
   const StandardProgram standard_program_;
   const ParticleProgram particle_program_;
