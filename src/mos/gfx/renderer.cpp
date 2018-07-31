@@ -1346,5 +1346,8 @@ void Renderer::Program::link(const std::string& name) {
 Renderer::Buffer::~Buffer() {
   glDeleteBuffers(1, &id);
 }
+Renderer::VertexBuffer::VertexBuffer() {
+
+}
 }
 }
