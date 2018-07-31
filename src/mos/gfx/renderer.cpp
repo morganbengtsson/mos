@@ -1343,5 +1343,8 @@ void Renderer::Program::link(const std::string& name) {
   std::cout << "Linking: " + name + " program." << std::endl;
   glLinkProgram(program);
 }
+Renderer::Buffer::~Buffer() {
+  glDeleteBuffers(1, &id);
+}
 }
 }
