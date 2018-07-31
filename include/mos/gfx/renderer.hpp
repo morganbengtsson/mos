@@ -69,15 +69,6 @@ private:
   struct Buffer {
     GLuint id;
     TimePoint modified;
-    ~Buffer();
-  };
-
-  struct VertexBuffer: public Buffer {
-    VertexBuffer();
-  };
-
-  struct ElementBuffer: public Buffer {
-    ElementBuffer();
   };
 
   class TextureBuffer2D {
