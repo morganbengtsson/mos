@@ -190,43 +190,6 @@ void Renderer::clear_buffers() {
   element_array_buffers_.clear();
 }
 
-unsigned int Renderer::create_shader(const std::string &source,
-                                     const unsigned int type,
-                                     const std::string &name) {
-  auto const *chars = source.c_str();
-  auto id = glCreateShader(type);
-
-  std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types_.at(type) << std::endl;
-  glShaderSource(id, 1, &chars, NULL);
-  glCompileShader(id);
-  return id;
-}
-
-bool Renderer::check_shader(const unsigned int shader,
-                            const std::string &name) {
-  if (!shader) {
-    return false;
-  }
-  GLint status;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-
-  GLint type;
-  glGetShaderiv(shader, GL_SHADER_TYPE, &type);
-
-  if (status == GL_FALSE) {
-    int length;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
-    if (length > 0) {
-      std::vector<char> buffer(length);
-      glGetShaderInfoLog(shader, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types_.at(type) << std::endl;
-      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
-    }
-    return false;
-  }
-  return true;
-}
-
 bool Renderer::check_program(const unsigned int program, const std::string &name = "") {
   if (!program) {
     return false;
@@ -845,15 +808,13 @@ Renderer::DepthProgram::DepthProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  check_shader(vertex_shader, name);
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  check_shader(fragment_shader, name);
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
 
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   link_program(program, name);
   check_program(program, name);
@@ -869,16 +830,12 @@ Renderer::StandardProgram::StandardProgram() {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-
-  auto fragment_shader =
-      create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
 
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "normal");
@@ -952,14 +909,12 @@ Renderer::ParticleProgram::ParticleProgram() {
   std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
 
@@ -979,15 +934,13 @@ Renderer::BoxProgram::BoxProgram() {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
 
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   link_program(program, name);
   check_program(program, name);
@@ -1002,15 +955,13 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
 
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link_program(program, name);
@@ -1028,15 +979,13 @@ Renderer::BloomProgram::BloomProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
 
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link_program(program, name);
@@ -1054,15 +1003,13 @@ Renderer::BlurProgram::BlurProgram() {
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
-  auto vertex_shader = create_shader(vert_source, GL_VERTEX_SHADER, name);
-  assert(check_shader(vertex_shader, name));
-  auto fragment_shader = create_shader(frag_source, GL_FRAGMENT_SHADER, name);
-  assert(check_shader(fragment_shader, name));
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
   program = glCreateProgram();
 
-  glAttachShader(program, vertex_shader);
-  glAttachShader(program, fragment_shader);
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link_program(program, name);
@@ -1375,7 +1322,7 @@ Renderer::Shader::Shader(const std::string &source,
   glShaderSource(id, 1, &chars, NULL);
   glCompileShader(id);
 
-  assert(!id);
+  assert(id);
 
   GLint status;
   glGetShaderiv(id, GL_COMPILE_STATUS, &status);

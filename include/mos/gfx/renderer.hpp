@@ -91,7 +91,6 @@ private:
   public:
     Shader(const std::string &source, const GLuint type, const std::string& name);
     ~Shader();
-  private:
     GLuint id;
   };
 
@@ -241,13 +240,6 @@ private:
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
-
-  static unsigned int create_shader(const std::string &source,
-                                    const unsigned int type,
-                                    const std::string &name);
-
-  static bool check_shader(const unsigned int shader,
-                           const std::string &name);
 
   static bool check_program(const unsigned int program,
                             const std::string &name);
