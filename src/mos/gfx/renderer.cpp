@@ -96,10 +96,6 @@ Renderer::~Renderer() {
     glDeleteRenderbuffers(1, &rb.second);
   }
 
-  for (auto &pb : pixel_buffers_) {
-    glDeleteBuffers(1, &pb.second);
-  }
-
   for (auto &ab : array_buffers_) {
     glDeleteBuffers(1, &ab.second.id);
   }
