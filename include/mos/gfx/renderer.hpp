@@ -94,6 +94,12 @@ private:
     GLuint id;
   };
 
+  struct Program {
+    Program();
+    ~Program();
+    GLuint program;
+  };
+
   /** Uniforms for the particle shader program. */
   struct ParticleProgram {
     ParticleProgram();

@@ -1342,5 +1342,12 @@ Renderer::Shader::Shader(const std::string &source,
 Renderer::Shader::~Shader() {
   glDeleteShader(id);
 }
+Renderer::Program::Program() {
+  program = glCreateProgram();
+
+}
+Renderer::Program::~Program() {
+  glDeleteProgram(program);
+}
 }
 }
