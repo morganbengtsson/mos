@@ -1359,5 +1359,24 @@ texture_2d.height(),
 wrap_convert(texture_2d.wrap),
 texture_2d.layers[0].data(),
 texture_2d.mipmaps){}
+
+Renderer::Shader::Shader(const std::string &source,
+    const GLuint type,
+    const std::string &name) {
+
+  static const std::map<const unsigned int, std::string> shader_types{
+      {GL_VERTEX_SHADER, "vertex shader"},
+      {GL_FRAGMENT_SHADER, "fragment shader"},
+      {GL_GEOMETRY_SHADER, "geometry shader"}};
+
+  auto const *chars = source.c_str();
+  id = glCreateShader(type);
+  std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
+  glShaderSource(id, 1, &chars, NULL);
+  glCompileShader(id);
+}
+Renderer::Shader::~Shader() {
+  glDeleteShader(id);
+}
 }
 }

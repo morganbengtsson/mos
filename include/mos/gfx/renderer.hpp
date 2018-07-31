@@ -87,6 +87,14 @@ private:
     TimePoint modified;
   };
 
+  class Shader {
+  public:
+    Shader(const std::string &source, const GLuint type, const std::string& name);
+    ~Shader();
+  private:
+    GLuint id;
+  };
+
   /** Uniforms for the particle shader program. */
   struct ParticleProgram {
     ParticleProgram();
