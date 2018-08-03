@@ -68,6 +68,11 @@ public:
   void push_back(const T &item){
     items_.push_back(item);
   }
+
+  void append(const Container<T> &container) {
+    insert(end(), container.begin(), container.end());
+  }
+
 private:
   Items items_;
 };
