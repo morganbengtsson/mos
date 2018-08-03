@@ -6,22 +6,17 @@
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/target.hpp>
-#include <mos/gfx/box.hpp>
-#include <mos/gfx/particle_cloud.hpp>
+#include <mos/gfx/boxes.hpp>
+#include <mos/gfx/particle_clouds.hpp>
 #include <mos/gfx/cube_camera.hpp>
-#include <mos/gfx/environment_light.hpp>
-#include <mos/gfx/texture_target.hpp>
+#include <mos/gfx/environment_lights.hpp>
+#include <mos/gfx/texture_targets.hpp>
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/lights.hpp>
 #include <mos/core/container.hpp>
 
 namespace mos {
 namespace gfx {
-
-using ParticleClouds = Container<ParticleCloud>;
-using TextureTargets = Container<TextureTarget>;
-using EnvironmentLights = std::array<EnvironmentLight, 2>;
-using Boxes = Container<Box>;
 
 /** Scene for rendering. */
 class Scene {
