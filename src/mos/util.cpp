@@ -47,7 +47,7 @@ glm::mat4 mos::jsonarray_to_mat4(const nlohmann::json &array) {
 int mos::now_ms() {
   using namespace std::chrono;
   auto now = system_clock::now();
-  return duration_cast<milliseconds>(now.time_since_epoch()).count();
+  return int(duration_cast<milliseconds>(now.time_since_epoch()).count());
 }
 mos::sim::Ray mos::un_project(const glm::vec2 &position,
                               const glm::mat4 &view,

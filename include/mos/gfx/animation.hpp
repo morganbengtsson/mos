@@ -27,7 +27,7 @@ public:
   void update(const float dt);
 
   /** Current frame */
-  unsigned int frame() const;
+  int frame() const;
 
   /** Restart the animation. */
   void reset();
@@ -43,9 +43,9 @@ public:
 
 private:
   float time_;
-  std::map<unsigned int, std::shared_ptr<const Mesh>> keyframes_;
+  std::map<int, std::shared_ptr<const Mesh>> keyframes_;
   std::shared_ptr<Mesh> mesh_;
-  unsigned int frame_rate_;
+  int frame_rate_;
 };
 }
 }

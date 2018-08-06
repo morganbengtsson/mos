@@ -40,8 +40,8 @@ Animation::Animation(const std::string &path) {
   }
 }
 
-unsigned int Animation::frame() const {
-  return glm::floor(time_ * frame_rate_);
+int Animation::frame() const {
+  return int(glm::floor(time_ * frame_rate_));
 }
 
 void Animation::reset() { time_ = 0; }
