@@ -207,7 +207,7 @@ private:
 
   void render_scene(const Camera &camera,
                     const Scene &scene,
-                    const glm::vec2 &resolution);
+                    const glm::ivec2 &resolution);
 
   void render_shadow_maps(const Models &models,
                           const Lights &lights);
@@ -258,7 +258,7 @@ private:
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   struct StandardTarget {
-    StandardTarget(const glm::vec2 &resolution);
+    StandardTarget(const glm::ivec2 &resolution);
     ~StandardTarget();
     GLuint frame_buffer;
     GLuint texture;
@@ -268,7 +268,7 @@ private:
   const StandardTarget standard_target_;
 
   struct MultiTarget {
-    MultiTarget(const glm::vec2 &resolution);
+    MultiTarget(const glm::ivec2 &resolution);
     ~MultiTarget();
     GLuint frame_buffer;
     GLuint color_texture;
@@ -278,7 +278,7 @@ private:
   const MultiTarget multi_target_;
 
   struct BlurTarget {
-    BlurTarget(const glm::vec2 &resolution);
+    BlurTarget(const glm::ivec2 &resolution);
     ~BlurTarget();
     GLuint frame_buffer;
     GLuint texture;

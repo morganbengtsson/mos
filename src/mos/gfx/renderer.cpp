@@ -188,7 +188,7 @@ void Renderer::clear_buffers() {
 
 void Renderer::render_scene(const Camera &camera,
                             const Scene &scene,
-                            const glm::vec2 &resolution) {
+                            const glm::ivec2 &resolution) {
   glViewport(0, 0, resolution.x, resolution.y);
   glUseProgram(standard_program_.program);
   glUniform1i(standard_program_.brdf_lut, 0);
@@ -219,7 +219,7 @@ void Renderer::render_scene(const Camera &camera,
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
 
-  for (int i = 0; i < scene.environment_lights.size(); i++) {
+  for (size_t i = 0; i < scene.environment_lights.size(); i++) {
     glUniform3fv(standard_program_.environment_maps[i].position, 1,
                  glm::value_ptr(scene.environment_lights[i].box_.position()));
     glUniform3fv(standard_program_.environment_maps[i].extent, 1,
@@ -232,7 +232,7 @@ void Renderer::render_scene(const Camera &camera,
   auto position = camera.position();
   glUniform3fv(standard_program_.camera_position, 1, glm::value_ptr(position));
 
-  for (int i = 0; i < scene.lights.size(); i++) {
+  for (size_t i = 0; i < scene.lights.size(); i++) {
     glUniform3fv(standard_program_.lights[i].position, 1,
                  glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
     auto light_color =
@@ -405,7 +405,7 @@ void Renderer::render_model(const Model &model,
     static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-    for (int i = 0; i < lights.size(); i++) {
+    for (size_t i = 0; i < lights.size(); i++) {
       const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
           lights[i].camera.view * parent_transform *
           model.transform;
@@ -468,7 +468,7 @@ void Renderer::clear_color(const glm::vec4 &color) {
 }
 
 void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
-  for (int i = 0; i < shadow_maps_.size(); i++) {
+  for (size_t i = 0; i < shadow_maps_.size(); i++) {
     auto frame_buffer = shadow_maps_[i].frame_buffer;
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -487,7 +487,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 }
 
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
-  for (int i = 0; i < environment_maps_targets.size(); i++) {
+  for (size_t i = 0; i < environment_maps_targets.size(); i++) {
     GLuint frame_buffer_id = environment_maps_targets[i].frame_buffer;
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
@@ -728,7 +728,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  glViewport(0, 0, resolution.x / 4.0f, resolution.y / 4.0f);
+  glViewport(0, 0, GLsizei(resolution.x / 4.0f), GLsizei(resolution.y / 4.0f));
 
   glBindFramebuffer(GL_FRAMEBUFFER, blur_target0_.frame_buffer);
   glUseProgram(blur_program_.program);
@@ -822,13 +822,13 @@ Renderer::StandardProgram::StandardProgram() {
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
-  for (int i = 0; i < 2; i++) {
+  for (size_t i = 0; i < 2; i++) {
     depth_bias_mvps[i] = glGetUniformLocation(program,
                                               std::string("depth_bias_model_view_projections[" + std::to_string(i)
                                                               + "]").c_str());
   }
 
-  for (int i = 0; i < environment_maps.size(); i++) {
+  for (size_t i = 0; i < environment_maps.size(); i++) {
     environment_maps[i].map =
         glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
     environment_maps[i].position =
@@ -857,7 +857,7 @@ Renderer::StandardProgram::StandardProgram() {
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
-  for (int i = 0; i < lights.size(); i++) {
+  for (size_t i = 0; i < lights.size(); i++) {
     lights[i].position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
@@ -1097,7 +1097,7 @@ Renderer::EnvironmentMapTarget::~EnvironmentMapTarget() {
   glDeleteFramebuffers(1, &frame_buffer);
 }
 
-Renderer::StandardTarget::StandardTarget(const glm::vec2 &resolution) {
+Renderer::StandardTarget::StandardTarget(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1127,7 +1127,7 @@ Renderer::StandardTarget::~StandardTarget() {
   glDeleteTextures(1, &texture);
   glDeleteTextures(1, &depth_texture);
 }
-Renderer::MultiTarget::MultiTarget(const glm::vec2 &resolution) {
+Renderer::MultiTarget::MultiTarget(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1164,7 +1164,7 @@ Renderer::MultiTarget::~MultiTarget() {
   glDeleteTextures(1, &color_texture);
   glDeleteTextures(1, &bright_texture);
 }
-Renderer::BlurTarget::BlurTarget(const glm::vec2 &resolution) {
+Renderer::BlurTarget::BlurTarget(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 

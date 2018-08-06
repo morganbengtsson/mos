@@ -14,7 +14,7 @@ Navmesh2::Navmesh2(const gfx::Mesh &mesh, const glm::mat4 &transform)
 std::optional<gfx::Vertex>
 Navmesh2::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   //for (auto &face : faces_) {
-  for (int i = 0; i < triangles.size(); i++) {
+  for (size_t i = 0; i < triangles.size(); i++) {
     Face2 face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
@@ -29,7 +29,7 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
                                const glm::vec3 &direction) {
   OptionalIntersection closest;
   //for (auto &face : faces_) {
-  for (int i = 0; i < triangles.size(); i++) {
+  for (size_t i = 0; i < triangles.size(); i++) {
     Face2 face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
@@ -45,7 +45,7 @@ Navmesh2::closest_intersection(const glm::vec3 &origin,
 
 Navmesh2::~Navmesh2() {}
 void Navmesh2::calculate_normals() {
-  for (int i = 0; i < triangles.size(); i++) {
+  for (size_t i = 0; i < triangles.size(); i++) {
     //TODO: Generalize
     auto &v0 = vertices[triangles[i][0]];
     auto &v1 = vertices[triangles[i][1]];

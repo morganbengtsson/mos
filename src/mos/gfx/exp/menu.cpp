@@ -17,10 +17,10 @@ void Menu::add(const Button &button) { buttons_.push_back(button); }
 
 gfx::Model Menu::model() {
   gfx::Model out;
-  for (int i = 0; i < buttons_.size(); i++) {
+  for (size_t i = 0; i < buttons_.size(); i++) {
     auto model = buttons_[i].model();
     model.transform = glm::translate(
-        model.transform, glm::vec3(0.0f, -i * buttons_[i].height(), 0.0f));
+        model.transform, glm::vec3(0.0f, -(i * buttons_[i].height()), 0.0f));
     out.models.push_back(model);
   }
   return out;

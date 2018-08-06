@@ -40,7 +40,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
       is.read((char *) &input_indices[0], input_indices.size() * sizeof(int));
     }
     vertices.assign(input_vertices.begin(), input_vertices.end());
-    for (int i = 0; i < input_indices.size(); i += 3) {
+    for (size_t i = 0; i < input_indices.size(); i += 3) {
       triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
     }
     calculate_tangents();
@@ -144,7 +144,7 @@ struct Face {
 
 void Mesh::calculate_normals() {
   if (triangles.size() == 0) {
-    for (int i = 0; i < vertices.size(); i += 3) {
+    for (size_t i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
       auto &v0 = vertices[i];
       auto &v1 = vertices[i + 1];
@@ -159,7 +159,7 @@ void Mesh::calculate_normals() {
     //TODO: Slow brute force, improve?
     using P = std::pair<int, std::vector<Face>>;
     std::map<int, std::vector<Face>> triangle_map;
-    for (int i = 0; i < triangles.size(); i++) {
+    for (size_t i = 0; i < triangles.size(); i++) {
       std::array<int, 3> tri{triangles[i][0], triangles[i][1], triangles[i][2]};
       Face t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
       for (auto i0 : tri) {
@@ -201,7 +201,7 @@ void Mesh::calculate_normals() {
 
 void Mesh::calculate_tangents() {
   if (triangles.size() == 0) {
-    for (int i = 0; i < vertices.size(); i += 3) {
+    for (size_t i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
       auto &v0 = vertices[i];
       auto &v1 = vertices[i + 1];
@@ -210,7 +210,7 @@ void Mesh::calculate_tangents() {
       calculate_tangents(v0, v1, v2);
     }
   } else {
-    for (int i = 0; i < triangles.size(); i++) {
+    for (size_t i = 0; i < triangles.size(); i++) {
       auto &v0 = vertices[triangles[i][0]];
       auto &v1 = vertices[triangles[i][1]];
       auto &v2 = vertices[triangles[i][2]];
@@ -221,7 +221,7 @@ void Mesh::calculate_tangents() {
 }
 void Mesh::calculate_flat_normals() {
   if (triangles.size() == 0) {
-    for (int i = 0; i < vertices.size(); i += 3) {
+    for (size_t i = 0; i < vertices.size(); i += 3) {
       auto &v0 = vertices[i];
       auto &v1 = vertices[i + 1];
       auto &v2 = vertices[i + 2];
@@ -232,7 +232,7 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   } else {
-    for (int i = 0; i < triangles.size(); i++) {
+    for (size_t i = 0; i < triangles.size(); i++) {
       auto &v0 = vertices[triangles[i][0]];
       auto &v1 = vertices[triangles[i][1]];
       auto &v2 = vertices[triangles[i][2]];
