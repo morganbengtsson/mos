@@ -36,10 +36,10 @@ Model Assets::model_value(const json &value, const glm::mat4 &parent_transform) 
       material(material_path));
 
   for (auto &m : value["children"]) {
-	  std::string temp = m;
-    filesystem::path t = temp;
-    if(t.extension() == "model") {
-      created_model.models.push_back(model(t.str()));
+	const std::string str_path = m;
+    filesystem::path path = str_path;
+    if(path.extension() == "model") {
+      created_model.models.push_back(model(path.str()));
     }
   }
   return created_model;
