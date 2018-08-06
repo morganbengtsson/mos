@@ -12,7 +12,7 @@ struct Fragment {
 
 struct Camera {
     vec3 position;
-    vec2 resolution;
+    ivec2 resolution;
 };
 
 struct Light {

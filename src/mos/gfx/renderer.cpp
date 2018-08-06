@@ -250,7 +250,7 @@ void Renderer::render_scene(const Camera &camera,
     glUniform3fv(standard_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
   }
 
-  glUniform2fv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));
+  glUniform2iv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));
 
   glUniform3fv(standard_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
   glUniform3fv(standard_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
