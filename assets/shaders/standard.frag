@@ -72,10 +72,6 @@ uniform sampler2D brdf_lut;
 in Fragment fragment;
 layout(location = 0) out vec4 color;
 
-float fog_attenuation(const float dist, const Fog fog) {
-    return 1.0 / exp(pow(dist * fog.attenuation_factor, 2.0));
-}
-
 // Defined in functions.frag
 float rand(vec2 co);
 vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir, const vec3 fragment_position);
@@ -86,6 +82,7 @@ float geometry_schlick_GGX(float NdotV, float roughness);
 float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 fresnel_schlick(float cosTheta, vec3 F0);
 vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
+float fog_attenuation(const float dist, const float factor);
 
 void main() {
     vec3 normal = fragment.normal;
@@ -208,7 +205,7 @@ void main() {
 
     //Fog
     float distance = distance(fragment.position, camera.position);
-    float fog_att = fog_attenuation(distance, fog);
+    float fog_att = fog_attenuation(distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
 }
