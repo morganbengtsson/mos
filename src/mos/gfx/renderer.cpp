@@ -812,10 +812,15 @@ Renderer::StandardProgram::StandardProgram() {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
 
+  std::string functions_name = "functions";
+  std::string functions_frag_source = text("assets/shaders/" + functions_name + ".frag");
+
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+  const auto functions_fragment_shader = Shader(functions_frag_source, GL_FRAGMENT_SHADER, functions_name);
 
   glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, functions_fragment_shader.id);
   glAttachShader(program, fragment_shader.id);
 
   glBindAttribLocation(program, 0, "position");
@@ -828,6 +833,7 @@ Renderer::StandardProgram::StandardProgram() {
 
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
+  glDetachShader(program, functions_fragment_shader.id);
 
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
