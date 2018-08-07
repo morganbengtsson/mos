@@ -105,7 +105,6 @@ private:
   /** Uniforms for the particle shader program. */
   struct ParticleProgram : public Program {
     ParticleProgram();
-    ~ParticleProgram();
     GLint mvp;
     GLint mv;
     GLint p;
@@ -116,20 +115,17 @@ private:
   /** Uniforms for the bounding box shader program. */
   struct BoxProgram : public Program {
     BoxProgram();
-    ~BoxProgram();
     GLint mvp;
   };
 
   struct MultisampleProgram : public Program {
     MultisampleProgram();
-    ~MultisampleProgram();
     GLint color_texture;
     GLint depth_texture;
   };
 
   struct BloomProgram : public Program {
     BloomProgram();
-    ~BloomProgram();
     GLint color_texture;
     GLint bright_color_texture;
     GLint strength;
@@ -137,14 +133,12 @@ private:
 
   struct BlurProgram : public Program {
     BlurProgram();
-    ~BlurProgram();
     GLint color_texture;
     GLint horizontal;
   };
 
   struct DepthProgram : public Program {
     DepthProgram();
-    ~DepthProgram();
     GLint model_view_projection_matrix;
   };
 
@@ -152,7 +146,6 @@ private:
   class StandardProgram : public Program {
   public:
     StandardProgram();
-    ~StandardProgram();
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;

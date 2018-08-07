@@ -800,16 +800,13 @@ Renderer::DepthProgram::DepthProgram() {
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   link(name);
+  check(name);
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
 
   model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::DepthProgram::~DepthProgram() {
-  glDeleteProgram(program);
-}
 Renderer::StandardProgram::StandardProgram() {
   std::string name = "standard";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
@@ -818,7 +815,6 @@ Renderer::StandardProgram::StandardProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
 
@@ -828,9 +824,10 @@ Renderer::StandardProgram::StandardProgram() {
   glBindAttribLocation(program, 3, "uv");
 
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
 
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
@@ -889,9 +886,7 @@ Renderer::StandardProgram::StandardProgram() {
   fog_attenuation_factor = glGetUniformLocation(program, "fog.attenuation_factor");
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
-Renderer::StandardProgram::~StandardProgram() {
-  glDeleteProgram(program);
-}
+
 Renderer::ParticleProgram::ParticleProgram() {
   std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
@@ -899,25 +894,24 @@ Renderer::ParticleProgram::ParticleProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
 
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
+
   mvp = glGetUniformLocation(program, "model_view_projection"),
   mv = glGetUniformLocation(program, "model_view"),
   p = glGetUniformLocation(program, "projection"),
   texture = glGetUniformLocation(program, "tex"),
   resolution = glGetUniformLocation(program, "resolution");
 }
-Renderer::ParticleProgram::~ParticleProgram() {
-  glDeleteProgram(program);
-}
+
 Renderer::BoxProgram::BoxProgram() {
   std::string name = "box";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
@@ -926,21 +920,19 @@ Renderer::BoxProgram::BoxProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
-
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
+
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
 
   mvp = glGetUniformLocation(program, "model_view_projection");
 }
-Renderer::BoxProgram::~BoxProgram() {
-  glDeleteProgram(program);
-}
+
 Renderer::MultisampleProgram::MultisampleProgram() {
   std::string name = "multisample";
   auto vert_source = text("assets/shaders/" + name + ".vert");
@@ -949,22 +941,18 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
-
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
 
   color_texture = glGetUniformLocation(program, "color_texture");
   depth_texture = glGetUniformLocation(program, "depth_texture");
-}
-Renderer::MultisampleProgram::~MultisampleProgram() {
-  glDeleteProgram(program);
 }
 
 Renderer::BloomProgram::BloomProgram() {
@@ -975,24 +963,22 @@ Renderer::BloomProgram::BloomProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
-
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
+
   color_texture = glGetUniformLocation(program, "color_texture");
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
   strength = glGetUniformLocation(program, "strength");
 
 }
-Renderer::BloomProgram::~BloomProgram() {
-  glDeleteProgram(program);
-}
+
 Renderer::BlurProgram::BlurProgram() {
   std::string name = "blur";
   auto vert_source = text("assets/shaders/" + name + ".vert");
@@ -1001,21 +987,17 @@ Renderer::BlurProgram::BlurProgram() {
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
-  program = glCreateProgram();
-
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
   link(name);
+  check(name);
+
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  check(name);
   color_texture = glGetUniformLocation(program, "color_texture");
   horizontal = glGetUniformLocation(program, "horizontal");
-}
-Renderer::BlurProgram::~BlurProgram() {
-  glDeleteProgram(program);
 }
 
 Renderer::ShadowMapTarget::ShadowMapTarget(const RenderBuffer &render_buffer) {
@@ -1346,16 +1328,19 @@ Renderer::Program::~Program() {
   glDeleteProgram(program);
 }
 void Renderer::Program::check(const std::string &name) {
-  GLint status;
-  glGetShaderiv(program, GL_LINK_STATUS, &status);
+  GLint status = 0;
+  glGetProgramiv(program, GL_LINK_STATUS, &status);
+  if(status == GL_FALSE) {
+    GLint infoLogLength;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+    GLchar* infoLog = new GLchar[infoLogLength + 1];
+    glGetProgramInfoLog(program, infoLogLength, 0, infoLog);
 
-  if (status == GL_FALSE) {
-    int length;
-    glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
-    std::vector<char> buffer(length);
-    glGetShaderInfoLog(program, length, nullptr, &buffer[0]);
-    std::cerr << "Link failure in" + name + " program" << std::endl;
-    std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+    std::cout << infoLogLength << std::endl;
+    std::cout << "Error while linking shader: " << name << std::endl;
+    std::cout << infoLog << std::endl;
+
+    delete[] infoLog;
   }
   assert(status);
 }
