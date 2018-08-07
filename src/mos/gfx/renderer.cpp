@@ -1308,12 +1308,10 @@ Renderer::Shader::Shader(const std::string &source,
   if (status == GL_FALSE) {
     int length;
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-    if (length > 0) {
-      std::vector<char> buffer(length);
-      glGetShaderInfoLog(id, length, NULL, &buffer[0]);
-      std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
-      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
-    }
+    std::vector<char> buffer(length);
+    glGetShaderInfoLog(id, length, NULL, &buffer[0]);
+    std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
+    std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
   }
   assert(status);
 }
@@ -1331,16 +1329,15 @@ void Renderer::Program::check(const std::string &name) {
   GLint status = 0;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if(status == GL_FALSE) {
-    GLint infoLogLength;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-    GLchar* infoLog = new GLchar[infoLogLength + 1];
-    glGetProgramInfoLog(program, infoLogLength, 0, infoLog);
+    GLint length;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+    GLchar* info_log = new GLchar[length + 1];
+    glGetProgramInfoLog(program, length, 0, info_log);
 
-    std::cout << infoLogLength << std::endl;
-    std::cout << "Error while linking shader: " << name << std::endl;
-    std::cout << infoLog << std::endl;
+    std::cout << "Link failure in: " << name << std::endl;
+    std::cout << info_log << std::endl;
 
-    delete[] infoLog;
+    delete[] info_log;
   }
   assert(status);
 }
