@@ -24,7 +24,7 @@ const std::map<const unsigned int, std::string> Renderer::shader_types_{
     {GL_FRAGMENT_SHADER, "fragment shader"},
     {GL_GEOMETRY_SHADER, "geometry shader"}};
 
-GLuint wrap_convert(const Texture::Wrap & wrap){
+GLuint wrap_convert(const Texture::Wrap &wrap) {
   const std::map<Texture::Wrap, GLuint> wrap_map{
       {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::REPEAT, GL_REPEAT}};
@@ -37,7 +37,7 @@ struct FormatPair {
 };
 
 FormatPair format_convert(const Texture::Format &format) {
-  const std::map<Texture::Format, FormatPair> format_map {
+  const std::map<Texture::Format, FormatPair> format_map{
       {Texture::Format::R, {GL_RED, GL_RED}},
       {Texture::Format::RG, {GL_RG, GL_RG}},
       {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
@@ -45,6 +45,19 @@ FormatPair format_convert(const Texture::Format &format) {
       {Texture::Format::RGB, {GL_RGB, GL_RGB}},
       {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
   return format_map.at(format);
+}
+
+void APIENTRY
+message_callback(GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar *message,
+                 const void *userParam) {
+  fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+          (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+          type, severity, message);
 }
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
@@ -62,8 +75,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
-    brdf_lut_texture_(Texture2D("assets/brdfLUT.png", false, false, Texture2D::Wrap::CLAMP))
-{
+    brdf_lut_texture_(Texture2D("assets/brdfLUT.png", false, false, Texture2D::Wrap::CLAMP)) {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -71,8 +83,9 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   }
 
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
-  fprintf(stdout, "Max uniform locations: %s\n",
-          glGetString(GL_MAX_ARRAY_TEXTURE_LAYERS));
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(message_callback, 0);
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -139,7 +152,7 @@ void Renderer::load_or_update(const Texture2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
     textures_.insert({texture.id(), std::make_unique<TextureBuffer2D>(texture)});
   } else {
-    auto & buffer = textures_.at(texture.id());
+    auto &buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer->modified) {
       glBindTexture(GL_TEXTURE_2D, buffer->texture);
       glTexImage2D(GL_TEXTURE_2D, 0,
@@ -1065,7 +1078,7 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
                   GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
@@ -1253,25 +1266,25 @@ Renderer::Box::~Box() {
 
 }
 Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
-                                   const GLuint external_format,
-                                   const int width,
-                                   const int height,
-                                   const GLuint wrap,
-                                   const void *data,
-                                   const bool mipmaps,
-                                   const TimePoint &modified) : modified(modified){
+                                           const GLuint external_format,
+                                           const int width,
+                                           const int height,
+                                           const GLuint wrap,
+                                           const void *data,
+                                           const bool mipmaps,
+                                           const TimePoint &modified) : modified(modified) {
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
   auto filter = mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 
   glTexImage2D(GL_TEXTURE_2D, 0,
-      internal_format,
+               internal_format,
                width, height, 0,
                external_format, GL_UNSIGNED_BYTE, data);
   if (mipmaps) {
@@ -1283,17 +1296,16 @@ Renderer::TextureBuffer2D::~TextureBuffer2D() {
   glDeleteTextures(1, &texture);
 }
 Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) :
-TextureBuffer2D(format_convert(texture_2d.format).internal_format
-, format_convert(texture_2d.format).format,
-texture_2d.width(),
-texture_2d.height(),
-wrap_convert(texture_2d.wrap),
-texture_2d.layers[0].data(),
-texture_2d.mipmaps){}
+    TextureBuffer2D(format_convert(texture_2d.format).internal_format, format_convert(texture_2d.format).format,
+                    texture_2d.width(),
+                    texture_2d.height(),
+                    wrap_convert(texture_2d.wrap),
+                    texture_2d.layers[0].data(),
+                    texture_2d.mipmaps) {}
 
 Renderer::Shader::Shader(const std::string &source,
-    const GLuint type,
-    const std::string &name) {
+                         const GLuint type,
+                         const std::string &name) {
 
   static const std::map<const unsigned int, std::string> shader_types{
       {GL_VERTEX_SHADER, "vertex shader"},
@@ -1333,7 +1345,7 @@ Renderer::Program::Program() {
 Renderer::Program::~Program() {
   glDeleteProgram(program);
 }
-void Renderer::Program::check(const std::string& name) {
+void Renderer::Program::check(const std::string &name) {
   GLint status;
   glGetShaderiv(program, GL_LINK_STATUS, &status);
 
@@ -1349,7 +1361,7 @@ void Renderer::Program::check(const std::string& name) {
   }
   assert(status);
 }
-void Renderer::Program::link(const std::string& name) {
+void Renderer::Program::link(const std::string &name) {
   std::cout << "Linking: " + name + " program." << std::endl;
   glLinkProgram(program);
 }
