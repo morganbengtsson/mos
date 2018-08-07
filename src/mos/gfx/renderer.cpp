@@ -1309,7 +1309,7 @@ Renderer::Shader::Shader(const std::string &source,
     int length;
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);
-    glGetShaderInfoLog(id, length, NULL, &buffer[0]);
+    glGetShaderInfoLog(id, length, nullptr, &buffer[0]);
     std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
     std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
   }
@@ -1331,13 +1331,10 @@ void Renderer::Program::check(const std::string &name) {
   if(status == GL_FALSE) {
     GLint length;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-    GLchar* info_log = new GLchar[length + 1];
-    glGetProgramInfoLog(program, length, 0, info_log);
-
+    std::vector<char> buffer(length);
+    glGetProgramInfoLog(program, length, nullptr, &buffer[0]);
     std::cout << "Link failure in: " << name << std::endl;
-    std::cout << info_log << std::endl;
-
-    delete[] info_log;
+    std::cout << std::string(buffer.begin(), buffer.end()) << std::endl;
   }
   assert(status);
 }
