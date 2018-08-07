@@ -1352,12 +1352,10 @@ void Renderer::Program::check(const std::string &name) {
   if (status == GL_FALSE) {
     int length;
     glGetShaderiv(program, GL_INFO_LOG_LENGTH, &length);
-    if (length > 0) {
-      std::vector<char> buffer(length);
-      glGetShaderInfoLog(program, length, NULL, &buffer[0]);
-      std::cerr << "Link failure in" + name + " program" << std::endl;
-      std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
-    }
+    std::vector<char> buffer(length);
+    glGetShaderInfoLog(program, length, nullptr, &buffer[0]);
+    std::cerr << "Link failure in" + name + " program" << std::endl;
+    std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
   }
   assert(status);
 }
