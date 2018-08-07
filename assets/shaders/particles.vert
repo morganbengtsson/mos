@@ -1,4 +1,5 @@
-#version 330 core
+#version 430 core
+
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
 uniform vec2 resolution;

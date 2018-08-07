@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 struct Fragment {
     vec3 position;

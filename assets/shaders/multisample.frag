@@ -1,4 +1,5 @@
-#version 330
+#version 430 core
+
 layout(location = 0) out vec4 color;
 layout(location = 1) out vec4 bright_color;
 in vec2 frag_uv;
