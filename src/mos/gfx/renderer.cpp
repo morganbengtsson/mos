@@ -1337,9 +1337,9 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
   for (int i = 0; i < 6; i++) {
 	  std::vector<unsigned char> data;
 	  for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
-		  data.push_back(128);
-		  data.push_back(128);
-		  data.push_back(128);
+		  data.push_back(0);
+		  data.push_back(0);
+		  data.push_back(0);
 	  }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB,
