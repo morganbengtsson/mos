@@ -4,7 +4,6 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    mat3 tbn;
     vec4[2] proj_shadow;
     vec3 camera_to_surface;
     float weight;
@@ -38,12 +37,6 @@ layout(location = 4) in float weight;
 out Fragment fragment;
 
 void main() {
-    vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
-    vec3 N = normalize(normal_matrix * normal);
-    T = normalize(T - dot(T, N) * N);
-    vec3 B = cross(N, T);
-    fragment.tbn = mat3(T,B,N);
-
     fragment.proj_shadow[0] = depth_bias_model_view_projections[0] * vec4(position, 1.0);
     fragment.proj_shadow[1] = depth_bias_model_view_projections[1] * vec4(position, 1.0);
 

@@ -12,11 +12,6 @@ struct Material {
     float emission_strength;
     float ambient_occlusion;
     sampler2D albedo_map;
-    sampler2D emission_map;
-    sampler2D normal_map;
-    sampler2D metallic_map;
-    sampler2D roughness_map;
-    sampler2D ambient_occlusion_map;
 };
 
 struct Light {
@@ -34,12 +29,6 @@ struct Camera {
     ivec2 resolution;
 };
 
-struct Environment {
-    vec3 position;
-    vec3 extent;
-    float strength;
-};
-
 struct Fog {
     vec3 color_near;
     vec3 color_far;
@@ -50,7 +39,6 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    mat3 tbn;
     vec4[2] proj_shadow;
     vec3 camera_to_surface;
     float weight;
@@ -59,9 +47,6 @@ struct Fragment {
 uniform Material material;
 uniform Light[2] lights;
 uniform sampler2D[2] shadow_maps;
-
-uniform Environment[2] environments;
-uniform samplerCube[2] environment_maps;
 
 uniform Camera camera;
 uniform Fog fog;

@@ -384,35 +384,10 @@ void Renderer::render_model(const Model &model,
 
     const auto &uniforms = program;
 
-    glActiveTexture(GL_TEXTURE5);
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                  ? textures_.at(model.material.albedo_map->id())->texture
                                  : black_texture_.texture);
-
-    glActiveTexture(GL_TEXTURE6);
-    glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                 ? textures_.at(model.material.emission_map->id())->texture
-                                 : black_texture_.texture);
-
-    glActiveTexture(GL_TEXTURE7);
-    glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                 ? textures_.at(model.material.normal_map->id())->texture
-                                 : black_texture_.texture);
-
-    glActiveTexture(GL_TEXTURE8);
-    glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
-                                 ? textures_.at(model.material.metallic_map->id())->texture
-                                 : black_texture_.texture);
-
-    glActiveTexture(GL_TEXTURE9);
-    glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                                 ? textures_.at(model.material.roughness_map->id())->texture
-                                 : black_texture_.texture);
-
-    glActiveTexture(GL_TEXTURE10);
-    glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
-                                 ? textures_.at(model.material.ambient_occlusion_map->id())->texture
-                                 : white_texture_.texture);
 
     static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -616,15 +591,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glUniform1i(environment_program_.shadow_maps[0], 1);
     glUniform1i(environment_program_.shadow_maps[1], 2);
 
-    glUniform1i(environment_program_.environment_maps[0].map, 3);
-    glUniform1i(environment_program_.environment_maps[1].map, 4);
-
-    glUniform1i(environment_program_.material_albedo_map, 5);
-    glUniform1i(environment_program_.material_emission_map, 6);
-    glUniform1i(environment_program_.material_normal_map, 7);
-    glUniform1i(environment_program_.material_metallic_map, 8);
-    glUniform1i(environment_program_.material_roughness_map, 9);
-    glUniform1i(environment_program_.material_ambient_occlusion_map, 10);
+    glUniform1i(environment_program_.material_albedo_map, 3);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -634,21 +601,6 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
-
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
-
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
-
-    for (size_t i = 0; i < scene.environment_lights.size(); i++) {
-      glUniform3fv(environment_program_.environment_maps[i].position, 1,
-                   glm::value_ptr(scene.environment_lights[i].box_.position()));
-      glUniform3fv(environment_program_.environment_maps[i].extent, 1,
-                   glm::value_ptr(scene.environment_lights[i].box_.extent));
-      glUniform1fv(environment_program_.environment_maps[i].strength, 1,
-                   &scene.environment_lights[i].strength);
-    }
 
     // Camera in world space
     auto position = cube_camera.position();
