@@ -685,7 +685,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                    scene.lights,
                    scene.environment_lights,
                    scene.fog,
-                   resolution, standard_program_);
+                   resolution, environment_program_);
     }
 
 

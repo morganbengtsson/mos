@@ -157,7 +157,7 @@ void main() {
 
     Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
-    vec3 ambient = vec3(0.0, 0.0, 0.0);
+    vec3 ambient = (lights[0].color + lights[1].color) / 1000.0f;
 
     for (int i = 0; i < 2; i++) {
       vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
@@ -192,7 +192,7 @@ void main() {
 
       float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
 
-      ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+      //ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
     }
     color.rgb = (Lo + ambient + emission) * material.factor;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
