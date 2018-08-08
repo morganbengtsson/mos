@@ -159,7 +159,6 @@ void main() {
     Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
     vec3 ambient = material.albedo.rgb * (lights[0].color * sqrt(lights[0].strength)/41.5 + lights[1].color * sqrt(lights[1].strength)/41.5);
-    ambient = vec3(0,0,0);
 
     for (int i = 0; i < 2; i++) {
       vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
