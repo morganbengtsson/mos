@@ -88,29 +88,15 @@ float fog_attenuation(const float dist, const float factor);
 void main() {
     vec3 normal = fragment.normal;
 
-    vec3 normal_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
-    normal_from_map = normalize(fragment.tbn * normal_from_map);
+    vec3 albedo = material.albedo.rgb;
 
-    float amount = texture(material.normal_map, fragment.uv).a;
+    float metallic = material.metallic;
 
-    if (amount > 0.0f){
-        normal = normalize(mix(normal, normal_from_map, amount));
-    }
+    float roughness = material.roughness;
 
-    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv); //TODO: use fragment.weight in 3D texture
-    vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
+    float ambient_occlusion = material.ambient_occlusion;
 
-    vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
-    float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
-
-    vec4 roughnesss_from_map = texture(material.roughness_map, fragment.uv);
-    float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
-
-    float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
-    float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
-
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
+    vec3 emission = material.emission.rgb;
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
@@ -161,7 +147,7 @@ void main() {
     vec3 ambient = material.albedo.rgb * (lights[0].color * sqrt(lights[0].strength)/41.5 + lights[1].color * sqrt(lights[1].strength)/41.5);
 
     color.rgb = (Lo + ambient + emission) * material.factor;
-    color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
+    color.a = clamp(material.opacity * (material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
