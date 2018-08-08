@@ -279,6 +279,15 @@ private:
                     const glm::vec2 &resolution,
                     const StandardProgram& program);
 
+  void render_model(const Model &model,
+                    const glm::mat4 &transform,
+                    const Camera &camera,
+                    const Lights &lights,
+                    const EnvironmentLights &environment_lights,
+                    const Fog &fog,
+                    const glm::vec2 &resolution,
+                    const EnvironmentProgram& program);
+
   void render_model_depth(const Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
