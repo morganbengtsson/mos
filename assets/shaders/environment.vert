@@ -17,6 +17,7 @@ struct Camera {
 struct Light {
     vec3 position;
     vec3 color;
+    float strength;
     mat4 view;
     mat4 projection;
     float angle;
