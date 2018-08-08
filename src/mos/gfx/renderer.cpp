@@ -968,23 +968,7 @@ Renderer::EnvironmentProgram::EnvironmentProgram() {
                                                               + "]").c_str());
   }
 
-  for (size_t i = 0; i < environment_maps.size(); i++) {
-    environment_maps[i].map =
-        glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
-    environment_maps[i].position =
-        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
-    environment_maps[i].extent =
-        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
-    environment_maps[i].strength =
-        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
-  }
-
   material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_map = glGetUniformLocation(program, "material.emission_map");
-  material_normal_map = glGetUniformLocation(program, "material.normal_map");
-  material_metallic_map = glGetUniformLocation(program, "material.metallic_map");
-  material_roughness_map = glGetUniformLocation(program, "material.roughness_map");
-  material_ambient_occlusion_map = glGetUniformLocation(program, "material.ambient_occlusion_map");
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
