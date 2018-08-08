@@ -152,12 +152,7 @@ void main() {
       vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
       vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
       float s = 0.0;
-      for(float x = -3; x <= 3; x += 2) {
-          for(float y = -3; y <= 3; y += 2) {
-              s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(x, y) * texelSize, shadow_map_uv.z);
-          }
-      }
-      s /= 16;
+      s = sample_shadow_map(shadow_maps[i], shadow_map_uv.xy, shadow_map_uv.z);
       shadow += s * spot_effect;
     }
 

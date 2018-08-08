@@ -616,6 +616,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glUniform1i(environment_program_.brdf_lut, 0);
     glUniform1i(environment_program_.shadow_maps[0], 1);
     glUniform1i(environment_program_.shadow_maps[1], 2);
+
     glUniform1i(environment_program_.environment_maps[0].map, 3);
     glUniform1i(environment_program_.environment_maps[1].map, 4);
 
