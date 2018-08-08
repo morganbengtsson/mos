@@ -142,6 +142,61 @@ private:
     GLint model_view_projection_matrix;
   };
 
+
+  /** Uniforms for the environment shader. */
+  class EnvironmentProgram : public Program {
+  public:
+    EnvironmentProgram();
+    GLint model_view_projection_matrix;
+    GLint model_matrix;
+    GLint normal_matrix;
+    std::array<GLint,2> depth_bias_mvps;
+
+    struct EnvironmentUniforms {
+      GLint map;
+      GLint position;
+      GLint extent;
+      GLint strength;
+    };
+    std::array<EnvironmentUniforms, 2> environment_maps;
+
+    GLint material_albedo_map;
+    GLint material_emission_map;
+    GLint material_normal_map;
+    GLint material_metallic_map;
+    GLint material_roughness_map;
+    GLint material_ambient_occlusion_map;
+    GLint material_albedo;
+    GLint material_roughness;
+    GLint material_metallic;
+    GLint material_opacity;
+    GLint material_emission;
+    GLint material_ambient_occlusion;
+    GLint material_emission_strength;
+    GLint material_factor;
+
+    GLint camera_resolution;
+    GLint camera_position;
+
+    struct LightUniforms {
+      GLint position;
+      GLint color;
+      GLint view;
+      GLint projection;
+      GLint angle;
+      GLint direction;
+    };
+
+    std::array<GLuint, 2> shadow_maps;
+    std::array<LightUniforms, 2> lights;
+
+    GLint fog_color_near;
+    GLint fog_color_far;
+    GLint fog_attenuation_factor;
+
+    GLint brdf_lut;
+  };
+
   /** Uniforms for the standard shader. */
   class StandardProgram : public Program {
   public:
@@ -236,6 +291,7 @@ private:
   void clear_color(const glm::vec4 &color);
 
   const StandardProgram standard_program_;
+  const EnvironmentProgram environment_program_;
   const ParticleProgram particle_program_;
   const BoxProgram box_program_;
   const DepthProgram depth_program_;
