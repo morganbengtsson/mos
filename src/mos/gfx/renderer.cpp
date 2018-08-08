@@ -579,7 +579,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
-    clear_depth();
+    clear(clear_color);
     auto resolution = glm::ivec2(environment_render_buffer_.resolution,
                                 environment_render_buffer_.resolution);
 
