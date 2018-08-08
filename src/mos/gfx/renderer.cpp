@@ -606,9 +606,87 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
     clear_depth();
-    auto resolution = glm::vec2(environment_render_buffer_.resolution,
+    auto resolution = glm::ivec2(environment_render_buffer_.resolution,
                                 environment_render_buffer_.resolution);
-    render_scene(cube_camera, scene, resolution);
+
+    glViewport(0, 0, resolution.x, resolution.y);
+
+    glUseProgram(environment_program_.program);
+
+    glUniform1i(environment_program_.brdf_lut, 0);
+    glUniform1i(environment_program_.shadow_maps[0], 1);
+    glUniform1i(environment_program_.shadow_maps[1], 2);
+    glUniform1i(environment_program_.environment_maps[0].map, 3);
+    glUniform1i(environment_program_.environment_maps[1].map, 4);
+
+    glUniform1i(environment_program_.material_albedo_map, 5);
+    glUniform1i(environment_program_.material_emission_map, 6);
+    glUniform1i(environment_program_.material_normal_map, 7);
+    glUniform1i(environment_program_.material_metallic_map, 8);
+    glUniform1i(environment_program_.material_roughness_map, 9);
+    glUniform1i(environment_program_.material_ambient_occlusion_map, 10);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
+
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
+
+    for (size_t i = 0; i < scene.environment_lights.size(); i++) {
+      glUniform3fv(environment_program_.environment_maps[i].position, 1,
+                   glm::value_ptr(scene.environment_lights[i].box_.position()));
+      glUniform3fv(environment_program_.environment_maps[i].extent, 1,
+                   glm::value_ptr(scene.environment_lights[i].box_.extent));
+      glUniform1fv(environment_program_.environment_maps[i].strength, 1,
+                   &scene.environment_lights[i].strength);
+    }
+
+    // Camera in world space
+    auto position = cube_camera.position();
+    glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
+
+    for (size_t i = 0; i < scene.lights.size(); i++) {
+      glUniform3fv(environment_program_.lights[i].position, 1,
+                   glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
+      auto light_color =
+          scene.lights[i].color * scene.lights[i].strength
+              / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
+      glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(light_color));
+
+      glUniformMatrix4fv(environment_program_.lights[i].view, 1, GL_FALSE,
+                         &scene.lights[i].camera.view[0][0]);
+      glUniformMatrix4fv(environment_program_.lights[i].projection, 1, GL_FALSE,
+                         &scene.lights[i].camera.projection[0][0]);
+
+      auto light_angle = scene.lights[i].angle();
+      glUniform1fv(environment_program_.lights[i].angle, 1, &light_angle);
+      glUniform3fv(environment_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+    }
+
+    glUniform2iv(environment_program_.camera_resolution, 1, glm::value_ptr(resolution));
+
+    glUniform3fv(environment_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
+    glUniform3fv(environment_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
+    glUniform1fv(environment_program_.fog_attenuation_factor, 1,
+                 &scene.fog.attenuation_factor);
+
+    for (auto &model : scene.models) {
+      render_model(model, glm::mat4(1.0f), cube_camera,
+                   scene.lights,
+                   scene.environment_lights,
+                   scene.fog,
+                   resolution, standard_program_);
+    }
+
 
     cube_camera_index_[i] = cube_camera_index_[i] >= 5 ? 0 : ++cube_camera_index_[i]; //TODO PROBLEM
 
