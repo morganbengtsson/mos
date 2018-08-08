@@ -181,6 +181,7 @@ private:
     struct LightUniforms {
       GLint position;
       GLint color;
+      GLint strength;
       GLint view;
       GLint projection;
       GLint angle;
@@ -235,6 +236,7 @@ private:
     struct LightUniforms {
       GLint position;
       GLint color;
+      GLint strength;
       GLint view;
       GLint projection;
       GLint angle;

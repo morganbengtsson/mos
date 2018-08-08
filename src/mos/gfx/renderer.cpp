@@ -248,10 +248,9 @@ void Renderer::render_scene(const Camera &camera,
   for (size_t i = 0; i < scene.lights.size(); i++) {
     glUniform3fv(standard_program_.lights[i].position, 1,
                  glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
-    auto light_color =
-        scene.lights[i].color * scene.lights[i].strength
-            / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
-    glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(light_color));
+
+    glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
+    glUniform1fv(standard_program_.lights[i].strength, 1, &scene.lights[i].strength);
 
     glUniformMatrix4fv(standard_program_.lights[i].view, 1, GL_FALSE,
                        &scene.lights[i].camera.view[0][0]);
@@ -658,10 +657,9 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     for (size_t i = 0; i < scene.lights.size(); i++) {
       glUniform3fv(environment_program_.lights[i].position, 1,
                    glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
-      auto light_color =
-          scene.lights[i].color * scene.lights[i].strength
-              / 11.5f; // 11.5 divider is for same light strength as in Blender/cycles.
-      glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(light_color));
+
+      glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
+      glUniform1fv(environment_program_.lights[i].strength, 1, &scene.lights[i].strength);
 
       glUniformMatrix4fv(environment_program_.lights[i].view, 1, GL_FALSE,
                          &scene.lights[i].camera.view[0][0]);
@@ -1051,6 +1049,7 @@ Renderer::EnvironmentProgram::EnvironmentProgram() {
     lights[i].position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights[i].strength = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
     lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
     lights[i].projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
@@ -1137,6 +1136,7 @@ Renderer::StandardProgram::StandardProgram() {
     lights[i].position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights[i].strength = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
     lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
     lights[i].projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
