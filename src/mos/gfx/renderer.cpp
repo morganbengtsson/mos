@@ -1075,11 +1075,18 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
                   GL_CLAMP_TO_EDGE);
 
   for (int i = 0; i < 6; i++) {
+	  std::vector<unsigned char> data;
+	  for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
+		  data.push_back(255);
+		  data.push_back(255);
+		  data.push_back(255);
+	  }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB,
                  render_buffer.resolution, render_buffer.resolution, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, nullptr);
+                 GL_UNSIGNED_BYTE, data.data());
   }
+  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
