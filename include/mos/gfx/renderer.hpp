@@ -148,6 +148,7 @@ private:
   public:
     PropagateProgram();
     GLint environment_map;
+    GLint side;
   };
 
   /** Uniforms for the environment shader. */

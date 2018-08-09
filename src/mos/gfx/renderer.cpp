@@ -669,6 +669,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
     glUniform1i(propagate_program_.environment_map, 0);
+    glUniform1iv(propagate_program_.side, 1, &i);
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1248,7 +1249,9 @@ Renderer::PropagateProgram::PropagateProgram() {
 
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
+
   environment_map = glGetUniformLocation(program, "environment_map");
+  side = glGetUniformLocation(program, "side");
 }
 
 Renderer::ShadowMapTarget::ShadowMapTarget(const RenderBuffer &render_buffer) {
