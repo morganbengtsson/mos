@@ -131,13 +131,11 @@ void main() {
     Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
 
-    vec3 ambient = (material.albedo.rgb * lights[0].color * pow(lights[0].strength, 0.25)/40.0
-    + material.albedo.rgb * lights[1].color * pow(lights[1].strength, 0.25)/40.0)
-    + material.emission.rgb * material.emission_strength;
-    //vec3 ambient = vec3(0, 0, 0); // Zero for now
+    vec3 ambient = (albedo * lights[0].color * pow(lights[0].strength, 0.25)/40.0
+    + albedo * lights[1].color * pow(lights[1].strength, 0.25)/40.0);
 
     color.rgb = (Lo + ambient + emission) * material.factor;
-    color.a = clamp(material.opacity * (material.emission.a + material.albedo.a), 0.0, 1.0);
+    color.a = clamp(material.opacity * (albedo_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
