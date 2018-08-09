@@ -126,7 +126,7 @@ void main() {
 
       float light_fragment_distance = distance(light.position, fragment.position);
       float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-      vec3 radiance = sqrt(light.strength) * light.color * attenuation * 40.0f;
+      vec3 radiance = sqrt(light.strength) * light.color * attenuation;
 
       vec3 L = normalize(light.position - fragment.position);
       vec3 H = normalize(V + L);
