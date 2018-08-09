@@ -181,14 +181,15 @@ void main() {
       vec3 kD_env = 1.0 - kS_env;
       kD_env *= 1.0 - metallic;
 
-      vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb;
+      vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb + textureLod(environment_maps[i], -corrected_normal, num_levels -1.5).rgb;
       vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
       vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength;
 
       vec3 irradiance = textureLod(environment_maps[i], corrected_normal, num_levels - 1.5).rgb;
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels - 0.5).rgb;
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels).rgb;
-      irradiance /= 3.0f;
+      irradiance /= 3.0;
+      irradiance += textureLod(environment_maps[i], -corrected_normal, num_levels - 1.5).rgb;
 
       vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
@@ -200,6 +201,7 @@ void main() {
       float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
 
       ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+      //ambient += diffuse_environment;
     }
     color.rgb = (Lo + ambient + emission) * material.factor;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
