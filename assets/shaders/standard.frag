@@ -174,7 +174,7 @@ void main() {
       vec2 environment_texture_size = textureSize(environment_maps[i], 0);
       float maxsize = max(environment_texture_size.x, environment_texture_size.x);
       float num_levels = 1 + floor(log2(maxsize));
-      float mip_level = roughness * num_levels * 3.0;
+      float mip_level = roughness * num_levels * 3.0 - 0.5;
 
       vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
       vec3 kS_env = F_env;
