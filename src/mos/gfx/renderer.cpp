@@ -649,6 +649,33 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     }
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   }
+
+  for (int i = 0; i < 6; i++) {
+    auto cube_camera = scene.environment_lights[0].cube_camera_.cameras[i];
+
+    glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
+    glUseProgram(propagate_program_.program);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
+
+    clear(clear_color);
+    auto resolution = glm::ivec2(environment_render_buffer_.resolution,
+                                 environment_render_buffer_.resolution);
+
+    glViewport(0, 0, resolution.x, resolution.y);
+
+    glBindVertexArray(quad_.vertex_array);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
+    glUniform1i(propagate_program_.environment_map, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
 }
 void Renderer::load(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {

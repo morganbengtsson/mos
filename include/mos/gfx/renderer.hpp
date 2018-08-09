@@ -308,6 +308,7 @@ private:
   void clear_depth();
   void clear_color(const glm::vec4 &color);
 
+  const PropagateProgram propagate_program_;
   const StandardProgram standard_program_;
   const EnvironmentProgram environment_program_;
   const ParticleProgram particle_program_;
