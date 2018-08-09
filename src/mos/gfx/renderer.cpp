@@ -72,6 +72,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     environment_render_buffer_(128),
     environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
                              EnvironmentMapTarget(environment_render_buffer_)},
+    propagate_target_(environment_render_buffer_),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -1200,6 +1201,27 @@ Renderer::BlurProgram::BlurProgram() {
   glDetachShader(program, fragment_shader.id);
   color_texture = glGetUniformLocation(program, "color_texture");
   horizontal = glGetUniformLocation(program, "horizontal");
+}
+
+
+Renderer::PropagateProgram::PropagateProgram() {
+  std::string name = "propagate";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  link(name);
+  check(name);
+
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
+  environment_map = glGetUniformLocation(program, "environment_map");
 }
 
 Renderer::ShadowMapTarget::ShadowMapTarget(const RenderBuffer &render_buffer) {

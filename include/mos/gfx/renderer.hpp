@@ -143,6 +143,13 @@ private:
   };
 
 
+  /** Uniforms for the propagate shader. */
+  class PropagateProgram : public Program {
+  public:
+    PropagateProgram();
+    GLint environment_map;
+  };
+
   /** Uniforms for the environment shader. */
   class EnvironmentProgram : public Program {
   public:
@@ -400,6 +407,7 @@ private:
   /** Environment map targets. */
   const RenderBuffer environment_render_buffer_;
   const std::array<EnvironmentMapTarget, 2> environment_maps_targets;
+  const EnvironmentMapTarget propagate_target_;
 
   static const std::map<const unsigned int, std::string> shader_types_;
 
