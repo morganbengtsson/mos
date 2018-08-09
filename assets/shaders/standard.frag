@@ -181,7 +181,7 @@ void main() {
       vec3 kD_env = 1.0 - kS_env;
       kD_env *= 1.0 - metallic;
 
-      vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb + textureLod(environment_maps[i], -corrected_normal, num_levels -1.5).rgb;
+      vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb;
       vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
       vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength;
 
@@ -189,7 +189,6 @@ void main() {
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels - 0.5).rgb;
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels).rgb;
       irradiance /= 3.0;
-      irradiance += textureLod(environment_maps[i], -corrected_normal, num_levels - 1.5).rgb;
 
       vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
