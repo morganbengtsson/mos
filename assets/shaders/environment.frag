@@ -130,7 +130,7 @@ void main() {
 
     Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
-    vec3 ambient = material.albedo.rgb * (lights[0].color * sqrt(lights[0].strength)/41.5 + lights[1].color * sqrt(lights[1].strength)/41.5);
+    vec3 ambient = (material.albedo.rgb * lights[0].color * pow(lights[0].strength, 0.25)/40.0 + material.albedo.rgb * lights[1].color * pow(lights[1].strength, 0.25)/40.0);
 
     color.rgb = (Lo + ambient + emission) * material.factor;
     color.a = clamp(material.opacity * (material.emission.a + material.albedo.a), 0.0, 1.0);
