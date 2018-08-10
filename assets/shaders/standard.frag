@@ -126,7 +126,7 @@ void main() {
 
       float light_fragment_distance = distance(light.position, fragment.position);
       float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-      vec3 radiance = pow(light.strength * 0.06, 2) * light.color * attenuation;
+      vec3 radiance = pow(light.strength * 0.09, 2) * light.color * attenuation;
 
       vec3 L = normalize(light.position - fragment.position);
       vec3 H = normalize(V + L);
@@ -200,7 +200,6 @@ void main() {
       float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
 
       ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-      //ambient += diffuse_environment;
     }
     color.rgb = (Lo + ambient + emission) * material.factor;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
