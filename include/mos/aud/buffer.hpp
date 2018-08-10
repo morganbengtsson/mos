@@ -25,7 +25,7 @@ public:
         samples_(begin, end), id_(current_id_++) {}
 
   /** Empty buffer constructor. */
-  Buffer(const unsigned int channels = 1u)
+  Buffer(const int channels = 1)
       : channels_(channels), id_(current_id_++) {}
 
   /** Construct from *.ogg file. */
