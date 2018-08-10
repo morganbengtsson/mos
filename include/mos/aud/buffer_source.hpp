@@ -15,8 +15,8 @@ public:
                const Source &source = Source());
   ~BufferSource();
 
-  //TODO: Rename to input()
-  void update(const float dt);
+  /** Play the source. */
+  void input(const float dt);
 
   SharedBuffer buffer;
   Source source;

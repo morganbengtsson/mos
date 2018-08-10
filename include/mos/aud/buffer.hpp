@@ -15,18 +15,18 @@ using SharedBuffer = std::shared_ptr<Buffer>;
 class Buffer final {
   friend class Renderer;
 public:
+  //TODO: Replace with tracked container
   using Samples = std::vector<short>;
 
   template<class T>
   /** Construct buffer from a container of shorts. */
-  Buffer(const T begin, const T end, const unsigned int channels = 1u,
+  Buffer(const T begin, const T end, const int channels = 1,
               const unsigned int sample_rate = 44100u)
-      : channels_(channels), sample_rate_(sample_rate), valid_(true),
+      : channels_(channels), sample_rate_(sample_rate),
         samples_(begin, end), id_(current_id_++) {}
 
   /** Empty buffer constructor. */
-  Buffer(const int channels = 1)
-      : channels_(channels), id_(current_id_++) {}
+  Buffer(const int channels = 1);
 
   /** Construct from *.ogg file. */
   Buffer(const std::string &path);
@@ -46,16 +46,11 @@ public:
   /** Unique id. */
   unsigned int id() const;
 
-  bool valid() const;
-
-  //TODO: Deprecate and use modified time instead.
-  void invalidate();
-
   /** Get number of channels. */
-  unsigned int channels() const;
+  int channels() const;
 
   /** Get sample rate */
-  unsigned int sample_rate() const;
+  int sample_rate() const;
 
   /** Length in seconds. */
   float length() const;
@@ -64,10 +59,8 @@ private:
   static std::atomic_uint current_id_;
   unsigned int id_;
   Samples samples_;
-  int channels_;
-  int sample_rate_;
-  //TODO: replace with modified time_point.
-  bool valid_;
+  const int channels_;
+  const int sample_rate_;
 };
 }
 }

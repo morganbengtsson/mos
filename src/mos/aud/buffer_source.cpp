@@ -9,7 +9,7 @@ BufferSource::BufferSource(const SharedBuffer &buffer,
 
 BufferSource::~BufferSource() {}
 
-void BufferSource::update(const float dt) {
+void BufferSource::input(const float dt) {
   if (source.playing) {
     time_ += dt;
   }
