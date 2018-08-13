@@ -57,6 +57,7 @@ uniform sampler2D brdf_lut;
 
 in Fragment fragment;
 layout(location = 0) out vec4 color;
+layout(location = 1) out vec4 albedo_out;
 
 // Defined in functions.frag
 float rand(vec2 co);
@@ -142,4 +143,6 @@ void main() {
     float fog_att = fog_attenuation(distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, fog_att);
+
+    albedo_out = vec4(albedo, 1.0);
 }
