@@ -126,7 +126,7 @@ void main() {
 
       float light_fragment_distance = distance(light.position, fragment.position);
       float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-      vec3 radiance = light.strength * light.color * attenuation / 11.0f;;
+      vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
       vec3 L = normalize(light.position - fragment.position);
       vec3 H = normalize(V + L);
@@ -188,7 +188,7 @@ void main() {
       vec3 irradiance = textureLod(environment_maps[i], corrected_normal, num_levels - 1.5).rgb;
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels - 0.5).rgb;
       irradiance += textureLod(environment_maps[i], corrected_normal, num_levels).rgb;
-      irradiance /= 3.0f;
+      irradiance /= 3.0;
 
       vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 

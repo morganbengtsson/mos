@@ -8,6 +8,8 @@ namespace aud {
 
 std::atomic_uint Buffer::current_id_;
 
+Buffer::Buffer(const int channels) : channels_(channels), id_(current_id_++) {}
+
 Buffer::Buffer(const std::string &path) : id_(current_id_++) {
   short *decoded;
 
@@ -22,8 +24,8 @@ Buffer::Buffer(const std::string &path) : id_(current_id_++) {
     data.push_back(c);
   }
   auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels_,
-                                    &sample_rate_, &decoded);
-  samples_.assign(decoded, decoded+length);
+                                         &sample_rate_, &decoded);
+  samples_.assign(decoded, decoded + length);
 }
 
 Buffer::~Buffer() {}
@@ -42,16 +44,15 @@ Buffer::Samples::const_iterator Buffer::end() const {
 
 unsigned int Buffer::id() const { return id_; }
 
-bool Buffer::valid() const { return valid_; }
+int Buffer::channels() const { return channels_; }
 
-unsigned int Buffer::channels() const { return channels_; }
-
-unsigned int Buffer::sample_rate() const { return sample_rate_; }
+int Buffer::sample_rate() const { return sample_rate_; }
 
 float Buffer::length() const {
   return float(samples_.size()) / float(sample_rate() * channels());
 }
 
 const short *Buffer::data() const { return samples_.data(); }
+
 }
 }
