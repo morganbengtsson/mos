@@ -15,7 +15,6 @@ void main() {
   vec3 pos = vec3(0, 0, 0);
   if (side == 0 ){
     dir =  vec3(-1.0, 0.0, 0.0);
-    pos = vec3(2.0, )
   }
   else if (side == 1) {
     dir = vec3(1.0, 0.0, 0.0);
@@ -33,5 +32,5 @@ void main() {
     dir = vec3(0.0, 0.0, 1.0);
   }
 
-  color = vec4(textureLod(environment_map, box_correct(vec3(2.0, 2.0, 2.0), dir), num_levels - 1.5).rgb, 1.0);
+  color = vec4(textureLod(environment_map, dir, 0).rgb, 1.0);
 }
