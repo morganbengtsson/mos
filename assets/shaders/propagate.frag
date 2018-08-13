@@ -15,25 +15,25 @@ void main() {
   float num_levels = 1 + floor(log2(maxsize));
   color = vec4(0.0, 0.0, 0.0, 1.0);
   vec3 dir = vec3(1.0, 0.0, 0.0);
-  vec3 pos = vec3(0, 0, 0);
-  if (side == 0 ){
-    dir =  vec3(-1.0, 0.0, 0.0);
+  vec2 uv = frag_uv - vec2(0.5, 0.5);
+  if (side == 0 ) {
+    dir =  normalize(vec3(-0.5, uv.x, uv.y));
   }
   else if (side == 1) {
-    dir = vec3(1.0, 0.0, 0.0);
+    dir =  normalize(vec3(0.5, uv.x, uv.y));
   }
-  else if (side == 2){
-    dir = vec3(0.0, -1.0, 0.0);
-
-  }else if (side == 3){
-    dir = vec3(0.0, 1.0, 0.0);
+  else if (side == 2) {
+    dir =  normalize(vec3(uv.x, 0.5, uv.y));
+  }
+  else if (side == 3){
+    dir =  normalize(vec3(uv.x, -0.5, uv.y));
   }
   else if (side == 4){
-    dir = vec3(0.0, 0.0, -1.0);
+    dir =  normalize(vec3(uv.x, uv.y, 0.5));
   }
-  else if (side == 5){
-    dir = vec3(0.0, 0.0, 1.0);
+  else if (side == 5) {
+    dir =  normalize(vec3(uv.x, uv.y, -0.5));
   }
 
-  color = vec4(texture(environment_albedo_map, vec3(-1.0, 0.0, 0.0), 0).rgb + texture(environment_map, vec3(-1.0, 0.0, 0.0), 0).rgb, 1.0);
+  color = vec4(texture(environment_albedo_map, dir, 0).rgb, 1.0);
 }
