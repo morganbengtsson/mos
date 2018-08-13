@@ -20,20 +20,20 @@ void main() {
     dir =  normalize(vec3(0.5, -uv.y, -uv.x));
   }
   else if (side == 1) {
-    dir =  normalize(vec3(0.5, uv.x, uv.y));
+    dir =  normalize(vec3(-0.5, -uv.y, uv.x));
   }
   else if (side == 2) {
     dir =  normalize(vec3(uv.x, 0.5, uv.y));
   }
-  else if (side == 3){
-    dir =  normalize(vec3(uv.x, -0.5, uv.y));
+  else if (side == 3){ // MAY BE WRONG
+    dir =  normalize(vec3(uv.x, -0.5, -uv.y));
   }
-  else if (side == 4){
+  else if (side == 4){ // MAY BE WRONG
     dir =  normalize(vec3(uv.x, uv.y, 0.5));
   }
   else if (side == 5) {
-    dir =  normalize(vec3(uv.x, uv.y, -0.5));
+    dir =  normalize(vec3(-uv.x, -uv.y, -0.5));
   }
 
-  color = vec4(texture(environment_albedo_map, dir, 0).rgb, 1.0);
+  color = vec4(texture(environment_map, dir, 0).rgb, 1.0);
 }
