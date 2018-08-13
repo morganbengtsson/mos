@@ -403,6 +403,7 @@ private:
     EnvironmentMapTarget(const RenderBuffer &render_buffer);
     ~EnvironmentMapTarget();
     GLuint texture;
+    GLuint albedo;
     GLuint frame_buffer;
   };
 
