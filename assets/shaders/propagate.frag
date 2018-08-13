@@ -17,7 +17,7 @@ void main() {
   vec3 dir = vec3(1.0, 0.0, 0.0);
   vec2 uv = frag_uv - vec2(0.5, 0.5);
   if (side == 0 ) {
-    dir =  normalize(vec3(-0.5, uv.x, uv.y));
+    dir =  normalize(vec3(0.5, -uv.y, -uv.x));
   }
   else if (side == 1) {
     dir =  normalize(vec3(0.5, uv.x, uv.y));
