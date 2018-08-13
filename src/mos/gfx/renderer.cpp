@@ -663,16 +663,22 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
 
-    clear(clear_color);
+    clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
     auto resolution = glm::ivec2(environment_render_buffer_.resolution,
                                  environment_render_buffer_.resolution);
 
     glViewport(0, 0, resolution.x, resolution.y);
 
     glBindVertexArray(quad_.vertex_array);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
     glUniform1i(propagate_program_.environment_map, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
+    glUniform1i(propagate_program_.environment_albedo_map, 1);
+
     glUniform1iv(propagate_program_.side, 1, &i);
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
@@ -1261,6 +1267,7 @@ Renderer::PropagateProgram::PropagateProgram() {
   glDetachShader(program, functions_fragment_shader.id);
 
   environment_map = glGetUniformLocation(program, "environment_map");
+  environment_albedo_map = glGetUniformLocation(program, "environment_albedo_map");
   side = glGetUniformLocation(program, "side");
 }
 

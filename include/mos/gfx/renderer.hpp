@@ -148,6 +148,7 @@ private:
   public:
     PropagateProgram();
     GLint environment_map;
+    GLint environment_albedo_map;
     GLint side;
   };
 
