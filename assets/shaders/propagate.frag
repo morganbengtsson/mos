@@ -23,18 +23,23 @@ void main() {
   }
   else if (side == 1) {
     dir =  normalize(vec3(-0.5, -uv.y, uv.x));
+    norm = vec3(-dir.x, -dir.y, dir.z);
   }
   else if (side == 2) {
     dir =  normalize(vec3(uv.x, 0.5, uv.y));
+    norm = vec3(dir.x, -dir.y, -dir.z);
   }
   else if (side == 3){ // MAY BE WRONG
     dir =  normalize(vec3(uv.x, -0.5, -uv.y));
+    norm = vec3(dir.x, -dir.y, -dir.z);
   }
   else if (side == 4){ // MAY BE WRONG
     dir =  normalize(vec3(uv.x, uv.y, 0.5));
+    norm = vec3(dir.x, -dir.y, -dir.z);
   }
   else if (side == 5) {
     dir =  normalize(vec3(-uv.x, -uv.y, -0.5));
+    norm = vec3(dir.x, -dir.y, -dir.z);
   }
 
   vec3 irradiance = textureLod(environment_map, norm, num_levels - 1.5).rgb;

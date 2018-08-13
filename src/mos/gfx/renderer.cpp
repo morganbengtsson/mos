@@ -228,7 +228,7 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
 
   glActiveTexture(GL_TEXTURE3);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
 
   glActiveTexture(GL_TEXTURE4);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
