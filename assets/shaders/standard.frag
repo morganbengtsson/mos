@@ -56,6 +56,20 @@ struct Fragment {
     float weight;
 };
 
+
+mat4 rotationMatrix(vec3 axis, float angle)
+{
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+}
+
 uniform Material material;
 uniform Light[2] lights;
 uniform sampler2D[2] shadow_maps;
@@ -185,10 +199,19 @@ void main() {
       vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
       vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength;
 
-      vec3 irradiance = textureLod(environment_maps[i], corrected_normal, num_levels - 1.5).rgb;
-      irradiance += textureLod(environment_maps[i], corrected_normal, num_levels - 0.5).rgb;
-      irradiance += textureLod(environment_maps[i], corrected_normal, num_levels).rgb;
-      irradiance /= 3.0;
+      vec3 irradiance = vec3(0.0, 0.0, 0.0);
+
+      for(float x = -0.5; x <= 0.5; x += 0.5) {
+          for(float y = -0.5; y <= 0.5; y += 0.5) {
+            for(float z = -0.5; z <= 0.5; z += 0.5) {
+                mat4 rotx = rotationMatrix(vec3(1.0, 0.0, 0.0), x);
+                mat4 roty = rotationMatrix(vec3(0.0, 1.0, 0.0), y);
+                mat4 rotz = rotationMatrix(vec3(0.0, 1.0, 0.0), z);
+                irradiance += textureLod(environment_maps[i], (rotx * roty * rotz * vec4(corrected_normal, 1.0)).rgb, num_levels - 1.5).rgb;
+              }
+          }
+      }
+      irradiance /= 27.0;
 
       vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
