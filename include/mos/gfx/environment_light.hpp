@@ -24,7 +24,7 @@ public:
   /** Get position. */
   glm::vec3 position() const;
 
-  /** Extent.*/
+  /** Set extent and recalculate cube camera projections.*/
   void extent(const glm::vec3 &extent);
 
   /** Get extent. */

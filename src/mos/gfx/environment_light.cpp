@@ -21,6 +21,7 @@ glm::vec3 EnvironmentLight::position() const {
 }
 void EnvironmentLight::extent(const glm::vec3 &extent) {
   box_.extent = extent;
+  cube_camera_.near_far(0.01f, glm::length(extent));
 }
 glm::vec3 EnvironmentLight::extent() const {
   return box_.extent;

@@ -18,6 +18,7 @@ public:
 
   glm::vec3 position() const;
   void position(const glm::vec3 &position);
+  void near_far(const float near, const float far);
   std::array<Camera, 6> cameras;
 
 };

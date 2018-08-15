@@ -58,5 +58,13 @@ void CubeCamera::position(const glm::vec3 &position) {
     camera.position(position);
   }
 }
+void CubeCamera::near_far(const float near, const float far) {
+  for (auto & camera : cameras){
+    camera.projection = glm::perspective(glm::half_pi<float>(),
+                                         1.0f,
+                                         near,
+                                         far);
+  }
+}
 }
 }
