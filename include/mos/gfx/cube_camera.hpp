@@ -9,9 +9,6 @@ namespace gfx {
 
 /** Camera for environment rendering. */
 class CubeCamera {
-private:
-  glm::mat4 projection_;
-  glm::vec3 up_;
 public:
   CubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
                const float near = 0.1,
@@ -21,7 +18,9 @@ public:
   void position(const glm::vec3 &position);
   void near_far(const float near, const float far);
   std::array<Camera, 6> cameras;
-
+private:
+  glm::mat4 projection_;
+  glm::vec3 up_;
 };
 }
 }
