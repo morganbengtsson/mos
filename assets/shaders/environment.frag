@@ -137,7 +137,7 @@ void main() {
     + albedo * lights[1].color * 0.01;
 
     color.rgb = (Lo + ambient + emission) * material.factor;
-    color.a = clamp(material.opacity * (albedo_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
+    color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
