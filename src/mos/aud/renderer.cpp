@@ -206,7 +206,7 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
     {
       long data_size = std::distance(buffer->begin(), buffer->end());
       const ALvoid *data = buffer->data();
-      alBufferData(al_buffer, AL_FORMAT_MONO16, data, data_size * sizeof(short),
+      alBufferData(al_buffer, buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, data_size * sizeof(short),
                    buffer->sample_rate());
     }
     buffers_.insert(BufferPair(buffer->id(), al_buffer));
@@ -338,7 +338,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
       auto samples = stream_source.stream->read();
       int size = stream_source.stream->buffer_size;
 
-      alBufferData(buffer, AL_FORMAT_MONO16, samples.data(),
+      alBufferData(buffer, stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, samples.data(),
                    size * sizeof(ALshort),
                    stream_source.stream->sample_rate());
       alSourceQueueBuffers(al_source, 1, &buffer);
