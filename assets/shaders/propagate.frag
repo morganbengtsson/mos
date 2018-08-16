@@ -43,7 +43,7 @@ void main() {
   }
 
   vec3 irradiance = textureLod(environment_map, norm, num_levels - 1.5).rgb;
-  
+
   vec3 albedo = texture(environment_albedo_map, dir).rgb;
 
   vec3 diffuse_environment = irradiance * albedo;
