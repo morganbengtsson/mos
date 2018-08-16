@@ -19,9 +19,9 @@ public:
         const Listener &listener);
   Scene();
 
-  const BufferSources buffer_sources;
-  const StreamSources stream_sources;
-  const Listener listener;
+  BufferSources buffer_sources;
+  StreamSources stream_sources;
+  Listener listener;
 };
 }
 }

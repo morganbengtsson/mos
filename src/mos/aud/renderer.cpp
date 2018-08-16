@@ -200,13 +200,14 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   }
 
   auto buffer = buffer_source.buffer;
+  auto format = buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
   if (buffers_.find(buffer->id()) == buffers_.end()) {
     ALuint al_buffer;
     alGenBuffers(1, &al_buffer);
     {
       long data_size = std::distance(buffer->begin(), buffer->end());
       const ALvoid *data = buffer->data();
-      alBufferData(al_buffer, buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, data_size * sizeof(short),
+      alBufferData(al_buffer, format, data, data_size * sizeof(short),
                    buffer->sample_rate());
     }
     buffers_.insert(BufferPair(buffer->id(), al_buffer));
@@ -318,13 +319,15 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
   ALuint buffer = 0;
 
+  auto format = stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+
   ALuint buffers[4]; // TODO std array
   if (stream_source.source.playing && (state != AL_PLAYING)) {
     alGenBuffers(4, buffers);
     int size = stream_source.stream->buffer_size;
     for (int i = 0; i < 4; i++) {
       alBufferData(
-          buffers[i], AL_FORMAT_MONO16, stream_source.stream->read().data(),
+          buffers[i], format, stream_source.stream->read().data(),
           size * sizeof(ALshort), stream_source.stream->sample_rate());
       alSourceQueueBuffers(al_source, 1, &buffers[i]);
     }
@@ -338,7 +341,7 @@ void Renderer::stream_source(const StreamSource &stream_source) {
       auto samples = stream_source.stream->read();
       int size = stream_source.stream->buffer_size;
 
-      alBufferData(buffer, stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, samples.data(),
+      alBufferData(buffer, format, samples.data(),
                    size * sizeof(ALshort),
                    stream_source.stream->sample_rate());
       alSourceQueueBuffers(al_source, 1, &buffer);
