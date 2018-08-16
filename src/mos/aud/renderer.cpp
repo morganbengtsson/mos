@@ -319,23 +319,23 @@ void Renderer::stream_source(const StreamSource &stream_source) {
   alGetSourcei(al_source, AL_BUFFERS_PROCESSED, &processed);
   ALuint buffer = 0;
 
-  auto format = stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-
-  ALuint buffers[4]; // TODO std array
-  if (stream_source.source.playing && (state != AL_PLAYING)) {
-    alGenBuffers(4, buffers);
-    int size = stream_source.stream->buffer_size;
-    for (int i = 0; i < 4; i++) {
-      alBufferData(
-          buffers[i], format, stream_source.stream->read().data(),
-          size * sizeof(ALshort), stream_source.stream->sample_rate());
-      alSourceQueueBuffers(al_source, 1, &buffers[i]);
-    }
-    alSourcePlay(al_source);
-    alSourcei(al_source, AL_STREAMING, AL_TRUE);
-  }
-
   if(stream_source.stream) {
+    auto format = stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+
+    ALuint buffers[4]; // TODO std array
+    if (stream_source.source.playing && (state != AL_PLAYING)) {
+      alGenBuffers(4, buffers);
+      int size = stream_source.stream->buffer_size;
+      for (int i = 0; i < 4; i++) {
+        alBufferData(
+            buffers[i], format, stream_source.stream->read().data(),
+            size * sizeof(ALshort), stream_source.stream->sample_rate());
+        alSourceQueueBuffers(al_source, 1, &buffers[i]);
+      }
+      alSourcePlay(al_source);
+      alSourcei(al_source, AL_STREAMING, AL_TRUE);
+    }
+
     while (processed--) {
       alSourceUnqueueBuffers(al_source, 1, &buffer);
       auto samples = stream_source.stream->read();
@@ -349,13 +349,13 @@ void Renderer::stream_source(const StreamSource &stream_source) {
     if (stream_source.source.loop && stream_source.stream->done()) {
       stream_source.stream->seek_start();
     }
-  }
-  if (!stream_source.source.playing && (state == AL_PLAYING)) {
-    alSourceStop(al_source);
-    ALint count;
-    alGetSourcei(al_source, AL_BUFFERS_QUEUED, &count);
-    alSourceUnqueueBuffers(al_source, count, &buffer);
-    alDeleteBuffers(4, buffers);
+    if (!stream_source.source.playing && (state == AL_PLAYING)) {
+      alSourceStop(al_source);
+      ALint count;
+      alGetSourcei(al_source, AL_BUFFERS_QUEUED, &count);
+      alSourceUnqueueBuffers(al_source, count, &buffer);
+      alDeleteBuffers(4, buffers);
+    }
   }
 }
 
