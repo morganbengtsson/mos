@@ -12,7 +12,7 @@ ParticleCloud::ParticleCloud() : id_(current_id_++) {
 }
 
 ParticleCloud::ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles) :
-emission_map(emission_map), particles(particles) {}
+emission_map(emission_map), particles(particles), id_(current_id_++){}
 
 ParticleCloud::~ParticleCloud() {}
 
