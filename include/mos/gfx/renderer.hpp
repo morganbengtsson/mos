@@ -22,10 +22,10 @@
 namespace mos {
 namespace gfx {
 
-/** Render geometry/models with OpenGL. */
+/** Render geometry shapes with OpenGL. */
 class Renderer final {
 public:
-  /** Inits the renderer, creates an OpenGL context with GLEW. */
+  /** Inits the renderer, creates an OpenGL context with GLAD. */
   Renderer(const glm::vec4 &color, const glm::ivec2 &resolution);
 
   ~Renderer();

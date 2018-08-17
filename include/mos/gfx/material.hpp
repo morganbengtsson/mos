@@ -9,7 +9,7 @@ namespace gfx {
 class Material;
 using SharedMaterial = std::shared_ptr<Material>;
 
-/** PBR based material. */
+/** Physically based material. */
 class Material {
 public:
   explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
@@ -34,7 +34,6 @@ public:
                     const float ambient_occlusion = 1.0f);
 
   virtual ~Material();
-
 
   glm::vec3 albedo;
   glm::vec3 emission;

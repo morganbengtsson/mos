@@ -5,6 +5,7 @@
 namespace mos{
 namespace gfx{
 
+/** Collection of scenes. */
 using Scenes = Container<Scene>;
 
 }

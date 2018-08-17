@@ -7,6 +7,7 @@
 namespace mos {
 namespace gfx {
 
+/** Environment light container. */
 using EnvironmentLights = std::array<EnvironmentLight, 2>;
 
 }

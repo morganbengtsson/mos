@@ -11,12 +11,12 @@
 namespace mos {
 namespace gfx {
 
-/** Particles for rendering. */
+/** Collection of same particles for rendering. */
 class ParticleCloud final : public Shape {
 public:
   ParticleCloud();
 
-  ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles);
+  ParticleCloud(const SharedTexture2D& emission_map, const Particles& particles);
 
   ~ParticleCloud();
 
@@ -28,7 +28,6 @@ public:
 
   /** Particles. */
   Particles particles;
-
 };
 }
 }

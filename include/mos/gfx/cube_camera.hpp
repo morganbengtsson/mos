@@ -15,8 +15,14 @@ public:
              const float far = 100.0f);
 
   glm::vec3 position() const;
+
+  /** Set position. */
   void position(const glm::vec3 &position);
+
+  /** Set near and far planes. */
   void near_far(const float near, const float far);
+
+  /** Cameras for eac axis. */
   std::array<Camera, 6> cameras;
 };
 }

@@ -5,9 +5,11 @@
 namespace mos {
 namespace gfx {
 
+/** Base class for geometric shapes. */
 class Shape {
 public:
   Shape();
+  /** Unique id. */
   unsigned int id() const;
 private:
   static std::atomic_uint current_id_;

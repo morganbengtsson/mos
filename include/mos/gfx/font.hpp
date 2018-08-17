@@ -22,7 +22,10 @@ public:
   ~Font();
   float height() const;
   float base() const;
+  /** Texture with characters. */
   SharedTexture2D texture;
+
+  /** Characters supported. */
   CharMap characters;
 private:
   float base_;

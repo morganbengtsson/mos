@@ -9,7 +9,7 @@ namespace gfx {
 class EnvironmentLight;
 using OptionalEnvironmentLight = std::optional<EnvironmentLight>;
 
-/** Real time environment light. */
+/** Environment light, based on a cube map. */
 class EnvironmentLight {
   friend class Renderer;
 public:

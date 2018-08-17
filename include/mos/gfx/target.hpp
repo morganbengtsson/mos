@@ -10,7 +10,7 @@ namespace gfx {
 class Target;
 using OptTarget = std::optional<Target>;
 
-/** Rendertarget,for off screen rendering. */
+/** Off screen rendering target. */
 class Target {
 public:
   Target();

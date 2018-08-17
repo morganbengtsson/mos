@@ -4,7 +4,7 @@
 namespace mos {
 namespace gfx {
 
-/** Physically based fog, with exponential falloff and near/far color blending. */
+/** Fog with exponential falloff and near/far color blending. */
 class Fog final{
 public:
   /** @param color Color of the fog.

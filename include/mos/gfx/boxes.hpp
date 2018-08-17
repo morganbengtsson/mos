@@ -6,6 +6,7 @@
 namespace mos {
 namespace gfx {
 
+/** Collection of boxes. */
 using Boxes = Container<Box>;
 
 }

@@ -10,8 +10,7 @@
 namespace mos {
 namespace gfx {
 
-using namespace nlohmann;
-/** Gathers what is needed to render an object. A Mesh, a Material and a transformation. */
+/** Collection of properties to render an object. */
 class Model final {
 public:
   Model();
@@ -30,14 +29,17 @@ public:
   /** Set position. */
   void position(const glm::vec3 &position);
 
+  /** A mesh shape. */
   SharedMesh mesh;
 
+  /** A material. */
   Material material;
 
+  /** A transform. */
   glm::mat4 transform;
 
+  /** Children models. */
   Models models;
-
 private:
   std::string name_;
 };
