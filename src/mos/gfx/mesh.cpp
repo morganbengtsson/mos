@@ -11,14 +11,12 @@
 namespace mos {
 namespace gfx {
 
-std::atomic_uint Mesh::current_id_;
-
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
            const std::initializer_list<Triangle> &triangles)
     : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
 }
 
-Mesh::Mesh(const std::string &path) : id_(current_id_++) {
+Mesh::Mesh(const std::string &path) {
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
@@ -49,8 +47,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
   }
 }
 
-Mesh::Mesh() : id_(current_id_++) {
-}
+Mesh::Mesh() {}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
@@ -65,8 +62,6 @@ SharedMesh Mesh::load(const std::string &path) {
     return std::make_shared<Mesh>(path);
   }
 }
-
-unsigned int Mesh::id() const { return id_; }
 
 void Mesh::clear() {
   vertices.clear();
