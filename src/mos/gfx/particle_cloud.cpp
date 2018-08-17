@@ -11,6 +11,9 @@ std::atomic_uint ParticleCloud::current_id_(10000);
 ParticleCloud::ParticleCloud() : id_(current_id_++) {
 }
 
+ParticleCloud::ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles) :
+emission_map(emission_map), particles(particles) {}
+
 ParticleCloud::~ParticleCloud() {}
 
 unsigned int ParticleCloud::id() const { return id_; }
@@ -23,5 +26,6 @@ void ParticleCloud::sort(const glm::vec3 &position) {
               return a_distance1 > b_distance1;
             });
 }
+
 }
 }

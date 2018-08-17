@@ -1,10 +1,11 @@
 #pragma once
 #include <vector>
 #include <atomic>
-#include <mos/gfx/texture_2d.hpp>
 #include <chrono>
-#include <mos/gfx/particle.hpp>
 #include <mos/core/tracked_container.hpp>
+#include <mos/core/container.hpp>
+#include <mos/gfx/texture_2d.hpp>
+#include <mos/gfx/particles.hpp>
 
 namespace mos {
 namespace gfx {
@@ -14,10 +15,7 @@ class ParticleCloud final {
 public:
   ParticleCloud();
 
-  template<class T>
-  ParticleCloud(T begin, T end) {
-    particles.assign(begin, end);
-  }
+  ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles);
 
   ~ParticleCloud();
 
@@ -31,7 +29,7 @@ public:
   SharedTexture2D emission_map;
 
   /** Particles. */
-  TrackedContainer<Particle> particles;
+  Particles particles;
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;
