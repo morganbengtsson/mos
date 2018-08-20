@@ -942,7 +942,7 @@ HTML_COLORSTYLE_HUE    = 220
 # the colors in the HTML output. For a value of 0 the output will use
 # grayscales only. A value of 255 will produce the most vivid colors.
 
-HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_SAT    = 0
 
 # The HTML_COLORSTYLE_GAMMA tag controls the gamma correction applied to
 # the luminance component of the colors in the HTML output. Values below
