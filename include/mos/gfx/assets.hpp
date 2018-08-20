@@ -35,9 +35,11 @@ public:
   ~Assets();
 
   /** Loads a Model from a *.model file.*/
+  [[deprecated]]
   Model model(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Loads a Model from a json structure */
+  [[deprecated]]
   Model model_value(const nlohmann::json &value, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Loads an animation from meshes specified in *.animation file. */
