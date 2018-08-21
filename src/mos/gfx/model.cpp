@@ -26,11 +26,7 @@ void Model::position(const glm::vec3 &position) {
   transform[3][2] = position[2];
 }
 
-Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_transform) {
-  std::cout << "Loading: " << path << std::endl;
-  filesystem::path fpath = path;
-  auto doc = nlohmann::json::parse(mos::text(assets.directory() + path));
-
+Model::Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_transform) {
   auto name = doc.value("name", "");
   auto mesh_path = std::string("");
   if (!doc["mesh"].is_null()) {
@@ -41,7 +37,7 @@ Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_tr
     material_path = doc.value("material", "");
   }
 
-  name_ =  name;
+  name_ = name;
   mesh = assets.mesh(mesh_path);
   transform = parent_transform * jsonarray_to_mat4(doc["transform"]);
   material = assets.material(material_path);
@@ -49,10 +45,15 @@ Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_tr
   for (auto &m : doc["children"]) {
     const std::string str_path = m;
     filesystem::path path = str_path;
-    if(path.extension() == "model") {
+    if (path.extension() == "model") {
       models.push_back(Model(assets, path.str()));
     }
   }
+}
+
+Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_transform) :
+Model(assets, nlohmann::json::parse(mos::text(assets.directory() + path)), parent_transform) {
+  std::cout << "Loaded: " << path << std::endl;
 }
 
 }
