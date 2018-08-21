@@ -16,7 +16,7 @@ class Assets;
 /** Collection of properties for a renderable object. */
 class Model final {
 public:
-  Model();
+  Model() = default;
 
   Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_transform);
 
@@ -25,7 +25,7 @@ public:
   Model(const std::string &name, const SharedMesh &mesh, const glm::mat4 &transform = glm::mat4(1.0f),
         const Material &material = Material(glm::vec3(1.0f)));
 
-  ~Model();
+  ~Model() = default;
 
   std::string name() const;
 

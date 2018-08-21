@@ -6,25 +6,9 @@
 namespace mos {
 namespace gfx {
 
-Model::Model() {}
-
 Model::Model(const std::string &name, const SharedMesh &mesh,
              const glm::mat4 &transform, const Material &material)
     : mesh(mesh), material(material), name_(name), transform(transform) {}
-
-Model::~Model() {}
-
-std::string Model::name() const { return name_; }
-
-glm::vec3 Model::position() const {
-  return glm::vec3(transform[3]);
-}
-
-void Model::position(const glm::vec3 &position) {
-  transform[3][0] = position[0];
-  transform[3][1] = position[1];
-  transform[3][2] = position[2];
-}
 
 Model::Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_transform) {
   auto name = doc.value("name", "");
@@ -32,7 +16,7 @@ Model::Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_
   if (!doc["mesh"].is_null()) {
     mesh_path = doc.value("mesh", "");
   }
-  std::string material_path = "";
+  std::string material_path;
   if (!doc["material"].is_null()) {
     material_path = doc.value("material", "");
   }
@@ -52,8 +36,20 @@ Model::Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_
 }
 
 Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_transform) :
-Model(assets, nlohmann::json::parse(mos::text(assets.directory() + path)), parent_transform) {
+    Model(assets, nlohmann::json::parse(mos::text(assets.directory() + path)), parent_transform) {
   std::cout << "Loaded: " << path << std::endl;
+}
+
+std::string Model::name() const { return name_; }
+
+glm::vec3 Model::position() const {
+  return glm::vec3(transform[3]);
+}
+
+void Model::position(const glm::vec3 &position) {
+  transform[3][0] = position[0];
+  transform[3][1] = position[1];
+  transform[3][2] = position[2];
 }
 
 }
