@@ -32,13 +32,13 @@ public:
   /** Set position. */
   void position(const glm::vec3 &position);
 
-  /** A mesh shape. */
+  /** Mesh shape. */
   SharedMesh mesh;
 
-  /** A material. */
+  /** Material. */
   Material material;
 
-  /** A transform. */
+  /** Transform. */
   glm::mat4 transform;
 
   /** Children models. */
