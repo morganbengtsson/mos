@@ -15,7 +15,7 @@
 namespace mos {
 namespace gfx {
 
-/** Handles heavy render assets, such as Textures and meshes. Caches things internally, so nothing is loaded twice. */
+/** Cache for faster loading of textures and meshes. */
 class Assets final {
 public:
   using MeshMap = std::unordered_map<std::string, std::shared_ptr<Mesh>>;

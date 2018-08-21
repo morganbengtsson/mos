@@ -16,7 +16,8 @@ namespace gfx {
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
 using Triangle = std::array<int, 3>;
-/** Geometric data description. Vertices and optional indices for rendering. */
+
+/** Geometric data description, vertices and indices. */
 class Mesh final : public Shape {
 public:
   using Positions = std::vector<glm::vec3>;

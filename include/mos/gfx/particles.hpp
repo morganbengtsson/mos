@@ -6,6 +6,7 @@
 namespace mos {
 namespace gfx {
 
+/** Collection of particles, tracks modifications */
 using Particles = TrackedContainer<Particle>;
 
 }

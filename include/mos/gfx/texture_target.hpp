@@ -7,6 +7,7 @@
 namespace mos {
 namespace gfx {
 
+/** Off screen rendertarget. */
 struct TextureTarget {
   TextureTarget(){
     texture = std::make_shared<Texture2D>(Texture2D(128, 128));

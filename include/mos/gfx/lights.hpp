@@ -4,7 +4,7 @@
 namespace mos {
 namespace gfx {
 
-/** Collection of lights for rendering. */
+/** Collection of lights. */
 using Lights = std::array<Light, 2>;
 
 }

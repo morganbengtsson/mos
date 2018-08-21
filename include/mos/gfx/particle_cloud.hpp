@@ -11,7 +11,7 @@
 namespace mos {
 namespace gfx {
 
-/** Collection of same particles for rendering. */
+/** Collection of particles for rendering, uses same texture. */
 class ParticleCloud final : public Shape {
 public:
   ParticleCloud();

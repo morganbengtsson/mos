@@ -5,7 +5,7 @@
 namespace mos {
 namespace gfx {
 
-/** Bounding box for rendering. */
+/** Visual bounding box. */
 class Box final {
 public:
   Box();
