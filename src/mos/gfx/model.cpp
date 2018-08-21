@@ -10,34 +10,34 @@ Model::Model(const std::string &name, const SharedMesh &mesh,
              const glm::mat4 &transform, const Material &material)
     : mesh(mesh), material(material), name_(name), transform(transform) {}
 
-Model::Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_transform) {
-  auto name = doc.value("name", "");
+Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform) {
+  auto parsed = json;
+  if (parsed.is_string()) {
+    std::cout << "Loading: " << parsed << std::endl;
+    parsed = nlohmann::json::parse(mos::text(assets.directory() + std::string(parsed)));
+  }
+  auto name = parsed.value("name", "");
   auto mesh_path = std::string("");
-  if (!doc["mesh"].is_null()) {
-    mesh_path = doc.value("mesh", "");
+  if (!parsed["mesh"].is_null()) {
+    mesh_path = parsed.value("mesh", "");
   }
   std::string material_path;
-  if (!doc["material"].is_null()) {
-    material_path = doc.value("material", "");
+  if (!parsed["material"].is_null()) {
+    material_path = parsed.value("material", "");
   }
 
   name_ = name;
   mesh = assets.mesh(mesh_path);
-  transform = parent_transform * jsonarray_to_mat4(doc["transform"]);
+  transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
   material = assets.material(material_path);
 
-  for (auto &m : doc["children"]) {
+  for (auto &m : parsed["children"]) {
     const std::string str_path = m;
     filesystem::path path = str_path;
     if (path.extension() == "model") {
       models.push_back(Model(assets, path.str()));
     }
   }
-}
-
-Model::Model(Assets &assets, const std::string &path, const glm::mat4 &parent_transform) :
-    Model(assets, nlohmann::json::parse(mos::text(assets.directory() + path)), parent_transform) {
-  std::cout << "Loaded: " << path << std::endl;
 }
 
 std::string Model::name() const { return name_; }

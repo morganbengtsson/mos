@@ -18,9 +18,7 @@ class Model final {
 public:
   Model() = default;
 
-  Model(Assets &assets, const nlohmann::json &doc, const glm::mat4 &parent_transform);
-
-  Model(Assets &assets, const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   Model(const std::string &name, const SharedMesh &mesh, const glm::mat4 &transform = glm::mat4(1.0f),
         const Material &material = Material(glm::vec3(1.0f)));
