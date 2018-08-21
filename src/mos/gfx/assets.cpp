@@ -97,40 +97,6 @@ Material Assets::material(const std::string &path) {
   }
 }
 
-Light Assets::light(const std::string &path, const glm::mat4 &parent_transform) {
-  if (path.empty()) {
-    return Light();
-  } else {
-    filesystem::path fpath = path;
-    if (fpath.extension() == "light") {
-      auto value = json::parse(mos::text(directory_ + fpath.str()));
-
-      auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
-      auto position = glm::vec3(transform[3]);
-      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
-
-	  std::string t = value["light"];
-      auto data_value = json::parse(mos::text(directory_ + t));
-
-      auto color = glm::vec3(data_value["color"][0],
-                             data_value["color"][1],
-                             data_value["color"][2]);
-      auto strength = data_value["strength"];
-      auto size = data_value["size"];
-      auto blend = value["blend"];
-
-      return Light(position,
-                      center,
-                      size,
-                      color,
-                      strength);
-    } else {
-      throw std::runtime_error(path.substr(path.find_last_of(".")) +
-          " file format is not supported.");
-    }
-  }
-}
-
 EnvironmentLight Assets::environment_light(const std::string &path, const glm::mat4 &parent_transform) {
   filesystem::path fpath = path;
 

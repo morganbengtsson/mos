@@ -18,6 +18,10 @@ public:
                  const float strength = 100.0f,
                  const float near = 0.1f,
                  const float far = 10.0f);
+
+  Light(const std::string &directory, const std::string &path, const float near = 0.1f, const float far = 100.0f,
+      const glm::mat4 &parent_transform = glm::mat4(1.0f));
+
   virtual ~Light();
 
   /** Set spot angle, in radans. */
