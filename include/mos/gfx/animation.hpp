@@ -1,10 +1,11 @@
 #pragma once
 
-#include <mos/gfx/mesh.hpp>
 #include <initializer_list>
 #include <map>
 #include <memory>
 #include <utility>
+#include <mos/gfx/mesh.hpp>
+#include <mos/gfx/assets.hpp>
 
 namespace mos {
 namespace gfx {
@@ -23,6 +24,8 @@ public:
             const unsigned int frame_rate = 30);
 
   Animation(const std::string &path);
+
+  Animation(Assets &assets, const std::string &path);
 
   void update(const float dt);
 

@@ -40,6 +40,16 @@ Animation::Animation(const std::string &path) {
   }
 }
 
+Animation::Animation(Assets &assets, const std::string &path) {
+  auto doc = json::parse(mos::text(assets.directory() + path));
+  frame_rate_ = doc["frame_rate"];
+  for (auto &keyframe : doc["keyframes"]) {
+    auto key = keyframe["key"];
+    auto mesh_path = keyframe["mesh"];
+    keyframes_.insert({key, assets.mesh(mesh_path)});
+  }
+}
+
 int Animation::frame() const {
   return int(glm::floor(time_ * frame_rate_));
 }
@@ -67,5 +77,7 @@ void Animation::update(const float dt) {
 }
 
 std::shared_ptr<Mesh> Animation::mesh() { return mesh_; }
+
+
 }
 }

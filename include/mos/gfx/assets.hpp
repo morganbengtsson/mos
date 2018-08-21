@@ -4,7 +4,6 @@
 #include <memory>
 #include <unordered_map>
 #include <json.hpp>
-#include <mos/gfx/animation.hpp>
 #include <mos/gfx/character.hpp>
 #include <mos/gfx/font.hpp>
 #include <mos/gfx/material.hpp>
@@ -32,18 +31,7 @@ public:
 
   Assets(const Assets &assets) = delete;
 
-  ~Assets();
-
-  /** Loads a Model from a *.model file.*/
-  [[deprecated]]
-  Model model(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
-
-  /** Loads a Model from a json structure */
-  [[deprecated]]
-  Model model_value(const nlohmann::json &value, const glm::mat4 &parent_transform = glm::mat4(1.0f));
-
-  /** Loads an animation from meshes specified in *.animation file. */
-  Animation animation(const std::string &path);
+  ~Assets() = default;
 
   /** Loads a Material from a *.material file into a Material object. */
   Material material(const std::string &path);

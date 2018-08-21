@@ -15,58 +15,6 @@ using namespace nlohmann;
 
 Assets::Assets(const std::string directory) : directory_(directory) {}
 
-Assets::~Assets() {}
-
-Model Assets::model_value(const json &value, const glm::mat4 &parent_transform) {
-  auto name = value.value("name", "");
-  auto mesh_path = std::string("");
-  if (!value["mesh"].is_null()) {
-    mesh_path = value.value("mesh", "");
-  }
-  std::string material_path = "";
-  if (!value["material"].is_null()) {
-    material_path = value.value("material", "");
-  }
-
-  auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
-
-  auto created_model = Model(
-      name, mesh(mesh_path),
-      transform,
-      material(material_path));
-
-  for (auto &m : value["children"]) {
-	const std::string str_path = m;
-    filesystem::path path = str_path;
-    if(path.extension() == "model") {
-      created_model.models.push_back(model(path.str()));
-    }
-  }
-  return created_model;
-}
-
-Model Assets::model(const std::string &path, const glm::mat4 &parent_transform) {
-  std::cout << "Loading: " << path << std::endl;
-  filesystem::path fpath = path;
-  auto doc = json::parse(mos::text(directory_ + path));
-
-  return model_value(doc, parent_transform);
-}
-
-Animation Assets::animation(const std::string &path) {
-  auto doc = json::parse(mos::text(directory_ + path));
-  auto frame_rate = doc["frame_rate"];
-  std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes;
-
-  for (auto &keyframe : doc["keyframes"]) {
-    auto key = keyframe["key"];
-    auto mesh_path = keyframe["mesh"];
-    keyframes.insert({key, mesh(mesh_path)});
-  }
-  Animation animation(keyframes, frame_rate);
-  return animation;
-}
-
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (path.empty()){
     return SharedMesh(nullptr);
