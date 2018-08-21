@@ -6,8 +6,8 @@
 
 namespace mos {
 namespace gfx {
-class Material;
-using SharedMaterial = std::shared_ptr<Material>;
+
+class Assets;
 
 /** Physically based material. */
 class Material {
@@ -23,7 +23,6 @@ public:
                     const float roughness = 0.0f,
                     const float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
-
                     const float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &albedo,
@@ -32,6 +31,8 @@ public:
                     const float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
                     const float ambient_occlusion = 1.0f);
+
+  explicit Material(Assets &assets, std::string &path);
 
   virtual ~Material();
 

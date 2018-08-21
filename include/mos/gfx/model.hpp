@@ -12,6 +12,7 @@ namespace mos {
 namespace gfx {
 
 class Assets;
+class Material;
 
 /** Collection of properties for a renderable object. */
 class Model final {

@@ -6,7 +6,6 @@
 #include <json.hpp>
 #include <mos/gfx/character.hpp>
 #include <mos/gfx/font.hpp>
-#include <mos/gfx/material.hpp>
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/texture_2d.hpp>
@@ -23,8 +22,6 @@ public:
   using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
   using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
   using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
-  using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
-  using SharedMaterial = std::shared_ptr<Material>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
   Assets(const std::string directory = "assets/");
@@ -32,9 +29,6 @@ public:
   Assets(const Assets &assets) = delete;
 
   ~Assets() = default;
-
-  /** Loads a Material from a *.material file into a Material object. */
-  Material material(const std::string &path);
 
   /** Loads a EnvironmentLight from a *.environment_light. */
   EnvironmentLight environment_light(const std::string &path, const glm::mat4& parent_transform = glm::mat4(1.0f));

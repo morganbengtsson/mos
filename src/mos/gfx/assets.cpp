@@ -40,63 +40,6 @@ Assets::texture(const std::string &path,
   }
 }
 
-Material Assets::material(const std::string &path) {
-  if (path.empty()) {
-    return Material();
-  } else {
-    filesystem::path fpath = path;
-    if (fpath.extension() == "material") {
-      auto value = json::parse(mos::text(directory_ + fpath.str()));
-
-      auto read_texture = [&](const std::string &name, const bool color_data = true) {
-        std::string file_name = "";
-        if (!value[name].is_null()) {
-          file_name = value[name];
-        }
-        auto tex = file_name.empty() ? texture("") : texture(file_name, color_data);
-        return tex;
-      };
-
-      auto albedo_map = read_texture("albedo_map");
-      auto emission_map = read_texture("emission_map");
-      auto normal_map = read_texture("normal_map");
-      if (normal_map) {
-        if (normal_map->format == Texture::Format::SRGB){
-          normal_map->format = Texture::Format::RGB;
-        }
-        else if (normal_map->format == Texture::Format::SRGBA){
-          normal_map->format = Texture::Format::RGBA;
-        }
-        //normal_map->format = normal_map->format == Texture::Format::SRGB ? Texture::Format::RGB : Texture::Format::RGBA;
-      }
-      auto metallic_map = read_texture("metallic_map");
-      auto roughness_map = read_texture("roughness_map");
-      auto ambient_occlusion_map = read_texture("ambient_occlusion_map");
-
-      auto diffuse = glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
-      auto opacity = value["opacity"];
-      auto roughness = value["roughness"];
-      auto metallic = value["metallic"];
-      auto emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
-      auto ambient_occlusion = value["ambient_occlusion"];
-      return Material(albedo_map,
-                      emission_map,
-                      normal_map,
-                      metallic_map,
-                      roughness_map,
-                      ambient_occlusion_map,
-                      diffuse,
-                      opacity,
-                      roughness,
-                      metallic,
-                      emission);
-    } else {
-      throw std::runtime_error(path.substr(path.find_last_of(".")) +
-          " file format is not supported.");
-    }
-  }
-}
-
 EnvironmentLight Assets::environment_light(const std::string &path, const glm::mat4 &parent_transform) {
   filesystem::path fpath = path;
 
