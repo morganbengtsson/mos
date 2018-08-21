@@ -30,9 +30,6 @@ public:
 
   ~Assets() = default;
 
-  /** Loads a EnvironmentLight from a *.environment_light. */
-  EnvironmentLight environment_light(const std::string &path, const glm::mat4& parent_transform = glm::mat4(1.0f));
-
   /** Loads a Mesh from a *.mesh file and caches it internally. */
   SharedMesh mesh(const std::string &path);
 

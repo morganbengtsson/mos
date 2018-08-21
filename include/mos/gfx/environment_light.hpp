@@ -18,6 +18,8 @@ public:
                    const glm::vec3 &extent = glm::vec3(50.0f),
                    const float strength = 0.0f);
 
+  EnvironmentLight(const std::string &directory, const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
+
   /** Set position. */
   void position(const glm::vec3 &position);
 
