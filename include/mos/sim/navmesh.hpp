@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <array>
 #include <glm/glm.hpp>
@@ -14,68 +15,42 @@ namespace sim {
 
 class Face {
 public:
-  Face(const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2);
-  std::optional<Intersection>
+  Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
+  std::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
-
-private:
-  glm::vec3 v0_;
-  glm::vec3 v1_;
-  glm::vec3 v2_;
+public :
+  gfx::Vertex v0_;
+  gfx::Vertex v1_;
+  gfx::Vertex v2_;
 };
 
 class Navmesh {
 public:
-  using OptionalIntersection = std::optional<Intersection>;
+  using OptionalIntersection = std::optional<gfx::Vertex>;
   Navmesh();
   Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform);
 
   template<class Tv, class Te>
   Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
-          Te elements_end, const glm::mat4 &transform)
-      : triangles_(elements_begin, elements_end) {
+           Te elements_end, const glm::mat4 &transform)
+      : triangles(elements_begin, elements_end), vertices(vertices_begin, vertices_end) {
 
-    std::transform(vertices_begin, vertices_end, std::back_inserter(positions_),
-                   [&](const gfx::Vertex &vertex) {
-                     return glm::vec3(transform *
-                         glm::vec4(vertex.position, 1.0f));
-                   });
-
-    if (triangles_.empty()) {
-      for (auto it = positions_.begin(); it != positions_.end();) {
-        auto &v0 = *it;
-        it++;
-        auto &v1 = *it;
-        it++;
-        auto &v2 = *it;
-        it++;
-        faces_.push_back(Face(v0, v1, v2));
-      }
-
-    } else {
-      for (auto it = triangles_.begin(); it != triangles_.end();) {
-        auto &v0 = positions_[it->at(0)];
-        it++;
-        auto &v1 = positions_[it->at(1)];
-        it++;
-        auto &v2 = positions_[it->at(2)];
-        it++;
-        faces_.push_back(Face(v0, v1, v2));
-      }
+    for (auto &vertex : vertices) {
+      vertex.position = glm::vec3(transform *
+          glm::vec4(vertex.position, 1.0f));
     }
   }
-  std::optional<Intersection>
+  std::optional<gfx::Vertex>
   intersects(const glm::vec3 &origin, const glm::vec3 &direction);
 
-  std::optional<Intersection>
-  closest_intersection(const glm::vec3 &origin, const glm::vec3 direction);
+  std::optional<gfx::Vertex>
+  closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
+  void calculate_normals();
 
   ~Navmesh();
 
-private:
-  std::vector<Face> faces_;
-  std::vector<glm::vec3> positions_;
-  std::vector<std::array<int, 3>> triangles_;
+  std::vector<gfx::Vertex> vertices;
+  std::vector<std::array<int, 3>> triangles;
 };
 }
 }
