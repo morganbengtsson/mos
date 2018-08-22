@@ -11,7 +11,7 @@
 namespace mos {
 namespace aud {
 
-/** Full scene for audio processing. */
+/** Audio scene with listener and audio sources. */
 class Scene final {
 public:
   Scene(const BufferSources &buffer_sources,

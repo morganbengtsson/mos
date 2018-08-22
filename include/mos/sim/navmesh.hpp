@@ -13,8 +13,7 @@
 namespace mos {
 namespace sim {
 
-
-
+/** Navigation mesh. */
 class Navmesh {
 public:
   using OptionalIntersection = std::optional<gfx::Vertex>;

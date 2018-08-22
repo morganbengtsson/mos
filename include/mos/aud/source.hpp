@@ -5,7 +5,7 @@
 namespace mos {
 namespace aud {
 
-/** Base class for the audio sources. Either streamed or direct from memory. */
+/** Base class for the audio source. Either streamed or direct from memory. */
 class Source final {
 public:
   Source(const glm::vec3 &position = glm::vec3(0.0f),
@@ -21,11 +21,18 @@ public:
   unsigned int id() const;
 
   glm::vec3 position;
+
+  /** Velocity */
   glm::vec3 velocity;
+  /** Pitch. */
   float pitch;
+  /** Volume */
   float gain;
+  /** The source is looping */
   bool loop;
+  /** The source is playing. */
   bool playing;
+  /** How much the source is obstructed. 0.0 - 1.0 */
   float obstructed;
 
 private:
