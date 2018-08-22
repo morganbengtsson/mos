@@ -127,15 +127,6 @@ void Mesh::calculate_tangents(Vertex &v0,
   v2.tangent = tangent;
 }
 
-//TODO: Remove?
-struct Face {
-  Vertex &v0;
-  Vertex &v1;
-  Vertex &v2;
-  glm::vec3 normal() const {
-    return glm::triangleNormal(v0.position, v1.position, v2.position);
-  }
-};
 
 void Mesh::calculate_normals() {
   if (triangles.size() == 0) {
@@ -238,6 +229,9 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   }
+}
+glm::vec3 Mesh::Face::normal() const {
+  return glm::triangleNormal(v0.position, v1.position, v2.position);
 }
 }
 }

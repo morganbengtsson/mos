@@ -64,6 +64,13 @@ public:
   TrackedContainer<Triangle> triangles;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
+
+  struct Face {
+    Vertex &v0;
+    Vertex &v1;
+    Vertex &v2;
+    glm::vec3 normal() const;
+  };
 };
 }
 }
