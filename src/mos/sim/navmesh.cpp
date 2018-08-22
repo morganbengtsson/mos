@@ -58,11 +58,11 @@ void Navmesh::calculate_normals() {
   }
 }
 
-Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
+Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
 std::optional<gfx::Vertex>
-Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
+Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   glm::vec3 bary;
   auto intersects =
       glm::intersectRayTriangle(origin, direction, v0_.position, v1_.position, v2_.position, bary);

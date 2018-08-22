@@ -13,16 +13,7 @@
 namespace mos {
 namespace sim {
 
-class Face {
-public:
-  Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
-  std::optional<gfx::Vertex>
-  intersects(const glm::vec3 &origin, const glm::vec3 &direction);
-public :
-  gfx::Vertex v0_;
-  gfx::Vertex v1_;
-  gfx::Vertex v2_;
-};
+
 
 class Navmesh {
 public:
@@ -51,6 +42,17 @@ public:
 
   std::vector<gfx::Vertex> vertices;
   std::vector<std::array<int, 3>> triangles;
+private:
+  class Face {
+  public:
+    Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
+    std::optional<gfx::Vertex>
+    intersects(const glm::vec3 &origin, const glm::vec3 &direction);
+  public :
+    gfx::Vertex v0_;
+    gfx::Vertex v1_;
+    gfx::Vertex v2_;
+  };
 };
 }
 }
