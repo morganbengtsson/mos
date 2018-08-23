@@ -7,6 +7,7 @@
 namespace mos {
 namespace aud {
 
+/** Container of buffer sources. */
 using BufferSources = Container<BufferSource>;
 
 }

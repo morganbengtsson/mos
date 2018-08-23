@@ -4,16 +4,13 @@
 namespace mos {
 namespace gfx {
 
-//TODO: Why 10000?
-//TODO: Inherit from abstract mesh?
-std::atomic_uint ParticleCloud::current_id_(10000);
-
-ParticleCloud::ParticleCloud() : id_(current_id_++) {
+ParticleCloud::ParticleCloud() {
 }
 
-ParticleCloud::~ParticleCloud() {}
+ParticleCloud::ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles) :
+emission_map(emission_map), particles(particles) {}
 
-unsigned int ParticleCloud::id() const { return id_; }
+ParticleCloud::~ParticleCloud() {}
 
 void ParticleCloud::sort(const glm::vec3 &position) {
   std::sort(particles.begin(), particles.end(),
@@ -23,5 +20,6 @@ void ParticleCloud::sort(const glm::vec3 &position) {
               return a_distance1 > b_distance1;
             });
 }
+
 }
 }

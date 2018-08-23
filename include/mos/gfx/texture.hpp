@@ -8,9 +8,10 @@
 namespace mos {
 namespace gfx {
 
-/** Texture base */
 class Texture;
 using SharedTexture = std::shared_ptr<Texture>;
+
+/** Texture base */
 class Texture {
   friend class Renderer;
 public:

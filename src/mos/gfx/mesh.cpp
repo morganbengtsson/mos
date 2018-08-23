@@ -11,14 +11,12 @@
 namespace mos {
 namespace gfx {
 
-std::atomic_uint Mesh::current_id_;
-
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
            const std::initializer_list<Triangle> &triangles)
     : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
 }
 
-Mesh::Mesh(const std::string &path) : id_(current_id_++) {
+Mesh::Mesh(const std::string &path) {
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
@@ -49,8 +47,7 @@ Mesh::Mesh(const std::string &path) : id_(current_id_++) {
   }
 }
 
-Mesh::Mesh() : id_(current_id_++) {
-}
+Mesh::Mesh() {}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
@@ -65,8 +62,6 @@ SharedMesh Mesh::load(const std::string &path) {
     return std::make_shared<Mesh>(path);
   }
 }
-
-unsigned int Mesh::id() const { return id_; }
 
 void Mesh::clear() {
   vertices.clear();
@@ -132,15 +127,6 @@ void Mesh::calculate_tangents(Vertex &v0,
   v2.tangent = tangent;
 }
 
-//TODO: Remove?
-struct Face {
-  Vertex &v0;
-  Vertex &v1;
-  Vertex &v2;
-  glm::vec3 normal() const {
-    return glm::triangleNormal(v0.position, v1.position, v2.position);
-  }
-};
 
 void Mesh::calculate_normals() {
   if (triangles.size() == 0) {
@@ -243,6 +229,9 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   }
+}
+glm::vec3 Mesh::Face::normal() const {
+  return glm::triangleNormal(v0.position, v1.position, v2.position);
 }
 }
 }

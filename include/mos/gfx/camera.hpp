@@ -5,7 +5,7 @@
 namespace mos {
 namespace gfx {
 
-/** Camera for rendering view. */
+/** Rendering camera view. */
 class Camera final {
 public:
   Camera();

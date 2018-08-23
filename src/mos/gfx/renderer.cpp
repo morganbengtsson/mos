@@ -395,7 +395,6 @@ void Renderer::render_model(const Model &model,
                                  ? textures_.at(model.material.emission_map->id())->texture
                                  : black_texture_.texture);
 
-
     static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                 0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
@@ -577,88 +576,91 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
   for (size_t i = 0; i < environment_maps_targets.size(); i++) {
-    GLuint frame_buffer_id = environment_maps_targets[i].frame_buffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
+    if (scene.environment_lights[i].strength > 0.0f) {
+      GLuint frame_buffer_id = environment_maps_targets[i].frame_buffer;
+      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-    auto texture_id = environment_maps_targets[i].texture;
+      auto texture_id = environment_maps_targets[i].texture;
 
-    auto cube_camera = scene.environment_lights[i].cube_camera_.cameras[cube_camera_index_[i]];
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER,
+                             GL_COLOR_ATTACHMENT1,
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i],
+                             environment_maps_targets[i].albedo,
+                             0);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], environment_maps_targets[i].albedo, 0);
+      clear(clear_color);
+      auto resolution = glm::ivec2(environment_render_buffer_.resolution,
+                                   environment_render_buffer_.resolution);
+      auto cube_camera = scene.environment_lights[i].cube_camera_.cameras[cube_camera_index_[i]];
 
-    clear(clear_color);
-    auto resolution = glm::ivec2(environment_render_buffer_.resolution,
-                                environment_render_buffer_.resolution);
+      glViewport(0, 0, resolution.x, resolution.y);
 
-    glViewport(0, 0, resolution.x, resolution.y);
+      glUseProgram(environment_program_.program);
 
-    glUseProgram(environment_program_.program);
+      glUniform1i(environment_program_.brdf_lut, 0);
+      glUniform1i(environment_program_.shadow_maps[0], 1);
+      glUniform1i(environment_program_.shadow_maps[1], 2);
 
-    glUniform1i(environment_program_.brdf_lut, 0);
-    glUniform1i(environment_program_.shadow_maps[0], 1);
-    glUniform1i(environment_program_.shadow_maps[1], 2);
+      glUniform1i(environment_program_.material_albedo_map, 3);
+      glUniform1i(environment_program_.material_emission_map, 4);
 
-    glUniform1i(environment_program_.material_albedo_map, 3);
-    glUniform1i(environment_program_.material_emission_map, 4);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+      glActiveTexture(GL_TEXTURE2);
+      glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
 
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+      // Camera in world space
+      auto position = cube_camera.position();
+      glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
 
-    // Camera in world space
-    auto position = cube_camera.position();
-    glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
+      for (size_t i = 0; i < scene.lights.size(); i++) {
+        glUniform3fv(environment_program_.lights[i].position, 1,
+                     glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
 
-    for (size_t i = 0; i < scene.lights.size(); i++) {
-      glUniform3fv(environment_program_.lights[i].position, 1,
-                   glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
+        glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
+        glUniform1fv(environment_program_.lights[i].strength, 1, &scene.lights[i].strength);
 
-      glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
-      glUniform1fv(environment_program_.lights[i].strength, 1, &scene.lights[i].strength);
+        glUniformMatrix4fv(environment_program_.lights[i].view, 1, GL_FALSE,
+                           &scene.lights[i].camera.view[0][0]);
+        glUniformMatrix4fv(environment_program_.lights[i].projection, 1, GL_FALSE,
+                           &scene.lights[i].camera.projection[0][0]);
 
-      glUniformMatrix4fv(environment_program_.lights[i].view, 1, GL_FALSE,
-                         &scene.lights[i].camera.view[0][0]);
-      glUniformMatrix4fv(environment_program_.lights[i].projection, 1, GL_FALSE,
-                         &scene.lights[i].camera.projection[0][0]);
+        auto light_angle = scene.lights[i].angle();
+        glUniform1fv(environment_program_.lights[i].angle, 1, &light_angle);
+        glUniform3fv(environment_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+      }
 
-      auto light_angle = scene.lights[i].angle();
-      glUniform1fv(environment_program_.lights[i].angle, 1, &light_angle);
-      glUniform3fv(environment_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+      glUniform2iv(environment_program_.camera_resolution, 1, glm::value_ptr(resolution));
+
+      glUniform3fv(environment_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
+      glUniform3fv(environment_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
+      glUniform1fv(environment_program_.fog_attenuation_factor, 1,
+                   &scene.fog.attenuation_factor);
+
+      for (auto &model : scene.models) {
+        render_model(model, glm::mat4(1.0f), cube_camera,
+                     scene.lights,
+                     scene.environment_lights,
+                     scene.fog,
+                     resolution, environment_program_);
+      }
+
+      cube_camera_index_[i] = cube_camera_index_[i] >= 5 ? 0 : ++cube_camera_index_[i]; //TODO PROBLEM
+
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+      if (cube_camera_index_[i] == 0) {
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+      }
+      glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
-
-    glUniform2iv(environment_program_.camera_resolution, 1, glm::value_ptr(resolution));
-
-    glUniform3fv(environment_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
-    glUniform3fv(environment_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
-    glUniform1fv(environment_program_.fog_attenuation_factor, 1,
-                 &scene.fog.attenuation_factor);
-
-    for (auto &model : scene.models) {
-      render_model(model, glm::mat4(1.0f), cube_camera,
-                   scene.lights,
-                   scene.environment_lights,
-                   scene.fog,
-                   resolution, environment_program_);
-    }
-
-
-    cube_camera_index_[i] = cube_camera_index_[i] >= 5 ? 0 : ++cube_camera_index_[i]; //TODO PROBLEM
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-    if (cube_camera_index_[i] == 0) {
-      glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-    }
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   }
 
   for (int i = 0; i < 6; i++) {
@@ -1032,7 +1034,8 @@ Renderer::EnvironmentProgram::EnvironmentProgram() {
     lights[i].position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights[i].strength = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
+    lights[i].strength =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
     lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
     lights[i].projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
@@ -1119,7 +1122,8 @@ Renderer::StandardProgram::StandardProgram() {
     lights[i].position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
     lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights[i].strength = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
+    lights[i].strength =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
     lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
     lights[i].projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
@@ -1249,7 +1253,6 @@ Renderer::BlurProgram::BlurProgram() {
   horizontal = glGetUniformLocation(program, "horizontal");
 }
 
-
 Renderer::PropagateProgram::PropagateProgram() {
   std::string name = "propagate";
   auto vert_source = text("assets/shaders/" + name + ".vert");
@@ -1349,12 +1352,12 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
                   GL_CLAMP_TO_EDGE);
 
   for (int i = 0; i < 6; i++) {
-	  std::vector<unsigned char> data;
-	  for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
-		  data.push_back(0);
-		  data.push_back(0);
-		  data.push_back(0);
-	  }
+    std::vector<unsigned char> data;
+    for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
+      data.push_back(0);
+      data.push_back(0);
+      data.push_back(0);
+    }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB,
                  render_buffer.resolution, render_buffer.resolution, 0, GL_RGB,
@@ -1648,7 +1651,7 @@ Renderer::Program::~Program() {
 void Renderer::Program::check(const std::string &name) {
   GLint status = 0;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
-  if(status == GL_FALSE) {
+  if (status == GL_FALSE) {
     GLint length;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);

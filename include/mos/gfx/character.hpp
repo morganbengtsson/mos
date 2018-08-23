@@ -3,7 +3,7 @@
 namespace mos {
 namespace gfx {
 
-/** Measurements of a character, for text rendering. */
+/** Measurements of a character glyph, for text rendering. */
 struct Character {
   float x_offset;
   float y_offset;

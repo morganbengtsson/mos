@@ -6,22 +6,25 @@
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/models.hpp>
+#include <mos/gfx/assets.hpp>
 
 namespace mos {
 namespace gfx {
 
-using namespace nlohmann;
-/** Gathers what is needed to render an object. A Mesh, a Material and a transformation. */
+class Assets;
+class Material;
+
+/** Collection of properties for a renderable object. */
 class Model final {
 public:
-  Model();
+  Model() = default;
 
-  Model(const std::string &name, const SharedMesh &mesh,
-        const glm::mat4 &transform = glm::mat4(1.0f),
-        const Material &material = Material(
-            Material(glm::vec3(1.0f))));
+  Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-  ~Model();
+  Model(const std::string &name, const SharedMesh &mesh, const glm::mat4 &transform = glm::mat4(1.0f),
+        const Material &material = Material(glm::vec3(1.0f)));
+
+  ~Model() = default;
 
   std::string name() const;
 
@@ -30,14 +33,17 @@ public:
   /** Set position. */
   void position(const glm::vec3 &position);
 
+  /** Mesh shape. */
   SharedMesh mesh;
 
+  /** Material. */
   Material material;
 
+  /** Transform. */
   glm::mat4 transform;
 
+  /** Children models. */
   Models models;
-
 private:
   std::string name_;
 };

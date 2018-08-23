@@ -28,8 +28,6 @@ Buffer::Buffer(const std::string &path) : id_(current_id_++) {
   samples_.assign(decoded, decoded + length);
 }
 
-Buffer::~Buffer() {}
-
 SharedBuffer Buffer::load(const std::string &path) {
   return std::make_shared<Buffer>(path);
 }

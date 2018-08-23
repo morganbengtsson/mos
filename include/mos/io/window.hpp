@@ -20,7 +20,7 @@ public:
     HAND, ARROW, CROSSHAIR
   };
 
-  Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080});
+  Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080}, const int swap_interval = 0);
   ~Window();
 
   using ErrorFunc =

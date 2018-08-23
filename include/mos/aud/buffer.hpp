@@ -2,8 +2,8 @@
 
 #include <atomic>
 #include <string>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace mos {
 namespace aud {
@@ -15,7 +15,6 @@ using SharedBuffer = std::shared_ptr<Buffer>;
 class Buffer final {
   friend class Renderer;
 public:
-  //TODO: Replace with tracked container
   using Samples = std::vector<short>;
 
   template<class T>
@@ -26,12 +25,12 @@ public:
         samples_(begin, end), id_(current_id_++) {}
 
   /** Empty buffer constructor. */
-  Buffer(const int channels = 1);
+  explicit Buffer(const int channels = 1);
 
   /** Construct from *.ogg file. */
-  Buffer(const std::string &path);
+  explicit Buffer(const std::string &path);
 
-  ~Buffer();
+  ~Buffer() = default;
 
   /** Load shared buffer. */
   static SharedBuffer load(const std::string &path);

@@ -12,7 +12,7 @@ Window::MouseFunc Window::mouse_func;
 Window::ScrollFunc Window::scroll_func;
 Window::KeyFunc Window::key_func;
 
-Window::Window(const std::string &title, const glm::ivec2 &resolution) {
+Window::Window(const std::string &title, const glm::ivec2 &resolution, const int swap_interval) {
   if (!glfwInit()) {
     exit(EXIT_FAILURE);
   }
@@ -51,7 +51,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution) {
   glfwSetScrollCallback(window_, scroll_callback);
   glfwSetWindowPosCallback(window_, position_callback);
 
-  glfwSwapInterval(1);
+  glfwSwapInterval(swap_interval);
 
   hand_cursor_ = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
   arrow_cursor_ = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);

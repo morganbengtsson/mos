@@ -4,7 +4,7 @@
 namespace mos {
 namespace gfx {
 
-/** Particle used in a particle system. */
+/** Particle used in a particle cloud. */
 class Particle final {
 public:
   explicit Particle(const glm::vec3 &position = glm::vec3(0.0f),

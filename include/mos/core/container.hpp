@@ -2,8 +2,11 @@
 #include <vector>
 #include <chrono>
 #include <initializer_list>
+#include <mos/core/tracked_container.hpp>
 
 namespace mos {
+
+template<class T> class TrackedContainer;
 
 /** Container. */
 template<class T>
@@ -20,6 +23,8 @@ public:
   Container(It begin, It end) {
     assign(begin, end);
   }
+
+  Container(const TrackedContainer<T> & container) : Container(container.begin(), container.end()){}
 
   template<class It>
   void assign(It begin, It end){

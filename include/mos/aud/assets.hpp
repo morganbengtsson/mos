@@ -8,7 +8,7 @@
 namespace mos {
 namespace aud {
 
-/** Handles heavy audio assets. */
+/** Cache for heavy audio assets. */
 class Assets final {
 public:
   using BufferMap =
@@ -17,7 +17,7 @@ public:
 
   Assets(const std::string directory = "assets/");
   Assets(const Assets &audio_assets) = delete;
-  ~Assets();
+  ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */
   SharedBuffer audio_buffer(const std::string &path);

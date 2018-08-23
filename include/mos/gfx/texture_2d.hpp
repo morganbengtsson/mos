@@ -12,7 +12,8 @@ namespace gfx {
 
 class Texture2D;
 using SharedTexture2D = std::shared_ptr<Texture2D>;
-/** Texture in two dimension. Contains iterable chars as data. */
+
+/** Texture in two dimension. Contains chars as data. */
 class Texture2D final : public Texture {
   friend class Renderer;
 public:

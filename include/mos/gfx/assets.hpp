@@ -4,10 +4,8 @@
 #include <memory>
 #include <unordered_map>
 #include <json.hpp>
-#include <mos/gfx/animation.hpp>
 #include <mos/gfx/character.hpp>
 #include <mos/gfx/font.hpp>
-#include <mos/gfx/material.hpp>
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/texture_2d.hpp>
@@ -17,40 +15,20 @@
 namespace mos {
 namespace gfx {
 
-/** Handles heavy render assets, such as Textures and meshes. Caches things internally, so nothing is loaded twice. */
+/** Cache for faster loading of textures and meshes. */
 class Assets final {
 public:
   using MeshMap = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
   using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
   using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
   using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
-  using MaterialPair = std::pair<std::string, std::shared_ptr<Material>>;
-  using SharedMaterial = std::shared_ptr<Material>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
   Assets(const std::string directory = "assets/");
 
   Assets(const Assets &assets) = delete;
 
-  ~Assets();
-
-  /** Loads a Model from a *.model file.*/
-  Model model(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
-
-  /** Loads a Model from a json structure */
-  Model model_value(const nlohmann::json &value, const glm::mat4 &parent_transform = glm::mat4(1.0f));
-
-  /** Loads an animation from meshes specified in *.animation file. */
-  Animation animation(const std::string &path);
-
-  /** Loads a Material from a *.material file into a Material object. */
-  Material material(const std::string &path);
-
-  /** Loads a Light from a *.light file into a Light object. */
-  Light light(const std::string &path, const glm::mat4 &parent_transform = glm::mat4(1.0f));
-
-  /** Loads a EnvironmentLight from a *.environment_light. */
-  EnvironmentLight environment_light(const std::string &path, const glm::mat4& parent_transform = glm::mat4(1.0f));
+  ~Assets() = default;
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */
   SharedMesh mesh(const std::string &path);

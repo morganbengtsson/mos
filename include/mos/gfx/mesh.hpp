@@ -7,6 +7,7 @@
 #include <memory>
 #include <chrono>
 #include <mos/gfx/vertex.hpp>
+#include <mos/gfx/shape.hpp>
 #include <mos/core/tracked_container.hpp>
 
 namespace mos {
@@ -15,8 +16,9 @@ namespace gfx {
 class Mesh;
 using SharedMesh = std::shared_ptr<Mesh>;
 using Triangle = std::array<int, 3>;
-/** Geometric data description. Vertices and optional indices for rendering. */
-class Mesh final {
+
+/** Geometric data description, vertices and indices. */
+class Mesh final : public Shape {
 public:
   using Positions = std::vector<glm::vec3>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
@@ -25,7 +27,7 @@ public:
   Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te triangles_begin, Te triangles_end)
       : vertices(vertices_begin, vertices_end),
-        triangles(triangles_begin, triangles_end), id_(current_id_++) {
+        triangles(triangles_begin, triangles_end) {
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
@@ -41,9 +43,6 @@ public:
   ~Mesh();
 
   static SharedMesh load(const std::string &path);
-
-  /** @return Unique identifier. */
-  unsigned int id() const;
 
   /** Erease all vertices and indices. */
   void clear();
@@ -65,8 +64,13 @@ public:
   TrackedContainer<Triangle> triangles;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
-  static std::atomic_uint current_id_;
-  unsigned int id_;
+
+  struct Face {
+    Vertex &v0;
+    Vertex &v1;
+    Vertex &v2;
+    glm::vec3 normal() const;
+  };
 };
 }
 }

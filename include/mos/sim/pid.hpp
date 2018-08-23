@@ -3,6 +3,7 @@ namespace mos {
 namespace sim {
 
 template<class T>
+/** Pid controller. */
 class Pid {
 public:
   Pid(const T &error, const float Kp = 1.0f, const float Ki = 0.0f, const float Kd = 0.1f)

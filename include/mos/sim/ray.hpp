@@ -4,6 +4,7 @@
 namespace mos {
 namespace sim {
 
+/** Ray for ray testing. */
 class Ray {
 public:
   Ray(const glm::vec3 &origin,

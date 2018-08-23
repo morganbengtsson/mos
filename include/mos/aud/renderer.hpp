@@ -16,7 +16,7 @@
 namespace mos {
 namespace aud {
 
-/** Audio system. Uses OpenAL for Windows/Linux/OSX. */
+/** OpenAL audio system. */
 class Renderer final {
 public:
   Renderer();
