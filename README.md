@@ -1,4 +1,4 @@
-![Screenshot](https://github.com/morganbengtsson/mos-skeleton/blob/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
 
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 
