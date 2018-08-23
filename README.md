@@ -40,3 +40,14 @@ target_link_libraries(${PROJECT_NAME} mos)
 target_include_directories(${PROJECT_NAME} PUBLIC externals/mos/include)
 
 ```
+
+# Dependencies
+
+MOS is dependent on the following excellent projects:
+
+- [GLAD](https://github.com/Dav1dde/glad): OpenGL context creation
+- [GLFW](https://www.glfw.org/): Window creation and input events
+- [GLM](https://glm.g-truc.net/0.9.9/index.html): Mathematics
+- [JSON for Modern C++](https://github.com/nlohmann/json): JSON reading
+- [OpenAL soft](https://github.com/kcat/openal-soft): 3D audio
+- [STB](https://github.com/nothings/stb): Image decoding
