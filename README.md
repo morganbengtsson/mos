@@ -40,6 +40,3 @@ target_link_libraries(${PROJECT_NAME} mos)
 target_include_directories(${PROJECT_NAME} PUBLIC externals/mos/include)
 
 ```
-
-A CMake based [project skeleton](https://github.com/morganbengtsson/mos-skeleton) is also available, for a minimal setup
-with working graphics and audio:
