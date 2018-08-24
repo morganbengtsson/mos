@@ -663,7 +663,9 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     }
   }
 
-  int i = cube_camera_index_[0] + 1 >= 5 ? 0 :  cube_camera_index_[0] + 1;
+  int i = cube_camera_index_[0];
+
+  std:: cout << i << std::endl;
 
   auto cube_camera = scene.environment_lights[0].cube_camera_.cameras[i];
 
