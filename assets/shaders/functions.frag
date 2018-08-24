@@ -6,6 +6,16 @@ float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
+mat3 rotate(const vec3 axis, const float a) {
+  const float s=sin(a);
+  const float c=cos(a);
+  const float oc=1.0-c;
+  const vec3 as=axis*s;
+  const mat3 p=mat3(axis.x*axis,axis.y*axis,axis.z*axis);
+  const mat3 q=mat3(c,-as.z,as.y,as.z,c,-as.x,-as.y,as.x,c);
+  return p*oc+q;
+}
+
 vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir, const vec3 fragment_position) {
     vec3 box_min = box_pos - box_extent;
     vec3 box_max = box_pos + box_extent;

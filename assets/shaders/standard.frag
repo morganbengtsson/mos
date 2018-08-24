@@ -56,20 +56,6 @@ struct Fragment {
     float weight;
 };
 
-
-mat4 rotationMatrix(vec3 axis, float angle)
-{
-    axis = normalize(axis);
-    float s = sin(angle);
-    float c = cos(angle);
-    float oc = 1.0 - c;
-
-    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
-                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
-                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
-                0.0,                                0.0,                                0.0,                                1.0);
-}
-
 uniform Material material;
 uniform Light[2] lights;
 uniform sampler2D[2] shadow_maps;
@@ -89,6 +75,7 @@ layout(location = 0) out vec4 color;
 
 // Defined in functions.frag
 float rand(vec2 co);
+mat3 rotate(const vec3 axis, const float a);
 vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir, const vec3 fragment_position);
 float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare);
 float sample_shadow_map(sampler2D shadow_map, const vec2 uv, const float compare);
@@ -201,17 +188,18 @@ void main() {
 
       vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
-      for(float x = -0.5; x <= 0.5; x += 0.5) {
-          for(float y = -0.5; y <= 0.5; y += 0.5) {
-            for(float z = -0.5; z <= 0.5; z += 0.5) {
-                mat4 rotx = rotationMatrix(vec3(1.0, 0.0, 0.0), x);
-                mat4 roty = rotationMatrix(vec3(0.0, 1.0, 0.0), y);
-                mat4 rotz = rotationMatrix(vec3(0.0, 1.0, 0.0), z);
-                irradiance += textureLod(environment_maps[i], (rotx * roty * rotz * vec4(corrected_normal, 1.0)).rgb, num_levels - 1.5).rgb;
+      const float m = 0.5;
+      for(float x = -m; x <= m; x += 1.0) {
+          for(float y = -m; y <= m; y += 1.0) {
+            for(float z = -m; z <= m; z += 1.0) {
+                mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+                mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+                mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
+                irradiance += textureLod(environment_maps[i], rotx * roty * rotz * corrected_normal, num_levels - 1.5).rgb;
               }
           }
       }
-      irradiance /= 27.0;
+      irradiance /= 8.0;
 
       vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 

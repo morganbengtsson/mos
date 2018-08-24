@@ -663,34 +663,35 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
     }
   }
 
-  for (int i = 0; i < 6; i++) {
-    auto cube_camera = scene.environment_lights[0].cube_camera_.cameras[i];
+  int i = cube_camera_index_[0] + 1 >= 5 ? 0 :  cube_camera_index_[0] + 1;
 
-    glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
-    glUseProgram(propagate_program_.program);
+  auto cube_camera = scene.environment_lights[0].cube_camera_.cameras[i];
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
+  glUseProgram(propagate_program_.program);
 
-    clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
-    auto resolution = glm::ivec2(environment_render_buffer_.resolution,
-                                 environment_render_buffer_.resolution);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
 
-    glViewport(0, 0, resolution.x, resolution.y);
+  clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
+  auto resolution = glm::ivec2(environment_render_buffer_.resolution,
+                               environment_render_buffer_.resolution);
 
-    glBindVertexArray(quad_.vertex_array);
+  glViewport(0, 0, resolution.x, resolution.y);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
-    glUniform1i(propagate_program_.environment_map, 0);
+  glBindVertexArray(quad_.vertex_array);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
-    glUniform1i(propagate_program_.environment_albedo_map, 1);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
+  glUniform1i(propagate_program_.environment_map, 0);
 
-    glUniform1iv(propagate_program_.side, 1, &i);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-  }
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
+  glUniform1i(propagate_program_.environment_albedo_map, 1);
+
+  glUniform1iv(propagate_program_.side, 1, &i);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
