@@ -27,6 +27,12 @@ public:
   /** Get number of channels. */
   int channels() const;
 
+  /** Duration in seconds. */
+  float duration() const;
+
+  /** Size of stream in samples. */
+  size_t size() const;
+
   /** Restart streaming. */
   void seek_start();
 

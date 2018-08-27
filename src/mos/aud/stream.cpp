@@ -42,10 +42,16 @@ int Stream::channels() const { return vorbis_info_.channels; }
 
 void Stream::seek_start() {
   stb_vorbis_seek_start(vorbis_stream_);
-  samples_left_ =
-      stb_vorbis_stream_length_in_samples(vorbis_stream_) * channels();
+  samples_left_ = size() * channels();
 }
 
 unsigned int Stream::id() const { return id_; }
+
+float Stream::duration() const {
+  return stb_vorbis_stream_length_in_seconds(vorbis_stream_);
+}
+size_t Stream::size() const {
+  return stb_vorbis_stream_length_in_samples(vorbis_stream_);
+}
 }
 }

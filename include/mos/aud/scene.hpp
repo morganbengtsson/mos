@@ -18,6 +18,7 @@ public:
         const StreamSources &stream_sources,
         const Listener &listener);
   Scene();
+  ~Scene() = default;
 
   BufferSources buffer_sources;
   StreamSources stream_sources;
