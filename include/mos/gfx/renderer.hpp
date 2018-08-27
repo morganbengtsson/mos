@@ -167,14 +167,9 @@ private:
       GLint extent;
       GLint strength;
     };
-    std::array<EnvironmentUniforms, 2> environment_maps;
 
     GLint material_albedo_map;
     GLint material_emission_map;
-    GLint material_normal_map;
-    GLint material_metallic_map;
-    GLint material_roughness_map;
-    GLint material_ambient_occlusion_map;
     GLint material_albedo;
     GLint material_roughness;
     GLint material_metallic;
@@ -412,9 +407,6 @@ private:
   const RenderBuffer environment_render_buffer_;
   const std::array<EnvironmentMapTarget, 2> environment_maps_targets;
   const EnvironmentMapTarget propagate_target_;
-
-  static const std::map<const unsigned int, std::string> shader_types_;
-
 };
 }
 }

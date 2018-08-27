@@ -19,11 +19,6 @@
 namespace mos {
 namespace gfx {
 
-const std::map<const unsigned int, std::string> Renderer::shader_types_{
-    {GL_VERTEX_SHADER, "vertex shader"},
-    {GL_FRAGMENT_SHADER, "fragment shader"},
-    {GL_GEOMETRY_SHADER, "geometry shader"}};
-
 GLuint wrap_convert(const Texture::Wrap &wrap) {
   const std::map<Texture::Wrap, GLuint> wrap_map{
       {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
