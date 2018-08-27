@@ -15,8 +15,8 @@ public:
   std::unordered_map<std::string, SharedBuffer>;
   using BufferPair = std::pair<std::string, SharedBuffer>;
 
-  Assets(const std::string directory = "assets/");
-  Assets(const Assets &audio_assets) = delete;
+  explicit Assets(const std::string &directory = "assets/");
+  Assets(const Assets &assets) = delete;
   ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */
@@ -24,6 +24,9 @@ public:
 
   /** Remove unused buffers. */
   void clear_unused();
+
+  /** Remove all buffers */
+  void clear();
 private:
   const std::string directory_;
   BufferMap buffers_;
