@@ -11,7 +11,7 @@ public:
                   const glm::vec3 &normal = glm::vec3(0.0f),
                   const glm::vec3 &tangent = glm::vec3(0.0f),
                   const glm::vec2 &uv = glm::vec2(0.0f),
-                  const float weight = 1.0f);
+                  float weight = 1.0f);
 
   ~Vertex();
 

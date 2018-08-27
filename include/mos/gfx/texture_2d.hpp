@@ -23,23 +23,23 @@ public:
             const bool mipmaps = true)
       : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps) {}
 
-   Texture2D(const unsigned int width, const unsigned int height,
+   Texture2D(unsigned int width, unsigned int height,
             const Format &format = Format::SRGBA,
              const Wrap &wrap = Wrap::REPEAT,
-            const bool mipmaps = true);
+            bool mipmaps = true);
 
   virtual ~Texture2D();
 
   /** Load from file */
   static SharedTexture2D load(const std::string &path,
-                              const bool color_data = true,
-                              const bool mipmaps = true,
+                              bool color_data = true,
+                              bool mipmaps = true,
                               const Wrap &wrap = Wrap::REPEAT);
 
   /** Create from file. */
   Texture2D(const std::string &path,
-            const bool color_data = true,
-            const bool mipmaps = true,
+            bool color_data = true,
+            bool mipmaps = true,
             const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
 };
 }

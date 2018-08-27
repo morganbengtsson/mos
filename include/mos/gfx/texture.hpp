@@ -36,22 +36,22 @@ public:
                                        format(format), wrap(wrap), mipmaps(mipmaps), id_(current_id_++) {};
 
   Texture(const std::initializer_list<Data> &layers,
-          const int width,
-          const int height,
+          int width,
+          int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true);
+          bool mipmaps = true);
 
-  Texture(const int width,
-          const int height,
+  Texture(int width,
+          int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::REPEAT,
-          const bool mipmaps = true);
+          bool mipmaps = true);
 
   Texture(const std::initializer_list<std::string> &paths,
-          const bool color_data,
+          bool color_data,
           const Wrap &wrap,
-          const bool mipmaps);
+          bool mipmaps);
 
   int id() const;
   int width() const;
