@@ -51,8 +51,11 @@ public:
   /** Get sample rate */
   int sample_rate() const;
 
-  /** Length in seconds. */
-  float length() const;
+  /** Duration in seconds. */
+  float duration() const;
+
+  /** Size of samples container. */
+  size_t size() const;
 
 private:
   static std::atomic_uint current_id_;

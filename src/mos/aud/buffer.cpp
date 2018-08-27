@@ -46,11 +46,15 @@ int Buffer::channels() const { return channels_; }
 
 int Buffer::sample_rate() const { return sample_rate_; }
 
-float Buffer::length() const {
+float Buffer::duration() const {
   return float(samples_.size()) / float(sample_rate() * channels());
 }
 
 const short *Buffer::data() const { return samples_.data(); }
+
+size_t Buffer::size() const {
+  return samples_.size();
+}
 
 }
 }

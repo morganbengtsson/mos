@@ -13,7 +13,7 @@ void BufferSource::input(const float dt) {
   if (source.playing) {
     time_ += dt;
   }
-  if (time_ > (buffer->length() / source.pitch) && !source.loop) {
+  if (time_ > (buffer->duration() / source.pitch) && !source.loop) {
     source.playing = false;
     time_ = .0f;
   }
