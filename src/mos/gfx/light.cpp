@@ -17,10 +17,6 @@ Light::Light(const glm::vec3 &position,
       camera(position, center, glm::perspective(angle, 1.0f, near, far),
              glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength), near_(near), far_(far) {}
 
-
-
-Light::~Light() {}
-
 void Light::position(const glm::vec3 &position) {
   camera.position(position);
 }
