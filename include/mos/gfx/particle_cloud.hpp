@@ -18,7 +18,7 @@ public:
 
   ParticleCloud(const SharedTexture2D& emission_map, const Particles& particles);
 
-  ~ParticleCloud();
+  ~ParticleCloud() = default;
 
   /** Sort particles relative to a position. */
   void sort(const glm::vec3 &position);

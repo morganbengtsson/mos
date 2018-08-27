@@ -10,8 +10,6 @@ ParticleCloud::ParticleCloud() {
 ParticleCloud::ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles) :
 emission_map(emission_map), particles(particles) {}
 
-ParticleCloud::~ParticleCloud() {}
-
 void ParticleCloud::sort(const glm::vec3 &position) {
   std::sort(particles.begin(), particles.end(),
             [&](const Particle &a, const Particle &b) -> bool {
