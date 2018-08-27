@@ -24,7 +24,7 @@ public:
   using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
-  Assets(const std::string directory = "assets/");
+  explicit Assets(const std::string &directory = "assets/");
 
   Assets(const Assets &assets) = delete;
 
@@ -36,12 +36,16 @@ public:
   /** Loads Texture2D from a *.png file and caches it internally. */
   SharedTexture2D
   texture(const std::string &path,
-          const bool color_data = true,
-          const bool mipmaps = true,
+          bool color_data = true,
+          bool mipmaps = true,
           const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
 
   /** Remove all unused assets. */
   void clear_unused();
+
+  /** Clear all assets. */
+  void clear();
+
   std::string directory() const;
 private:
   const std::string directory_;

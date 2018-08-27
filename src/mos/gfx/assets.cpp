@@ -13,7 +13,7 @@ namespace mos {
 namespace gfx {
 using namespace nlohmann;
 
-Assets::Assets(const std::string directory) : directory_(directory) {}
+Assets::Assets(const std::string &directory) : directory_(directory) {}
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (path.empty()){
@@ -56,8 +56,14 @@ void Assets::clear_unused() {
     }
   }
 }
+
 std::string Assets::directory() const {
   return directory_;
+}
+
+void Assets::clear() {
+  textures_.clear();
+  meshes_.clear();
 }
 
 }
