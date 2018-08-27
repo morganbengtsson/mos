@@ -13,7 +13,6 @@ using SharedTexture = std::shared_ptr<Texture>;
 
 /** Texture base */
 class Texture {
-  friend class Renderer;
 public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { REPEAT, CLAMP };

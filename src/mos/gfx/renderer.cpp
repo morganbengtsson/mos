@@ -230,9 +230,9 @@ void Renderer::render_scene(const Camera &camera,
 
   for (size_t i = 0; i < scene.environment_lights.size(); i++) {
     glUniform3fv(standard_program_.environment_maps[i].position, 1,
-                 glm::value_ptr(scene.environment_lights[i].box_.position()));
+                 glm::value_ptr(scene.environment_lights[i].position()));
     glUniform3fv(standard_program_.environment_maps[i].extent, 1,
-                 glm::value_ptr(scene.environment_lights[i].box_.extent));
+                 glm::value_ptr(scene.environment_lights[i].extent()));
     glUniform1fv(standard_program_.environment_maps[i].strength, 1,
                  &scene.environment_lights[i].strength);
   }
@@ -589,7 +589,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       clear(clear_color);
       auto resolution = glm::ivec2(environment_render_buffer_.resolution,
                                    environment_render_buffer_.resolution);
-      auto cube_camera = scene.environment_lights[i].cube_camera_.cameras[cube_camera_index_[i]];
+      auto cube_camera = scene.environment_lights[i].camera(cube_camera_index_[i]);
 
       glViewport(0, 0, resolution.x, resolution.y);
 
@@ -660,7 +660,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
   int i = cube_camera_index_[0];
 
-  auto cube_camera = scene.environment_lights[0].cube_camera_.cameras[i];
+  auto cube_camera = scene.environment_lights[0].camera(i);
 
   glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
   glUseProgram(propagate_program_.program);

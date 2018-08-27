@@ -63,6 +63,9 @@ glm::vec3 EnvironmentLight::extent() const {
 bool EnvironmentLight::inside(const glm::vec3 &point) const {
   return box_.inside(point);
 }
+mos::gfx::Camera EnvironmentLight::camera(const size_t index) const {
+  return cube_camera_.cameras[index];
+}
 
 }
 }

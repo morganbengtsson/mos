@@ -11,12 +11,11 @@ using OptionalEnvironmentLight = std::optional<EnvironmentLight>;
 
 /** Environment light, based on a cube map. */
 class EnvironmentLight final {
-  friend class Renderer;
 public:
   /** @param extent Describes how big the environment is, for parallax/box correction. */
   explicit EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
                    const glm::vec3 &extent = glm::vec3(50.0f),
-                   const float strength = 0.0f);
+                   float strength = 0.0f);
 
   EnvironmentLight(const std::string &directory, const std::string &path,
       const glm::mat4 &parent_transform = glm::mat4(1.0f));
@@ -35,6 +34,9 @@ public:
 
   /** Check if a point is inside the environment light box. */
   bool inside(const glm::vec3 &point) const;
+
+  /** Get one of the six cube cameras, for rendering. */
+  mos::gfx::Camera camera(size_t index) const;
 
   /** Strength. */
   float strength;

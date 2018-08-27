@@ -15,7 +15,6 @@ using SharedTexture2D = std::shared_ptr<Texture2D>;
 
 /** Texture in two dimension. Contains chars as data. */
 class Texture2D final : public Texture {
-  friend class Renderer;
 public:
   template<class T>
   Texture2D(T begin, T end, unsigned int width, unsigned int height,
