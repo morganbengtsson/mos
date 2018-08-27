@@ -74,13 +74,13 @@ private:
   class TextureBuffer2D {
   public:
     explicit TextureBuffer2D(const Texture2D &texture_2d);
-    TextureBuffer2D(const GLuint internal_format,
-                    const GLuint external_format,
-                    const int width,
-                    const int height,
-                    const GLuint wrap,
+    TextureBuffer2D(GLuint internal_format,
+                    GLuint external_format,
+                    int width,
+                    int height,
+                    GLuint wrap,
                     const void *data,
-                    const bool mipmaps,
+                    bool mipmaps,
                     const TimePoint &modified = std::chrono::system_clock::now());
     ~TextureBuffer2D();
     GLuint texture;
@@ -89,7 +89,7 @@ private:
 
   class Shader {
   public:
-    Shader(const std::string &source, const GLuint type, const std::string& name);
+    Shader(const std::string &source, GLuint type, const std::string& name);
     ~Shader();
     GLuint id;
   };
@@ -383,14 +383,14 @@ private:
   std::array<int,2> cube_camera_index_;
 
   struct RenderBuffer {
-    explicit RenderBuffer(const int resolution);
+    explicit RenderBuffer(int resolution);
     ~RenderBuffer();
     GLuint render_buffer;
     int resolution;
   };
 
   struct ShadowMapTarget {
-    ShadowMapTarget(const RenderBuffer &render_buffer);
+    explicit ShadowMapTarget(const RenderBuffer &render_buffer);
     ~ShadowMapTarget();
     GLuint texture;
     GLuint frame_buffer;
@@ -401,7 +401,7 @@ private:
   const std::array<ShadowMapTarget, 2> shadow_maps_;
 
   struct EnvironmentMapTarget {
-    EnvironmentMapTarget(const RenderBuffer &render_buffer);
+    explicit EnvironmentMapTarget(const RenderBuffer &render_buffer);
     ~EnvironmentMapTarget();
     GLuint texture;
     GLuint albedo;
