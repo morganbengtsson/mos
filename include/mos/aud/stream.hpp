@@ -42,8 +42,7 @@ private:
   static std::atomic_uint current_id_;
   unsigned int id_;
   int samples_left_;
-  int size_;
-  std::string file_name_;
+  const std::string file_name_;
   stb_vorbis *vorbis_stream_;
   stb_vorbis_info vorbis_info_;
 };

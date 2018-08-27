@@ -13,6 +13,7 @@ public:
                const glm::vec3 &center,
                const glm::mat4 &projection,
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+  ~Camera() = default;
 
   glm::vec3 up() const;
 
