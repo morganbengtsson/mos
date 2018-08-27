@@ -10,7 +10,7 @@ namespace gfx {
 class Assets;
 
 /** Physically based material. */
-class Material {
+class Material final {
 public:
   explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
                     const SharedTexture2D &emission_map = SharedTexture2D(),
@@ -19,18 +19,18 @@ public:
                     const SharedTexture2D &roughness_map = SharedTexture2D(),
                     const SharedTexture2D &ambient_occlusion_map = SharedTexture2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
-                    const float opacity = 1.0f,
-                    const float roughness = 0.0f,
-                    const float metallic = 0.0f,
+                    float opacity = 1.0f,
+                    float roughness = 0.0f,
+                    float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
-                    const float ambient_occlusion = 1.0f);
+                    float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &albedo,
-                    const float opacity = 1.0f,
-                    const float roughness = 0.0f,
-                    const float metallic = 0.0f,
+                    float opacity = 1.0f,
+                    float roughness = 0.0f,
+                    float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
-                    const float ambient_occlusion = 1.0f);
+                    float ambient_occlusion = 1.0f);
 
   explicit Material(Assets &assets, std::string &path);
 
