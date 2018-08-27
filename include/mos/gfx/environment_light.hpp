@@ -10,7 +10,7 @@ class EnvironmentLight;
 using OptionalEnvironmentLight = std::optional<EnvironmentLight>;
 
 /** Environment light, based on a cube map. */
-class EnvironmentLight {
+class EnvironmentLight final {
   friend class Renderer;
 public:
   /** @param extent Describes how big the environment is, for parallax/box correction. */

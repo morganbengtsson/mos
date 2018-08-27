@@ -15,18 +15,25 @@ public:
    * @param texture Image with glyphs. */
   Font(const CharMap &characters,
        const SharedTexture2D &texture,
-       const float height,
-       const float ascender,
-       const float descender);
-  Font(const std::string &path);
-  ~Font();
+       float height,
+       float ascender,
+       float descender);
+  explicit Font(const std::string &path);
+
+  ~Font() = default;
+
+  /** Height. */
   float height() const;
+
+  /** Base line. */
   float base() const;
+
   /** Texture with characters. */
   SharedTexture2D texture;
 
   /** Characters supported. */
   CharMap characters;
+
 private:
   float base_;
   float height_;

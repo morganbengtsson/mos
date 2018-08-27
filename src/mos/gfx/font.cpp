@@ -34,9 +34,8 @@ Font::Font(const std::string &path) {
   texture = Texture2D::load(fpath.parent_path().str() + "/" + texture_name);
 }
 
-Font::~Font() {}
-
 float Font::height() const { return height_; }
+
 float Font::base() const { return base_; }
 }
 }
