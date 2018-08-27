@@ -19,8 +19,8 @@ public:
   Text(const std::string &text,
        const Font &font,
        const glm::mat4 &transform = glm::mat4(1.0f),
-       const bool emissive = false,
-       const float spacing = 0.0f);
+       bool emissive = false,
+       float spacing = 0.0f);
 
   virtual ~Text();
 
@@ -45,7 +45,7 @@ public:
   /** Get position. */
   glm::vec2 position() const;
 
-  void scale(const float scale);
+  void scale(float scale);
 
   /** Set material. */
   void material(const Material &material);
@@ -60,7 +60,7 @@ public:
   Model model() const;
 
   /** Set if the text is emissive. */
-  void emissive(const bool emissive);
+  void emissive(bool emissive);
 
   /** Set the color multiplier for the text*/
   void factor(const glm::vec3& factor);
@@ -69,7 +69,7 @@ public:
   void opacity(const float &opacity);
 
   /** Set emission strength */
-  void emission_strength(const float &strength);
+  void emission_strength(float strength);
 
   /** Get the font. */
   Font font() const;
