@@ -53,8 +53,6 @@ Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
            mesh.triangles.end()) {}
 
-Mesh::~Mesh() {}
-
 SharedMesh Mesh::load(const std::string &path) {
   if (path.empty() || (path.back() == '/')) {
     return std::make_shared<Mesh>(Mesh());

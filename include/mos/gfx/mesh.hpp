@@ -34,13 +34,13 @@ public:
        const std::initializer_list<Triangle> &triangles);
 
   /** Load from *.mesh file. @param path Full path*/
-  Mesh(const std::string &path);
+  explicit Mesh(const std::string &path);
 
   Mesh();
 
   Mesh(const Mesh &mesh);
 
-  ~Mesh();
+  ~Mesh() = default;
 
   static SharedMesh load(const std::string &path);
 
@@ -50,7 +50,7 @@ public:
   /** Get only positions from vertices */
   Positions positions() const;
 
-  void mix(const Mesh &mesh1, const Mesh &mesh2, const float amount);
+  void mix(const Mesh &mesh1, const Mesh &mesh2, float amount);
 
   void apply_transform(const glm::mat4 &transform);
 
