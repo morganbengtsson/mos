@@ -27,6 +27,7 @@ public:
 
   /** Remove all buffers */
   void clear();
+
 private:
   const std::string directory_;
   BufferMap buffers_;

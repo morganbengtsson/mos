@@ -11,7 +11,7 @@ namespace aud {
 class Buffer;
 using SharedBuffer = std::shared_ptr<Buffer>;
 
-/** Audio 16bit integer buffer. */
+/** 16bit integer audio buffer. */
 class Buffer final {
   friend class Renderer;
 public:
