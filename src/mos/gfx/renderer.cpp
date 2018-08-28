@@ -555,11 +555,11 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
     auto frame_buffer = shadow_maps_[i].frame_buffer;
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glClear(GL_DEPTH_BUFFER_BIT);
-    auto resolution = glm::ivec2(512, 512);
+    auto resolution = shadow_maps_render_buffer_.resolution;
     glUseProgram(depth_program_.program);
-    glViewport(0, 0, resolution.x, resolution.y);
+    glViewport(0, 0, resolution, resolution);
     for (auto &model : models) {
-      render_model_depth(model, glm::mat4(1.0f), lights[i].camera, resolution, depth_program_);
+      render_model_depth(model, glm::mat4(1.0f), lights[i].camera, glm::vec2(resolution), depth_program_);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //Generate mipmaps
