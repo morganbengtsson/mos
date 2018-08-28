@@ -35,7 +35,7 @@ float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare) {
     vec2 moments = texture(shadow_map, uv).xy;
 
     float p = step(compare, moments.x);
-    float variance = max(moments.y - moments.x * moments.x, 0.00002);
+    float variance = max(moments.y - moments.x * moments.x, 0.000002);
 
     float d = compare - moments.x;
     float p_max = variance / (variance + d*d);
