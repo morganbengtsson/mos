@@ -1,5 +1,4 @@
 ![Logo](https://raw.githubusercontent.com/morganbengtsson/mos/master/doc/logo.png)
-![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
 
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
@@ -16,6 +15,8 @@ MOS is a lightweight cross platform game engine/library, written in modern C++. 
 - Collision detection
 - 3D audio playback, with obstruction model
 - Asset management
+
+![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
 
 # Companion projects
 
