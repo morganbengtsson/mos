@@ -156,10 +156,10 @@ void main() {
         float s = 0.0;
 
         s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(0, 0) * texelSize, shadow_map_uv.z);
-        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(-3.5, -3.5) * texelSize, shadow_map_uv.z);
-        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(-3.5, 3.5) * texelSize, shadow_map_uv.z);
-        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(3.5, -3.5) * texelSize, shadow_map_uv.z);
-        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(3.5, 3.5) * texelSize, shadow_map_uv.z);
+        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(-1.5, -1.5) * texelSize, shadow_map_uv.z);
+        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(-1.5, 1.5) * texelSize, shadow_map_uv.z);
+        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(1.5, -1.5) * texelSize, shadow_map_uv.z);
+        s += sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + vec2(1.5, 1.5) * texelSize, shadow_map_uv.z);
         s /= 5;
 
         shadow += s * spot_effect;
