@@ -15,7 +15,7 @@ public:
                  const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
                  float angle = glm::half_pi<float>(),
                  const glm::vec3 &color = glm::vec3(0.0f),
-                 float strength = 100.0f,
+                 float strength = 0.0f,
                  float near = 0.1f,
                  float far = 10.0f);
 
