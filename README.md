@@ -1,5 +1,5 @@
 ![Logo](https://raw.githubusercontent.com/morganbengtsson/mos/master/doc/screenshot.png)
-![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/logo.png)
 
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
