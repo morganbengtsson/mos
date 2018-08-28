@@ -16,7 +16,8 @@ Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent
   auto parsed = json;
   if (parsed.is_string()) {
     std::cout << "Loading: " << parsed << std::endl;
-    parsed = nlohmann::json::parse(mos::text(assets.directory() + std::string(parsed)));
+	std::string path = parsed;
+    parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
   }
   auto name = parsed.value("name", "");
   auto mesh_path = std::string("");
