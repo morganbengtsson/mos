@@ -15,7 +15,7 @@ Light::Light(const glm::vec3 &position,
              const float far_plane)
     : color(color), angle_(angle),
       camera(position, center, glm::perspective(angle, 1.0f, near_plane, far_plane),
-             glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength), near_(near), far_(far) {}
+             glm::vec3(0.0f, 0.0001f, 1.0f)), strength(strength), near_(near_plane), far_(far_plane) {}
 
 void Light::position(const glm::vec3 &position) {
   camera.position(position);
