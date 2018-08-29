@@ -1,6 +1,5 @@
 cmake_minimum_required (VERSION 3.1.0)
 project(mos)
-add_definitions(-DGLM_FORCE_RADIANS)
 
 set(CMAKE_CXX_STANDARD 17)
 
