@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.1.0)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
-add_definitions(-DMOS_EFX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -46,22 +45,25 @@ file(GLOB BRDF_LUT assets/brdfLUT.png)
 add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE MOS_EFX)
+
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+        include
+        externals/glfw/include
+        externals/openal-soft/include
+        externals/glad/include
+        externals/glm
+        externals/nlohmann_json_release
+        externals/stb
+        externals/filesystem
+        )
+
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenAL)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${GLFW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC stb)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
-target_include_directories(${PROJECT_NAME}
-PUBLIC
-    include
-    externals/glfw/include
-    externals/openal-soft/include
-    externals/glad/include
-    externals/glm
-    externals/nlohmann_json_release
-    externals/stb
-    externals/filesystem
-)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
