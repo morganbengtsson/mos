@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.1.0)
 project(mos)
 add_definitions(-DGLM_FORCE_RADIANS)
-add_definitions(-DGLEW_STATIC)
 add_definitions(-DMOS_EFX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -33,9 +32,6 @@ add_subdirectory(externals/glad)
 # Filesystem
 add_subdirectory(externals/filesystem)
 
-# glm
-include_directories(externals/glm)
-
 # stb
 add_subdirectory(externals/stb)
 
@@ -47,7 +43,6 @@ file(GLOB FRAGMENT_SHADERS assets/shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS assets/shaders/*.geom)
 file(GLOB BRDF_LUT assets/brdfLUT.png)
 
-include_directories(include)
 add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
@@ -58,6 +53,7 @@ target_link_libraries(${PROJECT_NAME} stb)
 target_link_libraries(${PROJECT_NAME} glad)
 target_include_directories(${PROJECT_NAME}
 PUBLIC
+    include
     externals/glfw/include
     externals/openal-soft/include
     externals/glad/include
