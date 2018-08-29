@@ -46,11 +46,11 @@ file(GLOB BRDF_LUT assets/brdfLUT.png)
 add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
-target_link_libraries(${PROJECT_NAME} OpenAL)
-target_link_libraries(${PROJECT_NAME} ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} stb)
-target_link_libraries(${PROJECT_NAME} glad)
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenAL)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${GLFW_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC stb)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 target_include_directories(${PROJECT_NAME}
 PUBLIC
     include

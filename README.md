@@ -38,9 +38,7 @@ The project is preferably used as a sub project with [CMake](https://cmake.org) 
 
 ```CMake
 add_subdirectory(externals/mos)
-target_link_libraries(${PROJECT_NAME} mos)
-target_include_directories(${PROJECT_NAME} PUBLIC externals/mos/include)
-
+target_link_libraries(${PROJECT_NAME} PUBLIC mos)
 ```
 
 # Dependencies
