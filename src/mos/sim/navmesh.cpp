@@ -63,25 +63,24 @@ Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
 
 std::optional<gfx::Vertex>
 Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
-  glm::vec3 bary;
+  glm::vec2 bary;
+  float distance;
   auto intersects =
-      glm::intersectRayTriangle(origin, direction, v0_.position, v1_.position, v2_.position, bary);
+      glm::intersectRayTriangle(origin, direction, v0_.position, v1_.position, v2_.position, bary, distance);
 
   if (intersects) {
-    auto p = origin + direction * bary.z;
+    auto p = origin + direction * distance;
     auto n = glm::triangleNormal(v0_.position, v1_.position, v2_.position);
     auto t = glm::normalize(v0_.position - v1_.position); // Is this correct?
 
     //Document this?
-    auto a = bary.x / (bary.x + bary.y + bary.z);
-    auto b = bary.y / (bary.x + bary.y + bary.z);
-    auto c = bary.z / (bary.x + bary.y + bary.z);
+    auto a = bary.x / (bary.x + bary.y + distance);
+    auto b = bary.y / (bary.x + bary.y + distance);
+    auto c = distance / (bary.x + bary.y + distance);
 
     //n = a * v0_.normal + b * v1_.normal + c * v2_.normal;
 
     n = glm::normalize(n);
-
-
 
     //auto uv = (v0_.uv + v1_.uv + v2_.uv) / 3.0f;
     auto uv = a * v0_.uv + b * v1_.uv + c * v2_.uv;

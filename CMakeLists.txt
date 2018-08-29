@@ -46,6 +46,7 @@ add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE MOS_EFX)
+target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
