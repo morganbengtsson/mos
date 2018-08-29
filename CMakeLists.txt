@@ -11,7 +11,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "")
 set(GLFW_USE_DWM_SWAP_INTERVAL ON CACHE BOOL "")
 add_subdirectory(externals/glfw)
 
-#openal soft
+# OpenAL soft
 set(ALSOFT_DLOPEN OFF CACHE BOOL "")
 set(ALSOFT_WERROR OFF CACHE BOOL "")
 set(ALSOFT_UTILS OFF CACHE BOOL "")
@@ -24,8 +24,11 @@ set(ALSOFT_AMBDEC_PRESETS OFF CACHE BOOL "")
 set(ALSOFT_INSTALL OFF CACHE BOOL "")
 add_subdirectory(externals/openal-soft)
 
-#glad
+# glad
 add_subdirectory(externals/glad)
+
+# glm
+add_subdirectory(externals/glm)
 
 # Filesystem
 add_subdirectory(externals/filesystem)
