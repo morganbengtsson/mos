@@ -188,7 +188,7 @@ void main() {
 
         vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb;
         vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
-        vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength * material.opacity;
+        vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength;
 
         vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
