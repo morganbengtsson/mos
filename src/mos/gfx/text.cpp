@@ -150,6 +150,7 @@ void Text::emissive(const bool emissive) {
     model_.material.emission_strength = 1.0f;
     model_.material.albedo_map = nullptr;
   } else {
+    model_.material.emission_strength = 0.0f;
     model_.material.albedo_map = font_.texture;
     model_.material.emission_map = nullptr;
   }
