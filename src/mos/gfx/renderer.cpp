@@ -50,9 +50,11 @@ message_callback(GLenum source,
                  GLsizei length,
                  const GLchar *message,
                  const void *userParam) {
-  fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-          (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-          type, severity, message);
+  if (severity == GL_DEBUG_SEVERITY_HIGH || severity == GL_DEBUG_SEVERITY_MEDIUM) {
+    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+            type, severity, message);
+  }
 }
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
@@ -80,8 +82,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
   fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
 
+#ifndef NDEBUG
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(message_callback, 0);
+#endif
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
