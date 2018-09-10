@@ -430,9 +430,8 @@ void Renderer::render_model(const Model &model,
                  &model.material.metallic);
     glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
-    glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
+    glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
-    glUniform3fv(uniforms.material_factor, 1, glm::value_ptr(model.material.factor));
 
     glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
   }
@@ -525,9 +524,8 @@ void Renderer::render_model(const Model &model,
                  &model.material.metallic);
     glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
 
-    glUniform1fv(uniforms.material_emission_strength, 1, &model.material.emission_strength);
+    glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
     glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
-    glUniform3fv(uniforms.material_factor, 1, glm::value_ptr(model.material.factor));
 
     glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
   }
@@ -1024,9 +1022,8 @@ Renderer::Environment_program::Environment_program() {
   material_metallic = glGetUniformLocation(program, "material.metallic");
   material_opacity = glGetUniformLocation(program, "material.opacity");
   material_emission = glGetUniformLocation(program, "material.emission");
-  material_emission_strength = glGetUniformLocation(program, "material.emission_strength");
+  material_strength = glGetUniformLocation(program, "material.strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
-  material_factor = glGetUniformLocation(program, "material.factor");
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
@@ -1112,9 +1109,8 @@ Renderer::Standard_program::Standard_program() {
   material_metallic = glGetUniformLocation(program, "material.metallic");
   material_opacity = glGetUniformLocation(program, "material.opacity");
   material_emission = glGetUniformLocation(program, "material.emission");
-  material_emission_strength = glGetUniformLocation(program, "material.emission_strength");
+  material_strength = glGetUniformLocation(program, "material.strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
-  material_factor = glGetUniformLocation(program, "material.factor");
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");

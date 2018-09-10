@@ -147,22 +147,22 @@ Text &Text::operator+=(const std::string &input) {
 void Text::emissive(const bool emissive) {
   if (emissive) {
     model_.material.emission_map = font_.texture;
-    model_.material.emission_strength = 1.0f;
+    model_.material.strength = 1.0f;
     model_.material.albedo_map = nullptr;
   } else {
-    model_.material.emission_strength = 0.0f;
+    model_.material.strength = 0.0f;
     model_.material.albedo_map = font_.texture;
     model_.material.emission_map = nullptr;
   }
 }
 void Text::factor(const glm::vec3 &factor) {
-  model_.material.factor = factor;
+  model_.material.strength = factor.x;
 }
 void Text::opacity(const float &opacity) {
   model_.material.opacity = opacity;
 }
 void Text::emission_strength(const float strength) {
-  model_.material.emission_strength = strength;
+  model_.material.strength = strength;
 }
 Font Text::font() const {
   return font_;

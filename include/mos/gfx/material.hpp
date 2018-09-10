@@ -42,7 +42,7 @@ public:
   float opacity;
   float roughness;
   float metallic;
-  float emission_strength;
+  float strength;
   float ambient_occlusion;
 
   Shared_texture_2D albedo_map;

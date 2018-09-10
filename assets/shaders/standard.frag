@@ -5,11 +5,10 @@ const float PI = 3.14159265359;
 struct Material {
     vec4 albedo;
     vec4 emission;
-    vec3 factor;
     float roughness;
     float metallic;
     float opacity;
-    float emission_strength;
+    float strength;
     float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D emission_map;
@@ -111,7 +110,7 @@ void main() {
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a) * material.emission_strength;
+    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
 
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
@@ -217,7 +216,7 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    color.rgb = (Lo + ambient + emission) * material.factor;
+    color.rgb = (Lo + ambient + emission) * material.strength;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

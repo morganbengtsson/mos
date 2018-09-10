@@ -176,7 +176,7 @@ private:
     GLint material_opacity;
     GLint material_emission;
     GLint material_ambient_occlusion;
-    GLint material_emission_strength;
+    GLint material_strength;
     GLint material_factor;
 
     GLint camera_resolution;
@@ -231,7 +231,7 @@ private:
     GLint material_opacity;
     GLint material_emission;
     GLint material_ambient_occlusion;
-    GLint material_emission_strength;
+    GLint material_strength;
     GLint material_factor;
 
     GLint camera_resolution;
