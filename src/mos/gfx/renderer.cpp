@@ -64,16 +64,16 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
     shadow_maps_render_buffer_(256),
-    shadow_maps_{ShadowMapTarget(shadow_maps_render_buffer_),
-                 ShadowMapTarget(shadow_maps_render_buffer_)},
+    shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
+                 Shadow_map_target(shadow_maps_render_buffer_)},
     environment_render_buffer_(128),
-    environment_maps_targets{EnvironmentMapTarget(environment_render_buffer_),
-                             EnvironmentMapTarget(environment_render_buffer_)},
+    environment_maps_targets{Environment_map_target(environment_render_buffer_),
+                             Environment_map_target(environment_render_buffer_)},
     propagate_target_(environment_render_buffer_),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
-    brdf_lut_texture_(Texture2D("assets/brdfLUT.png", false, false, Texture2D::Wrap::CLAMP)) {
+    brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::CLAMP)) {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -148,9 +148,9 @@ void Renderer::unload(const Model &model) {
   }
 }
 
-void Renderer::load_or_update(const Texture2D &texture) {
+void Renderer::load_or_update(const Texture_2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    textures_.insert({texture.id(), std::make_unique<TextureBuffer2D>(texture)});
+    textures_.insert({texture.id(), std::make_unique<Texture_buffer_2D>(texture)});
   } else {
     auto &buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer->modified) {
@@ -169,13 +169,13 @@ void Renderer::load_or_update(const Texture2D &texture) {
   }
 }
 
-void Renderer::load(const SharedTexture2D &texture) {
+void Renderer::load(const Shared_texture_2D &texture) {
   if (texture) {
     load_or_update(*texture);
   }
 }
 
-void Renderer::unload(const SharedTexture2D &texture) {
+void Renderer::unload(const Shared_texture_2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) != textures_.end()) {
       auto gl_id = textures_.at(texture->id())->texture;
@@ -303,7 +303,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
   glBindVertexArray(0);
 }
 
-void Renderer::render_particles(const ParticleClouds &clouds,
+void Renderer::render_particles(const Particle_clouds &clouds,
                                 const mos::gfx::Camera &camera,
                                 const glm::vec2 &resolution) {
   for (auto &particles : clouds) {
@@ -372,10 +372,10 @@ void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera,
                             const Lights &lights,
-                            const EnvironmentLights &environment_lights,
+                            const Environment_lights &environment_lights,
                             const Fog &fog,
                             const glm::vec2 &resolution,
-                            const EnvironmentProgram &program) {
+                            const Environment_program &program) {
 
   const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
@@ -447,10 +447,10 @@ void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera,
                             const Lights &lights,
-                            const EnvironmentLights &environment_lights,
+                            const Environment_lights &environment_lights,
                             const Fog &fog,
                             const glm::vec2 &resolution,
-                            const StandardProgram &program) {
+                            const Standard_program &program) {
 
   const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
@@ -795,13 +795,13 @@ void Renderer::unload(const Mesh &mesh) {
   }
 }
 
-void Renderer::load(const SharedMesh &mesh) {
+void Renderer::load(const Shared_mesh &mesh) {
   if (mesh) {
     load(*mesh);
   }
 }
 
-void Renderer::unload(const SharedMesh &mesh) {
+void Renderer::unload(const Shared_mesh &mesh) {
   if (mesh) {
     unload(*mesh);
   }
@@ -819,10 +819,10 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      auto buffer = TextureBuffer2D(*target.texture);
+      auto buffer = Texture_buffer_2D(*target.texture);
 
       textures_.insert({target.texture->id(),
-                        std::make_unique<TextureBuffer2D>(*target.texture)});
+                        std::make_unique<Texture_buffer_2D>(*target.texture)});
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_2D, textures_.at(target.texture->id())->texture, 0);
@@ -868,7 +868,7 @@ void Renderer::render_model_depth(const Model &model,
                                   const glm::mat4 &transform,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
-                                  const DepthProgram &program) {
+                                  const Depth_program &program) {
   const glm::mat4 mvp = camera.projection * camera.view * transform * model.transform;
 
   if (model.mesh) {
@@ -959,7 +959,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-Renderer::DepthProgram::DepthProgram() {
+Renderer::Depth_program::Depth_program() {
   std::string name = "depth";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
@@ -980,7 +980,7 @@ Renderer::DepthProgram::DepthProgram() {
   model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::EnvironmentProgram::EnvironmentProgram() {
+Renderer::Environment_program::Environment_program() {
   std::string name = "environment";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
@@ -1053,7 +1053,7 @@ Renderer::EnvironmentProgram::EnvironmentProgram() {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 
-Renderer::StandardProgram::StandardProgram() {
+Renderer::Standard_program::Standard_program() {
   std::string name = "standard";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
@@ -1141,7 +1141,7 @@ Renderer::StandardProgram::StandardProgram() {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 
-Renderer::ParticleProgram::ParticleProgram() {
+Renderer::Particle_program::Particle_program() {
   std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
@@ -1166,7 +1166,7 @@ Renderer::ParticleProgram::ParticleProgram() {
   resolution = glGetUniformLocation(program, "resolution");
 }
 
-Renderer::BoxProgram::BoxProgram() {
+Renderer::Box_program::Box_program() {
   std::string name = "box";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
@@ -1187,7 +1187,7 @@ Renderer::BoxProgram::BoxProgram() {
   mvp = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::MultisampleProgram::MultisampleProgram() {
+Renderer::Multisample_program::Multisample_program() {
   std::string name = "multisample";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
@@ -1209,7 +1209,7 @@ Renderer::MultisampleProgram::MultisampleProgram() {
   depth_texture = glGetUniformLocation(program, "depth_texture");
 }
 
-Renderer::BloomProgram::BloomProgram() {
+Renderer::Bloom_program::Bloom_program() {
   std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
@@ -1233,7 +1233,7 @@ Renderer::BloomProgram::BloomProgram() {
 
 }
 
-Renderer::BlurProgram::BlurProgram() {
+Renderer::Blur_program::Blur_program() {
   std::string name = "blur";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
@@ -1254,7 +1254,7 @@ Renderer::BlurProgram::BlurProgram() {
   horizontal = glGetUniformLocation(program, "horizontal");
 }
 
-Renderer::PropagateProgram::PropagateProgram() {
+Renderer::Propagate_program::Propagate_program() {
   std::string name = "propagate";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
@@ -1283,7 +1283,7 @@ Renderer::PropagateProgram::PropagateProgram() {
   side = glGetUniformLocation(program, "side");
 }
 
-Renderer::ShadowMapTarget::ShadowMapTarget(const RenderBuffer &render_buffer) {
+Renderer::Shadow_map_target::Shadow_map_target(const Render_buffer &render_buffer) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1320,12 +1320,12 @@ Renderer::ShadowMapTarget::ShadowMapTarget(const RenderBuffer &render_buffer) {
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::ShadowMapTarget::~ShadowMapTarget() {
+Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
 
-Renderer::RenderBuffer::RenderBuffer(const int resolution) : resolution(resolution) {
+Renderer::Render_buffer::Render_buffer(const int resolution) : resolution(resolution) {
   glGenRenderbuffers(1, &render_buffer);
   glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
@@ -1333,10 +1333,10 @@ Renderer::RenderBuffer::RenderBuffer(const int resolution) : resolution(resoluti
                         resolution);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
-Renderer::RenderBuffer::~RenderBuffer() {
+Renderer::Render_buffer::~Render_buffer() {
   glDeleteRenderbuffers(1, &render_buffer);
 }
-Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffer &render_buffer) {
+Renderer::Environment_map_target::Environment_map_target(const Renderer::Render_buffer &render_buffer) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1411,12 +1411,12 @@ Renderer::EnvironmentMapTarget::EnvironmentMapTarget(const Renderer::RenderBuffe
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::EnvironmentMapTarget::~EnvironmentMapTarget() {
+Renderer::Environment_map_target::~Environment_map_target() {
   glDeleteTextures(1, &texture);
   glDeleteFramebuffers(1, &frame_buffer);
 }
 
-Renderer::StandardTarget::StandardTarget(const glm::ivec2 &resolution) {
+Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1441,12 +1441,12 @@ Renderer::StandardTarget::StandardTarget(const glm::ivec2 &resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
-Renderer::StandardTarget::~StandardTarget() {
+Renderer::Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
   glDeleteTextures(1, &depth_texture);
 }
-Renderer::MultiTarget::MultiTarget(const glm::ivec2 &resolution) {
+Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1478,12 +1478,12 @@ Renderer::MultiTarget::MultiTarget(const glm::ivec2 &resolution) {
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::MultiTarget::~MultiTarget() {
+Renderer::Multi_target::~Multi_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &color_texture);
   glDeleteTextures(1, &bright_texture);
 }
-Renderer::BlurTarget::BlurTarget(const glm::ivec2 &resolution) {
+Renderer::Blur_target::Blur_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1503,7 +1503,7 @@ Renderer::BlurTarget::BlurTarget(const glm::ivec2 &resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
-Renderer::BlurTarget::~BlurTarget() {
+Renderer::Blur_target::~Blur_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
@@ -1571,14 +1571,14 @@ Renderer::Box::Box() {
 Renderer::Box::~Box() {
 
 }
-Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
+Renderer::Texture_buffer_2D::Texture_buffer_2D(const GLuint internal_format,
                                            const GLuint external_format,
                                            const int width,
                                            const int height,
                                            const GLuint wrap,
                                            const void *data,
                                            const bool mipmaps,
-                                           const TimePoint &modified) : modified(modified) {
+                                           const Time_point &modified) : modified(modified) {
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -1598,11 +1598,11 @@ Renderer::TextureBuffer2D::TextureBuffer2D(const GLuint internal_format,
   };
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-Renderer::TextureBuffer2D::~TextureBuffer2D() {
+Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);
 }
-Renderer::TextureBuffer2D::TextureBuffer2D(const Texture2D &texture_2d) :
-    TextureBuffer2D(format_convert(texture_2d.format).internal_format, format_convert(texture_2d.format).format,
+Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d) :
+    Texture_buffer_2D(format_convert(texture_2d.format).internal_format, format_convert(texture_2d.format).format,
                     texture_2d.width(),
                     texture_2d.height(),
                     wrap_convert(texture_2d.wrap),

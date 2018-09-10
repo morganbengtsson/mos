@@ -4,13 +4,13 @@
 namespace mos {
 namespace io {
 
-Window::ErrorFunc Window::error_func;
-Window::PosFunc Window::pos_func;
-Window::SizeFunc Window::size_func;
-Window::ClickFunc Window::click_func;
-Window::MouseFunc Window::mouse_func;
-Window::ScrollFunc Window::scroll_func;
-Window::KeyFunc Window::key_func;
+Window::Error_func Window::error_func;
+Window::Pos_func Window::pos_func;
+Window::Size_func Window::size_func;
+Window::Click_func Window::click_func;
+Window::Mouse_func Window::mouse_func;
+Window::Scroll_func Window::scroll_func;
+Window::Key_func Window::key_func;
 
 Window::Window(const std::string &title, const glm::ivec2 &resolution, const int swap_interval) {
   if (!glfwInit()) {
@@ -127,7 +127,7 @@ void Window::close(const bool close) {
   glfwSetWindowShouldClose(window_, close);
 }
 
-void Window::cursor_mode(const Window::CursorMode &mode) {
+void Window::cursor_mode(const Window::Cursor_mode &mode) {
   glfwSetInputMode(window_, GLFW_CURSOR, static_cast<int>(mode));
 }
 

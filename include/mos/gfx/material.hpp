@@ -12,12 +12,12 @@ class Assets;
 /** Physically based material. */
 class Material final {
 public:
-  explicit Material(const SharedTexture2D &albedo_map = SharedTexture2D(),
-                    const SharedTexture2D &emission_map = SharedTexture2D(),
-                    const SharedTexture2D &normal_map = SharedTexture2D(),
-                    const SharedTexture2D &metallic_map = SharedTexture2D(),
-                    const SharedTexture2D &roughness_map = SharedTexture2D(),
-                    const SharedTexture2D &ambient_occlusion_map = SharedTexture2D(),
+  explicit Material(const Shared_texture_2D &albedo_map = Shared_texture_2D(),
+                    const Shared_texture_2D &emission_map = Shared_texture_2D(),
+                    const Shared_texture_2D &normal_map = Shared_texture_2D(),
+                    const Shared_texture_2D &metallic_map = Shared_texture_2D(),
+                    const Shared_texture_2D &roughness_map = Shared_texture_2D(),
+                    const Shared_texture_2D &ambient_occlusion_map = Shared_texture_2D(),
                     const glm::vec3 &albedo = glm::vec3(1.0f),
                     float opacity = 1.0f,
                     float roughness = 0.0f,
@@ -45,12 +45,12 @@ public:
   float emission_strength;
   float ambient_occlusion;
 
-  SharedTexture2D albedo_map;
-  SharedTexture2D emission_map;
-  SharedTexture2D normal_map;
-  SharedTexture2D metallic_map;
-  SharedTexture2D roughness_map;
-  SharedTexture2D ambient_occlusion_map;
+  Shared_texture_2D albedo_map;
+  Shared_texture_2D emission_map;
+  Shared_texture_2D normal_map;
+  Shared_texture_2D metallic_map;
+  Shared_texture_2D roughness_map;
+  Shared_texture_2D ambient_occlusion_map;
 };
 }
 }

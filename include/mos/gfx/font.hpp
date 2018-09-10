@@ -10,11 +10,11 @@ namespace gfx {
 /** Bitmap font. */
 class Font final {
 public:
-  using CharMap = std::map<char, Character>;
+  using Char_map = std::map<char, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
-  Font(const CharMap &characters,
-       const SharedTexture2D &texture,
+  Font(const Char_map &characters,
+       const Shared_texture_2D &texture,
        float height,
        float ascender,
        float descender);
@@ -29,10 +29,10 @@ public:
   float base() const;
 
   /** Texture with characters. */
-  SharedTexture2D texture;
+  Shared_texture_2D texture;
 
   /** Characters supported. */
-  CharMap characters;
+  Char_map characters;
 
 private:
   float base_;

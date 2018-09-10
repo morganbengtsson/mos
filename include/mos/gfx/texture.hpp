@@ -9,7 +9,7 @@ namespace mos {
 namespace gfx {
 
 class Texture;
-using SharedTexture = std::shared_ptr<Texture>;
+using Shared_texture = std::shared_ptr<Texture>;
 
 /** Texture base */
 class Texture {
@@ -60,7 +60,7 @@ public:
   bool mipmaps; // TODO: const
   Wrap wrap; // TODO: const
   Format format; // TODO: const
-  TrackedContainer<Data> layers;
+  Tracked_container<Data> layers;
 private:
   static std::atomic_uint current_id_;
   int id_;

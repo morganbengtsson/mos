@@ -10,7 +10,7 @@ namespace io {
 
 class Window {
 public:
-  enum class CursorMode : int {
+  enum class Cursor_mode : int {
     NORMAL = GLFW_CURSOR_NORMAL,
     HIDDDEN = GLFW_CURSOR_HIDDEN,
     DISABLED = GLFW_CURSOR_DISABLED
@@ -23,31 +23,31 @@ public:
   Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080}, const int swap_interval = 0);
   ~Window();
 
-  using ErrorFunc =
+  using Error_func =
   std::function<void(const int error, const std::string &description)>;
-  using PosFunc = std::function<void(const glm::vec2 &position)>;
-  using SizeFunc = std::function<void(const glm::vec2 &size)>;
-  using ClickFunc =
+  using Pos_func = std::function<void(const glm::vec2 &position)>;
+  using Size_func = std::function<void(const glm::vec2 &size)>;
+  using Click_func =
   std::function<void(const int button, const int action, const int mods)>;
-  using MouseFunc = std::function<void(const glm::dvec2 &position)>;
-  using ScrollFunc = std::function<void(const glm::dvec2 &offset)>;
-  using KeyFunc = std::function<void(const int key, const int scancode,
+  using Mouse_func = std::function<void(const glm::dvec2 &position)>;
+  using Scroll_func = std::function<void(const glm::dvec2 &offset)>;
+  using Key_func = std::function<void(const int key, const int scancode,
                                      const int action, const int mods)>;
 
-  static ErrorFunc error_func;
-  static PosFunc pos_func;
-  static SizeFunc size_func;
-  static ClickFunc click_func;
-  static MouseFunc mouse_func;
-  static ScrollFunc scroll_func;
-  static KeyFunc key_func;
+  static Error_func error_func;
+  static Pos_func pos_func;
+  static Size_func size_func;
+  static Click_func click_func;
+  static Mouse_func mouse_func;
+  static Scroll_func scroll_func;
+  static Key_func key_func;
 
   glm::ivec2 framebuffer_size() const;
   void poll_events();
   void swap_buffers();
   bool close() const;
   void close(const bool);
-  void cursor_mode(const CursorMode &mode);
+  void cursor_mode(const Cursor_mode &mode);
   void cursor(const Cursor &cursor);
   glm::dvec2 cursor_position() const;
   float dpi() const;

@@ -7,7 +7,7 @@ namespace mos {
 namespace gfx {
 
 /** Collection of particle clouds.*/
-using ParticleClouds = Container<ParticleCloud>;
+using Particle_clouds = Container<Particle_cloud>;
 
 }
 }

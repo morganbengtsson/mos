@@ -13,9 +13,6 @@ namespace gfx {
 /** Text for rendering. */
 class Text {
 public:
-  using CharMap = std::map<char, Character>;
-  using TexPtr = std::shared_ptr<Texture2D>;
-
   Text(const std::string &text,
        const Font &font,
        const glm::mat4 &transform = glm::mat4(1.0f),

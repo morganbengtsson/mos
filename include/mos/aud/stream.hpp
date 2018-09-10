@@ -8,7 +8,7 @@
 namespace mos {
 namespace aud {
 class Stream;
-using SharedStream = std::shared_ptr<Stream>;
+using Shared_stream = std::shared_ptr<Stream>;
 
 /** Audio streaming from *.ogg file. */
 class Stream final {

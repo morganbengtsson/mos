@@ -6,18 +6,18 @@
 namespace mos {
 namespace gfx {
 
-class EnvironmentLight;
-using OptionalEnvironmentLight = std::optional<EnvironmentLight>;
+class Environment_light;
+using Optional_environment_light = std::optional<Environment_light>;
 
 /** Environment light, based on a cube map. */
-class EnvironmentLight final {
+class Environment_light final {
 public:
   /** @param extent Describes how big the environment is, for parallax/box correction. */
-  explicit EnvironmentLight(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
+  explicit Environment_light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
                    const glm::vec3 &extent = glm::vec3(50.0f),
                    float strength = 0.0f);
 
-  EnvironmentLight(const std::string &directory, const std::string &path,
+  Environment_light(const std::string &directory, const std::string &path,
       const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Set position. */
@@ -42,7 +42,7 @@ public:
   float strength;
 private:
   Box box_;
-  CubeCamera cube_camera_;
+  Cube_camera cube_camera_;
 };
 }
 }

@@ -10,24 +10,24 @@ template<class T> class Container;
 
 /** Container with modified time stamp. */
 template<class T>
-class TrackedContainer {
+class Tracked_container {
 public:
   using Items = std::vector<T>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
-  TrackedContainer(){
+  Tracked_container(){
     invalidate();
   };
 
   template<class It>
-  TrackedContainer(const std::initializer_list<It> list): TrackedContainer(list.begin(), list.end()){}
+  Tracked_container(const std::initializer_list<It> list): Tracked_container(list.begin(), list.end()){}
 
   template<class It>
-  TrackedContainer(It begin, It end) {
+  Tracked_container(It begin, It end) {
     assign(begin, end);
   }
 
-  TrackedContainer(const Container<T> &container): TrackedContainer(container.begin(), container.end()){}
+  Tracked_container(const Container<T> &container): Tracked_container(container.begin(), container.end()){}
 
   template<class It>
   void assign(It begin, It end){

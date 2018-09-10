@@ -9,12 +9,12 @@ namespace gfx {
 
 using namespace nlohmann;
 
-Material::Material(const SharedTexture2D &albedo_map,
-                   const SharedTexture2D &emission_map,
-                   const SharedTexture2D &normal_map,
-                   const SharedTexture2D &metallic_map,
-                   const SharedTexture2D &roughness_map,
-                   const SharedTexture2D &ambient_occlusion_map,
+Material::Material(const Shared_texture_2D &albedo_map,
+                   const Shared_texture_2D &emission_map,
+                   const Shared_texture_2D &normal_map,
+                   const Shared_texture_2D &metallic_map,
+                   const Shared_texture_2D &roughness_map,
+                   const Shared_texture_2D &ambient_occlusion_map,
                    const glm::vec3 &albedo,
                    const float opacity,
                    const float roughness,

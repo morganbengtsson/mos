@@ -17,26 +17,26 @@ Assets::Assets(const std::string &directory) : directory_(directory) {}
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (path.empty()){
-    return SharedMesh(nullptr);
+    return Shared_mesh(nullptr);
   }
   if (meshes_.find(path) == meshes_.end()) {
-    meshes_.insert(MeshPair(path, Mesh::load(directory_ + path)));
+    meshes_.insert(Mesh_pair(path, Mesh::load(directory_ + path)));
   }
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture2D>
+std::shared_ptr<Texture_2D>
 Assets::texture(const std::string &path,
                       const bool color_data,
                       const bool mipmaps,
-                      const Texture2D::Wrap &wrap) {
+                      const Texture_2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(TexturePair(path, Texture2D::load(directory_ + path, color_data, mipmaps, wrap)));
+      textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, wrap)));
     }
     return textures_.at(path);
   } else {
-    return SharedTexture2D(nullptr);
+    return Shared_texture_2D(nullptr);
   }
 }
 

@@ -4,13 +4,13 @@
 namespace mos {
 namespace gfx {
 
-ParticleCloud::ParticleCloud() {
+Particle_cloud::Particle_cloud() {
 }
 
-ParticleCloud::ParticleCloud(const SharedTexture2D& emission_map, const Particles & particles) :
+Particle_cloud::Particle_cloud(const Shared_texture_2D& emission_map, const Particles & particles) :
 emission_map(emission_map), particles(particles) {}
 
-void ParticleCloud::sort(const glm::vec3 &position) {
+void Particle_cloud::sort(const glm::vec3 &position) {
   std::sort(particles.begin(), particles.end(),
             [&](const Particle &a, const Particle &b) -> bool {
               auto a_distance1 = glm::distance(a.position, position);

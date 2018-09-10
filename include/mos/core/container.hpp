@@ -6,7 +6,7 @@
 
 namespace mos {
 
-template<class T> class TrackedContainer;
+template<class T> class Tracked_container;
 
 /** Container. */
 template<class T>
@@ -24,7 +24,7 @@ public:
     assign(begin, end);
   }
 
-  Container(const TrackedContainer<T> & container) : Container(container.begin(), container.end()){}
+  Container(const Tracked_container<T> & container) : Container(container.begin(), container.end()){}
 
   template<class It>
   void assign(It begin, It end){

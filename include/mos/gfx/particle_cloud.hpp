@@ -12,19 +12,19 @@ namespace mos {
 namespace gfx {
 
 /** Collection of particles for rendering, uses same texture. */
-class ParticleCloud final : public Shape {
+class Particle_cloud final : public Shape {
 public:
-  ParticleCloud();
+  Particle_cloud();
 
-  ParticleCloud(const SharedTexture2D& emission_map, const Particles& particles);
+  Particle_cloud(const Shared_texture_2D& emission_map, const Particles& particles);
 
-  ~ParticleCloud() = default;
+  ~Particle_cloud() = default;
 
   /** Sort particles relative to a position. */
   void sort(const glm::vec3 &position);
 
   /** Texture for all particles. */
-  SharedTexture2D emission_map;
+  Shared_texture_2D emission_map;
 
   /** Particles. */
   Particles particles;

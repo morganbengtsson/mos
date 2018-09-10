@@ -7,7 +7,7 @@ namespace mos {
 namespace aud {
 
 /** Collection of stream sources. */
-using StreamSources = Container<Stream_source>;
+using Stream_sources = Container<Stream_source>;
 
 }
 }

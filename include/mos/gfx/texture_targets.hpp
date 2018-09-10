@@ -7,7 +7,7 @@ namespace mos {
 namespace gfx {
 
 /** Collection of render targets. */
-using TextureTargets = Container<TextureTarget>;
+using Texture_targets = Container<Texture_target>;
 
 }
 }

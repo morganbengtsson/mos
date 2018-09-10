@@ -18,10 +18,10 @@ namespace gfx {
 /** Cache for faster loading of textures and meshes. */
 class Assets final {
 public:
-  using MeshMap = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
-  using TextureMap = std::unordered_map<std::string, std::shared_ptr<Texture2D>>;
-  using MeshPair = std::pair<std::string, std::shared_ptr<Mesh>>;
-  using TexturePair = std::pair<std::string, std::shared_ptr<Texture2D>>;
+  using Mesh_map = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
+  using Texture_map = std::unordered_map<std::string, std::shared_ptr<Texture_2D>>;
+  using Mesh_pair = std::pair<std::string, std::shared_ptr<Mesh>>;
+  using Texture_pair = std::pair<std::string, std::shared_ptr<Texture_2D>>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
   explicit Assets(const std::string &directory = "assets/");
@@ -31,14 +31,14 @@ public:
   ~Assets() = default;
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */
-  SharedMesh mesh(const std::string &path);
+  Shared_mesh mesh(const std::string &path);
 
   /** Loads Texture2D from a *.png file and caches it internally. */
-  SharedTexture2D
+  Shared_texture_2D
   texture(const std::string &path,
           bool color_data = true,
           bool mipmaps = true,
-          const Texture2D::Wrap &wrap = Texture2D::Wrap::REPEAT);
+          const Texture_2D::Wrap &wrap = Texture_2D::Wrap::REPEAT);
 
   /** Remove all unused assets. */
   void clear_unused();
@@ -49,8 +49,8 @@ public:
   std::string directory() const;
 private:
   const std::string directory_;
-  MeshMap meshes_;
-  TextureMap textures_;
+  Mesh_map meshes_;
+  Texture_map textures_;
 };
 }
 }

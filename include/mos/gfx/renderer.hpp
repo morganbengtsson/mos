@@ -40,20 +40,20 @@ public:
 
   /** Load a mesh in to memory. */
   void load(const Mesh &mesh);
-  void load(const SharedMesh &mesh);
+  void load(const Shared_mesh &mesh);
 
   /** Unloads a mesh from memory. */
   void unload(const Mesh &mesh);
-  void unload(const SharedMesh &mesh);
+  void unload(const Shared_mesh &mesh);
 
   /** Loads a shared texture into renderer memory. */
-  void load(const SharedTexture2D &texture);
+  void load(const Shared_texture_2D &texture);
 
   /** Loads a texture into renderer memory. */
-  void load_or_update(const Texture2D &texture);
+  void load_or_update(const Texture_2D &texture);
 
   /** Unloads a shared texture from renderer memory. */
-  void unload(const SharedTexture2D &texture);
+  void unload(const Shared_texture_2D &texture);
 
   /** Render multiple scenes. */
   void render(const Scenes &scenes,
@@ -64,27 +64,27 @@ public:
   void clear_buffers();
 
 private:
-  using TimePoint =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+  using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   struct Buffer {
     GLuint id;
-    TimePoint modified;
+    Time_point modified;
   };
 
-  class TextureBuffer2D {
+  class Texture_buffer_2D {
   public:
-    explicit TextureBuffer2D(const Texture2D &texture_2d);
-    TextureBuffer2D(GLuint internal_format,
+    explicit Texture_buffer_2D(const Texture_2D &texture_2d);
+    Texture_buffer_2D(GLuint internal_format,
                     GLuint external_format,
                     int width,
                     int height,
                     GLuint wrap,
                     const void *data,
                     bool mipmaps,
-                    const TimePoint &modified = std::chrono::system_clock::now());
-    ~TextureBuffer2D();
+                    const Time_point &modified = std::chrono::system_clock::now());
+    ~Texture_buffer_2D();
     GLuint texture;
-    TimePoint modified;
+    Time_point modified;
   };
 
   class Shader {
@@ -103,8 +103,8 @@ private:
   };
 
   /** Uniforms for the particle shader program. */
-  struct ParticleProgram : public Program {
-    ParticleProgram();
+  struct Particle_program : public Program {
+    Particle_program();
     GLint mvp;
     GLint mv;
     GLint p;
@@ -113,55 +113,55 @@ private:
   };
 
   /** Uniforms for the bounding box shader program. */
-  struct BoxProgram : public Program {
-    BoxProgram();
+  struct Box_program : public Program {
+    Box_program();
     GLint mvp;
   };
 
-  struct MultisampleProgram : public Program {
-    MultisampleProgram();
+  struct Multisample_program : public Program {
+    Multisample_program();
     GLint color_texture;
     GLint depth_texture;
   };
 
-  struct BloomProgram : public Program {
-    BloomProgram();
+  struct Bloom_program : public Program {
+    Bloom_program();
     GLint color_texture;
     GLint bright_color_texture;
     GLint strength;
   };
 
-  struct BlurProgram : public Program {
-    BlurProgram();
+  struct Blur_program : public Program {
+    Blur_program();
     GLint color_texture;
     GLint horizontal;
   };
 
-  struct DepthProgram : public Program {
-    DepthProgram();
+  struct Depth_program : public Program {
+    Depth_program();
     GLint model_view_projection_matrix;
   };
 
 
   /** Uniforms for the propagate shader. */
-  class PropagateProgram : public Program {
+  class Propagate_program : public Program {
   public:
-    PropagateProgram();
+    Propagate_program();
     GLint environment_map;
     GLint environment_albedo_map;
     GLint side;
   };
 
   /** Uniforms for the environment shader. */
-  class EnvironmentProgram : public Program {
+  class Environment_program : public Program {
   public:
-    EnvironmentProgram();
+    Environment_program();
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
     std::array<GLint,2> depth_bias_mvps;
 
-    struct EnvironmentUniforms {
+    struct Environment_uniforms {
       GLint map;
       GLint position;
       GLint extent;
@@ -182,7 +182,7 @@ private:
     GLint camera_resolution;
     GLint camera_position;
 
-    struct LightUniforms {
+    struct Light_uniforms {
       GLint position;
       GLint color;
       GLint strength;
@@ -193,7 +193,7 @@ private:
     };
 
     std::array<GLuint, 2> shadow_maps;
-    std::array<LightUniforms, 2> lights;
+    std::array<Light_uniforms, 2> lights;
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -203,21 +203,21 @@ private:
   };
 
   /** Uniforms for the standard shader. */
-  class StandardProgram : public Program {
+  class Standard_program : public Program {
   public:
-    StandardProgram();
+    Standard_program();
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
     std::array<GLint,2> depth_bias_mvps;
 
-    struct EnvironmentUniforms {
+    struct Environment_uniforms {
       GLint map;
       GLint position;
       GLint extent;
       GLint strength;
     };
-    std::array<EnvironmentUniforms, 2> environment_maps;
+    std::array<Environment_uniforms, 2> environment_maps;
 
     GLint material_albedo_map;
     GLint material_emission_map;
@@ -237,7 +237,7 @@ private:
     GLint camera_resolution;
     GLint camera_position;
 
-    struct LightUniforms {
+    struct Light_uniforms {
       GLint position;
       GLint color;
       GLint strength;
@@ -248,7 +248,7 @@ private:
     };
 
     std::array<GLuint, 2> shadow_maps;
-    std::array<LightUniforms, 2> lights;
+    std::array<Light_uniforms, 2> lights;
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -272,7 +272,7 @@ private:
   void render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera);
 
-  void render_particles(const ParticleClouds &clouds,
+  void render_particles(const Particle_clouds &clouds,
                         const mos::gfx::Camera &camera,
                         const glm::vec2 &resolution);
 
@@ -280,77 +280,77 @@ private:
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Lights &lights,
-                    const EnvironmentLights &environment_lights,
+                    const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const StandardProgram& program);
+                    const Standard_program& program);
 
   void render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Lights &lights,
-                    const EnvironmentLights &environment_lights,
+                    const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const EnvironmentProgram& program);
+                    const Environment_program& program);
 
   void render_model_depth(const Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,
-                          const DepthProgram& program);
+                          const Depth_program& program);
 
   /** Clear color and depth. */
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
 
-  const PropagateProgram propagate_program_;
-  const StandardProgram standard_program_;
-  const EnvironmentProgram environment_program_;
-  const ParticleProgram particle_program_;
-  const BoxProgram box_program_;
-  const DepthProgram depth_program_;
-  const MultisampleProgram multisample_program_;
-  const BloomProgram bloom_program_;
-  const BlurProgram blur_program_;
+  const Propagate_program propagate_program_;
+  const Standard_program standard_program_;
+  const Environment_program environment_program_;
+  const Particle_program particle_program_;
+  const Box_program box_program_;
+  const Depth_program depth_program_;
+  const Multisample_program multisample_program_;
+  const Bloom_program bloom_program_;
+  const Blur_program blur_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
-  std::unordered_map<unsigned int, std::unique_ptr<TextureBuffer2D>> textures_;
+  std::unordered_map<unsigned int, std::unique_ptr<Texture_buffer_2D>> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  struct StandardTarget {
-    StandardTarget(const glm::ivec2 &resolution);
-    ~StandardTarget();
+  struct Standard_target {
+    Standard_target(const glm::ivec2 &resolution);
+    ~Standard_target();
     GLuint frame_buffer;
     GLuint texture;
     GLuint depth_texture;
   };
 
-  const StandardTarget standard_target_;
+  const Standard_target standard_target_;
 
-  struct MultiTarget {
-    MultiTarget(const glm::ivec2 &resolution);
-    ~MultiTarget();
+  struct Multi_target {
+    Multi_target(const glm::ivec2 &resolution);
+    ~Multi_target();
     GLuint frame_buffer;
     GLuint color_texture;
     GLuint bright_texture;
   };
 
-  const MultiTarget multi_target_;
+  const Multi_target multi_target_;
 
-  struct BlurTarget {
-    BlurTarget(const glm::ivec2 &resolution);
-    ~BlurTarget();
+  struct Blur_target {
+    Blur_target(const glm::ivec2 &resolution);
+    ~Blur_target();
     GLuint frame_buffer;
     GLuint texture;
   };
 
-  const BlurTarget blur_target0_;
-  const BlurTarget blur_target1_;
+  const Blur_target blur_target0_;
+  const Blur_target blur_target1_;
 
   struct Quad {
     Quad();
@@ -371,42 +371,42 @@ private:
 
   const Box box;
 
-  const TextureBuffer2D black_texture_;
-  const TextureBuffer2D white_texture_;
-  const TextureBuffer2D brdf_lut_texture_;
+  const Texture_buffer_2D black_texture_;
+  const Texture_buffer_2D white_texture_;
+  const Texture_buffer_2D brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
 
-  struct RenderBuffer {
-    explicit RenderBuffer(int resolution);
-    ~RenderBuffer();
+  struct Render_buffer {
+    explicit Render_buffer(int resolution);
+    ~Render_buffer();
     GLuint render_buffer;
     int resolution;
   };
 
-  struct ShadowMapTarget {
-    explicit ShadowMapTarget(const RenderBuffer &render_buffer);
-    ~ShadowMapTarget();
+  struct Shadow_map_target {
+    explicit Shadow_map_target(const Render_buffer &render_buffer);
+    ~Shadow_map_target();
     GLuint texture;
     GLuint frame_buffer;
   };
 
   /** Shadow maps. */
-  const RenderBuffer shadow_maps_render_buffer_;
-  const std::array<ShadowMapTarget, 2> shadow_maps_;
+  const Render_buffer shadow_maps_render_buffer_;
+  const std::array<Shadow_map_target, 2> shadow_maps_;
 
-  struct EnvironmentMapTarget {
-    explicit EnvironmentMapTarget(const RenderBuffer &render_buffer);
-    ~EnvironmentMapTarget();
+  struct Environment_map_target {
+    explicit Environment_map_target(const Render_buffer &render_buffer);
+    ~Environment_map_target();
     GLuint texture;
     GLuint albedo;
     GLuint frame_buffer;
   };
 
   /** Environment map targets. */
-  const RenderBuffer environment_render_buffer_;
-  const std::array<EnvironmentMapTarget, 2> environment_maps_targets;
-  const EnvironmentMapTarget propagate_target_;
+  const Render_buffer environment_render_buffer_;
+  const std::array<Environment_map_target, 2> environment_maps_targets;
+  const Environment_map_target propagate_target_;
 };
 }
 }

@@ -8,7 +8,7 @@
 namespace mos {
 namespace gfx {
 
-Model::Model(const std::string &name, const SharedMesh &mesh,
+Model::Model(const std::string &name, const Shared_mesh &mesh,
              const glm::mat4 &transform, const Material &material)
     : mesh(mesh), material(material), name_(name), transform(transform) {}
 

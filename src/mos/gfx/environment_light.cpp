@@ -8,7 +8,7 @@
 namespace mos {
 namespace gfx {
 
-EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
+Environment_light::Environment_light(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength)
     :
@@ -17,7 +17,7 @@ EnvironmentLight::EnvironmentLight(const glm::vec3 &position,
       cube_camera_(position, 0.01f, glm::length(extent)) {
 }
 
-EnvironmentLight::EnvironmentLight(const std::string &directory, const std::string &path,
+Environment_light::Environment_light(const std::string &directory, const std::string &path,
     const glm::mat4 &parent_transform) {
   using json = nlohmann::json;
   filesystem::path fpath = path;
@@ -39,31 +39,31 @@ EnvironmentLight::EnvironmentLight(const std::string &directory, const std::stri
     auto extent = float(value["extent"]) * scale;
     box_ = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
     strength = value.value("strength", 1.0f);
-    cube_camera_ = mos::gfx::CubeCamera(position, 0.01, glm::length(extent));
+    cube_camera_ = mos::gfx::Cube_camera(position, 0.01, glm::length(extent));
   } else {
     throw std::runtime_error(path.substr(path.find_last_of(".")) +
         " file format is not supported.");
   }
 }
 
-void EnvironmentLight::position(const glm::vec3 &position) {
+void Environment_light::position(const glm::vec3 &position) {
   box_.transform[3] = glm::vec4(position, 0.0f);
   cube_camera_.position(position);
 }
-glm::vec3 EnvironmentLight::position() const {
+glm::vec3 Environment_light::position() const {
   return glm::vec3(box_.transform[3]);
 }
-void EnvironmentLight::extent(const glm::vec3 &extent) {
+void Environment_light::extent(const glm::vec3 &extent) {
   box_.extent = extent;
   cube_camera_.near_far(0.01f, glm::length(extent));
 }
-glm::vec3 EnvironmentLight::extent() const {
+glm::vec3 Environment_light::extent() const {
   return box_.extent;
 }
-bool EnvironmentLight::inside(const glm::vec3 &point) const {
+bool Environment_light::inside(const glm::vec3 &point) const {
   return box_.inside(point);
 }
-mos::gfx::Camera EnvironmentLight::camera(const size_t index) const {
+mos::gfx::Camera Environment_light::camera(const size_t index) const {
   return cube_camera_.cameras[index];
 }
 

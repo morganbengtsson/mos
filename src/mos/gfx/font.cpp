@@ -6,10 +6,10 @@
 namespace mos {
 namespace gfx {
 using namespace nlohmann;
-Font::Font(const Font::CharMap &characters, const SharedTexture2D &texture,
+Font::Font(const Font::Char_map &characters, const Shared_texture_2D &texture,
            const float height, const float ascender, const float descender)
     : characters(characters), texture(texture), height_(height) {
-  texture->wrap = Texture2D::Wrap::CLAMP;
+  texture->wrap = Texture_2D::Wrap::CLAMP;
 }
 
 Font::Font(const std::string &path) {
@@ -31,7 +31,7 @@ Font::Font(const std::string &path) {
   base_ = doc["config"]["base"];
   height_ = doc["config"]["charHeight"];
   std::string texture_name = doc["config"]["textureFile"];
-  texture = Texture2D::load(fpath.parent_path().str() + "/" + texture_name);
+  texture = Texture_2D::load(fpath.parent_path().str() + "/" + texture_name);
 }
 
 float Font::height() const { return height_; }

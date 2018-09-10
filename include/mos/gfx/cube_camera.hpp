@@ -8,9 +8,9 @@ namespace mos {
 namespace gfx {
 
 /** Camera for environment rendering. */
-class CubeCamera final {
+class Cube_camera final {
 public:
-  explicit CubeCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
+  explicit Cube_camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
              float near = 0.1,
              float far = 100.0f);
 

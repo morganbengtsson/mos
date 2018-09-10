@@ -14,14 +14,14 @@ namespace mos {
 namespace gfx {
 
 class Mesh;
-using SharedMesh = std::shared_ptr<Mesh>;
+using Shared_mesh = std::shared_ptr<Mesh>;
 using Triangle = std::array<int, 3>;
 
 /** Geometric data description, vertices and indices. */
 class Mesh final : public Shape {
 public:
   using Positions = std::vector<glm::vec3>;
-  using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+  using Time_point = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   template<class Tv, class Te>
   Mesh(const Tv vertices_begin, const Tv vertices_end,
@@ -42,7 +42,7 @@ public:
 
   ~Mesh() = default;
 
-  static SharedMesh load(const std::string &path);
+  static Shared_mesh load(const std::string &path);
 
   /** Erease all vertices and indices. */
   void clear();
@@ -60,8 +60,8 @@ public:
 
   void calculate_tangents();
 
-  TrackedContainer<Vertex> vertices;
-  TrackedContainer<Triangle> triangles;
+  Tracked_container<Vertex> vertices;
+  Tracked_container<Triangle> triangles;
 private:
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
 

@@ -8,7 +8,7 @@
 namespace mos {
 namespace gfx {
 class Target;
-using OptTarget = std::optional<Target>;
+using Optional_target = std::optional<Target>;
 
 /** Off screen rendering target. */
 class Target {

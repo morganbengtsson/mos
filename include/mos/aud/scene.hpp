@@ -15,13 +15,13 @@ namespace aud {
 class Scene final {
 public:
   Scene(const Buffer_sources &buffer_sources,
-        const StreamSources &stream_sources,
+        const Stream_sources &stream_sources,
         const Listener &listener);
   Scene();
   ~Scene() = default;
 
   Buffer_sources buffer_sources;
-  StreamSources stream_sources;
+  Stream_sources stream_sources;
   Listener listener;
 };
 }

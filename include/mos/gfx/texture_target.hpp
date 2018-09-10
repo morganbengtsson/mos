@@ -8,12 +8,12 @@ namespace mos {
 namespace gfx {
 
 /** Off screen rendertarget. */
-struct TextureTarget {
-  TextureTarget(){
-    texture = std::make_shared<Texture2D>(Texture2D(128, 128));
+struct Texture_target {
+  Texture_target(){
+    texture = std::make_shared<Texture_2D>(Texture_2D(128, 128));
   }
   mos::gfx::Camera camera;
-  mos::gfx::SharedTexture2D texture;
+  mos::gfx::Shared_texture_2D texture;
   mos::gfx::Target target;
 };
 

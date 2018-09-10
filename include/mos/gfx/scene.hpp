@@ -26,17 +26,17 @@ public:
         const Camera &camera,
         const Lights &lights = Lights(),
         const Fog &fog = Fog(),
-        const EnvironmentLights &environment_lights = EnvironmentLights(),
+        const Environment_lights &environment_lights = Environment_lights(),
         const Boxes &boxes = Boxes());
 
   Models models;
-  ParticleClouds particle_clouds;
+  Particle_clouds particle_clouds;
   Boxes boxes;
   Lights lights;
   Camera camera;
   Fog fog;
-  EnvironmentLights environment_lights;
-  TextureTargets texture_targets;
+  Environment_lights environment_lights;
+  Texture_targets texture_targets;
 };
 }
 }

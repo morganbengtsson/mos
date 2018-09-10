@@ -7,7 +7,7 @@ Scene::Scene(const Models &models,
              const Camera &camera,
              const Lights &lights,
              const Fog &fog,
-             const EnvironmentLights &environment_lights,
+             const Environment_lights &environment_lights,
              const Boxes &boxes)
     : models(models),
       camera(camera),

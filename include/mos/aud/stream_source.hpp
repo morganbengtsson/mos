@@ -12,12 +12,12 @@ namespace aud {
 /** Stream audio from file, combined with source data. */
 class Stream_source final {
 public:
-  explicit Stream_source(const SharedStream &stream,
+  explicit Stream_source(const Shared_stream &stream,
                         const Source &source = Source());
   ~Stream_source();
 
   /** Stream used for the source. */
-  SharedStream stream;
+  Shared_stream stream;
 
   /** Source data. */
   Source source;

@@ -4,24 +4,24 @@
 namespace mos {
 namespace gfx {
 
-Texture2D::Texture2D(const unsigned int width, const unsigned int height,
+Texture_2D::Texture_2D(const unsigned int width, const unsigned int height,
                      const Format &format, const Wrap &wrap,
                      const bool mipmaps)
     : Texture(width, height, format, wrap, mipmaps) {}
 
-Texture2D::~Texture2D() {}
+Texture_2D::~Texture_2D() {}
 
-SharedTexture2D Texture2D::load(const std::string &path, const bool color_data, const bool mipmaps, const Wrap &wrap) {
+Shared_texture_2D Texture_2D::load(const std::string &path, const bool color_data, const bool mipmaps, const Wrap &wrap) {
   if (path.empty() || path.back() == '/') {
-    return SharedTexture2D();
+    return Shared_texture_2D();
   }
-  return std::make_shared<Texture2D>(path, color_data, mipmaps, wrap);
+  return std::make_shared<Texture_2D>(path, color_data, mipmaps, wrap);
 }
 
-Texture2D::Texture2D(const std::string &path,
+Texture_2D::Texture_2D(const std::string &path,
                      const bool color_data,
                      const bool mipmaps,
-                     const Texture2D::Wrap &wrap)
+                     const Texture_2D::Wrap &wrap)
     : Texture({path}, color_data, wrap, mipmaps) {}
 }
 }
