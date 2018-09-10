@@ -39,10 +39,10 @@ private:
   void listener(const Listener &listener);
 
   /** Update internal stream source representation. */
-  void stream_source(const StreamSource &stream_source);
+  void stream_source(const Stream_source &stream_source);
 
   /** Update internal buffer source representation. */
-  void buffer_source(const BufferSource &buffer_source);
+  void buffer_source(const Buffer_source &buffer_source);
 
   ALCdevice *device_;
   ALCcontext *context_;

@@ -10,11 +10,11 @@ namespace mos {
 namespace aud {
 
 /** Stream audio from file, combined with source data. */
-class StreamSource final {
+class Stream_source final {
 public:
-  explicit StreamSource(const SharedStream &stream,
+  explicit Stream_source(const SharedStream &stream,
                         const Source &source = Source());
-  ~StreamSource();
+  ~Stream_source();
 
   /** Stream used for the source. */
   SharedStream stream;

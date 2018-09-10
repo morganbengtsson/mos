@@ -14,13 +14,13 @@ namespace aud {
 /** Audio scene with listener and audio sources. */
 class Scene final {
 public:
-  Scene(const BufferSources &buffer_sources,
+  Scene(const Buffer_sources &buffer_sources,
         const StreamSources &stream_sources,
         const Listener &listener);
   Scene();
   ~Scene() = default;
 
-  BufferSources buffer_sources;
+  Buffer_sources buffer_sources;
   StreamSources stream_sources;
   Listener listener;
 };

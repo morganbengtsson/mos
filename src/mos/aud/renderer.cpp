@@ -178,7 +178,7 @@ Renderer::~Renderer() {
   alcCloseDevice(device_);
 }
 
-void Renderer::buffer_source(const BufferSource &buffer_source) {
+void Renderer::buffer_source(const Buffer_source &buffer_source) {
 
   //TODO: HACK, replace this!
   float dt = 1.0f / 60.0f;
@@ -263,7 +263,7 @@ void Renderer::buffer_source(const BufferSource &buffer_source) {
   }
 }
 
-void Renderer::stream_source(const StreamSource &stream_source) {
+void Renderer::stream_source(const Stream_source &stream_source) {
 
   float dt = 1.0f / 60.0f; // TODO: REMOVE HACK
 

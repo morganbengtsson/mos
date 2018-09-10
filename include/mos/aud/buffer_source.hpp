@@ -9,16 +9,16 @@ namespace mos {
 namespace aud {
 
 /** Audio buffer and audio source combined. */
-class BufferSource final {
+class Buffer_source final {
 public:
-  explicit BufferSource(const SharedBuffer &buffer = nullptr,
+  explicit Buffer_source(const Shared_buffer &buffer = nullptr,
                const Source &source = Source());
-  ~BufferSource() = default;
+  ~Buffer_source() = default;
 
   /** Play the source. */
   void input(const float dt);
 
-  SharedBuffer buffer;
+  Shared_buffer buffer;
   Source source;
 private:
   float time_;

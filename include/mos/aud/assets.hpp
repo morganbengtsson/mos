@@ -11,16 +11,16 @@ namespace aud {
 /** Cache for heavy audio assets. */
 class Assets final {
 public:
-  using BufferMap =
-  std::unordered_map<std::string, SharedBuffer>;
-  using BufferPair = std::pair<std::string, SharedBuffer>;
+  using Buffer_map =
+  std::unordered_map<std::string, Shared_buffer>;
+  using Buffer_pair = std::pair<std::string, Shared_buffer>;
 
   explicit Assets(const std::string &directory = "assets/");
   Assets(const Assets &assets) = delete;
   ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */
-  SharedBuffer audio_buffer(const std::string &path);
+  Shared_buffer audio_buffer(const std::string &path);
 
   /** Remove unused buffers. */
   void clear_unused();
@@ -30,7 +30,7 @@ public:
 
 private:
   const std::string directory_;
-  BufferMap buffers_;
+  Buffer_map buffers_;
 };
 }
 }

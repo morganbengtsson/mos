@@ -9,7 +9,7 @@ namespace mos {
 namespace aud {
 
 class Buffer;
-using SharedBuffer = std::shared_ptr<Buffer>;
+using Shared_buffer = std::shared_ptr<Buffer>;
 
 /** 16bit integer audio buffer. */
 class Buffer final {
@@ -32,7 +32,7 @@ public:
   ~Buffer() = default;
 
   /** Load shared buffer. */
-  static SharedBuffer load(const std::string &path);
+  static Shared_buffer load(const std::string &path);
 
   Samples::const_iterator begin() const;
 

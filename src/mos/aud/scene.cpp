@@ -2,7 +2,7 @@
 namespace mos {
 namespace aud {
 Scene::Scene(
-    const BufferSources &buffer_sources,
+    const Buffer_sources &buffer_sources,
     const StreamSources &stream_sources,
     const Listener &listener)
     : buffer_sources(buffer_sources),
