@@ -15,7 +15,7 @@ using Shared_texture = std::shared_ptr<Texture>;
 class Texture {
 public:
   using Data = std::vector<unsigned char>;
-  enum class Wrap { REPEAT, CLAMP };
+  enum class Wrap { Repeat, Clamp };
   enum class Format {
     R,
     RG,
@@ -29,7 +29,7 @@ public:
           const int width,
           const int height,
           const Format &format = Format::SRGBA,
-          const Wrap &wrap = Wrap::REPEAT,
+          const Wrap &wrap = Wrap::Repeat,
           const bool mipmaps = true) : layers(begin, end),
                                        width_(width), height_(height),
                                        format(format), wrap(wrap), mipmaps(mipmaps), id_(current_id_++) {};
@@ -38,13 +38,13 @@ public:
           int width,
           int height,
           const Format &format = Format::SRGBA,
-          const Wrap &wrap = Wrap::REPEAT,
+          const Wrap &wrap = Wrap::Repeat,
           bool mipmaps = true);
 
   Texture(int width,
           int height,
           const Format &format = Format::SRGBA,
-          const Wrap &wrap = Wrap::REPEAT,
+          const Wrap &wrap = Wrap::Repeat,
           bool mipmaps = true);
 
   Texture(const std::initializer_list<std::string> &paths,

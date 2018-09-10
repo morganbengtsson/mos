@@ -9,7 +9,7 @@ using namespace nlohmann;
 Font::Font(const Font::Char_map &characters, const Shared_texture_2D &texture,
            const float height, const float ascender, const float descender)
     : characters(characters), texture(texture), height_(height) {
-  texture->wrap = Texture_2D::Wrap::CLAMP;
+  texture->wrap = Texture_2D::Wrap::Clamp;
 }
 
 Font::Font(const std::string &path) {

@@ -38,7 +38,7 @@ public:
   texture(const std::string &path,
           bool color_data = true,
           bool mipmaps = true,
-          const Texture_2D::Wrap &wrap = Texture_2D::Wrap::REPEAT);
+          const Texture_2D::Wrap &wrap = Texture_2D::Wrap::Repeat);
 
   /** Remove all unused assets. */
   void clear_unused();

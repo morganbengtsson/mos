@@ -21,8 +21,8 @@ namespace gfx {
 
 GLuint wrap_convert(const Texture::Wrap &wrap) {
   const std::map<Texture::Wrap, GLuint> wrap_map{
-      {Texture::Wrap::CLAMP, GL_CLAMP_TO_EDGE},
-      {Texture::Wrap::REPEAT, GL_REPEAT}};
+      {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
+      {Texture::Wrap::Repeat, GL_REPEAT}};
   return wrap_map.at(wrap);
 }
 
@@ -73,7 +73,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
-    brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::CLAMP)) {
+    brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::Clamp)) {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");

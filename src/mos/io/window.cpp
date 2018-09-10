@@ -132,12 +132,12 @@ void Window::cursor_mode(const Window::Cursor_mode &mode) {
 }
 
 void Window::cursor(const Window::Cursor &cursor) {
-  if (cursor == Cursor::HAND) {
+  if (cursor == Cursor::Hand) {
     glfwSetCursor(window_, hand_cursor_);
-  } else if (cursor == Cursor::ARROW){
+  } else if (cursor == Cursor::Arrow){
     glfwSetCursor(window_, arrow_cursor_);
   }
-  else if (cursor == Cursor::CROSSHAIR){
+  else if (cursor == Cursor::Crosshair){
     glfwSetCursor(window_, crosshair_cursor_);
   }
 }

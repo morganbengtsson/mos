@@ -18,13 +18,13 @@ class Texture_2D final : public Texture {
 public:
   template<class T>
   Texture_2D(T begin, T end, unsigned int width, unsigned int height,
-            const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::REPEAT,
+            const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::Repeat,
             const bool mipmaps = true)
       : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps) {}
 
    Texture_2D(unsigned int width, unsigned int height,
             const Format &format = Format::SRGBA,
-             const Wrap &wrap = Wrap::REPEAT,
+             const Wrap &wrap = Wrap::Repeat,
             bool mipmaps = true);
 
   virtual ~Texture_2D();
@@ -33,13 +33,13 @@ public:
   static Shared_texture_2D load(const std::string &path,
                               bool color_data = true,
                               bool mipmaps = true,
-                              const Wrap &wrap = Wrap::REPEAT);
+                              const Wrap &wrap = Wrap::Repeat);
 
   /** Create from file. */
   Texture_2D(const std::string &path,
             bool color_data = true,
             bool mipmaps = true,
-            const Texture::Wrap &wrap = Texture::Wrap::REPEAT);
+            const Texture::Wrap &wrap = Texture::Wrap::Repeat);
 };
 }
 }

@@ -11,13 +11,13 @@ namespace io {
 class Window {
 public:
   enum class Cursor_mode : int {
-    NORMAL = GLFW_CURSOR_NORMAL,
-    HIDDDEN = GLFW_CURSOR_HIDDEN,
-    DISABLED = GLFW_CURSOR_DISABLED
+    Normal = GLFW_CURSOR_NORMAL,
+    Hidden = GLFW_CURSOR_HIDDEN,
+    Disabled = GLFW_CURSOR_DISABLED
   };
 
   enum class Cursor {
-    HAND, ARROW, CROSSHAIR
+    Hand, Arrow, Crosshair
   };
 
   Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080}, const int swap_interval = 0);
