@@ -20,21 +20,21 @@ Material::Material(const Shared_texture_2D &albedo_map,
                    const float roughness,
                    const float metallic,
                    const glm::vec3 &emission,
-                   const float ambient_occlusion)
+                   const float ambient_occlusion,
+                   const float strength)
     : albedo_map(albedo_map),
       emission_map(emission_map),
       normal_map(normal_map),
       metallic_map(metallic_map),
       roughness_map(roughness_map),
       ambient_occlusion_map(ambient_occlusion_map),
-      strength(1.0f),
+      strength(strength),
       albedo(albedo),
       opacity(opacity),
       emission(emission),
       roughness(roughness),
       metallic(metallic),
-      ambient_occlusion(ambient_occlusion),
-      factor(1.0f) {}
+      ambient_occlusion(ambient_occlusion) {}
 
 Material::~Material() {}
 
@@ -43,9 +43,10 @@ Material::Material(const glm::vec3 &albedo,
                    const float roughness,
                    const float metallic,
                    const glm::vec3 &emission,
-                   const float ambient_occlusion)
+                   const float ambient_occlusion,
+                   const float strength)
     : albedo(albedo), opacity(opacity), roughness(roughness), metallic(metallic), emission(emission),
-      ambient_occlusion(ambient_occlusion), strength(0.0f), factor(1.0f) {
+      ambient_occlusion(ambient_occlusion), strength(strength) {
 
 }
 Material::Material(Assets &assets, std::string &path) : Material() {
@@ -79,6 +80,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       ambient_occlusion_map = read_texture("ambient_occlusion_map");
 
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
+      strength = value["strength"];
       opacity = value["opacity"];
       roughness = value["roughness"];
       metallic = value["metallic"];

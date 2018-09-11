@@ -23,14 +23,16 @@ public:
                     float roughness = 0.0f,
                     float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
-                    float ambient_occlusion = 1.0f);
+                    float ambient_occlusion = 1.0f,
+                    float strength = 1.0f);
 
   explicit Material(const glm::vec3 &albedo,
                     float opacity = 1.0f,
                     float roughness = 0.0f,
                     float metallic = 0.0f,
                     const glm::vec3 &emission = glm::vec3(0.0f),
-                    float ambient_occlusion = 1.0f);
+                    float ambient_occlusion = 1.0f,
+                    float strength = 1.0f);
 
   explicit Material(Assets &assets, std::string &path);
 
@@ -38,7 +40,6 @@ public:
 
   glm::vec3 albedo;
   glm::vec3 emission;
-  glm::vec3 factor;
   float opacity;
   float roughness;
   float metallic;
