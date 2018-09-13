@@ -13,7 +13,7 @@ public:
   /** Unique id. */
   unsigned int id() const;
 private:
-  static std::atomic_uint current_id_;
+  static unsigned int current_id_;
   unsigned int id_;
 };
 

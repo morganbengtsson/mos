@@ -3,7 +3,7 @@
 namespace mos {
 namespace gfx {
 
-std::atomic_uint Shape::current_id_(0);
+unsigned int Shape::current_id_(0);
 
 mos::gfx::Shape::Shape(): id_(current_id_++){
 }
