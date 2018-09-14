@@ -342,10 +342,12 @@ void Renderer::stream_source(const Stream_source &stream_source) {
       auto samples = stream_source.stream->read();
       int size = stream_source.stream->buffer_size;
 
-      alBufferData(buffer, format, samples.data(),
-                   size * sizeof(ALshort),
-                   stream_source.stream->sample_rate());
-      alSourceQueueBuffers(al_source, 1, &buffer);
+	  if (buffer != 0) {
+		  alBufferData(buffer, format, samples.data(),
+			  size * sizeof(ALshort),
+			  stream_source.stream->sample_rate());
+		  alSourceQueueBuffers(al_source, 1, &buffer);
+	  }
     }
     if (stream_source.source.loop && stream_source.stream->done()) {
       stream_source.stream->seek_start();
