@@ -211,9 +211,10 @@ void Renderer::buffer_source(const Buffer_source &buffer_source) {
                    buffer->sample_rate());
     }
     buffers_.insert(BufferPair(buffer->id(), al_buffer));
-  }
-  alSourcei(sources_.at(buffer_source.source.id()), AL_BUFFER,
-            buffers_.at(buffer->id()));
+	
+	alSourcei(sources_.at(buffer_source.source.id()), AL_BUFFER,
+		buffers_.at(buffer->id()));
+  }  
 
   ALuint al_source = sources_.at(buffer_source.source.id());
   alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
