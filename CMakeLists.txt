@@ -82,14 +82,10 @@ add_custom_command(TARGET copy_resources POST_BUILD
 		
 if(WIN32)
 	add_custom_target(copy_openal)	
-	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		add_custom_command(TARGET copy_openal POST_BUILD
-							COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/lib/$<CONFIGURATION>/OpenAL32_$<CONFIGURATION>.dll" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-	else()
-		add_custom_command(TARGET copy_openal POST_BUILD
-							COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/lib/$<CONFIGURATION>/OpenAL32.dll" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-	endif()
-	add_dependencies(OpenAL copy_openal)
+							COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+	
+	
 endif()
 		
 # Copy shaders on each build
