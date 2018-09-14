@@ -80,12 +80,10 @@ add_custom_command(TARGET copy_resources POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 		
-if(WIN32)
-	add_custom_target(copy_openal)	
-		add_custom_command(TARGET copy_openal POST_BUILD
+if(WIN32)	
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 							COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-	
-	
+		
 endif()
 		
 # Copy shaders on each build
