@@ -334,20 +334,20 @@ void Renderer::stream_source(const Stream_source &stream_source) {
         alSourceQueueBuffers(al_source, 1, &buffers[i]);
       }
       alSourcePlay(al_source);
-      alSourcei(al_source, AL_STREAMING, AL_TRUE);
+      //alSourcei(al_source, AL_STREAMING, AL_TRUE);
     }
 
     while (processed--) {
-      alSourceUnqueueBuffers(al_source, 1, &buffer);
-      auto samples = stream_source.stream->read();
-      int size = stream_source.stream->buffer_size;
-
-	  if (buffer != 0) {
-		  alBufferData(buffer, format, samples.data(),
-			  size * sizeof(ALshort),
-			  stream_source.stream->sample_rate());
-		  alSourceQueueBuffers(al_source, 1, &buffer);
-	  }
+		
+		  alSourceUnqueueBuffers(al_source, 1, &buffer);
+		  auto samples = stream_source.stream->read();
+		  int size = stream_source.stream->buffer_size;
+			if (buffer != 0) {
+	  			alBufferData(buffer, format, samples.data(),
+					size * sizeof(ALshort),
+					stream_source.stream->sample_rate());
+				alSourceQueueBuffers(al_source, 1, &buffer);
+			}
     }
     if (stream_source.source.loop && stream_source.stream->done()) {
       stream_source.stream->seek_start();
