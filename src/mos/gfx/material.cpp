@@ -66,18 +66,10 @@ Material::Material(Assets &assets, std::string &path) : Material() {
 
       albedo_map = read_texture("albedo_map");
       emission_map = read_texture("emission_map");
-      normal_map = read_texture("normal_map");
-      if (normal_map) {
-        if (normal_map->format == Texture::Format::SRGB){
-          normal_map->format = Texture::Format::RGB;
-        }
-        else if (normal_map->format == Texture::Format::SRGBA){
-          normal_map->format = Texture::Format::RGBA;
-        }
-      }
-      metallic_map = read_texture("metallic_map");
-      roughness_map = read_texture("roughness_map");
-      ambient_occlusion_map = read_texture("ambient_occlusion_map");
+      normal_map = read_texture("normal_map", false);
+      metallic_map = read_texture("metallic_map", false);
+      roughness_map = read_texture("roughness_map", false);
+      ambient_occlusion_map = read_texture("ambient_occlusion_map", false);
 
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
       strength = value["strength"];
