@@ -376,70 +376,77 @@ void Renderer::render_model(const Model &model,
                             const Fog &fog,
                             const glm::vec2 &resolution,
                             const Environment_program &program) {
+  auto normalA = camera.direction();
+  auto A = camera.position();
+  auto AB = model.position() - A;
+  auto d = dot(AB, normalA);
+  if (d > 0) {
 
-  const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
+    const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
-  if (model.mesh) {
-    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+    if (model.mesh) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
 
-    const auto &uniforms = program;
+      const auto &uniforms = program;
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                 ? textures_.at(model.material.albedo_map->id())->texture
-                                 : black_texture_.texture);
+      glActiveTexture(GL_TEXTURE3);
+      glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                   ? textures_.at(model.material.albedo_map->id())->texture
+                                   : black_texture_.texture);
 
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                 ? textures_.at(model.material.emission_map->id())->texture
-                                 : black_texture_.texture);
+      glActiveTexture(GL_TEXTURE4);
+      glBindTexture(GL_TEXTURE_2D, model.material.emission_map
+                                   ? textures_.at(model.material.emission_map->id())->texture
+                                   : black_texture_.texture);
 
-    static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
-                                0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
+      static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
+                                  0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
-    for (size_t i = 0; i < lights.size(); i++) {
-      const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
-          lights[i].camera.view * parent_transform *
-          model.transform;
-      glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
-                         &depth_bias_mvp[0][0]);
+      for (size_t i = 0; i < lights.size(); i++) {
+        const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
+            lights[i].camera.view * parent_transform *
+            model.transform;
+        glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
+                           &depth_bias_mvp[0][0]);
+      }
+
+      glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+                         &mvp[0][0]);
+      auto model_matrix = parent_transform * model.transform;
+      glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
+
+      glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
+          glm::mat3(model.transform));
+      normal_matrix =
+          glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
+      glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
+
+      glm::vec4 albedo =
+          glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
+      glUniform4fv(uniforms.material_albedo, 1,
+                   glm::value_ptr(albedo));
+      glm::vec4 emission =
+          glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
+      glUniform4fv(uniforms.material_emission, 1,
+                   glm::value_ptr(emission));
+      glUniform1fv(uniforms.material_roughness, 1,
+                   &model.material.roughness);
+      glUniform1fv(uniforms.material_metallic, 1,
+                   &model.material.metallic);
+      glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
+
+      glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
+      glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
+
+      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
     }
-
-    glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
-                       &mvp[0][0]);
-    auto model_matrix = parent_transform * model.transform;
-    glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
-
-    glm::mat3 normal_matrix = glm::inverseTranspose(glm::mat3(parent_transform) *
-        glm::mat3(model.transform));
-    normal_matrix =
-        glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
-    glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
-
-    glm::vec4 albedo =
-        glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
-    glUniform4fv(uniforms.material_albedo, 1,
-                 glm::value_ptr(albedo));
-    glm::vec4 emission =
-        glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
-    glUniform4fv(uniforms.material_emission, 1,
-                 glm::value_ptr(emission));
-    glUniform1fv(uniforms.material_roughness, 1,
-                 &model.material.roughness);
-    glUniform1fv(uniforms.material_metallic, 1,
-                 &model.material.metallic);
-    glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-
-    glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
-    glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
-
-    glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
   }
 
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, lights,
                  environment_lights, fog, resolution, program);
   }
+
 }
 
 void Renderer::render_model(const Model &model,
