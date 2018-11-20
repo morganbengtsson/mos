@@ -14,6 +14,7 @@ namespace gfx {
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
            const std::initializer_list<Triangle> &triangles)
     : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
+  calculate_sphere();
 }
 
 Mesh::Mesh(const std::string &path) {
@@ -42,12 +43,15 @@ Mesh::Mesh(const std::string &path) {
       triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
     }
     calculate_tangents();
+    calculate_sphere();
   } else {
     throw std::runtime_error("File extension not supported.");
   }
 }
 
-Mesh::Mesh() {}
+Mesh::Mesh() {
+  calculate_sphere();
+}
 
 Mesh::Mesh(const Mesh &mesh)
     : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
@@ -203,6 +207,7 @@ void Mesh::calculate_tangents() {
     }
   }
 }
+
 void Mesh::calculate_flat_normals() {
   if (triangles.size() == 0) {
     for (size_t i = 0; i < vertices.size(); i += 3) {
@@ -227,6 +232,25 @@ void Mesh::calculate_flat_normals() {
       v2.normal = normal;
     }
   }
+}
+
+void Mesh::calculate_sphere() {
+  const auto & all_positions = positions();
+
+  center = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
+  center.x /= all_positions.size();
+  center.y /= all_positions.size();
+  center.z /= all_positions.size();
+
+  radius = 0.0f;
+
+  for (auto & p : all_positions) {
+    auto d = glm::distance(center, p);
+    if (d > radius) {
+      radius = d;
+    }
+  }
+
 }
 glm::vec3 Mesh::Face::normal() const {
   return glm::triangleNormal(v0.position, v1.position, v2.position);

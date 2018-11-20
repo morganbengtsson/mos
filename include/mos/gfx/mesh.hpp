@@ -60,9 +60,13 @@ public:
 
   void calculate_tangents();
 
+  glm::vec3 center;
+  float radius;
+
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle> triangles;
 private:
+  void calculate_sphere();
   void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
 
   struct Face {
