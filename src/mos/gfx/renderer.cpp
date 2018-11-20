@@ -378,9 +378,11 @@ void Renderer::render_model(const Model &model,
                             const Environment_program &program) {
   auto normalA = camera.direction();
   auto A = camera.position();
-  auto AB = (model.position() + model.centroid()) - A;
+  auto B = model.centroid() + glm::vec3(parent_transform[3]);
+  auto AB = B - A;
   auto d = dot(AB, normalA);
-  if (d > 0) {
+
+  if (d > 0 || (glm::distance(B, A) <  model.radius())) {
 
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
@@ -459,10 +461,11 @@ void Renderer::render_model(const Model &model,
                             const Standard_program &program) {
   auto normalA = camera.direction();
   auto A = camera.position();
-  auto AB = (model.position() + model.centroid()) - A;
+  auto B = model.centroid() + glm::vec3(parent_transform[3]);
+  auto AB = B - A;
   auto d = dot(AB, normalA);
-  if (d > 0) {
 
+  if (d > 0 || (glm::distance(B, A) <  model.radius())) {
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
     if (model.mesh) {

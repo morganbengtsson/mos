@@ -34,6 +34,7 @@ public:
   void position(const glm::vec3 &position);
 
   glm::vec3 centroid() const;
+  float radius() const;
 
   /** Mesh shape. */
   Shared_mesh mesh;

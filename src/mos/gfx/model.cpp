@@ -56,10 +56,18 @@ void Model::position(const glm::vec3 &position) {
 }
 glm::vec3 Model::centroid() const {
   if (mesh){
-    return mesh->centroid;
+    return mesh->centroid + position();
   }
   else {
-    return glm::vec3(0.0f);
+    return position();
+  }
+}
+float Model::radius() const {
+  if (mesh){
+    return mesh->radius;
+  }
+  else {
+    return 0.0f;
   }
 }
 
