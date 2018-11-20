@@ -60,7 +60,7 @@ public:
 
   void calculate_tangents();
 
-  glm::vec3 center;
+  glm::vec3 centroid;
   float radius;
 
   Tracked_container<Vertex> vertices;

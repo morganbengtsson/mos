@@ -54,6 +54,14 @@ void Model::position(const glm::vec3 &position) {
   transform[3][1] = position[1];
   transform[3][2] = position[2];
 }
+glm::vec3 Model::centroid() const {
+  if (mesh){
+    return mesh->centroid;
+  }
+  else {
+    return glm::vec3(0.0f);
+  }
+}
 
 }
 }

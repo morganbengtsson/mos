@@ -237,15 +237,15 @@ void Mesh::calculate_flat_normals() {
 void Mesh::calculate_sphere() {
   const auto & all_positions = positions();
 
-  center = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
-  center.x /= all_positions.size();
-  center.y /= all_positions.size();
-  center.z /= all_positions.size();
+  centroid = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
+  centroid.x /= all_positions.size();
+  centroid.y /= all_positions.size();
+  centroid.z /= all_positions.size();
 
   radius = 0.0f;
 
   for (auto & p : all_positions) {
-    auto d = glm::distance(center, p);
+    auto d = glm::distance(centroid, p);
     if (d > radius) {
       radius = d;
     }
