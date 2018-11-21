@@ -376,13 +376,9 @@ void Renderer::render_model(const Model &model,
                             const Fog &fog,
                             const glm::vec2 &resolution,
                             const Environment_program &program) {
-  auto normalA = camera.direction();
-  auto A = camera.position();
-  auto B = model.centroid() + glm::vec3(parent_transform[3]);
-  auto AB = B - A;
-  auto d = dot(AB, normalA);
 
-  if (d > 0 || (glm::distance(B, A) <  model.radius())) {
+  auto center = model.centroid() + glm::vec3(parent_transform[3]); // Rotation??
+  if (camera.in_frustum(center, model.radius())) {
 
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
@@ -459,14 +455,9 @@ void Renderer::render_model(const Model &model,
                             const Fog &fog,
                             const glm::vec2 &resolution,
                             const Standard_program &program) {
-  auto normalA = camera.direction();
-  auto A = camera.position();
-  auto B = model.centroid() + glm::vec3(parent_transform[3]);
-  auto AB = B - A;
-  auto d = dot(AB, normalA);
 
-  if (camera.in_frustum(B, model.radius())) {
-  //if (d > 0 || (glm::distance(B, A) <  model.radius())) {
+  auto center = model.centroid() + glm::vec3(parent_transform[3]); // Rotation??
+  if (camera.in_frustum(center, model.radius())) {
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
     if (model.mesh) {
