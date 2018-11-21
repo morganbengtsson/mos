@@ -72,44 +72,6 @@ void Camera::calculate_frustum() {
   frustum_planes_[4] = t[3] + t[2]; /* near   */
   frustum_planes_[5] = t[3] - t[2]; /* far    */
 
-  /*
-  // Calculate the LEFT side
-  frustum_planes_[0].x = m[0][3] + m[0][0];
-  frustum_planes_[0].y = m[1][3] + m[1][0];
-  frustum_planes_[0].z = m[2][3] + m[2][0];
-  frustum_planes_[0].w = m[3][3] + m[3][0];
-
-  // Calculate the RIGHT side
-  frustum_planes_[1].x = m[0][3] - m[0][0];
-  frustum_planes_[1].y = m[1][3] - m[1][0];
-  frustum_planes_[1].z = m[2][3] - m[2][0];
-  frustum_planes_[1].w = m[3][3] - m[3][0];
-
-  // Calculate the TOP side
-  frustum_planes_[2].x = m[0][3] - m[0][1];
-  frustum_planes_[2].y = m[1][3] - m[1][1];
-  frustum_planes_[2].z = m[2][3] - m[2][1];
-  frustum_planes_[2].w = m[3][3] - m[3][1];
-
-  // Calculate the BOTTOM side
-  frustum_planes_[3].x = m[0][3] + m[0][1];
-  frustum_planes_[3].y = m[1][3] + m[1][1];
-  frustum_planes_[3].z = m[2][3] + m[2][1];
-  frustum_planes_[3].w = m[3][3] + m[3][1];
-
-  // Calculate the FRONT side
-  frustum_planes_[4].x = m[0][3] + m[0][2];
-  frustum_planes_[4].y = m[1][3] + m[1][2];
-  frustum_planes_[4].z = m[2][3] + m[2][2];
-  frustum_planes_[4].w = m[3][3] + m[3][2];
-
-  // Calculate the BACK side
-  frustum_planes_[5].x = m[0][3] - m[0][2];
-  frustum_planes_[5].y = m[1][3] - m[1][2];
-  frustum_planes_[5].z = m[2][3] - m[2][2];
-  frustum_planes_[5].w = m[3][3] - m[3][2];
- */
-
   //Normalize planes
   for (int i = 0; i < frustum_planes_.size(); i++) {
     float mag = glm::length(glm::vec3(frustum_planes_[i]));
