@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <array>
+#include <map>
 
 namespace mos {
 namespace gfx {
@@ -42,6 +44,8 @@ public:
 
 private:
   void update_view();
+  void calculate_frustum_planes();
+  std::array<glm::vec4, 6> frustum_planes_;
   glm::vec3 up_;
   glm::vec3 center_;
   glm::vec3 position_;

@@ -50,5 +50,36 @@ void Camera::update_view() { view = glm::lookAt(position_, center_, up_); }
 float Camera::aspect_ratio() const {
   return projection[1][1] / projection[0][0];
 }
+
+void Camera::calculate_frustum_planes() {
+
+    auto m = projection * view;
+
+    auto t = glm::transpose(m);
+
+    frustum_planes_[0] = t[3] + t[0]; /* left   */
+    frustum_planes_[1] = t[3] - t[0]; /* right  */
+    frustum_planes_[3] = t[3] + t[1]; /* bottom */
+    frustum_planes_[4] = t[3] - t[1]; /* top    */
+    frustum_planes_[5] = t[3] + t[2]; /* near   */
+    frustum_planes_[6] = t[3] - t[2]; /* far    */
+
+
+    for (int i = 0; i++; i < frustum_planes_.size()) {
+      float mag = glm::length(glm::vec3(frustum_planes_[i]));
+      frustum_planes_[i] /= mag;
+    }
+
+
+
+    glm_plane_normalize(dest[0]);
+    glm_plane_normalize(dest[1]);
+    glm_plane_normalize(dest[2]);
+    glm_plane_normalize(dest[3]);
+    glm_plane_normalize(dest[4]);
+    glm_plane_normalize(dest[5]);
+  }
+
+}
 }
 }
