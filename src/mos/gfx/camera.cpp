@@ -1,6 +1,8 @@
 #include <mos/gfx/camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtx/io.hpp>
+#include <iostream>
 
 namespace mos {
 namespace gfx {
@@ -60,25 +62,24 @@ float Camera::aspect_ratio() const {
 
 void Camera::calculate_frustum() {
 
-    auto m = projection * view;
+  auto m = projection * view;
+  auto t = glm::transpose(m);
 
-    auto t = glm::transpose(m);
+  frustum_planes_[0] = t[3] + t[0]; /* left   */
+  frustum_planes_[1] = t[3] - t[0]; /* right  */
+  frustum_planes_[2] = t[3] + t[1]; /* bottom */
+  frustum_planes_[3] = t[3] - t[1]; /* top    */
+  frustum_planes_[4] = t[3] + t[2]; /* near   */
+  frustum_planes_[5] = t[3] - t[2]; /* far    */
 
-    frustum_planes_[0] = t[3] + t[0]; /* left   */
-    frustum_planes_[1] = t[3] - t[0]; /* right  */
-    frustum_planes_[2] = t[3] + t[1]; /* bottom */
-    frustum_planes_[3] = t[3] - t[1]; /* top    */
-    frustum_planes_[4] = t[3] + t[2]; /* near   */
-    frustum_planes_[5] = t[3] - t[2]; /* far    */
-
-    //Normalize planes
-    for (int i = 0; i++; i < frustum_planes_.size()) {
-      float mag = glm::length(glm::vec3(frustum_planes_[i]));
-      frustum_planes_[i] /= mag;
-    }
+  //Normalize planes
+  for (int i = 0; i < frustum_planes_.size(); i++) {
+    float mag = glm::length(glm::vec3(frustum_planes_[i]));
+    frustum_planes_[i] /= mag;
   }
-bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
 
+}
+bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
     bool result = true;
 
     for(int i=0; i < 6; i++) {
