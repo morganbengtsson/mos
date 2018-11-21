@@ -12,7 +12,7 @@ Camera::Camera(const glm::vec3 &position,
                  const glm::vec3 &center,
                  const glm::mat4 &projection,
                  const glm::vec3 &up)
-  : projection(projection), up_(up),
+  : projection(projection), up_(up), view(glm::lookAt(position, center, up)),
     position_(position), center_(center){
   calculate_view_and_frustum();
 }
