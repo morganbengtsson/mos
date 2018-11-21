@@ -1,5 +1,6 @@
 #include <mos/gfx/camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/intersect.hpp>
 
 namespace mos {
 namespace gfx {
@@ -64,22 +65,29 @@ void Camera::calculate_frustum_planes() {
     frustum_planes_[5] = t[3] + t[2]; /* near   */
     frustum_planes_[6] = t[3] - t[2]; /* far    */
 
-
+    //Normalize planes
     for (int i = 0; i++; i < frustum_planes_.size()) {
       float mag = glm::length(glm::vec3(frustum_planes_[i]));
       frustum_planes_[i] /= mag;
     }
-
-
-
-    glm_plane_normalize(dest[0]);
-    glm_plane_normalize(dest[1]);
-    glm_plane_normalize(dest[2]);
-    glm_plane_normalize(dest[3]);
-    glm_plane_normalize(dest[4]);
-    glm_plane_normalize(dest[5]);
   }
+bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
+
+    bool result = true;
+
+    for(int i=0; i < 6; i++) {
+      auto plane_normal = glm::vec3(frustum_planes_[i]);
+      auto plane_point = plane_normal * frustum_planes_[i].w;
+      float distance = glm::dot(plane_normal, point - plane_point);
+
+      if (distance < -radius)
+        return false;
+      else if (distance < radius)
+        result = true;
+    }
+    return result;
+}
 
 }
 }
-}
+

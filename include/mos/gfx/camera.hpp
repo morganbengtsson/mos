@@ -39,6 +39,8 @@ public:
 
   float aspect_ratio() const;
 
+  bool in_frustum(const glm::vec3 & point, const float radius) const;
+
   glm::mat4 projection;
   glm::mat4 view;
 
