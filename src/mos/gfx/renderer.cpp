@@ -377,8 +377,8 @@ void Renderer::render_model(const Model &model,
                             const glm::vec2 &resolution,
                             const Environment_program &program) {
 
-  auto center = model.centroid() + glm::vec3(parent_transform[3]); // Rotation??
-  if (camera.in_frustum(center, model.radius())) {
+  auto t = parent_transform * model.transform;
+  if (camera.in_frustum(glm::vec3(t[3]) + model.centroid(), model.radius())) {
 
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
@@ -456,8 +456,8 @@ void Renderer::render_model(const Model &model,
                             const glm::vec2 &resolution,
                             const Standard_program &program) {
 
-  auto center = model.centroid() + glm::vec3(parent_transform[3]); // Rotation??
-  if (camera.in_frustum(center, model.radius())) {
+  auto t = parent_transform * model.transform;
+  if (camera.in_frustum(glm::vec3(t[3]) + model.centroid(), model.radius())) {
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
     if (model.mesh) {
