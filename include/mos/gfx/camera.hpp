@@ -46,7 +46,7 @@ public:
 
 private:
   void calculate_view();
-  void calculate_frustum_planes();
+  void calculate_frustum();
   std::array<glm::vec4, 6> frustum_planes_;
   glm::vec3 up_;
   glm::vec3 center_;

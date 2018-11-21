@@ -15,6 +15,7 @@ Camera::Camera(const glm::vec3 &position,
   : projection(projection), up_(up),
     position_(position), center_(center){
   calculate_view();
+  //calculate_frustum();
 }
 
 glm::vec3 Camera::up() const { return up_; }
@@ -22,6 +23,7 @@ glm::vec3 Camera::up() const { return up_; }
 void Camera::up(const glm::vec3 &up) {
   up_ = up;
   calculate_view();
+  //calculate_frustum();
 }
 
 glm::vec3 Camera::position() const { return position_; }
@@ -29,6 +31,7 @@ glm::vec3 Camera::position() const { return position_; }
 void Camera::position(const glm::vec3 &position) {
   position_ = position;
   calculate_view();
+  //calculate_frustum();
 }
 
 glm::vec3 Camera::center() const { return center_; }
@@ -36,6 +39,7 @@ glm::vec3 Camera::center() const { return center_; }
 void Camera::center(const glm::vec3 &center) {
   center_ = center;
   calculate_view();
+  //calculate_frustum();
 }
 
 glm::vec3 Camera::direction() const {
@@ -44,9 +48,7 @@ glm::vec3 Camera::direction() const {
 
 void Camera::direction(const glm::vec3 &direction) {
   center(position_ + direction);
-  calculate_view();
 }
-
 
 void Camera::calculate_view() {
   view = glm::lookAt(position_, center_, up_);
@@ -56,7 +58,7 @@ float Camera::aspect_ratio() const {
   return projection[1][1] / projection[0][0];
 }
 
-void Camera::calculate_frustum_planes() {
+void Camera::calculate_frustum() {
 
     auto m = projection * view;
 
