@@ -465,7 +465,8 @@ void Renderer::render_model(const Model &model,
   auto AB = B - A;
   auto d = dot(AB, normalA);
 
-  if (d > 0 || (glm::distance(B, A) <  model.radius())) {
+  if (camera.in_frustum(B, model.radius())) {
+  //if (d > 0 || (glm::distance(B, A) <  model.radius())) {
     const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
 
     if (model.mesh) {
