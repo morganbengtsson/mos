@@ -4,6 +4,7 @@
 #include <mos/util.hpp>
 #include <mos/gfx/material.hpp>
 #include <glm/gtx/io.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace mos {
 namespace gfx {
@@ -56,10 +57,10 @@ void Model::position(const glm::vec3 &position) {
 }
 glm::vec3 Model::centroid() const {
   if (mesh){
-    return mesh->centroid;
+    return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid))[3];
   }
   else {
-    return glm::vec3(0.0f);
+    return transform[3];
   }
 }
 float Model::radius() const {
