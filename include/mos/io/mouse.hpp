@@ -4,7 +4,12 @@
 #include <vector>
 #include <array>
 
-struct Mouse {
+namespace mos {
+namespace io {
+
+class Mouse {
+public:
+  Mouse();
   enum class Event {
     Button_press_0,
     Button_release_0,
@@ -14,3 +19,6 @@ struct Mouse {
   std::vector<Event> events;
   std::array<bool, 2> buttons;
 };
+
+}
+}
