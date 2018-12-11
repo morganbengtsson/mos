@@ -28,6 +28,7 @@ add_subdirectory(externals/openal-soft)
 add_subdirectory(externals/glad)
 
 # glm
+set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 add_subdirectory(externals/glm)
 
 # Filesystem
