@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <vector>
+#include <set>
 #include <array>
 
 namespace mos {
@@ -14,7 +14,7 @@ public:
     Button_press_0,
     Button_release_0,
   };
-  using Events = std::vector<Event>;
+  using Events = std::set<Event>;
 
   glm::vec2 position;
   Events events;
