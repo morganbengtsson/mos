@@ -54,8 +54,8 @@ Mesh::Mesh() {
 }
 
 Mesh::Mesh(const Mesh &mesh)
-    : Mesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
-           mesh.triangles.end()) {}
+    : vertices(mesh.vertices), triangles(mesh.triangles), centroid(mesh.centroid), radius(mesh.radius) {
+}
 
 Shared_mesh Mesh::load(const std::string &path) {
   if (path.empty() || (path.back() == '/')) {

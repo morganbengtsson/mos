@@ -28,6 +28,7 @@ public:
        Te triangles_begin, Te triangles_end)
       : vertices(vertices_begin, vertices_end),
         triangles(triangles_begin, triangles_end) {
+    calculate_sphere();
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
