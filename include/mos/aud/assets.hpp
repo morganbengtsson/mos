@@ -28,6 +28,9 @@ public:
   /** Remove all buffers */
   void clear();
 
+  /** Directory of assets */
+  std::string directory() const;
+
 private:
   const std::string directory_;
   Buffer_map buffers_;

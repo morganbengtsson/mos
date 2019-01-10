@@ -26,5 +26,9 @@ void Assets::clear_unused() {
 void Assets::clear() {
   buffers_.clear();
 }
+
+std::string Assets::directory() const{
+  return directory_;
+}
 }
 }
