@@ -576,6 +576,33 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
       glGenerateMipmap(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, 0);
+
+
+      glViewport(0, 0, shadow_maps_render_buffer_.resolution,
+                 shadow_maps_render_buffer_.resolution);
+
+      glBindFramebuffer(GL_FRAMEBUFFER, shadow_map_blur_targets_[0].frame_buffer);
+      glUseProgram(blur_program_.program);
+      glBindVertexArray(quad_.vertex_array);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
+      glUniform1i(blur_program_.color_texture, 0);
+      GLint horizontal = false;
+      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+      glDrawArrays(GL_TRIANGLES, 0, 6);
+
+      for (int i = 0; i < 5; i++) {
+        horizontal = (i % 2 == 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target1_.frame_buffer : blur_target0_.frame_buffer);
+        glUseProgram(blur_program_.program);
+        glBindVertexArray(quad_.vertex_array);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
+        glUniform1i(blur_program_.color_texture, 0);
+        glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+      }
     }
   }
 }
