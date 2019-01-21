@@ -401,6 +401,7 @@ private:
   /** Shadow maps. */
   const Render_buffer shadow_maps_render_buffer_;
   const std::array<Shadow_map_target, 2> shadow_maps_;
+  const Shadow_map_blur_target shadow_map_blur_target_;
   const std::array<Shadow_map_blur_target, 2> shadow_map_blur_targets_;
 
   struct Environment_map_target {
