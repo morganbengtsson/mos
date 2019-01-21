@@ -222,10 +222,12 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+  //glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+  glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
 
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+  //glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+  glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[1].texture);
 
   glActiveTexture(GL_TEXTURE3);
   glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
@@ -585,7 +587,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glUseProgram(blur_program_.program);
       glBindVertexArray(quad_.vertex_array);
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
+      glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
       glUniform1i(blur_program_.color_texture, 0);
       GLint horizontal = false;
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
@@ -593,11 +595,11 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 
       for (int i = 0; i < 5; i++) {
         horizontal = (i % 2 == 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target1_.frame_buffer : blur_target0_.frame_buffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_[1].frame_buffer : shadow_map_blur_targets_[0].frame_buffer);
         glUseProgram(blur_program_.program);
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
+        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_targets_[0].texture : shadow_map_blur_targets_[1].texture);
         glUniform1i(blur_program_.color_texture, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
