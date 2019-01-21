@@ -1284,6 +1284,44 @@ Renderer::Propagate_program::Propagate_program() {
   side = glGetUniformLocation(program, "side");
 }
 
+Renderer::Shadow_map_target_blur::Shadow_map_target_blur(const int &resolution) {
+  glGenFramebuffers(1, &frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glTexImage2D(GL_TEXTURE_2D, 0,
+               GL_RG32F,
+               resolution,
+               resolution,
+               0,
+               GL_RG,
+               GL_UNSIGNED_BYTE,
+               nullptr);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_2D, texture, 0);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete.");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+Renderer::Shadow_map_target_blur::~Shadow_map_target_blur() {
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &texture);
+}
+
 Renderer::Shadow_map_target::Shadow_map_target(const Render_buffer &render_buffer) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
