@@ -575,11 +575,11 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
         render_model_depth(model, glm::mat4(1.0f), lights[i].camera, glm::vec2(resolution), depth_program_);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      //Generate mipmaps
-      glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
-      glGenerateMipmap(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, 0);
 
+      //Generate mipmaps
+      //glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
+      //glGenerateMipmap(GL_TEXTURE_2D);
+      //glBindTexture(GL_TEXTURE_2D, 0);
 
       glViewport(0, 0, shadow_maps_render_buffer_.resolution,
                  shadow_maps_render_buffer_.resolution);
