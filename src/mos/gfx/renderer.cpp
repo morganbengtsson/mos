@@ -594,13 +594,13 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
       glDrawArrays(GL_TRIANGLES, 0, 6);
 
-      for (int j = 0; j < 3; j++) {
+      for (int j = 0; j < 1; j++) {
         horizontal = (j % 2 == 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, !horizontal ? shadow_map_blur_target_.frame_buffer :  shadow_map_blur_targets_[i].frame_buffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_[i].frame_buffer : shadow_map_blur_target_.frame_buffer);
         glUseProgram(blur_program_.program);
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, !horizontal ? shadow_map_blur_targets_[i].texture : shadow_map_blur_target_.texture);
+        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_[i].texture);
         glUniform1i(blur_program_.color_texture, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
