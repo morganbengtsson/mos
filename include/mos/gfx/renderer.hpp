@@ -391,9 +391,9 @@ private:
     GLuint frame_buffer;
   };
 
-  struct Shadow_map_target_blur{
-    explicit Shadow_map_target_blur(const int &resolution);
-    ~Shadow_map_target_blur();
+  struct Shadow_map_blur_target{
+    explicit Shadow_map_blur_target(const int &resolution);
+    ~Shadow_map_blur_target();
     GLuint texture;
     GLuint frame_buffer;
   };
@@ -401,7 +401,7 @@ private:
   /** Shadow maps. */
   const Render_buffer shadow_maps_render_buffer_;
   const std::array<Shadow_map_target, 2> shadow_maps_;
-  const std::array<Shadow_map_target_blur, 2> shadow_map_blur_targets_;
+  const std::array<Shadow_map_blur_target, 2> shadow_map_blur_targets_;
 
   struct Environment_map_target {
     explicit Environment_map_target(const Render_buffer &render_buffer);

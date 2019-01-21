@@ -646,10 +646,10 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
       glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+      glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
 
       glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+      glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[1].texture);
 
       // Camera in world space
       auto position = cube_camera.position();
