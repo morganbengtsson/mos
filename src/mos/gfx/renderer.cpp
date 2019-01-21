@@ -66,6 +66,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_)},
+    shadow_map_blur_targets_{Shadow_map_target_blur(shadow_maps_render_buffer_.resolution),
+                 Shadow_map_target_blur(shadow_maps_render_buffer_.resolution)},
     environment_render_buffer_(128),
     environment_maps_targets{Environment_map_target(environment_render_buffer_),
                              Environment_map_target(environment_render_buffer_)},
@@ -1293,7 +1295,6 @@ Renderer::Shadow_map_target_blur::Shadow_map_target_blur(const int &resolution) 
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
