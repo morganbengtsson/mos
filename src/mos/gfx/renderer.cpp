@@ -593,7 +593,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
       glDrawArrays(GL_TRIANGLES, 0, 6);
 
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 3; i++) {
         horizontal = (i % 2 == 0);
         glBindFramebuffer(GL_FRAMEBUFFER, shadow_map_blur_targets_[horizontal].frame_buffer);
         glUseProgram(blur_program_.program);
