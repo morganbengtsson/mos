@@ -66,8 +66,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_)},
-    shadow_map_blur_targets_{Shadow_map_target_blur(shadow_maps_render_buffer_.resolution),
-                 Shadow_map_target_blur(shadow_maps_render_buffer_.resolution)},
+    shadow_map_blur_targets_{Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
+                 Shadow_map_blur_target(shadow_maps_render_buffer_.resolution)},
     environment_render_buffer_(128),
     environment_maps_targets{Environment_map_target(environment_render_buffer_),
                              Environment_map_target(environment_render_buffer_)},
@@ -595,11 +595,11 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 
       for (int i = 0; i < 5; i++) {
         horizontal = (i % 2 == 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_[1].frame_buffer : shadow_map_blur_targets_[0].frame_buffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, shadow_map_blur_targets_[horizontal].frame_buffer);
         glUseProgram(blur_program_.program);
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_targets_[0].texture : shadow_map_blur_targets_[1].texture);
+        glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[!horizontal].texture);
         glUniform1i(blur_program_.color_texture, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
@@ -1315,7 +1315,7 @@ Renderer::Propagate_program::Propagate_program() {
   side = glGetUniformLocation(program, "side");
 }
 
-Renderer::Shadow_map_target_blur::Shadow_map_target_blur(const int &resolution) {
+Renderer::Shadow_map_blur_target::Shadow_map_blur_target(const int &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1347,7 +1347,7 @@ Renderer::Shadow_map_target_blur::Shadow_map_target_blur(const int &resolution) 
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::Shadow_map_target_blur::~Shadow_map_target_blur() {
+Renderer::Shadow_map_blur_target::~Shadow_map_blur_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
