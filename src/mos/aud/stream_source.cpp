@@ -5,7 +5,7 @@ namespace aud {
 
 Stream_source::Stream_source(const Shared_stream &stream,
                                      const Source &source)
-    : stream(std::move(stream)), source(std::move(source)) {}
+    : stream(stream), source(source) {}
 
 }
 }

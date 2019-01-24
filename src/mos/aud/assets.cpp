@@ -3,7 +3,7 @@
 namespace mos {
 namespace aud {
 
-Assets::Assets(const std::string &directory) : directory_(std::move(directory)) {}
+Assets::Assets(const std::string &directory) : directory_(directory) {}
 
 Shared_buffer Assets::audio_buffer(const std::string &path) {
   if (buffers_.find(path) == buffers_.end()) {
