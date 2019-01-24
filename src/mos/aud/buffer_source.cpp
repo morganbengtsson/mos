@@ -5,7 +5,7 @@ namespace aud {
 
 Buffer_source::Buffer_source(const Shared_buffer &buffer,
                                      const Source &source)
-    : buffer(buffer), source(source), time_(.0f) {}
+    : buffer(std::move(buffer)), source(std::move(source)), time_(.0f) {}
 
 void Buffer_source::input(const float dt) {
   if (source.playing) {

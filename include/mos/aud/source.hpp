@@ -15,7 +15,7 @@ public:
          const bool loop = false,
          const bool playing = false,
          const float obstructed = 0.0f);
-  ~Source();
+  ~Source() = default;
 
   /** Unique id. */
   unsigned int id() const;

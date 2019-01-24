@@ -13,8 +13,6 @@ Source::Source(const glm::vec3 &position,
       loop(loop), playing(playing), obstructed(obstructed), id_(current_id_++) {
 }
 
-Source::~Source() {}
-
 unsigned int Source::id() const { return id_; }
 }
 }

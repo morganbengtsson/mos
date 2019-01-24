@@ -7,15 +7,12 @@
 namespace mos {
 namespace gfx {
 
-Camera::Camera() {
-}
-
 Camera::Camera(const glm::vec3 &position,
                  const glm::vec3 &center,
                  const glm::mat4 &projection,
                  const glm::vec3 &up)
   : projection(projection), up_(up),
-    position_(position), center_(center){
+    position_(position), center_(center), view(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)} {
   calculate_view();
   calculate_frustum();
 }
@@ -72,12 +69,10 @@ void Camera::calculate_frustum() {
   frustum_planes_[4] = t[3] + t[2]; /* near   */
   frustum_planes_[5] = t[3] - t[2]; /* far    */
 
-  //Normalize planes
-  for (int i = 0; i < frustum_planes_.size(); i++) {
-    float mag = glm::length(glm::vec3(frustum_planes_[i]));
-    frustum_planes_[i] /= mag;
+  for (auto & plane : frustum_planes_){
+    auto magnitude = glm::length(glm::vec3(plane));
+    plane /= magnitude;
   }
-
 }
 bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
   bool result = true;

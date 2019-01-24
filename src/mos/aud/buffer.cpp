@@ -8,9 +8,9 @@ namespace aud {
 
 std::atomic_uint Buffer::current_id_;
 
-Buffer::Buffer(const int channels) : channels_(channels), id_(current_id_++) {}
+Buffer::Buffer(const int channels, const int sample_rate) : channels_(channels), id_(current_id_++), sample_rate_(sample_rate) {}
 
-Buffer::Buffer(const std::string &path) : id_(current_id_++) {
+Buffer::Buffer(const std::string &path) : id_(current_id_++), channels_(0), sample_rate_(0) {
   short *decoded;
 
   std::ifstream file(path, std::ios::binary);

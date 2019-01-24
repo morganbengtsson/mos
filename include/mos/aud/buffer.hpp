@@ -24,7 +24,7 @@ public:
         samples_(begin, end), id_(current_id_++) {}
 
   /** Empty buffer constructor. */
-  explicit Buffer(const int channels = 1);
+  explicit Buffer(const int channels = 1, const int sample_rate = 44100);
 
   /** Construct from *.ogg file. */
   explicit Buffer(const std::string &path);

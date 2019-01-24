@@ -9,7 +9,7 @@ namespace mos {
 namespace gfx {
 using namespace nlohmann;
 Animation::Animation(
-    const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
+    const std::map<unsigned int, std::shared_ptr<Mesh const>> & keyframes,
     const unsigned int frame_rate)
     : keyframes_(keyframes.begin(), keyframes.end()),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),

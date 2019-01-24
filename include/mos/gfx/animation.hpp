@@ -16,7 +16,7 @@ public:
   Animation() = default;
   ~Animation() = default;
 
-  Animation(const std::map<unsigned int, std::shared_ptr<Mesh const>> keyframes,
+  Animation(const std::map<unsigned int, std::shared_ptr<Mesh const>> &keyframes,
             const unsigned int frame_rate = 30);
   Animation(std::initializer_list<
       std::pair<unsigned int, std::shared_ptr<Mesh const>>>

@@ -14,7 +14,7 @@ class Stream_source final {
 public:
   explicit Stream_source(const Shared_stream &stream,
                         const Source &source = Source());
-  ~Stream_source();
+  ~Stream_source() = default;
 
   /** Stream used for the source. */
   Shared_stream stream;
