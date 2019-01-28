@@ -215,15 +215,15 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.shadow_maps[1], 2);
   glUniform1i(standard_program_.shadow_maps[2], 3);
   glUniform1i(standard_program_.shadow_maps[3], 4);
-  glUniform1i(standard_program_.environment_maps[0].map, 3);
-  glUniform1i(standard_program_.environment_maps[1].map, 4);
+  glUniform1i(standard_program_.environment_maps[0].map, 5);
+  glUniform1i(standard_program_.environment_maps[1].map, 6);
 
-  glUniform1i(standard_program_.material_albedo_map, 5);
-  glUniform1i(standard_program_.material_emission_map, 6);
-  glUniform1i(standard_program_.material_normal_map, 7);
-  glUniform1i(standard_program_.material_metallic_map, 8);
-  glUniform1i(standard_program_.material_roughness_map, 9);
-  glUniform1i(standard_program_.material_ambient_occlusion_map, 10);
+  glUniform1i(standard_program_.material_albedo_map, 7);
+  glUniform1i(standard_program_.material_emission_map, 8);
+  glUniform1i(standard_program_.material_normal_map, 9);
+  glUniform1i(standard_program_.material_metallic_map, 10);
+  glUniform1i(standard_program_.material_roughness_map, 11);
+  glUniform1i(standard_program_.material_ambient_occlusion_map, 12);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -670,7 +670,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto position = cube_camera.position();
       glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
 
-      for (size_t i = 0; i < scene.lights.size(); i++) {
+      for (size_t i = 0; i < 2; i++) {
         glUniform3fv(environment_program_.lights[i].position, 1,
                      glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
 
@@ -1060,7 +1060,7 @@ Renderer::Environment_program::Environment_program() {
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
-  for (size_t i = 0; i < 2; i++) {
+  for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
     depth_bias_mvps[i] = glGetUniformLocation(program,
                                               std::string("depth_bias_model_view_projections[" + std::to_string(i)
                                                               + "]").c_str());
@@ -1132,7 +1132,7 @@ Renderer::Standard_program::Standard_program() {
   model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
-  for (size_t i = 0; i < 2; i++) {
+  for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
     depth_bias_mvps[i] = glGetUniformLocation(program,
                                               std::string("depth_bias_model_view_projections[" + std::to_string(i)
                                                               + "]").c_str());

@@ -39,14 +39,14 @@ struct Fragment {
     vec3 position;
     vec3 normal;
     vec2 uv;
-    vec4[2] proj_shadow;
+    vec4[4] proj_shadow;
     vec3 camera_to_surface;
     float weight;
 };
 
 uniform Material material;
-uniform Light[2] lights;
-uniform sampler2D[2] shadow_maps;
+uniform Light[4] lights;
+uniform sampler2D[4] shadow_maps;
 
 uniform Camera camera;
 uniform Fog fog;
@@ -95,7 +95,7 @@ void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
     float shadow = 0.0f;
 
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
 
       float light_fragment_distance = distance(light.position, fragment.position);

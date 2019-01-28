@@ -159,7 +159,7 @@ private:
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
-    std::array<GLint,2> depth_bias_mvps;
+    std::array<GLint, 4> depth_bias_mvps;
 
     struct Environment_uniforms {
       GLint map;
@@ -192,8 +192,8 @@ private:
       GLint direction;
     };
 
-    std::array<GLuint, 2> shadow_maps;
-    std::array<Light_uniforms, 2> lights;
+    std::array<GLuint,4> shadow_maps;
+    std::array<Light_uniforms, 4> lights;
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -209,7 +209,7 @@ private:
     GLint model_view_projection_matrix;
     GLint model_matrix;
     GLint normal_matrix;
-    std::array<GLint,2> depth_bias_mvps;
+    std::array<GLint,4> depth_bias_mvps;
 
     struct Environment_uniforms {
       GLint map;
