@@ -65,10 +65,14 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     blur_target1_(resolution / 4),
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
+                 Shadow_map_target(shadow_maps_render_buffer_),
+                 Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_)},
     shadow_map_blur_target_(shadow_maps_render_buffer_.resolution),
     shadow_map_blur_targets_{Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
-                 Shadow_map_blur_target(shadow_maps_render_buffer_.resolution)},
+                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
+                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
+                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution)},
     environment_render_buffer_(128),
     environment_maps_targets{Environment_map_target(environment_render_buffer_),
                              Environment_map_target(environment_render_buffer_)},
@@ -209,6 +213,8 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.brdf_lut, 0);
   glUniform1i(standard_program_.shadow_maps[0], 1);
   glUniform1i(standard_program_.shadow_maps[1], 2);
+  glUniform1i(standard_program_.shadow_maps[2], 3);
+  glUniform1i(standard_program_.shadow_maps[3], 4);
   glUniform1i(standard_program_.environment_maps[0].map, 3);
   glUniform1i(standard_program_.environment_maps[1].map, 4);
 
@@ -231,9 +237,17 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[1].texture);
 
   glActiveTexture(GL_TEXTURE3);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+  //glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
+  glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[2].texture);
 
   glActiveTexture(GL_TEXTURE4);
+  //glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
+  glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[3].texture);
+
+  glActiveTexture(GL_TEXTURE5);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+
+  glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
 
   for (size_t i = 0; i < scene.environment_lights.size(); i++) {
@@ -467,32 +481,32 @@ void Renderer::render_model(const Model &model,
 
       const auto &uniforms = program;
 
-      glActiveTexture(GL_TEXTURE5);
+      glActiveTexture(GL_TEXTURE7);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                    ? textures_.at(model.material.albedo_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE6);
+      glActiveTexture(GL_TEXTURE8);
       glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                    ? textures_.at(model.material.emission_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE7);
+      glActiveTexture(GL_TEXTURE9);
       glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                    ? textures_.at(model.material.normal_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE8);
+      glActiveTexture(GL_TEXTURE10);
       glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                    ? textures_.at(model.material.metallic_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE9);
+      glActiveTexture(GL_TEXTURE11);
       glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                    ? textures_.at(model.material.roughness_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE10);
+      glActiveTexture(GL_TEXTURE12);
       glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                    ? textures_.at(model.material.ambient_occlusion_map->id())->texture
                                    : white_texture_.texture);

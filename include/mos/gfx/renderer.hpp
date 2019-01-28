@@ -247,8 +247,8 @@ private:
       GLint direction;
     };
 
-    std::array<GLuint, 2> shadow_maps;
-    std::array<Light_uniforms, 2> lights;
+    std::array<GLuint, 4> shadow_maps;
+    std::array<Light_uniforms, 4> lights;
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -400,9 +400,9 @@ private:
 
   /** Shadow maps. */
   const Render_buffer shadow_maps_render_buffer_;
-  const std::array<Shadow_map_target, 2> shadow_maps_;
+  const std::array<Shadow_map_target, 4> shadow_maps_;
   const Shadow_map_blur_target shadow_map_blur_target_;
-  const std::array<Shadow_map_blur_target, 2> shadow_map_blur_targets_;
+  const std::array<Shadow_map_blur_target, 4> shadow_map_blur_targets_;
 
   struct Environment_map_target {
     explicit Environment_map_target(const Render_buffer &render_buffer);
