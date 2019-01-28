@@ -50,14 +50,14 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4[2] proj_shadow;
+    vec4[4] proj_shadow;
     vec3 camera_to_surface;
     float weight;
 };
 
 uniform Material material;
-uniform Light[2] lights;
-uniform sampler2D[2] shadow_maps;
+uniform Light[4] lights;
+uniform sampler2D[4] shadow_maps;
 
 uniform Environment[2] environments;
 uniform samplerCube[2] environment_maps;

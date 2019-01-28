@@ -5,7 +5,7 @@ struct Fragment {
     vec3 normal;
     vec2 uv;
     mat3 tbn;
-    vec4[2] proj_shadow;
+    vec4[4] proj_shadow;
     vec3 camera_to_surface;
     float weight;
 };
@@ -25,9 +25,9 @@ struct Light {
     vec3 direction;
 };
 
-uniform Light[2] lights;
+uniform Light[4] lights;
 uniform Camera camera;
-uniform mat4[2] depth_bias_model_view_projections;
+uniform mat4[4] depth_bias_model_view_projections;
 uniform mat4 model;
 uniform mat4 model_view_projection;
 uniform mat3 normal_matrix;
@@ -47,6 +47,8 @@ void main() {
 
     fragment.proj_shadow[0] = depth_bias_model_view_projections[0] * vec4(position, 1.0);
     fragment.proj_shadow[1] = depth_bias_model_view_projections[1] * vec4(position, 1.0);
+    fragment.proj_shadow[2] = depth_bias_model_view_projections[2] * vec4(position, 1.0);
+    fragment.proj_shadow[3] = depth_bias_model_view_projections[3] * vec4(position, 1.0);
 
     fragment.weight = weight;
     fragment.uv = uv;
