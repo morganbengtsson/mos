@@ -121,7 +121,7 @@ void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
     float shadow = 0.0f;
 
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
       if (light.strength > 0.0) {
         float light_fragment_distance = distance(light.position, fragment.position);
@@ -162,7 +162,7 @@ void main() {
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0) {
         vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
         vec3 r = -reflect(fragment.camera_to_surface, normal);
