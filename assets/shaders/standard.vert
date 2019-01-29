@@ -45,10 +45,9 @@ void main() {
     vec3 B = cross(N, T);
     fragment.tbn = mat3(T,B,N);
 
-    fragment.proj_shadow[0] = depth_bias_model_view_projections[0] * vec4(position, 1.0);
-    fragment.proj_shadow[1] = depth_bias_model_view_projections[1] * vec4(position, 1.0);
-    fragment.proj_shadow[2] = depth_bias_model_view_projections[2] * vec4(position, 1.0);
-    fragment.proj_shadow[3] = depth_bias_model_view_projections[3] * vec4(position, 1.0);
+    for (int i = 0; i < depth_bias_model_view_projections.length(); i++){
+        fragment.proj_shadow[i] = depth_bias_model_view_projections[i] * vec4(position, 1.0);
+    }
 
     fragment.weight = weight;
     fragment.uv = uv;
