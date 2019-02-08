@@ -1,11 +1,22 @@
 #version 430 core
 
+struct Light {
+    vec3 position;
+    vec3 color;
+    float strength;
+    mat4 view;
+    mat4 projection;
+    float angle;
+    vec3 direction;
+};
+
 in vec3 fragment_position;
 in vec4 fragment_color;
 in float fragment_opacity;
 layout(location = 0) out vec4 color;
 
 uniform sampler2D tex;
+uniform Light[4] lights;
 
 void main() {
     color = vec4(fragment_color);

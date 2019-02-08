@@ -295,7 +295,7 @@ void Renderer::render_scene(const Camera &camera,
                  resolution, standard_program_);
   }
   render_boxes(scene.boxes, camera);
-  render_particles(scene.particle_clouds, camera, resolution);
+  render_particles(scene.particle_clouds, scene.lights, camera, resolution);
 }
 
 void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
@@ -322,6 +322,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
 }
 
 void Renderer::render_particles(const Particle_clouds &clouds,
+                                const Lights &lights,
                                 const mos::gfx::Camera &camera,
                                 const glm::vec2 &resolution) {
   for (auto &particles : clouds) {
@@ -379,6 +380,24 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glUniformMatrix4fv(particle_program_.mv, 1, GL_FALSE, &mv[0][0]);
     glUniformMatrix4fv(particle_program_.p, 1, GL_FALSE, &camera.projection[0][0]);
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(resolution));
+
+    for (size_t i = 0; i < lights.size(); i++) {
+      glUniform3fv(standard_program_.lights[i].position, 1,
+                   glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
+
+      glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(lights[i].color));
+      glUniform1fv(standard_program_.lights[i].strength, 1, &lights[i].strength);
+
+      glUniformMatrix4fv(standard_program_.lights[i].view, 1, GL_FALSE,
+                         &lights[i].camera.view[0][0]);
+      glUniformMatrix4fv(standard_program_.lights[i].projection, 1, GL_FALSE,
+                         &lights[i].camera.projection[0][0]);
+
+      auto light_angle = lights[i].angle();
+      glUniform1fv(standard_program_.lights[i].angle, 1, &light_angle);
+      glUniform3fv(standard_program_.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
+    }
+
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
@@ -670,6 +689,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto position = cube_camera.position();
       glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
 
+      //TODO: Loop through all lights?
       for (size_t i = 0; i < 2; i++) {
         glUniform3fv(environment_program_.lights[i].position, 1,
                      glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
@@ -1211,6 +1231,21 @@ Renderer::Particle_program::Particle_program() {
   p = glGetUniformLocation(program, "projection"),
   texture = glGetUniformLocation(program, "tex"),
   resolution = glGetUniformLocation(program, "resolution");
+
+  for (size_t i = 0; i < lights.size(); i++) {
+    lights[i].position =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
+    lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights[i].strength =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
+    lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
+    lights[i].projection =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
+    lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights[i].direction =
+        glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
+
+  }
 }
 
 Renderer::Box_program::Box_program() {

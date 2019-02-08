@@ -102,6 +102,16 @@ private:
     void link(const std::string &name);
   };
 
+  struct Light_uniforms {
+    GLint position;
+    GLint color;
+    GLint strength;
+    GLint view;
+    GLint projection;
+    GLint angle;
+    GLint direction;
+  };
+
   /** Uniforms for the particle shader program. */
   struct Particle_program : public Program {
     Particle_program();
@@ -110,6 +120,7 @@ private:
     GLint p;
     GLint texture;
     GLint resolution;
+    std::array<Light_uniforms, 4> lights;
   };
 
   /** Uniforms for the bounding box shader program. */
@@ -181,16 +192,6 @@ private:
 
     GLint camera_resolution;
     GLint camera_position;
-
-    struct Light_uniforms {
-      GLint position;
-      GLint color;
-      GLint strength;
-      GLint view;
-      GLint projection;
-      GLint angle;
-      GLint direction;
-    };
 
     std::array<GLuint,4> shadow_maps;
     std::array<Light_uniforms, 4> lights;
@@ -273,6 +274,7 @@ private:
                     const mos::gfx::Camera &camera);
 
   void render_particles(const Particle_clouds &clouds,
+                        const Lights &lights,
                         const mos::gfx::Camera &camera,
                         const glm::vec2 &resolution);
 
