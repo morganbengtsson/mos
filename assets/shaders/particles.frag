@@ -19,8 +19,8 @@ uniform sampler2D tex;
 uniform Light[4] lights;
 
 void main() {
-    color = vec4(fragment_color);
-    color = vec4(gl_PointCoord, 1.0, 1.0);
+    vec3 Lo = vec3(0.0, 0.0, 0.0);
     vec4 tex_color = texture(tex, gl_PointCoord);
     color = vec4(tex_color.r, tex_color.g, tex_color.b, tex_color.a * fragment_color.a * fragment_opacity);
+    color.rgb = lights[0].color;
 }

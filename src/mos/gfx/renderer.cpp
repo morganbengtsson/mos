@@ -382,22 +382,21 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(resolution));
 
     for (size_t i = 0; i < lights.size(); i++) {
-      glUniform3fv(standard_program_.lights[i].position, 1,
+      glUniform3fv(particle_program_.lights[i].position, 1,
                    glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
 
-      glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(lights[i].color));
-      glUniform1fv(standard_program_.lights[i].strength, 1, &lights[i].strength);
+      glUniform3fv(particle_program_.lights[i].color, 1, glm::value_ptr(lights[i].color));
+      glUniform1fv(particle_program_.lights[i].strength, 1, &lights[i].strength);
 
-      glUniformMatrix4fv(standard_program_.lights[i].view, 1, GL_FALSE,
+      glUniformMatrix4fv(particle_program_.lights[i].view, 1, GL_FALSE,
                          &lights[i].camera.view[0][0]);
-      glUniformMatrix4fv(standard_program_.lights[i].projection, 1, GL_FALSE,
+      glUniformMatrix4fv(particle_program_.lights[i].projection, 1, GL_FALSE,
                          &lights[i].camera.projection[0][0]);
 
       auto light_angle = lights[i].angle();
-      glUniform1fv(standard_program_.lights[i].angle, 1, &light_angle);
-      glUniform3fv(standard_program_.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
+      glUniform1fv(particle_program_.lights[i].angle, 1, &light_angle);
+      glUniform3fv(particle_program_.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
     }
-
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
