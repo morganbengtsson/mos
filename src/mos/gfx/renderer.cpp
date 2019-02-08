@@ -324,7 +324,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
 void Renderer::render_particles(const Particle_clouds &clouds,
                                 const Lights &lights,
                                 const mos::gfx::Camera &camera,
-                                const glm::vec2 &resolution) {
+                                const glm::ivec2 &resolution) {
   for (auto &particles : clouds) {
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
@@ -379,7 +379,8 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glUniformMatrix4fv(particle_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(particle_program_.mv, 1, GL_FALSE, &mv[0][0]);
     glUniformMatrix4fv(particle_program_.p, 1, GL_FALSE, &camera.projection[0][0]);
-    glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(resolution));
+    auto r = glm::vec2(resolution); // TODO: Remove.
+    glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
 
     for (size_t i = 0; i < lights.size(); i++) {
       glUniform3fv(particle_program_.lights[i].position, 1,
@@ -397,6 +398,10 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glUniform1fv(particle_program_.lights[i].angle, 1, &light_angle);
       glUniform3fv(particle_program_.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
     }
+
+    auto position = camera.position();
+    glUniform3fv(particle_program_.camera_position, 1, glm::value_ptr(position));
+    glUniform2iv(particle_program_.camera_resolution, 1, glm::value_ptr(resolution));
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
@@ -1237,6 +1242,8 @@ Renderer::Particle_program::Particle_program() {
   p = glGetUniformLocation(program, "projection"),
   texture = glGetUniformLocation(program, "tex"),
   resolution = glGetUniformLocation(program, "resolution");
+  camera_position = glGetUniformLocation(program, "camera.position");
+  camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
   for (size_t i = 0; i < lights.size(); i++) {
     lights[i].position =

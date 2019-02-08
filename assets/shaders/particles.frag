@@ -12,6 +12,11 @@ struct Light {
     vec3 direction;
 };
 
+struct Camera {
+    vec3 position;
+    ivec2 resolution;
+};
+
 in vec3 fragment_position;
 in vec4 fragment_color;
 in float fragment_opacity;
@@ -19,6 +24,7 @@ layout(location = 0) out vec4 color;
 
 uniform sampler2D tex;
 uniform Light[4] lights;
+uniform Camera camera;
 
 float distribution_GGX(vec3 N, vec3 H, float roughness);
 float geometry_schlick_GGX(float NdotV, float roughness);
@@ -30,8 +36,8 @@ void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
     vec3 N = vec3(0.0, -1.0, 0.0);
 
-    vec3 frag_pos = gl_FragCoord.xyz;
-    vec3 V = normalize(-frag_pos);
+    vec3 frag_pos = fragment_position;
+    vec3 V = normalize(camera.position - frag_pos);
 
     vec4 albedo = texture(tex, gl_PointCoord);
 

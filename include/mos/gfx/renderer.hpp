@@ -119,7 +119,9 @@ private:
     GLint mv;
     GLint p;
     GLint texture;
-    GLint resolution;
+    GLint resolution;    
+    GLint camera_resolution;
+    GLint camera_position;
     std::array<Light_uniforms, 4> lights;
   };
 
@@ -276,7 +278,7 @@ private:
   void render_particles(const Particle_clouds &clouds,
                         const Lights &lights,
                         const mos::gfx::Camera &camera,
-                        const glm::vec2 &resolution);
+                        const glm::ivec2 &resolution);
 
   void render_model(const Model &model,
                     const glm::mat4 &transform,
