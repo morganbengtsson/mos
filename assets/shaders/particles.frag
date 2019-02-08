@@ -29,18 +29,20 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
     vec3 N = vec3(0.0, -1.0, 0.0);
-    vec3 V = normalize(-fragment_position);
+
+    vec3 frag_pos = gl_FragCoord.xyz;
+    vec3 V = normalize(-frag_pos);
 
     vec4 albedo = texture(tex, gl_PointCoord);
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
       if (light.strength > 0.0) {
-        float light_fragment_distance = distance(light.position, fragment_position);
+        float light_fragment_distance = distance(light.position, frag_pos);
         float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
         vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-        vec3 L = normalize(light.position - fragment_position);
+        vec3 L = normalize(light.position - frag_pos);
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF
