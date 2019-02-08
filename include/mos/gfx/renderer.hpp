@@ -117,6 +117,7 @@ private:
     Particle_program();
     GLint mvp;
     GLint mv;
+    GLint m;
     GLint p;
     GLint texture;
     GLint resolution;    

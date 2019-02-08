@@ -2,6 +2,7 @@
 
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
+uniform mat4 model;
 uniform vec2 resolution;
 uniform mat4 projection;
 layout(location = 0) in vec3 position;
@@ -20,7 +21,7 @@ void main() {
 
     fragment_color = color;
     fragment_opacity = opacity;
-    fragment_position = (model_view * vec4(position, 0.0)).xyz;
+    fragment_position = (model * vec4(position, 0.0)).xyz;
 
     gl_Position = projection * eye_pos;
 }

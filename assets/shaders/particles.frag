@@ -34,7 +34,7 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 
 void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
-    vec3 N = vec3(0.0, -1.0, 0.0);
+    vec3 N = normalize(fragment_position - camera.position);
 
     vec3 frag_pos = fragment_position;
     vec3 V = normalize(camera.position - frag_pos);
@@ -67,7 +67,8 @@ void main() {
         float cos_dir = dot(L, -light.direction);
         float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-        Lo += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
+        //Lo += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
+        Lo += spot_effect;
       }
     }
     //color = vec4(tex_color.r, tex_color.g, tex_color.b, tex_color.a * fragment_color.a * fragment_opacity);
