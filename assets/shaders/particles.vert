@@ -2,7 +2,6 @@
 
 uniform mat4 model_view_projection;
 uniform mat4 model_view;
-uniform mat4 model;
 uniform vec2 resolution;
 uniform mat4 projection;
 layout(location = 0) in vec3 position;
