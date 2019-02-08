@@ -112,6 +112,10 @@ void main() {
     vec4 emission_from_map = texture(material.emission_map, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
 
+    if (material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a) < 0.5 && emission == vec3(0,0,0)) {
+        discard;
+    }
+
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
 
