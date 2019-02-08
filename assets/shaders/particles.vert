@@ -21,7 +21,7 @@ void main() {
 
     fragment_color = color;
     fragment_opacity = opacity;
-    fragment_position = (model * vec4(position, 0.0)).xyz;
+    fragment_position = position;
 
     gl_Position = projection * eye_pos;
 }
