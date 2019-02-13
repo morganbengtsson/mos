@@ -1230,10 +1230,10 @@ Renderer::Particle_program::Particle_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  mvp = glGetUniformLocation(program, "model_view_projection"),
-  mv = glGetUniformLocation(program, "model_view"),
-  p = glGetUniformLocation(program, "projection"),
-  texture = glGetUniformLocation(program, "tex"),
+  mvp = glGetUniformLocation(program, "model_view_projection");
+  mv = glGetUniformLocation(program, "model_view");
+  p = glGetUniformLocation(program, "projection");
+  texture = glGetUniformLocation(program, "tex");
   resolution = glGetUniformLocation(program, "resolution");
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
