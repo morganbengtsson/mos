@@ -26,39 +26,24 @@ uniform sampler2D tex;
 uniform Light[4] lights;
 uniform Camera camera;
 
-float distribution_GGX(vec3 N, vec3 H, float roughness);
-float geometry_schlick_GGX(float NdotV, float roughness);
-float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness);
-vec3 fresnel_schlick(float cosTheta, vec3 F0);
-vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
-
 void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
     vec3 N = normalize(-fragment_position);
 
-    vec3 frag_pos = fragment_position;
-    vec3 V = normalize(camera.position - frag_pos);
+    vec3 V = normalize(camera.position - fragment_position);
 
     vec4 albedo = texture(tex, gl_PointCoord);
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
       if (light.strength > 0.0) {
-        float light_fragment_distance = distance(light.position, frag_pos);
+        float light_fragment_distance = distance(light.position, fragment_position);
         float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
         vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-        vec3 L = normalize(light.position - frag_pos);
-        vec3 H = normalize(V + L);
+        vec3 L = normalize(light.position - fragment_position);
 
-        // Cook-Torrance BRDF
-        float roughness = 0.1;
-        float NDF = distribution_GGX(N, H, roughness);
-        float G = geometry_smith(N, V, L, roughness);
-        vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), vec3(0.0, 0.0, 0.0));
-
-        vec3 kS = F;
-        vec3 kD = vec3(1.0) - kS;
+        vec3 kD = vec3(1.0);
 
         float NdotL = 1.0;
         float cos_dir = dot(L, -light.direction);
