@@ -220,5 +220,5 @@ void main() {
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    color.rgb = mix(fog_color, color.rgb, fog_att);
+    color.rgb = mix(fog_color, color.rgb, clamp(fog_att, 0.45, 1.0));
 }
