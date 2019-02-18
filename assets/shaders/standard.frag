@@ -122,24 +122,22 @@ void main() {
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
-    vec3 Lo = vec3(0.0, 0.0, 0.0);
+    vec3 direct = vec3(0.0, 0.0, 0.0);
 
     for(int i = 0; i < lights.length(); i++) {
-      Light light = lights[i];
-      if (light.strength > 0.0) {
+        Light light = lights[i];
+        if (light.strength > 0.0) {
+            vec3 L = normalize(light.position - fragment.position);
+            vec3 H = normalize(V + L);
 
-        vec3 L = normalize(light.position - fragment.position);
-        vec3 H = normalize(V + L);
+            float NdotL = max(dot(N, L), 0.0);
+            float cos_dir = dot(L, -light.direction);
+            float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-        float NdotL = max(dot(N, L), 0.0);
-        float cos_dir = dot(L, -light.direction);
-        float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+            vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+            vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
+            const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z) * spot_effect;
 
-        vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-        vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
-        const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texelSize, shadow_map_uv.z) * spot_effect;
-
-        if (shadow > 0.0) {
             float light_fragment_distance = distance(light.position, fragment.position);
             float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
             vec3 radiance = light.strength * 0.09 * light.color * attenuation;
@@ -158,9 +156,8 @@ void main() {
             vec3 kD = vec3(1.0) - kS;
             kD *= 1.0 - metallic;
 
-            Lo += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow;
+            direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow;
         }
-      }
     }
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
@@ -212,7 +209,7 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    color.rgb = (Lo + ambient + emission) * material.strength;
+    color.rgb = (direct + ambient + emission) * material.strength;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
