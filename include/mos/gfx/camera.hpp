@@ -33,6 +33,8 @@ public:
 
   glm::vec3 direction() const;
 
+  glm::vec3 right() const;
+
   /** Set direction. */
   void direction(const glm::vec3 &direction);
 

@@ -45,6 +45,10 @@ glm::vec3 Camera::direction() const {
   return glm::normalize(center_ - position_);
 }
 
+glm::vec3 Camera::right() const {
+  return glm::normalize(glm::cross(up(), direction()));
+}
+
 void Camera::direction(const glm::vec3 &direction) {
   center(position_ + direction);
 }

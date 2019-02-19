@@ -16,9 +16,11 @@ public:
   };
   using Events = std::set<Event>;
 
-  glm::vec2 position;
+  glm::dvec2 position;
+  //TODO: set automaticly
+  glm::dvec2 old_position;
   Events events;
-  std::array<bool, 2> buttons;
+  std::array<bool, 3> buttons;
 };
 
 }
