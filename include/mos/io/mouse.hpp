@@ -13,6 +13,10 @@ public:
   enum class Event {
     Button_press_0,
     Button_release_0,
+    Button_press_1,
+    Button_release_1,
+    Button_press_2,
+    Button_release_2,
   };
   using Events = std::set<Event>;
 
