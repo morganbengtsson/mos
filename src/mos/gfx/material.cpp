@@ -17,6 +17,7 @@ Material::Material(const Shared_texture_2D &albedo_map,
                    const Shared_texture_2D &ambient_occlusion_map,
                    const glm::vec3 &albedo,
                    const float opacity,
+                   const float transmission,
                    const float roughness,
                    const float metallic,
                    const glm::vec3 &emission,
@@ -31,6 +32,7 @@ Material::Material(const Shared_texture_2D &albedo_map,
       strength(strength),
       albedo(albedo),
       opacity(opacity),
+      transmission(transmission),
       emission(emission),
       roughness(roughness),
       metallic(metallic),
@@ -40,12 +42,13 @@ Material::~Material() {}
 
 Material::Material(const glm::vec3 &albedo,
                    const float opacity,
+                   const float transmission,
                    const float roughness,
                    const float metallic,
                    const glm::vec3 &emission,
                    const float ambient_occlusion,
                    const float strength)
-    : albedo(albedo), opacity(opacity), roughness(roughness), metallic(metallic), emission(emission),
+    : albedo(albedo), opacity(opacity), transmission(transmission), roughness(roughness), metallic(metallic), emission(emission),
       ambient_occlusion(ambient_occlusion), strength(strength) {
 
 }
