@@ -472,8 +472,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material_metallic, 1,
                    &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
-
-      glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
+      glUniform1fv(uniforms.material_transmission, 1, &model.material.strength);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
       glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
@@ -1096,6 +1095,7 @@ Renderer::Environment_program::Environment_program() {
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
   material_opacity = glGetUniformLocation(program, "material.opacity");
+  material_transmission = glGetUniformLocation(program, "material.transmission");
   material_emission = glGetUniformLocation(program, "material.emission");
   material_strength = glGetUniformLocation(program, "material.strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");

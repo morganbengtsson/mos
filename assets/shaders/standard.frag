@@ -8,6 +8,7 @@ struct Material {
     float roughness;
     float metallic;
     float opacity;
+    float transmission;
     float strength;
     float ambient_occlusion;
     sampler2D albedo_map;
