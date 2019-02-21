@@ -156,7 +156,7 @@ void main() {
             vec3 kD = vec3(1.0) - kS;
             kD *= 1.0 - metallic;
 
-            direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow;
+            direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission);
         }
     }
 
@@ -184,9 +184,10 @@ void main() {
         float refractive_index = 1.5;
         vec3 refracted_direction = refract(V, N, 1.0 / refractive_index);
         vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
-        vec3 refraction = textureLod(environment_maps[i], corrected_refract_direction, mip_level).rgb * (1.0 - material.transmission);
+        vec3 refraction = textureLod(environment_maps[i], corrected_refract_direction, mip_level).rgb * material.transmission;
 
         vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
+        //specular_environment = filtered * F_env * brdf.x + brdf.y;
 
         vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
@@ -212,10 +213,11 @@ void main() {
 
         float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
 
-        ambient += clamp((kD_env * diffuse_environment + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+        ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
     color.rgb = (direct + ambient + emission) * material.strength;
+    color.rgb = material.transmission.xxx;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

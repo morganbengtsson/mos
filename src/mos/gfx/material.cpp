@@ -3,6 +3,7 @@
 #include <mos/gfx/material.hpp>
 #include <mos/util.hpp>
 #include <mos/gfx/assets.hpp>
+#include <iostream>
 
 namespace mos {
 namespace gfx {
@@ -78,6 +79,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       strength = value["strength"];
       opacity = value["opacity"];
       transmission = value["transmission"];
+      std::cout << path << " " << "trans: " << transmission << std::endl;
       roughness = value["roughness"];
       metallic = value["metallic"];
       emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);

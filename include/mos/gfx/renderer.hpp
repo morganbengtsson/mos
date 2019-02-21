@@ -234,6 +234,7 @@ private:
     GLint material_roughness;
     GLint material_metallic;
     GLint material_opacity;
+    GLint material_transmission;
     GLint material_emission;
     GLint material_ambient_occlusion;
     GLint material_strength;
