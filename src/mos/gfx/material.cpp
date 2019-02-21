@@ -77,6 +77,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
       strength = value["strength"];
       opacity = value["opacity"];
+      transmission = value["transmission"];
       roughness = value["roughness"];
       metallic = value["metallic"];
       emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
