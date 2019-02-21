@@ -184,7 +184,7 @@ void main() {
         float refractive_index = 1.5;
         vec3 refracted_direction = refract(V, N, 1.0 / refractive_index);
         vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
-        vec3 refraction = texture(environment_maps[i], corrected_refract_direction).rgb * (1.0 - material.transmission);
+        vec3 refraction = textureLod(environment_maps[i], corrected_refract_direction, mip_level).rgb * (1.0 - material.transmission);
 
         vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
 
