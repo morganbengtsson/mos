@@ -217,7 +217,6 @@ void main() {
       }
     }
     color.rgb = (direct + ambient + emission) * material.strength;
-    color.rgb = material.transmission.xxx;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
