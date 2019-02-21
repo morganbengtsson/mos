@@ -143,7 +143,6 @@ void main() {
             float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
             vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-
             // Cook-Torrance BRDF
             float NDF = distribution_GGX(N, H, roughness);
             float G = geometry_smith(N, V, L, roughness);
@@ -182,6 +181,7 @@ void main() {
         vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb;
         vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
         vec3 specular_environment = filtered * (F_env * brdf.x + brdf.y) * environments[i].strength;
+
 
         vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
