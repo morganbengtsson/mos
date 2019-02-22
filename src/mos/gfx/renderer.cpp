@@ -570,7 +570,6 @@ void Renderer::render_model(const Model &model,
                    &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
-      std::cout << model.material.transmission << " ";
       glUniform1fv(uniforms.material_strength, 1, &model.material.strength);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
