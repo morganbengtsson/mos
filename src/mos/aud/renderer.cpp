@@ -212,11 +212,17 @@ void Renderer::buffer_source(const Buffer_source &buffer_source) {
     }
     buffers_.insert(BufferPair(buffer->id(), al_buffer));
 	
-	alSourcei(sources_.at(buffer_source.source.id()), AL_BUFFER,
-		buffers_.at(buffer->id()));
-  }  
 
+  }
   ALuint al_source = sources_.at(buffer_source.source.id());
+  ALuint al_buffer = buffers_.at(buffer_source.buffer->id());
+
+  int v;
+  alGetSourcei(al_source, AL_BUFFER, &v);
+  if (v == 0){
+    alSourcei(al_source, AL_BUFFER, al_buffer);
+  }
+
   alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
   alSourcef(al_source, AL_PITCH, buffer_source.source.pitch);
   //alSourcef(al_source, AL_GAIN, buffer_source.source.gain);
