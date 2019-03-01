@@ -46,9 +46,9 @@ public:
 
 private:
   float time_;
-  std::map<int, std::shared_ptr<const Mesh>> keyframes_;
+  unsigned int frame_rate_;
   std::shared_ptr<Mesh> mesh_;
-  int frame_rate_;
-};
+  std::map<int, std::shared_ptr<const Mesh>> keyframes_;
+  };
 }
 }

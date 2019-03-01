@@ -11,9 +11,11 @@ using namespace nlohmann;
 Animation::Animation(
     const std::map<unsigned int, std::shared_ptr<Mesh const>> & keyframes,
     const unsigned int frame_rate)
-    : keyframes_(keyframes.begin(), keyframes.end()),
+    :
+      time_(0.0f),
+      frame_rate_(frame_rate),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
-      time_(0.0f), frame_rate_(frame_rate) {
+      keyframes_(keyframes.begin(), keyframes.end()) {
   std::cout << keyframes_.size() << std::endl;
   for (auto &p : keyframes_) {
     std::cout << p.first << " " << p.second->vertices.size() << std::endl;
@@ -25,9 +27,12 @@ Animation::Animation(
     std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>>
     keyframes,
     const unsigned int frame_rate)
-    : keyframes_(keyframes.begin(), keyframes.end()),
+    :
+      time_(0.0f),
+      frame_rate_(frame_rate),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
-      time_(0.0f), frame_rate_(frame_rate) {}
+      keyframes_(keyframes.begin(), keyframes.end())
+{}
 
 Animation::Animation(const std::string &path) {
   filesystem::path fpath = path;
@@ -70,8 +75,8 @@ void Animation::update(const float dt) {
   auto next_frame = keyframes_.upper_bound(frame());
   auto previous_frame = next_frame;
   previous_frame--;
-  auto amount = (float) ((time_ * frame_rate_) - previous_frame->first) /
-      (float) (next_frame->first - previous_frame->first);
+  auto amount = static_cast<float>((time_ * frame_rate_) - previous_frame->first) /
+      static_cast<float>(next_frame->first - previous_frame->first);
 
   mesh_->mix(*previous_frame->second, *next_frame->second, amount);
 }
