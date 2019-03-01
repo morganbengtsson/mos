@@ -11,8 +11,13 @@ Camera::Camera(const glm::vec3 &position,
                  const glm::vec3 &center,
                  const glm::mat4 &projection,
                  const glm::vec3 &up)
-  : projection(projection), up_(up),
-    position_(position), center_(center), view(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)} {
+  : projection(projection),
+    view(1.0f),
+    frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)},
+    up_(up),
+    center_(center),
+    position_(position)
+{
   calculate_view();
   calculate_frustum();
 }
