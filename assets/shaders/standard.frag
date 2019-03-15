@@ -98,8 +98,15 @@ void main() {
         normal = normalize(mix(normal, normal_from_map, amount));
     }
 
-    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv); //TODO: use fragment.weight in 3D texture
-    vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
+    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
+    //TODO: Mix nicer
+    vec3 albedo = vec3(0.0, 0.0, 0.0);
+    if (albedo_from_map.a > 0.0){
+        albedo = albedo_from_map.rgb;
+    }
+    else {
+        albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
+    }
 
     vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
     float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
