@@ -758,11 +758,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
-  glUniform1i(propagate_program_.environment_map, 0);
+  glUniform1i(propagate_program_.environment_sampler_uniform, 0);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
-  glUniform1i(propagate_program_.environment_albedo_map, 1);
+  glUniform1i(propagate_program_.environment_albedo_sampler_uniform, 1);
 
   glUniform1iv(propagate_program_.side, 1, &i);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -980,11 +980,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.direct_shading_texture);
-  glUniform1i(multisample_program_.color_texture, 0);
+  glUniform1i(multisample_program_.color_sampler_uniform, 0);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(multisample_program_.depth_texture, 1);
+  glUniform1i(multisample_program_.depth_sampler_uniform, 1);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -1322,8 +1322,8 @@ Renderer::Multisample_program::Multisample_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  color_texture = glGetUniformLocation(program, "color_texture");
-  depth_texture = glGetUniformLocation(program, "depth_texture");
+  color_sampler_uniform = glGetUniformLocation(program, "color_texture");
+  depth_sampler_uniform = glGetUniformLocation(program, "depth_texture");
 }
 
 Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
@@ -1419,8 +1419,8 @@ Renderer::Propagate_program::Propagate_program() {
   glDetachShader(program, fragment_shader.id);
   glDetachShader(program, functions_fragment_shader.id);
 
-  environment_map = glGetUniformLocation(program, "environment_map");
-  environment_albedo_map = glGetUniformLocation(program, "environment_albedo_map");
+  environment_sampler_uniform = glGetUniformLocation(program, "environment_map");
+  environment_albedo_sampler_uniform = glGetUniformLocation(program, "environment_albedo_map");
   side = glGetUniformLocation(program, "side");
 }
 

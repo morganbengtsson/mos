@@ -134,8 +134,8 @@ private:
 
   struct Multisample_program : public Program {
     Multisample_program();
-    GLint color_texture;
-    GLint depth_texture;
+    GLint color_sampler_uniform;
+    GLint depth_sampler_uniform;
   };
 
   struct Ambient_occlusion_program : public Program {
@@ -169,8 +169,8 @@ private:
   class Propagate_program : public Program {
   public:
     Propagate_program();
-    GLint environment_map;
-    GLint environment_albedo_map;
+    GLint environment_sampler_uniform;
+    GLint environment_albedo_sampler_uniform;
     GLint side;
   };
 
