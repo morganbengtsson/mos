@@ -71,7 +71,9 @@ uniform mat4 view;
 uniform sampler2D brdf_lut;
 
 in Fragment fragment;
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec4 out_direct;
+layout(location = 1) out vec4 out_indirect;
+layout(location = 2) out vec4 out_normal;
 
 // Defined in functions.frag
 float rand(vec2 co);
@@ -223,12 +225,12 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    color.rgb = (direct + ambient + emission) * material.strength;
-    color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
+    out_direct.rgb = (direct + ambient + emission) * material.strength;
+    out_direct.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    color.rgb = mix(fog_color, color.rgb, clamp(fog_att, 0.45, 1.0));
+    out_direct.rgb = mix(fog_color, out_direct.rgb, clamp(fog_att, 0.45, 1.0));
 }
