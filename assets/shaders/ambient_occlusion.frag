@@ -3,9 +3,9 @@
 layout(location = 0) out vec4 color;
 in vec2 frag_uv;
 
-uniform sampler2D ambient_sampler;
+uniform sampler2DMS ambient_sampler;
 uniform sampler2DMS depth_sampler;
-uniform sampler2D normals_sampler;
+uniform sampler2DMS normals_sampler;
 
 float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -83,5 +83,6 @@ void main() {
      }
 
      float ao = 1.0 - total_strength * occlusion * (1.0 / samples);
-     color.rgb = texture(ambient_sampler, frag_uv).rgb * ao;
+     color.rgb = vec3(1.0, 0.0, 0.0);
+     //color.rgb = texture(ambient_sampler, frag_uv).rgb * ao;
 }

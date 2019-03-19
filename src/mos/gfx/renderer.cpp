@@ -1016,8 +1016,24 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glViewport(0, 0, resolution.x, resolution.y);
 
   //Ambient occlusion
+  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target_.frame_buffer);
+  glUseProgram(ambient_occlusion_program_.program);
 
+  glBindVertexArray(quad_.vertex_array);
 
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
+  glUniform1i(ambient_occlusion_program_.ambient_sampler_uniform, 0);
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
+  glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 1);
+
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
+  glUniform1i(ambient_occlusion_program_.normals_sampler_uniform, 2);
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 
   //Render to screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
