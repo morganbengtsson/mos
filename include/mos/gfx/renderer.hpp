@@ -164,7 +164,6 @@ private:
     GLint model_view_projection_matrix;
   };
 
-
   /** Uniforms for the propagate shader. */
   class Propagate_program : public Program {
   public:
