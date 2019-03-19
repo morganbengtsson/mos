@@ -83,6 +83,5 @@ void main() {
      }
 
      float ao = 1.0 - total_strength * occlusion * (1.0 / samples);
-     color.rgb = vec3(1.0, 0.0, 0.0);
-     //color.rgb = texture(ambient_sampler, frag_uv).rgb * ao;
+     color.rgb = texelFetch(ambient_sampler, pixel_uv, 0).rgb * ao;
 }

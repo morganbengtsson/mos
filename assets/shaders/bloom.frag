@@ -16,9 +16,6 @@ void main() {
   vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
   color = vec4(texture(direct_sampler, frag_uv).rgb + bloom * strength, 1.0);
 
-  //vec2 texture_size = textureSize(ambient_sampler);
-  //ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
-
   color.rgb += texture(ambient_sampler, frag_uv).rgb;
 
   float r = rand(frag_uv * color.rg);
