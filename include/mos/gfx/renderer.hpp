@@ -140,9 +140,9 @@ private:
 
   struct Bloom_program : public Program {
     Bloom_program();
-    GLint color_texture;
+    GLint direct_sampler_uniform;
     GLint ambient_sampler_uniform;
-    GLint bright_color_texture;
+    GLint bloom_sampler_uniform;
     GLint strength;
   };
 
