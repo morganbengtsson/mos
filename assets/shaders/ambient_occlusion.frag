@@ -3,8 +3,9 @@
 layout(location = 0) out vec4 color;
 in vec2 frag_uv;
 
-uniform sampler2D color_texture;
-uniform sampler2DMS depth_texture;
+uniform sampler2D ambient_sampler;
+uniform sampler2DMS depth_sampler;
+uniform sampler2D normals_sampler;
 
 float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -12,13 +13,13 @@ float rand(vec2 co) {
 
 vec3 normal_from_depth(vec2 texcoords) {
 
-  vec2 texture_size = textureSize(depth_texture);
+  vec2 texture_size = textureSize(depth_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * texcoords));
 
-  float depth1 = texelFetch(depth_texture, pixel_uv + ivec2(0, 1), 0).r;
-  float depth2 = texelFetch(depth_texture, pixel_uv + ivec2(1, 0), 1).r;
+  float depth1 = texelFetch(depth_sampler, pixel_uv + ivec2(0, 1), 0).r;
+  float depth2 = texelFetch(depth_sampler, pixel_uv + ivec2(1, 0), 1).r;
 
-  const float depth = texelFetch(depth_texture, pixel_uv, 0).r;
+  const float depth = texelFetch(depth_sampler, pixel_uv, 0).r;
   vec3 p1 = vec3(0, 0.001, depth1 - depth);
   vec3 p2 = vec3(0.001, 0, depth2 - depth);
 
@@ -59,9 +60,9 @@ void main() {
      vec3 random = vec3(rand(frag_uv), rand(frag_uv + 1.0), rand(frag_uv * 2));
      random = normalize(random);
 
-     vec2 texture_size = textureSize(depth_texture);
+     vec2 texture_size = textureSize(depth_sampler);
      ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
-     float depth = texelFetch(depth_texture, pixel_uv, 0).r;
+     float depth = texelFetch(depth_sampler, pixel_uv, 0).r;
 
      vec3 position = vec3(frag_uv, depth);
 
@@ -75,12 +76,12 @@ void main() {
        vec2 t  = clamp(hemi_ray.xy, vec2(0.0,0.0), vec2(1.0, 1.0));
        ivec2 p_uv = ivec2(floor(texture_size * t));
 
-       float occ_depth = texelFetch(depth_texture, p_uv , 0).r;
+       float occ_depth = texelFetch(depth_sampler, p_uv , 0).r;
        float difference = depth - occ_depth;
 
        occlusion += step(falloff, difference) * (1.0-smoothstep(falloff, area, difference));
      }
 
      float ao = 1.0 - total_strength * occlusion * (1.0 / samples);
-     color.rgb = texture(color_texture, frag_uv).rgb * ao;
+     color.rgb = texture(ambient_sampler, frag_uv).rgb * ao;
 }

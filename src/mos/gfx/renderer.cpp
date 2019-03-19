@@ -1324,6 +1324,7 @@ Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
 
   ambient_sampler_uniform = glGetUniformLocation(program, "ambient_sampler");
   depth_sampler_uniform = glGetUniformLocation(program, "depth_sampler");
+  normals_sampler_uniform = glGetUniformLocation(program, "normals_sampler");
 }
 
 Renderer::Bloom_program::Bloom_program() {

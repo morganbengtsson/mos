@@ -142,6 +142,7 @@ private:
     Ambient_occlusion_program();
     GLint ambient_sampler_uniform;
     GLint depth_sampler_uniform;
+    GLint normals_sampler_uniform;
   };
 
   struct Bloom_program : public Program {
