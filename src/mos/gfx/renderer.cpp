@@ -978,7 +978,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.direct_shading_texture);
   glUniform1i(multisample_program_.color_texture, 0);
 
   glActiveTexture(GL_TEXTURE1);
@@ -1547,11 +1547,25 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+  glGenTextures(1, &direct_shading_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture);
   glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture, 0);
+
+  glGenTextures(1, &indirect_shading_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture);
+  //TODO: Lower precision?
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture, 0);
+
+  glGenTextures(1, &normals_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, normals_texture);
+  //TODO: Lower precision?
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D_MULTISAMPLE, normals_texture, 0);
 
   glGenTextures(1, &depth_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
@@ -1562,6 +1576,10 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
                          GL_TEXTURE_2D_MULTISAMPLE,
                          depth_texture,
                          0);
+
+  unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+  glDrawBuffers(3, attachments);
+
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete.");
   }
@@ -1570,7 +1588,7 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
 }
 Renderer::Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
-  glDeleteTextures(1, &texture);
+  glDeleteTextures(1, &direct_shading_texture);
   glDeleteTextures(1, &depth_texture);
 }
 Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {

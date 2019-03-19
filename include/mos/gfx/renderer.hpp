@@ -333,7 +333,9 @@ private:
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
     GLuint frame_buffer;
-    GLuint texture;
+    GLuint direct_shading_texture;
+    GLuint indirect_shading_texture;
+    GLuint normals_texture;
     GLuint depth_texture;
   };
 
