@@ -138,6 +138,12 @@ private:
     GLint depth_texture;
   };
 
+  struct Ambient_occlusion_program : public Program {
+    Ambient_occlusion_program();
+    GLint ambient_sampler_uniform;
+    GLint depth_sampler_uniform;
+  };
+
   struct Bloom_program : public Program {
     Bloom_program();
     GLint direct_sampler_uniform;
