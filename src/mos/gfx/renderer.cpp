@@ -1026,6 +1026,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, blur_target0_.texture);
   glUniform1i(bloom_program_.bright_color_texture, 1);
+
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
+  glUniform1i(bloom_program_.ambient_sampler_uniform, 2);
+
   float strength = 0.1f;
   glUniform1fv(bloom_program_.strength, 1, &strength);
 
@@ -1319,6 +1324,7 @@ Renderer::Bloom_program::Bloom_program() {
 
   color_texture = glGetUniformLocation(program, "color_texture");
   bright_color_texture = glGetUniformLocation(program, "bright_color_texture");
+  ambient_sampler_uniform = glGetUniformLocation(program, "ambient_sampler");
   strength = glGetUniformLocation(program, "strength");
 
 }
