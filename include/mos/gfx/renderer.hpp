@@ -329,6 +329,7 @@ private:
   const Multisample_program multisample_program_;
   const Bloom_program bloom_program_;
   const Blur_program blur_program_;
+  const Ambient_occlusion_program ambient_occlusion_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
@@ -358,6 +359,16 @@ private:
   };
 
   const Multi_target multi_target_;
+
+  //TODO: Generalize
+  struct Ambient_occlusion_target {
+    Ambient_occlusion_target(const glm::ivec2 &resolution);
+    ~Ambient_occlusion_target();
+    GLuint frame_buffer;
+    GLuint texture;
+  };
+
+  const Ambient_occlusion_target ambient_occlusion_target_;
 
   struct Blur_target {
     Blur_target(const glm::ivec2 &resolution);
