@@ -5,7 +5,7 @@ in vec2 frag_uv;
 
 uniform sampler2D direct_sampler;
 uniform sampler2D bloom_sampler;
-uniform sampler2DMS ambient_sampler;
+uniform sampler2D ambient_sampler;
 uniform float strength;
 
 float rand(vec2 co) {
@@ -19,7 +19,7 @@ void main() {
   vec2 texture_size = textureSize(ambient_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
 
-  color.rgb += texelFetch(ambient_sampler, pixel_uv, 0).rgb;
+  color.rgb += texture(ambient_sampler, frag_uv).rgb;
 
   float r = rand(frag_uv * color.rg);
   color.rgb *= (1.0 - r * 0.1);
