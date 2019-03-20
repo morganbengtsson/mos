@@ -27,5 +27,4 @@ void main() {
 
   float r = rand(frag_uv * color.rg);
   color.rgb *= (1.0 - r * 0.1);
-  color.rgb = occlusion.xxx;
 }

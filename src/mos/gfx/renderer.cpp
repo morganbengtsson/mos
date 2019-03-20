@@ -61,8 +61,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     cube_camera_index_({0, 0}),
     standard_target_(resolution),
     multi_target_(resolution),
-    ambient_occlusion_target0_(resolution / 1, GL_RED),
-    ambient_occlusion_target1_(resolution / 1, GL_RED),
+    ambient_occlusion_target0_(resolution / 2, GL_RED),
+    ambient_occlusion_target1_(resolution / 2, GL_RED),
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
     shadow_maps_render_buffer_(256),
@@ -1031,6 +1031,36 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 1);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+
+  //AO BLUR
+  glViewport(0, 0, ambient_occlusion_target0_.resolution.x, ambient_occlusion_target0_.resolution.y);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target1_.frame_buffer);
+  glUseProgram(blur_program_.program);
+  glBindVertexArray(quad_.vertex_array);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
+  glUniform1i(blur_program_.color_texture, 0);
+  horizontal = false;
+  glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  for (int i = 0; i < 10; i++) {
+    horizontal = (i % 2 == 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? ambient_occlusion_target0_.frame_buffer : ambient_occlusion_target1_.frame_buffer);
+    glUseProgram(blur_program_.program);
+    glBindVertexArray(quad_.vertex_array);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, horizontal ? ambient_occlusion_target1_.texture : ambient_occlusion_target0_.texture);
+    glUniform1i(blur_program_.color_texture, 0);
+    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+  }
+  //----
+
 
   glViewport(0, 0, resolution.x, resolution.y);
 
