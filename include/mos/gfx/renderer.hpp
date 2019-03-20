@@ -361,10 +361,11 @@ private:
   const Multi_target multi_target_;
 
   struct Post_target {
-    Post_target(const glm::ivec2 &resolution);
+    Post_target(const glm::ivec2 &resolution, const GLenum precision = GL_RGB16F);
     ~Post_target();
     GLuint frame_buffer;
     GLuint texture;
+    const glm::ivec2 resolution;
   };
 
   const Post_target ambient_occlusion_target0_;
