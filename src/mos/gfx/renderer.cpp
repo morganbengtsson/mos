@@ -1356,8 +1356,8 @@ Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
   normals_sampler_uniform = glGetUniformLocation(program, "normals_sampler");
 }
 
-Renderer::Bloom_program::Bloom_program() {
-  std::string name = "bloom";
+Renderer::Compositing_program::Compositing_program() {
+  std::string name = "compositing";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 

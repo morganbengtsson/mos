@@ -145,8 +145,8 @@ private:
     GLint normals_sampler_uniform;
   };
 
-  struct Bloom_program : public Program {
-    Bloom_program();
+  struct Compositing_program : public Program {
+    Compositing_program();
     GLint direct_sampler_uniform;
     GLint ambient_occlusion_sampler_uniform;
     GLint ambient_sampler_uniform;
@@ -327,7 +327,7 @@ private:
   const Box_program box_program_;
   const Depth_program depth_program_;
   const Multisample_program multisample_program_;
-  const Bloom_program bloom_program_;
+  const Compositing_program bloom_program_;
   const Blur_program blur_program_;
   const Ambient_occlusion_program ambient_occlusion_program_;
 
