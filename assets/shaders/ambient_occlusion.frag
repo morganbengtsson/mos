@@ -61,5 +61,5 @@ void main() {
   }
 
   float ao = 1.0 - total_strength * occlusion * (1.0 / samples);
-  color = vec4(texelFetch(ambient_sampler, pixel_uv, 0).rgb * ao, 1.0f);
+  color = vec4(ao, ao, ao, 1.0);
 }

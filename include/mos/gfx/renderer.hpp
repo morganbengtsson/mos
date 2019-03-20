@@ -148,6 +148,7 @@ private:
   struct Bloom_program : public Program {
     Bloom_program();
     GLint direct_sampler_uniform;
+    GLint ambient_occlusion_sampler_uniform;
     GLint ambient_sampler_uniform;
     GLint bloom_sampler_uniform;
     GLint strength;
