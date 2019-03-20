@@ -1036,28 +1036,28 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   //Render to screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glUseProgram(bloom_program_.program);
+  glUseProgram(compositing_program_.program);
 
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.color_texture);
-  glUniform1i(bloom_program_.direct_sampler_uniform, 0);
+  glUniform1i(compositing_program_.direct_sampler_uniform, 0);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, blur_target0_.texture);
-  glUniform1i(bloom_program_.bloom_sampler_uniform, 1);
+  glUniform1i(compositing_program_.bloom_sampler_uniform, 1);
 
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
-  glUniform1i(bloom_program_.ambient_occlusion_sampler_uniform, 2);
+  glUniform1i(compositing_program_.ambient_occlusion_sampler_uniform, 2);
 
   glActiveTexture(GL_TEXTURE3);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
-  glUniform1i(bloom_program_.ambient_sampler_uniform, 3);
+  glUniform1i(compositing_program_.ambient_sampler_uniform, 3);
 
   float strength = 0.1f;
-  glUniform1fv(bloom_program_.strength, 1, &strength);
+  glUniform1fv(compositing_program_.strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
