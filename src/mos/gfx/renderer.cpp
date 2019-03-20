@@ -1047,7 +1047,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 8; i++) {
     horizontal = (i % 2 == 0);
     glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? ambient_occlusion_target0_.frame_buffer : ambient_occlusion_target1_.frame_buffer);
     glUseProgram(blur_program_.program);
