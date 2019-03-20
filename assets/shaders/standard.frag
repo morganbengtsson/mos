@@ -235,5 +235,4 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     out_direct.rgb = mix(fog_color, out_direct.rgb, clamp(fog_att, 0.45, 1.0));
     out_indirect = vec4(ambient, 1.0);
-    out_normal = vec4(normal, 1.0);
 }

@@ -344,7 +344,6 @@ private:
     GLuint frame_buffer;
     GLuint direct_shading_texture;
     GLuint indirect_shading_texture;
-    GLuint normals_texture;
     GLuint depth_texture;
   };
 

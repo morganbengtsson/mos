@@ -1030,10 +1030,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
   glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 1);
 
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.normals_texture);
-  glUniform1i(ambient_occlusion_program_.normals_sampler_uniform, 2);
-
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1619,13 +1615,6 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture, 0);
 
-  glGenTextures(1, &normals_texture);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, normals_texture);
-  //TODO: Lower precision?
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D_MULTISAMPLE, normals_texture, 0);
-
   glGenTextures(1, &depth_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
   glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
@@ -1636,8 +1625,8 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
                          depth_texture,
                          0);
 
-  unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
-  glDrawBuffers(3, attachments);
+  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, attachments);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete.");
