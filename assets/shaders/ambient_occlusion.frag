@@ -11,11 +11,30 @@ float rand(vec2 co) {
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
+vec3 normal_from_depth(vec2 texcoords, sampler2DMS sampler) {
+
+  vec2 texture_size = textureSize(sampler);
+  ivec2 pixel_uv = ivec2(floor(texture_size * texcoords));
+
+  float depth1 = texelFetch(sampler, pixel_uv + ivec2(0, 1), 0).r;
+  float depth2 = texelFetch(sampler, pixel_uv + ivec2(1, 0), 1).r;
+
+  const float depth = texelFetch(sampler, pixel_uv, 0).r;
+  vec3 p1 = vec3(0, 0.001, depth1 - depth);
+  vec3 p2 = vec3(0.001, 0, depth2 - depth);
+
+  vec3 normal = cross(p1, p2);
+  normal.z = -normal.z;
+
+  return normalize(normal);
+}
+
+
 void main() {
   vec2 texture_size = textureSize(depth_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
 
-  const vec3 normal = normalize(texelFetch(normals_sampler, pixel_uv, 0).rgb * 2.0 - 1.0);
+  const vec3 normal = normal_from_depth(frag_uv, depth_sampler);
 
   const float total_strength = 1.0;
   const float base = 0.2;
