@@ -1031,7 +1031,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 1);
 
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.normals_texture);
   glUniform1i(ambient_occlusion_program_.normals_sampler_uniform, 2);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
