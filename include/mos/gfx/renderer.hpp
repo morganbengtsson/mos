@@ -378,6 +378,8 @@ private:
 
   const Blur_target blur_target0_;
   const Blur_target blur_target1_;
+  const Blur_target blur_target_half0_;
+  const Blur_target blur_target_half1_;
 
   struct Quad {
     Quad();

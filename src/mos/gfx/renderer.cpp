@@ -64,6 +64,8 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     ambient_occlusion_target_(resolution),
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
+    blur_target_half0_(resolution / 2),
+    blur_target_half1_(resolution / 2),
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
