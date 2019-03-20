@@ -1634,14 +1634,14 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &direct_shading_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture, 0);
 
   glGenTextures(1, &indirect_shading_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture);
   //TODO: Lower precision?
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture, 0);
 
