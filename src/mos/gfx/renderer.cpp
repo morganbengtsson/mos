@@ -61,11 +61,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     cube_camera_index_({0, 0}),
     standard_target_(resolution),
     multi_target_(resolution),
-    ambient_occlusion_target_(resolution),
+    ambient_occlusion_target0_(resolution /2),
+    ambient_occlusion_target1_(resolution /2),
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
-    blur_target_half0_(resolution / 2),
-    blur_target_half1_(resolution / 2),
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
@@ -1015,10 +1014,10 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
-  glViewport(0, 0, resolution.x, resolution.y);
+  glViewport(0, 0, resolution.x / 2, resolution.y / 2);
 
   //Ambient occlusion
-  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target_.frame_buffer);
+  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target0_.frame_buffer);
   glUseProgram(ambient_occlusion_program_.program);
 
   glBindVertexArray(quad_.vertex_array);
@@ -1037,6 +1036,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
+  glViewport(0, 0, resolution.x, resolution.y);
+
   //Render to screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glUseProgram(bloom_program_.program);
@@ -1052,7 +1053,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(bloom_program_.bloom_sampler_uniform, 1);
 
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
   glUniform1i(bloom_program_.ambient_occlusion_sampler_uniform, 2);
 
   glActiveTexture(GL_TEXTURE3);
@@ -1687,7 +1688,7 @@ Renderer::Multi_target::~Multi_target() {
   glDeleteTextures(1, &bright_texture);
 }
 
-Renderer::Ambient_occlusion_target::Ambient_occlusion_target(const glm::ivec2 &resolution) {
+Renderer::Post_target::Post_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -1707,32 +1708,7 @@ Renderer::Ambient_occlusion_target::Ambient_occlusion_target(const glm::ivec2 &r
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
-Renderer::Ambient_occlusion_target::~Ambient_occlusion_target() {
-  glDeleteFramebuffers(1, &frame_buffer);
-  glDeleteTextures(1, &texture);
-}
-
-Renderer::Blur_target::Blur_target(const glm::ivec2 &resolution) {
-  glGenFramebuffers(1, &frame_buffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete");
-  }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-}
-Renderer::Blur_target::~Blur_target() {
+Renderer::Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }

@@ -360,27 +360,18 @@ private:
 
   const Multi_target multi_target_;
 
-  //TODO: Generalize
-  struct Ambient_occlusion_target {
-    Ambient_occlusion_target(const glm::ivec2 &resolution);
-    ~Ambient_occlusion_target();
+  struct Post_target {
+    Post_target(const glm::ivec2 &resolution);
+    ~Post_target();
     GLuint frame_buffer;
     GLuint texture;
   };
 
-  const Ambient_occlusion_target ambient_occlusion_target_;
+  const Post_target ambient_occlusion_target0_;
+  const Post_target ambient_occlusion_target1_;
 
-  struct Blur_target {
-    Blur_target(const glm::ivec2 &resolution);
-    ~Blur_target();
-    GLuint frame_buffer;
-    GLuint texture;
-  };
-
-  const Blur_target blur_target0_;
-  const Blur_target blur_target1_;
-  const Blur_target blur_target_half0_;
-  const Blur_target blur_target_half1_;
+  const Post_target blur_target0_;
+  const Post_target blur_target1_;
 
   struct Quad {
     Quad();
