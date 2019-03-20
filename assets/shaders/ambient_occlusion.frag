@@ -15,7 +15,7 @@ void main() {
   vec2 texture_size = textureSize(depth_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
 
-  const vec3 normal = texelFetch(normals_sampler, pixel_uv, 0).rgb;
+  const vec3 normal = normalize(texelFetch(normals_sampler, pixel_uv, 0).rgb * 2.0 - 1.0);
 
   const float total_strength = 1.0;
   const float base = 0.2;
