@@ -628,7 +628,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glBindVertexArray(quad_.vertex_array);
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
-      glUniform1i(blur_program_.color_texture, 0);
+      glUniform1i(blur_program_.color_sampler_uniform, 0);
       GLint horizontal = false;
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
       glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -640,7 +640,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_[i].texture);
-        glUniform1i(blur_program_.color_texture, 0);
+        glUniform1i(blur_program_.color_sampler_uniform, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -973,22 +973,19 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(it->camera, *it, resolution);
   }
 
-  //RenderQuad
+  // Multisampling / bloom
   glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
   glUseProgram(multisample_program_.program);
 
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.direct_shading_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.color_texture);
   glUniform1i(multisample_program_.color_sampler_uniform, 0);
-
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(multisample_program_.depth_sampler_uniform, 1);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
+  // Blur bloom
   glViewport(0, 0, GLsizei(resolution.x / 4.0f), GLsizei(resolution.y / 4.0f));
 
   glBindFramebuffer(GL_FRAMEBUFFER, blur_target0_.frame_buffer);
@@ -996,7 +993,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
-  glUniform1i(blur_program_.color_texture, 0);
+  glUniform1i(blur_program_.color_sampler_uniform, 0);
   GLint horizontal = false;
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1008,33 +1005,28 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
-    glUniform1i(blur_program_.color_texture, 0);
+    glUniform1i(blur_program_.color_sampler_uniform, 0);
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
+  // Ambient occlusion
   glViewport(0, 0, ambient_occlusion_target0_.resolution.x, ambient_occlusion_target0_.resolution.y);
 
-  //Ambient occlusion
   glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target0_.frame_buffer);
   glUseProgram(ambient_occlusion_program_.program);
 
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
-  glUniform1i(ambient_occlusion_program_.ambient_sampler_uniform, 0);
-
-  glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 1);
+  glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-
-  //AO BLUR
+  // Ambient occlusion blur
   glViewport(0, 0, ambient_occlusion_target0_.resolution.x, ambient_occlusion_target0_.resolution.y);
 
   glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target1_.frame_buffer);
@@ -1042,7 +1034,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
-  glUniform1i(blur_program_.color_texture, 0);
+  glUniform1i(blur_program_.color_sampler_uniform, 0);
   horizontal = false;
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1054,17 +1046,15 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, horizontal ? ambient_occlusion_target1_.texture : ambient_occlusion_target0_.texture);
-    glUniform1i(blur_program_.color_texture, 0);
+    glUniform1i(blur_program_.color_sampler_uniform, 0);
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
-  //----
 
-
+  // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
 
-  //Render to screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glUseProgram(compositing_program_.program);
 
@@ -1081,10 +1071,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
   glUniform1i(compositing_program_.ambient_occlusion_sampler_uniform, 2);
-
-  glActiveTexture(GL_TEXTURE3);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.indirect_shading_texture);
-  glUniform1i(compositing_program_.ambient_sampler_uniform, 3);
 
   float strength = 0.1f;
   glUniform1fv(compositing_program_.strength, 1, &strength);
@@ -1356,7 +1342,6 @@ Renderer::Multisample_program::Multisample_program() {
   glDetachShader(program, fragment_shader.id);
 
   color_sampler_uniform = glGetUniformLocation(program, "color_texture");
-  depth_sampler_uniform = glGetUniformLocation(program, "depth_texture");
 }
 
 Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
@@ -1377,9 +1362,7 @@ Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  ambient_sampler_uniform = glGetUniformLocation(program, "ambient_sampler");
   depth_sampler_uniform = glGetUniformLocation(program, "depth_sampler");
-  normals_sampler_uniform = glGetUniformLocation(program, "normals_sampler");
 }
 
 Renderer::Compositing_program::Compositing_program() {
@@ -1402,7 +1385,6 @@ Renderer::Compositing_program::Compositing_program() {
 
   direct_sampler_uniform = glGetUniformLocation(program, "direct_sampler");
   bloom_sampler_uniform = glGetUniformLocation(program, "bloom_sampler");
-  ambient_sampler_uniform = glGetUniformLocation(program, "ambient_sampler");
   ambient_occlusion_sampler_uniform = glGetUniformLocation(program, "ambient_occlusion_sampler");
   strength = glGetUniformLocation(program, "strength");
 
@@ -1425,7 +1407,7 @@ Renderer::Blur_program::Blur_program() {
 
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  color_texture = glGetUniformLocation(program, "color_texture");
+  color_sampler_uniform = glGetUniformLocation(program, "color_texture");
   horizontal = glGetUniformLocation(program, "horizontal");
 }
 
@@ -1632,18 +1614,11 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-  glGenTextures(1, &direct_shading_texture);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture);
+  glGenTextures(1, &color_texture);
+  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
   glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, direct_shading_texture, 0);
-
-  glGenTextures(1, &indirect_shading_texture);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture);
-  //TODO: Lower precision?
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, resolution.x, resolution.y, GL_TRUE);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, indirect_shading_texture, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_texture, 0);
 
   glGenTextures(1, &depth_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
@@ -1655,8 +1630,6 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
                          depth_texture,
                          0);
 
-  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-  glDrawBuffers(2, attachments);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete.");
@@ -1666,7 +1639,7 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
 }
 Renderer::Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
-  glDeleteTextures(1, &direct_shading_texture);
+  glDeleteTextures(1, &color_texture);
   glDeleteTextures(1, &depth_texture);
 }
 Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {

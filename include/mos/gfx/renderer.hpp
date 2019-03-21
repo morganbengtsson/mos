@@ -135,28 +135,24 @@ private:
   struct Multisample_program : public Program {
     Multisample_program();
     GLint color_sampler_uniform;
-    GLint depth_sampler_uniform;
   };
 
   struct Ambient_occlusion_program : public Program {
     Ambient_occlusion_program();
-    GLint ambient_sampler_uniform;
     GLint depth_sampler_uniform;
-    GLint normals_sampler_uniform;
   };
 
   struct Compositing_program : public Program {
     Compositing_program();
     GLint direct_sampler_uniform;
     GLint ambient_occlusion_sampler_uniform;
-    GLint ambient_sampler_uniform;
     GLint bloom_sampler_uniform;
     GLint strength;
   };
 
   struct Blur_program : public Program {
     Blur_program();
-    GLint color_texture;
+    GLint color_sampler_uniform;
     GLint horizontal;
   };
 
@@ -342,8 +338,7 @@ private:
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
     GLuint frame_buffer;
-    GLuint direct_shading_texture;
-    GLuint indirect_shading_texture;
+    GLuint color_texture;
     GLuint depth_texture;
   };
 

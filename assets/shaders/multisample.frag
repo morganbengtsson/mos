@@ -5,7 +5,6 @@ layout(location = 1) out vec4 bright_color;
 in vec2 frag_uv;
 
 uniform sampler2DMS color_texture;
-uniform sampler2DMS depth_texture;
 
 void main() {
     vec2 texture_size = textureSize(color_texture);
