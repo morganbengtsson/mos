@@ -170,29 +170,28 @@ void main() {
 
     for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0) {
-        vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
-        vec3 r = -reflect(fragment.camera_to_surface, normal);
-        vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, r, fragment.position);
+        const vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
+        const vec3 r = -reflect(fragment.camera_to_surface, normal);
+        const vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, r, fragment.position);
 
-        vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
-        float maxsize = max(environment_texture_size.x, environment_texture_size.x);
-        float num_levels = 1 + floor(log2(maxsize));
-        float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
+        const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
+        const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
+        const float num_levels = 1 + floor(log2(maxsize));
+        const float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
 
-        vec3 F_env = fresnel_schlick_roughness(max(dot(normal, V), 0.0), F0, roughness);
-        vec3 kS_env = F_env;
-        vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
+        const vec3 F_env = fresnel_schlick_roughness(max(dot(normal, V), 0.0), F0, roughness);
+        const vec3 kS_env = F_env;
+        const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
-        vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
-        vec2 brdf  = texture(brdf_lut, vec2(max(dot(normal, V), 0.0), roughness)).rg;
+        const vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
+        const vec2 brdf  = texture(brdf_lut, vec2(max(dot(normal, V), 0.0), roughness)).rg;
 
-        float refractive_index = 1.5;
-        vec3 refracted_direction = refract(V, normal, 1.0 / refractive_index);
-        vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
-        vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
+        const float refractive_index = 1.5;
+        const vec3 refracted_direction = refract(V, normal, 1.0 / refractive_index);
+        const vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
+        const vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
 
-        vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
-        //specular_environment = filtered * F_env * brdf.x + brdf.y;
+        const vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
 
         vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
