@@ -3,9 +3,7 @@
 layout(location = 0) out vec4 color;
 in vec2 frag_uv;
 
-uniform sampler2DMS ambient_sampler;
 uniform sampler2DMS depth_sampler;
-uniform sampler2DMS normals_sampler;
 
 float rand(vec2 co) {
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);

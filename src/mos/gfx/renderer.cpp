@@ -1211,7 +1211,7 @@ Renderer::Standard_program::Standard_program() {
 
   for (size_t i = 0; i < environment_maps.size(); i++) {
     environment_maps[i].map =
-        glGetUniformLocation(program, std::string("environment_maps[" + std::to_string(i) + "]").c_str());
+        glGetUniformLocation(program, std::string("environment_samplers[" + std::to_string(i) + "]").c_str());
     environment_maps[i].position =
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
     environment_maps[i].extent =

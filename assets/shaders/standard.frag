@@ -61,7 +61,7 @@ uniform Light[4] lights;
 uniform sampler2D[4] shadow_maps;
 
 uniform Environment[2] environments;
-uniform samplerCube[2] environment_maps;
+uniform samplerCube[2] environment_samplers;
 
 uniform Camera camera;
 uniform Fog fog;
@@ -71,6 +71,7 @@ uniform mat4 view;
 uniform sampler2D brdf_lut;
 
 in Fragment fragment;
+
 layout(location = 0) out vec4 out_color;
 
 // Defined in functions.frag
@@ -175,7 +176,7 @@ void main() {
         vec3 r = -reflect(fragment.camera_to_surface, normal);
         vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, r, fragment.position);
 
-        vec2 environment_texture_size = textureSize(environment_maps[i], 0);
+        vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
         float maxsize = max(environment_texture_size.x, environment_texture_size.x);
         float num_levels = 1 + floor(log2(maxsize));
         float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
@@ -185,13 +186,13 @@ void main() {
         vec3 kD_env = 1.0 - kS_env;
         kD_env *= 1.0 - metallic;
 
-        vec3 filtered = textureLod(environment_maps[i], corrected_r, mip_level).rgb;
+        vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
         vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
 
         float refractive_index = 1.5;
         vec3 refracted_direction = refract(V, N, 1.0 / refractive_index);
         vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
-        vec3 refraction = textureLod(environment_maps[i], corrected_refract_direction, mip_level).rgb * material.transmission;
+        vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
 
         vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
         //specular_environment = filtered * F_env * brdf.x + brdf.y;
@@ -205,7 +206,7 @@ void main() {
                   mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
                   mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
                   mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
-                  irradiance += textureLod(environment_maps[i], rotx * roty * rotz * corrected_normal, num_levels - 1.5).rgb;
+                  irradiance += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_normal, num_levels - 1.5).rgb;
                 }
             }
         }
