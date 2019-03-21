@@ -125,7 +125,7 @@ void main() {
         discard;
     }
 
-      vec3 V = normalize(camera.position - fragment.position);
+    const vec3 V = normalize(camera.position - fragment.position);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -135,33 +135,32 @@ void main() {
     for(int i = 0; i < lights.length(); i++) {
         Light light = lights[i];
         if (light.strength > 0.0) {
-            vec3 L = normalize(light.position - fragment.position);
-            vec3 H = normalize(V + L);
+            const vec3 L = normalize(light.position - fragment.position);
+            const vec3 H = normalize(V + L);
 
-            float NdotL = max(dot(normal, L), 0.0);
-            float cos_dir = dot(L, -light.direction);
-            float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+            const float NdotL = max(dot(normal, L), 0.0);
+            const float cos_dir = dot(L, -light.direction);
+            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-            vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-            vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
+            const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+            const vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
             const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z) * spot_effect;
 
-            float light_fragment_distance = distance(light.position, fragment.position);
-            float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-            vec3 radiance = light.strength * 0.09 * light.color * attenuation;
+            const float light_fragment_distance = distance(light.position, fragment.position);
+            const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+            const vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
             // Cook-Torrance BRDF
-            float NDF = distribution_GGX(normal, H, roughness);
-            float G = geometry_smith(normal, V, L, roughness);
-            vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+            const float NDF = distribution_GGX(normal, H, roughness);
+            const float G = geometry_smith(normal, V, L, roughness);
+            const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
-            vec3 nominator    = NDF * G * F;
-            float denominator = 4 * max(dot(normal, V), 0.0) * max(dot(normal, L), 0.0) + 0.001;
-            vec3 specular = nominator / denominator;
+            const vec3 nominator = NDF * G * F;
+            const float denominator = 4 * max(dot(normal, V), 0.0) * max(dot(normal, L), 0.0) + 0.001;
+            const vec3 specular = nominator / denominator;
 
-            vec3 kS = F;
-            vec3 kD = vec3(1.0) - kS;
-            kD *= 1.0 - metallic;
+            const vec3 kS = F;
+            const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
             direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission);
         }
