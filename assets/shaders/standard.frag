@@ -200,9 +200,9 @@ void main() {
         for(float x = -m; x <= m; x += 1.0) {
             for(float y = -m; y <= m; y += 1.0) {
               for(float z = -m; z <= m; z += 1.0) {
-                  mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-                  mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-                  mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
+                  const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+                  const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+                  const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
                   irradiance += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_normal, num_levels - 1.5).rgb;
                 }
             }
