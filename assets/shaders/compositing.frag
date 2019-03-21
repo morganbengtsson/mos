@@ -3,9 +3,8 @@
 layout(location = 0) out vec4 color;
 in vec2 frag_uv;
 
-uniform sampler2D direct_sampler;
+uniform sampler2D color_sampler;
 uniform sampler2D bloom_sampler;
-uniform sampler2DMS ambient_sampler;
 uniform sampler2D ambient_occlusion_sampler;
 uniform float strength;
 
@@ -14,13 +13,10 @@ float rand(vec2 co) {
 }
 
 void main() {
-  vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
-  color = vec4(texture(direct_sampler, frag_uv).rgb + bloom * strength, 1.0);
+  const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
+  color = vec4(texture(color_sampler, frag_uv).rgb + bloom * strength, 1.0);
 
-  vec2 texture_size = textureSize(ambient_sampler);
-  ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
-
-  float ambient_occlusion = texture(ambient_occlusion_sampler, frag_uv).r;
+  const float ambient_occlusion = texture(ambient_occlusion_sampler, frag_uv).r;
 
   color.rgb *= ambient_occlusion;
 

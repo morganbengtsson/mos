@@ -1341,7 +1341,7 @@ Renderer::Multisample_program::Multisample_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  color_sampler_uniform = glGetUniformLocation(program, "color_texture");
+  color_sampler_uniform = glGetUniformLocation(program, "color_sampler");
 }
 
 Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
@@ -1383,7 +1383,7 @@ Renderer::Compositing_program::Compositing_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  direct_sampler_uniform = glGetUniformLocation(program, "direct_sampler");
+  direct_sampler_uniform = glGetUniformLocation(program, "color_sampler");
   bloom_sampler_uniform = glGetUniformLocation(program, "bloom_sampler");
   ambient_occlusion_sampler_uniform = glGetUniformLocation(program, "ambient_occlusion_sampler");
   strength = glGetUniformLocation(program, "strength");
@@ -1407,7 +1407,7 @@ Renderer::Blur_program::Blur_program() {
 
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  color_sampler_uniform = glGetUniformLocation(program, "color_texture");
+  color_sampler_uniform = glGetUniformLocation(program, "color_sampler");
   horizontal = glGetUniformLocation(program, "horizontal");
 }
 
