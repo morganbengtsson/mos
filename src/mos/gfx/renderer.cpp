@@ -61,8 +61,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     cube_camera_index_({0, 0}),
     standard_target_(resolution),
     multi_target_(resolution),
-    ambient_occlusion_target0_(resolution / 2, GL_RED),
-    ambient_occlusion_target1_(resolution / 2, GL_RED),
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
     shadow_maps_render_buffer_(256),
@@ -1011,47 +1009,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glDrawArrays(GL_TRIANGLES, 0, 6);
   }
 
-  // Ambient occlusion
-  glViewport(0, 0, ambient_occlusion_target0_.resolution.x, ambient_occlusion_target0_.resolution.y);
-
-  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target0_.frame_buffer);
-  glUseProgram(ambient_occlusion_program_.program);
-
-  glBindVertexArray(quad_.vertex_array);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(ambient_occlusion_program_.depth_sampler_uniform, 0);
-
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-  // Ambient occlusion blur
-  glViewport(0, 0, ambient_occlusion_target0_.resolution.x, ambient_occlusion_target0_.resolution.y);
-
-  glBindFramebuffer(GL_FRAMEBUFFER, ambient_occlusion_target1_.frame_buffer);
-  glUseProgram(blur_program_.program);
-  glBindVertexArray(quad_.vertex_array);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
-  glUniform1i(blur_program_.color_sampler_uniform, 0);
-  horizontal = false;
-  glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-
-  for (int i = 0; i < 8; i++) {
-    horizontal = (i % 2 == 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? ambient_occlusion_target0_.frame_buffer : ambient_occlusion_target1_.frame_buffer);
-    glUseProgram(blur_program_.program);
-    glBindVertexArray(quad_.vertex_array);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, horizontal ? ambient_occlusion_target1_.texture : ambient_occlusion_target0_.texture);
-    glUniform1i(blur_program_.color_sampler_uniform, 0);
-    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-  }
-
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
 
@@ -1067,10 +1024,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, blur_target0_.texture);
   glUniform1i(compositing_program_.bloom_sampler_uniform, 1);
-
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, ambient_occlusion_target0_.texture);
-  glUniform1i(compositing_program_.ambient_occlusion_sampler_uniform, 2);
 
   float strength = 0.1f;
   glUniform1fv(compositing_program_.strength, 1, &strength);
@@ -1344,27 +1297,6 @@ Renderer::Multisample_program::Multisample_program() {
   color_sampler_uniform = glGetUniformLocation(program, "color_sampler");
 }
 
-Renderer::Ambient_occlusion_program::Ambient_occlusion_program() {
-  std::string name = "ambient_occlusion";
-  auto vert_source = text("assets/shaders/" + name + ".vert");
-  auto frag_source = text("assets/shaders/" + name + ".frag");
-
-  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
-  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
-
-  glAttachShader(program, vertex_shader.id);
-  glAttachShader(program, fragment_shader.id);
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "uv");
-  link(name);
-  check(name);
-
-  glDetachShader(program, vertex_shader.id);
-  glDetachShader(program, fragment_shader.id);
-
-  depth_sampler_uniform = glGetUniformLocation(program, "depth_sampler");
-}
-
 Renderer::Compositing_program::Compositing_program() {
   std::string name = "compositing";
   auto vert_source = text("assets/shaders/" + name + ".vert");
@@ -1385,7 +1317,6 @@ Renderer::Compositing_program::Compositing_program() {
 
   direct_sampler_uniform = glGetUniformLocation(program, "color_sampler");
   bloom_sampler_uniform = glGetUniformLocation(program, "bloom_sampler");
-  ambient_occlusion_sampler_uniform = glGetUniformLocation(program, "ambient_occlusion_sampler");
   strength = glGetUniformLocation(program, "strength");
 
 }

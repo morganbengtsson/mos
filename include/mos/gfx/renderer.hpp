@@ -137,15 +137,10 @@ private:
     GLint color_sampler_uniform;
   };
 
-  struct Ambient_occlusion_program : public Program {
-    Ambient_occlusion_program();
-    GLint depth_sampler_uniform;
-  };
 
   struct Compositing_program : public Program {
     Compositing_program();
     GLint direct_sampler_uniform;
-    GLint ambient_occlusion_sampler_uniform;
     GLint bloom_sampler_uniform;
     GLint strength;
   };
@@ -325,7 +320,6 @@ private:
   const Multisample_program multisample_program_;
   const Compositing_program compositing_program_;
   const Blur_program blur_program_;
-  const Ambient_occlusion_program ambient_occlusion_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
@@ -361,9 +355,6 @@ private:
     GLuint texture;
     const glm::ivec2 resolution;
   };
-
-  const Post_target ambient_occlusion_target0_;
-  const Post_target ambient_occlusion_target1_;
 
   const Post_target blur_target0_;
   const Post_target blur_target1_;
