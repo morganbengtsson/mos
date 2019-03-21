@@ -208,14 +208,14 @@ void main() {
         }
         irradiance /= 8.0;
 
-        vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
+        const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
-        float fragment_environment_distance = distance(fragment.position, environments[i].position);
-        float environment_attenuation_x = 1.0 - (distance(fragment.position.x, environments[i].position.x) / environments[i].extent.x);
-        float environment_attenuation_y = 1.0 - (distance(fragment.position.y, environments[i].position.y) / environments[i].extent.y);
-        float environment_attenuation_z = 1.0 - (distance(fragment.position.z, environments[i].position.z) / environments[i].extent.z);
+        const float fragment_environment_distance = distance(fragment.position, environments[i].position);
+        const float environment_attenuation_x = 1.0 - (distance(fragment.position.x, environments[i].position.x) / environments[i].extent.x);
+        const float environment_attenuation_y = 1.0 - (distance(fragment.position.y, environments[i].position.y) / environments[i].extent.y);
+        const float environment_attenuation_z = 1.0 - (distance(fragment.position.z, environments[i].position.z) / environments[i].extent.z);
 
-        float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
+        const float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
 
         ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
