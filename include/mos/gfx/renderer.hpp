@@ -115,10 +115,10 @@ private:
   /** Uniforms for the particle shader program. */
   struct Particle_program : public Program {
     Particle_program();
-    GLint mvp;
-    GLint mv;
-    GLint m;
-    GLint p;
+    GLint model_view_projection;
+    GLint model_view;
+    GLint model;
+    GLint projection;
     GLint texture;
     GLint resolution;    
     GLint camera_resolution;
@@ -129,39 +129,39 @@ private:
   /** Uniforms for the bounding box shader program. */
   struct Box_program : public Program {
     Box_program();
-    GLint mvp;
+    GLint model_view_projection;
   };
 
   struct Multisample_program : public Program {
     Multisample_program();
-    GLint color_sampler_uniform;
+    GLint color_sampler;
   };
 
 
   struct Compositing_program : public Program {
     Compositing_program();
-    GLint direct_sampler_uniform;
-    GLint bloom_sampler_uniform;
-    GLint strength;
+    GLint color_sampler;
+    GLint bloom_sampler;
+    GLint bloom_strength;
   };
 
   struct Blur_program : public Program {
     Blur_program();
-    GLint color_sampler_uniform;
+    GLint color_sampler;
     GLint horizontal;
   };
 
   struct Depth_program : public Program {
     Depth_program();
-    GLint model_view_projection_matrix;
+    GLint model_view_projection;
   };
 
   /** Uniforms for the propagate shader. */
   class Propagate_program : public Program {
   public:
     Propagate_program();
-    GLint environment_sampler_uniform;
-    GLint environment_albedo_sampler_uniform;
+    GLint environment_sampler;
+    GLint environment_albedo_sampler;
     GLint side;
   };
 
@@ -169,7 +169,7 @@ private:
   class Environment_program : public Program {
   public:
     Environment_program();
-    GLint model_view_projection_matrix;
+    GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
     std::array<GLint, 4> depth_bias_mvps;
@@ -181,8 +181,8 @@ private:
       GLint strength;
     };
 
-    GLint material_albedo_map;
-    GLint material_emission_map;
+    GLint material_albedo_sampler;
+    GLint material_emission_sampler;
     GLint material_albedo;
     GLint material_roughness;
     GLint material_metallic;
@@ -196,7 +196,7 @@ private:
     GLint camera_resolution;
     GLint camera_position;
 
-    std::array<GLuint,4> shadow_maps;
+    std::array<GLuint,4> shadow_samplers;
     std::array<Light_uniforms, 4> lights;
 
     GLint fog_color_near;
@@ -210,7 +210,7 @@ private:
   class Standard_program : public Program {
   public:
     Standard_program();
-    GLint model_view_projection_matrix;
+    GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
     std::array<GLint,4> depth_bias_mvps;
@@ -223,8 +223,8 @@ private:
     };
     std::array<Environment_uniforms, 2> environment_maps;
 
-    GLint material_albedo_map;
-    GLint material_emission_map;
+    GLint material_albedo_sampler;
+    GLint material_emission_sampler;
     GLint material_normal_map;
     GLint material_metallic_map;
     GLint material_roughness_map;

@@ -218,8 +218,8 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.environment_maps[0].map, 5);
   glUniform1i(standard_program_.environment_maps[1].map, 6);
 
-  glUniform1i(standard_program_.material_albedo_map, 7);
-  glUniform1i(standard_program_.material_emission_map, 8);
+  glUniform1i(standard_program_.material_albedo_sampler, 7);
+  glUniform1i(standard_program_.material_emission_sampler, 8);
   glUniform1i(standard_program_.material_normal_map, 9);
   glUniform1i(standard_program_.material_metallic_map, 10);
   glUniform1i(standard_program_.material_roughness_map, 11);
@@ -310,7 +310,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
     glm::mat4 mvp = camera.projection * camera.view * transform *
         glm::scale(glm::mat4(1.0f), size);
 
-    glUniformMatrix4fv(box_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(box_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
 
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
@@ -376,9 +376,9 @@ void Renderer::render_particles(const Particle_clouds &clouds,
                                  : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
-    glUniformMatrix4fv(particle_program_.mvp, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(particle_program_.mv, 1, GL_FALSE, &mv[0][0]);
-    glUniformMatrix4fv(particle_program_.p, 1, GL_FALSE, &camera.projection[0][0]);
+    glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(particle_program_.model_view, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(particle_program_.projection, 1, GL_FALSE, &camera.projection[0][0]);
     auto r = glm::vec2(resolution); // TODO: Remove.
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
 
@@ -448,7 +448,7 @@ void Renderer::render_model(const Model &model,
                            &depth_bias_mvp[0][0]);
       }
 
-      glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+      glUniformMatrix4fv(uniforms.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
       auto model_matrix = parent_transform * model.transform;
       glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
@@ -545,7 +545,7 @@ void Renderer::render_model(const Model &model,
                            &depth_bias_mvp[0][0]);
       }
 
-      glUniformMatrix4fv(uniforms.model_view_projection_matrix, 1, GL_FALSE,
+      glUniformMatrix4fv(uniforms.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
       auto model_matrix = parent_transform * model.transform;
       glUniformMatrix4fv(uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
@@ -626,7 +626,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glBindVertexArray(quad_.vertex_array);
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
-      glUniform1i(blur_program_.color_sampler_uniform, 0);
+      glUniform1i(blur_program_.color_sampler, 0);
       GLint horizontal = false;
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
       glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -638,7 +638,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_[i].texture);
-        glUniform1i(blur_program_.color_sampler_uniform, 0);
+        glUniform1i(blur_program_.color_sampler, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -674,11 +674,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUseProgram(environment_program_.program);
 
       glUniform1i(environment_program_.brdf_lut, 0);
-      glUniform1i(environment_program_.shadow_maps[0], 1);
-      glUniform1i(environment_program_.shadow_maps[1], 2);
+      glUniform1i(environment_program_.shadow_samplers[0], 1);
+      glUniform1i(environment_program_.shadow_samplers[1], 2);
 
-      glUniform1i(environment_program_.material_albedo_map, 3);
-      glUniform1i(environment_program_.material_emission_map, 4);
+      glUniform1i(environment_program_.material_albedo_sampler, 3);
+      glUniform1i(environment_program_.material_emission_sampler, 4);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -757,11 +757,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
-  glUniform1i(propagate_program_.environment_sampler_uniform, 0);
+  glUniform1i(propagate_program_.environment_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
-  glUniform1i(propagate_program_.environment_albedo_sampler_uniform, 1);
+  glUniform1i(propagate_program_.environment_albedo_sampler, 1);
 
   glUniform1iv(propagate_program_.side, 1, &i);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -946,7 +946,7 @@ void Renderer::render_model_depth(const Model &model,
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
-    glUniformMatrix4fv(program.model_view_projection_matrix, 1, GL_FALSE,
+    glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                        &mvp[0][0]);
     const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
     glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
@@ -979,7 +979,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.color_texture);
-  glUniform1i(multisample_program_.color_sampler_uniform, 0);
+  glUniform1i(multisample_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -991,7 +991,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
-  glUniform1i(blur_program_.color_sampler_uniform, 0);
+  glUniform1i(blur_program_.color_sampler, 0);
   GLint horizontal = false;
   glUniform1iv(blur_program_.horizontal, 1, &horizontal);
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1003,7 +1003,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
-    glUniform1i(blur_program_.color_sampler_uniform, 0);
+    glUniform1i(blur_program_.color_sampler, 0);
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1019,14 +1019,14 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multi_target_.color_texture);
-  glUniform1i(compositing_program_.direct_sampler_uniform, 0);
+  glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, blur_target0_.texture);
-  glUniform1i(compositing_program_.bloom_sampler_uniform, 1);
+  glUniform1i(compositing_program_.bloom_sampler, 1);
 
   float strength = 0.1f;
-  glUniform1fv(compositing_program_.strength, 1, &strength);
+  glUniform1fv(compositing_program_.bloom_strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
@@ -1049,7 +1049,7 @@ Renderer::Depth_program::Depth_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  model_view_projection_matrix = glGetUniformLocation(program, "model_view_projection");
+  model_view_projection = glGetUniformLocation(program, "model_view_projection");
 }
 
 Renderer::Environment_program::Environment_program() {
@@ -1080,7 +1080,7 @@ Renderer::Environment_program::Environment_program() {
   glDetachShader(program, fragment_shader.id);
   glDetachShader(program, functions_fragment_shader.id);
 
-  model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
+  model_view_projection = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
@@ -1089,8 +1089,8 @@ Renderer::Environment_program::Environment_program() {
                                                               + "]").c_str());
   }
 
-  material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_map = glGetUniformLocation(program, "material.emission_map");
+  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
+  material_emission_sampler = glGetUniformLocation(program, "material.emission_map");
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
@@ -1116,7 +1116,7 @@ Renderer::Environment_program::Environment_program() {
     lights[i].direction =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
-    shadow_maps[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
+    shadow_samplers[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }
 
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
@@ -1153,7 +1153,7 @@ Renderer::Standard_program::Standard_program() {
   glDetachShader(program, fragment_shader.id);
   glDetachShader(program, functions_fragment_shader.id);
 
-  model_view_projection_matrix = (glGetUniformLocation(program, "model_view_projection"));
+  model_view_projection = (glGetUniformLocation(program, "model_view_projection"));
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
@@ -1173,8 +1173,8 @@ Renderer::Standard_program::Standard_program() {
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
   }
 
-  material_albedo_map = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_map = glGetUniformLocation(program, "material.emission_map");
+  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
+  material_emission_sampler = glGetUniformLocation(program, "material.emission_map");
   material_normal_map = glGetUniformLocation(program, "material.normal_map");
   material_metallic_map = glGetUniformLocation(program, "material.metallic_map");
   material_roughness_map = glGetUniformLocation(program, "material.roughness_map");
@@ -1231,9 +1231,9 @@ Renderer::Particle_program::Particle_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  mvp = glGetUniformLocation(program, "model_view_projection");
-  mv = glGetUniformLocation(program, "model_view");
-  p = glGetUniformLocation(program, "projection");
+  model_view_projection = glGetUniformLocation(program, "model_view_projection");
+  model_view = glGetUniformLocation(program, "model_view");
+  projection = glGetUniformLocation(program, "projection");
   texture = glGetUniformLocation(program, "tex");
   resolution = glGetUniformLocation(program, "resolution");
   camera_position = glGetUniformLocation(program, "camera.position");
@@ -1273,7 +1273,7 @@ Renderer::Box_program::Box_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  mvp = glGetUniformLocation(program, "model_view_projection");
+  model_view_projection = glGetUniformLocation(program, "model_view_projection");
 }
 
 Renderer::Multisample_program::Multisample_program() {
@@ -1294,7 +1294,7 @@ Renderer::Multisample_program::Multisample_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  color_sampler_uniform = glGetUniformLocation(program, "color_sampler");
+  color_sampler = glGetUniformLocation(program, "color_sampler");
 }
 
 Renderer::Compositing_program::Compositing_program() {
@@ -1315,9 +1315,9 @@ Renderer::Compositing_program::Compositing_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  direct_sampler_uniform = glGetUniformLocation(program, "color_sampler");
-  bloom_sampler_uniform = glGetUniformLocation(program, "bloom_sampler");
-  strength = glGetUniformLocation(program, "strength");
+  color_sampler = glGetUniformLocation(program, "color_sampler");
+  bloom_sampler = glGetUniformLocation(program, "bloom_sampler");
+  bloom_strength = glGetUniformLocation(program, "strength");
 
 }
 
@@ -1338,7 +1338,7 @@ Renderer::Blur_program::Blur_program() {
 
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
-  color_sampler_uniform = glGetUniformLocation(program, "color_sampler");
+  color_sampler = glGetUniformLocation(program, "color_sampler");
   horizontal = glGetUniformLocation(program, "horizontal");
 }
 
@@ -1366,8 +1366,8 @@ Renderer::Propagate_program::Propagate_program() {
   glDetachShader(program, fragment_shader.id);
   glDetachShader(program, functions_fragment_shader.id);
 
-  environment_sampler_uniform = glGetUniformLocation(program, "environment_map");
-  environment_albedo_sampler_uniform = glGetUniformLocation(program, "environment_albedo_map");
+  environment_sampler = glGetUniformLocation(program, "environment_map");
+  environment_albedo_sampler = glGetUniformLocation(program, "environment_albedo_map");
   side = glGetUniformLocation(program, "side");
 }
 
