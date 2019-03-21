@@ -20,10 +20,9 @@ void main() {
   vec2 texture_size = textureSize(ambient_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
 
-  vec3 ambient = texelFetch(ambient_sampler, pixel_uv, 0).rgb;
-  float occlusion = texture(ambient_occlusion_sampler, frag_uv).r;
+  float ambient_occlusion = texture(ambient_occlusion_sampler, frag_uv).r;
 
-  color.rgb += ambient * occlusion;
+  color.rgb *= ambient_occlusion;
 
   float r = rand(frag_uv * color.rg);
   color.rgb *= (1.0 - r * 0.1);
