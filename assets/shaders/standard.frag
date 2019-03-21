@@ -125,8 +125,7 @@ void main() {
         discard;
     }
 
-    vec3 N = normalize(normal);
-    vec3 V = normalize(camera.position - fragment.position);
+      vec3 V = normalize(camera.position - fragment.position);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -139,7 +138,7 @@ void main() {
             vec3 L = normalize(light.position - fragment.position);
             vec3 H = normalize(V + L);
 
-            float NdotL = max(dot(N, L), 0.0);
+            float NdotL = max(dot(normal, L), 0.0);
             float cos_dir = dot(L, -light.direction);
             float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
@@ -152,12 +151,12 @@ void main() {
             vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
             // Cook-Torrance BRDF
-            float NDF = distribution_GGX(N, H, roughness);
-            float G = geometry_smith(N, V, L, roughness);
+            float NDF = distribution_GGX(normal, H, roughness);
+            float G = geometry_smith(normal, V, L, roughness);
             vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
             vec3 nominator    = NDF * G * F;
-            float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+            float denominator = 4 * max(dot(normal, V), 0.0) * max(dot(normal, L), 0.0) + 0.001;
             vec3 specular = nominator / denominator;
 
             vec3 kS = F;
@@ -181,16 +180,16 @@ void main() {
         float num_levels = 1 + floor(log2(maxsize));
         float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
 
-        vec3 F_env = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
+        vec3 F_env = fresnel_schlick_roughness(max(dot(normal, V), 0.0), F0, roughness);
         vec3 kS_env = F_env;
         vec3 kD_env = 1.0 - kS_env;
         kD_env *= 1.0 - metallic;
 
         vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
-        vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
+        vec2 brdf  = texture(brdf_lut, vec2(max(dot(normal, V), 0.0), roughness)).rg;
 
         float refractive_index = 1.5;
-        vec3 refracted_direction = refract(V, N, 1.0 / refractive_index);
+        vec3 refracted_direction = refract(V, normal, 1.0 / refractive_index);
         vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
         vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
 
