@@ -15,5 +15,5 @@ void main() {
     }
     color = vec4(average_color / 4.0, 1.0);
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-    bright_color = vec4(color.rgb * float(brightness > 1.0), 1.0);
+    bright_color = vec4(clamp(color.rgb * float(brightness > 1.0), vec3(0.0), vec3(10.0)), 1.0);
 }
