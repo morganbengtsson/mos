@@ -181,8 +181,7 @@ void main() {
 
         vec3 F_env = fresnel_schlick_roughness(max(dot(normal, V), 0.0), F0, roughness);
         vec3 kS_env = F_env;
-        vec3 kD_env = 1.0 - kS_env;
-        kD_env *= 1.0 - metallic;
+        vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
         vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
         vec2 brdf  = texture(brdf_lut, vec2(max(dot(normal, V), 0.0), roughness)).rg;
