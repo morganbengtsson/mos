@@ -14,6 +14,7 @@ class Tracked_container {
 public:
   using Items = std::vector<T>;
   using TimePoint = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+  using size_type = typename Items::size_type;
 
   Tracked_container(){
     invalidate();

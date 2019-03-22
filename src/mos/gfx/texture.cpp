@@ -58,7 +58,7 @@ int Texture::width() const {
 int Texture::height() const {
   return height_;
 }
-int Texture::depth() const {
+Tracked_container<Texture::Data>::size_type Texture::depth() const {
   return layers.size();
 }
 

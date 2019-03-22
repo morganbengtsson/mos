@@ -60,7 +60,7 @@ public:
   int id() const;
   int width() const;
   int height() const;
-  int depth() const;
+  Tracked_container<Data>::size_type depth() const;
 
   bool mipmaps; // TODO: const
   Wrap wrap; // TODO: const

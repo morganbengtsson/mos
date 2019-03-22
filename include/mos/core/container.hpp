@@ -13,6 +13,7 @@ template<class T>
 class Container {
 public:
   using Items = std::vector<T>;
+  using size_type = typename Items::size_type;
 
   Container() = default;
 
