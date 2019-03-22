@@ -10,6 +10,7 @@ namespace gfx {
 /** Rendering camera view. */
 class Camera final {
 public:
+  using Planes = std::array<glm::vec4, 6>;
   Camera(const glm::vec3 &position = glm::vec3(0.0f),
                const glm::vec3 &center = glm::vec3(0.0f),
                const glm::mat4 &projection = glm::mat4(1.0f),
@@ -48,7 +49,7 @@ public:
 private:
   void calculate_view();
   void calculate_frustum();
-  std::array<glm::vec4, 6> frustum_planes_;
+  Planes frustum_planes_;
   glm::vec3 up_;
   glm::vec3 center_;
   glm::vec3 position_;

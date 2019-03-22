@@ -12,8 +12,8 @@ Environment_light::Environment_light(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength)
     :
-      box_(glm::translate(glm::mat4(1.0f), position), extent),
       strength(strength),
+      box_(glm::translate(glm::mat4(1.0f), position), extent),
       cube_camera_(position, length(extent) / 2.0f, glm::length(extent)) {
 }
 
@@ -39,7 +39,7 @@ Environment_light::Environment_light(const std::string &directory, const std::st
     auto extent = float(value["extent"]) * scale;
     box_ = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
     strength = value.value("strength", 1.0f);
-    cube_camera_ = mos::gfx::Cube_camera(position, 0.01, glm::length(extent));
+    cube_camera_ = mos::gfx::Cube_camera(position, 0.01f, glm::length(extent));
   } else {
     throw std::runtime_error(path.substr(path.find_last_of(".")) +
         " file format is not supported.");

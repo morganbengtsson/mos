@@ -9,11 +9,11 @@ Scene::Scene(const Models &models,
              const Fog &fog,
              const Environment_lights &environment_lights,
              const Boxes &boxes)
-    : models(models),
-      camera(camera),
+    : models(models),      
+      boxes(boxes),
       lights(lights),
-      environment_lights(environment_lights),
+      camera(camera),
       fog(fog),
-      boxes(boxes){}
+      environment_lights(environment_lights) {}
 }
 }

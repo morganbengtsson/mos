@@ -85,7 +85,7 @@ void Camera::calculate_frustum() {
 }
 bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
   bool result = true;
-  for (int i = 0; i < 6; i++)
+  for (Planes::size_type i = 0; i < 6; i++)
   {
     if (frustum_planes_[i].x * point.x + frustum_planes_[i].y * point.y + frustum_planes_[i].z * point.z + frustum_planes_[i].w <= -radius) {
       result = false;
