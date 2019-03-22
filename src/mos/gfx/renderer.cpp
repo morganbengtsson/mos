@@ -58,11 +58,15 @@ message_callback(GLenum source,
 }
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
-    cube_camera_index_({0, 0}),
     standard_target_(resolution),
     multi_target_(resolution),
     blur_target0_(resolution / 4),
     blur_target1_(resolution / 4),
+    quad_(),
+    black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
+    white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
+    brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::Clamp)),
+    cube_camera_index_({0, 0}),
     shadow_maps_render_buffer_(256),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
@@ -76,11 +80,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     environment_render_buffer_(128),
     environment_maps_targets{Environment_map_target(environment_render_buffer_),
                              Environment_map_target(environment_render_buffer_)},
-    propagate_target_(environment_render_buffer_),
-    quad_(),
-    black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
-    white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
-    brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::Clamp)) {
+    propagate_target_(environment_render_buffer_) {
 
   if (!gladLoadGL()) {
     printf("No valid OpenGL context.\n");
@@ -612,11 +612,6 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
         render_model_depth(model, glm::mat4(1.0f), lights[i].camera, glm::vec2(resolution), depth_program_);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-      //Generate mipmaps
-      //glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
-      //glGenerateMipmap(GL_TEXTURE_2D);
-      //glBindTexture(GL_TEXTURE_2D, 0);
 
       glViewport(0, 0, shadow_maps_render_buffer_.resolution,
                  shadow_maps_render_buffer_.resolution);
