@@ -1547,7 +1547,7 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &color_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB16F, resolution.x, resolution.y, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R11F_G11F_B10F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_texture, 0);
 
@@ -1579,7 +1579,7 @@ Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &color_texture);
   glBindTexture(GL_TEXTURE_2D, color_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1589,7 +1589,7 @@ Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &bright_texture);
   glBindTexture(GL_TEXTURE_2D, bright_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
