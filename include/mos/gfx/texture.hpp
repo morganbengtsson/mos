@@ -30,9 +30,14 @@ public:
           const int height,
           const Format &format = Format::SRGBA,
           const Wrap &wrap = Wrap::Repeat,
-          const bool mipmaps = true) : layers(begin, end),
-                                       width_(width), height_(height),
-                                       format(format), wrap(wrap), mipmaps(mipmaps), id_(current_id_++) {};
+          const bool mipmaps = true) :
+    mipmaps(mipmaps),
+    wrap(wrap),
+    format(format),
+    layers(begin, end),
+    id_(current_id_++),
+     width_(width),
+     height_(height){}
 
   Texture(const std::initializer_list<Data> &layers,
           int width,
@@ -62,7 +67,7 @@ public:
   Format format; // TODO: const
   Tracked_container<Data> layers;
 private:
-  static std::atomic_uint current_id_;
+  static std::atomic_int current_id_;
   int id_;
   int width_;
   int height_;

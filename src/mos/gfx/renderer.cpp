@@ -97,7 +97,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_FRAMEBUFFER_SRGB);
-  //glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
   glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
   glDepthFunc(GL_LEQUAL);
   glDepthMask(GL_TRUE);

@@ -6,18 +6,19 @@
 
 namespace mos {
 namespace gfx {
-std::atomic_uint Texture::current_id_;
+std::atomic_int Texture::current_id_;
 Texture::Texture(const int width,
                  const int height,
                  const Texture::Format &format,
                  const Texture::Wrap &wrap,
-                 const bool mipmaps) : id_(current_id_++),
-                                       width_(width),
-                                       height_(height),
-                                       format(format),
-                                       wrap(wrap),
-                                       mipmaps(mipmaps),
-                                       layers{Data()} {}
+                 const bool mipmaps) :
+  mipmaps(mipmaps),
+  wrap(wrap),
+  format(format),
+  layers{Data()},
+  id_(current_id_++),
+  width_(width),
+  height_(height){}
 
 Texture::Texture(const std::initializer_list<Texture::Data> &layers,
                  const int width,
@@ -35,7 +36,10 @@ Texture::Texture(const std::initializer_list<Texture::Data> &layers,
 Texture::Texture(const std::initializer_list<std::string> &paths,
                  const bool color_data,
                  const Texture::Wrap &wrap,
-                 const bool mipmaps) : id_(current_id_++), wrap(wrap), mipmaps(mipmaps) {
+                 const bool mipmaps) :
+  mipmaps(mipmaps),
+  wrap(wrap),
+  id_(current_id_++) {
   for (auto &path : paths) {
     int bpp;
     unsigned char *pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, 0);
