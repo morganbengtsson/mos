@@ -18,7 +18,7 @@ public:
 
   Tracked_container(){
     invalidate();
-  };
+  }
 
   template<class It>
   Tracked_container(const std::initializer_list<It> list): Tracked_container(list.begin(), list.end()){}
