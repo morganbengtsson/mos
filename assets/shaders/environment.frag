@@ -129,10 +129,9 @@ void main() {
 
     Lo.rgb *= clamp(shadow, 0.0, 1.0);
 
-
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = Lo + ambient + material.emission * albedo;
+    color.rgb = (1.0 - material.emission) * (Lo + ambient) + material.emission * albedo;
     color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
