@@ -16,6 +16,8 @@ Text::Text(const std::string &txt,
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
       font_(font), spacing(spacing) {
+  model_.material.roughness = 1.0f;
+  model_.material.metallic = 0.0f;
   model_.material.albedo = glm::vec3(1.0f);
   model_.material.opacity = 0.5f;
   model_.material.emission = glm::vec3(1.0f);
@@ -55,22 +57,25 @@ void Text::text(const std::string &text) {
 
         float z = index / 2000.0f;
 
+        const glm::vec3 normal = glm::vec3(0.0f, 0.0f, 1.0f);
+        const glm::vec3 tangent = glm::vec3(0.0f, 1.0f, 0.0f);
+
         model_.mesh->vertices.push_back(
             Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
-                   glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v2)));
+                   normal, tangent, glm::vec2(u1, v2)));
 
         model_.mesh->vertices.push_back(Vertex(
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
-            glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v1)));
+            normal, tangent, glm::vec2(u2, v1)));
 
         model_.mesh->vertices.push_back(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
-                                               glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u1, v1)));
+                                               normal, tangent, glm::vec2(u1, v1)));
 
         model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
 
         model_.mesh->vertices.push_back(Vertex(glm::vec3(index + rect_w + offset_x,
                                                          rect_h + offset_y + line_index, z),
-                                               glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec2(u2, v2)));
+                                               normal, tangent, glm::vec2(u2, v2)));
 
         model_.mesh->triangles.push_back({triangle_index - 3, triangle_index++, triangle_index - 3});
 
