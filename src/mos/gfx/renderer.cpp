@@ -130,7 +130,6 @@ Renderer::~Renderer() {
 void Renderer::load(const Model &model) {
   load(model.mesh);
   load(model.material.albedo_map);
-  load(model.material.emission_map);
   load(model.material.normal_map);
   load(model.material.metallic_map);
   load(model.material.roughness_map);
@@ -143,7 +142,6 @@ void Renderer::load(const Model &model) {
 void Renderer::unload(const Model &model) {
   unload(model.mesh);
   unload(model.material.albedo_map);
-  unload(model.material.emission_map);
   unload(model.material.normal_map);
   unload(model.material.metallic_map);
   unload(model.material.roughness_map);
@@ -218,7 +216,6 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.environment_maps[1].map, 6);
 
   glUniform1i(standard_program_.material_albedo_sampler, 7);
-  glUniform1i(standard_program_.material_emission_sampler, 8);
   glUniform1i(standard_program_.material_normal_map, 9);
   glUniform1i(standard_program_.material_metallic_map, 10);
   glUniform1i(standard_program_.material_roughness_map, 11);
@@ -431,11 +428,6 @@ void Renderer::render_model(const Model &model,
                                    ? textures_.at(model.material.albedo_map->id())->texture
                                    : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE4);
-      glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                   ? textures_.at(model.material.emission_map->id())->texture
-                                   : black_texture_.texture);
-
       static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
@@ -459,17 +451,11 @@ void Renderer::render_model(const Model &model,
       glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
       glm::vec4 albedo =
-          glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_albedo, 1,
-                   glm::value_ptr(albedo));
-      glm::vec4 emission =
-          glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_emission, 1,
-                   glm::value_ptr(emission));
-      glUniform1fv(uniforms.material_roughness, 1,
-                   &model.material.roughness);
-      glUniform1fv(uniforms.material_metallic, 1,
-                   &model.material.metallic);
+          glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
+      glUniform4fv(uniforms.material_albedo, 1,glm::value_ptr(albedo));
+      glUniform4fv(uniforms.material_emission, 1, &model.material.emission);
+      glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
+      glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
@@ -505,11 +491,6 @@ void Renderer::render_model(const Model &model,
       glActiveTexture(GL_TEXTURE7);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                    ? textures_.at(model.material.albedo_map->id())->texture
-                                   : black_texture_.texture);
-
-      glActiveTexture(GL_TEXTURE8);
-      glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                   ? textures_.at(model.material.emission_map->id())->texture
                                    : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE9);
@@ -555,17 +536,11 @@ void Renderer::render_model(const Model &model,
       glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
       glm::vec4 albedo =
-          glm::vec4(model.material.albedo, model.material.albedo_map || model.material.emission_map ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_albedo, 1,
-                   glm::value_ptr(albedo));
-      glm::vec4 emission =
-          glm::vec4(model.material.emission, model.material.emission_map || model.material.albedo_map ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_emission, 1,
-                   glm::value_ptr(emission));
-      glUniform1fv(uniforms.material_roughness, 1,
-                   &model.material.roughness);
-      glUniform1fv(uniforms.material_metallic, 1,
-                   &model.material.metallic);
+          glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
+      glUniform4fv(uniforms.material_albedo, 1, glm::value_ptr(albedo));
+      glUniform4fv(uniforms.material_emission, 1, &model.material.emission);
+      glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
+      glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
@@ -670,7 +645,6 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUniform1i(environment_program_.shadow_samplers[1], 2);
 
       glUniform1i(environment_program_.material_albedo_sampler, 3);
-      glUniform1i(environment_program_.material_emission_sampler, 4);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -1082,7 +1056,6 @@ Renderer::Environment_program::Environment_program() {
   }
 
   material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_sampler = glGetUniformLocation(program, "material.emission_map");
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
@@ -1166,7 +1139,6 @@ Renderer::Standard_program::Standard_program() {
   }
 
   material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_sampler = glGetUniformLocation(program, "material.emission_map");
   material_normal_map = glGetUniformLocation(program, "material.normal_map");
   material_metallic_map = glGetUniformLocation(program, "material.metallic_map");
   material_roughness_map = glGetUniformLocation(program, "material.roughness_map");

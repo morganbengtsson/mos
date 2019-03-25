@@ -11,7 +11,6 @@ namespace gfx {
 using namespace nlohmann;
 
 Material::Material(const Shared_texture_2D &albedo_map,
-                   const Shared_texture_2D &emission_map,
                    const Shared_texture_2D &normal_map,
                    const Shared_texture_2D &metallic_map,
                    const Shared_texture_2D &roughness_map,
@@ -21,10 +20,9 @@ Material::Material(const Shared_texture_2D &albedo_map,
                    const float transmission,
                    const float roughness,
                    const float metallic,
-                   const glm::vec3 &emission,
+                   const float emission,
                    const float ambient_occlusion)
     : albedo_map(albedo_map),
-      emission_map(emission_map),
       normal_map(normal_map),
       metallic_map(metallic_map),
       roughness_map(roughness_map),
@@ -44,7 +42,7 @@ Material::Material(const glm::vec3 &albedo,
                    const float transmission,
                    const float roughness,
                    const float metallic,
-                   const glm::vec3 &emission,
+                   const float emission,
                    const float ambient_occlusion)
     : albedo(albedo), opacity(opacity), transmission(transmission), roughness(roughness), metallic(metallic), emission(emission),
       ambient_occlusion(ambient_occlusion) {}
@@ -65,7 +63,6 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       };
 
       albedo_map = read_texture("albedo_map");
-      emission_map = read_texture("emission_map");
       normal_map = read_texture("normal_map", false);
       metallic_map = read_texture("metallic_map", false);
       roughness_map = read_texture("roughness_map", false);
@@ -77,10 +74,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       std::cout << path << " " << "trans: " << transmission << std::endl;
       roughness = value["roughness"];
       metallic = value["metallic"];
-      //TODO: Change
-      //emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
-      float e = value["emission"];
-      emission = glm::vec3(e);
+      emission = value["emission"];
       ambient_occlusion = value["ambient_occlusion"];
     } else {
       throw std::runtime_error(path.substr(path.find_last_of(".")) +

@@ -13,7 +13,6 @@ class Assets;
 class Material final {
 public:
   explicit Material(const Shared_texture_2D &albedo_map = Shared_texture_2D(),
-                    const Shared_texture_2D &emission_map = Shared_texture_2D(),
                     const Shared_texture_2D &normal_map = Shared_texture_2D(),
                     const Shared_texture_2D &metallic_map = Shared_texture_2D(),
                     const Shared_texture_2D &roughness_map = Shared_texture_2D(),
@@ -23,7 +22,7 @@ public:
                     float transmission = 0.0f,
                     float roughness = 0.0f,
                     float metallic = 0.0f,
-                    const glm::vec3 &emission = glm::vec3(0.0f),
+                    float emission = 0.0f,
                     float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &albedo,
@@ -31,7 +30,7 @@ public:
                     float transmission = 0.0f,
                     float roughness = 0.0f,
                     float metallic = 0.0f,
-                    const glm::vec3 &emission = glm::vec3(0.0f),
+                    float emission = 0.0f,
                     float ambient_occlusion = 1.0f);
 
   explicit Material(Assets &assets, std::string &path);
@@ -39,7 +38,7 @@ public:
   virtual ~Material();
 
   glm::vec3 albedo;
-  glm::vec3 emission;
+  float emission;
   float transmission;
   float opacity;
   float roughness;
@@ -47,7 +46,6 @@ public:
   float ambient_occlusion;
 
   Shared_texture_2D albedo_map;
-  Shared_texture_2D emission_map;
   Shared_texture_2D normal_map;
   Shared_texture_2D metallic_map;
   Shared_texture_2D roughness_map;

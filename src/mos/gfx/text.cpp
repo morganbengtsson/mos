@@ -20,7 +20,8 @@ Text::Text(const std::string &txt,
   model_.material.metallic = 0.0f;
   model_.material.albedo = glm::vec3(1.0f);
   model_.material.opacity = 0.5f;
-  model_.material.emission = glm::vec3(1.0f);
+  model_.material.emission = 1.0f;
+  model_.material.albedo_map = font_.texture;
   emissive(emiss);
   text(txt);
 }
@@ -150,13 +151,7 @@ Text &Text::operator+=(const std::string &input) {
   return *this;
 }
 void Text::emissive(const bool emissive) {
-  if (emissive) {
-    model_.material.emission_map = font_.texture;
-    model_.material.albedo_map = nullptr;
-  } else {
-    model_.material.albedo_map = font_.texture;
-    model_.material.emission_map = nullptr;
-  }
+ model_.material.emission = float(emissive);
 }
 void Text::opacity(const float &opacity) {
   model_.material.opacity = opacity;
