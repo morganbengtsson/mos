@@ -9,7 +9,6 @@ struct Material {
     float metallic;
     float opacity;
     float transmission;
-    float strength;
     float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D emission_map;
@@ -137,7 +136,7 @@ void main() {
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = (Lo + ambient + emission) * material.strength;
+    color.rgb = Lo + ambient + emission;
     color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

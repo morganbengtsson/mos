@@ -9,7 +9,6 @@ struct Material {
     float metallic;
     float opacity;
     float transmission;
-    float strength;
     float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D emission_map;
@@ -220,7 +219,7 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    out_color.rgb = (direct + ambient + emission) * material.strength;
+    out_color.rgb = direct + ambient + emission;
     out_color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

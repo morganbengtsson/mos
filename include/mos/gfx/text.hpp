@@ -59,14 +59,8 @@ public:
   /** Set if the text is emissive. */
   void emissive(bool emissive);
 
-  /** Set the color multiplier for the text*/
-  void factor(const glm::vec3& factor);
-
   /** Set opacity of text. */
   void opacity(const float &opacity);
-
-  /** Set emission strength */
-  void emission_strength(float strength);
 
   /** Get the font. */
   Font font() const;

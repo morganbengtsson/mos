@@ -158,15 +158,10 @@ void Text::emissive(const bool emissive) {
     model_.material.emission_map = nullptr;
   }
 }
-void Text::factor(const glm::vec3 &factor) {
-  model_.material.strength = factor.x;
-}
 void Text::opacity(const float &opacity) {
   model_.material.opacity = opacity;
 }
-void Text::emission_strength(const float strength) {
-  model_.material.strength = strength;
-}
+
 Font Text::font() const {
   return font_;
 }
