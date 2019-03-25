@@ -4,14 +4,13 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec4 albedo;
-    vec4 emission;
+    float emission;
     float roughness;
     float metallic;
     float opacity;
     float transmission;
     float ambient_occlusion;
     sampler2D albedo_map;
-    sampler2D emission_map;
     sampler2D normal_map;
     sampler2D metallic_map;
     sampler2D roughness_map;
@@ -117,10 +116,7 @@ void main() {
     float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
-
-    if (material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a) < 0.1 && emission == vec3(0,0,0)) {
+    if (material.opacity * (albedo_from_map.a + material.albedo.a) < 0.1 && material.emission == 0.0) {
         discard;
     }
 
@@ -219,8 +215,8 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    out_color.rgb = direct + ambient + emission;
-    out_color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
+    out_color.rgb = direct + ambient + material.emission * albedo;
+    out_color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);

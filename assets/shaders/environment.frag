@@ -4,14 +4,13 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec4 albedo;
-    vec4 emission;
+    float emission;
     float roughness;
     float metallic;
     float opacity;
     float transmission;
     float ambient_occlusion;
     sampler2D albedo_map;
-    sampler2D emission_map;
 };
 
 struct Light {
@@ -83,9 +82,6 @@ void main() {
 
     float ambient_occlusion = material.ambient_occlusion;
 
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
-
     vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
 
@@ -136,8 +132,8 @@ void main() {
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = Lo + ambient + emission;
-    color.a = clamp(material.opacity * (albedo_from_map.a + emission_from_map.a + material.emission.a + material.albedo.a), 0.0, 1.0);
+    color.rgb = Lo + ambient + material.emission * albedo;
+    color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
