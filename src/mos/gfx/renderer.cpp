@@ -1062,7 +1062,6 @@ Renderer::Environment_program::Environment_program() {
   material_opacity = glGetUniformLocation(program, "material.opacity");
   material_transmission = glGetUniformLocation(program, "material.transmission");
   material_emission = glGetUniformLocation(program, "material.emission");
-  material_strength = glGetUniformLocation(program, "material.strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
 
   camera_position = glGetUniformLocation(program, "camera.position");
@@ -1149,7 +1148,6 @@ Renderer::Standard_program::Standard_program() {
   material_opacity = glGetUniformLocation(program, "material.opacity");
   material_transmission = glGetUniformLocation(program, "material.transmission");
   material_emission = glGetUniformLocation(program, "material.emission");
-  material_strength = glGetUniformLocation(program, "material.strength");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
 
   camera_position = glGetUniformLocation(program, "camera.position");
