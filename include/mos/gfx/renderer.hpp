@@ -155,6 +155,8 @@ private:
     Depth_program();
     GLint model_view_projection;
     GLint albedo_sampler;
+    GLint albedo;
+    GLint emission;
   };
 
   /** Uniforms for the propagate shader. */

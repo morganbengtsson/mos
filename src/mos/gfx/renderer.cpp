@@ -923,6 +923,10 @@ void Renderer::render_model_depth(const Model &model,
 
     glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                        &mvp[0][0]);
+    glm::vec4 albedo =
+        glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
+    glUniform4fv(program.albedo, 1, glm::value_ptr(albedo));
+    glUniform1fv(program.emission, 1, &model.material.emission);
     const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
     glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
   }
@@ -1027,6 +1031,8 @@ Renderer::Depth_program::Depth_program() {
 
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
   albedo_sampler = glGetUniformLocation(program, "albedo_sampler");
+  albedo = glGetUniformLocation(program, "albedo");
+  emission = glGetUniformLocation(program, "emission");
 }
 
 Renderer::Environment_program::Environment_program() {
