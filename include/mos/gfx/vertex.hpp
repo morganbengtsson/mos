@@ -21,6 +21,7 @@ public:
 
   glm::vec3 tangent;
 
+  /** Texture coordinate. */
   glm::vec2 uv;
 
   float weight;
