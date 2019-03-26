@@ -17,15 +17,20 @@ using Shared_texture_2D = std::shared_ptr<Texture_2D>;
 class Texture_2D final : public Texture {
 public:
   template<class T>
-  Texture_2D(T begin, T end, unsigned int width, unsigned int height,
-            const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::Repeat,
-            const bool mipmaps = true)
+  Texture_2D(T begin,
+             T end,
+             int width,
+             int height,
+             const Format &format = Format::SRGBA,
+             const Wrap &wrap = Wrap::Repeat,
+             const bool mipmaps = true)
       : Texture({Data(begin, end)}, width, height, format, wrap, mipmaps) {}
 
-   Texture_2D(unsigned int width, unsigned int height,
-            const Format &format = Format::SRGBA,
-             const Wrap &wrap = Wrap::Repeat,
-            bool mipmaps = true);
+   Texture_2D(int width,
+              int height,
+              const Format &format = Format::SRGBA,
+              const Wrap &wrap = Wrap::Repeat,
+              bool mipmaps = true);
 
   virtual ~Texture_2D();
 
