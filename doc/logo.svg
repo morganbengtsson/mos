@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="50.465855mm"
+   height="10.893392mm"
+   viewBox="0 0 50.465855 10.893392"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="logo.svg"
    inkscape:export-filename="/home/morgan/Projects/Room/externals/mos/doc/logo.png"
    inkscape:export-xdpi="96"
@@ -28,17 +28,21 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.06"
-     inkscape:cx="357.9171"
-     inkscape:cy="580.43504"
+     inkscape:zoom="0.74953319"
+     inkscape:cx="74.513668"
+     inkscape:cy="253.43594"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="2048"
-     inkscape:window-height="1101"
+     inkscape:window-height="1102"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -54,34 +58,36 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
-    <path
-       style="opacity:1;fill:#202020;fill-opacity:1;stroke:none;stroke-width:1.13910031;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 92.907881,128.94661 -9.004856,9.00485 h 42.194065 l 9.00486,-9.00485 z"
-       id="rect819-9"
-       inkscape:connector-curvature="0" />
-    <rect
-       style="opacity:1;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1.13910043;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect819"
-       width="42.19418"
-       height="21.09709"
-       x="83.902908"
-       y="137.95146" />
+     id="layer1"
+     transform="translate(-78.603556,-134.05135)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16.93333244px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="88.376724"
-       y="152.97311"
-       id="text817"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono weight=250';letter-spacing:2.48443818px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="78.086792"
+       y="144.08347"
+       id="text821-6-7-3"
+       inkscape:export-filename="/home/morgan/Projects/Pakke/externals/mos/doc/logo.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         id="tspan815"
-         x="88.376724"
-         y="152.97311"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16.93333244px;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';fill:#ffffff;stroke-width:0.26458332">mos</tspan></text>
-    <path
-       style="opacity:1;fill:#101010;fill-opacity:1;stroke:none;stroke-width:1.13910031;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 135.10195,128.94661 -9.00486,9.00485 v 21.0974 l 9.00486,-9.00487 z"
-       id="rect819-8"
-       inkscape:connector-curvature="0" />
+         x="78.086792"
+         y="144.08347"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.11111069px;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
+         id="tspan1063-5">mos/\</tspan><tspan
+         sodipodi:role="line"
+         x="78.086792"
+         y="155.39168"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
+         id="tspan1059-3" /><tspan
+         sodipodi:role="line"
+         x="78.086792"
+         y="165.97502"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
+         id="tspan1057-5" /><tspan
+         sodipodi:role="line"
+         x="78.086792"
+         y="176.55835"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
+         id="tspan942-6" /></text>
   </g>
 </svg>
