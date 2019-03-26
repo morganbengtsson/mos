@@ -48,9 +48,6 @@ public:
   /** Set scale. */
   void scale(float scale);
 
-  /** Set material. */
-  void material(const Material &material);
-
   /** Set transform */
   void transform(const glm::mat4 &transform);
 

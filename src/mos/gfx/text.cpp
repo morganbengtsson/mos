@@ -16,10 +16,9 @@ Text::Text(const std::string &txt,
            const float roughness,
            const float metallic,
            const float emiss)
-    : model_("Text", std::make_shared<Mesh>(Mesh()),
-             transform),
-      font_(font),
-      spacing(spacing) {
+    : spacing(spacing),
+      model_("Text", std::make_shared<Mesh>(Mesh()), transform),
+      font_(font) {
   model_.material.roughness = roughness;
   model_.material.metallic = metallic;
   model_.material.albedo = glm::vec3(1.0f);
@@ -44,12 +43,12 @@ void Text::text(const std::string &text) {
       float index = 0.0f;
       for (auto &c : line) {
         auto character = font_.characters.at(c);
-        float u1 = character.x / ((float) font_.texture->width());
+        float u1 = character.x / static_cast<float>(font_.texture->width());
         float u2 = (character.x + character.width) /
-            (float) font_.texture->width();
-        float v1 = character.y / ((float) font_.texture->height());
+            static_cast<float>(font_.texture->width());
+        float v1 = character.y / static_cast<float>(font_.texture->height());
         float v2 = ((character.y + character.height) /
-            ((float) font_.texture->height()));
+            static_cast<float>(font_.texture->height()));
 
         float offset_y = -(character.y_offset - font_.base()) / font_.height();
         float offset_x = character.x_offset / font_.height();
@@ -126,10 +125,6 @@ glm::vec2 Text::position() const { return glm::vec2(model_.position()); }
 void Text::scale(const float scale) {
   model_.transform =
       glm::scale(model_.transform, glm::vec3(scale, scale, scale));
-}
-
-void Text::material(const Material &material) {
-  model_.material = material;
 }
 
 void Text::transform(const glm::mat4 &transform) {
