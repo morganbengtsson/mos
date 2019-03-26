@@ -11,9 +11,10 @@ class Target;
 using Optional_target = std::optional<Target>;
 
 /** Off screen rendering target. */
-class Target {
+class Target final{
 public:
   Target();
+  ~Target() = default;
 
   /** Unique id */
   unsigned int id() const;

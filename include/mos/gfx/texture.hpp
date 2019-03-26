@@ -57,6 +57,8 @@ public:
           const Wrap &wrap,
           bool mipmaps);
 
+  ~Texture() = default;
+
   int id() const;
   int width() const;
   int height() const;

@@ -63,9 +63,6 @@ public:
   /** Set if the text is emissive. */
   void emission(float emission);
 
-  /** Set opacity of text material. */
-  void opacity(const float &opacity);
-
   /** Get the font. */
   Font font() const;
 

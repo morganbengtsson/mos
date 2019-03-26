@@ -137,7 +137,7 @@ glm::mat4 Text::transform() const {
 
 Model Text::model() const { return model_; }
 
-void Text::opacity(float op) {
+void Text::opacity(const float op) {
   model_.material.opacity = op;
 }
 
@@ -153,10 +153,6 @@ Text &Text::operator+=(const std::string &input) {
 
 void Text::emission(const float emiss) {
  model_.material.emission = emiss;
-}
-
-void Text::opacity(const float &opacity) {
-  model_.material.opacity = opacity;
 }
 
 Font Text::font() const {

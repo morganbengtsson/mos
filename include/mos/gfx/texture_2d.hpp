@@ -32,7 +32,7 @@ public:
               const Wrap &wrap = Wrap::Repeat,
               bool mipmaps = true);
 
-  virtual ~Texture_2D();
+  ~Texture_2D() = default;
 
   /** Load from file */
   static Shared_texture_2D load(const std::string &path,
