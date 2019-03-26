@@ -137,6 +137,10 @@ glm::mat4 Text::transform() const {
 
 Model Text::model() const { return model_; }
 
+void Text::opacity(float op) {
+  model_.material.opacity = op;
+}
+
 Text &Text::operator=(const std::string &input) {
   text(input);
   return *this;

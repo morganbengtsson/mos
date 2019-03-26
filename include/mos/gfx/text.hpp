@@ -57,6 +57,9 @@ public:
   /** Get model. */
   Model model() const;
 
+  /** Set opacity. */
+  void opacity(float opacity);
+
   /** Set if the text is emissive. */
   void emission(float emission);
 
