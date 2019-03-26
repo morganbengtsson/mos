@@ -580,6 +580,9 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       auto resolution = shadow_maps_render_buffer_.resolution;
       glUseProgram(depth_program_.program);
       glViewport(0, 0, resolution, resolution);
+
+      glUniform1i(depth_program_.albedo_sampler, 0);
+
       for (auto &model : models) {
         render_model_depth(model, glm::mat4(1.0f), lights[i].camera, glm::vec2(resolution), depth_program_);
       }
@@ -912,6 +915,12 @@ void Renderer::render_model_depth(const Model &model,
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                 ? textures_.at(model.material.albedo_map->id())->texture
+                                 : black_texture_.texture);
+
     glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                        &mvp[0][0]);
     const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
@@ -1010,12 +1019,14 @@ Renderer::Depth_program::Depth_program() {
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 3, "uv");
   link(name);
   check(name);
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
+  albedo_sampler = glGetUniformLocation(program, "albedo_sampler");
 }
 
 Renderer::Environment_program::Environment_program() {

@@ -154,6 +154,7 @@ private:
   struct Depth_program : public Program {
     Depth_program();
     GLint model_view_projection;
+    GLint albedo_sampler;
   };
 
   /** Uniforms for the propagate shader. */
