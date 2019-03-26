@@ -215,7 +215,7 @@ void main() {
         ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    out_color.rgb = direct + ambient + material.emission * albedo;
+    out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
     out_color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

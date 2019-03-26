@@ -453,7 +453,7 @@ void Renderer::render_model(const Model &model,
       glm::vec4 albedo =
           glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
       glUniform4fv(uniforms.material_albedo, 1,glm::value_ptr(albedo));
-      glUniform4fv(uniforms.material_emission, 1, &model.material.emission);
+      glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
@@ -538,7 +538,7 @@ void Renderer::render_model(const Model &model,
       glm::vec4 albedo =
           glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
       glUniform4fv(uniforms.material_albedo, 1, glm::value_ptr(albedo));
-      glUniform4fv(uniforms.material_emission, 1, &model.material.emission);
+      glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
       glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
