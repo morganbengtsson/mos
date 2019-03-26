@@ -11,15 +11,18 @@ namespace mos {
 namespace gfx {
 
 /** Text for rendering. */
-class Text {
+class Text final {
 public:
   Text(const std::string &text,
        const Font &font,
        const glm::mat4 &transform = glm::mat4(1.0f),
-       bool emissive = false,
-       float spacing = 0.0f);
+       float spacing = 0.0f,
+       float opacity = 1.0f,
+       float roughness = 1.0f,
+       float metallic = 0.0f,
+       float emission = 0.0f);
 
-  virtual ~Text();
+  ~Text() = default;
 
   /** Set text. */
   void text(const std::string &text);
@@ -42,6 +45,7 @@ public:
   /** Get position. */
   glm::vec2 position() const;
 
+  /** Set scale. */
   void scale(float scale);
 
   /** Set material. */
@@ -57,9 +61,9 @@ public:
   Model model() const;
 
   /** Set if the text is emissive. */
-  void emissive(bool emissive);
+  void emission(float emission);
 
-  /** Set opacity of text. */
+  /** Set opacity of text material. */
   void opacity(const float &opacity);
 
   /** Get the font. */

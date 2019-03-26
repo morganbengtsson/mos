@@ -11,22 +11,23 @@ namespace gfx {
 Text::Text(const std::string &txt,
            const Font &font,
            const glm::mat4 &transform,
-           const bool emiss,
-           const float spacing)
+           const float spacing,
+           const float opacity,
+           const float roughness,
+           const float metallic,
+           const float emiss)
     : model_("Text", std::make_shared<Mesh>(Mesh()),
              transform),
-      font_(font), spacing(spacing) {
-  model_.material.roughness = 1.0f;
-  model_.material.metallic = 0.0f;
+      font_(font),
+      spacing(spacing) {
+  model_.material.roughness = roughness;
+  model_.material.metallic = metallic;
   model_.material.albedo = glm::vec3(1.0f);
-  model_.material.opacity = 0.5f;
-  model_.material.emission = 1.0f;
+  model_.material.opacity = opacity;
+  model_.material.emission = emiss;
   model_.material.albedo_map = font_.texture;
-  emissive(emiss);
   text(txt);
 }
-
-Text::~Text() {}
 
 std::string Text::text() const { return text_; }
 
@@ -150,9 +151,11 @@ Text &Text::operator+=(const std::string &input) {
   text(text() + input);
   return *this;
 }
-void Text::emissive(const bool emissive) {
- model_.material.emission = float(emissive);
+
+void Text::emission(const float emiss) {
+ model_.material.emission = emiss;
 }
+
 void Text::opacity(const float &opacity) {
   model_.material.opacity = opacity;
 }
