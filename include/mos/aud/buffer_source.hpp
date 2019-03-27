@@ -11,8 +11,8 @@ namespace aud {
 /** Audio buffer and audio source combined. */
 class Buffer_source final {
 public:
-  explicit Buffer_source(const Shared_buffer &buffer = nullptr,
-               const Source &source = Source());
+  explicit Buffer_source(Shared_buffer buffer = nullptr,
+                         Source source = Source());
   ~Buffer_source() = default;
 
   /** Play the source. */
