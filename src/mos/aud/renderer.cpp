@@ -329,7 +329,7 @@ void Renderer::stream_source(const Stream_source &stream_source) {
   if(stream_source.stream) {
     auto format = stream_source.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 
-    std::array<ALuint,4> buffers; // TODO std array
+    std::array<ALuint,4> buffers{0,0,0,0}; // TODO std array
     if (stream_source.source.playing && (state != AL_PLAYING)) {
       alGenBuffers(4, buffers.data());
       int size = stream_source.stream->buffer_size;
@@ -340,7 +340,6 @@ void Renderer::stream_source(const Stream_source &stream_source) {
         alSourceQueueBuffers(al_source, 1, &buffer);
       }
       alSourcePlay(al_source);
-      //alSourcei(al_source, AL_STREAMING, AL_TRUE);
     }
 
     while (processed--) {
@@ -373,8 +372,8 @@ Listener Renderer::listener() const {
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);
 
-  float orientation[6];
-  alGetListenerf(AL_ORIENTATION, orientation);
+  std::array<float,6> orientation{};
+  alGetListenerf(AL_ORIENTATION, orientation.data());
   listener.direction.x = orientation[0];
   listener.direction.y = orientation[1];
   listener.direction.z = orientation[2];
@@ -395,10 +394,10 @@ void Renderer::listener(const Listener &listener) {
   alListener3f(AL_VELOCITY, listener.velocity.x, listener.velocity.y,
                listener.velocity.z);
 
-  float orientation[6] = {listener.direction.x, listener.direction.y,
+  std::array<float, 6> orientation {listener.direction.x, listener.direction.y,
                           listener.direction.z, listener.up.x,
                           listener.up.y, listener.up.z};
-  alListenerfv(AL_ORIENTATION, orientation);
+  alListenerfv(AL_ORIENTATION, orientation.data());
   alListenerf(AL_GAIN, listener.gain);
 }
 
