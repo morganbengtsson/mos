@@ -3,9 +3,9 @@
 namespace mos {
 namespace aud {
 
-Stream_source::Stream_source(const Shared_stream &stream,
-                                     const Source &source)
-    : stream(stream), source(source) {}
+Stream_source::Stream_source(Shared_stream stream,
+                             Source source)
+    : stream(std::move(stream)), source(source) {}
 
 }
 }

@@ -3,9 +3,9 @@
 namespace mos {
 namespace aud {
 
-Buffer_source::Buffer_source(const Shared_buffer &buffer,
-                                     const Source &source)
-    : buffer(buffer), source(source), time_(.0f) {}
+Buffer_source::Buffer_source(Shared_buffer buffer,
+                             Source source)
+    : buffer(std::move(buffer)), source(source), time_(.0f) {}
 
 void Buffer_source::input(const float dt) {
   if (source.playing) {

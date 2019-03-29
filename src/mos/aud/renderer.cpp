@@ -96,9 +96,9 @@ namespace aud {
 Renderer::Renderer()
     : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM), reverb_effect(0),
       reverb_slot(0), lowpass_filter1(0), lowpass_filter2(0) {
-  ALCint contextAttr[] = {ALC_FREQUENCY, 44100, ALC_HRTF_SOFT, ALC_TRUE, 0};
+  std::array<ALCint, 5> context_attributes{ALC_FREQUENCY, 44100, ALC_HRTF_SOFT, ALC_TRUE, 0};
   device_ = alcOpenDevice(nullptr);
-  context_ = alcCreateContext(device_, contextAttr);
+  context_ = alcCreateContext(device_, context_attributes.data());
   alcMakeContextCurrent(context_);
 
 #ifdef MOS_EFX
