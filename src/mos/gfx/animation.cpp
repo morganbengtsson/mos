@@ -34,7 +34,7 @@ Animation::Animation(
       keyframes_(keyframes.begin(), keyframes.end())
 {}
 
-Animation::Animation(const std::string &path) {
+Animation::Animation(const std::string &path) : time_(0.0f) {
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(fpath.str()));
   frame_rate_ = doc["frame_rate"];
@@ -45,7 +45,7 @@ Animation::Animation(const std::string &path) {
   }
 }
 
-Animation::Animation(Assets &assets, const std::string &path) {
+Animation::Animation(Assets &assets, const std::string &path) : time_(0.0f) {
   auto doc = json::parse(mos::text(assets.directory() + path));
   frame_rate_ = doc["frame_rate"];
   for (auto &keyframe : doc["keyframes"]) {
