@@ -7,6 +7,7 @@
 
 MOS is a lightweight cross platform game engine/library, written in modern C++. Some of the included functionality is:
 
+- Integration with [Blender-2.80](https://github.com/morganbengtsson/mos-blender-export)
 - 3D mesh rendering
 - Physically based material model
 - Global illumination
@@ -21,8 +22,8 @@ MOS is a lightweight cross platform game engine/library, written in modern C++. 
 # Companion projects
 
 - [MOS Skeleton](https://github.com/morganbengtsson/mos-skeleton): An example project to quickly get up and running.
-- [MOS Blender export](https://github.com/morganbengtsson/mos-blender-export): Export scripts/addon for Blender, to export
-models, levels and other entities, usable with MOS.
+- [MOS Blender export](https://github.com/morganbengtsson/mos-blender-export): Export scripts/addon for Blender 2.80, to export
+models, levels and other entities.
 
 # Source code
 
