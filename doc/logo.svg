@@ -20,7 +20,22 @@
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
-     id="defs2" />
+     id="defs2">
+    <inkscape:path-effect
+       effect="skeletal"
+       id="path-effect992"
+       is_visible="true"
+       pattern="m 85.534267,191.68067 h 9.051294"
+       copytype="single_stretched"
+       prop_scale="0.26458333"
+       scale_y_rel="false"
+       spacing="0"
+       normal_offset="0"
+       tang_offset="0"
+       prop_units="false"
+       vertical_pattern="false"
+       fuse_tolerance="0" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -28,9 +43,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.74953319"
-     inkscape:cx="74.513668"
-     inkscape:cy="253.43594"
+     inkscape:zoom="1.06"
+     inkscape:cx="90.488594"
+     inkscape:cy="4.2455512"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -42,7 +57,8 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     inkscape:snap-global="false" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -63,31 +79,51 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono weight=250';letter-spacing:2.48443818px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="78.086792"
-       y="144.08347"
-       id="text821-6-7-3"
+       x="93.360329"
+       y="144.14696"
+       id="text821-6-7-3-8"
        inkscape:export-filename="/home/morgan/Projects/Pakke/externals/mos/doc/logo.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><tspan
          sodipodi:role="line"
-         x="78.086792"
-         y="144.08347"
+         x="93.360329"
+         y="144.14696"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.11111069px;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
-         id="tspan1063-5">mos/\</tspan><tspan
+         id="tspan1063-5-7">mos</tspan><tspan
          sodipodi:role="line"
-         x="78.086792"
-         y="155.39168"
+         x="93.360329"
+         y="155.45517"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
-         id="tspan1059-3" /><tspan
+         id="tspan1059-3-9" /><tspan
          sodipodi:role="line"
-         x="78.086792"
-         y="165.97502"
+         x="93.360329"
+         y="166.03851"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
-         id="tspan1057-5" /><tspan
+         id="tspan1057-5-2" /><tspan
          sodipodi:role="line"
-         x="78.086792"
-         y="176.55835"
+         x="93.360329"
+         y="176.62184"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:1;font-family:'Roboto Mono';-inkscape-font-specification:'Roboto Mono Bold';stroke-width:0.26458332"
-         id="tspan942-6" /></text>
+         id="tspan942-6-0" /></text>
+    <g
+       id="g996"
+       transform="matrix(1.5954195,0,0,1.5954195,-81.564484,-83.00171)"
+       style="stroke-width:0.62679434">
+      <rect
+         y="136.66338"
+         x="101.00182"
+         height="5.6693401"
+         width="5.6693401"
+         id="rect982"
+         style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.1277076;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" />
+      <path
+         transform="translate(17.665541,-33.134939)"
+         inkscape:original-d="m 83.280773,169.74282 5.780334,5.78033"
+         inkscape:path-effect="#path-effect992"
+         inkscape:connector-curvature="0"
+         id="path984"
+         d="m 83.280773,169.74282 5.780339,5.78033"
+         style="fill:#000000;stroke:#000000;stroke-width:1.1277076;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
   </g>
 </svg>
