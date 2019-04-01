@@ -10,30 +10,30 @@ namespace gfx {
 
 using namespace nlohmann;
 
-Material::Material(const Shared_texture_2D &albedo_map,
-                   const Shared_texture_2D &normal_map,
-                   const Shared_texture_2D &metallic_map,
-                   const Shared_texture_2D &roughness_map,
-                   const Shared_texture_2D &ambient_occlusion_map,
-                   const glm::vec3 &albedo,
+Material::Material(Shared_texture_2D albedo_map,
+                   Shared_texture_2D normal_map,
+                   Shared_texture_2D metallic_map,
+                   Shared_texture_2D roughness_map,
+                   Shared_texture_2D ambient_occlusion_map,
+                   glm::vec3 albedo,
                    const float opacity,
                    const float transmission,
                    const float roughness,
                    const float metallic,
                    const float emission,
                    const float ambient_occlusion)
-    : albedo_map(albedo_map),
-      normal_map(normal_map),
-      metallic_map(metallic_map),
-      roughness_map(roughness_map),
-      ambient_occlusion_map(ambient_occlusion_map),
-      albedo(albedo),
+    : albedo(std::move(albedo)),
       opacity(opacity),
-      transmission(transmission),
       emission(emission),
+      transmission(transmission),
       roughness(roughness),
       metallic(metallic),
-      ambient_occlusion(ambient_occlusion) {}
+      ambient_occlusion(ambient_occlusion),
+      albedo_map(std::move(albedo_map)),
+      normal_map(std::move(normal_map)),
+      metallic_map(std::move(metallic_map)),
+      roughness_map(std::move(roughness_map)),
+      ambient_occlusion_map(std::move(ambient_occlusion_map)) {}
 
 Material::~Material() {}
 
@@ -44,7 +44,12 @@ Material::Material(const glm::vec3 &albedo,
                    const float metallic,
                    const float emission,
                    const float ambient_occlusion)
-    : albedo(albedo), opacity(opacity), transmission(transmission), roughness(roughness), metallic(metallic), emission(emission),
+    : albedo(albedo),
+      opacity(opacity),
+      emission(emission),
+      transmission(transmission),
+      roughness(roughness),
+      metallic(metallic),
       ambient_occlusion(ambient_occlusion) {}
 
 Material::Material(Assets &assets, std::string &path) : Material() {

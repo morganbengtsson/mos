@@ -56,8 +56,14 @@ void Light::near_far(const float near_plane, const float far_plane) {
   camera.projection = glm::perspective(angle_, 1.0f, near_, far_);
 
 }
-Light::Light(const std::string &directory, const std::string &path, const float near_plane, const float far_plane,
-    const glm::mat4 &parent_transform) : near_(near_plane), far_(far_plane) {
+Light::Light(const std::string &directory,
+             const std::string &path,
+             const float near_plane,
+             const float far_plane,
+    const glm::mat4 &parent_transform) :
+  color(glm::vec3{0.0f}),
+  near_(near_plane),
+  far_(far_plane) {
   using json = nlohmann::json;
   if (!path.empty()) {
     filesystem::path fpath = path;
@@ -82,7 +88,7 @@ Light::Light(const std::string &directory, const std::string &path, const float 
              glm::vec3(0.0f, 0.0001f, 1.0f));
 
     } else {
-      throw std::runtime_error(path.substr(path.find_last_of(".")) +
+      throw std::runtime_error(path.substr(path.find_last_of('.')) +
           " file format is not supported.");
     }
   }

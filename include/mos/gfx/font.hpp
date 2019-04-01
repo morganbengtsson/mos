@@ -13,8 +13,8 @@ public:
   using Char_map = std::map<char, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
-  Font(const Char_map &characters,
-       const Shared_texture_2D &texture,
+  Font(Char_map characters,
+       Shared_texture_2D texture,
        float height,
        float base);
   explicit Font(const std::string &path);

@@ -6,13 +6,14 @@
 namespace mos {
 namespace gfx {
 using namespace nlohmann;
-Font::Font(const Font::Char_map &characters,
-           const Shared_texture_2D &texture,
+Font::Font(Font::Char_map characters,
+           Shared_texture_2D texture,
            const float height,
            const float base)
-    : texture(texture),
-      characters(characters),
-      height_(height), base_(base) {
+    : texture(std::move(texture)),
+      characters(std::move(characters)),
+      height_(height),
+      base_(base) {
   texture->wrap = Texture_2D::Wrap::Clamp;
 }
 
@@ -20,7 +21,7 @@ Font::Font(const std::string &path) {
   filesystem::path fpath = path;
   auto doc = json::parse(text(fpath.str()));
   for (auto &c : doc["symbols"]) {
-    Character character;
+    Character character{};
     character.x_offset = c["xoffset"];
     character.y_offset = c["yoffset"];
     character.x_advance = c["xadvance"];

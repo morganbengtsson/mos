@@ -16,7 +16,8 @@ class Particle_cloud final : public Shape {
 public:
   Particle_cloud();
 
-  Particle_cloud(const Shared_texture_2D& emission_map, const Particles& particles);
+  Particle_cloud(Shared_texture_2D emission_map,
+                 Particles particles);
 
   ~Particle_cloud() = default;
 

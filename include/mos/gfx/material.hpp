@@ -12,12 +12,12 @@ class Assets;
 /** Physically based material. */
 class Material final {
 public:
-  explicit Material(const Shared_texture_2D &albedo_map = Shared_texture_2D(),
-                    const Shared_texture_2D &normal_map = Shared_texture_2D(),
-                    const Shared_texture_2D &metallic_map = Shared_texture_2D(),
-                    const Shared_texture_2D &roughness_map = Shared_texture_2D(),
-                    const Shared_texture_2D &ambient_occlusion_map = Shared_texture_2D(),
-                    const glm::vec3 &albedo = glm::vec3(1.0f),
+  explicit Material(Shared_texture_2D albedo_map = Shared_texture_2D(),
+                    Shared_texture_2D normal_map = Shared_texture_2D(),
+                    Shared_texture_2D metallic_map = Shared_texture_2D(),
+                    Shared_texture_2D roughness_map = Shared_texture_2D(),
+                    Shared_texture_2D ambient_occlusion_map = Shared_texture_2D(),
+                    glm::vec3 albedo = glm::vec3(1.0f),
                     float opacity = 1.0f,
                     float transmission = 0.0f,
                     float roughness = 0.0f,
@@ -38,9 +38,9 @@ public:
   virtual ~Material();
 
   glm::vec3 albedo;
+  float opacity;
   float emission;
   float transmission;
-  float opacity;
   float roughness;
   float metallic;
   float ambient_occlusion;
