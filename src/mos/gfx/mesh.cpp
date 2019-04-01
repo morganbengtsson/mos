@@ -23,8 +23,8 @@ Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
     if (!is.good()) {
       throw std::runtime_error(path + " does not exist.");
     }
-    std::size_t num_vertices;
-    std::size_t num_indices;
+    int num_vertices;
+    int num_indices;
     is.read((char *) &num_vertices, sizeof(int));
     is.read((char *) &num_indices, sizeof(int));
 
