@@ -10,12 +10,12 @@ namespace mos {
 namespace gfx {
 
 Model::Model(std::string name,
-             Shared_mesh mesh,
-             glm::mat4 transform,
+             const Shared_mesh &mesh,
+             const glm::mat4 transform,
              Material material)
-    : mesh(std::move(mesh)),
+    : mesh(mesh),
       material(std::move(material)),
-      transform(std::move(transform)),
+      transform(transform),
       name_(std::move(name)) {}
 
 Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform) {
