@@ -3,6 +3,8 @@
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
 
+*Note that MOS is in development and slightly experimental*
+
 # Introduction
 
 MOS is a lightweight cross-platform game engine/library, written in modern C++.
