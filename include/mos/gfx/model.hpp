@@ -21,8 +21,10 @@ public:
 
   Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-  Model(const std::string &name, const Shared_mesh &mesh, const glm::mat4 &transform = glm::mat4(1.0f),
-        const Material &material = Material(glm::vec3(1.0f)));
+  Model(std::string name,
+        Shared_mesh mesh,
+        glm::mat4 transform = glm::mat4(1.0f),
+        Material material = Material(glm::vec3(1.0f)));
 
   ~Model() = default;
 

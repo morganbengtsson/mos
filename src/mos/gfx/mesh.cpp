@@ -31,11 +31,11 @@ Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
     auto input_vertices = std::vector<Vertex>(num_vertices);
     auto input_indices = std::vector<int>(num_indices);
 
-    if (input_vertices.size() > 0) {
+    if (!input_vertices.empty()) {
       is.read(reinterpret_cast<char *>(&input_vertices[0]), std::streamsize(input_vertices.size() * sizeof(Vertex)));
     }
 
-    if (input_indices.size() > 0) {
+    if (!input_indices.empty()) {
       is.read(reinterpret_cast<char *>(&input_indices[0]), std::streamsize(input_indices.size() * sizeof(int)));
     }
     vertices.assign(input_vertices.begin(), input_vertices.end());
@@ -49,20 +49,24 @@ Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
   }
 }
 
-Mesh::Mesh() {
+Mesh::Mesh():
+  centroid(0.0f),
+  radius(0.0f) {
   calculate_sphere();
 }
 
 Mesh::Mesh(const Mesh &mesh)
-    : vertices(mesh.vertices), triangles(mesh.triangles), centroid(mesh.centroid), radius(mesh.radius) {
-}
+    :
+      centroid(mesh.centroid),
+      radius(mesh.radius),
+      vertices(mesh.vertices),
+      triangles(mesh.triangles) {}
 
 Shared_mesh Mesh::load(const std::string &path) {
   if (path.empty() || (path.back() == '/')) {
     return std::make_shared<Mesh>(Mesh());
-  } else {
-    return std::make_shared<Mesh>(path);
   }
+  return std::make_shared<Mesh>(path);
 }
 
 void Mesh::clear() {
@@ -158,7 +162,7 @@ void Mesh::calculate_normals() {
         }
       }
     }
-    for (auto p : triangle_map) {
+    for (const auto & p : triangle_map) {
       auto &v = vertices[p.first];
       glm::vec3 normal = glm::vec3(0.0f);
       for (auto &neighbour : p.second) {
@@ -166,24 +170,6 @@ void Mesh::calculate_normals() {
       }
       v.normal = glm::normalize(normal);
     }
-
-    /*
-    for (std::vector<int>::const_iterator i = indices.begin(); i != indices.end(); std::advance(i, 3))
-    {
-      glm::vec3 v[3] = { vertices[*i].position, vertices[*(i+1)].position, vertices[*(i+2)].position };
-      glm::vec3 normal = glm::cross(v[1] - v[0], v[2] - v[0]);
-
-      for (int j = 0; j < 3; ++j)
-      {
-        glm::vec3 a = v[(j+1) % 3] - v[j];
-        glm::vec3 b = v[(j+2) % 3] - v[j];
-        float weight =  glm::acos(glm::dot(a, b) / (a.length() * b.length()));
-        vertices[*(i+j)].normal += weight * normal;
-      }
-    }
-    for (auto & vertex : vertices){
-      vertex.normal = glm::normalize(vertex.normal);
-    }*/
   }
 }
 
