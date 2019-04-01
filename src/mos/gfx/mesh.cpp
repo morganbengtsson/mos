@@ -18,25 +18,25 @@ Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
 }
 
 Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
-  if (path.substr(path.find_last_of(".") + 1) == "mesh") {
+  if (path.substr(path.find_last_of('.') + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
       throw std::runtime_error(path + " does not exist.");
     }
     int num_vertices;
     int num_indices;
-    is.read((char *) &num_vertices, sizeof(int));
-    is.read((char *) &num_indices, sizeof(int));
+    is.read(reinterpret_cast<char *>(&num_vertices), sizeof(int));
+    is.read(reinterpret_cast<char *>(&num_indices), sizeof(int));
 
     auto input_vertices = std::vector<Vertex>(num_vertices);
     auto input_indices = std::vector<int>(num_indices);
 
     if (input_vertices.size() > 0) {
-      is.read((char *) &input_vertices[0], input_vertices.size() * sizeof(Vertex));
+      is.read(reinterpret_cast<char *>(&input_vertices[0]), std::streamsize(input_vertices.size() * sizeof(Vertex)));
     }
 
     if (input_indices.size() > 0) {
-      is.read((char *) &input_indices[0], input_indices.size() * sizeof(int));
+      is.read(reinterpret_cast<char *>(&input_indices[0]), std::streamsize(input_indices.size() * sizeof(int)));
     }
     vertices.assign(input_vertices.begin(), input_vertices.end());
     for (size_t i = 0; i < input_indices.size(); i += 3) {

@@ -57,7 +57,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       auto value = json::parse(mos::text(assets.directory() + fpath.str()));
 
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
-        std::string file_name = "";
+        std::string file_name{};
         if (!value[name].is_null()) {
           file_name = value[name];
         }
