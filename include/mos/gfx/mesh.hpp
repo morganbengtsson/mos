@@ -39,8 +39,6 @@ public:
 
   Mesh();
 
-  Mesh(const Mesh &mesh);
-
   ~Mesh() = default;
 
   static Shared_mesh load(const std::string &path);

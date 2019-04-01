@@ -55,13 +55,6 @@ Mesh::Mesh():
   calculate_sphere();
 }
 
-Mesh::Mesh(const Mesh &mesh)
-    :
-      centroid(mesh.centroid),
-      radius(mesh.radius),
-      vertices(mesh.vertices),
-      triangles(mesh.triangles) {}
-
 Shared_mesh Mesh::load(const std::string &path) {
   if (path.empty() || (path.back() == '/')) {
     return std::make_shared<Mesh>(Mesh());
