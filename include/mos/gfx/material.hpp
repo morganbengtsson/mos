@@ -35,7 +35,7 @@ public:
 
   explicit Material(Assets &assets, std::string &path);
 
-  virtual ~Material();
+  ~Material() = default;
 
   glm::vec3 albedo;
   float opacity;

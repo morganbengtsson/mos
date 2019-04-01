@@ -15,14 +15,14 @@ Material::Material(Shared_texture_2D albedo_map,
                    Shared_texture_2D metallic_map,
                    Shared_texture_2D roughness_map,
                    Shared_texture_2D ambient_occlusion_map,
-                   glm::vec3 albedo,
+                   const glm::vec3 albedo,
                    const float opacity,
                    const float transmission,
                    const float roughness,
                    const float metallic,
                    const float emission,
                    const float ambient_occlusion)
-    : albedo(std::move(albedo)),
+    : albedo(albedo),
       opacity(opacity),
       emission(emission),
       transmission(transmission),
@@ -34,8 +34,6 @@ Material::Material(Shared_texture_2D albedo_map,
       metallic_map(std::move(metallic_map)),
       roughness_map(std::move(roughness_map)),
       ambient_occlusion_map(std::move(ambient_occlusion_map)) {}
-
-Material::~Material() {}
 
 Material::Material(const glm::vec3 &albedo,
                    const float opacity,
@@ -76,13 +74,12 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
       opacity = value["opacity"];
       transmission = value["transmission"];
-      std::cout << path << " " << "trans: " << transmission << std::endl;
       roughness = value["roughness"];
       metallic = value["metallic"];
       emission = value["emission"];
       ambient_occlusion = value["ambient_occlusion"];
     } else {
-      throw std::runtime_error(path.substr(path.find_last_of(".")) +
+      throw std::runtime_error(path.substr(path.find_last_of('.')) +
           " file format is not supported.");
     }
   }

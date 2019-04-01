@@ -17,14 +17,14 @@ Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
   calculate_sphere();
 }
 
-Mesh::Mesh(const std::string &path) {
+Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
   if (path.substr(path.find_last_of(".") + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
       throw std::runtime_error(path + " does not exist.");
     }
-    int num_vertices;
-    int num_indices;
+    std::size_t num_vertices;
+    std::size_t num_indices;
     is.read((char *) &num_vertices, sizeof(int));
     is.read((char *) &num_indices, sizeof(int));
 
