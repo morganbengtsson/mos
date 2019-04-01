@@ -13,7 +13,7 @@ namespace mos {
 namespace gfx {
 using namespace nlohmann;
 
-Assets::Assets(const std::string &directory) : directory_(directory) {}
+Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
 
 std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   if (path.empty()){
@@ -35,9 +35,8 @@ Assets::texture(const std::string &path,
       textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, wrap)));
     }
     return textures_.at(path);
-  } else {
-    return Shared_texture_2D(nullptr);
   }
+  return Shared_texture_2D(nullptr);
 }
 
 void Assets::clear_unused() {

@@ -24,7 +24,7 @@ public:
   using Texture_pair = std::pair<std::string, std::shared_ptr<Texture_2D>>;
 
   /** @param directory The directory where the assets exist, relative to the run directory. */
-  explicit Assets(const std::string &directory = "assets/");
+  explicit Assets(std::string directory = "assets/");
 
   Assets(const Assets &assets) = delete;
 
