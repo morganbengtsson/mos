@@ -157,7 +157,7 @@ void Mesh::calculate_normals() {
     }
     for (const auto & p : triangle_map) {
       auto &v = vertices[p.first];
-      glm::vec3 normal = glm::vec3(0.0f);
+      auto normal = glm::vec3(0.0f);
       for (auto &neighbour : p.second) {
         normal += neighbour.normal();
       }

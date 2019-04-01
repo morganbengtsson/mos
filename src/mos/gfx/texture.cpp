@@ -39,7 +39,9 @@ Texture::Texture(const std::initializer_list<std::string> &paths,
                  const bool mipmaps) :
   mipmaps(mipmaps),
   wrap(wrap),
-  id_(current_id_++) {
+  id_(current_id_++),
+  width_(0),
+  height_(0) {
   for (auto &path : paths) {
     int bpp;
     unsigned char *pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, 0);

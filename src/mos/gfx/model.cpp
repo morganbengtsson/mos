@@ -10,10 +10,10 @@ namespace mos {
 namespace gfx {
 
 Model::Model(std::string name,
-             const Shared_mesh &mesh,
+             Shared_mesh mesh,
              const glm::mat4 transform,
              Material material)
-    : mesh(mesh),
+    : mesh(std::move(mesh)),
       material(std::move(material)),
       transform(transform),
       name_(std::move(name)) {}
@@ -64,17 +64,13 @@ glm::vec3 Model::centroid() const {
   if (mesh){
     return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid))[3];
   }
-  else {
-    return transform[3];
-  }
+  return transform[3];
 }
 float Model::radius() const {
   if (mesh){
     return mesh->radius;
   }
-  else {
-    return 0.0f;
-  }
+  return 0.0f;
 }
 
 }

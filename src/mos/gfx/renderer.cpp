@@ -91,7 +91,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
 
 #ifndef NDEBUG
   glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(message_callback, 0);
+  glDebugMessageCallback(message_callback, nullptr);
 #endif
 
   glEnable(GL_DEPTH_TEST);
@@ -308,7 +308,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
 
     glUniformMatrix4fv(box_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
 
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
     glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
                    (GLvoid *) (4 * sizeof(GLuint)));
     glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
@@ -336,7 +336,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
         array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.particles.modified()}});
       }
       glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), nullptr);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
       glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
@@ -460,7 +460,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
-      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, nullptr);
     }
   }
 
@@ -545,7 +545,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
-      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, nullptr);
     }
 
   }
