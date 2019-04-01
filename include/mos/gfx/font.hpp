@@ -15,9 +15,7 @@ public:
    * @param texture Image with glyphs. */
   Font(const Char_map &characters,
        const Shared_texture_2D &texture,
-       float height,
-       float ascender,
-       float descender);
+       float height);
   explicit Font(const std::string &path);
 
   ~Font() = default;

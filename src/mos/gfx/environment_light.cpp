@@ -41,7 +41,7 @@ Environment_light::Environment_light(const std::string &directory, const std::st
     strength = value.value("strength", 1.0f);
     cube_camera_ = mos::gfx::Cube_camera(position, 0.01f, glm::length(extent));
   } else {
-    throw std::runtime_error(path.substr(path.find_last_of(".")) +
+    throw std::runtime_error(path.substr(path.find_last_of('.')) +
         " file format is not supported.");
   }
 }
@@ -64,7 +64,7 @@ bool Environment_light::inside(const glm::vec3 &point) const {
   return box_.inside(point);
 }
 mos::gfx::Camera Environment_light::camera(const size_t index) const {
-  return cube_camera_.cameras[index];
+  return cube_camera_.cameras.at(index);
 }
 
 }
