@@ -9,8 +9,6 @@ namespace sim {
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
     : extent(extent), position(position) {}
 
-Box::Box() {}
-
 Box Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) {
   std::vector<gfx::Vertex> all_vertices;
 

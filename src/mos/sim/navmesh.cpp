@@ -5,8 +5,6 @@
 namespace mos {
 namespace sim {
 
-Navmesh::Navmesh() {}
-
 Navmesh::Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform)
     : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
                mesh.triangles.end(), transform) {}
@@ -43,7 +41,6 @@ Navmesh::closest_intersection(const glm::vec3 &origin,
   return closest;
 }
 
-Navmesh::~Navmesh() {}
 void Navmesh::calculate_normals() {
   for (size_t i = 0; i < triangles.size(); i++) {
     //TODO: Generalize
@@ -88,9 +85,8 @@ Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
     //auto uv_l = bary.x * v0_.uv_lightmap + bary.y * v1_.uv_lightmap + bary.z * v2_.uv_lightmap;
     auto v = gfx::Vertex(p, n, t, uv);
     return std::optional<gfx::Vertex>(v);
-  } else {
-    return std::optional<gfx::Vertex>();
   }
+  return std::optional<gfx::Vertex>();
 }
 }
 }

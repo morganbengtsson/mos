@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <mos/sim/ray.hpp>
 
-std::string mos::text(const std::string path) {
+std::string mos::text(const std::string &path) {
   std::ifstream file(path);
   if (!file.is_open()) {
     throw std::runtime_error("Could not open " + path + ".");

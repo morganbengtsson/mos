@@ -1558,7 +1558,7 @@ Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &color_texture);
   glBindTexture(GL_TEXTURE_2D, color_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1568,7 +1568,7 @@ Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &bright_texture);
   glBindTexture(GL_TEXTURE_2D, bright_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1576,8 +1576,8 @@ Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
   glBindTexture(GL_TEXTURE_2D, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bright_texture, 0);
 
-  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-  glDrawBuffers(2, attachments);
+  std::array<GLuint, 2> attachments{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, attachments.data());
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete");
@@ -1596,7 +1596,7 @@ Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLenum pr
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1668,16 +1668,14 @@ Renderer::Box::Box() {
                         GL_FLOAT, // the type of each element
                         GL_FALSE, // take our values as-is
                         0,        // no extra data between each position
-                        0         // offset of first element
+                        nullptr         // offset of first element
   );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
   glBindVertexArray(0);
 
 }
-Renderer::Box::~Box() {
 
-}
 Renderer::Texture_buffer_2D::Texture_buffer_2D(const GLuint internal_format,
                                            const GLuint external_format,
                                            const int width,
@@ -1728,7 +1726,7 @@ Renderer::Shader::Shader(const std::string &source,
   auto const *chars = source.c_str();
   id = glCreateShader(type);
   std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
-  glShaderSource(id, 1, &chars, NULL);
+  glShaderSource(id, 1, &chars, nullptr);
   glCompileShader(id);
 
   assert(id);

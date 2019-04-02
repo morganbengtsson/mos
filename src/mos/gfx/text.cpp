@@ -94,9 +94,8 @@ float Text::width() const {
                                       [](const auto &a, const auto &b) { return a.position.x < b.position.x; });
 
     return glm::distance(result.first->position.x, result.second->position.x);
-  } else {
-    return 0.0f;
   }
+  return 0.0f;
 }
 
 float Text::height() const {
@@ -106,9 +105,8 @@ float Text::height() const {
                                       [](const auto &a, const auto &b) { return a.position.y < b.position.y; });
 
     return glm::distance(result.first->position.t, result.second->position.y);
-  } else {
-    return 0.0f;
   }
+  return 0.0f;
 }
 
 void Text::position(const glm::vec2 &position) {

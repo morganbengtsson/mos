@@ -8,7 +8,7 @@ namespace sim {
 class Intersection {
 public:
   Intersection(const glm::vec3 &position, const glm::vec3 &normal);
-  ~Intersection();
+  ~Intersection() = default;
   glm::vec3 position;
   glm::vec3 normal;
 };

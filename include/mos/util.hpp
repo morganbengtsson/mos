@@ -16,7 +16,7 @@ namespace mos {
  * @param path Full path.
  * @return String with all content.
  */
-std::string text(const std::string path);
+std::string text(const std::string &path);
 
 std::vector<std::string> &split(const std::string &s, char delim,
                                 std::vector<std::string> &elems);

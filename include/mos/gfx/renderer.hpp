@@ -367,7 +367,7 @@ private:
 
   struct Box {
     Box();
-    ~Box();
+    ~Box() = default;
     GLuint buffer;
     GLuint element_buffer;
     GLuint vertex_array;

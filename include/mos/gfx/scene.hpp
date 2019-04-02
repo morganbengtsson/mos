@@ -22,12 +22,12 @@ namespace gfx {
 class Scene {
 public:
   Scene();
-  Scene(const Models &models,
+  Scene(Models models,
         const Camera &camera,
         const Lights &lights = Lights(),
         const Fog &fog = Fog(),
         const Environment_lights &environment_lights = Environment_lights(),
-        const Boxes &boxes = Boxes());
+        Boxes boxes = Boxes());
 
   Models models;
   Particle_clouds particle_clouds;
