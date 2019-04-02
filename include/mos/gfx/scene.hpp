@@ -21,7 +21,7 @@ namespace gfx {
 /** Scene for rendering. */
 class Scene {
 public:
-  Scene();
+  Scene() = default;
   Scene(Models models,
         const Camera &camera,
         const Lights &lights = Lights(),

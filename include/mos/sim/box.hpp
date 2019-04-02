@@ -57,7 +57,7 @@ public:
 
   Box(const glm::vec3 &extent, const glm::vec3 &position);
 
-  Box();
+  Box() = default;
 
   static Box create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
   static Box create_from_min_max(const glm::vec3 &min, const glm::vec3 &max);
