@@ -769,7 +769,7 @@ void Renderer::load(const Mesh &mesh) {
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
     // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
     // Normal
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
@@ -928,7 +928,7 @@ void Renderer::render_model_depth(const Model &model,
     glUniform4fv(program.albedo, 1, glm::value_ptr(albedo));
     glUniform1fv(program.emission, 1, &model.material.emission);
     const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
-    glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
   }
   for (const auto &child : model.models) {
     render_model_depth(child, transform * model.transform, camera, resolution, program);
@@ -946,8 +946,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
   clear(color);
 
-  for (auto it = scenes.begin(); it != scenes.end(); it++) {
-    render_scene(it->camera, *it, resolution);
+  for (auto &scene : scenes) {
+    render_scene(scene.camera, scene, resolution);
   }
 
   // Multisampling / bloom
