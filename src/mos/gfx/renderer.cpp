@@ -247,12 +247,12 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
 
   for (size_t i = 0; i < scene.environment_lights.size(); i++) {
-    glUniform3fv(standard_program_.environment_maps[i].position, 1,
-                 glm::value_ptr(scene.environment_lights[i].position()));
-    glUniform3fv(standard_program_.environment_maps[i].extent, 1,
-                 glm::value_ptr(scene.environment_lights[i].extent()));
-    glUniform1fv(standard_program_.environment_maps[i].strength, 1,
-                 &scene.environment_lights[i].strength);
+    glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
+                 glm::value_ptr(scene.environment_lights.at(i).position()));
+    glUniform3fv(standard_program_.environment_maps.at(i).extent, 1,
+                 glm::value_ptr(scene.environment_lights.at(i).extent()));
+    glUniform1fv(standard_program_.environment_maps.at(i).strength, 1,
+                 &scene.environment_lights.at(i).strength);
   }
 
   // Camera in world space
@@ -260,20 +260,20 @@ void Renderer::render_scene(const Camera &camera,
   glUniform3fv(standard_program_.camera_position, 1, glm::value_ptr(position));
 
   for (size_t i = 0; i < scene.lights.size(); i++) {
-    glUniform3fv(standard_program_.lights[i].position, 1,
-                 glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
+    glUniform3fv(standard_program_.lights.at(i).position, 1,
+                 glm::value_ptr(glm::vec3(glm::vec4(scene.lights.at(i).position(), 1.0f))));
 
-    glUniform3fv(standard_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
-    glUniform1fv(standard_program_.lights[i].strength, 1, &scene.lights[i].strength);
+    glUniform3fv(standard_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
+    glUniform1fv(standard_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
 
-    glUniformMatrix4fv(standard_program_.lights[i].view, 1, GL_FALSE,
-                       &scene.lights[i].camera.view[0][0]);
-    glUniformMatrix4fv(standard_program_.lights[i].projection, 1, GL_FALSE,
-                       &scene.lights[i].camera.projection[0][0]);
+    glUniformMatrix4fv(standard_program_.lights.at(i).view, 1, GL_FALSE,
+                       &scene.lights.at(i).camera.view[0][0]);
+    glUniformMatrix4fv(standard_program_.lights.at(i).projection, 1, GL_FALSE,
+                       &scene.lights.at(i).camera.projection[0][0]);
 
-    auto light_angle = scene.lights[i].angle();
-    glUniform1fv(standard_program_.lights[i].angle, 1, &light_angle);
-    glUniform3fv(standard_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+    auto light_angle = scene.lights.at(i).angle();
+    glUniform1fv(standard_program_.lights.at(i).angle, 1, &light_angle);
+    glUniform3fv(standard_program_.lights.at(i).direction, 1, glm::value_ptr(scene.lights.at(i).direction()));
   }
 
   glUniform2iv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));

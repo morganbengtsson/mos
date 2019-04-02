@@ -12,13 +12,13 @@ namespace gfx {
 Model::Model(std::string name,
              Shared_mesh mesh,
              const glm::mat4 transform,
-             Material material)
+             const Material &material)
     : mesh(std::move(mesh)),
-      material(std::move(material)),
+      material(material),
       transform(transform),
       name_(std::move(name)) {}
 
-Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform) {
+Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform) : transform(1.0f) {
   auto parsed = json;
   if (parsed.is_string()) {
     std::cout << "Loading: " << parsed << std::endl;

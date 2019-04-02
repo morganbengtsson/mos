@@ -24,7 +24,7 @@ public:
   Model(std::string name,
         Shared_mesh mesh,
         glm::mat4 transform = glm::mat4(1.0f),
-        Material material = Material(glm::vec3(1.0f)));
+        const Material &material = Material(glm::vec3(1.0f)));
 
   ~Model() = default;
 
