@@ -1504,8 +1504,8 @@ Renderer::Environment_map_target::Environment_map_target(const Renderer::Render_
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X, albedo, 0);
 
-  unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-  glDrawBuffers(2, attachments);
+  std::array<GLuint, 2> attachments{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, attachments.data());
 
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                             GL_RENDERBUFFER, render_buffer.render_buffer);

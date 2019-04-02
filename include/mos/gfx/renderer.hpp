@@ -192,7 +192,6 @@ private:
     GLint material_transmission;
     GLint material_emission;
     GLint material_ambient_occlusion;
-    GLint material_factor;
 
     GLint camera_resolution;
     GLint camera_position;
@@ -236,7 +235,6 @@ private:
     GLint material_transmission;
     GLint material_emission;
     GLint material_ambient_occlusion;
-    GLint material_factor;
 
     GLint camera_resolution;
     GLint camera_position;
