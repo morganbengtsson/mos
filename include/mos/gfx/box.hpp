@@ -8,7 +8,7 @@ namespace gfx {
 /** Visual bounding box. */
 class Box final {
 public:
-  Box() = default;
+  Box();
   Box(const glm::mat4 &transform,
       const glm::vec3 &extent);
   glm::mat4 transform;
