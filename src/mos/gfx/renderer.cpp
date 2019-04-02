@@ -379,20 +379,20 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
 
     for (size_t i = 0; i < lights.size(); i++) {
-      glUniform3fv(particle_program_.lights[i].position, 1,
-                   glm::value_ptr(glm::vec3(glm::vec4(lights[i].position(), 1.0f))));
+      glUniform3fv(particle_program_.lights.at(i).position, 1,
+                   glm::value_ptr(glm::vec3(glm::vec4(lights.at(i).position(), 1.0f))));
 
-      glUniform3fv(particle_program_.lights[i].color, 1, glm::value_ptr(lights[i].color));
-      glUniform1fv(particle_program_.lights[i].strength, 1, &lights[i].strength);
+      glUniform3fv(particle_program_.lights.at(i).color, 1, glm::value_ptr(lights.at(i).color));
+      glUniform1fv(particle_program_.lights.at(i).strength, 1, &lights.at(i).strength);
 
-      glUniformMatrix4fv(particle_program_.lights[i].view, 1, GL_FALSE,
-                         &lights[i].camera.view[0][0]);
-      glUniformMatrix4fv(particle_program_.lights[i].projection, 1, GL_FALSE,
-                         &lights[i].camera.projection[0][0]);
+      glUniformMatrix4fv(particle_program_.lights.at(i).view, 1, GL_FALSE,
+                         &lights.at(i).camera.view[0][0]);
+      glUniformMatrix4fv(particle_program_.lights.at(i).projection, 1, GL_FALSE,
+                         &lights.at(i).camera.projection[0][0]);
 
-      auto light_angle = lights[i].angle();
-      glUniform1fv(particle_program_.lights[i].angle, 1, &light_angle);
-      glUniform3fv(particle_program_.lights[i].direction, 1, glm::value_ptr(lights[i].direction()));
+      auto light_angle = lights.at(i).angle();
+      glUniform1fv(particle_program_.lights.at(i).angle, 1, &light_angle);
+      glUniform3fv(particle_program_.lights.at(i).direction, 1, glm::value_ptr(lights.at(i).direction()));
     }
 
     auto position = camera.position();
@@ -432,10 +432,10 @@ void Renderer::render_model(const Model &model,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
       for (size_t i = 0; i < lights.size(); i++) {
-        const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
-            lights[i].camera.view * parent_transform *
+        const glm::mat4 depth_bias_mvp = bias * lights.at(i).camera.projection *
+            lights.at(i).camera.view * parent_transform *
             model.transform;
-        glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
+        glUniformMatrix4fv(uniforms.depth_bias_mvps.at(i), 1, GL_FALSE,
                            &depth_bias_mvp[0][0]);
       }
 
@@ -517,10 +517,10 @@ void Renderer::render_model(const Model &model,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
       for (size_t i = 0; i < lights.size(); i++) {
-        const glm::mat4 depth_bias_mvp = bias * lights[i].camera.projection *
-            lights[i].camera.view * parent_transform *
+        const glm::mat4 depth_bias_mvp = bias * lights.at(i).camera.projection *
+            lights.at(i).camera.view * parent_transform *
             model.transform;
-        glUniformMatrix4fv(uniforms.depth_bias_mvps[i], 1, GL_FALSE,
+        glUniformMatrix4fv(uniforms.depth_bias_mvps.at(i), 1, GL_FALSE,
                            &depth_bias_mvp[0][0]);
       }
 
@@ -573,8 +573,8 @@ void Renderer::clear_color(const glm::vec4 &color) {
 
 void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
-    if (lights[i].strength > 0.0f) {
-      auto frame_buffer = shadow_maps_[i].frame_buffer;
+    if (lights.at(i).strength > 0.0f) {
+      auto frame_buffer = shadow_maps_.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
       glClear(GL_DEPTH_BUFFER_BIT);
       auto resolution = shadow_maps_render_buffer_.resolution;
@@ -584,7 +584,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glUniform1i(depth_program_.albedo_sampler, 0);
 
       for (auto &model : models) {
-        render_model_depth(model, glm::mat4(1.0f), lights[i].camera, glm::vec2(resolution), depth_program_);
+        render_model_depth(model, glm::mat4(1.0f), lights.at(i).camera, glm::vec2(resolution), depth_program_);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -595,7 +595,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glUseProgram(blur_program_.program);
       glBindVertexArray(quad_.vertex_array);
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, shadow_maps_[i].texture);
+      glBindTexture(GL_TEXTURE_2D, shadow_maps_.at(i).texture);
       glUniform1i(blur_program_.color_sampler, 0);
       GLint horizontal = false;
       glUniform1iv(blur_program_.horizontal, 1, &horizontal);
@@ -603,11 +603,11 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 
       for (int j = 0; j < 1; j++) {
         horizontal = (j % 2 == 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_[i].frame_buffer : shadow_map_blur_target_.frame_buffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_.at(i).frame_buffer : shadow_map_blur_target_.frame_buffer);
         glUseProgram(blur_program_.program);
         glBindVertexArray(quad_.vertex_array);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_[i].texture);
+        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_.at(i).texture);
         glUniform1i(blur_program_.color_sampler, 0);
         glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
@@ -619,25 +619,25 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
   for (size_t i = 0; i < environment_maps_targets.size(); i++) {
-    if (scene.environment_lights[i].strength > 0.0f) {
-      GLuint frame_buffer_id = environment_maps_targets[i].frame_buffer;
+    if (scene.environment_lights.at(i).strength > 0.0f) {
+      GLuint frame_buffer_id = environment_maps_targets.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      auto texture_id = environment_maps_targets[i].texture;
+      auto texture_id = environment_maps_targets.at(i).texture;
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i], texture_id, 0);
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_.at(i), texture_id, 0);
 
       glFramebufferTexture2D(GL_FRAMEBUFFER,
                              GL_COLOR_ATTACHMENT1,
-                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_[i],
-                             environment_maps_targets[i].albedo,
+                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_.at(i),
+                             environment_maps_targets.at(i).albedo,
                              0);
 
       clear(clear_color);
       auto resolution = glm::ivec2(environment_render_buffer_.resolution,
                                    environment_render_buffer_.resolution);
-      auto cube_camera = scene.environment_lights[i].camera(cube_camera_index_[i]);
+      auto cube_camera = scene.environment_lights.at(i).camera(cube_camera_index_.at(i));
 
       glViewport(0, 0, resolution.x, resolution.y);
 
@@ -664,20 +664,20 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
       //TODO: Loop through all lights?
       for (size_t i = 0; i < 2; i++) {
-        glUniform3fv(environment_program_.lights[i].position, 1,
-                     glm::value_ptr(glm::vec3(glm::vec4(scene.lights[i].position(), 1.0f))));
+        glUniform3fv(environment_program_.lights.at(i).position, 1,
+                     glm::value_ptr(glm::vec3(glm::vec4(scene.lights.at(i).position(), 1.0f))));
 
-        glUniform3fv(environment_program_.lights[i].color, 1, glm::value_ptr(scene.lights[i].color));
-        glUniform1fv(environment_program_.lights[i].strength, 1, &scene.lights[i].strength);
+        glUniform3fv(environment_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
+        glUniform1fv(environment_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
 
-        glUniformMatrix4fv(environment_program_.lights[i].view, 1, GL_FALSE,
-                           &scene.lights[i].camera.view[0][0]);
-        glUniformMatrix4fv(environment_program_.lights[i].projection, 1, GL_FALSE,
-                           &scene.lights[i].camera.projection[0][0]);
+        glUniformMatrix4fv(environment_program_.lights.at(i).view, 1, GL_FALSE,
+                           &scene.lights.at(i).camera.view[0][0]);
+        glUniformMatrix4fv(environment_program_.lights.at(i).projection, 1, GL_FALSE,
+                           &scene.lights.at(i).camera.projection[0][0]);
 
-        auto light_angle = scene.lights[i].angle();
-        glUniform1fv(environment_program_.lights[i].angle, 1, &light_angle);
-        glUniform3fv(environment_program_.lights[i].direction, 1, glm::value_ptr(scene.lights[i].direction()));
+        auto light_angle = scene.lights.at(i).angle();
+        glUniform1fv(environment_program_.lights.at(i).angle, 1, &light_angle);
+        glUniform3fv(environment_program_.lights.at(i).direction, 1, glm::value_ptr(scene.lights.at(i).direction()));
       }
 
       glUniform2iv(environment_program_.camera_resolution, 1, glm::value_ptr(resolution));
@@ -695,11 +695,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                      resolution, environment_program_);
       }
 
-      cube_camera_index_[i] = cube_camera_index_[i] >= 5 ? 0 : ++cube_camera_index_[i]; //TODO PROBLEM
+      cube_camera_index_.at(i) = cube_camera_index_.at(i) >= 5 ? 0 : ++cube_camera_index_.at(i); //TODO PROBLEM
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
       glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-      if (cube_camera_index_[i] == 0) {
+      if (cube_camera_index_.at(i) == 0) {
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
       }
       glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -1067,7 +1067,7 @@ Renderer::Environment_program::Environment_program() {
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
-    depth_bias_mvps[i] = glGetUniformLocation(program,
+    depth_bias_mvps.at(i) = glGetUniformLocation(program,
                                               std::string("depth_bias_model_view_projections[" + std::to_string(i)
                                                               + "]").c_str());
   }
@@ -1085,19 +1085,19 @@ Renderer::Environment_program::Environment_program() {
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
   for (size_t i = 0; i < lights.size(); i++) {
-    lights[i].position =
+    lights.at(i).position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
-    lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights[i].strength =
+    lights.at(i).color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights.at(i).strength =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
-    lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights[i].projection =
+    lights.at(i).view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
+    lights.at(i).projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
-    lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights[i].direction =
+    lights.at(i).angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights.at(i).direction =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
-    shadow_samplers[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
+    shadow_samplers.at(i) = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }
 
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
@@ -1138,19 +1138,19 @@ Renderer::Standard_program::Standard_program() {
   model_matrix = glGetUniformLocation(program, "model");
   normal_matrix = glGetUniformLocation(program, "normal_matrix");
   for (size_t i = 0; i < depth_bias_mvps.size(); i++) {
-    depth_bias_mvps[i] = glGetUniformLocation(program,
+    depth_bias_mvps.at(i) = glGetUniformLocation(program,
                                               std::string("depth_bias_model_view_projections[" + std::to_string(i)
                                                               + "]").c_str());
   }
 
   for (size_t i = 0; i < environment_maps.size(); i++) {
-    environment_maps[i].map =
+    environment_maps.at(i).map =
         glGetUniformLocation(program, std::string("environment_samplers[" + std::to_string(i) + "]").c_str());
-    environment_maps[i].position =
+    environment_maps.at(i).position =
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
-    environment_maps[i].extent =
+    environment_maps.at(i).extent =
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
-    environment_maps[i].strength =
+    environment_maps.at(i).strength =
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
   }
 
@@ -1171,19 +1171,19 @@ Renderer::Standard_program::Standard_program() {
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
   for (size_t i = 0; i < lights.size(); i++) {
-    lights[i].position =
+    lights.at(i).position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
-    lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights[i].strength =
+    lights.at(i).color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights.at(i).strength =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
-    lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights[i].projection =
+    lights.at(i).view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
+    lights.at(i).projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
-    lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights[i].direction =
+    lights.at(i).angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights.at(i).direction =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
-    shadow_maps[i] = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
+    shadow_maps.at(i) = glGetUniformLocation(program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }
 
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
@@ -1219,16 +1219,16 @@ Renderer::Particle_program::Particle_program() {
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
   for (size_t i = 0; i < lights.size(); i++) {
-    lights[i].position =
+    lights.at(i).position =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].position").c_str());
-    lights[i].color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights[i].strength =
+    lights.at(i).color = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].color").c_str());
+    lights.at(i).strength =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].strength").c_str());
-    lights[i].view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights[i].projection =
+    lights.at(i).view = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].view").c_str());
+    lights.at(i).projection =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].projection").c_str());
-    lights[i].angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights[i].direction =
+    lights.at(i).angle = glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights.at(i).direction =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
   }
