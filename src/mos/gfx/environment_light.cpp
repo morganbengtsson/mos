@@ -14,7 +14,7 @@ Environment_light::Environment_light(const glm::vec3 &position,
     :
       strength(strength),
       box_(glm::translate(glm::mat4(1.0f), position), extent),
-      cube_camera_(position, length(extent) / 2.0f, glm::length(extent)) {
+      cube_camera_(position, 1.0f, glm::length(extent)) {
 }
 
 Environment_light::Environment_light(const std::string &directory, const std::string &path,
