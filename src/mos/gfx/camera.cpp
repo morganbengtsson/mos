@@ -89,10 +89,15 @@ void Camera::calculate_frustum() {
 }
 
 void Camera::calculate_near_far() {
-  const auto C = projection[2][2];
-  const auto D = projection[2][3];
-  near_ = D / (C - 1.0f);
-  far_ = D / (C + 1.0f);
+  auto m = glm::transpose(projection);
+
+  auto n0 = m[3] + m[2];
+  n0 = n0 / glm::length(glm::vec3(n0));
+  auto f0 = m[3] - m[2];
+  f0 = f0 / glm::length(glm::vec3(f0));
+
+  near_ = n0.z * n0.w;
+  far_ = f0.z * f0.w;
 }
 
 bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
