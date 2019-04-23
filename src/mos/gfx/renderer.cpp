@@ -266,10 +266,13 @@ void Renderer::render_scene(const Camera &camera,
     glUniform3fv(standard_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
     glUniform1fv(standard_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
 
+    auto view = scene.lights.at(i).camera.view();
     glUniformMatrix4fv(standard_program_.lights.at(i).view, 1, GL_FALSE,
-                       &scene.lights.at(i).camera.view[0][0]);
+                       glm::value_ptr(view));
+
+    auto projection = scene.lights.at(i).camera.projection();
     glUniformMatrix4fv(standard_program_.lights.at(i).projection, 1, GL_FALSE,
-                       &scene.lights.at(i).camera.projection[0][0]);
+                       glm::value_ptr(projection));
 
     auto light_angle = scene.lights.at(i).angle();
     glUniform1fv(standard_program_.lights.at(i).angle, 1, &light_angle);
@@ -302,8 +305,8 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
   for (auto &box : boxes) {
     glm::vec3 size = box.size();
     glm::mat4 transform = box.transform;
-    glm::mat4 mv = camera.view * transform * glm::scale(glm::mat4(1.0f), size);
-    glm::mat4 mvp = camera.projection * camera.view * transform *
+    glm::mat4 mv = camera.view() * transform * glm::scale(glm::mat4(1.0f), size);
+    glm::mat4 mvp = camera.projection() * camera.view() * transform *
         glm::scale(glm::mat4(1.0f), size);
 
     glUniformMatrix4fv(box_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
@@ -358,8 +361,8 @@ void Renderer::render_particles(const Particle_clouds &clouds,
                  particles.particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glm::mat4 mv = camera.view;
-    glm::mat4 mvp = camera.projection * camera.view;
+    glm::mat4 mv = camera.view();
+    glm::mat4 mvp = camera.projection() * camera.view();
 
     glUseProgram(particle_program_.program);
 
@@ -374,7 +377,8 @@ void Renderer::render_particles(const Particle_clouds &clouds,
 
     glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(particle_program_.model_view, 1, GL_FALSE, &mv[0][0]);
-    glUniformMatrix4fv(particle_program_.projection, 1, GL_FALSE, &camera.projection[0][0]);
+    auto projection = camera.projection();
+    glUniformMatrix4fv(particle_program_.projection, 1, GL_FALSE, glm::value_ptr(projection));
     auto r = glm::vec2(resolution); // TODO: Remove.
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
 
@@ -385,10 +389,12 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glUniform3fv(particle_program_.lights.at(i).color, 1, glm::value_ptr(lights.at(i).color));
       glUniform1fv(particle_program_.lights.at(i).strength, 1, &lights.at(i).strength);
 
+      auto view = lights.at(i).camera.view();
       glUniformMatrix4fv(particle_program_.lights.at(i).view, 1, GL_FALSE,
-                         &lights.at(i).camera.view[0][0]);
+                         glm::value_ptr(view));
+      auto projection = lights.at(i).camera.projection();
       glUniformMatrix4fv(particle_program_.lights.at(i).projection, 1, GL_FALSE,
-                         &lights.at(i).camera.projection[0][0]);
+                         glm::value_ptr(projection));
 
       auto light_angle = lights.at(i).angle();
       glUniform1fv(particle_program_.lights.at(i).angle, 1, &light_angle);
@@ -398,10 +404,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     auto position = camera.position();
     glUniform3fv(particle_program_.camera_position, 1, glm::value_ptr(position));
     glUniform2iv(particle_program_.camera_resolution, 1, glm::value_ptr(resolution));
-    /*
-    glUniform1fv(particle_program_.camera_far, 1, glm::value_ptr(camera.));
-    glUniform1fv(particle_program_.camera_near, 1, glm::value_ptr(resolution));
-*/
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -419,7 +422,7 @@ void Renderer::render_model(const Model &model,
 
   if (camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
 
-    const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
+    const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {
       glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -435,8 +438,8 @@ void Renderer::render_model(const Model &model,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
       for (size_t i = 0; i < lights.size(); i++) {
-        const glm::mat4 depth_bias_mvp = bias * lights.at(i).camera.projection *
-            lights.at(i).camera.view * parent_transform *
+        const glm::mat4 depth_bias_mvp = bias * lights.at(i).camera.projection() *
+            lights.at(i).camera.view() * parent_transform *
             model.transform;
         glUniformMatrix4fv(uniforms.depth_bias_mvps.at(i), 1, GL_FALSE,
                            &depth_bias_mvp[0][0]);
@@ -484,7 +487,7 @@ void Renderer::render_model(const Model &model,
                             const Standard_program &program) {
 
    if (camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
-    const glm::mat4 mvp = camera.projection * camera.view * parent_transform * model.transform;
+    const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {
       glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
@@ -520,8 +523,10 @@ void Renderer::render_model(const Model &model,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
 
       for (size_t i = 0; i < lights.size(); i++) {
-        const glm::mat4 depth_bias_mvp = bias * lights.at(i).camera.projection *
-            lights.at(i).camera.view * parent_transform *
+        auto projection = lights.at(i).camera.projection();
+        auto view = lights.at(i).camera.view();
+        const glm::mat4 depth_bias_mvp = bias * projection *
+            view * parent_transform *
             model.transform;
         glUniformMatrix4fv(uniforms.depth_bias_mvps.at(i), 1, GL_FALSE,
                            &depth_bias_mvp[0][0]);
@@ -679,10 +684,12 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
         glUniform3fv(environment_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
         glUniform1fv(environment_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
 
+        auto view = scene.lights.at(i).camera.view();
         glUniformMatrix4fv(environment_program_.lights.at(i).view, 1, GL_FALSE,
-                           &scene.lights.at(i).camera.view[0][0]);
+                           glm::value_ptr(view));
+        auto projection = scene.lights.at(i).camera.projection();
         glUniformMatrix4fv(environment_program_.lights.at(i).projection, 1, GL_FALSE,
-                           &scene.lights.at(i).camera.projection[0][0]);
+                           glm::value_ptr(projection));
 
         auto light_angle = scene.lights.at(i).angle();
         glUniform1fv(environment_program_.lights.at(i).angle, 1, &light_angle);
@@ -920,7 +927,7 @@ void Renderer::render_model_depth(const Model &model,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
                                   const Depth_program &program) {
-  const glm::mat4 mvp = camera.projection * camera.view * transform * model.transform;
+  const glm::mat4 mvp = camera.projection() * camera.view() * transform * model.transform;
 
   if (model.mesh) {
     glBindVertexArray(vertex_arrays_.at(model.mesh->id()));

@@ -11,8 +11,8 @@ Camera::Camera(const glm::vec3 &position,
                  const glm::vec3 &center,
                  const glm::mat4 &projection,
                  const glm::vec3 &up)
-  : projection(projection),
-    view(1.0f),
+  : projection_(projection),
+    view_(1.0f),
     frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)},
     up_(up),
     center_(center),
@@ -63,16 +63,15 @@ void Camera::direction(const glm::vec3 &direction) {
 }
 
 void Camera::calculate_view() {
-  view = glm::lookAt(position_, center_, up_);
+  view_ = glm::lookAt(position_, center_, up_);
 }
 
 float Camera::aspect_ratio() const {
-  return projection[1][1] / projection[0][0];
+  return projection_[1][1] / projection_[0][0];
 }
 
 void Camera::calculate_frustum() {
-
-  auto m = projection * view;
+  auto m = projection_ * view_;
   auto t = glm::transpose(m);
 
   frustum_planes_[0] = t[3] + t[0]; /* left   */
@@ -89,7 +88,7 @@ void Camera::calculate_frustum() {
 }
 
 void Camera::calculate_near_far() {
-  auto m = glm::transpose(projection);
+  auto m = glm::transpose(projection_);
 
   auto n0 = m[3] + m[2];
   n0 = n0 / glm::length(glm::vec3(n0));
@@ -117,6 +116,21 @@ float Camera::near() const {
 
 float Camera::far() const {
   return far_;
+}
+
+glm::mat4 Camera::projection() const {
+  return projection_;
+}
+
+void Camera::projection(const glm::mat4 &proj) {
+  projection_ = proj;
+  calculate_view();
+  calculate_frustum();
+  calculate_near_far();
+}
+
+glm::mat4 Camera::view() const {
+  return view_;
 }
 
 }

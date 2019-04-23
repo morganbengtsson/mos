@@ -50,13 +50,21 @@ public:
   /** Get far clip plane. */
   float far() const;
 
-  glm::mat4 projection;
-  glm::mat4 view;
+  /** Get projection matrix. */
+  glm::mat4 projection() const;
+
+  /** Set projection matrix. */
+  void projection(const glm::mat4 &proj);
+
+  /** Get view matrix */
+  glm::mat4 view() const;
 
 private:
   void calculate_view();
   void calculate_frustum();
   void calculate_near_far();
+  glm::mat4 projection_;
+  glm::mat4 view_;
   Planes frustum_planes_;
   glm::vec3 up_;
   glm::vec3 center_;

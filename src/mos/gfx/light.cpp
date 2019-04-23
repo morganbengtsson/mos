@@ -31,7 +31,7 @@ glm::vec3 Light::position() const {
 
 void Light::angle(const float angle) {
   angle_ = angle;
-  camera.projection = glm::perspective(angle_, 1.0f, near_, far_);
+  camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
 
 float Light::angle() const {
@@ -53,8 +53,7 @@ glm::vec3 Light::direction() const {
 void Light::near_far(const float near_plane, const float far_plane) {
   near_ = near_plane;
   far_ = far_plane;
-  camera.projection = glm::perspective(angle_, 1.0f, near_, far_);
-
+  camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
 Light::Light(const std::string &directory,
              const std::string &path,
