@@ -20,6 +20,7 @@ Camera::Camera(const glm::vec3 &position,
 {
   calculate_view();
   calculate_frustum();
+  calculate_near_far();
 }
 
 glm::vec3 Camera::up() const { return up_; }
@@ -28,6 +29,7 @@ void Camera::up(const glm::vec3 &up) {
   up_ = up;
   calculate_view();
   calculate_frustum();
+  calculate_near_far();
 }
 
 glm::vec3 Camera::position() const { return position_; }
@@ -36,6 +38,7 @@ void Camera::position(const glm::vec3 &position) {
   position_ = position;
   calculate_view();
   calculate_frustum();
+  calculate_near_far();
 }
 
 glm::vec3 Camera::center() const { return center_; }
@@ -44,6 +47,7 @@ void Camera::center(const glm::vec3 &center) {
   center_ = center;
   calculate_view();
   calculate_frustum();
+  calculate_near_far();
 }
 
 glm::vec3 Camera::direction() const {
@@ -83,6 +87,14 @@ void Camera::calculate_frustum() {
     plane /= magnitude;
   }
 }
+
+void Camera::calculate_near_far() {
+  const auto C = projection[2][2];
+  const auto D = projection[2][3];
+  near = D / (C - 1.0f);
+  far = D / (C + 1.0f);
+}
+
 bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
   bool result = true;
   for (Planes::size_type i = 0; i < 6; i++)
@@ -92,6 +104,14 @@ bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
     }
   }
   return result;
+}
+
+float Camera::near() const {
+  return near_;
+}
+
+float Camera::far() const {
+  return far_;
 }
 
 }

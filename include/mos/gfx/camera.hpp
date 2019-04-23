@@ -43,16 +43,25 @@ public:
 
   bool in_frustum(const glm::vec3 & point, const float radius) const;
 
+  /** Get near clip plane. */
+  float near() const;
+
+  /** Get far clip plane. */
+  float far() const;
+
   glm::mat4 projection;
   glm::mat4 view;
 
 private:
   void calculate_view();
   void calculate_frustum();
+  void calculate_near_far();
   Planes frustum_planes_;
   glm::vec3 up_;
   glm::vec3 center_;
   glm::vec3 position_;
+  float near_;
+  float far_;
 };
 }
 }

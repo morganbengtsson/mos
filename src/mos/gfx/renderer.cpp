@@ -398,7 +398,10 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     auto position = camera.position();
     glUniform3fv(particle_program_.camera_position, 1, glm::value_ptr(position));
     glUniform2iv(particle_program_.camera_resolution, 1, glm::value_ptr(resolution));
-
+    /*
+    glUniform1fv(particle_program_.camera_far, 1, glm::value_ptr(camera.));
+    glUniform1fv(particle_program_.camera_near, 1, glm::value_ptr(resolution));
+*/
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1083,6 +1086,8 @@ Renderer::Environment_program::Environment_program() {
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
+  camera_far = glGetUniformLocation(program, "camera.far");
+  camera_near = glGetUniformLocation(program, "camera.near");
 
   for (size_t i = 0; i < lights.size(); i++) {
     lights.at(i).position =

@@ -123,6 +123,8 @@ private:
     GLint resolution;    
     GLint camera_resolution;
     GLint camera_position;
+    GLint camera_far;
+    GLint camera_near;
     std::array<Light_uniforms, 4> lights;
   };
 
@@ -195,6 +197,8 @@ private:
 
     GLint camera_resolution;
     GLint camera_position;
+    GLint camera_near;
+    GLint camera_far;
 
     std::array<GLuint,4> shadow_samplers;
     std::array<Light_uniforms, 4> lights;

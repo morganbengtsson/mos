@@ -30,6 +30,8 @@ struct Light {
 struct Camera {
     vec3 position;
     ivec2 resolution;
+    float far;
+    float near;
 };
 
 struct Environment {
