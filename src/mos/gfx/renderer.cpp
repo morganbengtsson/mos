@@ -1482,7 +1482,7 @@ Renderer::Environment_map_target::Environment_map_target(const Renderer::Render_
       data.push_back(0);
     }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 GL_RGB,
+                 GL_RGB16F,
                  render_buffer.resolution, render_buffer.resolution, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data.data());
   }
