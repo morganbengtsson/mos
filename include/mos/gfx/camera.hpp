@@ -41,6 +41,7 @@ public:
 
   float aspect_ratio() const;
 
+  /** Check if sphere with a radius is within camera frustum. */
   bool in_frustum(const glm::vec3 & point, const float radius) const;
 
   /** Get near clip plane. */
