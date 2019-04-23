@@ -1086,8 +1086,8 @@ Renderer::Environment_program::Environment_program() {
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
-  camera_far = glGetUniformLocation(program, "camera.far");
-  camera_near = glGetUniformLocation(program, "camera.near");
+  //camera_far = glGetUniformLocation(program, "camera.far");
+  //camera_near = glGetUniformLocation(program, "camera.near");
 
   for (size_t i = 0; i < lights.size(); i++) {
     lights.at(i).position =
