@@ -12,6 +12,8 @@ struct Fragment {
 struct Camera {
     vec3 position;
     ivec2 resolution;
+    float near;
+    float far;
 };
 
 struct Light {

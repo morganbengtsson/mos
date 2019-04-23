@@ -665,6 +665,12 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto position = cube_camera.position();
       glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
 
+      auto near = cube_camera.near();
+      glUniform1fv(environment_program_.camera_near, 1, &near);
+
+      auto far = cube_camera.far();
+      glUniform1fv(environment_program_.camera_far, 1, &far);
+
       //TODO: Loop through all lights?
       for (size_t i = 0; i < 2; i++) {
         glUniform3fv(environment_program_.lights.at(i).position, 1,
@@ -1086,8 +1092,8 @@ Renderer::Environment_program::Environment_program() {
 
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");
-  //camera_far = glGetUniformLocation(program, "camera.far");
-  //camera_near = glGetUniformLocation(program, "camera.near");
+  camera_far = glGetUniformLocation(program, "camera.far");
+  camera_near = glGetUniformLocation(program, "camera.near");
 
   for (size_t i = 0; i < lights.size(); i++) {
     lights.at(i).position =
