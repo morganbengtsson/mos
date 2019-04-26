@@ -90,50 +90,43 @@ void main() {
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
-    vec3 Lo = vec3(0.0, 0.0, 0.0);
-    float shadow = 0.0f;
+    vec3 direct = vec3(0.0, 0.0, 0.0);
 
     for(int i = 0; i < lights.length(); i++) {
         Light light = lights[i];
         if (light.strength > 0.0) {
-            float light_fragment_distance = distance(light.position, fragment.position);
-            float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-            vec3 radiance = light.strength * 0.09 * light.color * attenuation;
+            const vec3 L = normalize(light.position - fragment.position);
+            const vec3 H = normalize(V + L);
 
-            vec3 L = normalize(light.position - fragment.position);
-            vec3 H = normalize(V + L);
+            const float NdotL = max(dot(N, L), 0.0);
+            const float cos_dir = dot(L, -light.direction);
+            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-            float NDF = distribution_GGX(N, H, roughness);
-            float G = geometry_smith(N, V, L, roughness);
-            vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+            const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+            const float shadow = sample_shadow_map(shadow_maps[i], shadow_map_uv.xy, shadow_map_uv.z);
 
-            vec3 nominator    = NDF * G * F;
-            float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
-            vec3 specular = nominator / denominator;
+            const float light_fragment_distance = distance(light.position, fragment.position);
+            const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+            const vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-            vec3 kS = F;
-            vec3 kD = vec3(1.0) - kS;
-            kD *= 1.0 - metallic;
+            const float NDF = distribution_GGX(N, H, roughness);
+            const float G = geometry_smith(N, V, L, roughness);
+            const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
-            float NdotL = max(dot(N, L), 0.0);
-            float cos_dir = dot(L, -light.direction);
-            float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+            const vec3 nominator    = NDF * G * F;
+            const float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+            const vec3 specular = nominator / denominator;
 
-            Lo += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect;
+            const vec3 kS = F;
+            const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
-            vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-            vec2 texelSize = 1.0 / textureSize(shadow_maps[i], 0);
-            float s = 0.0;
-            s = sample_shadow_map(shadow_maps[i], shadow_map_uv.xy, shadow_map_uv.z);
-            shadow += s * spot_effect;
+            direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow;
         }
     }
 
-    Lo.rgb *= clamp(shadow, 0.0, 1.0);
-
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = (1.0 - material.emission) * (Lo + ambient) + material.emission * albedo;
+    color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
     color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

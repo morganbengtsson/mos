@@ -140,7 +140,6 @@ void main() {
             const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
             const vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-            // Cook-Torrance BRDF
             const float NDF = distribution_GGX(normal, H, roughness);
             const float G = geometry_smith(normal, V, L, roughness);
             const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
