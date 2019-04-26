@@ -213,8 +213,8 @@ void main() {
     out_color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
-    float distance = distance(fragment.position, camera.position);
-    float fog_att = fog_attenuation(distance, fog.attenuation_factor);
+    float fog_distance = distance(fragment.position, camera.position);
+    float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, 0.45, 1.0));
 }
