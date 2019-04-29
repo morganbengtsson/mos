@@ -324,6 +324,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
                                 const Lights &lights,
                                 const mos::gfx::Camera &camera,
                                 const glm::ivec2 &resolution) {
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   for (auto &particles : clouds) {
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
@@ -405,10 +406,10 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glUniform3fv(particle_program_.camera_position, 1, glm::value_ptr(position));
     glUniform2iv(particle_program_.camera_resolution, 1, glm::value_ptr(resolution));
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 void Renderer::render_model(const Model &model,
