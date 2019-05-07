@@ -87,6 +87,17 @@ vec3 fresnel_schlick(float cosTheta, vec3 F0);
 vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 float fog_attenuation(const float dist, const float factor);
 
+bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
+  vec3 mi = position - extent;
+  vec3 ma = position + extent;
+  return (mi.x <= point.x
+      && point.x <= ma.x
+      && mi.y <= point.y
+      && point.y <= ma.y
+      && mi.z <= point.z
+      && point.z <= ma.z);
+}
+
 void main() {
     vec3 normal = fragment.normal;
 
@@ -158,7 +169,7 @@ void main() {
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
     for (int i = 0; i < environments.length(); i++) {
-      if (environments[i].strength > 0.0) {
+      if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
         const vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
         const vec3 r = -reflect(fragment.camera_to_surface, normal);
         const vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, r, fragment.position);
@@ -198,15 +209,8 @@ void main() {
         irradiance /= 8.0;
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
-
-        const float fragment_environment_distance = distance(fragment.position, environments[i].position);
-        const float environment_attenuation_x = 1.0 - (distance(fragment.position.x, environments[i].position.x) / environments[i].extent.x);
-        const float environment_attenuation_y = 1.0 - (distance(fragment.position.y, environments[i].position.y) / environments[i].extent.y);
-        const float environment_attenuation_z = 1.0 - (distance(fragment.position.z, environments[i].position.z) / environments[i].extent.z);
-
-        const float environment_attenuation = ceil(min(environment_attenuation_x, min(environment_attenuation_y, environment_attenuation_z)));
-
-        ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion * environment_attenuation, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+        ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+        break;
       }
     }
     out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
