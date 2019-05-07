@@ -191,7 +191,12 @@ void main() {
         const vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
         const vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
 
-        const vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * environments[i].strength;
+        float horiz = dot(corrected_r, normal);
+        const float horiz_fade_power = 1.0 - roughness;
+        horiz = clamp( 1.0 + horiz_fade_power * horiz, 0.0, 1.0 );
+        horiz *= horiz;
+
+        vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * horiz * environments[i].strength;
 
         vec3 irradiance = vec3(0.0, 0.0, 0.0);
 
