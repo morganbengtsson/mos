@@ -127,6 +127,7 @@ void main() {
     }
 
     const vec3 V = normalize(camera.position - fragment.position);
+    const vec3 R = -reflect(fragment.camera_to_surface, normal);
 
     const float NdotV = max(dot(normal, V), 0.0);
 
@@ -174,8 +175,7 @@ void main() {
     for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
         const vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
-        const vec3 r = -reflect(fragment.camera_to_surface, normal);
-        const vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, r, fragment.position);
+        const vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, R, fragment.position);
 
         const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
         const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
