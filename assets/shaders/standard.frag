@@ -99,15 +99,15 @@ bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
 }
 
 void main() {
-    vec3 normal = fragment.normal;
+    vec3 N = fragment.normal;
 
-    vec3 normal_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
-    normal_from_map = normalize(fragment.tbn * normal_from_map);
+    vec3 N_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
+    N_from_map = normalize(fragment.tbn * N_from_map);
 
     float amount = texture(material.normal_map, fragment.uv).a;
 
     if (amount > 0.0f){
-        normal = normalize(mix(normal, normal_from_map, amount));
+        N = normalize(mix(N, N_from_map, amount));
     }
 
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
@@ -127,9 +127,9 @@ void main() {
     }
 
     const vec3 V = normalize(camera.position - fragment.position);
-    const vec3 R = -reflect(fragment.camera_to_surface, normal);
+    const vec3 R = -reflect(fragment.camera_to_surface, N);
 
-    const float NdotV = max(dot(normal, V), 0.0);
+    const float NdotV = max(dot(N, V), 0.0);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -142,7 +142,7 @@ void main() {
             const vec3 L = normalize(light.position - fragment.position);
             const vec3 H = normalize(V + L);
 
-            const float NdotL = max(dot(normal, L), 0.0);
+            const float NdotL = max(dot(N, L), 0.0);
 
             const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
             const vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
@@ -152,8 +152,8 @@ void main() {
             const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
             const vec3 radiance = light.strength * 0.09 * light.color * attenuation;
 
-            const float NDF = distribution_GGX(normal, H, roughness);
-            const float G = geometry_smith(normal, V, L, roughness);
+            const float NDF = distribution_GGX(N, H, roughness);
+            const float G = geometry_smith(N, V, L, roughness);
             const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
             const vec3 nominator = NDF * G * F;
@@ -174,8 +174,8 @@ void main() {
 
     for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
-        const vec3 corrected_normal = box_correct(environments[i].extent, environments[i].position,normal, fragment.position);
-        const vec3 corrected_r = box_correct(environments[i].extent, environments[i].position, R, fragment.position);
+        const vec3 corrected_N = box_correct(environments[i].extent, environments[i].position, N, fragment.position);
+        const vec3 corrected_R = box_correct(environments[i].extent, environments[i].position, R, fragment.position);
 
         const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
         const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
@@ -186,15 +186,15 @@ void main() {
         const vec3 kS_env = F_env;
         const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
-        const vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
+        const vec3 filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
         const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
         const float refractive_index = 1.5;
-        const vec3 refracted_direction = refract(V, normal, 1.0 / refractive_index);
-        const vec3 corrected_refract_direction = box_correct(environments[i].extent, environments[i].position, refracted_direction, fragment.position);
-        const vec3 refraction = textureLod(environment_samplers[i], corrected_refract_direction, mip_level).rgb * material.transmission;
+        const vec3 RF = refract(V, N, 1.0 / refractive_index);
+        const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
+        const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
 
-        float horiz = dot(corrected_r, normal);
+        float horiz = dot(corrected_R,N);
         const float horiz_fade_power = 1.0 - roughness;
         horiz = clamp( 1.0 + horiz_fade_power * horiz, 0.0, 1.0 );
         horiz *= horiz;
@@ -210,7 +210,7 @@ void main() {
                   const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
                   const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
                   const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
-                  irradiance += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_normal, num_levels - 1.5).rgb;
+                  irradiance += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_N, num_levels - 1.5).rgb;
                 }
             }
         }
