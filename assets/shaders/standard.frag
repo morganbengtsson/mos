@@ -128,6 +128,8 @@ void main() {
 
     const vec3 V = normalize(camera.position - fragment.position);
 
+    const float NdotV = max(dot(normal, V), 0.0);
+
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
@@ -154,7 +156,7 @@ void main() {
             const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
             const vec3 nominator = NDF * G * F;
-            const float denominator = 4 * max(dot(normal, V), 0.0) * max(dot(normal, L), 0.0) + 0.001;
+            const float denominator = 4 * NdotV * NdotL + 0.001;
             const vec3 specular = nominator / denominator;
 
             const vec3 kS = F;
@@ -180,12 +182,12 @@ void main() {
         const float num_levels = 1 + floor(log2(maxsize));
         const float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
 
-        const vec3 F_env = fresnel_schlick_roughness(max(dot(normal, V), 0.0), F0, roughness);
+        const vec3 F_env = fresnel_schlick_roughness(NdotV, F0, roughness);
         const vec3 kS_env = F_env;
         const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
         const vec3 filtered = textureLod(environment_samplers[i], corrected_r, mip_level).rgb;
-        const vec2 brdf  = texture(brdf_lut, vec2(max(dot(normal, V), 0.0), roughness)).rg;
+        const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
         const float refractive_index = 1.5;
         const vec3 refracted_direction = refract(V, normal, 1.0 / refractive_index);
