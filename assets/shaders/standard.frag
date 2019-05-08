@@ -140,12 +140,10 @@ void main() {
             const vec3 H = normalize(V + L);
 
             const float NdotL = max(dot(normal, L), 0.0);
-            const float cos_dir = dot(L, -light.direction);
-            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
             const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
             const vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
-            const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z) * spot_effect;
+            const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z);
 
             const float light_fragment_distance = distance(light.position, fragment.position);
             const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
@@ -161,6 +159,9 @@ void main() {
 
             const vec3 kS = F;
             const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+
+            const float cos_dir = dot(L, -light.direction);
+            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
             direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission);
         }
