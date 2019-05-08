@@ -73,7 +73,7 @@ vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 float fog_attenuation(const float dist, const float factor);
 
 void main() {
-    vec3 normal = fragment.normal;
+    vec3 N = fragment.normal;
 
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
@@ -84,8 +84,8 @@ void main() {
 
     float ambient_occlusion = material.ambient_occlusion;
 
-    vec3 N = normalize(normal);
     vec3 V = normalize(camera.position - fragment.position);
+    const float NdotV = max(dot(N, V), 0.0);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -114,7 +114,7 @@ void main() {
             const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
             const vec3 nominator    = NDF * G * F;
-            const float denominator = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+            const float denominator = 4 * NdotV * NdotL + 0.001;
             const vec3 specular = nominator / denominator;
 
             const vec3 kS = F;
