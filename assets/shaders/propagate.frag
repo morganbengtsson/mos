@@ -50,5 +50,6 @@ void main() {
 
   vec3 pass0 = texture(environment_map, dir).rgb;
 
-  color = vec4(diffuse_environment + pass0, 1.0);
+  //TODO: Get kD from samplerCube
+  color = vec4(0.5 * diffuse_environment + pass0, 1.0);
 }
