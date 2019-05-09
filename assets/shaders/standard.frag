@@ -179,14 +179,33 @@ void main() {
 
         const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
         const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
-        const float num_levels = 1 + floor(log2(maxsize));
+        const float num_levels = textureQueryLevels(environment_samplers[i]);
         const float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
 
         const vec3 F_env = fresnel_schlick_roughness(NdotV, F0, roughness);
         const vec3 kS_env = F_env;
         const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
-        const vec3 filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
+        vec3 filtered = vec3(0,0,0);
+        if (roughness > 0.4) {
+          const float m0 = 0.5 * roughness;
+          const float step = 1.0 * roughness;
+          for(float x = -m0; x <= m0; x += step) {
+              for(float y = -m0; y <= m0; y += step ) {
+                for(float z = -m0; z <= m0; z += step ) {
+                    const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+                    const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+                    const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
+                    filtered += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_R, mip_level).rgb;
+                  }
+              }
+          }
+          filtered /= 8.0;
+        } else {
+          filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
+        }
+
+
         const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
         const float refractive_index = 1.5;
