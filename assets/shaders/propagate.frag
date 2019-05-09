@@ -12,7 +12,7 @@ uniform int side;
 void main() {
   vec2 environment_texture_size = textureSize(environment_map, 0);
   float maxsize = max(environment_texture_size.x, environment_texture_size.x);
-  float num_levels = 1 + floor(log2(maxsize));
+  float num_levels = textureQueryLevels(environment_map);
   color = vec4(0.0, 0.0, 0.0, 1.0);
   vec3 dir = vec3(1.0, 0.0, 0.0);
   vec3 norm = vec3(1.0, 0.0, 0.0);
