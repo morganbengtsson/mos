@@ -29,12 +29,12 @@ void main() {
     dir =  normalize(vec3(uv.x, 0.5, uv.y));
     norm = vec3(dir.x, -dir.y, dir.z);
   }
-  else if (side == 3){ // MAY BE WRONG
+  else if (side == 3) {
     dir =  normalize(vec3(uv.x, -0.5, -uv.y));
     norm = vec3(dir.x, -dir.y, dir.z);
   }
-  else if (side == 4){ // MAY BE WRONG
-    dir =  normalize(vec3(uv.x, uv.y, 0.5));
+  else if (side == 4) {
+    dir =  normalize(vec3(uv.x, -uv.y, 0.5));
     norm = vec3(dir.x, dir.y, -dir.z);
   }
   else if (side == 5) {
