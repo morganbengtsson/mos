@@ -135,5 +135,5 @@ void main() {
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, clamp(fog_att, 0.45, 1.0));
 
-    albedo_out = vec4(albedo, 1.0);
+    albedo_out = vec4(albedo * (1.0 - material.emission), 1.0);
 }
