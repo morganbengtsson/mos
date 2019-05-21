@@ -19,7 +19,7 @@ class Model final {
 public:
   Model() = default;
 
-  Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  Model(const nlohmann::json &json, Assets &assets = *std::make_unique<Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   Model(std::string name,
         Shared_mesh mesh,

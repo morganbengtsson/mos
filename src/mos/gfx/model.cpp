@@ -18,7 +18,7 @@ Model::Model(std::string name,
       transform(transform),
       name_(std::move(name)) {}
 
-Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent_transform) : transform(1.0f) {
+Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &parent_transform) : transform(1.0f) {
   auto parsed = json;
   if (parsed.is_string()) {
     std::cout << "Loading: " << parsed << std::endl;
@@ -44,7 +44,7 @@ Model::Model(Assets &assets, const nlohmann::json &json, const glm::mat4 &parent
     const std::string str_path = m;
     filesystem::path path = str_path;
     if (path.extension() == "model") {
-      models.push_back(Model(assets, path.str()));
+      models.push_back(Model(path.str(), assets));
     }
   }
 }
