@@ -35,8 +35,29 @@ public:
   /** Set position. */
   void position(const glm::vec3 &position);
 
+  /** Get centroid position. */
   glm::vec3 centroid() const;
+
+  /** Get radious of bounding sphere */
   float radius() const;
+
+  /** Set emission of material recursively. */
+  void emission(const float emission);
+
+  /** Set ambient occlusion of material recursively. */
+  void ambient_occlusion(const float ambient_occlusion);
+
+  /** set opacity of material recursively. */
+  void opacity(const float opacity);
+
+  /** set transmission of material recursively. */
+  void transmission(const float transmission);
+
+  /** set roughness of material recursively. */
+  void roughness(const float roughness);
+
+  /** set metallic of material recursively. */
+  void metallic(const float metallic);
 
   /** Mesh shape. */
   Shared_mesh mesh;

@@ -73,5 +73,53 @@ float Model::radius() const {
   return 0.0f;
 }
 
+void Model::emission(const float emission)
+{
+  material.emission = emission;
+  for (auto & model : models){
+    model.emission(emission);
+  }
+}
+
+void Model::ambient_occlusion(const float ambient_occlusion)
+{
+  material.ambient_occlusion = ambient_occlusion;
+  for (auto & model : models){
+    model.ambient_occlusion(ambient_occlusion);
+  }
+}
+
+void Model::opacity(const float opacity)
+{
+  material.opacity = opacity;
+  for (auto & model : models){
+    model.opacity(opacity);
+  }
+}
+
+void Model::transmission(const float transmission)
+{
+  material.transmission = transmission;
+  for (auto & model : models){
+    model.transmission(transmission);
+  }
+}
+
+void Model::roughness(const float roughness)
+{
+  material.roughness = roughness;
+  for (auto & model : models){
+    model.roughness(roughness);
+  }
+}
+
+void Model::metallic(const float metallic)
+{
+  material.metallic = metallic;
+  for (auto & model : models){
+    model.metallic(metallic);
+  }
+}
+
 }
 }
