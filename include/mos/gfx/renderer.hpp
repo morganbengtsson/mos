@@ -357,8 +357,8 @@ private:
     const glm::ivec2 resolution;
   };
 
-  const Post_target blur_target0_;
-  const Post_target blur_target1_;
+  const Post_target bloom_blurred_target_;
+  const Post_target blur_target_;
 
   struct Quad {
     Quad();
