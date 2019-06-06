@@ -16,5 +16,5 @@ void main()
     result += texture(color_sampler, frag_uv + vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgb * weight[i];
     result += texture(color_sampler, frag_uv - vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgb * weight[i];
   }
-  color = vec4(result, 1.0);
+  color = vec4(clamp(result, vec3(0.0), vec3(1.0)), 1.0);
 }
