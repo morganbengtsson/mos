@@ -975,11 +975,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glViewport(0, 0, bloom_target_.resolution.x, bloom_target_.resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, bloom_target_.frame_buffer);
 
-  glUseProgram(multisample_program_.program);
+  glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
-  glUniform1i(multisample_program_.color_sampler, 0);
+  glUniform1i(bloom_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -1254,7 +1254,7 @@ Renderer::Box_program::Box_program() {
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::Multisample_program::Multisample_program() {
+Renderer::Bloom_program::Bloom_program() {
   std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
