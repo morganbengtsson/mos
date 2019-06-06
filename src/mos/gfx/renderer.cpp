@@ -580,6 +580,22 @@ void Renderer::clear_color(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer::blur(const GLuint input_texture, const Renderer::Post_target &target, const float iterations) {
+  glViewport(0, 0, GLsizei(target.resolution.x), GLsizei(target.resolution.y));
+  for (int i = 0; i < iterations; i++) {
+    GLint horizontal = (i % 2 == 1);
+    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target_.frame_buffer : target.frame_buffer);
+    glUseProgram(blur_program_.program);
+    glBindVertexArray(quad_.vertex_array);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? target.texture : blur_target_.texture);
+    glUniform1i(blur_program_.color_sampler, 0);
+    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+  }
+}
+
 void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
     if (lights.at(i).strength > 0.0f) {
@@ -978,23 +994,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(multisample_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
-  auto blur = [&](const GLuint input_texture, const Post_target &target){
-    glViewport(0, 0, GLsizei(resolution.x / 4.0f), GLsizei(resolution.y / 4.0f));
-
-    for (int i = 0; i < 6; i++) {
-      GLint horizontal = (i % 2 == 1);
-      glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target_.frame_buffer : target.frame_buffer);
-      glUseProgram(blur_program_.program);
-      glBindVertexArray(quad_.vertex_array);
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? target.texture : blur_target_.texture);
-      glUniform1i(blur_program_.color_sampler, 0);
-      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-
-      glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-  };
 
   blur(multi_target_.bright_texture, bloom_blurred_target_);
 

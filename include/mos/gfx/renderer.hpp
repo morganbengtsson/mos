@@ -379,6 +379,7 @@ private:
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
+  void blur(const GLuint input_texture, const Post_target &target, const float iterations = 6);
 
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;
