@@ -1003,9 +1003,9 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindTexture(GL_TEXTURE_2D, depth_of_field_target_.texture);
   glUniform1i(depth_of_field_program_.blurred_color_sampler, 1);
 
-  glActiveTexture(GL_TEXTURE3);
+  glActiveTexture(GL_TEXTURE2);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(depth_of_field_program_.depth_sampler, 3);
+  glUniform1i(depth_of_field_program_.depth_sampler, 2);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
