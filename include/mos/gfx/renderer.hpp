@@ -263,6 +263,74 @@ private:
     GLint brdf_lut;
   };
 
+  struct Standard_target {
+    Standard_target(const glm::ivec2 &resolution);
+    ~Standard_target();
+    GLuint frame_buffer;
+    GLuint color_texture;
+    GLuint depth_texture;
+  };
+
+  struct Multi_target {
+    Multi_target(const glm::ivec2 &resolution);
+    ~Multi_target();
+    GLuint frame_buffer;
+    GLuint color_texture;
+    GLuint bright_texture;
+  };
+
+  struct Post_target {
+    Post_target(const glm::ivec2 &resolution, const GLenum precision = GL_RGB16F);
+    ~Post_target();
+    GLuint frame_buffer;
+    GLuint texture;
+    const glm::ivec2 resolution;
+  };
+
+  struct Render_buffer {
+    explicit Render_buffer(int resolution);
+    ~Render_buffer();
+    GLuint render_buffer;
+    int resolution;
+  };
+
+  struct Shadow_map_target {
+    explicit Shadow_map_target(const Render_buffer &render_buffer);
+    ~Shadow_map_target();
+    GLuint texture;
+    GLuint frame_buffer;
+  };
+
+  struct Shadow_map_blur_target{
+    explicit Shadow_map_blur_target(const int &resolution);
+    ~Shadow_map_blur_target();
+    GLuint texture;
+    GLuint frame_buffer;
+  };
+
+  struct Environment_map_target {
+    explicit Environment_map_target(const Render_buffer &render_buffer);
+    ~Environment_map_target();
+    GLuint texture;
+    GLuint albedo;
+    GLuint frame_buffer;
+  };
+
+  struct Quad {
+    Quad();
+    ~Quad();
+    GLuint vertex_array;
+    GLuint buffer;
+  };
+
+  struct Box {
+    Box();
+    ~Box() = default;
+    GLuint buffer;
+    GLuint element_buffer;
+    GLuint vertex_array;
+  };
+
   void render_texture_targets(const Scene &scene);
 
   void render_scene(const Camera &camera,
@@ -329,54 +397,13 @@ private:
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
-  struct Standard_target {
-    Standard_target(const glm::ivec2 &resolution);
-    ~Standard_target();
-    GLuint frame_buffer;
-    GLuint color_texture;
-    GLuint depth_texture;
-  };
-
   const Standard_target standard_target_;
-
-  struct Multi_target {
-    Multi_target(const glm::ivec2 &resolution);
-    ~Multi_target();
-    GLuint frame_buffer;
-    GLuint color_texture;
-    GLuint bright_texture;
-  };
-
   const Multi_target multi_target_;
-
-  struct Post_target {
-    Post_target(const glm::ivec2 &resolution, const GLenum precision = GL_RGB16F);
-    ~Post_target();
-    GLuint frame_buffer;
-    GLuint texture;
-    const glm::ivec2 resolution;
-  };
 
   const Post_target blur_target0_;
   const Post_target blur_target1_;
 
-  struct Quad {
-    Quad();
-    ~Quad();
-    GLuint vertex_array;
-    GLuint buffer;
-  };
-
   const Quad quad_;
-
-  struct Box {
-    Box();
-    ~Box() = default;
-    GLuint buffer;
-    GLuint element_buffer;
-    GLuint vertex_array;
-  };
-
   const Box box;
 
   const Texture_buffer_2D black_texture_;
@@ -385,40 +412,11 @@ private:
 
   std::array<int,2> cube_camera_index_;
 
-  struct Render_buffer {
-    explicit Render_buffer(int resolution);
-    ~Render_buffer();
-    GLuint render_buffer;
-    int resolution;
-  };
-
-  struct Shadow_map_target {
-    explicit Shadow_map_target(const Render_buffer &render_buffer);
-    ~Shadow_map_target();
-    GLuint texture;
-    GLuint frame_buffer;
-  };
-
-  struct Shadow_map_blur_target{
-    explicit Shadow_map_blur_target(const int &resolution);
-    ~Shadow_map_blur_target();
-    GLuint texture;
-    GLuint frame_buffer;
-  };
-
   /** Shadow maps. */
   const Render_buffer shadow_maps_render_buffer_;
   const std::array<Shadow_map_target, 4> shadow_maps_;
   const Shadow_map_blur_target shadow_map_blur_target_;
   const std::array<Shadow_map_blur_target, 4> shadow_map_blur_targets_;
-
-  struct Environment_map_target {
-    explicit Environment_map_target(const Render_buffer &render_buffer);
-    ~Environment_map_target();
-    GLuint texture;
-    GLuint albedo;
-    GLuint frame_buffer;
-  };
 
   /** Environment map targets. */
   const Render_buffer environment_render_buffer_;
