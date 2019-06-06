@@ -975,6 +975,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
   // Bloom
+  /*
   glViewport(0, 0, bloom_target_.resolution.x, bloom_target_.resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, bloom_target_.frame_buffer);
 
@@ -1009,7 +1010,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
   glUniform1i(depth_of_field_program_.depth_sampler, 2);
 
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
   // Render to screen
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1021,7 +1022,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
+  //glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
@@ -1304,6 +1306,27 @@ Renderer::Box_program::Box_program() {
   glDetachShader(program, fragment_shader.id);
 
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
+}
+
+Renderer::Add_program::Add_program() {
+  std::string name = "add";
+  auto vert_source = text("assets/shaders/" + name + ".vert");
+  auto frag_source = text("assets/shaders/" + name + ".frag");
+
+  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
+  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+
+  glAttachShader(program, vertex_shader.id);
+  glAttachShader(program, fragment_shader.id);
+  glBindAttribLocation(program, 0, "position");
+  glBindAttribLocation(program, 1, "uv");
+  link(name);
+  check(name);
+
+  glDetachShader(program, vertex_shader.id);
+  glDetachShader(program, fragment_shader.id);
+
+  color_sampler = glGetUniformLocation(program, "color_sampler");
 }
 
 Renderer::Bloom_program::Bloom_program() {

@@ -139,6 +139,11 @@ private:
     GLint color_sampler;
   };
 
+  struct Add_program : public Program {
+    Add_program();
+    GLint color_sampler;
+  };
+
 
   struct Compositing_program : public Program {
     Compositing_program();
@@ -386,6 +391,7 @@ private:
   const Compositing_program compositing_program_;
   const Blur_program blur_program_;
   const Depth_of_field_program depth_of_field_program_;
+  const Add_program add_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
