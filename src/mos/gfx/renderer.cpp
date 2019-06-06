@@ -60,8 +60,8 @@ message_callback(GLenum source,
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multi_target_(resolution),
-    blur_target0_(resolution / 4),
-    blur_target1_(resolution / 4),
+    bloom_blurred_target_(resolution / 4),
+    blur_target_(resolution / 4),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -979,31 +979,24 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  // Blur bloom
-  glViewport(0, 0, GLsizei(resolution.x / 4.0f), GLsizei(resolution.y / 4.0f));
+  auto blur = [&](const GLuint input_texture, const Post_target &target){
+    glViewport(0, 0, GLsizei(resolution.x / 4.0f), GLsizei(resolution.y / 4.0f));
 
-  glBindFramebuffer(GL_FRAMEBUFFER, blur_target0_.frame_buffer);
-  glUseProgram(blur_program_.program);
-  glBindVertexArray(quad_.vertex_array);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, multi_target_.bright_texture);
-  glUniform1i(blur_program_.color_sampler, 0);
-  GLint horizontal = false;
-  glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+    for (int i = 0; i < 6; i++) {
+      GLint horizontal = (i % 2 == 1);
+      glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target_.frame_buffer : target.frame_buffer);
+      glUseProgram(blur_program_.program);
+      glBindVertexArray(quad_.vertex_array);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? target.texture : blur_target_.texture);
+      glUniform1i(blur_program_.color_sampler, 0);
+      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
-  for (int i = 0; i < 5; i++) {
-    horizontal = (i % 2 == 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target1_.frame_buffer : blur_target0_.frame_buffer);
-    glUseProgram(blur_program_.program);
-    glBindVertexArray(quad_.vertex_array);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, horizontal ? blur_target0_.texture : blur_target1_.texture);
-    glUniform1i(blur_program_.color_sampler, 0);
-    glUniform1iv(blur_program_.horizontal, 1, &horizontal);
+      glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+  };
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-  }
+  blur(multi_target_.bright_texture, bloom_blurred_target_);
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1018,7 +1011,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, blur_target0_.texture);
+  glBindTexture(GL_TEXTURE_2D, bloom_blurred_target_.texture);
   glUniform1i(compositing_program_.bloom_sampler, 1);
 
   float strength = 0.1f;
