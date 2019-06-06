@@ -59,7 +59,7 @@ message_callback(GLenum source,
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
-    multi_target_(resolution),
+    multisample_target_(resolution, GL_R11F_G11F_B10F),
     bloom_blurred_target_(resolution / 4),
     color_blur_target(resolution / 4),
     quad_(),
@@ -966,9 +966,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(scene.camera, scene, resolution);
   }
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multi_target_.frame_buffer);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
   glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
-  //glDrawBuffer(GL_BACK);
   glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
   // Multisampling / bloom
@@ -995,7 +994,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, multi_target_.color_texture);
+  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);

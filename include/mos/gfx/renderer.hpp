@@ -395,8 +395,7 @@ private:
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   const Standard_target standard_target_;
-  const Multi_target multi_target_;
-
+  const Post_target bloom_target_;
   const Post_target bloom_blurred_target_;
   const Post_target color_blur_target;
 
