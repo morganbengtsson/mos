@@ -60,6 +60,7 @@ message_callback(GLenum source,
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multisample_target_(resolution, GL_R11F_G11F_B10F),
+    screen_target_(resolution, GL_R11F_G11F_B10F),
     bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
     depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
     post_target_(resolution / 4, GL_R11F_G11F_B10F),
@@ -988,9 +989,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   // Depth of field
   blur(multisample_target_.texture, post_target_, depth_of_field_target_);
 
-  // Render to screen
-  glViewport(0, 0, resolution.x, resolution.y);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
+  glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
 
   glUseProgram(depth_of_field_program_.program);
   glBindVertexArray(quad_.vertex_array);
@@ -1009,6 +1009,9 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
+  // Render to screen
+  glViewport(0, 0, resolution.x, resolution.y);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   //Compositing
   glUseProgram(compositing_program_.program);
@@ -1016,7 +1019,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
