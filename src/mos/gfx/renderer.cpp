@@ -1601,7 +1601,7 @@ Renderer::Multi_target::~Multi_target() {
   glDeleteTextures(1, &bright_texture);
 }
 
-Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLenum precision) : resolution(resolution){
+Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLint precision) : resolution(resolution){
   glGenFramebuffers(1, &frame_buffer);
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
