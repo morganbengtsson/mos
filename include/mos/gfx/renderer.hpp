@@ -379,7 +379,10 @@ private:
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
-  void blur(const GLuint input_texture, const Post_target &target, const float iterations = 6);
+  void blur(const GLuint input_texture,
+            const Post_target &buffer_target,
+            const Post_target &output_target,
+            const float iterations = 6);
 
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;
@@ -402,7 +405,7 @@ private:
   const Multi_target multi_target_;
 
   const Post_target bloom_blurred_target_;
-  const Post_target blur_target_;
+  const Post_target blur_screen_target_;
 
   const Quad quad_;
   const Box box;

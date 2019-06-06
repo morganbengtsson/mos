@@ -61,7 +61,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multi_target_(resolution),
     bloom_blurred_target_(resolution / 4),
-    blur_target_(resolution / 4),
+    blur_screen_target_(resolution / 4),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -580,15 +580,19 @@ void Renderer::clear_color(const glm::vec4 &color) {
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::blur(const GLuint input_texture, const Renderer::Post_target &target, const float iterations) {
-  glViewport(0, 0, GLsizei(target.resolution.x), GLsizei(target.resolution.y));
+void Renderer::blur(const GLuint input_texture,
+                    const Post_target &buffer_target,
+                    const Post_target &output_target,
+                    const float iterations) {
+  assert(buffer_target.resolution != output_target.resolution);
+  glViewport(0, 0, GLsizei(output_target.resolution.x), GLsizei(output_target.resolution.y));
   for (int i = 0; i < iterations; i++) {
     GLint horizontal = (i % 2 == 1);
-    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? blur_target_.frame_buffer : target.frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? buffer_target.frame_buffer : output_target.frame_buffer);
     glUseProgram(blur_program_.program);
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? target.texture : blur_target_.texture);
+    glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? output_target.texture : buffer_target.texture);
     glUniform1i(blur_program_.color_sampler, 0);
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
@@ -995,7 +999,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(multi_target_.bright_texture, bloom_blurred_target_);
+  blur(multi_target_.bright_texture, blur_screen_target_, bloom_blurred_target_);
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
