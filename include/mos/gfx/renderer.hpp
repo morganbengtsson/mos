@@ -153,6 +153,13 @@ private:
     GLint horizontal;
   };
 
+  struct Depth_of_field_program : public Program {
+    Depth_of_field_program();
+    GLint color_sampler;
+    GLint blurred_color_sampler;
+    GLint depth_sampler;
+  };
+
   struct Depth_program : public Program {
     Depth_program();
     GLint model_view_projection;
