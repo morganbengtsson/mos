@@ -987,6 +987,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   // Depth of field
   blur(multisample_target_.texture, post_target_, depth_of_field_target_);
+
+  // Render to screen
+  glViewport(0, 0, resolution.x, resolution.y);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
   glUseProgram(depth_of_field_program_.program);
   glBindVertexArray(quad_.vertex_array);
 
@@ -1003,10 +1008,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(depth_of_field_program_.depth_sampler, 3);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
-  // Render to screen
-  glViewport(0, 0, resolution.x, resolution.y);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
   //Compositing
@@ -1026,6 +1027,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1fv(compositing_program_.bloom_strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
 }
 
 Renderer::Depth_program::Depth_program() {

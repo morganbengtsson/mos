@@ -12,7 +12,7 @@ const float focal_length_sharpness = 100.0;
 const float blur_rate = 6;
 
 void main() {
-  vec3 focus_color = texture(color_sampler, frag_uv).rgb + bloom * strength;
+  vec3 focus_color = texture(color_sampler, frag_uv).rgb;
   vec3 unfocus_color = texture(blurred_color_sampler, frag_uv).rgb;
 
   vec2 texture_size = textureSize(depth_sampler);
