@@ -966,7 +966,13 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(scene.camera, scene, resolution);
   }
 
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multi_target_.frame_buffer);
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
+  //glDrawBuffer(GL_BACK);
+  glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
   // Multisampling / bloom
+  /*
   glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
   glUseProgram(multisample_program_.program);
 
@@ -978,7 +984,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(multi_target_.bright_texture, color_blur_target, bloom_blurred_target_);
+  blur(multi_target_.bright_texture, color_blur_target, bloom_blurred_target_);*/
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
