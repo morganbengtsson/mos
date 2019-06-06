@@ -280,7 +280,7 @@ private:
   };
 
   struct Post_target {
-    Post_target(const glm::ivec2 &resolution, const GLint precision = GL_RGB16F);
+    explicit Post_target(const glm::ivec2 &resolution, const GLint precision = GL_RGB16F);
     ~Post_target();
     GLuint frame_buffer;
     GLuint texture;
@@ -297,13 +297,6 @@ private:
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
     ~Shadow_map_target();
-    GLuint texture;
-    GLuint frame_buffer;
-  };
-
-  struct Shadow_map_blur_target{
-    explicit Shadow_map_blur_target(const int &resolution);
-    ~Shadow_map_blur_target();
     GLuint texture;
     GLuint frame_buffer;
   };
@@ -405,7 +398,7 @@ private:
   const Multi_target multi_target_;
 
   const Post_target bloom_blurred_target_;
-  const Post_target blur_screen_target_;
+  const Post_target color_blur_target;
 
   const Quad quad_;
   const Box box;
@@ -419,8 +412,8 @@ private:
   /** Shadow maps. */
   const Render_buffer shadow_maps_render_buffer_;
   const std::array<Shadow_map_target, 4> shadow_maps_;
-  const Shadow_map_blur_target shadow_map_blur_target_;
-  const std::array<Shadow_map_blur_target, 4> shadow_map_blur_targets_;
+  const Post_target shadow_map_blur_target_;
+  const std::array<Post_target, 4> shadow_map_blur_targets_;
 
   /** Environment map targets. */
   const Render_buffer environment_render_buffer_;

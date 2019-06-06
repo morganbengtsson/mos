@@ -61,7 +61,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multi_target_(resolution),
     bloom_blurred_target_(resolution / 4),
-    blur_screen_target_(resolution / 4),
+    color_blur_target(resolution / 4),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -72,11 +72,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
                  Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_)},
-    shadow_map_blur_target_(shadow_maps_render_buffer_.resolution),
-    shadow_map_blur_targets_{Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
-                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
-                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution),
-                             Shadow_map_blur_target(shadow_maps_render_buffer_.resolution)},
+    shadow_map_blur_target_(Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F)),
+    shadow_map_blur_targets_{Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F),
+                             Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F),
+                             Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F),
+                             Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F)},
     environment_render_buffer_(128),
     environment_maps_targets{Environment_map_target(environment_render_buffer_),
                              Environment_map_target(environment_render_buffer_)},
@@ -999,7 +999,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(multi_target_.bright_texture, blur_screen_target_, bloom_blurred_target_);
+  blur(multi_target_.bright_texture, color_blur_target, bloom_blurred_target_);
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1363,43 +1363,6 @@ Renderer::Propagate_program::Propagate_program() {
   environment_sampler = glGetUniformLocation(program, "environment_map");
   environment_albedo_sampler = glGetUniformLocation(program, "environment_albedo_map");
   side = glGetUniformLocation(program, "side");
-}
-
-Renderer::Shadow_map_blur_target::Shadow_map_blur_target(const int &resolution) {
-  glGenFramebuffers(1, &frame_buffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-  glTexImage2D(GL_TEXTURE_2D, 0,
-               GL_RG32F,
-               resolution,
-               resolution,
-               0,
-               GL_RG,
-               GL_UNSIGNED_BYTE,
-               nullptr);
-
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  glFramebufferTexture2D(GL_FRAMEBUFFER,
-                         GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D, texture, 0);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete.");
-  }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-Renderer::Shadow_map_blur_target::~Shadow_map_blur_target() {
-  glDeleteFramebuffers(1, &frame_buffer);
-  glDeleteTextures(1, &texture);
 }
 
 Renderer::Shadow_map_target::Shadow_map_target(const Render_buffer &render_buffer) {
