@@ -963,16 +963,38 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   render_environment(scenes[0], color);
   render_texture_targets(scenes[0]);
 
-  glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-  clear(color);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
+  clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
   for (auto &scene : scenes) {
+    glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
+    clear(color);
     render_scene(scene.camera, scene, resolution);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
+    glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
+
+
+    glBlendFunc(GL_ONE, GL_ONE);
+
+
+    glUseProgram(add_program_.program);
+    glBindVertexArray(quad_.vertex_array);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
+    glUniform1i(add_program_.color_sampler, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   }
 
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
-  glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
 
   // Bloom
   /*
@@ -1022,8 +1044,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  //glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
-  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
+  //glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
