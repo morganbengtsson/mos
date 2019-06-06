@@ -389,6 +389,7 @@ private:
   const Standard_target standard_target_;
   const Post_target multisample_target_;
   const Post_target bloom_target_;
+  const Post_target depth_of_field_target_;
   const Post_target post_target_;
 
   const Quad quad_;
