@@ -61,8 +61,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multisample_target_(resolution, GL_R11F_G11F_B10F),
     bloom_target_(resolution / 4),
-    bloom_blurred_target_(resolution / 4), //TODO remove
-    color_blur_target(resolution / 4),
+    post_target_(resolution / 4),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -984,7 +983,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(bloom_target_.texture, color_blur_target, bloom_blurred_target_);
+  blur(bloom_target_.texture, post_target_, bloom_target_);
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
@@ -999,7 +998,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, bloom_blurred_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, bloom_target_.texture);
   glUniform1i(compositing_program_.bloom_sampler, 1);
 
   float strength = 0.1f;
