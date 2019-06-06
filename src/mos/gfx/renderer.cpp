@@ -970,8 +970,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(scene.camera, scene, resolution);
   }
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
   glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
   glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
   // Bloom
