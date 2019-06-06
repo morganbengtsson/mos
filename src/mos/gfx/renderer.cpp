@@ -1255,7 +1255,7 @@ Renderer::Box_program::Box_program() {
 }
 
 Renderer::Multisample_program::Multisample_program() {
-  std::string name = "multisample";
+  std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
