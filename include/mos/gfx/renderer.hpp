@@ -271,14 +271,6 @@ private:
     GLuint depth_texture;
   };
 
-  struct Multi_target {
-    Multi_target(const glm::ivec2 &resolution);
-    ~Multi_target();
-    GLuint frame_buffer;
-    GLuint color_texture;
-    GLuint bright_texture;
-  };
-
   struct Post_target {
     explicit Post_target(const glm::ivec2 &resolution, const GLint precision = GL_RGB16F);
     ~Post_target();
@@ -395,6 +387,7 @@ private:
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   const Standard_target standard_target_;
+  const Post_target multisample_target_;
   const Post_target bloom_target_;
   const Post_target bloom_blurred_target_;
   const Post_target color_blur_target;

@@ -60,7 +60,8 @@ message_callback(GLenum source,
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
     multisample_target_(resolution, GL_R11F_G11F_B10F),
-    bloom_blurred_target_(resolution / 4),
+    bloom_target_(resolution / 4),
+    bloom_blurred_target_(resolution / 4), //TODO remove
     color_blur_target(resolution / 4),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
@@ -971,19 +972,19 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
   // Multisampling / bloom
-  /*
-  glBindFramebuffer(GL_FRAMEBUFFER, multi_target_.frame_buffer);
+
+  glViewport(0, 0, bloom_target_.resolution.x, bloom_target_.resolution.y);
+  glBindFramebuffer(GL_FRAMEBUFFER, bloom_target_.frame_buffer);
+
   glUseProgram(multisample_program_.program);
-
   glBindVertexArray(quad_.vertex_array);
-
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.color_texture);
+  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(multisample_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(multi_target_.bright_texture, color_blur_target, bloom_blurred_target_);*/
+  blur(bloom_target_.texture, color_blur_target, bloom_blurred_target_);
 
   // Compositing
   glViewport(0, 0, resolution.x, resolution.y);
@@ -1513,43 +1514,6 @@ Renderer::Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &color_texture);
   glDeleteTextures(1, &depth_texture);
-}
-Renderer::Multi_target::Multi_target(const glm::ivec2 &resolution) {
-  glGenFramebuffers(1, &frame_buffer);
-  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-  glGenTextures(1, &color_texture);
-  glBindTexture(GL_TEXTURE_2D, color_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
-
-  glGenTextures(1, &bright_texture);
-  glBindTexture(GL_TEXTURE_2D, bright_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bright_texture, 0);
-
-  std::array<GLuint, 2> attachments{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-  glDrawBuffers(2, attachments.data());
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    throw std::runtime_error("Framebuffer incomplete");
-  }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-Renderer::Multi_target::~Multi_target() {
-  glDeleteFramebuffers(1, &frame_buffer);
-  glDeleteTextures(1, &color_texture);
-  glDeleteTextures(1, &bright_texture);
 }
 
 Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLint precision) : resolution(resolution){
