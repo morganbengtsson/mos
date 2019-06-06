@@ -588,11 +588,11 @@ void Renderer::blur(const GLuint input_texture,
   glViewport(0, 0, GLsizei(output_target.resolution.x), GLsizei(output_target.resolution.y));
   for (int i = 0; i < iterations; i++) {
     GLint horizontal = (i % 2 == 1);
-    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? buffer_target.frame_buffer : output_target.frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? output_target.frame_buffer : buffer_target.frame_buffer);
     glUseProgram(blur_program_.program);
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? output_target.texture : buffer_target.texture);
+    glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? buffer_target.texture : output_target.texture);
     glUniform1i(blur_program_.color_sampler, 0);
     glUniform1iv(blur_program_.horizontal, 1, &horizontal);
 
@@ -620,28 +620,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glViewport(0, 0, shadow_maps_render_buffer_.resolution,
                  shadow_maps_render_buffer_.resolution);
 
-      glBindFramebuffer(GL_FRAMEBUFFER, shadow_map_blur_target_.frame_buffer);
-      glUseProgram(blur_program_.program);
-      glBindVertexArray(quad_.vertex_array);
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, shadow_maps_.at(i).texture);
-      glUniform1i(blur_program_.color_sampler, 0);
-      GLint horizontal = false;
-      glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-      glDrawArrays(GL_TRIANGLES, 0, 6);
-
-      for (int j = 0; j < 1; j++) {
-        horizontal = (j % 2 == 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? shadow_map_blur_targets_.at(i).frame_buffer : shadow_map_blur_target_.frame_buffer);
-        glUseProgram(blur_program_.program);
-        glBindVertexArray(quad_.vertex_array);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, horizontal ? shadow_map_blur_target_.texture : shadow_map_blur_targets_.at(i).texture);
-        glUniform1i(blur_program_.color_sampler, 0);
-        glUniform1iv(blur_program_.horizontal, 1, &horizontal);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-      }
+      blur(shadow_maps_.at(i).texture, shadow_map_blur_target_, shadow_map_blur_targets_.at(i), 2);
     }
   }
 }
