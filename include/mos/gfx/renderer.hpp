@@ -143,6 +143,7 @@ private:
     Add_program();
     GLint color_sampler;
     GLint blurred_color_sampler;
+    GLint depth_sampler;
   };
 
 
