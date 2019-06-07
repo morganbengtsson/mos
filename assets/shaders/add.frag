@@ -9,12 +9,13 @@ uniform sampler2DMS depth_sampler;
 uniform float camera_near;
 uniform float camera_far;
 uniform float camera_focus_distance;
-uniform float fstop;
-
-const float focal_length_sharpness = 100.0;
-const float blur_rate = 6;
+uniform float camera_fstop;
 
 void main() {
+  //TODO: Adjust parameters for more corectness.
+  const float focal_length_sharpness = 1000.0 * camera_fstop;
+  const float blur_rate = 6;
+
   vec2 texture_size = textureSize(depth_sampler);
   ivec2 pixel_uv = ivec2(floor(texture_size * frag_uv));
   float depth = texelFetch(depth_sampler, pixel_uv, 0).r;
