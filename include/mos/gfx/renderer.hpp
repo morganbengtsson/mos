@@ -406,6 +406,7 @@ private:
   const Post_target bloom_target_;
   const Post_target depth_of_field_target_;
   const Post_target post_target_;
+  const Post_target temp_target_;
 
   const Quad quad_;
   const Box box;

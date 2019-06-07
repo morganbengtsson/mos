@@ -59,6 +59,7 @@ message_callback(GLenum source,
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
+    temp_target_(resolution / 4, GL_RGB16F),
     multisample_target_(resolution, GL_RGBA16F),
     screen_target_(resolution, GL_R11F_G11F_B10F),
     bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
@@ -974,6 +975,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    blur(multisample_target_.texture, post_target_, temp_target_);
 
     glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
     glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
