@@ -969,7 +969,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   for (auto &scene : scenes) {
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-    clear(color);
+    clear(glm::vec4(0.0f));
     render_scene(scene.camera, scene, resolution);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
