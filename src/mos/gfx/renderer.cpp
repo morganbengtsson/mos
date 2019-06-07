@@ -978,10 +978,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
     glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
 
-
-    glBlendFunc(GL_ONE, GL_ONE);
-
-
     glUseProgram(add_program_.program);
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
@@ -989,10 +985,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glUniform1i(add_program_.color_sampler, 0);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  }
+ }
 
 
 
