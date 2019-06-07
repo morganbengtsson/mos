@@ -1007,7 +1007,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
  }
 
   // Bloom
-  /*
   glViewport(0, 0, bloom_target_.resolution.x, bloom_target_.resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, bloom_target_.frame_buffer);
 
@@ -1020,29 +1019,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
   blur(bloom_target_.texture, post_target_, bloom_target_);
-
-  // Depth of field
-  blur(multisample_target_.texture, post_target_, depth_of_field_target_);
-
-  glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
-  glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
-
-  glUseProgram(depth_of_field_program_.program);
-  glBindVertexArray(quad_.vertex_array);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
-  glUniform1i(depth_of_field_program_.color_sampler, 0);
-
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, depth_of_field_target_.texture);
-  glUniform1i(depth_of_field_program_.blurred_color_sampler, 1);
-
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-  glUniform1i(depth_of_field_program_.depth_sampler, 2);
-
-  glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
   // Render to screen
   glViewport(0, 0, resolution.x, resolution.y);
