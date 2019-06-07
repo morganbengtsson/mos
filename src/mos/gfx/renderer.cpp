@@ -1003,6 +1003,16 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
     glUniform1i(add_program_.depth_sampler, 2);
 
+    float camera_near = scene.camera.near();
+    glUniform1fv(add_program_.camera_near, 1, &camera_near);
+
+    float camera_far = scene.camera.far();
+    glUniform1fv(add_program_.camera_far, 1, &camera_far);
+
+    float camera_focus_distance = glm::distance(scene.camera.position(), scene.camera.center());
+    std::cout << camera_focus_distance << std::endl;
+    glUniform1fv(add_program_.camera_focus_distance, 1, &camera_focus_distance);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
  }
 
@@ -1337,6 +1347,10 @@ Renderer::Add_program::Add_program() {
   color_sampler = glGetUniformLocation(program, "color_sampler");
   blurred_color_sampler = glGetUniformLocation(program, "blurred_color_sampler");
   depth_sampler = glGetUniformLocation(program, "depth_sampler");
+
+  camera_far = glGetUniformLocation(program, "camera_far");
+  camera_near = glGetUniformLocation(program, "camera_near");
+  camera_focus_distance = glGetUniformLocation(program, "camera_focus_distance");
 }
 
 Renderer::Bloom_program::Bloom_program() {

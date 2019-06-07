@@ -10,8 +10,10 @@ namespace gfx {
 Camera::Camera(const glm::vec3 &position,
                  const glm::vec3 &center,
                  const glm::mat4 &projection,
-                 const glm::vec3 &up)
-  : projection_(projection),
+                 const glm::vec3 &up,
+                 const float fstop)
+  : fstop(fstop),
+    projection_(projection),
     view_(1.0f),
     frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)},
     up_(up),

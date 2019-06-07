@@ -139,11 +139,15 @@ private:
     GLint color_sampler;
   };
 
+  //TODO: rename
   struct Add_program : public Program {
     Add_program();
     GLint color_sampler;
     GLint blurred_color_sampler;
     GLint depth_sampler;
+    GLint camera_far;
+    GLint camera_near;
+    GLint camera_focus_distance;
   };
 
 
