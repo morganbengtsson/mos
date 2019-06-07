@@ -59,12 +59,12 @@ message_callback(GLenum source,
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
-    temp_target_(resolution / 4, GL_RGB16F),
+    temp_target_(resolution / 4, GL_RGBA16F),
     multisample_target_(resolution, GL_RGBA16F),
     screen_target_(resolution, GL_R11F_G11F_B10F),
     bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
     depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
-    post_target_(resolution / 4, GL_R11F_G11F_B10F),
+    post_target_(resolution / 4, GL_RGBA16F),
     quad_(),
     black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
@@ -966,7 +966,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
 
   glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
-  clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
   for (auto &scene : scenes) {
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
@@ -976,9 +976,16 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
+    //TODO: Include clear in blur
+    glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
+    clear(glm::vec4(0.0f));
+
+    glBindFramebuffer(GL_FRAMEBUFFER, post_target_.frame_buffer);
+    clear(glm::vec4(0.0f));
     blur(multisample_target_.texture, post_target_, temp_target_);
 
     glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
+
     glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
 
     glUseProgram(add_program_.program);
@@ -998,8 +1005,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
  }
-
-
 
   // Bloom
   /*
