@@ -59,7 +59,7 @@ message_callback(GLenum source,
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     standard_target_(resolution),
-    multisample_target_(resolution, GL_R11F_G11F_B10F),
+    multisample_target_(resolution, GL_RGBA16F),
     screen_target_(resolution, GL_R11F_G11F_B10F),
     bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
     depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
@@ -1578,7 +1578,7 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
 
   glGenTextures(1, &color_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_R11F_G11F_B10F, resolution.x, resolution.y, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_texture, 0);
 
@@ -1611,7 +1611,7 @@ Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLint pre
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGB, GL_FLOAT, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGBA, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
