@@ -983,9 +983,14 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
     glUseProgram(add_program_.program);
     glBindVertexArray(quad_.vertex_array);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
     glUniform1i(add_program_.color_sampler, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, temp_target_.texture);
+    glUniform1i(add_program_.blurred_color_sampler, 1);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
  }
@@ -1345,6 +1350,7 @@ Renderer::Add_program::Add_program() {
   glDetachShader(program, fragment_shader.id);
 
   color_sampler = glGetUniformLocation(program, "color_sampler");
+  blurred_color_sampler = glGetUniformLocation(program, "blurred_color_sampler");
 }
 
 Renderer::Bloom_program::Bloom_program() {

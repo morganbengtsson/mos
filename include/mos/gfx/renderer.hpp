@@ -142,6 +142,7 @@ private:
   struct Add_program : public Program {
     Add_program();
     GLint color_sampler;
+    GLint blurred_color_sampler;
   };
 
 
