@@ -587,7 +587,6 @@ void Renderer::blur(const GLuint input_texture,
                     const Post_target &buffer_target,
                     const Post_target &output_target,
                     const float iterations) {
-  assert(buffer_target.resolution != output_target.resolution);
   glViewport(0, 0, GLsizei(output_target.resolution.x), GLsizei(output_target.resolution.y));
   for (int i = 0; i < iterations; i++) {
     GLint horizontal = (i % 2 == 1);
