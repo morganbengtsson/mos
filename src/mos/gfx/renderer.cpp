@@ -988,31 +988,31 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
     glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
 
-    glUseProgram(add_program_.program);
+    glUseProgram(depth_of_field_program_.program);
     glBindVertexArray(quad_.vertex_array);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
-    glUniform1i(add_program_.color_sampler, 0);
+    glUniform1i(depth_of_field_program_.color_sampler, 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, temp_target_.texture);
-    glUniform1i(add_program_.blurred_color_sampler, 1);
+    glUniform1i(depth_of_field_program_.blurred_color_sampler, 1);
 
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
-    glUniform1i(add_program_.depth_sampler, 2);
+    glUniform1i(depth_of_field_program_.depth_sampler, 2);
 
     float camera_near = scene.camera.near();
-    glUniform1fv(add_program_.camera_near, 1, &camera_near);
+    glUniform1fv(depth_of_field_program_.camera_near, 1, &camera_near);
 
     float camera_far = scene.camera.far();
-    glUniform1fv(add_program_.camera_far, 1, &camera_far);
+    glUniform1fv(depth_of_field_program_.camera_far, 1, &camera_far);
 
     float camera_focus_distance = glm::distance(scene.camera.position(), scene.camera.center());
-    glUniform1fv(add_program_.camera_focus_distance, 1, &camera_focus_distance);
+    glUniform1fv(depth_of_field_program_.camera_focus_distance, 1, &camera_focus_distance);
 
-    glUniform1fv(add_program_.camera_fstop, 1, &scene.camera.fstop);
+    glUniform1fv(depth_of_field_program_.camera_fstop, 1, &scene.camera.fstop);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
  }
@@ -1304,7 +1304,7 @@ Renderer::Box_program::Box_program() {
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::Add_program::Add_program() {
+Renderer::Depth_of_field_program::Depth_of_field_program() {
   std::string name = "depth_of_field";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
