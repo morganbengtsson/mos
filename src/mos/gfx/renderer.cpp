@@ -1010,8 +1010,9 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glUniform1fv(add_program_.camera_far, 1, &camera_far);
 
     float camera_focus_distance = glm::distance(scene.camera.position(), scene.camera.center());
-    std::cout << camera_focus_distance << std::endl;
     glUniform1fv(add_program_.camera_focus_distance, 1, &camera_focus_distance);
+
+    glUniform1fv(add_program_.camera_fstop, 1, &scene.camera.fstop);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
  }
@@ -1351,6 +1352,7 @@ Renderer::Add_program::Add_program() {
   camera_far = glGetUniformLocation(program, "camera_far");
   camera_near = glGetUniformLocation(program, "camera_near");
   camera_focus_distance = glGetUniformLocation(program, "camera_focus_distance");
+  camera_fstop = glGetUniformLocation(program, "camera_fstop");
 }
 
 Renderer::Bloom_program::Bloom_program() {

@@ -148,6 +148,7 @@ private:
     GLint camera_far;
     GLint camera_near;
     GLint camera_focus_distance;
+    GLint camera_fstop;
   };
 
 
