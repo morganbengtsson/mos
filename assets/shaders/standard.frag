@@ -98,12 +98,12 @@ bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
       && point.z <= ma.z);
 }
 
-float box_attenuation(const vec3 point, const vec3 position, const vec3 extent) {
-  float fragment_environment_distance_x = 1.0 - smoothstep(position.x + extent.x - 0.1, position.x + extent.x, point.x);
-  float fragment_environment_distance_y = 1.0 - smoothstep(position.y + extent.y - 0.1, position.y + extent.y, point.y);
-  float fragment_environment_distance_z = 1.0 - smoothstep(position.z + extent.z - 0.1, position.z + extent.z, point.z);
+float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent) {
+  const float distance_x = 1.0 - smoothstep(position.x + extent.x - 0.1, position.x + extent.x, abs(point.x));
+  const float distance_y = 1.0 - smoothstep(position.y + extent.y - 0.1, position.y + extent.y, abs(point.y));
+  const float distance_z = 1.0 - smoothstep(position.z + extent.z - 0.1, position.z + extent.z, abs(point.z));
 
-  return min(fragment_environment_distance_x, min(fragment_environment_distance_y, fragment_environment_distance_z));
+  return min(distance_x, min(distance_y, distance_z));
 }
 
 
@@ -247,7 +247,7 @@ void main() {
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
         if (att == 0.0){
-         att = box_attenuation(fragment.position, environments[i].position, environments[i].extent);
+         att = environment_attenuation(fragment.position, environments[i].position, environments[i].extent);
         }
         else {
           att = 1.0 - att;
