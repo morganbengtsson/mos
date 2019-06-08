@@ -98,6 +98,15 @@ bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
       && point.z <= ma.z);
 }
 
+float box_attenuation(const vec3 point, const vec3 position, const vec3 extent) {
+  float fragment_environment_distance_x = 1.0 - smoothstep(position.x + extent.x - 0.1, position.x + extent.x, point.x);
+  float fragment_environment_distance_y = 1.0 - smoothstep(position.y + extent.y - 0.1, position.y + extent.y, point.y);
+  float fragment_environment_distance_z = 1.0 - smoothstep(position.z + extent.z - 0.1, position.z + extent.z, point.z);
+
+  return min(fragment_environment_distance_x, min(fragment_environment_distance_y, fragment_environment_distance_z));
+}
+
+
 void main() {
     vec3 N = fragment.normal;
 
@@ -171,6 +180,7 @@ void main() {
     }
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
+    float att = 0.0f;
 
     for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
@@ -236,8 +246,16 @@ void main() {
         irradiance /= 8.0;
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
-        ambient += clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-        break;
+        if (att == 0.0){
+         att = box_attenuation(fragment.position, environments[i].position, environments[i].extent);
+        }
+        else {
+          att = 1.0 - att;
+        }
+        ambient += att * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+        if (att == 1.0){
+          break;
+        }
       }
     }
     out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
