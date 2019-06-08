@@ -180,7 +180,7 @@ void main() {
     }
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
-    float att = 0.0f;
+    float attenuation = 0.0f;
 
     for (int i = 0; i < environments.length(); i++) {
       if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
@@ -246,14 +246,11 @@ void main() {
         irradiance /= 8.0;
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
-        if (att == 0.0){
-         att = environment_attenuation(fragment.position, environments[i].position, environments[i].extent);
-        }
-        else {
-          att = 1.0 - att;
-        }
-        ambient += att * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-        if (att == 1.0){
+
+        attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent) : 1.0 - attenuation;
+
+        ambient += attenuation * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+        if (attenuation == 1.0) {
           break;
         }
       }
