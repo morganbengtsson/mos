@@ -15,7 +15,8 @@ public:
   /** @param extent Describes how big the environment is, for parallax/box correction. */
   explicit Environment_light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.0f),
                    const glm::vec3 &extent = glm::vec3(50.0f),
-                   float strength = 0.0f);
+                   float strength = 0.0f,
+                   float falloff = 0.1f);
 
   Environment_light(const std::string &directory, const std::string &path,
       const glm::mat4 &parent_transform = glm::mat4(1.0f));
@@ -40,6 +41,9 @@ public:
 
   /** Strength. */
   float strength;
+
+  /** Falloff. */
+  float falloff;
 private:
   Box box_;
   Cube_camera cube_camera_;

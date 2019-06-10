@@ -256,6 +256,8 @@ void Renderer::render_scene(const Camera &camera,
                  glm::value_ptr(scene.environment_lights.at(i).extent()));
     glUniform1fv(standard_program_.environment_maps.at(i).strength, 1,
                  &scene.environment_lights.at(i).strength);
+    glUniform1fv(standard_program_.environment_maps.at(i).falloff, 1,
+                 &scene.environment_lights.at(i).falloff);
   }
 
   // Camera in world space
@@ -1198,6 +1200,8 @@ Renderer::Standard_program::Standard_program() {
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
     environment_maps.at(i).strength =
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
+    environment_maps.at(i).falloff =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].falloff").c_str());
   }
 
   material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");

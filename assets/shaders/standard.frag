@@ -38,6 +38,7 @@ struct Environment {
     vec3 position;
     vec3 extent;
     float strength;
+    float falloff;
 };
 
 struct Fog {
@@ -116,10 +117,10 @@ bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
       && point.z <= ma.z);
 }
 
-float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent) {
-  const float distance_x = 1.0 - smoothstep(position.x + extent.x - 0.1, position.x + extent.x, abs(point.x));
-  const float distance_y = 1.0 - smoothstep(position.y + extent.y - 0.1, position.y + extent.y, abs(point.y));
-  const float distance_z = 1.0 - smoothstep(position.z + extent.z - 0.1, position.z + extent.z, abs(point.z));
+float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent, const float falloff) {
+  const float distance_x = 1.0 - smoothstep(position.x + extent.x - falloff, position.x + extent.x, abs(point.x));
+  const float distance_y = 1.0 - smoothstep(position.y + extent.y - falloff, position.y + extent.y, abs(point.y));
+  const float distance_z = 1.0 - smoothstep(position.z + extent.z - falloff, position.z + extent.z, abs(point.z));
 
   return min(distance_x, min(distance_y, distance_z));
 }
@@ -240,7 +241,7 @@ void main() {
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
-        attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent) : 1.0 - attenuation;
+        attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent, environments[i].falloff) : 1.0 - attenuation;
 
         ambient += attenuation * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
         if (attenuation == 1.0) {

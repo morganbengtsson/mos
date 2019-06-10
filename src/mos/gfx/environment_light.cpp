@@ -10,9 +10,11 @@ namespace gfx {
 
 Environment_light::Environment_light(const glm::vec3 &position,
                                    const glm::vec3 &extent,
-                                   const float strength)
+                                   const float strength,
+                                   const float falloff)
     :
       strength(strength),
+      falloff(falloff),
       box_(glm::translate(glm::mat4(1.0f), position), extent),
       cube_camera_(position, 1.0f, glm::length(extent)) {
 }

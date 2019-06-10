@@ -236,6 +236,7 @@ private:
       GLint position;
       GLint extent;
       GLint strength;
+      GLint falloff;
     };
     std::array<Environment_uniforms, 2> environment_maps;
 
