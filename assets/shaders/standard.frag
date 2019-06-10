@@ -87,6 +87,24 @@ vec3 fresnel_schlick(float cosTheta, vec3 F0);
 vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 float fog_attenuation(const float dist, const float factor);
 
+vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_level, const float angle, const float step){
+  int num_samples = 0;
+  vec3 filtered = vec3(0.0);
+  for(float x = -angle; x <= angle; x += step) {
+      for(float y = -angle; y <= angle; y += step ) {
+        for(float z = -angle; z <= angle; z += step ) {
+            const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+            const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+            const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
+            filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
+            num_samples += 1;
+        }
+      }
+  }
+  filtered /= num_samples;
+  return filtered;
+}
+
 bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
   vec3 mi = position - extent;
   vec3 ma = position + extent;
@@ -198,19 +216,7 @@ void main() {
 
         vec3 filtered = vec3(0,0,0);
         if (roughness > 0.4) {
-          const float m0 = 0.5 * roughness;
-          const float step = 1.0 * roughness;
-          for(float x = -m0; x <= m0; x += step) {
-              for(float y = -m0; y <= m0; y += step ) {
-                for(float z = -m0; z <= m0; z += step ) {
-                    const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-                    const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-                    const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
-                    filtered += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_R, mip_level).rgb;
-                  }
-              }
-          }
-          filtered /= 8.0;
+          filtered = sample_environment(environment_samplers[i], corrected_R, mip_level, 0.5 * roughness, 1.0 * roughness);
         } else {
           filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
         }
@@ -230,20 +236,7 @@ void main() {
 
         vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * horiz * environments[i].strength;
 
-        vec3 irradiance = vec3(0.0, 0.0, 0.0);
-
-        const float m = 0.5;
-        for(float x = -m; x <= m; x += 1.0) {
-            for(float y = -m; y <= m; y += 1.0) {
-              for(float z = -m; z <= m; z += 1.0) {
-                  const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-                  const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-                  const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
-                  irradiance += textureLod(environment_samplers[i], rotx * roty * rotz * corrected_N, num_levels - 1.5).rgb;
-                }
-            }
-        }
-        irradiance /= 8.0;
+        vec3 irradiance = sample_environment(environment_samplers[i], corrected_N, num_levels - 1.5, 0.5, 1.0);
 
         const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
