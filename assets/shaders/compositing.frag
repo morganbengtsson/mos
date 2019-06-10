@@ -1,6 +1,6 @@
 #version 430 core
 
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec4 out_color;
 in vec2 frag_uv;
 
 uniform sampler2D color_sampler;
@@ -13,8 +13,11 @@ float rand(vec2 co) {
 
 void main() {
   const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
-  color = vec4(texture(color_sampler, frag_uv).rgb + bloom * strength, 1.0);
+  vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
 
   float r = rand(frag_uv * color.rg);
   color.rgb *= (1.0 - r * 0.1);
+
+  float exposure = 1.0;
+  out_color = vec4(vec3(1.0) - exp(-color * exposure), 1.0);
 }
