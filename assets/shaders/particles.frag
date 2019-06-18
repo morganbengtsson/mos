@@ -52,7 +52,7 @@ void main() {
         Lo += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
       }
     }
-    if (Lo.x < 0.3){
+    if (Lo.x < 0.9){
       discard;
     }
     color = vec4(Lo, albedo.a * fragment_color.a * fragment_opacity);
