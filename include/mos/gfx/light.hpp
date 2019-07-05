@@ -22,7 +22,7 @@ public:
   Light(const std::string &directory,
         const std::string &path,
         float near = 0.1f,
-        float far = 100.0f,
+        float far = 10.0f,
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   ~Light() = default;
