@@ -54,6 +54,6 @@ MOS is dependent on the following excellent projects:
 - [GLAD](https://github.com/Dav1dde/glad): OpenGL context creation
 - [GLFW](https://www.glfw.org/): Window creation and input events
 - [GLM](https://glm.g-truc.net/0.9.9/index.html): Mathematics
-- [JSON for Modern C++](https://github.com/nlohmann/json): JSON reading
+- [JSON for Modern C++](https://github.com/nlohmann/json): JSON parsing
 - [OpenAL soft](https://github.com/kcat/openal-soft): 3D audio
 - [STB](https://github.com/nothings/stb): Image decoding
