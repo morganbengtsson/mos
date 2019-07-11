@@ -11,6 +11,7 @@ Window::Click_func Window::click_func;
 Window::Mouse_func Window::mouse_func;
 Window::Scroll_func Window::scroll_func;
 Window::Key_func Window::key_func;
+Window::Char_func Window::char_func;
 
 Window::Window(const std::string &title, const glm::ivec2 &resolution, const int swap_interval) {
   if (!glfwInit()) {
@@ -50,6 +51,7 @@ Window::Window(const std::string &title, const glm::ivec2 &resolution, const int
   glfwSetCursorPosCallback(window_, mouse_callback);
   glfwSetScrollCallback(window_, scroll_callback);
   glfwSetWindowPosCallback(window_, position_callback);
+  glfwSetCharCallback(window_, char_callback);
 
   glfwSwapInterval(swap_interval);
 
@@ -109,6 +111,12 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
                           int mods) {
   if (key_func) {
     key_func(key, scancode, action, mods);
+  }
+}
+
+void Window::char_callback(GLFWwindow *window, unsigned int codepoint){
+  if(char_func){
+    char_func(codepoint);
   }
 }
 

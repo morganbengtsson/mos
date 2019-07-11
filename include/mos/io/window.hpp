@@ -33,6 +33,7 @@ public:
   using Scroll_func = std::function<void(const glm::dvec2 &offset)>;
   using Key_func = std::function<void(const int key, const int scancode,
                                      const int action, const int mods)>;
+  using Char_func = std::function<void(const unsigned int codepoint)>;
 
   static Error_func error_func;
   static Pos_func pos_func;
@@ -41,6 +42,7 @@ public:
   static Mouse_func mouse_func;
   static Scroll_func scroll_func;
   static Key_func key_func;
+  static Char_func char_func;
 
   glm::ivec2 framebuffer_size() const;
   void poll_events();
@@ -68,6 +70,7 @@ private:
                               double yoffset);
   static void key_callback(GLFWwindow *window, int key, int scancode,
                            int action, int mods);
+  static void char_callback(GLFWwindow * window, unsigned int codepoint);
 
   bool pause_ = false;
   float pause_time_ = 0.0f;
