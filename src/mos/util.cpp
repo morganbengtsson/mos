@@ -71,3 +71,13 @@ mos::sim::Ray mos::un_project(const glm::vec2 &position,
 glm::vec3 mos::jsonarray_to_vec3(const nlohmann::json &array) {
   return glm::vec3(array[0], array[1], array[2]);
 }
+
+std::string mos::utf8_str(unsigned int codepoint) {
+  char c[5]={ 0x00,0x00,0x00,0x00,0x00 };
+  if     (codepoint<=0x7F) { c[0] = codepoint;  }
+  else if(codepoint<=0x7FF) { c[0] = (codepoint>>6)+192; c[1] = (codepoint&63)+128; }
+  else if(0xd800<=codepoint && codepoint<=0xdfff) {} //invalid block of utf8
+  else if(codepoint<=0xFFFF) { c[0] = (codepoint>>12)+224; c[1]= ((codepoint>>6)&63)+128; c[2]=(codepoint&63)+128; }
+  else if(codepoint<=0x10FFFF) { c[0] = (codepoint>>18)+240; c[1] = ((codepoint>>12)&63)+128; c[2] = ((codepoint>>6)&63)+128; c[3]=(codepoint&63)+128; }
+  return std::string(c);
+}
