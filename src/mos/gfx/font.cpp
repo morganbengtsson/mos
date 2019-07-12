@@ -30,7 +30,7 @@ Font::Font(const std::string &path) {
     character.x = c["x"];
     character.y = c["y"];
     character.height = c["height"];
-    characters.insert(std::pair<char, Character>(character.id, character));
+    characters.insert(std::pair<unsigned int, Character>(character.id, character));
   }
   base_ = doc["config"]["base"];
   height_ = doc["config"]["charHeight"];

@@ -42,8 +42,11 @@ void Text::text(const std::string &text) {
     int triangle_index = 0;
     for (auto &line : lines) {
       float index = 0.0f;
-      for (auto &c : line) {
-        auto character = font_.characters.at(c);
+
+      auto it = line.begin();
+      while(it != line.end()) {
+        auto cp = utf8::next(it, line.end());
+        auto character = font_.characters.at(cp);
         float u1 = character.x / static_cast<float>(font_.texture->width());
         float u2 = (character.x + character.width) /
             static_cast<float>(font_.texture->width());
