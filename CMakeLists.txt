@@ -66,7 +66,6 @@ target_include_directories(${PROJECT_NAME}
         externals/nlohmann_json_release
         externals/stb
         externals/filesystem
-        PRIVATE
         externals/utfcpp/source
         )
 
