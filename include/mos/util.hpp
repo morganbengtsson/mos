@@ -11,9 +11,6 @@
 
 namespace mos {
 
-/** UTF-8 code point to string */
-std::string utf8_str(unsigned int codepoint);
-
 /**
  * @brief Load text from file.
  * @param path Full path.
@@ -37,4 +34,5 @@ mos::sim::Ray un_project(const glm::vec2 &position,
                          const glm::mat4 &view,
                          const glm::mat4 &projection,
                          const glm::uvec2 &resolution);
+
 }
