@@ -12,7 +12,8 @@ struct Character final {
   float x;
   float y;
   float height;
-  char id;
+  /** Unicode character point id. **/
+  unsigned int id;
 };
 }
 }

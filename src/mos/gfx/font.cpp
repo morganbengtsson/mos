@@ -26,8 +26,7 @@ Font::Font(const std::string &path) {
     character.y_offset = c["yoffset"];
     character.x_advance = c["xadvance"];
     character.width = c["width"];
-    int id = c["id"];
-    character.id = char(id);
+    character.id = c["id"];
     character.x = c["x"];
     character.y = c["y"];
     character.height = c["height"];

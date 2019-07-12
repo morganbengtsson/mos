@@ -10,7 +10,7 @@ namespace gfx {
 /** Bitmap font. */
 class Font final {
 public:
-  using Char_map = std::map<char, Character>;
+  using Char_map = std::map<unsigned int, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
   Font(Char_map characters,
