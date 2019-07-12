@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/io.hpp>
 #include <algorithm>
+#include <utf8.h>
 
 namespace mos {
 namespace gfx {

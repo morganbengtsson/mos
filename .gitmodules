@@ -13,3 +13,6 @@
 [submodule "externals/nlohmann_json_release"]
 	path = externals/nlohmann_json_release
 	url = https://github.com/azadkuh/nlohmann_json_release.git
+[submodule "externals/utfcpp"]
+	path = externals/utfcpp
+	url = https://github.com/nemtrif/utfcpp.git

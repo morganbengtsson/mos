@@ -37,6 +37,11 @@ add_subdirectory(externals/filesystem)
 # stb
 add_subdirectory(externals/stb)
 
+# unicode
+set(UTF8_TESTS OFF CACHE BOOL "" FORCE)
+set(UTF8_SAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(externals/utfcpp)
+
 # mos
 file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
 file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
@@ -61,6 +66,8 @@ target_include_directories(${PROJECT_NAME}
         externals/nlohmann_json_release
         externals/stb
         externals/filesystem
+        PRIVATE
+        externals/utfcpp/source
         )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenAL)
