@@ -150,7 +150,7 @@ void main() {
     float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-    if (material.opacity * (albedo_from_map.a + material.albedo.a) < 0.9 && material.emission == 0.0) {
+    if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == 0.0) {
         discard;
     }
 
