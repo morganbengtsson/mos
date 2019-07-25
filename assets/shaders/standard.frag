@@ -186,7 +186,7 @@ void main() {
 
             const vec3 nominator = NDF * G * F;
             const float denominator = 4 * NdotV * NdotL + 0.001;
-            const vec3 specular = nominator / denominator;
+            const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
 
             const vec3 kS = F;
             const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
