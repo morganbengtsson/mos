@@ -70,7 +70,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution) :
     white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT, std::array<unsigned char, 4>{255, 255, 255, 255}.data(), true),
     brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false, Texture_2D::Wrap::Clamp)),
     cube_camera_index_({0, 0}),
-    shadow_maps_render_buffer_(256),
+    shadow_maps_render_buffer_(512),
     shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
                  Shadow_map_target(shadow_maps_render_buffer_),
