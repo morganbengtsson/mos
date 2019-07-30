@@ -37,8 +37,6 @@ public:
   closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
   void calculate_normals();
 
-  ~Navmesh() = default;
-
   std::vector<gfx::Vertex> vertices;
   std::vector<std::array<int, 3>> triangles;
 private:

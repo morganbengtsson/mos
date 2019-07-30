@@ -9,7 +9,6 @@ namespace gfx {
 class Shape {
 public:
   Shape();
-  ~Shape() = default;
   /** Unique id. */
   unsigned int id() const;
 private:

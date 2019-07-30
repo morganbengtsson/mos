@@ -13,16 +13,14 @@ namespace gfx {
 /** Text for rendering. */
 class Text final {
 public:
-  Text(const std::string &text,
-       const Font &font,
+  Text(const std::string &txt,
+       Font font,
        const glm::mat4 &transform = glm::mat4(1.0f),
        float spacing = 0.0f,
        float opacity = 1.0f,
        float roughness = 1.0f,
        float metallic = 0.0f,
        float emission = 0.0f);
-
-  ~Text() = default;
 
   /** Set text. */
   void text(const std::string &text);
@@ -68,9 +66,9 @@ public:
 
   float spacing;
 
-  Text &operator=(const std::string &text);
+  Text &operator=(const std::string &input);
 
-  Text &operator+=(const std::string &text);
+  Text &operator+=(const std::string &input);
 
 private:
   Model model_;

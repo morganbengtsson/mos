@@ -39,8 +39,6 @@ public:
 
   Mesh();
 
-  ~Mesh() = default;
-
   static Shared_mesh load(const std::string &path);
 
   /** Erease all vertices and indices. */
@@ -61,8 +59,8 @@ public:
 
   void calculate_sphere();
 
-  glm::vec3 centroid;
-  float radius;
+  glm::vec3 centroid{0.0f};
+  float radius{0.0f};
 
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle> triangles;

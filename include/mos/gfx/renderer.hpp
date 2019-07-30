@@ -27,7 +27,10 @@ class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLAD. */
   Renderer(const glm::vec4 &color, const glm::ivec2 &resolution);
-
+  Renderer(const Renderer &renderer) = delete;
+  Renderer(const Renderer &&renderer) = delete;
+  Renderer & operator=(const Renderer & renderer) = delete;
+  Renderer & operator=(const Renderer && renderer) = delete;
   ~Renderer();
 
   /** Loads a model into renderers own memory. */
@@ -83,7 +86,11 @@ private:
                     bool mipmaps,
                     const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
-    GLuint texture;
+    Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
+    Texture_buffer_2D(const Texture_buffer_2D &&buffer) = delete;
+    Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
+    Texture_buffer_2D & operator=(const Texture_buffer_2D &&buffer) = delete;
+    GLuint texture{};
     Time_point modified;
   };
 
@@ -91,12 +98,20 @@ private:
   public:
     Shader(const std::string &source, GLuint type, const std::string& name);
     ~Shader();
+    Shader(const Shader &shader) = delete;
+    Shader(const Shader &&shader) = delete;
+    Shader & operator=(const Shader &shader) = delete;
+    Shader & operator=(const Shader &&shader) = delete;
     GLuint id;
   };
 
   struct Program {
     Program();
     ~Program();
+    Program(const Program &program) = delete;
+    Program(const Program &&program) = delete;
+    Program & operator=(const Program &program) = delete;
+    Program & operator=(const Program &&program) = delete;
     GLuint program;
     void check(const std::string &name);
     void link(const std::string &name);
@@ -117,15 +132,15 @@ private:
     Particle_program();
     GLint model_view_projection;
     GLint model_view;
-    GLint model;
+    GLint model{};
     GLint projection;
     GLint texture;
     GLint resolution;    
     GLint camera_resolution;
     GLint camera_position;
-    GLint camera_far;
-    GLint camera_near;
-    std::array<Light_uniforms, 4> lights;
+    GLint camera_far{};
+    GLint camera_near{};
+    std::array<Light_uniforms, 4> lights{};
   };
 
   /** Uniforms for the bounding box shader program. */
@@ -189,7 +204,7 @@ private:
     GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
-    std::array<GLint, 4> depth_bias_mvps;
+    std::array<GLint, 4> depth_bias_mvps{};
 
     struct Environment_uniforms {
       GLint map;
@@ -212,8 +227,8 @@ private:
     GLint camera_near;
     GLint camera_far;
 
-    std::array<GLuint,4> shadow_samplers;
-    std::array<Light_uniforms, 4> lights;
+    std::array<GLuint, 4> shadow_samplers{};
+    std::array<Light_uniforms, 4> lights{};
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -229,7 +244,7 @@ private:
     GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
-    std::array<GLint,4> depth_bias_mvps;
+    std::array<GLint, 4> depth_bias_mvps{};
 
     struct Environment_uniforms {
       GLint map;
@@ -238,7 +253,7 @@ private:
       GLint strength;
       GLint falloff;
     };
-    std::array<Environment_uniforms, 2> environment_maps;
+    std::array<Environment_uniforms, 2> environment_maps {};
 
     GLint material_albedo_sampler;
     GLint material_normal_map;
@@ -266,8 +281,8 @@ private:
       GLint direction;
     };
 
-    std::array<GLuint, 4> shadow_maps;
-    std::array<Light_uniforms, 4> lights;
+    std::array<GLuint, 4> shadow_maps {};
+    std::array<Light_uniforms, 4> lights{};
 
     GLint fog_color_near;
     GLint fog_color_far;
@@ -279,54 +294,82 @@ private:
   struct Standard_target {
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
-    GLuint frame_buffer;
-    GLuint color_texture;
-    GLuint depth_texture;
+    Standard_target(const Standard_target &target) = delete;
+    Standard_target(const Standard_target &&target) = delete;
+    Standard_target & operator=(const Standard_target &target) = delete;
+    Standard_target & operator=(const Standard_target &&target) = delete;
+    GLuint frame_buffer{};
+    GLuint color_texture{};
+    GLuint depth_texture{};
   };
 
   struct Post_target {
-    explicit Post_target(const glm::ivec2 &resolution, const GLint precision = GL_RGB16F);
+    explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
     ~Post_target();
-    GLuint frame_buffer;
-    GLuint texture;
+    Post_target(const Post_target &target) = delete;
+    Post_target(const Post_target &&target) = delete;
+    Post_target & operator=(const Post_target &target) = delete;
+    Post_target & operator=(const Post_target &&target) = delete;
+    GLuint frame_buffer{};
+    GLuint texture{};
     const glm::ivec2 resolution;
   };
 
   struct Render_buffer {
     explicit Render_buffer(int resolution);
     ~Render_buffer();
-    GLuint render_buffer;
+    Render_buffer(const Render_buffer &target) = delete;
+    Render_buffer(const Render_buffer &&target) = delete;
+    Render_buffer & operator=(const Render_buffer &target) = delete;
+    Render_buffer & operator=(const Render_buffer &&target) = delete;
+    GLuint render_buffer{};
     int resolution;
   };
 
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
     ~Shadow_map_target();
-    GLuint texture;
-    GLuint frame_buffer;
+    Shadow_map_target(const Shadow_map_target &target) = delete;
+    Shadow_map_target(const Shadow_map_target &&target) = delete;
+    Shadow_map_target & operator=(const Shadow_map_target &target) = delete;
+    Shadow_map_target & operator=(const Shadow_map_target &&target) = delete;
+    GLuint texture{};
+    GLuint frame_buffer{};
   };
 
   struct Environment_map_target {
     explicit Environment_map_target(const Render_buffer &render_buffer);
     ~Environment_map_target();
-    GLuint texture;
-    GLuint albedo;
-    GLuint frame_buffer;
+    Environment_map_target(const Environment_map_target &target) = delete;
+    Environment_map_target(const Environment_map_target &&target) = delete;
+    Environment_map_target & operator=(const Environment_map_target &target) = delete;
+    Environment_map_target & operator=(const Environment_map_target &&target) = delete;
+    GLuint texture{};
+    GLuint albedo{};
+    GLuint frame_buffer{};
   };
 
   struct Quad {
     Quad();
     ~Quad();
-    GLuint vertex_array;
-    GLuint buffer;
+    Quad(const Quad &target) = delete;
+    Quad(const Quad &&target) = delete;
+    Quad & operator=(const Quad &target) = delete;
+    Quad & operator=(const Quad &&target) = delete;
+    GLuint vertex_array{};
+    GLuint buffer{};
   };
 
   struct Box {
     Box();
-    ~Box() = default;
-    GLuint buffer;
-    GLuint element_buffer;
-    GLuint vertex_array;
+    ~Box();
+    Box(const Box &target) = delete;
+    Box(const Box &&target) = delete;
+    Box & operator=(const Box &target) = delete;
+    Box & operator=(const Box &&target) = delete;
+    GLuint buffer{};
+    GLuint element_buffer{};
+    GLuint vertex_array{};
   };
 
   void render_texture_targets(const Scene &scene);
@@ -377,10 +420,10 @@ private:
   void clear(const glm::vec4 &color);
   void clear_depth();
   void clear_color(const glm::vec4 &color);
-  void blur(const GLuint input_texture,
+  void blur(GLuint input_texture,
             const Post_target &buffer_target,
             const Post_target &output_target,
-            const float iterations = 6);
+            float iterations = 6);
 
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;

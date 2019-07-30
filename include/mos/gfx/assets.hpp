@@ -27,7 +27,9 @@ public:
   explicit Assets(std::string directory = "assets/");
 
   Assets(const Assets &assets) = delete;
-
+  Assets(const Assets &&assets) = delete;
+  Assets & operator=(const Assets &assets) = delete;
+  Assets & operator=(const Assets &&assets) = delete;
   ~Assets() = default;
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */

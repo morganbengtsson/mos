@@ -10,7 +10,7 @@
 namespace mos {
 namespace gfx {
 Text::Text(const std::string &txt,
-           const Font &font,
+           Font font,
            const glm::mat4 &transform,
            const float spacing,
            const float opacity,
@@ -19,7 +19,7 @@ Text::Text(const std::string &txt,
            const float emiss)
     : spacing(spacing),
       model_("Text", std::make_shared<Mesh>(Mesh()), transform),
-      font_(font) {
+      font_(std::move(font)) {
   model_.material.roughness = roughness;
   model_.material.metallic = metallic;
   model_.material.albedo = glm::vec3(1.0f);

@@ -12,9 +12,9 @@ namespace gfx {
 Model::Model(std::string name,
              Shared_mesh mesh,
              const glm::mat4 transform,
-             const Material &material)
+             Material material)
     : mesh(std::move(mesh)),
-      material(material),
+      material(std::move(material)),
       transform(transform),
       name_(std::move(name)) {}
 

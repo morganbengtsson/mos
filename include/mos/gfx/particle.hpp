@@ -12,8 +12,6 @@ public:
                     const float size = 10.0f, const float opacity = 1.0f)
       : position(position), color(color), size(size), opacity(opacity) {}
 
-  ~Particle() = default;
-
   glm::vec3 position;
 
   glm::vec4 color;

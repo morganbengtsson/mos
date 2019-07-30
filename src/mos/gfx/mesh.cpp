@@ -17,7 +17,7 @@ Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
   calculate_sphere();
 }
 
-Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
+Mesh::Mesh(const std::string &path) {
   if (path.substr(path.find_last_of('.') + 1) == "mesh") {
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
@@ -49,9 +49,7 @@ Mesh::Mesh(const std::string &path) : centroid(0.0f), radius(0.0f) {
   }
 }
 
-Mesh::Mesh():
-  centroid(0.0f),
-  radius(0.0f) {
+Mesh::Mesh() {
   calculate_sphere();
 }
 

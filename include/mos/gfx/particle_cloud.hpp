@@ -14,12 +14,8 @@ namespace gfx {
 /** Collection of particles for rendering, uses same texture. */
 class Particle_cloud final : public Shape {
 public:
+  Particle_cloud(Shared_texture_2D emission_map, Particles particles);
   Particle_cloud() = default;
-
-  Particle_cloud(Shared_texture_2D emission_map,
-                 Particles particles);
-
-  ~Particle_cloud() = default;
 
   /** Sort particles relative to a position. */
   void sort(const glm::vec3 &position);

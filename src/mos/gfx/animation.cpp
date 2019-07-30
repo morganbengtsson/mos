@@ -9,11 +9,9 @@ namespace mos {
 namespace gfx {
 using namespace nlohmann;
 Animation::Animation(
-    const std::map<unsigned int, std::shared_ptr<Mesh const>> & keyframes,
+    const std::map<unsigned int, std::shared_ptr<Mesh const>> &keyframes,
     const unsigned int frame_rate)
-    :
-      time_(0.0f),
-      frame_rate_(frame_rate),
+    : frame_rate_(frame_rate),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
       keyframes_(keyframes.begin(), keyframes.end()) {
   std::cout << keyframes_.size() << std::endl;
@@ -25,16 +23,13 @@ Animation::Animation(
 
 Animation::Animation(
     std::initializer_list<std::pair<unsigned int, std::shared_ptr<const Mesh>>>
-    keyframes,
+        keyframes,
     const unsigned int frame_rate)
-    :
-      time_(0.0f),
-      frame_rate_(frame_rate),
+    : frame_rate_(frame_rate),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
-      keyframes_(keyframes.begin(), keyframes.end())
-{}
+      keyframes_(keyframes.begin(), keyframes.end()) {}
 
-Animation::Animation(const std::string &path) : time_(0.0f) {
+Animation::Animation(const std::string &path) {
   filesystem::path fpath = path;
   auto doc = json::parse(mos::text(fpath.str()));
   frame_rate_ = doc["frame_rate"];
@@ -45,7 +40,7 @@ Animation::Animation(const std::string &path) : time_(0.0f) {
   }
 }
 
-Animation::Animation(Assets &assets, const std::string &path) : time_(0.0f) {
+Animation::Animation(Assets &assets, const std::string &path) {
   auto doc = json::parse(mos::text(assets.directory() + path));
   frame_rate_ = doc["frame_rate"];
   for (auto &keyframe : doc["keyframes"]) {

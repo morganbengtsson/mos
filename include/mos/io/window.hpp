@@ -20,8 +20,12 @@ public:
     Hand, Arrow, Crosshair
   };
 
-  Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080}, const int swap_interval = 0);
+  Window(const std::string &title = "Window", const glm::ivec2 &resolution = {1920, 1080}, int swap_interval = 0);
   ~Window();
+  Window(const Window & window) = delete;
+  Window(const Window && window) = delete;
+  Window & operator=(const Window & window) = delete;
+  Window & operator=(const Window && window) = delete;
 
   using Error_func =
   std::function<void(const int error, const std::string &description)>;
@@ -48,7 +52,7 @@ public:
   void poll_events();
   void swap_buffers();
   bool close() const;
-  void close(const bool);
+  void close(bool close);
   void cursor_mode(const Cursor_mode &mode);
   void cursor(const Cursor &cursor);
   glm::dvec2 cursor_position() const;

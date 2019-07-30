@@ -14,7 +14,6 @@ using Optional_target = std::optional<Target>;
 class Target final{
 public:
   Target();
-  ~Target() = default;
 
   /** Unique id */
   unsigned int id() const;

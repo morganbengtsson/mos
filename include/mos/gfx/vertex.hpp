@@ -13,8 +13,6 @@ public:
                   const glm::vec2 &uv = glm::vec2(0.0f),
                   float weight = 1.0f);
 
-  ~Vertex() = default;
-
   glm::vec3 position;
 
   glm::vec3 normal;

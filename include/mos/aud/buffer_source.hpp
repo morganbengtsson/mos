@@ -13,15 +13,14 @@ class Buffer_source final {
 public:
   explicit Buffer_source(Shared_buffer buffer = nullptr,
                          Source source = Source());
-  ~Buffer_source() = default;
 
   /** Play the source. */
-  void input(const float dt);
+  void input(float dt);
 
   Shared_buffer buffer;
   Source source;
 private:
-  float time_;
+  float time_{0.0f};
 };
 }
 }

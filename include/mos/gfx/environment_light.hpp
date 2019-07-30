@@ -43,7 +43,7 @@ public:
   float strength;
 
   /** Falloff. */
-  float falloff;
+  float falloff{0.1f};
 private:
   Box box_;
   Cube_camera cube_camera_;

@@ -56,7 +56,6 @@ public:
   }
 
   Box(const glm::vec3 &extent, const glm::vec3 &position);
-
   Box() = default;
 
   static Box create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
@@ -107,8 +106,8 @@ public:
     return position != other.position || extent != other.extent;
   }
 
-  glm::vec3 extent;
-  glm::vec3 position;
+  glm::vec3 extent{0.0f};
+  glm::vec3 position{0.0f};
 
 private:
   template<class T>

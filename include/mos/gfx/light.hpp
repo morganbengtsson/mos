@@ -25,8 +25,6 @@ public:
         float far = 10.0f,
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-  ~Light() = default;
-
   /** Set spot angle, in radans. */
   void angle(float angle);
 

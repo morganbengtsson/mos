@@ -19,8 +19,6 @@ public:
        float base);
   explicit Font(const std::string &path);
 
-  ~Font() = default;
-
   /** Height. */
   float height() const;
 

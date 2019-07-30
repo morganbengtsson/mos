@@ -1633,7 +1633,7 @@ Renderer::Quad::Quad() {
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) nullptr);
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1680,14 +1680,17 @@ Renderer::Box::Box() {
 
 }
 
-Renderer::Texture_buffer_2D::Texture_buffer_2D(const GLuint internal_format,
-                                           const GLuint external_format,
-                                           const int width,
-                                           const int height,
-                                           const GLuint wrap,
-                                           const void *data,
-                                           const bool mipmaps,
-                                           const Time_point &modified) : modified(modified) {
+Renderer::Box::~Box(){
+  glDeleteBuffers(1, &buffer);
+  glDeleteVertexArrays(1, &vertex_array);
+  glDeleteBuffers(1, &element_buffer);
+}
+
+Renderer::Texture_buffer_2D::Texture_buffer_2D(
+    const GLuint internal_format, const GLuint external_format, const int width,
+    const int height, const GLuint wrap, const void *data, const bool mipmaps,
+    const Time_point &modified)
+    : modified(modified) {
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 

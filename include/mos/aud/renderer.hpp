@@ -20,9 +20,10 @@ namespace aud {
 class Renderer final {
 public:
   Renderer();
-
-  Renderer(const Renderer &audio) = delete;
-
+  Renderer(const Renderer &renderer) = delete;
+  Renderer(const Renderer &&renderer) = delete;
+  Renderer & operator=(const Renderer & renderer) = delete;
+  Renderer & operator=(const Renderer && renderer) = delete;
   ~Renderer();
 
   /** Get listener data. */
@@ -48,11 +49,10 @@ private:
   ALCcontext *context_;
 
   EFXEAXREVERBPROPERTIES reverb_properties;
-  ALuint reverb_effect;
-  ALuint reverb_slot;
-
-  ALuint lowpass_filter1;
-  ALuint lowpass_filter2;
+  ALuint reverb_effect{0};
+  ALuint reverb_slot{0};
+  ALuint lowpass_filter1{0};
+  ALuint lowpass_filter2{0};
 
   using SourcePair = std::pair<unsigned int, ALuint>;
   using BufferPair = std::pair<unsigned int, ALuint>;

@@ -17,6 +17,9 @@ public:
 
   explicit Assets(std::string directory = "assets/");
   Assets(const Assets &assets) = delete;
+  Assets(const Assets &&assets) = delete;
+  Assets & operator=(const Assets & assets) = delete;
+  Assets & operator=(const Assets && assets) = delete;
   ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */

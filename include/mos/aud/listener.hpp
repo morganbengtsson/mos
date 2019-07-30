@@ -13,8 +13,7 @@ public:
            const glm::vec3 &direction = glm::vec3(.0f, 1.0f, .0f),
            const glm::vec3 &up = glm::vec3(.0f, .0f, 1.0f),
            const glm::vec3 &velocity = glm::vec3(.0f),
-           const float gain = 1.0f);
-  ~Listener() = default;
+           float gain = 1.0f);
 
   glm::vec3 position;
   glm::vec3 direction;

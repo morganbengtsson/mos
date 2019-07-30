@@ -15,6 +15,10 @@ class Stream final {
 public:
   explicit Stream(const std::string &path);
   ~Stream();
+  Stream(const Stream &stream) = default;
+  Stream(Stream &&stream) = default;
+  Stream & operator=(const Stream &stream) = default;
+  Stream & operator=(Stream &&stream) = default;
 
   static const int buffer_size = 4096 * 8;
 
@@ -42,7 +46,7 @@ private:
   static std::atomic_uint current_id_;
   unsigned int id_;
   int samples_left_;
-  const std::string file_name_;
+  std::string file_name_;
   stb_vorbis *vorbis_stream_;
   stb_vorbis_info vorbis_info_;
 };

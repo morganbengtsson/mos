@@ -17,16 +17,14 @@ class Material;
 /** Collection of properties for a renderable object. */
 class Model final {
 public:
-  Model() = default;
-
   Model(const nlohmann::json &json, Assets &assets = *std::make_unique<Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   Model(std::string name,
         Shared_mesh mesh,
         glm::mat4 transform = glm::mat4(1.0f),
-        const Material &material = Material(glm::vec3(1.0f)));
+        Material material = Material(glm::vec3(1.0f)));
 
-  ~Model() = default;
+  Model() = default;
 
   std::string name() const;
 
@@ -42,22 +40,22 @@ public:
   float radius() const;
 
   /** Set emission of material recursively. */
-  void emission(const float emission);
+  void emission(float emission);
 
   /** Set ambient occlusion of material recursively. */
-  void ambient_occlusion(const float ambient_occlusion);
+  void ambient_occlusion(float ambient_occlusion);
 
   /** set opacity of material recursively. */
-  void opacity(const float opacity);
+  void opacity(float opacity);
 
   /** set transmission of material recursively. */
-  void transmission(const float transmission);
+  void transmission(float transmission);
 
   /** set roughness of material recursively. */
-  void roughness(const float roughness);
+  void roughness(float roughness);
 
   /** set metallic of material recursively. */
-  void metallic(const float metallic);
+  void metallic(float metallic);
 
   /** Mesh shape. */
   Shared_mesh mesh;
@@ -66,7 +64,7 @@ public:
   Material material;
 
   /** Transform. */
-  glm::mat4 transform;
+  glm::mat4 transform{0.0f};
 
   /** Children models. */
   Models models;

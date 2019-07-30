@@ -32,8 +32,6 @@ public:
               const Wrap &wrap = Wrap::Repeat,
               bool mipmaps = true);
 
-  ~Texture_2D() = default;
-
   /** Load from file */
   static Shared_texture_2D load(const std::string &path,
                               bool color_data = true,

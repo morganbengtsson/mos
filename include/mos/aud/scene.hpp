@@ -18,7 +18,6 @@ public:
         Stream_sources stream_sources,
         Listener listener);
   Scene();
-  ~Scene() = default;
 
   Buffer_sources buffer_sources;
   Stream_sources stream_sources;

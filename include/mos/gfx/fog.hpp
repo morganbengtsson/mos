@@ -19,8 +19,6 @@ public:
       const glm::vec3 &color_far = glm::vec3(1.0f),
       float attenuation_factor = 0.0f);
 
-  ~Fog() = default;
-
   glm::vec3 color_near;
   glm::vec3 color_far;
   float attenuation_factor;
