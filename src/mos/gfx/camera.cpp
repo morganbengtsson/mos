@@ -112,11 +112,11 @@ bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
   return result;
 }
 
-float Camera::near() const {
+float Camera::near_plane() const {
   return near_;
 }
 
-float Camera::far() const {
+float Camera::far_plane() const {
   return far_;
 }
 

@@ -43,12 +43,12 @@ public:
 
   /** Check if sphere with a radius is within camera frustum. */
   bool in_frustum(const glm::vec3 & point, float radius) const;
-
+  
   /** Get near clip plane. */
-  float near() const;
+  float near_plane() const;
 
   /** Get far clip plane. */
-  float far() const;
+  float far_plane() const;
 
   /** Get projection matrix. */
   glm::mat4 projection() const;

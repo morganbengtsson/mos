@@ -59,7 +59,8 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name{};
         if (!value[name].is_null()) {
-          file_name = value[name];
+		  std::string temp = value[name];
+          file_name = temp;
         }
         auto tex = file_name.empty() ? assets.texture("") : assets.texture(file_name, color_data);
         return tex;

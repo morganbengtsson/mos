@@ -674,11 +674,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto position = cube_camera.position();
       glUniform3fv(environment_program_.camera_position, 1, glm::value_ptr(position));
 
-      auto near = cube_camera.near();
-      glUniform1fv(environment_program_.camera_near, 1, &near);
+      auto near_plane = cube_camera.near_plane();
+      glUniform1fv(environment_program_.camera_near, 1, &near_plane);
 
-      auto far = cube_camera.far();
-      glUniform1fv(environment_program_.camera_far, 1, &far);
+      auto far_plane = cube_camera.far_plane();
+      glUniform1fv(environment_program_.camera_far, 1, &far_plane);
 
       //TODO: Loop through all lights?
       for (size_t i = 0; i < 2; i++) {
@@ -1002,10 +1002,10 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
     glUniform1i(depth_of_field_program_.depth_sampler, 2);
 
-    float camera_near = scene.camera.near();
+    float camera_near = scene.camera.near_plane();
     glUniform1fv(depth_of_field_program_.camera_near, 1, &camera_near);
 
-    float camera_far = scene.camera.far();
+    float camera_far = scene.camera.far_plane();
     glUniform1fv(depth_of_field_program_.camera_far, 1, &camera_far);
 
     float camera_focus_distance = glm::distance(scene.camera.position(), scene.camera.center());

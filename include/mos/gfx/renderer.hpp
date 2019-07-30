@@ -87,9 +87,9 @@ private:
                     const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
     Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(const Texture_buffer_2D &&buffer) = delete;
+    Texture_buffer_2D(Texture_buffer_2D &&buffer) = default;
     Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(const Texture_buffer_2D &&buffer) = delete;
+    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = default;
     GLuint texture{};
     Time_point modified;
   };
@@ -99,9 +99,9 @@ private:
     Shader(const std::string &source, GLuint type, const std::string& name);
     ~Shader();
     Shader(const Shader &shader) = delete;
-    Shader(const Shader &&shader) = delete;
+    Shader(Shader &&shader) = default;
     Shader & operator=(const Shader &shader) = delete;
-    Shader & operator=(const Shader &&shader) = delete;
+    Shader & operator=(Shader &&shader) = default;
     GLuint id;
   };
 
@@ -295,9 +295,9 @@ private:
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
     Standard_target(const Standard_target &target) = delete;
-    Standard_target(const Standard_target &&target) = delete;
+    Standard_target(Standard_target &&target) = default;
     Standard_target & operator=(const Standard_target &target) = delete;
-    Standard_target & operator=(const Standard_target &&target) = delete;
+    Standard_target & operator=(Standard_target &&target) = default;
     GLuint frame_buffer{};
     GLuint color_texture{};
     GLuint depth_texture{};
@@ -307,9 +307,9 @@ private:
     explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
     ~Post_target();
     Post_target(const Post_target &target) = delete;
-    Post_target(const Post_target &&target) = delete;
+    Post_target(Post_target &&target) = default;
     Post_target & operator=(const Post_target &target) = delete;
-    Post_target & operator=(const Post_target &&target) = delete;
+    Post_target & operator=(Post_target &&target) = default;
     GLuint frame_buffer{};
     GLuint texture{};
     const glm::ivec2 resolution;
@@ -319,9 +319,9 @@ private:
     explicit Render_buffer(int resolution);
     ~Render_buffer();
     Render_buffer(const Render_buffer &target) = delete;
-    Render_buffer(const Render_buffer &&target) = delete;
+    Render_buffer(Render_buffer &&target) = default;
     Render_buffer & operator=(const Render_buffer &target) = delete;
-    Render_buffer & operator=(const Render_buffer &&target) = delete;
+    Render_buffer & operator=(Render_buffer &&target) = default;
     GLuint render_buffer{};
     int resolution;
   };
@@ -330,9 +330,9 @@ private:
     explicit Shadow_map_target(const Render_buffer &render_buffer);
     ~Shadow_map_target();
     Shadow_map_target(const Shadow_map_target &target) = delete;
-    Shadow_map_target(const Shadow_map_target &&target) = delete;
+    Shadow_map_target(Shadow_map_target &&target) = default;
     Shadow_map_target & operator=(const Shadow_map_target &target) = delete;
-    Shadow_map_target & operator=(const Shadow_map_target &&target) = delete;
+    Shadow_map_target & operator=(Shadow_map_target &&target) = default;
     GLuint texture{};
     GLuint frame_buffer{};
   };
@@ -341,9 +341,9 @@ private:
     explicit Environment_map_target(const Render_buffer &render_buffer);
     ~Environment_map_target();
     Environment_map_target(const Environment_map_target &target) = delete;
-    Environment_map_target(const Environment_map_target &&target) = delete;
+    Environment_map_target(Environment_map_target &&target) = default;
     Environment_map_target & operator=(const Environment_map_target &target) = delete;
-    Environment_map_target & operator=(const Environment_map_target &&target) = delete;
+    Environment_map_target & operator=(Environment_map_target &&target) = default;
     GLuint texture{};
     GLuint albedo{};
     GLuint frame_buffer{};
