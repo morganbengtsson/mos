@@ -1,4 +1,4 @@
-![Logo](doc/logo.svg)
+# ![Logo](doc/logo.svg)
 
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
