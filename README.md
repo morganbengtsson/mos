@@ -1,5 +1,6 @@
 # ![Logo](doc/logo.svg)
 
+[![Build Status](https://travis-ci.org/morganbengtsson/mos.svg?branch=master)](https://travis-ci.org/morganbengtsson/mos)
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
 
