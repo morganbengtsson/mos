@@ -1,0 +1,15 @@
+language: cpp
+
+dist: bionic
+
+compiler:
+  - gcc
+
+before_script:
+  - sudo apt-get install xorg-dev libglu1-mesa-dev
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script:
+  - make
