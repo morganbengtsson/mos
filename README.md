@@ -12,6 +12,7 @@ MOS is a lightweight cross-platform game engine/library, written in modern C++.
 
 # Features
 
+- Minimal and [documented](https://readthedocs.org/projects/mos/badge/?version=latest) codebase.
 - Integration with [Blender-2.80](https://github.com/morganbengtsson/mos-blender-export)
 - 3D mesh rendering
 - Physically based material model
@@ -21,6 +22,7 @@ MOS is a lightweight cross-platform game engine/library, written in modern C++.
 - Collision detection
 - 3D audio playback, with obstruction model
 - Asset management
+- IO management
 
 ![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
 ![Screenshot2](https://github.com/morganbengtsson/mos/blob/master/doc/screenshot.png?raw=true)
@@ -50,7 +52,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC mos)
 
 # Dependencies
 
-MOS is dependent on the following excellent projects:
+MOS is dependent on the following projects:
 
 - [GLAD](https://github.com/Dav1dde/glad): OpenGL context creation
 - [GLFW](https://www.glfw.org/): Window creation and input events
