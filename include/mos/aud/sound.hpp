@@ -14,7 +14,7 @@ namespace aud {
 class Sound final {
 public:
   Sound(const nlohmann::json &json, Assets &assets,
-                const glm::mat4 &parent_transform = glm::mat4(1.0f));
+        const glm::mat4 &parent_transform = glm::mat4(1.0f));
   explicit Sound(Shared_buffer buffer = nullptr,
                          Source source = Source());
 
