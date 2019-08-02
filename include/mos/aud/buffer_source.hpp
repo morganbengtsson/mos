@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/source.hpp>
+#include <mos/aud/assets.hpp>
+#include <json.hpp>
 
 namespace mos {
 namespace aud {
@@ -11,6 +13,8 @@ namespace aud {
 /** Audio buffer and audio source combined. */
 class Buffer_source final {
 public:
+  Buffer_source(const nlohmann::json &json, Assets &assets,
+                const glm::mat4 &parent_transform = glm::mat4(1.0f));
   explicit Buffer_source(Shared_buffer buffer = nullptr,
                          Source source = Source());
 
