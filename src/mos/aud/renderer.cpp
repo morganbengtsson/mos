@@ -3,7 +3,6 @@
 #include <iostream>
 #include <thread>
 
-#include <mos/aud/buffer_source.hpp>
 #include <mos/aud/renderer.hpp>
 
 #ifdef MOS_EFX
@@ -402,10 +401,10 @@ void Renderer::listener(const Listener &listener) {
 
 void Renderer::render(const Scene &scene) {
   listener(scene.listener);
-  for (const auto &bs : scene.buffer_sources) {
+  for (const auto &bs : scene.speakers) {
     buffer_source(bs);
   }
-  for (auto &ss : scene.stream_sources) {
+  for (auto &ss : scene.stream_speakers) {
     stream_source(ss);
   }
 }

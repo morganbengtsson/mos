@@ -1,4 +1,4 @@
-#include <mos/aud/stream_source.hpp>
+#include <mos/aud/stream_speaker.hpp>
 
 namespace mos {
 namespace aud {

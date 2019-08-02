@@ -1,7 +1,7 @@
 #pragma once
 
 #include <mos/core/container.hpp>
-#include <mos/aud/stream_source.hpp>
+#include <mos/aud/stream_speaker.hpp>
 
 namespace mos {
 namespace aud {

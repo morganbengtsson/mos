@@ -2,11 +2,11 @@
 
 #include <initializer_list>
 #include <vector>
-#include <mos/aud/buffer_source.hpp>
+#include <mos/aud/speaker.hpp>
 #include <mos/aud/listener.hpp>
-#include <mos/aud/stream_source.hpp>
-#include <mos/aud/buffer_sources.hpp>
-#include <mos/aud/stream_sources.hpp>
+#include <mos/aud/stream_speaker.hpp>
+#include <mos/aud/speakers.hpp>
+#include <mos/aud/stream_speakers.hpp>
 
 namespace mos {
 namespace aud {
@@ -14,13 +14,13 @@ namespace aud {
 /** Audio scene with listener and audio sources. */
 class Scene final {
 public:
-  Scene(Buffer_sources buffer_sources,
-        Stream_sources stream_sources,
+  Scene(Speakers speakers,
+        Stream_speakers stream_speakers,
         Listener listener);
   Scene();
 
-  Buffer_sources buffer_sources;
-  Stream_sources stream_sources;
+  Speakers speakers;
+  Stream_speakers stream_speakers;
   Listener listener;
 };
 }
