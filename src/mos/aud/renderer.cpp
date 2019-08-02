@@ -197,28 +197,31 @@ void Renderer::buffer_source(const Speaker &buffer_source) {
 #endif
   }
 
-  auto buffer = buffer_source.buffer;
-  auto format = buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-  if (buffers_.find(buffer->id()) == buffers_.end()) {
-    ALuint al_buffer;
-    alGenBuffers(1, &al_buffer);
-    {
-      long data_size = std::distance(buffer->begin(), buffer->end());
-      const ALvoid *data = buffer->data();
-      alBufferData(al_buffer, format, data, data_size * sizeof(short),
-                   buffer->sample_rate());
-    }
-    buffers_.insert(BufferPair(buffer->id(), al_buffer));
-	
-
-  }
   ALuint al_source = sources_.at(buffer_source.source.id());
-  ALuint al_buffer = buffers_.at(buffer_source.buffer->id());
 
-  int v;
-  alGetSourcei(al_source, AL_BUFFER, &v);
-  if (v == 0){
-    alSourcei(al_source, AL_BUFFER, al_buffer);
+  auto buffer = buffer_source.buffer;
+  if (buffer) {
+    auto format =
+        buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+    if (buffers_.find(buffer->id()) == buffers_.end()) {
+      ALuint al_buffer;
+      alGenBuffers(1, &al_buffer);
+      {
+        long data_size = std::distance(buffer->begin(), buffer->end());
+        const ALvoid *data = buffer->data();
+        alBufferData(al_buffer, format, data, data_size * sizeof(short),
+                     buffer->sample_rate());
+      }
+      buffers_.insert(BufferPair(buffer->id(), al_buffer));
+    }
+
+    ALuint al_buffer = buffers_.at(buffer_source.buffer->id());
+
+    int v;
+    alGetSourcei(al_source, AL_BUFFER, &v);
+    if (v == 0) {
+      alSourcei(al_source, AL_BUFFER, al_buffer);
+    }
   }
 
   alSourcei(al_source, AL_LOOPING, buffer_source.source.loop);
