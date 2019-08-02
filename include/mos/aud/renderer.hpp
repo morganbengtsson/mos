@@ -8,8 +8,8 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <mos/aud/stream_speaker.hpp>
-#include <mos/aud/speaker.hpp>
+#include <mos/aud/sound_stream.hpp>
+#include <mos/aud/sound.hpp>
 #include <mos/aud/listener.hpp>
 #include <mos/aud/scene.hpp>
 

@@ -2,11 +2,11 @@
 
 #include <initializer_list>
 #include <vector>
-#include <mos/aud/speaker.hpp>
+#include <mos/aud/sound.hpp>
 #include <mos/aud/listener.hpp>
-#include <mos/aud/stream_speaker.hpp>
-#include <mos/aud/speakers.hpp>
-#include <mos/aud/stream_speakers.hpp>
+#include <mos/aud/sound_stream.hpp>
+#include <mos/aud/sounds.hpp>
+#include <mos/aud/sound_streams.hpp>
 
 namespace mos {
 namespace aud {

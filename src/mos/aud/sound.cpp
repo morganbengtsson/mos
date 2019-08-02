@@ -1,4 +1,4 @@
-#include <mos/aud/speaker.hpp>
+#include <mos/aud/sound.hpp>
 #include <iostream>
 #include <mos/util.hpp>
 
