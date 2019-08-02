@@ -11,11 +11,11 @@ namespace mos {
 namespace aud {
 
 /** Audio buffer and audio source combined. */
-class Buffer_source final {
+class Speaker final {
 public:
-  Buffer_source(const nlohmann::json &json, Assets &assets,
+  Speaker(const nlohmann::json &json, Assets &assets,
                 const glm::mat4 &parent_transform = glm::mat4(1.0f));
-  explicit Buffer_source(Shared_buffer buffer = nullptr,
+  explicit Speaker(Shared_buffer buffer = nullptr,
                          Source source = Source());
 
   /** Play the source. */

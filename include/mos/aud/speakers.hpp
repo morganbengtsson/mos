@@ -8,7 +8,7 @@ namespace mos {
 namespace aud {
 
 /** Container of buffer sources. */
-using Buffer_sources = Container<Buffer_source>;
+using Speakers = Container<Speaker>;
 
 }
 }

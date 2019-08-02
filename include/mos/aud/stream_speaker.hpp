@@ -10,9 +10,9 @@ namespace mos {
 namespace aud {
 
 /** Stream audio from file, combined with source data. */
-class Stream_source final {
+class Stream_speaker final {
 public:
-  explicit Stream_source(Shared_stream stream,
+  explicit Stream_speaker(Shared_stream stream,
                          Source source = Source());
 
   /** Stream used for the source. */
