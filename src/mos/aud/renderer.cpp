@@ -176,7 +176,7 @@ Renderer::~Renderer() {
   alcCloseDevice(device_);
 }
 
-void Renderer::buffer_source(const Speaker &buffer_source) {
+void Renderer::buffer_source(const Sound &buffer_source) {
 
   //TODO: HACK, replace this!
   float dt = 1.0f / 60.0f;
@@ -271,7 +271,7 @@ void Renderer::buffer_source(const Speaker &buffer_source) {
   }
 }
 
-void Renderer::stream_source(const Stream_speaker &stream_source) {
+void Renderer::stream_source(const Sound_stream &stream_source) {
 
   float dt = 1.0f / 60.0f; // TODO: REMOVE HACK
 
@@ -404,10 +404,10 @@ void Renderer::listener(const Listener &listener) {
 
 void Renderer::render(const Scene &scene) {
   listener(scene.listener);
-  for (const auto &bs : scene.speakers) {
+  for (const auto &bs : scene.sounds) {
     buffer_source(bs);
   }
-  for (auto &ss : scene.stream_speakers) {
+  for (auto &ss : scene.sound_streams) {
     stream_source(ss);
   }
 }

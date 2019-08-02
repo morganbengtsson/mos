@@ -5,7 +5,7 @@
 namespace mos {
 namespace aud {
 
-Speaker::Speaker(const nlohmann::json &json, Assets &assets,
+Sound::Sound(const nlohmann::json &json, Assets &assets,
                              const glm::mat4 &parent_transform) {
   auto parsed = json;
   if (parsed.is_string()) {
@@ -30,11 +30,11 @@ Speaker::Speaker(const nlohmann::json &json, Assets &assets,
   source = Source(glm::vec3(transform[3]), glm::vec3(0.0f), pitch, gain);
 }
 
-Speaker::Speaker(Shared_buffer buffer,
+Sound::Sound(Shared_buffer buffer,
                              Source source)
     : buffer(std::move(buffer)), source(source) {}
 
-void Speaker::input(const float dt) {
+void Sound::input(const float dt) {
   if (source.playing) {
     time_ += dt;
   }

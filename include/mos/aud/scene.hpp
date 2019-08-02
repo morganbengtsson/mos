@@ -14,13 +14,13 @@ namespace aud {
 /** Audio scene with listener and audio sources. */
 class Scene final {
 public:
-  Scene(Speakers speakers,
-        Stream_speakers stream_speakers,
+  Scene(Sounds sounds,
+        Sound_streams sound_streams,
         Listener listener);
   Scene();
 
-  Speakers speakers;
-  Stream_speakers stream_speakers;
+  Sounds sounds;
+  Sound_streams sound_streams;
   Listener listener;
 };
 }
