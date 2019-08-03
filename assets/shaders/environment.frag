@@ -130,7 +130,7 @@ void main() {
 
     float opacity = 1.0;
     if (material.index_of_refraction <= 1.0) {
-        opacity = material.transmission;
+        opacity = 1.0 - material.transmission;
     }
     color.a = clamp(opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
