@@ -18,7 +18,7 @@ public:
                     Shared_texture_2D roughness_map = Shared_texture_2D(),
                     Shared_texture_2D ambient_occlusion_map = Shared_texture_2D(),
                     glm::vec3 albedo = glm::vec3(1.0f),
-                    float opacity = 1.0f,
+                    float index_of_refraction = 1.0f,
                     float transmission = 0.0f,
                     float roughness = 0.0f,
                     float metallic = 0.0f,
@@ -26,7 +26,7 @@ public:
                     float ambient_occlusion = 1.0f);
 
   explicit Material(const glm::vec3 &albedo,
-                    float opacity = 1.0f,
+                    float index_of_refraction = 1.0f,
                     float transmission = 0.0f,
                     float roughness = 0.0f,
                     float metallic = 0.0f,
@@ -36,7 +36,7 @@ public:
   explicit Material(Assets &assets, std::string &path);
 
   glm::vec3 albedo;
-  float opacity;
+  float index_of_refraction;
   float emission;
   float transmission;
   float roughness;

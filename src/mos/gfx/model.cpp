@@ -91,7 +91,7 @@ void Model::ambient_occlusion(const float ambient_occlusion)
 
 void Model::opacity(const float opacity)
 {
-  material.opacity = opacity;
+  material.index_of_refraction = opacity;
   for (auto & model : models){
     model.opacity(opacity);
   }

@@ -23,7 +23,8 @@ Text::Text(const std::string &txt,
   model_.material.roughness = roughness;
   model_.material.metallic = metallic;
   model_.material.albedo = glm::vec3(1.0f);
-  model_.material.opacity = opacity;
+  model_.material.index_of_refraction = 1.0f;
+  model_.material.index_of_refraction = opacity;
   model_.material.emission = emiss;
   model_.material.albedo_map = font_.texture;
   text(txt);
@@ -140,7 +141,7 @@ glm::mat4 Text::transform() const {
 Model Text::model() const { return model_; }
 
 void Text::opacity(const float op) {
-  model_.material.opacity = op;
+  model_.material.transmission = 1.0f - op;
 }
 
 Text &Text::operator=(const std::string &input) {

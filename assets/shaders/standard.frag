@@ -7,7 +7,7 @@ struct Material {
     float emission;
     float roughness;
     float metallic;
-    float opacity;
+    float index_of_refraction;
     float transmission;
     float ambient_occlusion;
     sampler2D albedo_map;
@@ -225,9 +225,10 @@ void main() {
 
         const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
-        const float refractive_index = 1.5;
+        const float refractive_index = material.index_of_refraction;
         const vec3 RF = refract(V, N, 1.0 / refractive_index);
         const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
+        //TODO: Avoid if transmission == 0
         const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
 
         float horiz = dot(corrected_R,N);
@@ -250,7 +251,13 @@ void main() {
       }
     }
     out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
-    out_color.a = clamp(material.opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
+
+    float opacity = 1.0;
+    if (material.index_of_refraction <= 1.0) {
+        opacity = 1.0 - material.transmission;
+    }
+
+    out_color.a = clamp(opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float fog_distance = distance(fragment.position, camera.position);

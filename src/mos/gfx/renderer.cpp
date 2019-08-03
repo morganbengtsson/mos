@@ -468,7 +468,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
-      glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
+      glUniform1fv(uniforms.material_index_of_refraction, 1, &model.material.index_of_refraction);
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
@@ -555,7 +555,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material_emission, 1, &model.material.emission);
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic);
-      glUniform1fv(uniforms.material_opacity, 1, &model.material.opacity);
+      glUniform1fv(uniforms.material_index_of_refraction, 1, &model.material.index_of_refraction);
       glUniform1fv(uniforms.material_transmission, 1, &model.material.transmission);
       glUniform1fv(uniforms.material_ambient_occlusion, 1, &model.material.ambient_occlusion);
 
@@ -1122,7 +1122,7 @@ Renderer::Environment_program::Environment_program() {
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
-  material_opacity = glGetUniformLocation(program, "material.opacity");
+  material_index_of_refraction = glGetUniformLocation(program, "material.index_of_refraction");
   material_transmission = glGetUniformLocation(program, "material.transmission");
   material_emission = glGetUniformLocation(program, "material.emission");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");
@@ -1212,7 +1212,7 @@ Renderer::Standard_program::Standard_program() {
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
-  material_opacity = glGetUniformLocation(program, "material.opacity");
+  material_index_of_refraction = glGetUniformLocation(program, "material.index_of_refraction");
   material_transmission = glGetUniformLocation(program, "material.transmission");
   material_emission = glGetUniformLocation(program, "material.emission");
   material_ambient_occlusion = glGetUniformLocation(program, "material.ambient_occlusion");

@@ -16,14 +16,14 @@ Material::Material(Shared_texture_2D albedo_map,
                    Shared_texture_2D roughness_map,
                    Shared_texture_2D ambient_occlusion_map,
                    const glm::vec3 albedo,
-                   const float opacity,
+                   const float index_of_refraction,
                    const float transmission,
                    const float roughness,
                    const float metallic,
                    const float emission,
                    const float ambient_occlusion)
     : albedo(albedo),
-      opacity(opacity),
+      index_of_refraction(index_of_refraction),
       emission(emission),
       transmission(transmission),
       roughness(roughness),
@@ -36,14 +36,14 @@ Material::Material(Shared_texture_2D albedo_map,
       ambient_occlusion_map(std::move(ambient_occlusion_map)) {}
 
 Material::Material(const glm::vec3 &albedo,
-                   const float opacity,
+                   const float index_of_refraction,
                    const float transmission,
                    const float roughness,
                    const float metallic,
                    const float emission,
                    const float ambient_occlusion)
     : albedo(albedo),
-      opacity(opacity),
+      index_of_refraction(index_of_refraction),
       emission(emission),
       transmission(transmission),
       roughness(roughness),
@@ -73,7 +73,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       ambient_occlusion_map = read_texture("ambient_occlusion_map", false);
 
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
-      opacity = value["opacity"];
+      index_of_refraction = value["index_of_refraction"];
       transmission = value["transmission"];
       roughness = value["roughness"];
       metallic = value["metallic"];
