@@ -16,6 +16,7 @@ Material::Material(Shared_texture_2D albedo_map,
                    Shared_texture_2D roughness_map,
                    Shared_texture_2D ambient_occlusion_map,
                    const glm::vec3 albedo,
+                   const float alpha,
                    const float index_of_refraction,
                    const float transmission,
                    const float roughness,
@@ -23,9 +24,10 @@ Material::Material(Shared_texture_2D albedo_map,
                    const float emission,
                    const float ambient_occlusion)
     : albedo(albedo),
+      alpha(alpha),
       index_of_refraction(index_of_refraction),
-      emission(emission),
       transmission(transmission),
+      emission(emission),
       roughness(roughness),
       metallic(metallic),
       ambient_occlusion(ambient_occlusion),
@@ -36,6 +38,7 @@ Material::Material(Shared_texture_2D albedo_map,
       ambient_occlusion_map(std::move(ambient_occlusion_map)) {}
 
 Material::Material(const glm::vec3 &albedo,
+                   const float alpha,
                    const float index_of_refraction,
                    const float transmission,
                    const float roughness,
@@ -43,9 +46,10 @@ Material::Material(const glm::vec3 &albedo,
                    const float emission,
                    const float ambient_occlusion)
     : albedo(albedo),
+      alpha(alpha),
       index_of_refraction(index_of_refraction),
-      emission(emission),
       transmission(transmission),
+      emission(emission),
       roughness(roughness),
       metallic(metallic),
       ambient_occlusion(ambient_occlusion) {}
@@ -75,6 +79,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
       albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
       index_of_refraction = value["index_of_refraction"];
       transmission = value["transmission"];
+      alpha = value["alpha"];
       roughness = value["roughness"];
       metallic = value["metallic"];
       emission = value["emission"];

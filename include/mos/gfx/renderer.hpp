@@ -218,6 +218,7 @@ private:
     GLint material_roughness;
     GLint material_metallic;
     GLint material_index_of_refraction;
+    GLint material_alpha;
     GLint material_transmission;
     GLint material_emission;
     GLint material_ambient_occlusion;
@@ -264,6 +265,7 @@ private:
     GLint material_roughness;
     GLint material_metallic;
     GLint material_index_of_refraction;
+    GLint material_alpha;
     GLint material_transmission;
     GLint material_emission;
     GLint material_ambient_occlusion;

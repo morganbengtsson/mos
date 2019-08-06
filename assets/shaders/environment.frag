@@ -9,6 +9,7 @@ struct Material {
     float metallic;
     float index_of_refraction;
     float transmission;
+    float alpha;
     float ambient_occlusion;
     sampler2D albedo_map;
 };
@@ -127,12 +128,7 @@ void main() {
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
     color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
-
-    float opacity = 1.0;
-    if (material.index_of_refraction <= 1.0) {
-        opacity = 1.0 - material.transmission;
-    }
-    color.a = clamp(opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
+    color.a = clamp(material.alpha * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);

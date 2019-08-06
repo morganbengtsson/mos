@@ -9,6 +9,7 @@ struct Material {
     float metallic;
     float index_of_refraction;
     float transmission;
+    float alpha;
     float ambient_occlusion;
     sampler2D albedo_map;
     sampler2D normal_map;
@@ -251,13 +252,7 @@ void main() {
       }
     }
     out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
-
-    float opacity = 1.0;
-    if (material.index_of_refraction <= 1.0) {
-        opacity = 1.0 - material.transmission;
-    }
-
-    out_color.a = clamp(opacity * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
+    out_color.a = clamp(material.alpha * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
     float fog_distance = distance(fragment.position, camera.position);
