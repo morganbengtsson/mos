@@ -164,7 +164,7 @@ void main() {
 
     const float NdotV = max(dot(N, V), 0.0);
 
-    vec3 F0 = vec3(0.04);
+    vec3 F0 = vec3(0.02);
     F0 = mix(F0, albedo, metallic);
 
     vec3 direct = vec3(0.0, 0.0, 0.0);
