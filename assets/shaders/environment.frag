@@ -4,7 +4,7 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec4 albedo;
-    float emission;
+    vec3 emission;
     float roughness;
     float metallic;
     float index_of_refraction;
@@ -12,6 +12,7 @@ struct Material {
     float alpha;
     float ambient_occlusion;
     sampler2D albedo_map;
+    sampler2D emission_map;
 };
 
 struct Light {
@@ -79,6 +80,9 @@ void main() {
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
 
+    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
+
     float metallic = material.metallic;
 
     float roughness = material.roughness;
@@ -127,7 +131,7 @@ void main() {
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
+    color.rgb = (direct + ambient) + material.emission;
     color.a = clamp(material.alpha * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog
@@ -135,6 +139,5 @@ void main() {
     float fog_att = fog_attenuation(distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
     color.rgb = mix(fog_color, color.rgb, clamp(fog_att, 0.45, 1.0));
-
-    albedo_out = vec4(albedo * (1.0 - material.emission), 1.0);
+    albedo_out = vec4(albedo, 1.0);
 }

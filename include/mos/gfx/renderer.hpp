@@ -214,6 +214,7 @@ private:
     };
 
     GLint material_albedo_sampler;
+    GLint material_emission_sampler;
     GLint material_albedo;
     GLint material_roughness;
     GLint material_metallic;
@@ -260,6 +261,7 @@ private:
     GLint material_normal_map;
     GLint material_metallic_map;
     GLint material_roughness_map;
+    GLint material_emission_map;
     GLint material_ambient_occlusion_map;
     GLint material_albedo;
     GLint material_roughness;

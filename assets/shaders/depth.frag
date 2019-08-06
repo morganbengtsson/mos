@@ -3,7 +3,7 @@
 layout(location = 0) out vec4 color;
 uniform sampler2D albedo_sampler;
 uniform vec4 albedo;
-uniform float emission;
+uniform vec3 emission;
 in vec2 fragment_uv;
 
 void main() {

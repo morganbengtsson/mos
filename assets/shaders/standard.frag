@@ -4,7 +4,7 @@ const float PI = 3.14159265359;
 
 struct Material {
     vec4 albedo;
-    float emission;
+    vec3 emission;
     float roughness;
     float metallic;
     float index_of_refraction;
@@ -12,6 +12,7 @@ struct Material {
     float alpha;
     float ambient_occlusion;
     sampler2D albedo_map;
+    sampler2D emission_map;
     sampler2D normal_map;
     sampler2D metallic_map;
     sampler2D roughness_map;
@@ -142,6 +143,9 @@ void main() {
     vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
 
+    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
+
     vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
     float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
 
@@ -151,7 +155,7 @@ void main() {
     float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-    if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == 0.0) {
+    if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
         discard;
     }
 
@@ -251,7 +255,7 @@ void main() {
         }
       }
     }
-    out_color.rgb = (1.0 - material.emission) * (direct + ambient) + material.emission * albedo;
+    out_color.rgb = (direct + ambient) + emission;
     out_color.a = clamp(material.alpha * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
 
     //Fog

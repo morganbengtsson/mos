@@ -16,7 +16,7 @@ Text::Text(const std::string &txt,
            const float opacity,
            const float roughness,
            const float metallic,
-           const float emiss)
+           const glm::vec3 & emiss)
     : spacing(spacing),
       model_("Text", std::make_shared<Mesh>(Mesh()), transform),
       font_(std::move(font)) {
@@ -154,7 +154,7 @@ Text &Text::operator+=(const std::string &input) {
   return *this;
 }
 
-void Text::emission(const float emiss) {
+void Text::emission(const glm::vec3 & emiss) {
  model_.material.emission = emiss;
 }
 

@@ -20,7 +20,7 @@ public:
        float opacity = 1.0f,
        float roughness = 1.0f,
        float metallic = 0.0f,
-       float emission = 0.0f);
+       const glm::vec3 & emission = glm::vec3(0.0f));
 
   /** Set text. */
   void text(const std::string &text);
@@ -59,7 +59,7 @@ public:
   void opacity(float opacity);
 
   /** Set if the text is emissive. */
-  void emission(float emission);
+  void emission(const glm::vec3 & emission);
 
   /** Get the font. */
   Font font() const;

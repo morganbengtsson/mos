@@ -40,7 +40,7 @@ public:
   float radius() const;
 
   /** Set emission of material recursively. */
-  void emission(float emission);
+  void emission(const glm::vec3 & emission);
 
   /** Set ambient occlusion of material recursively. */
   void ambient_occlusion(float ambient_occlusion);

@@ -73,7 +73,7 @@ float Model::radius() const {
   return 0.0f;
 }
 
-void Model::emission(const float emission)
+void Model::emission(const glm::vec3 & emission)
 {
   material.emission = emission;
   for (auto & model : models){
