@@ -221,11 +221,11 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.environment_maps[1].map, 6);
 
   glUniform1i(standard_program_.material_albedo_sampler, 7);
-  glUniform1i(standard_program_.material_emission_map, 8);
-  glUniform1i(standard_program_.material_normal_map, 9);
-  glUniform1i(standard_program_.material_metallic_map, 10);
-  glUniform1i(standard_program_.material_roughness_map, 11);
-  glUniform1i(standard_program_.material_ambient_occlusion_map, 12);
+  glUniform1i(standard_program_.material_emission_sampler, 8);
+  glUniform1i(standard_program_.material_normal_sampler, 9);
+  glUniform1i(standard_program_.material_metallic_sampler, 10);
+  glUniform1i(standard_program_.material_roughness_sampler, 11);
+  glUniform1i(standard_program_.material_ambient_occlusion_sampler, 12);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -1135,8 +1135,8 @@ Renderer::Environment_program::Environment_program() {
                                                               + "]").c_str());
   }
 
-  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
-  material_emission_sampler = glGetUniformLocation(program, "material.emission_map");
+  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_sampler");
+  material_emission_sampler = glGetUniformLocation(program, "material.emission_sampler");
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");
@@ -1223,12 +1223,12 @@ Renderer::Standard_program::Standard_program() {
         glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].falloff").c_str());
   }
 
-  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_map");
-  material_normal_map = glGetUniformLocation(program, "material.normal_map");
-  material_metallic_map = glGetUniformLocation(program, "material.metallic_map");
-  material_roughness_map = glGetUniformLocation(program, "material.roughness_map");
-  material_emission_map = glGetUniformLocation(program, "material.emission_map");
-  material_ambient_occlusion_map = glGetUniformLocation(program, "material.ambient_occlusion_map");
+  material_albedo_sampler = glGetUniformLocation(program, "material.albedo_sampler");
+  material_normal_sampler = glGetUniformLocation(program, "material.normal_sampler");
+  material_metallic_sampler = glGetUniformLocation(program, "material.metallic_sampler");
+  material_roughness_sampler = glGetUniformLocation(program, "material.roughness_sampler");
+  material_emission_sampler = glGetUniformLocation(program, "material.emission_sampler");
+  material_ambient_occlusion_sampler = glGetUniformLocation(program, "material.ambient_occlusion_sampler");
   material_albedo = glGetUniformLocation(program, "material.albedo");
   material_roughness = glGetUniformLocation(program, "material.roughness");
   material_metallic = glGetUniformLocation(program, "material.metallic");

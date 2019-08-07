@@ -11,8 +11,8 @@ struct Material {
     float transmission;
     float alpha;
     float ambient_occlusion;
-    sampler2D albedo_map;
-    sampler2D emission_map;
+    sampler2D albedo_sampler;
+    sampler2D emission_sampler;
 };
 
 struct Light {
@@ -77,10 +77,10 @@ float fog_attenuation(const float dist, const float factor);
 void main() {
     vec3 N = fragment.normal;
 
-    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
+    vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
 
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
 
     float metallic = material.metallic;

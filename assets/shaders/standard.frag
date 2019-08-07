@@ -11,12 +11,12 @@ struct Material {
     float transmission;
     float alpha;
     float ambient_occlusion;
-    sampler2D albedo_map;
-    sampler2D emission_map;
-    sampler2D normal_map;
-    sampler2D metallic_map;
-    sampler2D roughness_map;
-    sampler2D ambient_occlusion_map;
+    sampler2D albedo_sampler;
+    sampler2D emission_sampler;
+    sampler2D normal_sampler;
+    sampler2D metallic_sampler;
+    sampler2D roughness_sampler;
+    sampler2D ambient_occlusion_sampler;
 };
 
 struct Light {
@@ -131,28 +131,28 @@ float environment_attenuation(const vec3 point, const vec3 position, const vec3 
 void main() {
     vec3 N = fragment.normal;
 
-    vec3 N_from_map = texture(material.normal_map, fragment.uv).rgb * 2.0 - vec3(1.0);
+    vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
     N_from_map = normalize(fragment.tbn * N_from_map);
 
-    float amount = texture(material.normal_map, fragment.uv).a;
+    float amount = texture(material.normal_sampler, fragment.uv).a;
 
     if (amount > 0.0f){
         N = normalize(mix(N, N_from_map, amount));
     }
 
-    vec4 albedo_from_map = texture(material.albedo_map, fragment.uv);
+    vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
 
-    vec4 emission_from_map = texture(material.emission_map, fragment.uv);
+    vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
 
-    vec4 metallic_from_map = texture(material.metallic_map, fragment.uv);
+    vec4 metallic_from_map = texture(material.metallic_sampler, fragment.uv);
     float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
 
-    vec4 roughnesss_from_map = texture(material.roughness_map, fragment.uv);
+    vec4 roughnesss_from_map = texture(material.roughness_sampler, fragment.uv);
     float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
 
-    float ambient_occlusion_from_map = texture(material.ambient_occlusion_map, fragment.uv).r;
+    float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {

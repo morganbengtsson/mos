@@ -258,11 +258,11 @@ private:
     std::array<Environment_uniforms, 2> environment_maps {};
 
     GLint material_albedo_sampler;
-    GLint material_normal_map;
-    GLint material_metallic_map;
-    GLint material_roughness_map;
-    GLint material_emission_map;
-    GLint material_ambient_occlusion_map;
+    GLint material_normal_sampler;
+    GLint material_metallic_sampler;
+    GLint material_roughness_sampler;
+    GLint material_emission_sampler;
+    GLint material_ambient_occlusion_sampler;
     GLint material_albedo;
     GLint material_roughness;
     GLint material_metallic;
