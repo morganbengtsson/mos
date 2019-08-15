@@ -95,13 +95,11 @@ vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_lev
   vec3 filtered = vec3(0.0);
   for(float x = -angle; x <= angle; x += step) {
       for(float y = -angle; y <= angle; y += step ) {
-        for(float z = -angle; z <= angle; z += step ) {
-            const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-            const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-            const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), z);
-            filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
-            num_samples += 1;
-        }
+        const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+        const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+        const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), y);
+        filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
+        num_samples += 1;
       }
   }
   filtered /= num_samples;
@@ -230,11 +228,13 @@ void main() {
 
         const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
-        const float refractive_index = material.index_of_refraction;
-        const vec3 RF = refract(V, N, 1.0 / refractive_index);
-        const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
-        //TODO: Avoid if transmission == 0
-        const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
+        vec3 refraction = vec3(0,0,0);
+        if (material.transmission > 0.0) {
+          const float refractive_index = material.index_of_refraction;
+          const vec3 RF = refract(V, N, 1.0 / refractive_index);
+          const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
+          const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
+        }
 
         float horiz = dot(corrected_R,N);
         const float horiz_fade_power = 1.0 - roughness;
