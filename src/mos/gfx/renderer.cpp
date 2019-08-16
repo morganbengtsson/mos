@@ -948,24 +948,26 @@ void Renderer::render_model_depth(const Model &model,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
                                   const Depth_program &program) {
-  const glm::mat4 mvp = camera.projection() * camera.view() * transform * model.transform;
+  if (camera.in_frustum(glm::vec3(transform[3]) + model.centroid(), model.radius())) {
+    const glm::mat4 mvp = camera.projection() * camera.view() * transform * model.transform;
 
-  if (model.mesh) {
-    glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+    if (model.mesh) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                 ? textures_.at(model.material.albedo_map->id())->texture
-                                 : black_texture_.texture);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
+                                   ? textures_.at(model.material.albedo_map->id())->texture
+                                   : black_texture_.texture);
 
-    glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
-                       &mvp[0][0]);
-    glm::vec4 albedo =
-        glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
-    glUniform4fv(program.albedo, 1, glm::value_ptr(albedo));
-    glUniform3fv(program.emission, 1, glm::value_ptr(model.material.emission));
-    const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
-    glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
+      glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
+                         &mvp[0][0]);
+      glm::vec4 albedo =
+          glm::vec4(model.material.albedo, model.material.albedo_map ? 0.0f : 1.0f);
+      glUniform4fv(program.albedo, 1, glm::value_ptr(albedo));
+      glUniform3fv(program.emission, 1, glm::value_ptr(model.material.emission));
+      const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
+      glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
+    }
   }
   for (const auto &child : model.models) {
     render_model_depth(child, transform * model.transform, camera, resolution, program);
