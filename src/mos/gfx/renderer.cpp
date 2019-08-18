@@ -19,28 +19,22 @@
 namespace mos {
 namespace gfx {
 
-GLuint wrap_convert(const Texture::Wrap &wrap) {
-  const std::map<Texture::Wrap, GLuint> wrap_map{
-      {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
-      {Texture::Wrap::Repeat, GL_REPEAT}};
-  return wrap_map.at(wrap);
-}
+static const std::map<Texture::Wrap, GLuint> wrap_map{
+    {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
+    {Texture::Wrap::Repeat, GL_REPEAT}};
 
 struct FormatPair {
   GLuint internal_format;
   GLuint format;
 };
 
-FormatPair format_convert(const Texture::Format &format) {
-  const std::map<Texture::Format, FormatPair> format_map{
-      {Texture::Format::R, {GL_RED, GL_RED}},
-      {Texture::Format::RG, {GL_RG, GL_RG}},
-      {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
-      {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
-      {Texture::Format::RGB, {GL_RGB, GL_RGB}},
-      {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
-  return format_map.at(format);
-}
+static const std::map<Texture::Format, FormatPair> format_map{
+    {Texture::Format::R, {GL_RED, GL_RED}},
+    {Texture::Format::RG, {GL_RG, GL_RG}},
+    {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
+    {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
+    {Texture::Format::RGB, {GL_RGB, GL_RGB}},
+    {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
 
 void APIENTRY
 message_callback(GLenum source,
@@ -164,9 +158,9 @@ void Renderer::load_or_update(const Texture_2D &texture) {
     if (texture.layers.modified() > buffer->modified) {
       glBindTexture(GL_TEXTURE_2D, buffer->texture);
       glTexImage2D(GL_TEXTURE_2D, 0,
-                   format_convert(texture.format).internal_format,
+                   format_map.at(texture.format).internal_format,
                    texture.width(), texture.height(), 0,
-                   format_convert(texture.format).format,
+                   format_map.at(texture.format).format,
                    GL_UNSIGNED_BYTE, texture.layers[0].data());
       if (texture.mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -1737,10 +1731,10 @@ Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);
 }
 Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d) :
-    Texture_buffer_2D(format_convert(texture_2d.format).internal_format, format_convert(texture_2d.format).format,
+    Texture_buffer_2D(format_map.at(texture_2d.format).internal_format, format_map.at(texture_2d.format).format,
                     texture_2d.width(),
                     texture_2d.height(),
-                    wrap_convert(texture_2d.wrap),
+                    wrap_map.at(texture_2d.wrap),
                     texture_2d.layers[0].data(),
                     texture_2d.mipmaps) {}
 
