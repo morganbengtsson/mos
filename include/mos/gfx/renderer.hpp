@@ -77,11 +77,11 @@ private:
   class Texture_buffer_2D {
   public:
     explicit Texture_buffer_2D(const Texture_2D &texture_2d);
-    Texture_buffer_2D(GLuint internal_format,
-                    GLuint external_format,
+    Texture_buffer_2D(GLint internal_format,
+                    GLenum external_format,
                     int width,
                     int height,
-                    GLuint wrap,
+                    GLint wrap,
                     const void *data,
                     bool mipmaps,
                     const Time_point &modified = std::chrono::system_clock::now());

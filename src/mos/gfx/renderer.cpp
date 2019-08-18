@@ -19,13 +19,13 @@
 namespace mos {
 namespace gfx {
 
-static const std::map<Texture::Wrap, GLuint> wrap_map{
+static const std::map<Texture::Wrap, GLint> wrap_map{
     {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
     {Texture::Wrap::Repeat, GL_REPEAT}};
 
 struct FormatPair {
-  GLuint internal_format;
-  GLuint format;
+  GLint internal_format;
+  GLenum format;
 };
 
 static const std::map<Texture::Format, FormatPair> format_map{
@@ -1704,8 +1704,8 @@ Renderer::Box::~Box(){
 }
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(
-    const GLuint internal_format, const GLuint external_format, const int width,
-    const int height, const GLuint wrap, const void *data, const bool mipmaps,
+    const GLint internal_format, const GLenum external_format, const int width,
+    const int height, const GLint wrap, const void *data, const bool mipmaps,
     const Time_point &modified)
     : modified(modified) {
   glGenTextures(1, &texture);
