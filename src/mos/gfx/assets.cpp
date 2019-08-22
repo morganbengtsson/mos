@@ -32,21 +32,19 @@ std::shared_ptr<Texture_2D> Assets::texture(const std::string &path,
                                             const Texture_2D::Wrap &wrap) {
   if (!path.empty()) {
     filesystem::path fpath = path;
-    if (fpath.extension() == "texture") {
-      if (textures_.find(path) == textures_.end()) {
-        auto texture_json = json::parse(mos::text(directory() + path));
-        std::string image_name = texture_json["image"];
-        std::string filter = texture_json["filter"];
-        std::string wrap = texture_json["wrap"];
+    if (textures_.find(path) == textures_.end()) {
+      if (fpath.extension() == "texture") {
+          auto texture_json = json::parse(mos::text(directory() + path));
+          std::string image_path = texture_json["image"];
+          std::string filter_key = texture_json["filter"];
+          std::string wrap_key = texture_json["wrap"];
 
-        static const std::map<std::string, Texture_2D::Filter> filter_map{{"linear", Texture_2D::Filter::Linear}, {"closest", Texture_2D::Filter::Closest}};
-        static const std::map<std::string, Texture_2D::Wrap> wrap_map{{"clamp", Texture_2D::Wrap::Clamp}, {"repeat", Texture_2D::Wrap::Repeat}};
-        //return texture(image_name, color_data, true, filter_map.at(filter), wrap_map.at(wrap));
-        textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, true, filter_map.at(filter), wrap_map.at(wrap))));
+          static const std::map<std::string, Texture_2D::Filter> filter_map{{"linear", Texture_2D::Filter::Linear}, {"closest", Texture_2D::Filter::Closest}};
+          static const std::map<std::string, Texture_2D::Wrap> wrap_map{{"clamp", Texture_2D::Wrap::Clamp}, {"repeat", Texture_2D::Wrap::Repeat}};
+
+          textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + image_path, color_data, mipmaps, filter_map.at(filter_key), wrap_map.at(wrap_key))));
       }
-    }
-    else {
-      if (textures_.find(path) == textures_.end()) {
+      else {
         textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap)));
       }
     }
