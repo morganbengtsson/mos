@@ -31,8 +31,24 @@ std::shared_ptr<Texture_2D> Assets::texture(const std::string &path,
                                             const Texture_2D::Filter &filter,
                                             const Texture_2D::Wrap &wrap) {
   if (!path.empty()) {
-    if (textures_.find(path) == textures_.end()) {
-      textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap)));
+    filesystem::path fpath = path;
+    if (fpath.extension() == "texture") {
+      if (textures_.find(path) == textures_.end()) {
+        auto texture_json = json::parse(mos::text(directory() + path));
+        std::string image_name = texture_json["image"];
+        std::string filter = texture_json["filter"];
+        std::string wrap = texture_json["wrap"];
+
+        static const std::map<std::string, Texture_2D::Filter> filter_map{{"linear", Texture_2D::Filter::Linear}, {"closest", Texture_2D::Filter::Closest}};
+        static const std::map<std::string, Texture_2D::Wrap> wrap_map{{"clamp", Texture_2D::Wrap::Clamp}, {"repeat", Texture_2D::Wrap::Repeat}};
+        //return texture(image_name, color_data, true, filter_map.at(filter), wrap_map.at(wrap));
+        textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, true, filter_map.at(filter), wrap_map.at(wrap))));
+      }
+    }
+    else {
+      if (textures_.find(path) == textures_.end()) {
+        textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap)));
+      }
     }
     return textures_.at(path);
   }

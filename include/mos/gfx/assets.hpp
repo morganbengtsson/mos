@@ -35,7 +35,7 @@ public:
   /** Loads a Mesh from a *.mesh file and caches it internally. */
   Shared_mesh mesh(const std::string &path);
 
-  /** Loads Texture2D from a *.png file and caches it internally. */
+  /** Loads Texture2D from a *.png file or *.texture and caches it internally. */
   Shared_texture_2D
   texture(const std::string &path, bool color_data = true, bool mipmaps = true,
           const Texture_2D::Filter &filter = Texture_2D::Filter::Linear,
