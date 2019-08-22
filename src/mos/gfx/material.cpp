@@ -62,14 +62,22 @@ Material::Material(Assets &assets, std::string &path) : Material() {
     if (fpath.extension() == "material") {
       auto value = json::parse(mos::text(assets.directory() + fpath.str()));
 
+      //TODO: Move to texture class
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name{};
         if (!value[name].is_null()) {
 		  std::string temp = value[name];
           file_name = temp;
         }
-        auto tex = file_name.empty() ? assets.texture("") : assets.texture(file_name, color_data);
-        return tex;
+        if (file_name.empty()){
+          return assets.texture("");
+        }
+        else {
+          auto texture_json = json::parse(mos::text(assets.directory() + std::string(value[name])));
+          std::string image_name = texture_json["image"];
+          std::string filtering = texture_json["filtering"];
+          return assets.texture(image_name, color_data);
+        }
       };
 
       albedo_map = read_texture("albedo_map");
