@@ -16,17 +16,12 @@ class Texture {
 public:
   using Data = std::vector<unsigned char>;
   enum class Wrap { Repeat, Clamp };
-  enum class Format {
-    R,
-    RG,
-    RGB,
-    RGBA,
-    SRGB,
-    SRGBA
-  };
+  enum class Filter { Linear, Closest };
+  enum class Format { R, RG, RGB, RGBA, SRGB, SRGBA };
+
   template <class T>
   Texture(T begin, T end, const int width, const int height,
-          const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::Repeat,
+          const Format &format = Format::SRGBA, const Filter &filter = Filter::Linear, const Wrap &wrap = Wrap::Repeat,
           const bool mipmaps = true)
       : mipmaps(mipmaps), wrap(wrap), format(format), layers(begin, end),
         id_(current_id_++), width_(width), height_(height) {}
@@ -35,17 +30,20 @@ public:
           int width,
           int height,
           const Format &format = Format::SRGBA,
+          const Filter &filter = Filter::Linear,
           const Wrap &wrap = Wrap::Repeat,
           bool mipmaps = true);
 
   Texture(int width,
           int height,
           const Format &format = Format::SRGBA,
+          const Filter &filter = Filter::Linear,
           const Wrap &wrap = Wrap::Repeat,
           bool mipmaps = true);
 
   Texture(const std::initializer_list<std::string> &paths,
           bool color_data,
+          const Filter &filter,
           const Wrap &wrap,
           bool mipmaps);
 
@@ -55,6 +53,7 @@ public:
   Tracked_container<Data>::size_type depth() const;
 
   bool mipmaps; // TODO: const
+  Filter filter;
   Wrap wrap; // TODO: const
   Format format; // TODO: const
   Tracked_container<Data> layers;

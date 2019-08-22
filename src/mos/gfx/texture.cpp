@@ -7,41 +7,33 @@
 namespace mos {
 namespace gfx {
 std::atomic_int Texture::current_id_;
-Texture::Texture(const int width,
-                 const int height,
-                 const Texture::Format &format,
-                 const Texture::Wrap &wrap,
-                 const bool mipmaps) :
-  mipmaps(mipmaps),
-  wrap(wrap),
-  format(format),
-  layers{Data()},
-  id_(current_id_++),
-  width_(width),
-  height_(height){}
+Texture::Texture(const int width, const int height,
+                 const Texture::Format &format, const Texture::Filter &filter,
+                 const Texture::Wrap &wrap, const bool mipmaps)
+    : mipmaps(mipmaps), filter(filter), wrap(wrap),
+      format(format), layers{Data()}, id_(current_id_++), width_(width),
+      height_(height) {}
 
 Texture::Texture(const std::initializer_list<Texture::Data> &layers,
                  const int width,
                  const int height,
                  const Texture::Format &format,
+                 const Texture::Filter &filter,
                  const Texture::Wrap &wrap,
                  const bool mipmaps) : Texture(layers.begin(),
                                                layers.end(),
                                                width,
                                                height,
                                                format,
+                                               filter,
                                                wrap,
                                                mipmaps) {}
 
 Texture::Texture(const std::initializer_list<std::string> &paths,
-                 const bool color_data,
-                 const Texture::Wrap &wrap,
-                 const bool mipmaps) :
-  mipmaps(mipmaps),
-  wrap(wrap),
-  id_(current_id_++),
-  width_(0),
-  height_(0) {
+                 const bool color_data, const Texture::Filter &filter,
+                 const Texture::Wrap &wrap, const bool mipmaps)
+    : mipmaps(mipmaps), filter(filter), wrap(wrap), id_(current_id_++),
+      width_(0), height_(0) {
   for (auto &path : paths) {
     int bpp;
     unsigned char *pixels = stbi_load(path.c_str(), &width_, &height_, &bpp, 0);
