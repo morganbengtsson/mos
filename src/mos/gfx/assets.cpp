@@ -25,14 +25,14 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture_2D>
-Assets::texture(const std::string &path,
-                      const bool color_data,
-                      const bool mipmaps,
-                      const Texture_2D::Wrap &wrap) {
+std::shared_ptr<Texture_2D> Assets::texture(const std::string &path,
+                                            const bool color_data,
+                                            const bool mipmaps,
+                                            const Texture_2D::Filter &filter,
+                                            const Texture_2D::Wrap &wrap) {
   if (!path.empty()) {
     if (textures_.find(path) == textures_.end()) {
-      textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, wrap)));
+      textures_.insert(Texture_pair(path, Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap)));
     }
     return textures_.at(path);
   }

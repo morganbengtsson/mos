@@ -37,9 +37,8 @@ public:
 
   /** Loads Texture2D from a *.png file and caches it internally. */
   Shared_texture_2D
-  texture(const std::string &path,
-          bool color_data = true,
-          bool mipmaps = true,
+  texture(const std::string &path, bool color_data = true, bool mipmaps = true,
+          const Texture_2D::Filter &filter = Texture_2D::Filter::Linear,
           const Texture_2D::Wrap &wrap = Texture_2D::Wrap::Repeat);
 
   /** Remove all unused assets. */

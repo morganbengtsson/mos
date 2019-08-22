@@ -75,8 +75,13 @@ Material::Material(Assets &assets, std::string &path) : Material() {
         else {
           auto texture_json = json::parse(mos::text(assets.directory() + std::string(value[name])));
           std::string image_name = texture_json["image"];
-          std::string filtering = texture_json["filtering"];
-          return assets.texture(image_name, color_data);
+          std::string filter = texture_json["filter"];
+          std::string wrap = texture_json["wrap"];
+
+          static const std::map<std::string, Texture_2D::Filter> filter_map{{"linear", Texture_2D::Filter::Linear}, {"closest", Texture_2D::Filter::Closest}};
+          static const std::map<std::string, Texture_2D::Wrap> wrap_map{{"clamp", Texture_2D::Wrap::Clamp}, {"repeat", Texture_2D::Wrap::Repeat}};
+
+          return assets.texture(image_name, color_data, true, filter_map.at(filter), wrap_map.at(wrap));
         }
       };
 
