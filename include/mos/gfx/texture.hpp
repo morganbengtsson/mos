@@ -24,20 +24,12 @@ public:
     SRGB,
     SRGBA
   };
-  template<class T>
-  Texture(T begin, T end,
-          const int width,
-          const int height,
-          const Format &format = Format::SRGBA,
-          const Wrap &wrap = Wrap::Repeat,
-          const bool mipmaps = true) :
-    mipmaps(mipmaps),
-    wrap(wrap),
-    format(format),
-    layers(begin, end),
-    id_(current_id_++),
-     width_(width),
-     height_(height){}
+  template <class T>
+  Texture(T begin, T end, const int width, const int height,
+          const Format &format = Format::SRGBA, const Wrap &wrap = Wrap::Repeat,
+          const bool mipmaps = true)
+      : mipmaps(mipmaps), wrap(wrap), format(format), layers(begin, end),
+        id_(current_id_++), width_(width), height_(height) {}
 
   Texture(const std::initializer_list<Data> &layers,
           int width,
