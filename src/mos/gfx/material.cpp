@@ -62,7 +62,6 @@ Material::Material(Assets &assets, std::string &path) : Material() {
     if (fpath.extension() == "material") {
       auto value = json::parse(mos::text(assets.directory() + fpath.str()));
 
-      //TODO: Move to texture class
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name{};
         if (!value[name].is_null()) {
