@@ -23,6 +23,15 @@ static const std::map<Texture::Wrap, GLint> wrap_map{
     {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
     {Texture::Wrap::Repeat, GL_REPEAT}};
 
+static const std::map<Texture::Filter, GLint> filter_map{
+    {Texture::Filter::Linear, GL_LINEAR},
+    {Texture::Filter::Closest, GL_NEAREST}};
+
+static const std::map<Texture::Filter, GLint> filter_map_mip{
+    {Texture::Filter::Linear, GL_LINEAR_MIPMAP_LINEAR},
+    {Texture::Filter::Closest, GL_NEAREST_MIPMAP_LINEAR}};
+
+
 struct FormatPair {
   GLint internal_format;
   GLenum format;
@@ -58,11 +67,10 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
       bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
       depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
       post_target_(resolution / 4, GL_RGBA16F), quad_(),
-      black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT,
-                     std::array<unsigned char, 4>{0, 0, 0, 0}.data(), true),
-      white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_REPEAT,
-                     std::array<unsigned char, 4>{255, 255, 255, 255}.data(),
-                     true),
+      black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+                     std::array<unsigned char, 4>{0, 0, 0, 0}.data()),
+      white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+                     std::array<unsigned char, 4>{255, 255, 255, 255}.data()),
       brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false,
                                    Texture_2D::Filter::Linear,
                                    Texture_2D::Wrap::Clamp)),
@@ -1714,16 +1722,17 @@ Renderer::Box::~Box(){
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(
     const GLint internal_format, const GLenum external_format, const int width,
-    const int height, const GLint wrap, const void *data, const bool mipmaps,
-    const Time_point &modified)
+    const int height, const GLint filter_min, const GLint filter_mag,
+    const GLint wrap, const void *data, const Time_point &modified)
     : modified(modified) {
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  auto filter = mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+  // TODO: Finnish
+  //auto min_filter = mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 
@@ -1731,7 +1740,7 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
                internal_format,
                width, height, 0,
                external_format, GL_UNSIGNED_BYTE, data);
-  if (mipmaps) {
+  if (filter_min == GL_LINEAR_MIPMAP_LINEAR || filter_min == GL_NEAREST_MIPMAP_LINEAR) {
     glGenerateMipmap(GL_TEXTURE_2D);
   };
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -1739,13 +1748,14 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
 Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);
 }
-Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d) :
-    Texture_buffer_2D(format_map.at(texture_2d.format).internal_format, format_map.at(texture_2d.format).format,
-                    texture_2d.width(),
-                    texture_2d.height(),
-                    wrap_map.at(texture_2d.wrap),
-                    texture_2d.layers[0].data(),
-                    texture_2d.mipmaps) {}
+Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d)
+    : Texture_buffer_2D(format_map.at(texture_2d.format).internal_format,
+                        format_map.at(texture_2d.format).format,
+                        texture_2d.width(), texture_2d.height(),
+                        texture_2d.mipmaps ? filter_map_mip.at(texture_2d.filter) : filter_map.at(texture_2d.filter),
+                        filter_map.at(texture_2d.filter),
+                        wrap_map.at(texture_2d.wrap),
+                        texture_2d.layers[0].data()) {}
 
 Renderer::Shader::Shader(const std::string &source,
                          const GLuint type,
