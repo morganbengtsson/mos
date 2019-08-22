@@ -23,14 +23,19 @@ static const std::map<Texture::Wrap, GLint> wrap_map{
     {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
     {Texture::Wrap::Repeat, GL_REPEAT}};
 
+auto wrap_convert(const Texture::Wrap& w) { return wrap_map.at(w); }
+
 static const std::map<Texture::Filter, GLint> filter_map{
     {Texture::Filter::Linear, GL_LINEAR},
     {Texture::Filter::Closest, GL_NEAREST}};
+
+auto filter_convert(const Texture::Filter &f) { return filter_map.at(f); }
 
 static const std::map<Texture::Filter, GLint> filter_map_mip{
     {Texture::Filter::Linear, GL_LINEAR_MIPMAP_LINEAR},
     {Texture::Filter::Closest, GL_NEAREST_MIPMAP_LINEAR}};
 
+auto filter_convert_mp(const Texture::Filter &f) { return filter_map_mip.at(f); }
 
 struct FormatPair {
   GLint internal_format;
@@ -44,6 +49,10 @@ static const std::map<Texture::Format, FormatPair> format_map{
     {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
     {Texture::Format::RGB, {GL_RGB, GL_RGB}},
     {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
+
+auto format_convert(const Texture::Format &f){
+  return format_map.at(f);
+}
 
 void APIENTRY
 message_callback(GLenum source,
