@@ -87,7 +87,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
       brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false,
                                    Texture_2D::Filter::Linear,
                                    Texture_2D::Wrap::Clamp)),
-      cube_camera_index_({0, 0}), shadow_maps_render_buffer_(512),
+      cube_camera_index_({0, 0}), shadow_maps_render_buffer_(resolution.y),
       shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_),
@@ -664,7 +664,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glViewport(0, 0, shadow_maps_render_buffer_.resolution,
                  shadow_maps_render_buffer_.resolution);
 
-      blur(shadow_maps_.at(i).texture, shadow_map_blur_target_, shadow_map_blur_targets_.at(i), 2);
+      blur(shadow_maps_.at(i).texture, shadow_map_blur_target_, shadow_map_blur_targets_.at(i), 4);
     }
   }
 }
