@@ -72,7 +72,7 @@ Material::Material(Assets &assets, std::string &path) : Material() {
           return assets.texture("");
         }
         else {
-          return assets.texture(std::string(value[name]), color_data, true);
+          return assets.texture(value[name].get<std::string>(), color_data, true);
         }
       };
 
