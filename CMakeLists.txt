@@ -77,11 +77,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
-#Copy HRT files for OpenAL
-add_custom_command(TARGET copy_resources POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
-
 #Copy shader files to assets and brdfLUT to assets
 add_custom_command(TARGET copy_resources POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
