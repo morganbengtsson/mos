@@ -83,9 +83,9 @@ private:
         const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
     Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(Texture_buffer_2D &&buffer) = default;
+    Texture_buffer_2D(Texture_buffer_2D &&buffer) = delete;
     Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = default;
+    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = delete;
     const GLuint texture{};
     Time_point modified;
   };
