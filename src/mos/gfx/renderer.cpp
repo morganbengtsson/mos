@@ -23,7 +23,7 @@ namespace gfx {
 auto generate(const std::function<void(GLsizei, GLuint*)> & f){
   GLuint id;
   f(1, &id);
-  return std::move(id);
+  return id;
 }
 
 auto wrap_convert(const Texture::Wrap& w) {
