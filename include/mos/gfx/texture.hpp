@@ -24,7 +24,7 @@ public:
   Texture(T begin, T end, const int width, const int height,
           const Format &format = Format::SRGBA, const Filter &filter = Filter::Linear, const Wrap &wrap = Wrap::Repeat,
           const bool mipmaps = true)
-      : mipmaps(mipmaps), wrap(wrap), format(format), layers(begin, end),
+      : mipmaps(mipmaps), filter(filter), wrap(wrap), format(format), layers(begin, end),
         id_(current_id_++), width_(width), height_(height) {}
 
   Texture(const std::initializer_list<Data> &layers,
