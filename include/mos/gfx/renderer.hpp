@@ -310,8 +310,8 @@ private:
     Post_target(Post_target &&target) = default;
     Post_target & operator=(const Post_target &target) = delete;
     Post_target & operator=(Post_target &&target) = default;
-    GLuint frame_buffer{};
-    GLuint texture{};
+    const GLuint frame_buffer{};
+    const GLuint texture{};
     const glm::ivec2 resolution;
   };
 

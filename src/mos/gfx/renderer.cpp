@@ -1641,11 +1641,11 @@ Renderer::Standard_target::~Standard_target() {
   glDeleteTextures(1, &depth_texture);
 }
 
-Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLint precision) : resolution(resolution){
-  glGenFramebuffers(1, &frame_buffer);
+Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
+                                   const GLint precision)
+    : resolution(resolution), frame_buffer([](){GLuint fb; glGenFramebuffers(1, &fb); return fb;}()), texture([](){GLuint t; glGenTextures(1, &t); return t;}()) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-  glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGBA, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -1659,7 +1659,6 @@ Renderer::Post_target::Post_target(const glm::ivec2 &resolution, const GLint pre
     throw std::runtime_error("Framebuffer incomplete");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 Renderer::Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
