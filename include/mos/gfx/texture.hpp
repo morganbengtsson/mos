@@ -3,6 +3,7 @@
 #include <atomic>
 #include <initializer_list>
 #include <memory>
+#include <string>
 #include <mos/core/tracked_container.hpp>
 
 namespace mos {

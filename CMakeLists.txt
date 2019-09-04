@@ -77,19 +77,19 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
-#Copy HRT files for OpenAL
-add_custom_command(TARGET copy_resources POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/externals/openal-soft/hrtf ${CMAKE_BINARY_DIR})
-
 #Copy shader files to assets and brdfLUT to assets
 add_custom_command(TARGET copy_resources POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 		
+# Copy OpenAL dll on Windows
 if(WIN32)	
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-							COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+					   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/$<CONFIGURATION>/")
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+							COMMAND ${CMAKE_COMMAND} -E copy
+							"$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>/")
+	
 		
 endif()
 		
