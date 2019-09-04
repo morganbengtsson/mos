@@ -82,11 +82,7 @@ private:
         GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
         const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
-    Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(Texture_buffer_2D &&buffer) = default;
-    Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = default;
-    GLuint texture{};
+    const GLuint texture{};
     Time_point modified;
   };
 
@@ -94,21 +90,13 @@ private:
   public:
     Shader(const std::string &source, GLuint type, const std::string& name);
     ~Shader();
-    Shader(const Shader &shader) = delete;
-    Shader(Shader &&shader) = default;
-    Shader & operator=(const Shader &shader) = delete;
-    Shader & operator=(Shader &&shader) = default;
-    GLuint id;
+    const GLuint id;
   };
 
   struct Program {
     Program();
     ~Program();
-    Program(const Program &program) = delete;
-    Program(const Program &&program) = delete;
-    Program & operator=(const Program &program) = delete;
-    Program & operator=(const Program &&program) = delete;
-    GLuint program;
+    const GLuint program;
     void check(const std::string &name);
     void link(const std::string &name);
   };

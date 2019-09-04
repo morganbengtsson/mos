@@ -1100,8 +1100,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1fv(compositing_program_.bloom_strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
 }
 
 Renderer::Depth_program::Depth_program() {
@@ -1111,8 +1109,6 @@ Renderer::Depth_program::Depth_program() {
 
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
-
-  program = glCreateProgram();
 
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
@@ -1738,12 +1734,8 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
     const GLint internal_format, const GLenum external_format, const int width,
     const int height, const GLint filter_min, const GLint filter_mag,
     const GLint wrap, const void *data, const Time_point &modified)
-    : modified(modified) {
-  glGenTextures(1, &texture);
+    : texture(generate(glGenTextures)), modified(modified) {
   glBindTexture(GL_TEXTURE_2D, texture);
-
-  // TODO: Finnish
-  //auto min_filter = mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag);
@@ -1773,7 +1765,7 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d)
 
 Renderer::Shader::Shader(const std::string &source,
                          const GLuint type,
-                         const std::string &name) {
+                         const std::string &name): id(glCreateShader(type)) {
 
   static const std::map<const unsigned int, std::string> shader_types{
       {GL_VERTEX_SHADER, "vertex shader"},
@@ -1781,7 +1773,6 @@ Renderer::Shader::Shader(const std::string &source,
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
   auto const *chars = source.c_str();
-  id = glCreateShader(type);
   std::cout << "Compiling: " << (!name.empty() ? name + " " : "") << shader_types.at(type) << std::endl;
   glShaderSource(id, 1, &chars, nullptr);
   glCompileShader(id);
@@ -1804,8 +1795,7 @@ Renderer::Shader::Shader(const std::string &source,
 Renderer::Shader::~Shader() {
   glDeleteShader(id);
 }
-Renderer::Program::Program() {
-  program = glCreateProgram();
+Renderer::Program::Program() : program(glCreateProgram()) {
   assert(program);
 }
 Renderer::Program::~Program() {
