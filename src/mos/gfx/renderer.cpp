@@ -26,19 +26,6 @@ auto generate(const std::function<void(GLsizei, GLuint*)> & f){
   return id;
 }
 
-auto generate_gl_framebuffer(){
-  GLuint id;
-  glGenFramebuffers(1, &id);
-  return id;
-}
-
-auto generate_gl_texture(){
-  GLuint id;
-  glGenTextures(1, &id);
-  return id;
-}
-
-
 auto wrap_convert(const Texture::Wrap& w) {
   static const std::map<Texture::Wrap, GLint> wrap_map{
       {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
