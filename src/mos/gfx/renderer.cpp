@@ -15,10 +15,28 @@
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
+#include <functional>
 
 namespace mos {
 namespace gfx {
 
+auto gl_gen(const std::function<void(GLsizei, GLuint*)> & f){
+  GLuint id;
+  f(1, &id);
+  return id;
+}
+
+auto generate_gl_framebuffer(){
+  GLuint id;
+  glGenFramebuffers(1, &id);
+  return id;
+}
+
+auto generate_gl_texture(){
+  GLuint id;
+  glGenTextures(1, &id);
+  return id;
+}
 
 
 auto wrap_convert(const Texture::Wrap& w) {
@@ -1643,7 +1661,9 @@ Renderer::Standard_target::~Standard_target() {
 
 Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
                                    const GLint precision)
-    : resolution(resolution), frame_buffer([](){GLuint fb; glGenFramebuffers(1, &fb); return fb;}()), texture([](){GLuint t; glGenTextures(1, &t); return t;}()) {
+    : resolution(resolution),
+      frame_buffer(gl_gen(glGenFramebuffers)),
+      texture(gl_gen(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D, texture);
