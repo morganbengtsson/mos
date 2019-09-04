@@ -20,7 +20,7 @@
 namespace mos {
 namespace gfx {
 
-auto gl_gen(const std::function<void(GLsizei, GLuint*)> & f){
+auto generate(const std::function<void(GLsizei, GLuint*)> & f){
   GLuint id;
   f(1, &id);
   return id;
@@ -1493,11 +1493,11 @@ Renderer::Propagate_program::Propagate_program() {
   side = glGetUniformLocation(program, "side");
 }
 
-Renderer::Shadow_map_target::Shadow_map_target(const Render_buffer &render_buffer) {
-  glGenFramebuffers(1, &frame_buffer);
+Renderer::Shadow_map_target::Shadow_map_target(
+    const Render_buffer &render_buffer)
+    : frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-  glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -1535,8 +1535,7 @@ Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Render_buffer::Render_buffer(const int resolution) : resolution(resolution) {
-  glGenRenderbuffers(1, &render_buffer);
+Renderer::Render_buffer::Render_buffer(const int resolution) : resolution(resolution), render_buffer(generate(glGenRenderbuffers)){
   glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                         resolution,
@@ -1546,12 +1545,12 @@ Renderer::Render_buffer::Render_buffer(const int resolution) : resolution(resolu
 Renderer::Render_buffer::~Render_buffer() {
   glDeleteRenderbuffers(1, &render_buffer);
 }
-Renderer::Environment_map_target::Environment_map_target(const Renderer::Render_buffer &render_buffer) {
-  glGenFramebuffers(1, &frame_buffer);
+Renderer::Environment_map_target::Environment_map_target(
+    const Renderer::Render_buffer &render_buffer)
+    : frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)), albedo(generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-  // Target
-  glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1581,7 +1580,6 @@ Renderer::Environment_map_target::Environment_map_target(const Renderer::Render_
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture, 0);
 
   //Albedo target
-  glGenTextures(1, &albedo);
   glBindTexture(GL_TEXTURE_CUBE_MAP, albedo);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1626,17 +1624,17 @@ Renderer::Environment_map_target::~Environment_map_target() {
   glDeleteFramebuffers(1, &frame_buffer);
 }
 
-Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
-  glGenFramebuffers(1, &frame_buffer);
+Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution)
+    : frame_buffer(generate(glGenFramebuffers)),
+      color_texture(generate(glGenTextures)),
+      depth_texture(generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
-  glGenTextures(1, &color_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
   glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_texture, 0);
 
-  glGenTextures(1, &depth_texture);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
   glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
@@ -1651,7 +1649,6 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution) {
     throw std::runtime_error("Framebuffer incomplete.");
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 Renderer::Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
@@ -1662,8 +1659,8 @@ Renderer::Standard_target::~Standard_target() {
 Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
                                    const GLint precision)
     : resolution(resolution),
-      frame_buffer(gl_gen(glGenFramebuffers)),
-      texture(gl_gen(glGenTextures)) {
+      frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -1684,7 +1681,9 @@ Renderer::Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
-Renderer::Quad::Quad() {
+Renderer::Quad::Quad()
+    : vertex_array(generate(glGenVertexArrays)),
+      buffer(generate(glGenBuffers)) {
   static const float quad_vertices[] = {
       -1.0f, 1.0f, 0.0f, 1.0f,
       -1.0f, -1.0f, 0.0f, 0.0f,
@@ -1693,8 +1692,6 @@ Renderer::Quad::Quad() {
       1.0f, -1.0f, 1.0f, 0.0f,
       1.0f, 1.0f, 1.0f, 1.0f
   };
-  glGenVertexArrays(1, &vertex_array);
-  glGenBuffers(1, &buffer);
   glBindVertexArray(vertex_array);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
@@ -1708,7 +1705,9 @@ Renderer::Quad::~Quad() {
   glDeleteBuffers(1, &buffer);
   glDeleteVertexArrays(1, &vertex_array);
 }
-Renderer::Box::Box() {
+Renderer::Box::Box()
+    : buffer(generate(glGenBuffers)), element_buffer(generate(glGenBuffers)),
+      vertex_array(generate(glGenVertexArrays)) {
   // Render boxes
   float vertices[] = {
       -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
@@ -1716,20 +1715,17 @@ Renderer::Box::Box() {
       0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
   };
 
-  glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   unsigned int elements[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 4, 1, 5, 2, 6, 3, 7};
 
-  glGenBuffers(1, &element_buffer);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
                GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  glGenVertexArrays(1, &vertex_array);
   glBindVertexArray(vertex_array);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glEnableVertexAttribArray(0);
@@ -1743,7 +1739,6 @@ Renderer::Box::Box() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
   glBindVertexArray(0);
-
 }
 
 Renderer::Box::~Box(){

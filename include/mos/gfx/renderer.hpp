@@ -294,22 +294,14 @@ private:
   struct Standard_target {
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
-    Standard_target(const Standard_target &target) = delete;
-    Standard_target(Standard_target &&target) = default;
-    Standard_target & operator=(const Standard_target &target) = delete;
-    Standard_target & operator=(Standard_target &&target) = default;
-    GLuint frame_buffer{};
-    GLuint color_texture{};
-    GLuint depth_texture{};
+    const GLuint frame_buffer{};
+    const GLuint color_texture{};
+    const GLuint depth_texture{};
   };
 
   struct Post_target {
     explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
     ~Post_target();
-    Post_target(const Post_target &target) = delete;
-    Post_target(Post_target &&target) = default;
-    Post_target & operator=(const Post_target &target) = delete;
-    Post_target & operator=(Post_target &&target) = default;
     const GLuint frame_buffer{};
     const GLuint texture{};
     const glm::ivec2 resolution;
@@ -318,58 +310,38 @@ private:
   struct Render_buffer {
     explicit Render_buffer(int resolution);
     ~Render_buffer();
-    Render_buffer(const Render_buffer &target) = delete;
-    Render_buffer(Render_buffer &&target) = default;
-    Render_buffer & operator=(const Render_buffer &target) = delete;
-    Render_buffer & operator=(Render_buffer &&target) = default;
-    GLuint render_buffer{};
-    int resolution;
+    const GLuint render_buffer{};
+    const int resolution;
   };
 
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
-    ~Shadow_map_target();
-    Shadow_map_target(const Shadow_map_target &target) = delete;
-    Shadow_map_target(Shadow_map_target &&target) = default;
-    Shadow_map_target & operator=(const Shadow_map_target &target) = delete;
-    Shadow_map_target & operator=(Shadow_map_target &&target) = default;
-    GLuint texture{};
-    GLuint frame_buffer{};
+    ~Shadow_map_target();   
+    const GLuint texture{};
+    const GLuint frame_buffer{};
   };
 
   struct Environment_map_target {
     explicit Environment_map_target(const Render_buffer &render_buffer);
     ~Environment_map_target();
-    Environment_map_target(const Environment_map_target &target) = delete;
-    Environment_map_target(Environment_map_target &&target) = default;
-    Environment_map_target & operator=(const Environment_map_target &target) = delete;
-    Environment_map_target & operator=(Environment_map_target &&target) = default;
-    GLuint texture{};
-    GLuint albedo{};
-    GLuint frame_buffer{};
+    const GLuint texture{};
+    const GLuint albedo{};
+    const GLuint frame_buffer{};
   };
 
   struct Quad {
     Quad();
     ~Quad();
-    Quad(const Quad &target) = delete;
-    Quad(const Quad &&target) = delete;
-    Quad & operator=(const Quad &target) = delete;
-    Quad & operator=(const Quad &&target) = delete;
-    GLuint vertex_array{};
-    GLuint buffer{};
+    const GLuint vertex_array{};
+    const GLuint buffer{};
   };
 
   struct Box {
     Box();
     ~Box();
-    Box(const Box &target) = delete;
-    Box(const Box &&target) = delete;
-    Box & operator=(const Box &target) = delete;
-    Box & operator=(const Box &&target) = delete;
-    GLuint buffer{};
-    GLuint element_buffer{};
-    GLuint vertex_array{};
+    const GLuint buffer{};
+    const GLuint element_buffer{};
+    const GLuint vertex_array{};
   };
 
   void render_texture_targets(const Scene &scene);
