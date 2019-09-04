@@ -82,6 +82,10 @@ private:
         GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
         const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
+    Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
+    Texture_buffer_2D(Texture_buffer_2D &&buffer) = default;
+    Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
+    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = default;
     const GLuint texture{};
     Time_point modified;
   };
@@ -91,11 +95,19 @@ private:
     Shader(const std::string &source, GLuint type, const std::string& name);
     ~Shader();
     const GLuint id;
+    Shader(const Shader &shader) = delete;
+    Shader(Shader &&shader) = delete;
+    Shader & operator=(const Shader &shader) = delete;
+    Shader & operator=(Shader &&shader) = delete;
   };
 
   struct Program {
     Program();
     ~Program();
+    Program(const Program &program) = delete;
+    Program(const Program &&program) = delete;
+    Program & operator=(const Program &program) = delete;
+    Program & operator=(const Program &&program) = delete;
     const GLuint program;
     void check(const std::string &name);
     void link(const std::string &name);
@@ -282,6 +294,10 @@ private:
   struct Standard_target {
     Standard_target(const glm::ivec2 &resolution);
     ~Standard_target();
+    Standard_target(const Standard_target &target) = delete;
+    Standard_target(Standard_target &&target) = delete;
+    Standard_target & operator=(const Standard_target &target) = delete;
+    Standard_target & operator=(Standard_target &&target) = delete;
     const GLuint frame_buffer{};
     const GLuint color_texture{};
     const GLuint depth_texture{};
@@ -291,9 +307,9 @@ private:
     explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
     ~Post_target();
     Post_target(const Post_target &target) = delete;
-    Post_target(Post_target &&target) = default;
+    Post_target(Post_target &&target) = delete;
     Post_target & operator=(const Post_target &target) = delete;
-    Post_target & operator=(Post_target &&target) = default;
+    Post_target & operator=(Post_target &&target) = delete;
     const GLuint frame_buffer{};
     const GLuint texture{};
     const glm::ivec2 resolution;
@@ -302,13 +318,21 @@ private:
   struct Render_buffer {
     explicit Render_buffer(int resolution);
     ~Render_buffer();
+    Render_buffer(const Render_buffer &target) = delete;
+    Render_buffer(Render_buffer &&target) = delete;
+    Render_buffer & operator=(const Render_buffer &target) = delete;
+    Render_buffer & operator=(Render_buffer &&target) = delete;
     const GLuint render_buffer{};
     const int resolution;
   };
 
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
-    ~Shadow_map_target();   
+    ~Shadow_map_target();
+    Shadow_map_target(const Shadow_map_target &target) = delete;
+    Shadow_map_target(Shadow_map_target &&target) = delete;
+    Shadow_map_target & operator=(const Shadow_map_target &target) = delete;
+    Shadow_map_target & operator=(Shadow_map_target &&target) = delete;
     const GLuint texture{};
     const GLuint frame_buffer{};
   };
@@ -316,6 +340,10 @@ private:
   struct Environment_map_target {
     explicit Environment_map_target(const Render_buffer &render_buffer);
     ~Environment_map_target();
+    Environment_map_target(const Environment_map_target &target) = delete;
+    Environment_map_target(Environment_map_target &&target) = delete;
+    Environment_map_target & operator=(const Environment_map_target &target) = delete;
+    Environment_map_target & operator=(Environment_map_target &&target) = delete;
     const GLuint texture{};
     const GLuint albedo{};
     const GLuint frame_buffer{};
@@ -324,6 +352,10 @@ private:
   struct Quad {
     Quad();
     ~Quad();
+    Quad(const Quad &target) = delete;
+    Quad(const Quad &&target) = delete;
+    Quad & operator=(const Quad &target) = delete;
+    Quad & operator=(const Quad &&target) = delete;
     const GLuint vertex_array{};
     const GLuint buffer{};
   };
@@ -331,6 +363,10 @@ private:
   struct Box {
     Box();
     ~Box();
+    Box(const Box &target) = delete;
+    Box(const Box &&target) = delete;
+    Box & operator=(const Box &target) = delete;
+    Box & operator=(const Box &&target) = delete;
     const GLuint buffer{};
     const GLuint element_buffer{};
     const GLuint vertex_array{};
