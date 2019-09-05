@@ -5,6 +5,7 @@
 #include <mos/gfx/material.hpp>
 #include <glm/gtx/io.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace mos {
 namespace gfx {
@@ -68,7 +69,13 @@ glm::vec3 Model::centroid() const {
 }
 float Model::radius() const {
   if (mesh){
-    return mesh->radius;
+    glm::vec3 scale;
+    glm::quat rotation;
+    glm::vec3 translation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(transform, scale, rotation, translation, skew, perspective);
+    return mesh->radius * glm::max(glm::max(scale.x, scale.y), scale.z);
   }
   return 0.0f;
 }
