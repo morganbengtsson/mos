@@ -425,6 +425,8 @@ private:
             const Post_target &output_target,
             float iterations = 6);
 
+  const bool context_;
+
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;
   const Environment_program environment_program_;

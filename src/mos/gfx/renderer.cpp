@@ -79,7 +79,7 @@ message_callback(GLenum source,
 }
 
 Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
-    : standard_target_(resolution), temp_target_(resolution / 4, GL_RGBA16F),
+    : context_(gladLoadGL()),standard_target_(resolution), temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
       screen_target_(resolution, GL_R11F_G11F_B10F),
       bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
@@ -114,7 +114,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
           Environment_map_target(environment_render_buffer_)},
       propagate_target_(environment_render_buffer_) {
 
-  if (!gladLoadGL()) {
+  if (!context_) {
     printf("No valid OpenGL context.\n");
     exit(-1);
   }
