@@ -137,6 +137,9 @@ void main() {
     if (amount > 0.0f){
         N = normalize(mix(N, N_from_map, amount));
     }
+    if (!gl_FrontFacing){
+      N = -N;
+    }
 
     vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);

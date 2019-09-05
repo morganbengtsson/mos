@@ -76,6 +76,9 @@ float fog_attenuation(const float dist, const float factor);
 
 void main() {
     vec3 N = fragment.normal;
+    if (!gl_FrontFacing){
+      N = -N;
+    }
 
     vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
     vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
