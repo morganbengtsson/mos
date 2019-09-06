@@ -1015,8 +1015,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
   //for (auto &scene : scenes) {
-  for (int i = 0; i < scenes.size() -1; i++){
-    auto & scene = scenes[i];
+  for (auto & scene : scenes) {
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
     clear(glm::vec4(0.0f));
     render_scene(scene.camera, scene, resolution);
