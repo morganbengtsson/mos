@@ -331,7 +331,6 @@ void Renderer::render_scene(const Camera &camera,
                  resolution, standard_program_);
   }
   render_boxes(scene.boxes, camera);
-  render_particles(scene.particle_clouds, scene.lights, camera, resolution);
 }
 
 void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
@@ -1013,19 +1012,26 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   render_environment(scenes[0], color);
   render_texture_targets(scenes[0]);
 
-
   glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
   clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-  for (auto &scene : scenes) {
+  //for (auto &scene : scenes) {
+  for (auto & scene : scenes) {
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
     clear(glm::vec4(0.0f));
     render_scene(scene.camera, scene, resolution);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
+    render_particles(scene.particle_clouds, scene.lights, scene.camera, resolution);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-    //TODO: Include clear in blur
+     //TODO: Include clear in blur
     glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
     clear(glm::vec4(0.0f));
 
@@ -1049,7 +1055,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glUniform1i(depth_of_field_program_.blurred_color_sampler, 1);
 
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, standard_target_.depth_texture);
+    glBindTexture(GL_TEXTURE_2D, multisample_target_.depth_texture);
     glUniform1i(depth_of_field_program_.depth_sampler, 2);
 
     float camera_near = scene.camera.near_plane();
@@ -1666,6 +1672,42 @@ Renderer::Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
+
+Renderer::Blit_target::Blit_target(const glm::ivec2 &resolution,
+                                   const GLint precision)
+    : resolution(resolution), frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)), depth_texture(generate(glGenTextures)) {
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, resolution.x, resolution.y, 0, GL_RGBA, GL_FLOAT, nullptr);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+  glBindTexture(GL_TEXTURE_2D, depth_texture);
+  glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, resolution.x, resolution.y);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_DEPTH_ATTACHMENT,
+                         GL_TEXTURE_2D,
+                         depth_texture,
+                         0);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+Renderer::Blit_target::~Blit_target() {
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &texture);
+  glDeleteTextures(1, &depth_texture);
+}
+
 Renderer::Quad::Quad()
     : vertex_array(generate(glGenVertexArrays)),
       buffer(generate(glGenBuffers)) {
