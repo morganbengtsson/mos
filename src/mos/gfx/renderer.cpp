@@ -1024,9 +1024,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
      //TODO: Include clear in blur
     glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
     clear(glm::vec4(0.0f));
