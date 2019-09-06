@@ -303,6 +303,19 @@ private:
     const GLuint depth_texture{};
   };
 
+  struct Blit_target {
+    explicit Blit_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
+    ~Blit_target();
+    Blit_target(const Blit_target &target) = delete;
+    Blit_target(Blit_target &&target) = delete;
+    Blit_target & operator=(const Blit_target &target) = delete;
+    Blit_target & operator=(Blit_target &&target) = delete;
+    const GLuint frame_buffer{};
+    const GLuint texture{};
+    const GLuint depth_texture{};
+    const glm::ivec2 resolution;
+  };
+
   struct Post_target {
     explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
     ~Post_target();
@@ -446,7 +459,7 @@ private:
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   const Standard_target standard_target_;
-  const Post_target multisample_target_;
+  const Blit_target multisample_target_;
   const Post_target screen_target_;
   const Post_target bloom_target_;
   const Post_target depth_of_field_target_;

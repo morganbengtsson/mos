@@ -1021,7 +1021,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(scene.camera, scene, resolution);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
-    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     //TODO: Include clear in blur
     glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
@@ -1664,6 +1664,42 @@ Renderer::Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }
+
+Renderer::Blit_target::Blit_target(const glm::ivec2 &resolution,
+                                   const GLint precision)
+    : resolution(resolution), frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)), depth_texture(generate(glGenTextures)) {
+  glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0, GL_RGBA, GL_FLOAT, nullptr);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+  glBindTexture(GL_TEXTURE_2D, depth_texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER,
+                         GL_DEPTH_ATTACHMENT,
+                         GL_TEXTURE_2D,
+                         depth_texture,
+                         0);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete");
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+Renderer::Blit_target::~Blit_target() {
+  glDeleteFramebuffers(1, &frame_buffer);
+  glDeleteTextures(1, &texture);
+  glDeleteTextures(1, &depth_texture);
+}
+
 Renderer::Quad::Quad()
     : vertex_array(generate(glGenVertexArrays)),
       buffer(generate(glGenBuffers)) {
