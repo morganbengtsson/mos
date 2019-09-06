@@ -30,5 +30,4 @@ void main() {
   vec4 unfocus_color = texture(blurred_color_sampler, frag_uv);
 
   out_color = mix(focus_color, unfocus_color, blur);
-  out_color.rgb = depth.xxx;
 }
