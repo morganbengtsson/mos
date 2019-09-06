@@ -362,6 +362,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
                                 const mos::gfx::Camera &camera,
                                 const glm::ivec2 &resolution) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  glDisable(GL_DEPTH_TEST);
   for (auto &particles : clouds) {
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
@@ -445,6 +446,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
 
     glDrawArrays(GL_POINTS, 0, particles.particles.size());
   }
+  glEnable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
