@@ -331,7 +331,6 @@ void Renderer::render_scene(const Camera &camera,
                  resolution, standard_program_);
   }
   render_boxes(scene.boxes, camera);
-  render_particles(scene.particle_clouds, scene.lights, camera, resolution);
 }
 
 void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) {
@@ -1021,8 +1020,14 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     render_scene(scene.camera, scene, resolution);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
-    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
+    render_particles(scene.particle_clouds, scene.lights, scene.camera, resolution);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
      //TODO: Include clear in blur
     glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
