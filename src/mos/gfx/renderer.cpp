@@ -85,13 +85,13 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
       bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
       depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
       post_target_(resolution / 4, GL_RGBA16F), quad_(),
-      black_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
-                     std::array<unsigned char, 4>{0, 0, 0, 0}.data()),
-      white_texture_(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
-                     std::array<unsigned char, 4>{255, 255, 255, 255}.data()),
-      brdf_lut_texture_(Texture_2D("assets/brdfLUT.png", false, false,
+      black_texture_(Texture_buffer_2D::make(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+                                             std::array<unsigned char, 4>{0, 0, 0, 0}.data())),
+      white_texture_(Texture_buffer_2D::make(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+                                             std::array<unsigned char, 4>{255, 255, 255, 255}.data())),
+      brdf_lut_texture_(Texture_buffer_2D::make(Texture_2D("assets/brdfLUT.png", false, false,
                                    Texture_2D::Filter::Linear,
-                                   Texture_2D::Wrap::Clamp)),
+                                   Texture_2D::Wrap::Clamp))),
       cube_camera_index_({0, 0}), shadow_maps_render_buffer_(resolution.y),
       shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_),
@@ -187,7 +187,7 @@ void Renderer::unload(const Model &model) {
 
 void Renderer::load_or_update(const Texture_2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    textures_.insert({texture.id(), std::make_unique<Texture_buffer_2D>(texture)});
+    textures_.insert({texture.id(), Texture_buffer_2D::make(texture)});
   } else {
     auto &buffer = textures_.at(texture.id());
     if (texture.layers.modified() > buffer->modified) {
@@ -257,7 +257,7 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.material_ambient_occlusion_sampler, 12);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
+  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_->texture);
 
   glActiveTexture(GL_TEXTURE1);
   //glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
@@ -410,7 +410,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
                                  ? textures_.at(particles.emission_map->id())->texture
-                                 : black_texture_.texture);
+                                     : black_texture_->texture);
     glUniform1i(particle_program_.texture, 10);
 
     glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
@@ -471,12 +471,12 @@ void Renderer::render_model(const Model &model,
       glActiveTexture(GL_TEXTURE3);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                    ? textures_.at(model.material.albedo_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glActiveTexture(GL_TEXTURE4);
       glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                        ? textures_.at(model.material.emission_map->id())->texture
-                                       : black_texture_.texture);
+                                       : black_texture_->texture);
 
       static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -542,33 +542,33 @@ void Renderer::render_model(const Model &model,
       glActiveTexture(GL_TEXTURE7);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                    ? textures_.at(model.material.albedo_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
 
       glActiveTexture(GL_TEXTURE8);
       glBindTexture(GL_TEXTURE_2D, model.material.emission_map
                                        ? textures_.at(model.material.emission_map->id())->texture
-                                       : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glActiveTexture(GL_TEXTURE9);
       glBindTexture(GL_TEXTURE_2D, model.material.normal_map
                                    ? textures_.at(model.material.normal_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glActiveTexture(GL_TEXTURE10);
       glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
                                    ? textures_.at(model.material.metallic_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glActiveTexture(GL_TEXTURE11);
       glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
                                    ? textures_.at(model.material.roughness_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glActiveTexture(GL_TEXTURE12);
       glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
                                    ? textures_.at(model.material.ambient_occlusion_map->id())->texture
-                                   : white_texture_.texture);
+                                       : white_texture_->texture);
 
       static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -709,7 +709,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUniform1i(environment_program_.material_emission_sampler, 4);
 
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
+      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_->texture);
 
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
@@ -928,10 +928,10 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      auto buffer = Texture_buffer_2D(*target.texture);
+      //auto buffer = Texture_buffer_2D(*target.texture);
 
       textures_.insert({target.texture->id(),
-                        std::make_unique<Texture_buffer_2D>(*target.texture)});
+                        Texture_buffer_2D::make(*target.texture)});
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_2D, textures_.at(target.texture->id())->texture, 0);
@@ -987,7 +987,7 @@ void Renderer::render_model_depth(const Model &model,
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
                                    ? textures_.at(model.material.albedo_map->id())->texture
-                                   : black_texture_.texture);
+                                       : black_texture_->texture);
 
       glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
@@ -1794,6 +1794,18 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
     glGenerateMipmap(GL_TEXTURE_2D);
   };
   glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+Renderer::Texture_buffer_2D::Unique Renderer::Texture_buffer_2D::make(
+    const Texture_2D &texture_2d) {
+  return std::unique_ptr<Texture_buffer_2D>(new Texture_buffer_2D(texture_2d));
+}
+
+Renderer::Texture_buffer_2D::Unique Renderer::Texture_buffer_2D::make(
+    GLint internal_format, GLenum external_format, int width, int height,
+    GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
+    const Renderer::Time_point &modified) {
+  return std::unique_ptr<Texture_buffer_2D>(new Texture_buffer_2D(internal_format, external_format, width, height, filter_min, filter_mag, wrap, data, modified));
 }
 Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);

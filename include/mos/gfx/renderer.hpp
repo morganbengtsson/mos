@@ -75,12 +75,18 @@ private:
   };
 
   class Texture_buffer_2D {
-  public:
+  private:
     explicit Texture_buffer_2D(const Texture_2D &texture_2d);
     Texture_buffer_2D(
         GLint internal_format, GLenum external_format, int width, int height,
         GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
         const Time_point &modified = std::chrono::system_clock::now());
+  public:
+    using Unique = std::unique_ptr<Texture_buffer_2D>;
+    static Unique make(const Texture_2D &texture_2d);
+    static Unique make(GLint internal_format, GLenum external_format, int width, int height,
+        GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
+                const Time_point &modified = std::chrono::system_clock::now());
     ~Texture_buffer_2D();
     Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
     Texture_buffer_2D(Texture_buffer_2D &&buffer) = delete;
@@ -469,9 +475,9 @@ private:
   const Quad quad_;
   const Box box;
 
-  const Texture_buffer_2D black_texture_;
-  const Texture_buffer_2D white_texture_;
-  const Texture_buffer_2D brdf_lut_texture_;
+  const Texture_buffer_2D::Unique black_texture_;
+  const Texture_buffer_2D::Unique white_texture_;
+  const Texture_buffer_2D::Unique brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
 
