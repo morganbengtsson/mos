@@ -43,14 +43,28 @@ set(UTF8_SAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(externals/utfcpp)
 
 # mos
-file(GLOB_RECURSE ROOT_SOURCE src/mos/*.cpp)
-file(GLOB_RECURSE ROOT_HEADER include/mos/*.hpp)
+file(GLOB ROOT_SOURCE src/mos/*.cpp)
+file(GLOB GFX_SOURCE src/mos/gfx/*.cpp)
+file(GLOB AUD_SOURCE src/mos/aud/*.cpp)
+file(GLOB SIM_SOURCE src/mos/sim/*.cpp)
+file(GLOB IO_SOURCE src/mos/io/*.cpp)
+file(GLOB CORE_SOURCE src/mos/core/*.cpp)
+
+file(GLOB ROOT_HEADER include/mos/*.hpp)
+file(GLOB GFX_HEADER include/mos/gfx/*.hpp)
+file(GLOB AUD_HEADER include/mos/aud/*.hpp)
+file(GLOB SIM_HEADER include/mos/sim/*.hpp)
+file(GLOB IO_HEADER include/mos/io/*.hpp)
+file(GLOB CORE_HEADER include/mos/core/*.hpp)
+
 file(GLOB VERTEX_SHADERS assets/shaders/*.vert)
 file(GLOB FRAGMENT_SHADERS assets/shaders/*.frag)
 file(GLOB GEOMETRY_SHADERS assets/shaders/*.geom)
 file(GLOB BRDF_LUT assets/brdfLUT.png)
 
-add_library(${PROJECT_NAME} STATIC ${ROOT_HEADER} ${ROOT_SOURCE}
+add_library(${PROJECT_NAME} STATIC
+${ROOT_HEADER} ${GFX_HEADER} ${AUD_HEADER} ${SIM_HEADER} ${IO_HEADER} ${CORE_HEADER}
+${ROOT_SOURCE} ${GFX_SOURCE} ${AUD_SOURCE} ${SIM_SOURCE} ${IO_SOURCE} ${CORE_SOURCE}
 ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE MOS_EFX)
