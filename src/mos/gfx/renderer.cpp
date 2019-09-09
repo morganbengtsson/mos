@@ -146,14 +146,6 @@ Renderer::~Renderer() {
     glDeleteRenderbuffers(1, &rb.second);
   }
 
-  for (auto &ab : array_buffers_) {
-    glDeleteBuffers(1, &ab.second.id);
-  }
-
-  for (auto &eab : element_array_buffers_) {
-    glDeleteBuffers(1, &eab.second.id);
-  }
-
   for (auto &va : vertex_arrays_) {
     glDeleteVertexArrays(1, &va.second);
   }
@@ -224,15 +216,7 @@ void Renderer::unload(const Shared_texture_2D &texture) {
 
 void Renderer::clear_buffers() {
   textures_.clear();
-
-  for (auto &ab : array_buffers_) {
-    glDeleteBuffers(1, &ab.second.id);
-  }
   array_buffers_.clear();
-
-  for (auto &eab : element_array_buffers_) {
-    glDeleteBuffers(1, &eab.second.id);
-  }
   element_array_buffers_.clear();
 }
 
@@ -374,9 +358,13 @@ void Renderer::render_particles(const Particle_clouds &clouds,
         glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
                      particles.particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        array_buffers_.insert({particles.id(), Buffer{array_buffer, particles.particles.modified()}});
+        array_buffers_.insert({particles.id(), Buffer::make(GL_ARRAY_BUFFER,
+                                                            particles.particles.size() * sizeof(Particle),
+                                                            particles.particles.data(),
+                                                            GL_STREAM_DRAW,
+                                                            particles.particles.modified())});
       }
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id())->id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), nullptr);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -394,7 +382,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id())->id);
     glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
                  particles.particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -814,27 +802,21 @@ void Renderer::load(const Mesh &mesh) {
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
     if (array_buffers_.find(mesh.id()) == array_buffers_.end()) {
-      unsigned int array_buffer_id;
-      glGenBuffers(1, &array_buffer_id);
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffer_id);
-      glBufferData(GL_ARRAY_BUFFER,
-                   mesh.vertices.size() * sizeof(Vertex),
-                   mesh.vertices.data(), GL_STATIC_DRAW);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      array_buffers_.insert({mesh.id(), Buffer{array_buffer_id, mesh.vertices.modified()}});
+      array_buffers_.insert({mesh.id(), Buffer::make(GL_ARRAY_BUFFER,
+                                               mesh.vertices.size() * sizeof(Vertex),
+                                               mesh.vertices.data(),
+                                               GL_STATIC_DRAW,
+                                               mesh.vertices.modified())});
     }
     if (element_array_buffers_.find(mesh.id()) ==
         element_array_buffers_.end()) {
-      unsigned int element_array_buffer_id;
-      glGenBuffers(1, &element_array_buffer_id);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffer_id);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   mesh.triangles.size() * 3 * sizeof(unsigned int),
-                   mesh.triangles.data(), GL_STATIC_DRAW);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_array_buffers_.insert({mesh.id(), Buffer{element_array_buffer_id, mesh.triangles.modified()}});
+      element_array_buffers_.insert({mesh.id(), Buffer::make(GL_ELEMENT_ARRAY_BUFFER,
+                                                             mesh.triangles.size() * 3 * sizeof(unsigned int),
+                                                             mesh.triangles.data(),
+                                                             GL_STATIC_DRAW,
+                                                             mesh.triangles.modified())});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id())->id);
     // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
@@ -858,7 +840,7 @@ void Renderer::load(const Mesh &mesh) {
                               sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 element_array_buffers_.at(mesh.id()).id);
+                 element_array_buffers_.at(mesh.id())->id);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -868,14 +850,14 @@ void Renderer::load(const Mesh &mesh) {
     vertex_arrays_.insert({mesh.id(), vertex_array});
   }
 
-  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id()).modified) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
+  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id())->modified) {
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id())->id);
     glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
                  mesh.vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id()).modified) {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id()).id);
+  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id())->modified) {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id())->id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  mesh.triangles.size() * 3 * sizeof(unsigned int),
                  mesh.triangles.data(),
@@ -891,14 +873,10 @@ void Renderer::unload(const Mesh &mesh) {
     vertex_arrays_.erase(mesh.id());
 
     if (array_buffers_.find(mesh.id()) != array_buffers_.end()) {
-      auto abo = array_buffers_.at(mesh.id());
-      glDeleteBuffers(1, &abo.id);
       array_buffers_.erase(mesh.id());
     }
     if (element_array_buffers_.find(mesh.id()) !=
         element_array_buffers_.end()) {
-      auto ebo = element_array_buffers_.at(mesh.id());
-      glDeleteBuffers(1, &ebo.id);
       element_array_buffers_.erase(mesh.id());
     }
   }
@@ -1772,6 +1750,23 @@ Renderer::Box::~Box(){
   glDeleteBuffers(1, &buffer);
   glDeleteVertexArrays(1, &vertex_array);
   glDeleteBuffers(1, &element_buffer);
+}
+
+Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
+                         GLenum hint, Time_point modified)
+    : id(generate(glGenBuffers)), modified(modified) {
+  glBindBuffer(type, id);
+  glBufferData(type, size,
+              data, hint);
+  glBindBuffer(type, 0);
+}
+
+Renderer::Buffer::~Buffer() {
+  glDeleteBuffers(1, &id);
+}
+
+Renderer::Buffer::Unique Renderer::Buffer::make(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified){
+  return Unique(new Buffer(type, size, data, hint, modified));
 }
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(

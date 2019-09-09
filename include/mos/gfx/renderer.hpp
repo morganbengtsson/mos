@@ -69,8 +69,18 @@ public:
 private:
   using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
-  struct Buffer {
-    GLuint id;
+  class Buffer {
+  private:
+    Buffer(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
+    Buffer(const Buffer &buffer) = delete;
+    Buffer(Buffer &&buffer) = delete;
+    Buffer & operator=(const Buffer &buffer) = delete;
+    Buffer & operator=(Buffer &&buffer) = delete;
+  public:
+    ~Buffer();
+    using Unique = std::unique_ptr<Buffer>;
+    static Unique make(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
+    const GLuint id{0};
     Time_point modified;
   };
 
@@ -92,7 +102,7 @@ private:
     Texture_buffer_2D(Texture_buffer_2D &&buffer) = delete;
     Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
     Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = delete;
-    const GLuint texture{};
+    const GLuint texture{0};
     Time_point modified;
   };
 
@@ -460,8 +470,8 @@ private:
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
   std::unordered_map<unsigned int, std::unique_ptr<Texture_buffer_2D>> textures_;
-  std::unordered_map<unsigned int, Buffer> array_buffers_;
-  std::unordered_map<unsigned int, Buffer> element_array_buffers_;
+  std::unordered_map<unsigned int, Buffer::Unique> array_buffers_;
+  std::unordered_map<unsigned int, Buffer::Unique> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   const Standard_target standard_target_;
