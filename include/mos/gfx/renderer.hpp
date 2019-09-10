@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <glad/glad.h>
 #include <optional>
 #include <initializer_list>
@@ -70,40 +70,37 @@ private:
   using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   class Buffer {
-  private:
+  public:
     Buffer(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
     Buffer(const Buffer &buffer) = delete;
-    Buffer(Buffer &&buffer) = delete;
+    Buffer(Buffer &&buffer);
     Buffer & operator=(const Buffer &buffer) = delete;
-    Buffer & operator=(Buffer &&buffer) = delete;
-  public:
+    Buffer & operator=(Buffer &&buffer);
     ~Buffer();
-    using Unique = std::unique_ptr<Buffer>;
-    static Unique make(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
-    const GLuint id{0};
+
+    GLuint id{0};
     Time_point modified;
+  private:
+    void release();
   };
 
   class Texture_buffer_2D {
-  private:
+  public:
     explicit Texture_buffer_2D(const Texture_2D &texture_2d);
     Texture_buffer_2D(
         GLint internal_format, GLenum external_format, int width, int height,
         GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
         const Time_point &modified = std::chrono::system_clock::now());
-  public:
-    using Unique = std::unique_ptr<Texture_buffer_2D>;
-    static Unique make(const Texture_2D &texture_2d);
-    static Unique make(GLint internal_format, GLenum external_format, int width, int height,
-        GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
-                const Time_point &modified = std::chrono::system_clock::now());
-    ~Texture_buffer_2D();
+
+   ~Texture_buffer_2D();
     Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(Texture_buffer_2D &&buffer) = delete;
+    Texture_buffer_2D(Texture_buffer_2D &&buffer);
     Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) = delete;
-    const GLuint texture{0};
+    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer);
+    GLuint texture{0};
     Time_point modified;
+  private:
+    void release();
   };
 
   class Shader {
@@ -469,9 +466,9 @@ private:
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
   std::unordered_map<unsigned int, GLuint> render_buffers;
-  std::unordered_map<unsigned int, std::unique_ptr<Texture_buffer_2D>> textures_;
-  std::unordered_map<unsigned int, Buffer::Unique> array_buffers_;
-  std::unordered_map<unsigned int, Buffer::Unique> element_array_buffers_;
+  std::unordered_map<unsigned int, Texture_buffer_2D> textures_;
+  std::unordered_map<unsigned int, Buffer> array_buffers_;
+  std::unordered_map<unsigned int, Buffer> element_array_buffers_;
   std::unordered_map<unsigned int, GLuint> vertex_arrays_;
 
   const Standard_target standard_target_;
@@ -485,9 +482,9 @@ private:
   const Quad quad_;
   const Box box;
 
-  const Texture_buffer_2D::Unique black_texture_;
-  const Texture_buffer_2D::Unique white_texture_;
-  const Texture_buffer_2D::Unique brdf_lut_texture_;
+  const Texture_buffer_2D black_texture_;
+  const Texture_buffer_2D white_texture_;
+  const Texture_buffer_2D brdf_lut_texture_;
 
   std::array<int,2> cube_camera_index_;
 

@@ -85,11 +85,11 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
       bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
       depth_of_field_target_(resolution / 4, GL_R11F_G11F_B10F),
       post_target_(resolution / 4, GL_RGBA16F), quad_(),
-      black_texture_(Texture_buffer_2D::make(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+      black_texture_(Texture_buffer_2D(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
                                              std::array<unsigned char, 4>{0, 0, 0, 0}.data())),
-      white_texture_(Texture_buffer_2D::make(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
+      white_texture_(Texture_buffer_2D(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
                                              std::array<unsigned char, 4>{255, 255, 255, 255}.data())),
-      brdf_lut_texture_(Texture_buffer_2D::make(Texture_2D("assets/brdfLUT.png", false, false,
+      brdf_lut_texture_(Texture_buffer_2D(Texture_2D("assets/brdfLUT.png", false, false,
                                    Texture_2D::Filter::Linear,
                                    Texture_2D::Wrap::Clamp))),
       cube_camera_index_({0, 0}), shadow_maps_render_buffer_(resolution.y),
@@ -179,11 +179,11 @@ void Renderer::unload(const Model &model) {
 
 void Renderer::load_or_update(const Texture_2D &texture) {
   if (textures_.find(texture.id()) == textures_.end()) {
-    textures_.insert({texture.id(), Texture_buffer_2D::make(texture)});
+    textures_.insert({texture.id(), Texture_buffer_2D(texture)});
   } else {
     auto &buffer = textures_.at(texture.id());
-    if (texture.layers.modified() > buffer->modified) {
-      glBindTexture(GL_TEXTURE_2D, buffer->texture);
+    if (texture.layers.modified() > buffer.modified) {
+      glBindTexture(GL_TEXTURE_2D, buffer.texture);
       glTexImage2D(GL_TEXTURE_2D, 0,
                    format_convert(texture.format).internal_format,
                    texture.width(), texture.height(), 0,
@@ -193,7 +193,7 @@ void Renderer::load_or_update(const Texture_2D &texture) {
         glGenerateMipmap(GL_TEXTURE_2D);
       }
       glBindTexture(GL_TEXTURE_2D, 0);
-      buffer->modified = texture.layers.modified();
+      buffer.modified = texture.layers.modified();
     }
   }
 }
@@ -207,8 +207,6 @@ void Renderer::load(const Shared_texture_2D &texture) {
 void Renderer::unload(const Shared_texture_2D &texture) {
   if (texture) {
     if (textures_.find(texture->id()) != textures_.end()) {
-      auto gl_id = textures_.at(texture->id())->texture;
-      glDeleteTextures(1, &gl_id);
       textures_.erase(texture->id());
     }
   }
@@ -241,7 +239,7 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1i(standard_program_.material_ambient_occlusion_sampler, 12);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_->texture);
+  glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
   glActiveTexture(GL_TEXTURE1);
   //glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
@@ -358,13 +356,13 @@ void Renderer::render_particles(const Particle_clouds &clouds,
         glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
                      particles.particles.data(), GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        array_buffers_.insert({particles.id(), Buffer::make(GL_ARRAY_BUFFER,
+        array_buffers_.insert({particles.id(), Buffer(GL_ARRAY_BUFFER,
                                                             particles.particles.size() * sizeof(Particle),
                                                             particles.particles.data(),
                                                             GL_STREAM_DRAW,
                                                             particles.particles.modified())});
       }
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id())->id);
+      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), nullptr);
       glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
@@ -382,7 +380,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), vertex_array});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id())->id);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
     glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
                  particles.particles.data(), GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -397,8 +395,8 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
     glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                 ? textures_.at(particles.emission_map->id())->texture
-                                     : black_texture_->texture);
+                                 ? textures_.at(particles.emission_map->id()).texture
+                                     : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
     glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
@@ -458,13 +456,13 @@ void Renderer::render_model(const Model &model,
 
       glActiveTexture(GL_TEXTURE3);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                   ? textures_.at(model.material.albedo_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.albedo_map->id()).texture
+                                       : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE4);
       glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                       ? textures_.at(model.material.emission_map->id())->texture
-                                       : black_texture_->texture);
+                                       ? textures_.at(model.material.emission_map->id()).texture
+                                       : black_texture_.texture);
 
       static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -529,34 +527,34 @@ void Renderer::render_model(const Model &model,
 
       glActiveTexture(GL_TEXTURE7);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                   ? textures_.at(model.material.albedo_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.albedo_map->id()).texture
+                                       : black_texture_.texture);
 
 
       glActiveTexture(GL_TEXTURE8);
       glBindTexture(GL_TEXTURE_2D, model.material.emission_map
-                                       ? textures_.at(model.material.emission_map->id())->texture
-                                       : black_texture_->texture);
+                                       ? textures_.at(model.material.emission_map->id()).texture
+                                       : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE9);
       glBindTexture(GL_TEXTURE_2D, model.material.normal_map
-                                   ? textures_.at(model.material.normal_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.normal_map->id()).texture
+                                       : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE10);
       glBindTexture(GL_TEXTURE_2D, model.material.metallic_map
-                                   ? textures_.at(model.material.metallic_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.metallic_map->id()).texture
+                                       : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE11);
       glBindTexture(GL_TEXTURE_2D, model.material.roughness_map
-                                   ? textures_.at(model.material.roughness_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.roughness_map->id()).texture
+                                       : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE12);
       glBindTexture(GL_TEXTURE_2D, model.material.ambient_occlusion_map
-                                   ? textures_.at(model.material.ambient_occlusion_map->id())->texture
-                                       : white_texture_->texture);
+                                   ? textures_.at(model.material.ambient_occlusion_map->id()).texture
+                                       : white_texture_.texture);
 
       static const glm::mat4 bias(0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0,
                                   0.5, 0.0, 0.5, 0.5, 0.5, 1.0);
@@ -697,7 +695,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUniform1i(environment_program_.material_emission_sampler, 4);
 
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_->texture);
+      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
@@ -802,7 +800,7 @@ void Renderer::load(const Mesh &mesh) {
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
     if (array_buffers_.find(mesh.id()) == array_buffers_.end()) {
-      array_buffers_.insert({mesh.id(), Buffer::make(GL_ARRAY_BUFFER,
+      array_buffers_.insert({mesh.id(), Buffer(GL_ARRAY_BUFFER,
                                                mesh.vertices.size() * sizeof(Vertex),
                                                mesh.vertices.data(),
                                                GL_STATIC_DRAW,
@@ -810,13 +808,13 @@ void Renderer::load(const Mesh &mesh) {
     }
     if (element_array_buffers_.find(mesh.id()) ==
         element_array_buffers_.end()) {
-      element_array_buffers_.insert({mesh.id(), Buffer::make(GL_ELEMENT_ARRAY_BUFFER,
+      element_array_buffers_.insert({mesh.id(), Buffer(GL_ELEMENT_ARRAY_BUFFER,
                                                              mesh.triangles.size() * 3 * sizeof(unsigned int),
                                                              mesh.triangles.data(),
                                                              GL_STATIC_DRAW,
                                                              mesh.triangles.modified())});
     }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id())->id);
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
     // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
@@ -840,7 +838,7 @@ void Renderer::load(const Mesh &mesh) {
                               sizeof(glm::vec2)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 element_array_buffers_.at(mesh.id())->id);
+                 element_array_buffers_.at(mesh.id()).id);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -850,14 +848,14 @@ void Renderer::load(const Mesh &mesh) {
     vertex_arrays_.insert({mesh.id(), vertex_array});
   }
 
-  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id())->modified) {
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id())->id);
+  if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id()).modified) {
+    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
     glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
                  mesh.vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id())->modified) {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id())->id);
+  if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id()).modified) {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id()).id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  mesh.triangles.size() * 3 * sizeof(unsigned int),
                  mesh.triangles.data(),
@@ -909,10 +907,10 @@ void Renderer::render_texture_targets(const Scene &scene) {
       //auto buffer = Texture_buffer_2D(*target.texture);
 
       textures_.insert({target.texture->id(),
-                        Texture_buffer_2D::make(*target.texture)});
+                        Texture_buffer_2D(*target.texture)});
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, textures_.at(target.texture->id())->texture, 0);
+                             GL_TEXTURE_2D, textures_.at(target.texture->id()).texture, 0);
 
       GLuint depthrenderbuffer_id;
       glGenRenderbuffers(1, &depthrenderbuffer_id);
@@ -934,7 +932,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
     auto fb = frame_buffers_.at(target.target.id());
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
 
-    auto texture_id = textures_.at(target.texture->id())->texture;
+    auto texture_id = textures_.at(target.texture->id()).texture;
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, texture_id, 0);
@@ -964,8 +962,8 @@ void Renderer::render_model_depth(const Model &model,
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo_map
-                                   ? textures_.at(model.material.albedo_map->id())->texture
-                                       : black_texture_->texture);
+                                   ? textures_.at(model.material.albedo_map->id()).texture
+                                       : black_texture_.texture);
 
       glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
@@ -1761,13 +1759,26 @@ Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
   glBindBuffer(type, 0);
 }
 
-Renderer::Buffer::~Buffer() {
-  glDeleteBuffers(1, &id);
+Renderer::Buffer::Buffer(Renderer::Buffer &&buffer): id(buffer.id){
+  buffer.id = 0;
 }
 
-Renderer::Buffer::Unique Renderer::Buffer::make(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified){
-  return Unique(new Buffer(type, size, data, hint, modified));
+Renderer::Buffer &Renderer::Buffer::operator=(Renderer::Buffer &&buffer) {
+  if(this != &buffer){
+    release();
+    std::swap(id, buffer.id);
+  }
 }
+
+Renderer::Buffer::~Buffer() {
+  release();
+}
+
+void Renderer::Buffer::release() {
+  glDeleteBuffers(1, &id);
+  id = 0;
+}
+
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(
     const GLint internal_format, const GLenum external_format, const int width,
@@ -1791,20 +1802,26 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Renderer::Texture_buffer_2D::Unique Renderer::Texture_buffer_2D::make(
-    const Texture_2D &texture_2d) {
-  return std::unique_ptr<Texture_buffer_2D>(new Texture_buffer_2D(texture_2d));
-}
-
-Renderer::Texture_buffer_2D::Unique Renderer::Texture_buffer_2D::make(
-    GLint internal_format, GLenum external_format, int width, int height,
-    GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
-    const Renderer::Time_point &modified) {
-  return std::unique_ptr<Texture_buffer_2D>(new Texture_buffer_2D(internal_format, external_format, width, height, filter_min, filter_mag, wrap, data, modified));
-}
 Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);
 }
+
+Renderer::Texture_buffer_2D::Texture_buffer_2D(Renderer::Texture_buffer_2D &&buffer) : texture(buffer.texture) {
+  buffer.texture = 0;
+}
+
+Renderer::Texture_buffer_2D &Renderer::Texture_buffer_2D::operator=(Renderer::Texture_buffer_2D &&buffer) {
+  if (this != &buffer){
+    release();
+    std::swap(texture, buffer.texture);
+  }
+}
+
+void Renderer::Texture_buffer_2D::release(){
+  glDeleteTextures(1, &texture);
+  texture = 0;
+}
+
 Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d)
     : Texture_buffer_2D(format_convert(texture_2d.format).internal_format,
                         format_convert(texture_2d.format).format,
