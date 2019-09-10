@@ -1768,6 +1768,7 @@ Renderer::Buffer &Renderer::Buffer::operator=(Renderer::Buffer &&buffer) {
     release();
     std::swap(id, buffer.id);
   }
+  return *this;
 }
 
 Renderer::Buffer::~Buffer() {
@@ -1815,6 +1816,7 @@ Renderer::Texture_buffer_2D &Renderer::Texture_buffer_2D::operator=(Renderer::Te
     release();
     std::swap(texture, buffer.texture);
   }
+  return  *this;
 }
 
 void Renderer::Texture_buffer_2D::release(){
