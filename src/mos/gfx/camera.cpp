@@ -2,7 +2,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/io.hpp>
+#include <json.hpp>
 #include <iostream>
+#include <filesystem/path.h>
+#include <mos/util.hpp>
 
 namespace mos {
 namespace gfx {
@@ -30,6 +33,43 @@ Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
   calculate_view();
   calculate_frustum();
   calculate_near_far();
+}
+
+Camera::Camera(const std::string &directory, const std::string &path,
+               const glm::mat4 &parent_transform)
+    : fstop(100.0f),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(glm::vec3(0.0f, 0.0f, 1.0f)) {
+  using json = nlohmann::json;
+  if (!path.empty()) {
+    filesystem::path fpath = path;
+    if (fpath.extension() == "camera") {
+      auto value = json::parse(mos::text(directory + fpath.str()));
+
+      auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
+      auto position = glm::vec3(transform[3]);
+      //auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+
+      auto blend = value["blend"];
+
+      auto proj = mos::jsonarray_to_mat4(value["projection"]);
+      float focus_distance = value["focus_distance"];
+
+      position_ = position;
+      projection_ = proj;
+      center_ = focus_distance * direction();
+
+      calculate_view();
+      calculate_frustum();
+      calculate_near_far();
+
+    } else {
+      throw std::runtime_error(path.substr(path.find_last_of('.')) +
+                               " file format is not supported.");
+    }
+}
 }
 
 glm::vec3 Camera::up() const { return up_; }
@@ -141,7 +181,6 @@ void Camera::projection(const glm::mat4 &proj) {
 glm::mat4 Camera::view() const {
   return view_;
 }
-
 }
 }
 
