@@ -17,6 +17,12 @@ public:
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
                float fstop = 1.0f);
 
+  Camera(const glm::vec3 &position,
+         const glm::mat4 &projection,
+         const float &focus_distance,
+         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
+         float fstop = 1.0f);
+
   glm::vec3 up() const;
 
   /** Set up vector. */

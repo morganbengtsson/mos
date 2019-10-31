@@ -7,19 +7,26 @@
 namespace mos {
 namespace gfx {
 
-Camera::Camera(const glm::vec3 &position,
-                 const glm::vec3 &center,
-                 const glm::mat4 &projection,
-                 const glm::vec3 &up,
-                 const float fstop)
-  : fstop(fstop),
-    projection_(projection),
-    view_(1.0f),
-    frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)},
-    up_(up),
-    center_(center),
-    position_(position)
-{
+Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
+               const glm::mat4 &projection, const glm::vec3 &up,
+               const float fstop)
+    : fstop(fstop), projection_(projection),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(up), center_(center), position_(position) {
+  calculate_view();
+  calculate_frustum();
+  calculate_near_far();
+}
+
+Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
+               const float &focus_distance, const glm::vec3 &up, float fstop)
+    : fstop(fstop), projection_(projection),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(up), center_(focus_distance * direction()), position_(position) {
   calculate_view();
   calculate_frustum();
   calculate_near_far();
