@@ -56,7 +56,6 @@ Camera::Camera(const std::string &directory, const std::string &path,
 
       auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
-
       position_ = position;
       projection_ = proj;
       //center_ = focus_distance * direction();
