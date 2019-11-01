@@ -58,7 +58,9 @@ Camera::Camera(const std::string &directory, const std::string &path,
 
       position_ = position;
       projection_ = proj;
-      //center_ = focus_distance * direction();
+
+      near_ = value["near"];
+      far_ = value["far"];
 
       calculate_view();
       calculate_frustum();
