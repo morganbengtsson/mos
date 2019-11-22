@@ -2,27 +2,75 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/io.hpp>
+#include <json.hpp>
 #include <iostream>
+#include <filesystem/path.h>
+#include <mos/util.hpp>
 
 namespace mos {
 namespace gfx {
 
-Camera::Camera(const glm::vec3 &position,
-                 const glm::vec3 &center,
-                 const glm::mat4 &projection,
-                 const glm::vec3 &up,
-                 const float fstop)
-  : fstop(fstop),
-    projection_(projection),
-    view_(1.0f),
-    frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f), glm::vec4(0.0f)},
-    up_(up),
-    center_(center),
-    position_(position)
-{
+Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
+               const glm::mat4 &projection, const glm::vec3 &up,
+               const float fstop)
+    : fstop(fstop), projection_(projection),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(up), center_(center), position_(position) {
   calculate_view();
   calculate_frustum();
   calculate_near_far();
+}
+
+Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
+               const float &focus_distance, const glm::vec3 &up, float fstop)
+    : fstop(fstop), projection_(projection),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(up), center_(focus_distance * direction()), position_(position) {
+  calculate_view();
+  calculate_frustum();
+  calculate_near_far();
+}
+
+Camera::Camera(const std::string &directory, const std::string &path,
+               const glm::mat4 &parent_transform)
+    : fstop(100.0f),
+      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f),
+                                   glm::vec4(0.0f), glm::vec4(0.0f)},
+      up_(glm::vec3(0.0f, 0.0f, 1.0f)) {
+  using json = nlohmann::json;
+  if (!path.empty()) {
+    filesystem::path fpath = path;
+    if (fpath.extension() == "camera") {
+      auto value = json::parse(mos::text(directory + fpath.str()));
+
+      float focus_distance = value["focus_distance"];
+
+      auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
+      auto position = glm::vec3(transform[3]);
+      center_ = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -focus_distance, 0.0f));
+
+      auto proj = mos::jsonarray_to_mat4(value["projection"]);
+
+      position_ = position;
+      projection_ = proj;
+
+      near_ = value["near"];
+      far_ = value["far"];
+
+      calculate_view();
+      calculate_frustum();
+      calculate_near_far();
+
+    } else {
+      throw std::runtime_error(path.substr(path.find_last_of('.')) +
+                               " file format is not supported.");
+    }
+}
 }
 
 glm::vec3 Camera::up() const { return up_; }
@@ -134,7 +182,6 @@ void Camera::projection(const glm::mat4 &proj) {
 glm::mat4 Camera::view() const {
   return view_;
 }
-
 }
 }
 
