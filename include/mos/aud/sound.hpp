@@ -17,14 +17,8 @@ public:
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
   explicit Sound(Shared_buffer buffer = nullptr,
                          Source source = Source());
-
-  /** Play the source. */
-  void input(float dt);
-
   Shared_buffer buffer;
   Source source;
-private:
-  float time_{0.0f};
 };
 }
 }
