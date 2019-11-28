@@ -42,11 +42,14 @@ public:
   /** Set emission of material recursively. */
   void emission(const glm::vec3 & emission);
 
+  /** Set alpha of material recursively. */
+  void alpha(const float alpha);
+
   /** Set ambient occlusion of material recursively. */
   void ambient_occlusion(float ambient_occlusion);
 
-  /** set opacity of material recursively. */
-  void opacity(float opacity);
+  /** set index of refraction of material recursively. */
+  void index_of_refraction(float index_of_refraction);
 
   /** set transmission of material recursively. */
   void transmission(float transmission);

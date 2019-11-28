@@ -88,6 +88,13 @@ void Model::emission(const glm::vec3 & emission)
   }
 }
 
+void Model::alpha(const float alpha) {
+  material.alpha = alpha;
+  for (auto & model : models){
+    model.alpha(alpha);
+  }
+}
+
 void Model::ambient_occlusion(const float ambient_occlusion)
 {
   material.ambient_occlusion = ambient_occlusion;
@@ -96,11 +103,11 @@ void Model::ambient_occlusion(const float ambient_occlusion)
   }
 }
 
-void Model::opacity(const float opacity)
+void Model::index_of_refraction(const float index_of_refraction)
 {
-  material.index_of_refraction = opacity;
+  material.index_of_refraction = index_of_refraction;
   for (auto & model : models){
-    model.opacity(opacity);
+    model.index_of_refraction(index_of_refraction);
   }
 }
 
