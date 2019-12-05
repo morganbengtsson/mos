@@ -156,8 +156,10 @@ void main() {
     float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-    if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
-        discard;
+    if (material.alpha == 1.0) {
+      if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
+          discard;
+      }
     }
 
     const vec3 V = normalize(camera.position - fragment.position);
