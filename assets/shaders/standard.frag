@@ -141,8 +141,9 @@ void main() {
       N = -N;
     }
 
+    bool has_albedo_map = textureSize(material.albedo_sampler, 0).x != 1;
     vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
-    vec3 albedo = mix(material.albedo.rgb, albedo_from_map.rgb, albedo_from_map.a);
+    vec3 albedo = has_albedo_map ? albedo_from_map.rgb : material.albedo.rgb;
 
     vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
     vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
