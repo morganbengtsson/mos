@@ -97,14 +97,10 @@ add_custom_command(TARGET copy_resources POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 		
 # Copy OpenAL dll on Windows
-if(WIN32)	
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-					   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/$<CONFIGURATION>/")
+if(WIN32)
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 							COMMAND ${CMAKE_COMMAND} -E copy
-							"$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/$<CONFIGURATION>/")
-	
-		
+							"$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/")
 endif()
 		
 # Copy shaders on each build
