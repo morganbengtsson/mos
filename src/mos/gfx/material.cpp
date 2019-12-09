@@ -24,20 +24,15 @@ Material::Material(Shared_texture_2D albedo_map,
                    const float metallic,
                    const glm::vec3 emission,
                    const float ambient_occlusion)
-    : albedo(albedo),
+    : albedo{albedo, albedo_map},
+      metallic{metallic, metallic_map},
+      roughness{roughness, roughness_map},
+      emission{emission, emission_map},
+      ambient_occlusion{ambient_occlusion, ambient_occlusion_map},
+      normal{normal_map},
       alpha(alpha),
       index_of_refraction(index_of_refraction),
-      transmission(transmission),
-      emission(emission),
-      roughness(roughness),
-      metallic(metallic),
-      ambient_occlusion(ambient_occlusion),
-      emission_map(std::move(emission_map)),
-      albedo_map(std::move(albedo_map)),
-      normal_map(std::move(normal_map)),
-      metallic_map(std::move(metallic_map)),
-      roughness_map(std::move(roughness_map)),
-      ambient_occlusion_map(std::move(ambient_occlusion_map)) {}
+      transmission(transmission){}
 
 Material::Material(const glm::vec3 &albedo,
                    const float alpha,
@@ -47,14 +42,14 @@ Material::Material(const glm::vec3 &albedo,
                    const float metallic,
                    const glm::vec3 emission,
                    const float ambient_occlusion)
-    : albedo(albedo),
+    : albedo{albedo, Shared_texture_2D()},
+      metallic{metallic, Shared_texture_2D()},
+      roughness{roughness, Shared_texture_2D()},
+      emission{emission, Shared_texture_2D()},
+      ambient_occlusion{ambient_occlusion, Shared_texture_2D()},
       alpha(alpha),
       index_of_refraction(index_of_refraction),
-      transmission(transmission),
-      emission(emission),
-      roughness(roughness),
-      metallic(metallic),
-      ambient_occlusion(ambient_occlusion) {}
+      transmission(transmission){}
 
 Material::Material(Assets &assets, std::string &path) : Material() {
   if (!path.empty()) {
@@ -76,21 +71,32 @@ Material::Material(Assets &assets, std::string &path) : Material() {
         }
       };
 
-      albedo_map = read_texture("albedo_map");
-      normal_map = read_texture("normal_map", false);
-      emission_map = read_texture("emission_map", false);
-      metallic_map = read_texture("metallic_map", false);
-      roughness_map = read_texture("roughness_map", false);
-      ambient_occlusion_map = read_texture("ambient_occlusion_map", false);
+      auto albedo_map = read_texture("albedo_map");
+      auto albedo_value =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
+      albedo = {albedo_value, albedo_map};
 
-      albedo =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
+      auto normal_map = read_texture("normal_map", false);
+      normal = {normal_map};
+
+      auto emission_map = read_texture("emission_map", false);
+      auto emission_value = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
+      emission = {emission_value, emission_map};
+
+      auto metallic_map = read_texture("metallic_map", false);
+      auto metallic_value = value["metallic"];
+      metallic = {metallic_value, metallic_map};
+
+      auto roughness_map = read_texture("roughness_map", false);
+      auto roughness_value = value["roughness"];
+      roughness = {roughness_value, roughness_map};
+
+      auto ambient_occlusion_map = read_texture("ambient_occlusion_map", false);
+      auto ambient_occlusion_value = value["ambient_occlusion"];
+      ambient_occlusion = {ambient_occlusion_value, ambient_occlusion_map};
+
       index_of_refraction = value["index_of_refraction"];
       transmission = value["transmission"];
       alpha = value["alpha"];
-      roughness = value["roughness"];
-      metallic = value["metallic"];
-      emission = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
-      ambient_occlusion = value["ambient_occlusion"];
     } else {
       throw std::runtime_error(path.substr(path.find_last_of('.')) +
           " file format is not supported.");
