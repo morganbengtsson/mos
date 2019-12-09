@@ -484,9 +484,7 @@ void Renderer::render_model(const Model &model,
           glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
       glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-      glm::vec4 albedo =
-          glm::vec4(model.material.albedo.value, model.material.albedo.texture ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_albedo, 1,glm::value_ptr(albedo));
+      glUniform3fv(uniforms.material_albedo, 1,glm::value_ptr(model.material.albedo.value));
       glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(model.material.emission.value));
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness.value);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic.value);
@@ -578,9 +576,7 @@ void Renderer::render_model(const Model &model,
           glm::inverseTranspose(glm::mat3(parent_transform * model.transform));
       glUniformMatrix3fv(uniforms.normal_matrix, 1, GL_FALSE, &normal_matrix[0][0]);
 
-      glm::vec4 albedo =
-          glm::vec4(model.material.albedo.value, model.material.albedo.texture ? 0.0f : 1.0f);
-      glUniform4fv(uniforms.material_albedo, 1, glm::value_ptr(albedo));
+      glUniform3fv(uniforms.material_albedo, 1, glm::value_ptr(model.material.albedo.value));
       glUniform3fv(uniforms.material_emission, 1, glm::value_ptr(model.material.emission.value));
       glUniform1fv(uniforms.material_roughness, 1, &model.material.roughness.value);
       glUniform1fv(uniforms.material_metallic, 1, &model.material.metallic.value);
@@ -965,9 +961,8 @@ void Renderer::render_model_depth(const Model &model,
 
       glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
-      glm::vec4 albedo =
-          glm::vec4(model.material.albedo.value, model.material.albedo.texture ? 0.0f : 1.0f);
-      glUniform4fv(program.albedo, 1, glm::value_ptr(albedo));
+
+      glUniform3fv(program.albedo, 1, glm::value_ptr(model.material.albedo.value));
       glUniform3fv(program.emission, 1, glm::value_ptr(model.material.emission.value));
       const int num_elements = model.mesh ? model.mesh->triangles.size() * 3 : 0;
       glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);

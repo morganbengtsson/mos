@@ -3,7 +3,7 @@
 const float PI = 3.14159265359;
 
 struct Material {
-    vec4 albedo;
+    vec3 albedo;
     vec3 emission;
     float roughness;
     float metallic;
@@ -158,7 +158,7 @@ void main() {
     float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
     if (material.alpha == 1.0) {
-      if (albedo_from_map.a + material.albedo.a < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
+      if (albedo_from_map.a + float(!has_albedo_map) < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
           discard;
       }
     }
@@ -262,7 +262,7 @@ void main() {
       }
     }
     out_color.rgb = (direct + ambient) + emission;
-    out_color.a = clamp(material.alpha * (albedo_from_map.a + material.albedo.a), 0.0, 1.0);
+    out_color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map)), 0.0, 1.0);
 
     //Fog
     float fog_distance = distance(fragment.position, camera.position);
