@@ -59,39 +59,39 @@ Material::Material(Assets &assets, std::string &path) : Material() {
 
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name{};
-        if (!value[name].is_null()) {
-		  std::string temp = value[name];
+        if (!value[name]["texture"].is_null()) {
+                  std::string temp = value[name]["texture"];
           file_name = temp;
         }
         if (file_name.empty()){
           return assets.texture("");
         }
         else {
-          return assets.texture(value[name].get<std::string>(), color_data, true);
+          return assets.texture(value[name]["texture"].get<std::string>(), color_data, true);
         }
       };
 
-      auto albedo_map = read_texture("albedo_map");
-      auto albedo_value =  glm::vec3(value["albedo"][0], value["albedo"][1], value["albedo"][2]);
+      auto albedo_map = read_texture("albedo");
+      auto albedo_value =  glm::vec3(value["albedo"]["value"][0], value["albedo"]["value"][1], value["albedo"]["value"][2]);
       albedo = {albedo_value, albedo_map};
 
-      auto normal_map = read_texture("normal_map", false);
+      auto normal_map = read_texture("normal", false);
       normal = {normal_map};
 
-      auto emission_map = read_texture("emission_map", false);
-      auto emission_value = glm::vec3(value["emission"][0], value["emission"][1], value["emission"][2]);
+      auto emission_map = read_texture("emission", false);
+      auto emission_value = glm::vec3(value["emission"]["value"][0], value["emission"]["value"][1], value["emission"]["value"][2]);
       emission = {emission_value, emission_map};
 
-      auto metallic_map = read_texture("metallic_map", false);
-      auto metallic_value = value["metallic"];
+      auto metallic_map = read_texture("metallic", false);
+      auto metallic_value = value["metallic"]["value"];
       metallic = {metallic_value, metallic_map};
 
-      auto roughness_map = read_texture("roughness_map", false);
-      auto roughness_value = value["roughness"];
+      auto roughness_map = read_texture("roughness", false);
+      auto roughness_value = value["roughness"]["value"];
       roughness = {roughness_value, roughness_map};
 
-      auto ambient_occlusion_map = read_texture("ambient_occlusion_map", false);
-      auto ambient_occlusion_value = value["ambient_occlusion"];
+      auto ambient_occlusion_map = read_texture("ambient_occlusion", false);
+      auto ambient_occlusion_value = value["ambient_occlusion"]["value"];
       ambient_occlusion = {ambient_occlusion_value, ambient_occlusion_map};
 
       index_of_refraction = value["index_of_refraction"];

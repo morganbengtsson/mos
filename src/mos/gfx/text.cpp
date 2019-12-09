@@ -20,13 +20,13 @@ Text::Text(const std::string &txt,
     : spacing(spacing),
       model_("Text", std::make_shared<Mesh>(Mesh()), transform),
       font_(std::move(font)) {
-  model_.material.roughness = roughness;
-  model_.material.metallic = metallic;
-  model_.material.albedo = glm::vec3(1.0f);
+  model_.material.roughness.value = roughness;
+  model_.material.metallic.value = metallic;
+  model_.material.albedo.value = glm::vec3(1.0f);
   model_.material.index_of_refraction = 1.0f;
   model_.material.index_of_refraction = opacity;
-  model_.material.emission = emiss;
-  model_.material.albedo_map = font_.texture;
+  model_.material.emission.value = emiss;
+  model_.material.albedo.texture = font_.texture;
   text(txt);
 }
 
@@ -155,7 +155,7 @@ Text &Text::operator+=(const std::string &input) {
 }
 
 void Text::emission(const glm::vec3 & emiss) {
- model_.material.emission = emiss;
+ model_.material.emission.value = emiss;
 }
 
 Font Text::font() const {

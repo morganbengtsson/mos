@@ -82,7 +82,7 @@ float Model::radius() const {
 
 void Model::emission(const glm::vec3 & emission)
 {
-  material.emission = emission;
+  material.emission.value = emission;
   for (auto & model : models){
     model.emission(emission);
   }
@@ -97,7 +97,7 @@ void Model::alpha(const float alpha) {
 
 void Model::ambient_occlusion(const float ambient_occlusion)
 {
-  material.ambient_occlusion = ambient_occlusion;
+  material.ambient_occlusion.value = ambient_occlusion;
   for (auto & model : models){
     model.ambient_occlusion(ambient_occlusion);
   }
@@ -121,7 +121,7 @@ void Model::transmission(const float transmission)
 
 void Model::roughness(const float roughness)
 {
-  material.roughness = roughness;
+  material.roughness.value = roughness;
   for (auto & model : models){
     model.roughness(roughness);
   }
@@ -129,7 +129,7 @@ void Model::roughness(const float roughness)
 
 void Model::metallic(const float metallic)
 {
-  material.metallic = metallic;
+  material.metallic.value = metallic;
   for (auto & model : models){
     model.metallic(metallic);
   }
