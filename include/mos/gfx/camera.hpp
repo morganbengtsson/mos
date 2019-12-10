@@ -76,12 +76,12 @@ private:
   void calculate_view();
   void calculate_frustum();
   void calculate_near_far();
-  glm::mat4 projection_;
+  glm::mat4 projection_{};
   glm::mat4 view_;
   Planes frustum_planes_;
   glm::vec3 up_;
-  glm::vec3 center_;
-  glm::vec3 position_;
+  glm::vec3 center_{};
+  glm::vec3 position_{};
   float near_{0.1f};
   float far_{100.0f};
 };

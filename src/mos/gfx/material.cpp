@@ -24,12 +24,12 @@ Material::Material(Shared_texture_2D albedo_map,
                    const float metallic,
                    const glm::vec3 emission,
                    const float ambient_occlusion)
-    : albedo{albedo, albedo_map},
-      metallic{metallic, metallic_map},
-      roughness{roughness, roughness_map},
-      emission{emission, emission_map},
-      ambient_occlusion{ambient_occlusion, ambient_occlusion_map},
-      normal{normal_map},
+    : albedo{albedo, std::move(albedo_map)},
+      metallic{metallic, std::move(metallic_map)},
+      roughness{roughness, std::move(roughness_map)},
+      emission{emission, std::move(emission_map)},
+      ambient_occlusion{ambient_occlusion, std::move(ambient_occlusion_map)},
+      normal{std::move(normal_map)},
       alpha(alpha),
       index_of_refraction(index_of_refraction),
       transmission(transmission){}
@@ -63,12 +63,8 @@ Material::Material(Assets &assets, std::string &path) : Material() {
                   std::string temp = value[name]["texture"];
           file_name = temp;
         }
-        if (file_name.empty()){
-          return assets.texture("");
-        }
-        else {
-          return assets.texture(value[name]["texture"].get<std::string>(), color_data, true);
-        }
+        std::string path = file_name.empty() ? "" : value[name]["texture"].get<std::string>();
+        return assets.texture(path, color_data, true);
       };
 
       auto albedo_map = read_texture("albedo");

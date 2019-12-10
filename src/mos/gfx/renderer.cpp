@@ -1752,11 +1752,11 @@ Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
   glBindBuffer(type, 0);
 }
 
-Renderer::Buffer::Buffer(Renderer::Buffer &&buffer): id(buffer.id){
+Renderer::Buffer::Buffer(Renderer::Buffer &&buffer) noexcept : id(buffer.id){
   buffer.id = 0;
 }
 
-Renderer::Buffer &Renderer::Buffer::operator=(Renderer::Buffer &&buffer) {
+Renderer::Buffer &Renderer::Buffer::operator=(Renderer::Buffer &&buffer) noexcept {
   if(this != &buffer){
     release();
     std::swap(id, buffer.id);
@@ -1800,11 +1800,11 @@ Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Texture_buffer_2D::Texture_buffer_2D(Renderer::Texture_buffer_2D &&buffer) : texture(buffer.texture) {
+Renderer::Texture_buffer_2D::Texture_buffer_2D(Renderer::Texture_buffer_2D &&buffer) noexcept : texture(buffer.texture) {
   buffer.texture = 0;
 }
 
-Renderer::Texture_buffer_2D &Renderer::Texture_buffer_2D::operator=(Renderer::Texture_buffer_2D &&buffer) {
+Renderer::Texture_buffer_2D &Renderer::Texture_buffer_2D::operator=(Renderer::Texture_buffer_2D &&buffer) noexcept {
   if (this != &buffer){
     release();
     std::swap(texture, buffer.texture);

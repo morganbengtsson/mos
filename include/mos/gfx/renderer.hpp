@@ -73,9 +73,9 @@ private:
   public:
     Buffer(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
     Buffer(const Buffer &buffer) = delete;
-    Buffer(Buffer &&buffer);
+    Buffer(Buffer &&buffer) noexcept;
     Buffer & operator=(const Buffer &buffer) = delete;
-    Buffer & operator=(Buffer &&buffer);
+    Buffer & operator=(Buffer &&buffer) noexcept;
     ~Buffer();
 
     GLuint id{0};
@@ -94,9 +94,9 @@ private:
 
    ~Texture_buffer_2D();
     Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(Texture_buffer_2D &&buffer);
+    Texture_buffer_2D(Texture_buffer_2D &&buffer) noexcept;
     Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer);
+    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) noexcept;
     GLuint texture{0};
     Time_point modified;
   private:

@@ -43,7 +43,7 @@ public:
   void emission(const glm::vec3 & emission);
 
   /** Set alpha of material recursively. */
-  void alpha(const float alpha);
+  void alpha(float alpha);
 
   /** Set ambient occlusion of material recursively. */
   void ambient_occlusion(float ambient_occlusion);
