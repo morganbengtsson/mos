@@ -10,7 +10,7 @@ void main() {
   bool has_albedo_map = textureSize(albedo_sampler, 0).x != 1;
   vec4 albedo_from_map = texture(albedo_sampler, fragment_uv);
 
-  if (albedo_from_map.a + float(!has_albedo_map) < 0.5) {
+  if (albedo_from_map.a + float(!has_albedo_map) < 0.9) {
       discard;
   }
 
