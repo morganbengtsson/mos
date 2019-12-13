@@ -1048,7 +1048,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
   glUniform1i(bloom_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
