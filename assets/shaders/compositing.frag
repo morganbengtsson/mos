@@ -15,7 +15,7 @@ void main() {
   const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
   vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
 
-  float r = rand(frag_uv * color.rg);
+  float r = rand(frag_uv);
   color.rgb *= (1.0 - r * 0.1);
 
   float exposure = 1.0;
