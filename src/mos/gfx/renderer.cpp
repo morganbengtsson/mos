@@ -1481,7 +1481,7 @@ Renderer::Shadow_map_target::Shadow_map_target(
 
   glFramebufferRenderbuffer(GL_FRAMEBUFFER,
                             GL_DEPTH_ATTACHMENT,
-                            GL_RENDERBUFFER, render_buffer.render_buffer);
+                            GL_RENDERBUFFER, render_buffer.id);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete.");
@@ -1493,9 +1493,9 @@ Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : render_buffer(generate(glGenRenderbuffers)),
+Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : id(generate(glGenRenderbuffers)),
                                                                 resolution(res){
-  glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, id);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                         resolution.x,
                         resolution.y);
@@ -1505,8 +1505,31 @@ Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : render_buffer(ge
 Renderer::Render_buffer::Render_buffer(int resolution) : Render_buffer(glm::ivec2(resolution, resolution)){}
 
 Renderer::Render_buffer::~Render_buffer() {
-  glDeleteRenderbuffers(1, &render_buffer);
+  glDeleteRenderbuffers(1, &id);
 }
+
+Renderer::Render_buffer::Render_buffer(Renderer::Render_buffer &&render_buffer) noexcept : id(render_buffer.id),
+                                                                                  resolution(render_buffer.resolution)
+{
+  render_buffer.id = 0;
+}
+
+Renderer::Render_buffer &Renderer::Render_buffer::operator=(Renderer::Render_buffer &&render_buffer) noexcept
+{
+  if(this != &render_buffer){
+    release();
+    std::swap(id, render_buffer.id);
+    std::swap(resolution, render_buffer.resolution);
+  }
+  return *this;
+}
+
+void Renderer::Render_buffer::release()
+{
+  glDeleteRenderbuffers(1, &id);
+  id = 0;
+}
+
 Renderer::Environment_map_target::Environment_map_target(
     const Renderer::Render_buffer &render_buffer)
     : frame_buffer(generate(glGenFramebuffers)),
@@ -1574,7 +1597,7 @@ Renderer::Environment_map_target::Environment_map_target(
   glDrawBuffers(2, attachments.data());
 
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                            GL_RENDERBUFFER, render_buffer.render_buffer);
+                            GL_RENDERBUFFER, render_buffer.id);
 
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     throw std::runtime_error("Framebuffer incomplete.");

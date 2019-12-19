@@ -84,6 +84,21 @@ private:
     void release();
   };
 
+  class Render_buffer {
+  public:
+    Render_buffer(int resolution);
+    Render_buffer(const glm::ivec2 &resolution);
+    ~Render_buffer();
+    Render_buffer(Render_buffer &&target) noexcept;
+    Render_buffer(const Render_buffer &target) = delete;
+    Render_buffer & operator=(const Render_buffer &target) = delete;
+    Render_buffer & operator=(Render_buffer &&target) noexcept;
+    GLuint id{0};
+   glm::ivec2 resolution;
+  private:
+    void release();
+  };
+
   class Texture_buffer_2D {
   public:
     explicit Texture_buffer_2D(const Texture_2D &texture_2d);
@@ -341,17 +356,7 @@ private:
     const glm::ivec2 resolution;
   };
 
-  struct Render_buffer {
-    Render_buffer(int resolution);
-    Render_buffer(const glm::ivec2 &resolution);
-    ~Render_buffer();
-    Render_buffer(const Render_buffer &target) = delete;
-    Render_buffer(Render_buffer &&target) = delete;
-    Render_buffer & operator=(const Render_buffer &target) = delete;
-    Render_buffer & operator=(Render_buffer &&target) = delete;
-    const GLuint render_buffer{};
-    const glm::ivec2 resolution;
-  };
+
 
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
