@@ -1750,6 +1750,33 @@ Renderer::Box::~Box(){
   glDeleteBuffers(1, &element_buffer);
 }
 
+
+mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Particle_cloud &particle_cloud) {
+
+}
+
+Renderer::Vertex_array::~Vertex_array() {
+  release();
+}
+
+Renderer::Vertex_array::Vertex_array(Renderer::Vertex_array &&array) noexcept : id(array.id) {
+  array.id = 0;
+}
+
+Renderer::Vertex_array &Renderer::Vertex_array::operator=(Renderer::Vertex_array &&array) noexcept {
+  if(this != &array){
+    release();
+    std::swap(id, array.id);
+  }
+  return *this;
+}
+
+void Renderer::Vertex_array::release()
+{
+  glDeleteVertexArrays(1, &id);
+  id = 0;
+}
+
 Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
                          GLenum hint, Time_point modified)
     : id(generate(glGenBuffers)), modified(modified) {
