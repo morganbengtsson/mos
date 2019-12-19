@@ -142,10 +142,6 @@ Renderer::~Renderer() {
     glDeleteFramebuffers(1, &fb.second);
   }
 
-  for (auto &rb : render_buffers) {
-    glDeleteRenderbuffers(1, &rb.second);
-  }
-
   for (auto &va : vertex_arrays_) {
     glDeleteVertexArrays(1, &va.second);
   }

@@ -86,8 +86,8 @@ private:
 
   class Render_buffer {
   public:
-    Render_buffer(int resolution);
-    Render_buffer(const glm::ivec2 &resolution);
+    explicit Render_buffer(int resolution);
+    explicit Render_buffer(const glm::ivec2 &resolution);
     ~Render_buffer();
     Render_buffer(Render_buffer &&target) noexcept;
     Render_buffer(const Render_buffer &target) = delete;
@@ -471,7 +471,7 @@ private:
   const Depth_of_field_program depth_of_field_program_;
 
   std::unordered_map<unsigned int, GLuint> frame_buffers_;
-  std::unordered_map<unsigned int, GLuint> render_buffers;
+  std::unordered_map<unsigned int, Render_buffer> render_buffers;
   std::unordered_map<unsigned int, Texture_buffer_2D> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
