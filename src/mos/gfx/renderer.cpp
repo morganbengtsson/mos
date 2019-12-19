@@ -141,10 +141,6 @@ Renderer::~Renderer() {
   for (auto &fb : frame_buffers_) {
     glDeleteFramebuffers(1, &fb.second);
   }
-
-  for (auto &va : vertex_arrays_) {
-    glDeleteVertexArrays(1, &va.second);
-  }
 }
 
 void Renderer::load(const Model &model) {
@@ -367,7 +363,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glEnableVertexAttribArray(2);
       glEnableVertexAttribArray(3);
       glBindVertexArray(0);
-      vertex_arrays_.insert({particles.id(), vertex_array});
+      vertex_arrays_.insert({particles.id(), Vertex_array(particles, array_buffers_)});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
     glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
@@ -379,7 +375,7 @@ void Renderer::render_particles(const Particle_clouds &clouds,
 
     glUseProgram(particle_program_.program);
 
-    glBindVertexArray(vertex_arrays_.at(particles.id()));
+    glBindVertexArray(vertex_arrays_.at(particles.id()).id);
 
     load(particles.emission_map);
     glActiveTexture(GL_TEXTURE10);
@@ -438,7 +434,7 @@ void Renderer::render_model(const Model &model,
     const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+      glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
 
       const auto &uniforms = program;
 
@@ -507,7 +503,7 @@ void Renderer::render_model(const Model &model,
     const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+      glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
 
       const auto &uniforms = program;
 
@@ -777,57 +773,8 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
 }
 void Renderer::load(const Mesh &mesh) {
-  if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
-    unsigned int vertex_array;
-    glGenVertexArrays(1, &vertex_array);
-    glBindVertexArray(vertex_array);
-    if (array_buffers_.find(mesh.id()) == array_buffers_.end()) {
-      array_buffers_.insert({mesh.id(), Buffer(GL_ARRAY_BUFFER,
-                                               mesh.vertices.size() * sizeof(Vertex),
-                                               mesh.vertices.data(),
-                                               GL_STATIC_DRAW,
-                                               mesh.vertices.modified())});
-    }
-    if (element_array_buffers_.find(mesh.id()) ==
-        element_array_buffers_.end()) {
-      element_array_buffers_.insert({mesh.id(), Buffer(GL_ELEMENT_ARRAY_BUFFER,
-                                                             mesh.triangles.size() * 3 * sizeof(unsigned int),
-                                                             mesh.triangles.data(),
-                                                             GL_STATIC_DRAW,
-                                                             mesh.triangles.modified())});
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(mesh.id()).id);
-    // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-
-    // Normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3)));
-
-    // Tangent
-    glVertexAttribPointer(
-        2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
-
-    // UV
-    glVertexAttribPointer(
-        3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
-
-    // Weight
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                              sizeof(glm::vec2)));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 element_array_buffers_.at(mesh.id()).id);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    glEnableVertexAttribArray(4);
-    glBindVertexArray(0);
-    vertex_arrays_.insert({mesh.id(), vertex_array});
+  if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {    
+    vertex_arrays_.insert({mesh.id(), Vertex_array(mesh, array_buffers_, element_array_buffers_)});
   }
 
   if (mesh.vertices.size() > 0 && mesh.vertices.modified() > array_buffers_.at(mesh.id()).modified) {
@@ -848,8 +795,6 @@ void Renderer::load(const Mesh &mesh) {
 
 void Renderer::unload(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) != vertex_arrays_.end()) {
-    auto va_id = vertex_arrays_.at(mesh.id());
-    glDeleteVertexArrays(1, &va_id);
     vertex_arrays_.erase(mesh.id());
 
     if (array_buffers_.find(mesh.id()) != array_buffers_.end()) {
@@ -932,7 +877,7 @@ void Renderer::render_model_depth(const Model &model,
     const glm::mat4 mvp = camera.projection() * camera.view() * transform * model.transform;
 
     if (model.mesh) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh->id()));
+      glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo.texture
@@ -1751,8 +1696,86 @@ Renderer::Box::~Box(){
 }
 
 
-mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Particle_cloud &particle_cloud) {
+mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Particle_cloud &particle_cloud, std::unordered_map<unsigned int, Buffer> &array_buffers) {
+  glGenVertexArrays(1, &id);
+  glBindVertexArray(id);
+  if (array_buffers.find(particle_cloud.id()) == array_buffers.end()) {
+    array_buffers.insert({particle_cloud.id(), Buffer(GL_ARRAY_BUFFER,
+                                                  particle_cloud.particles.size() * sizeof(Particle),
+                                                  particle_cloud.particles.data(),
+                                                  GL_STREAM_DRAW,
+                                                  particle_cloud.particles.modified())});
+  }
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(particle_cloud.id()).id);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), nullptr);
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                        reinterpret_cast<const void *>(sizeof(glm::vec3)));
+  glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                        reinterpret_cast<const void *>(sizeof(glm::vec3) +
+                                                       sizeof(glm::vec4)));
+  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle),
+                        reinterpret_cast<const void *>(sizeof(glm::vec3) +
+                                                       sizeof(glm::vec4) + sizeof(float)));
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glBindVertexArray(0);
 
+}
+
+Renderer::Vertex_array::Vertex_array(const Mesh &mesh,
+                                     std::unordered_map<unsigned int, Renderer::Buffer> &array_buffers,
+                                     std::unordered_map<unsigned int, Renderer::Buffer> &element_array_buffers) {
+  glGenVertexArrays(1, &id);
+  glBindVertexArray(id);
+  if (array_buffers.find(mesh.id()) == array_buffers.end()) {
+    array_buffers.insert({mesh.id(), Buffer(GL_ARRAY_BUFFER,
+                                             mesh.vertices.size() * sizeof(Vertex),
+                                             mesh.vertices.data(),
+                                             GL_STATIC_DRAW,
+                                             mesh.vertices.modified())});
+  }
+  if (element_array_buffers.find(mesh.id()) ==
+      element_array_buffers.end()) {
+    element_array_buffers.insert({mesh.id(), Buffer(GL_ELEMENT_ARRAY_BUFFER,
+                                                     mesh.triangles.size() * 3 * sizeof(unsigned int),
+                                                     mesh.triangles.data(),
+                                                     GL_STATIC_DRAW,
+                                                     mesh.triangles.modified())});
+  }
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(mesh.id()).id);
+  // Position
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+
+  // Normal
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        reinterpret_cast<const void *>(sizeof(glm::vec3)));
+
+  // Tangent
+  glVertexAttribPointer(
+      2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+      reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
+
+  // UV
+  glVertexAttribPointer(
+      3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+      reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
+
+  // Weight
+  glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
+                                                       sizeof(glm::vec2)));
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+               element_array_buffers.at(mesh.id()).id);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glEnableVertexAttribArray(4);
+  glBindVertexArray(0);
 }
 
 Renderer::Vertex_array::~Vertex_array() {

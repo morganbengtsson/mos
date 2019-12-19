@@ -101,7 +101,11 @@ private:
 
   class Vertex_array {
   public:
-    explicit Vertex_array(const Particle_cloud &particle_cloud);
+    explicit Vertex_array(const Particle_cloud &particle_cloud,
+                          std::unordered_map<unsigned int, Buffer> &array_buffers);
+    explicit Vertex_array(const Mesh & mesh,
+                          std::unordered_map<unsigned int, Buffer> &array_buffers,
+                          std::unordered_map<unsigned int, Buffer> &element_array_buffers);
     ~Vertex_array();
     Vertex_array(Vertex_array &&array) noexcept;
     Vertex_array(const Vertex_array &target) = delete;
@@ -488,7 +492,7 @@ private:
   std::unordered_map<unsigned int, Texture_buffer_2D> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;
-  std::unordered_map<unsigned int, GLuint> vertex_arrays_;
+  std::unordered_map<unsigned int, Vertex_array> vertex_arrays_;
 
   const Standard_target standard_target_;
   const Blit_target multisample_target_;
