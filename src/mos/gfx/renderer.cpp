@@ -98,15 +98,15 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
                    Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_)},
       shadow_map_blur_target_(Post_target(
-          glm::ivec2(shadow_maps_render_buffer_.resolution), GL_RG32F)),
+          shadow_maps_render_buffer_.resolution, GL_RG32F)),
       shadow_map_blur_targets_{
-          Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution),
+          Post_target(shadow_maps_render_buffer_.resolution,
                       GL_RG32F),
-          Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution),
+          Post_target(shadow_maps_render_buffer_.resolution,
                       GL_RG32F),
-          Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution),
+          Post_target(shadow_maps_render_buffer_.resolution,
                       GL_RG32F),
-          Post_target(glm::ivec2(shadow_maps_render_buffer_.resolution),
+          Post_target(shadow_maps_render_buffer_.resolution,
                       GL_RG32F)},
       environment_render_buffer_(128),
       environment_maps_targets{
@@ -638,17 +638,17 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       glClear(GL_DEPTH_BUFFER_BIT);
       auto resolution = shadow_maps_render_buffer_.resolution;
       glUseProgram(depth_program_.program);
-      glViewport(0, 0, resolution, resolution);
+      glViewport(0, 0, resolution.x, resolution.y);
 
       glUniform1i(depth_program_.albedo_sampler, 0);
 
       for (auto &model : models) {
-        render_model_depth(model, glm::mat4(1.0f), lights.at(i).camera, glm::vec2(resolution), depth_program_);
+        render_model_depth(model, glm::mat4(1.0f), lights.at(i).camera, resolution, depth_program_);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-      glViewport(0, 0, shadow_maps_render_buffer_.resolution,
-                 shadow_maps_render_buffer_.resolution);
+      glViewport(0, 0, shadow_maps_render_buffer_.resolution.x,
+                      shadow_maps_render_buffer_.resolution.y);
 
       blur(shadow_maps_.at(i).texture, shadow_map_blur_target_, shadow_map_blur_targets_.at(i), 4);
     }
@@ -673,8 +673,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                              0);
 
       clear(clear_color);
-      auto resolution = glm::ivec2(environment_render_buffer_.resolution,
-                                   environment_render_buffer_.resolution);
+      auto resolution = environment_render_buffer_.resolution;
       auto cube_camera = scene.environment_lights.at(i).camera(cube_camera_index_.at(i));
 
       glViewport(0, 0, resolution.x, resolution.y);
@@ -764,8 +763,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
 
   clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
-  auto resolution = glm::ivec2(environment_render_buffer_.resolution,
-                               environment_render_buffer_.resolution);
+  auto resolution = environment_render_buffer_.resolution;
 
   glViewport(0, 0, resolution.x, resolution.y);
 
@@ -1468,8 +1466,8 @@ Renderer::Shadow_map_target::Shadow_map_target(
 
   glTexImage2D(GL_TEXTURE_2D, 0,
                GL_RG32F,
-               render_buffer.resolution,
-               render_buffer.resolution,
+               render_buffer.resolution.x,
+               render_buffer.resolution.y,
                0,
                GL_RG,
                GL_UNSIGNED_BYTE,
@@ -1495,11 +1493,11 @@ Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Render_buffer::Render_buffer(const int resolution) : resolution(resolution), render_buffer(generate(glGenRenderbuffers)){
+Renderer::Render_buffer::Render_buffer(const int res) : resolution(res, res), render_buffer(generate(glGenRenderbuffers)){
   glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                        resolution,
-                        resolution);
+                        resolution.x,
+                        resolution.y);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 Renderer::Render_buffer::~Render_buffer() {
@@ -1523,14 +1521,14 @@ Renderer::Environment_map_target::Environment_map_target(
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
+    for (int i = 0; i < render_buffer.resolution.x * render_buffer.resolution.y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB16F,
-                 render_buffer.resolution, render_buffer.resolution, 0, GL_RGB,
+                 render_buffer.resolution.x, render_buffer.resolution.y, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -1552,14 +1550,14 @@ Renderer::Environment_map_target::Environment_map_target(
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution * render_buffer.resolution; i++) {
+    for (int i = 0; i < render_buffer.resolution.x * render_buffer.resolution.y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB,
-                 render_buffer.resolution, render_buffer.resolution, 0, GL_RGB,
+                 render_buffer.resolution.x, render_buffer.resolution.y, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);

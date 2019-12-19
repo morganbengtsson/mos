@@ -349,7 +349,7 @@ private:
     Render_buffer & operator=(const Render_buffer &target) = delete;
     Render_buffer & operator=(Render_buffer &&target) = delete;
     const GLuint render_buffer{};
-    const int resolution;
+    const glm::ivec2 resolution;
   };
 
   struct Shadow_map_target {
