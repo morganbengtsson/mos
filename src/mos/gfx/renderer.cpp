@@ -892,24 +892,16 @@ void Renderer::render_texture_targets(const Scene &scene) {
       glGenFramebuffers(1, &frame_buffer_id);
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      //auto buffer = Texture_buffer_2D(*target.texture);
-
       textures_.insert({target.texture->id(),
                         Texture_buffer_2D(*target.texture)});
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_2D, textures_.at(target.texture->id()).texture, 0);
 
-      GLuint depthrenderbuffer_id;
-      glGenRenderbuffers(1, &depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer_id);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                            target.texture->width(),
-                            target.texture->height());
+      render_buffers.insert({target.target.id(), Render_buffer(glm::ivec2(target.texture->width(), target.texture->height()))});
+
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, depthrenderbuffer_id);
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
-      render_buffers.insert({target.target.id(), depthrenderbuffer_id});
+                                GL_RENDERBUFFER, render_buffers.at(target.target.id()).id);
 
       if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         throw std::runtime_error("Framebuffer incomplete.");
