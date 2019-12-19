@@ -345,12 +345,6 @@ void Renderer::render_particles(const Particle_clouds &clouds,
       glGenVertexArrays(1, &vertex_array);
       glBindVertexArray(vertex_array);
       if (array_buffers_.find(particles.id()) == array_buffers_.end()) {
-        unsigned int array_buffer;
-        glGenBuffers(1, &array_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, array_buffer);
-        glBufferData(GL_ARRAY_BUFFER, particles.particles.size() * sizeof(Particle),
-                     particles.particles.data(), GL_STREAM_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
         array_buffers_.insert({particles.id(), Buffer(GL_ARRAY_BUFFER,
                                                             particles.particles.size() * sizeof(Particle),
                                                             particles.particles.data(),
