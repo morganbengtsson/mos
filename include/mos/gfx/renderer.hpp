@@ -342,7 +342,8 @@ private:
   };
 
   struct Render_buffer {
-    explicit Render_buffer(int resolution);
+    Render_buffer(int resolution);
+    Render_buffer(const glm::ivec2 &resolution);
     ~Render_buffer();
     Render_buffer(const Render_buffer &target) = delete;
     Render_buffer(Render_buffer &&target) = delete;

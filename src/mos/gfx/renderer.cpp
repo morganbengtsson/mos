@@ -1493,13 +1493,17 @@ Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Render_buffer::Render_buffer(const int res) : resolution(res, res), render_buffer(generate(glGenRenderbuffers)){
+Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : render_buffer(generate(glGenRenderbuffers)),
+                                                                resolution(res){
   glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                         resolution.x,
                         resolution.y);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
+
+Renderer::Render_buffer::Render_buffer(int resolution) : Render_buffer(glm::ivec2(resolution, resolution)){}
+
 Renderer::Render_buffer::~Render_buffer() {
   glDeleteRenderbuffers(1, &render_buffer);
 }
