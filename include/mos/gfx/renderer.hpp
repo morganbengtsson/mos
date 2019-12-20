@@ -138,7 +138,7 @@ private:
   class Frame_buffer {
   public:
     explicit Frame_buffer(const Texture_target & target,
-                          std::unordered_map<unsigned int, Texture_buffer_2D> texture_buffers,
+                          std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
                           std::unordered_map<unsigned int, Render_buffer> &render_buffers);
     ~Frame_buffer();
     Frame_buffer(Frame_buffer &&buffer) noexcept;
