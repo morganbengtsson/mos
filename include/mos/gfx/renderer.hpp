@@ -135,6 +135,21 @@ private:
     void release();
   };
 
+  class Frame_buffer {
+  public:
+    explicit Frame_buffer(const Texture_target & target,
+                          std::unordered_map<unsigned int, Texture_buffer_2D> texture_buffers,
+                          std::unordered_map<unsigned int, Render_buffer> &render_buffers);
+    ~Frame_buffer();
+    Frame_buffer(Frame_buffer &&buffer) noexcept;
+    Frame_buffer(const Frame_buffer &buffer) = delete;
+    Frame_buffer & operator=(const Frame_buffer &buffer) = delete;
+    Frame_buffer & operator=(Frame_buffer &&buffer) noexcept;
+    GLuint id{0};
+  private:
+    void release();
+  };
+
   class Shader {
   public:
     Shader(const std::string &source, GLuint type, const std::string& name);
