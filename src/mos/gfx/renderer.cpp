@@ -1481,7 +1481,7 @@ Renderer::Frame_buffer &Renderer::Frame_buffer::operator=(Renderer::Frame_buffer
   return *this;
 }
 
-void Renderer::Render_buffer::release() {
+void Renderer::Frame_buffer::release() {
   glDeleteFramebuffers(1, &id);
   id = 0;
 }
