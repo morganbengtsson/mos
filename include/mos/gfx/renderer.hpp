@@ -135,11 +135,17 @@ private:
     void release();
   };
 
+  using Render_buffers = std::unordered_map<unsigned int, Render_buffer>;
+  using Texture_buffers = std::unordered_map<unsigned int, Texture_buffer_2D>;
+  using Array_buffers = std::unordered_map<unsigned int, Buffer>;
+  using Element_array_buffers = std::unordered_map<unsigned int, Buffer>;
+  using Vertex_arrays = std::unordered_map<unsigned int, Vertex_array>;
+
   class Frame_buffer {
   public:
     explicit Frame_buffer(const Texture_target & target,
-                          std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
-                          std::unordered_map<unsigned int, Render_buffer> &render_buffers_);
+                          Texture_buffers &texture_buffers,
+                          Render_buffers &render_buffers);
     ~Frame_buffer();
     Frame_buffer(Frame_buffer &&buffer) noexcept;
     Frame_buffer(const Frame_buffer &buffer) = delete;
@@ -149,6 +155,8 @@ private:
   private:
     void release();
   };
+
+  using Frame_buffers = std::unordered_map<unsigned int, Frame_buffer>;
 
   class Shader {
   public:
@@ -502,12 +510,12 @@ private:
   const Blur_program blur_program_;
   const Depth_of_field_program depth_of_field_program_;
 
-  std::unordered_map<unsigned int, Frame_buffer> frame_buffers_;
-  std::unordered_map<unsigned int, Render_buffer> render_buffers_;
-  std::unordered_map<unsigned int, Texture_buffer_2D> textures_;
-  std::unordered_map<unsigned int, Buffer> array_buffers_;
-  std::unordered_map<unsigned int, Buffer> element_array_buffers_;
-  std::unordered_map<unsigned int, Vertex_array> vertex_arrays_;
+  Frame_buffers frame_buffers_;
+  Render_buffers render_buffers_;
+  Texture_buffers textures_;
+  Array_buffers array_buffers_;
+  Element_array_buffers element_array_buffers_;
+  Vertex_arrays vertex_arrays_;
 
   const Standard_target standard_target_;
   const Blit_target multisample_target_;
