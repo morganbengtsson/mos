@@ -139,7 +139,7 @@ private:
   public:
     explicit Frame_buffer(const Texture_target & target,
                           std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
-                          std::unordered_map<unsigned int, Render_buffer> &render_buffers);
+                          std::unordered_map<unsigned int, Render_buffer> &render_buffers_);
     ~Frame_buffer();
     Frame_buffer(Frame_buffer &&buffer) noexcept;
     Frame_buffer(const Frame_buffer &buffer) = delete;
@@ -502,8 +502,8 @@ private:
   const Blur_program blur_program_;
   const Depth_of_field_program depth_of_field_program_;
 
-  std::unordered_map<unsigned int, GLuint> frame_buffers_;
-  std::unordered_map<unsigned int, Render_buffer> render_buffers;
+  std::unordered_map<unsigned int, Frame_buffer> frame_buffers_;
+  std::unordered_map<unsigned int, Render_buffer> render_buffers_;
   std::unordered_map<unsigned int, Texture_buffer_2D> textures_;
   std::unordered_map<unsigned int, Buffer> array_buffers_;
   std::unordered_map<unsigned int, Buffer> element_array_buffers_;

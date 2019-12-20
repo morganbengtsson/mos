@@ -137,11 +137,7 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
   clear(color);
 }
 
-Renderer::~Renderer() {
-  for (auto &fb : frame_buffers_) {
-    glDeleteFramebuffers(1, &fb.second);
-  }
-}
+Renderer::~Renderer() {}
 
 void Renderer::load(const Model &model) {
   load(model.mesh);
@@ -827,34 +823,12 @@ void Renderer::load(const Models &models) {
 void Renderer::render_texture_targets(const Scene &scene) {
   for (auto &target : scene.texture_targets) {
     if (frame_buffers_.find(target.target.id()) == frame_buffers_.end()) {
-      GLuint frame_buffer_id;
-      glGenFramebuffers(1, &frame_buffer_id);
-      glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
-
-      textures_.insert({target.texture->id(),
-                        Texture_buffer_2D(*target.texture)});
-
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, textures_.at(target.texture->id()).texture, 0);
-
-      render_buffers.insert({target.target.id(), Render_buffer(glm::ivec2(target.texture->width(), target.texture->height()))});
-
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                GL_RENDERBUFFER, render_buffers.at(target.target.id()).id);
-
-      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        throw std::runtime_error("Framebuffer incomplete.");
-      }
-
-      frame_buffers_.insert({target.target.id(), frame_buffer_id});
+      frame_buffers_.insert({target.target.id(), Frame_buffer(target, textures_, render_buffers_)});
     }
-    auto fb = frame_buffers_.at(target.target.id());
-    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    const auto & fb = frame_buffers_.at(target.target.id());
+    glBindFramebuffer(GL_FRAMEBUFFER, fb.id);
 
     auto texture_id = textures_.at(target.texture->id()).texture;
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D, texture_id, 0);
 
     clear(glm::vec4(0.0f));
 
@@ -1463,6 +1437,23 @@ void Renderer::Render_buffer::release()
 Renderer::Frame_buffer::Frame_buffer(const Texture_target & target,
                                      std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
                                      std::unordered_map<unsigned int, Render_buffer> &render_buffers) {
+  glGenFramebuffers(1, &id);
+  glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+  texture_buffers.insert({target.texture->id(),
+                    Texture_buffer_2D(*target.texture)});
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                         GL_TEXTURE_2D, texture_buffers.at(target.texture->id()).texture, 0);
+
+  render_buffers.insert({target.target.id(), Render_buffer(glm::ivec2(target.texture->width(), target.texture->height()))});
+
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                            GL_RENDERBUFFER, render_buffers.at(target.target.id()).id);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    throw std::runtime_error("Framebuffer incomplete.");
+  }
 }
 
 Renderer::Frame_buffer::~Frame_buffer() {
