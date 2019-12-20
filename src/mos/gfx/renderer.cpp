@@ -98,15 +98,15 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
                    Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_)},
       shadow_map_blur_target_(Post_target(
-          shadow_maps_render_buffer_.resolution, GL_RG32F)),
+          shadow_maps_render_buffer_.resolution(), GL_RG32F)),
       shadow_map_blur_targets_{
-          Post_target(shadow_maps_render_buffer_.resolution,
+          Post_target(shadow_maps_render_buffer_.resolution(),
                       GL_RG32F),
-          Post_target(shadow_maps_render_buffer_.resolution,
+          Post_target(shadow_maps_render_buffer_.resolution(),
                       GL_RG32F),
-          Post_target(shadow_maps_render_buffer_.resolution,
+          Post_target(shadow_maps_render_buffer_.resolution(),
                       GL_RG32F),
-          Post_target(shadow_maps_render_buffer_.resolution,
+          Post_target(shadow_maps_render_buffer_.resolution(),
                       GL_RG32F)},
       environment_render_buffer_(128),
       environment_maps_targets{
@@ -622,7 +622,7 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       auto frame_buffer = shadow_maps_.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
       glClear(GL_DEPTH_BUFFER_BIT);
-      auto resolution = shadow_maps_render_buffer_.resolution;
+      auto resolution = shadow_maps_render_buffer_.resolution();
       glUseProgram(depth_program_.program);
       glViewport(0, 0, resolution.x, resolution.y);
 
@@ -633,8 +633,8 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-      glViewport(0, 0, shadow_maps_render_buffer_.resolution.x,
-                      shadow_maps_render_buffer_.resolution.y);
+      glViewport(0, 0, shadow_maps_render_buffer_.resolution().x,
+                 shadow_maps_render_buffer_.resolution().y);
 
       blur(shadow_maps_.at(i).texture, shadow_map_blur_target_, shadow_map_blur_targets_.at(i), 4);
     }
@@ -659,7 +659,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                              0);
 
       clear(clear_color);
-      auto resolution = environment_render_buffer_.resolution;
+      auto resolution = environment_render_buffer_.resolution();
       auto cube_camera = scene.environment_lights.at(i).camera(cube_camera_index_.at(i));
 
       glViewport(0, 0, resolution.x, resolution.y);
@@ -749,7 +749,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, propagate_target_.texture, 0);
 
   clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
-  auto resolution = environment_render_buffer_.resolution;
+  auto resolution = environment_render_buffer_.resolution();
 
   glViewport(0, 0, resolution.x, resolution.y);
 
@@ -1393,8 +1393,8 @@ Renderer::Shadow_map_target::Shadow_map_target(
 
   glTexImage2D(GL_TEXTURE_2D, 0,
                GL_RG32F,
-               render_buffer.resolution.x,
-               render_buffer.resolution.y,
+               render_buffer.resolution().x,
+               render_buffer.resolution().y,
                0,
                GL_RG,
                GL_UNSIGNED_BYTE,
@@ -1420,12 +1420,11 @@ Renderer::Shadow_map_target::~Shadow_map_target() {
   glDeleteTextures(1, &texture);
 }
 
-Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : id(generate(glGenRenderbuffers)),
-                                                                resolution(res){
+Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : id(generate(glGenRenderbuffers)){
   glBindRenderbuffer(GL_RENDERBUFFER, id);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-                        resolution.x,
-                        resolution.y);
+                        res.x,
+                        res.y);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
@@ -1435,9 +1434,7 @@ Renderer::Render_buffer::~Render_buffer() {
   glDeleteRenderbuffers(1, &id);
 }
 
-Renderer::Render_buffer::Render_buffer(Renderer::Render_buffer &&render_buffer) noexcept : id(render_buffer.id),
-                                                                                  resolution(render_buffer.resolution)
-{
+Renderer::Render_buffer::Render_buffer(Renderer::Render_buffer &&render_buffer) noexcept : id(render_buffer.id) {
   render_buffer.id = 0;
 }
 
@@ -1446,9 +1443,16 @@ Renderer::Render_buffer &Renderer::Render_buffer::operator=(Renderer::Render_buf
   if(this != &render_buffer){
     release();
     std::swap(id, render_buffer.id);
-    std::swap(resolution, render_buffer.resolution);
   }
   return *this;
+}
+
+glm::ivec2 Renderer::Render_buffer::resolution() const
+{
+  glm::ivec2 res;
+  GLint w;
+  GLint h;
+  return glm::ivec2(w,h);
 }
 
 void Renderer::Render_buffer::release()

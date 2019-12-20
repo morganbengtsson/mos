@@ -94,7 +94,7 @@ private:
     Render_buffer & operator=(const Render_buffer &target) = delete;
     Render_buffer & operator=(Render_buffer &&target) noexcept;
     GLuint id{0};
-   glm::ivec2 resolution;
+    glm::ivec2 resolution() const;
   private:
     void release();
   };
