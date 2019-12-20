@@ -1447,12 +1447,11 @@ Renderer::Render_buffer &Renderer::Render_buffer::operator=(Renderer::Render_buf
   return *this;
 }
 
-glm::ivec2 Renderer::Render_buffer::resolution() const
-{
+glm::ivec2 Renderer::Render_buffer::resolution() const {
   glm::ivec2 res;
-  GLint w;
-  GLint h;
-  return glm::ivec2(w,h);
+  glGetNamedRenderbufferParameteriv(id, GL_RENDERBUFFER_WIDTH, &res.x);
+  glGetNamedRenderbufferParameteriv(id, GL_RENDERBUFFER_HEIGHT, &res.y);
+  return res;
 }
 
 void Renderer::Render_buffer::release()
@@ -1479,14 +1478,14 @@ Renderer::Environment_map_target::Environment_map_target(
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution.x * render_buffer.resolution.y; i++) {
+    for (int i = 0; i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB16F,
-                 render_buffer.resolution.x, render_buffer.resolution.y, 0, GL_RGB,
+                 render_buffer.resolution().x, render_buffer.resolution().y, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -1508,14 +1507,14 @@ Renderer::Environment_map_target::Environment_map_target(
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution.x * render_buffer.resolution.y; i++) {
+    for (int i = 0; i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                  GL_RGB,
-                 render_buffer.resolution.x, render_buffer.resolution.y, 0, GL_RGB,
+                 render_buffer.resolution().x, render_buffer.resolution().y, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
