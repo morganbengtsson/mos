@@ -1457,7 +1457,7 @@ Renderer::Frame_buffer::Frame_buffer(const Texture_target & target,
 }
 
 Renderer::Frame_buffer::~Frame_buffer() {
-  glDeleteFramebuffers(1, &id);
+  release();
 }
 
 Renderer::Frame_buffer::Frame_buffer(Renderer::Frame_buffer &&frame_buffer) noexcept : id(frame_buffer.id) {
