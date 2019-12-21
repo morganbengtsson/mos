@@ -1405,7 +1405,7 @@ Renderer::Render_buffer::Render_buffer(const glm::ivec2 &res) : id(generate(glGe
 Renderer::Render_buffer::Render_buffer(int resolution) : Render_buffer(glm::ivec2(resolution, resolution)){}
 
 Renderer::Render_buffer::~Render_buffer() {
-  glDeleteRenderbuffers(1, &id);
+  release();
 }
 
 Renderer::Render_buffer::Render_buffer(Renderer::Render_buffer &&render_buffer) noexcept : id(render_buffer.id) {
