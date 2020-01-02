@@ -12,10 +12,10 @@ void main()
 {
   vec2 tex_offset = 1.0 / textureSize(color_sampler, 0);
   vec4 tex = texture(color_sampler, frag_uv);
-  vec3 result = tex.rgb * weight[0];
+  vec4 result = tex * weight[0];
   for(int i = 1; i < 5; ++i) {
-    result += texture(color_sampler, frag_uv + vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgb * weight[i];
-    result += texture(color_sampler, frag_uv - vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgb * weight[i];
+    result += texture(color_sampler, frag_uv + vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgba * weight[i];
+    result += texture(color_sampler, frag_uv - vec2(horizontal ? tex_offset.x * i : 0, horizontal ? 0 : tex_offset.y * i)).rgba * weight[i];
   }
-  color = vec4(clamp(result, vec3(0.0), vec3(1.0)), tex.a);
+  color = vec4(clamp(result, vec4(0.0), vec4(1.0)));
 }
