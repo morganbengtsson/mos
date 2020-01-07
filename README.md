@@ -26,7 +26,6 @@ MOS is a lightweight cross-platform game engine/library, written in modern C++.
 
 ![Screenshot](https://raw.githubusercontent.com/morganbengtsson/mos-skeleton/master/screenshot.png)
 ![Screenshot2](https://github.com/morganbengtsson/mos/blob/master/doc/screenshot2.png?raw=true)
-![Screenshot3](https://github.com/morganbengtsson/mos/blob/master/doc/screenshot.png?raw=true)
 
 # Companion projects
 
