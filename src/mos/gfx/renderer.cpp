@@ -1874,7 +1874,7 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
 }
 
 Renderer::Texture_buffer_2D::~Texture_buffer_2D() {
-  glDeleteTextures(1, &texture);
+  release();
 }
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(Renderer::Texture_buffer_2D &&buffer) noexcept : texture(buffer.texture) {
