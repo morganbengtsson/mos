@@ -778,6 +778,8 @@ void Renderer::load(const Mesh &mesh) {
     glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
                  mesh.vertices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    array_buffers_.at(mesh.id()).modified = mesh.vertices.modified();
+
   }
   if (mesh.triangles.size() > 0 && mesh.triangles.modified() > element_array_buffers_.at(mesh.id()).modified) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_array_buffers_.at(mesh.id()).id);
@@ -786,6 +788,7 @@ void Renderer::load(const Mesh &mesh) {
                  mesh.triangles.data(),
                  GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    element_array_buffers_.at(mesh.id()).modified = mesh.triangles.modified();
   }
 }
 
