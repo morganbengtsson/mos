@@ -26,7 +26,7 @@ namespace gfx {
 class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLAD. */
-  explicit Renderer(const glm::ivec2 &resolution);
+  explicit Renderer(const glm::ivec2 &resolution, const int samples = 1);
   Renderer(const Renderer &renderer) = delete;
   Renderer(const Renderer &&renderer) = delete;
   Renderer & operator=(const Renderer & renderer) = delete;
@@ -360,7 +360,7 @@ private:
   };
 
   struct Standard_target {
-    Standard_target(const glm::ivec2 &resolution, const int samples = 1);
+    Standard_target(const glm::ivec2 &resolution, const int samples);
     ~Standard_target();
     Standard_target(const Standard_target &target) = delete;
     Standard_target(Standard_target &&target) = delete;

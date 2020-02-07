@@ -78,8 +78,8 @@ message_callback(GLenum source,
   }
 }
 
-Renderer::Renderer(const glm::ivec2 &resolution)
-    : context_(gladLoadGL()),standard_target_(resolution), temp_target_(resolution / 4, GL_RGBA16F),
+Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
+    : context_(gladLoadGL()), standard_target_(resolution, samples), temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
       screen_target_(resolution, GL_R11F_G11F_B10F),
       bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
