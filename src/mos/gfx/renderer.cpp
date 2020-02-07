@@ -137,8 +137,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
   clear(color);
 }
 
-Renderer::~Renderer() {}
-
 void Renderer::load(const Model &model) {
   load(model.mesh);
   load(model.material.albedo.texture);

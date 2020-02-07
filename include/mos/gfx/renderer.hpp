@@ -31,7 +31,7 @@ public:
   Renderer(const Renderer &&renderer) = delete;
   Renderer & operator=(const Renderer & renderer) = delete;
   Renderer & operator=(const Renderer && renderer) = delete;
-  ~Renderer();
+  ~Renderer() = default;
 
   /** Loads a model into renderers own memory. */
   void load(const Model &model);
