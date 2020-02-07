@@ -360,7 +360,7 @@ private:
   };
 
   struct Standard_target {
-    Standard_target(const glm::ivec2 &resolution);
+    Standard_target(const glm::ivec2 &resolution, const int samples = 1);
     ~Standard_target();
     Standard_target(const Standard_target &target) = delete;
     Standard_target(Standard_target &&target) = delete;

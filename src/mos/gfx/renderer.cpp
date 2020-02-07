@@ -1556,19 +1556,19 @@ Renderer::Environment_map_target::~Environment_map_target() {
   glDeleteFramebuffers(1, &frame_buffer);
 }
 
-Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution)
+Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution, const int samples)
     : frame_buffer(generate(glGenFramebuffers)),
       color_texture(generate(glGenTextures)),
       depth_texture(generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
-  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
+  glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGBA16F, resolution.x, resolution.y, GL_TRUE);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_texture, 0);
 
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
-  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
+  glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_DEPTH_COMPONENT24, resolution.x, resolution.y, true);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER,
                          GL_DEPTH_ATTACHMENT,
