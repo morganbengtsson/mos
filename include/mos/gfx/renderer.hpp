@@ -26,7 +26,7 @@ namespace gfx {
 class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLAD. */
-  Renderer(const glm::vec4 &color, const glm::ivec2 &resolution);
+  Renderer(const glm::ivec2 &resolution);
   Renderer(const Renderer &renderer) = delete;
   Renderer(const Renderer &&renderer) = delete;
   Renderer & operator=(const Renderer & renderer) = delete;

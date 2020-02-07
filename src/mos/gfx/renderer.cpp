@@ -78,7 +78,7 @@ message_callback(GLenum source,
   }
 }
 
-Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
+Renderer::Renderer(const glm::ivec2 &resolution)
     : context_(gladLoadGL()),standard_target_(resolution), temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
       screen_target_(resolution, GL_R11F_G11F_B10F),
@@ -134,7 +134,6 @@ Renderer::Renderer(const glm::vec4 &color, const glm::ivec2 &resolution)
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  clear(color);
 }
 
 void Renderer::load(const Model &model) {
