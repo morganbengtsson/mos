@@ -396,8 +396,6 @@ private:
     const glm::ivec2 resolution;
   };
 
-
-
   struct Shadow_map_target {
     explicit Shadow_map_target(const Render_buffer &render_buffer);
     ~Shadow_map_target();
