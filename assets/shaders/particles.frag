@@ -59,6 +59,7 @@ void main() {
     bool has_albedo_map = textureSize(tex, 0).x != 1;
     vec4 albedo_from_map = texture(tex, gl_PointCoord);
     vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
+    albedo.a = 0.5 - length(temp);
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
@@ -97,5 +98,5 @@ void main() {
         ambient += clamp(diffuse_environment, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    color = vec4(direct + ambient, albedo.a * fragment_opacity);
+    color = vec4(albedo.a * (direct + ambient), albedo.a * fragment_opacity);
 }
