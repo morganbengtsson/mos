@@ -52,6 +52,10 @@ void main() {
 
     vec3 V = normalize(camera.position - fragment_position);
 
+    vec2 temp = gl_PointCoord - vec2(0.5);
+    float f = dot(temp, temp);
+    if (f>0.25) discard;
+
     bool has_albedo_map = textureSize(tex, 0).x != 1;
     vec4 albedo_from_map = texture(tex, gl_PointCoord);
     vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
