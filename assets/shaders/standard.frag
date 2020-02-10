@@ -234,7 +234,6 @@ void main() {
           filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
         }
 
-
         const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
 
         vec3 refraction = vec3(0,0,0);

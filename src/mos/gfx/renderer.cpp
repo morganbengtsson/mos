@@ -109,7 +109,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
           Post_target(shadow_maps_render_buffer_.resolution(),
                       GL_RG32F)},
       environment_render_buffer_(128),
-      environment_maps_targets{
+      environment_maps_targets_{
           Environment_map_target(environment_render_buffer_),
           Environment_map_target(environment_render_buffer_)},
       propagate_target_(environment_render_buffer_) {
@@ -246,7 +246,7 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
 
   glActiveTexture(GL_TEXTURE6);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[1].texture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
 
   for (size_t i = 0; i < scene.environment_lights.size(); i++) {
     glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
@@ -325,6 +325,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
 
 void Renderer::render_particles(const Particle_clouds &clouds,
                                 const Lights &lights,
+                                const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
                                 const glm::ivec2 &resolution) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -377,6 +378,12 @@ void Renderer::render_particles(const Particle_clouds &clouds,
                                      : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
+    glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+    glUniform1i(particle_program_.environment_maps[0].map, 5);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
+    glUniform1i(particle_program_.environment_maps[1].map, 6);
+
     glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
     glUniformMatrix4fv(particle_program_.model_view, 1, GL_FALSE, &mv[0][0]);
     auto projection = camera.projection();
@@ -384,6 +391,16 @@ void Renderer::render_particles(const Particle_clouds &clouds,
     auto r = glm::vec2(resolution); // TODO: Remove.
     glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
 
+    for (size_t i = 0; i < environment_lights.size(); i++) {
+      glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
+                   glm::value_ptr(environment_lights.at(i).position()));
+      glUniform3fv(standard_program_.environment_maps.at(i).extent, 1,
+                   glm::value_ptr(environment_lights.at(i).extent()));
+      glUniform1fv(standard_program_.environment_maps.at(i).strength, 1,
+                   &environment_lights.at(i).strength);
+      glUniform1fv(standard_program_.environment_maps.at(i).falloff, 1,
+                   &environment_lights.at(i).falloff);
+    }
     for (size_t i = 0; i < lights.size(); i++) {
       glUniform3fv(particle_program_.lights.at(i).position, 1,
                    glm::value_ptr(glm::vec3(glm::vec4(lights.at(i).position(), 1.0f))));
@@ -635,12 +652,12 @@ void Renderer::render_shadow_maps(const Models &models, const Lights &lights) {
 }
 
 void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_color) {
-  for (size_t i = 0; i < environment_maps_targets.size(); i++) {
+  for (size_t i = 0; i < environment_maps_targets_.size(); i++) {
     if (scene.environment_lights.at(i).strength > 0.0f) {
-      GLuint frame_buffer_id = environment_maps_targets.at(i).frame_buffer;
+      GLuint frame_buffer_id = environment_maps_targets_.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
-      auto texture_id = environment_maps_targets.at(i).texture;
+      auto texture_id = environment_maps_targets_.at(i).texture;
 
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_.at(i), texture_id, 0);
@@ -648,7 +665,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glFramebufferTexture2D(GL_FRAMEBUFFER,
                              GL_COLOR_ATTACHMENT1,
                              GL_TEXTURE_CUBE_MAP_POSITIVE_X + cube_camera_index_.at(i),
-                             environment_maps_targets.at(i).albedo,
+                             environment_maps_targets_.at(i).albedo,
                              0);
 
       clear(clear_color);
@@ -749,11 +766,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].texture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].texture);
   glUniform1i(propagate_program_.environment_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets[0].albedo);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].albedo);
   glUniform1i(propagate_program_.environment_albedo_sampler, 1);
 
   glUniform1iv(propagate_program_.side, 1, &i);
@@ -893,7 +910,11 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-    render_particles(scene.particle_clouds, scene.lights, scene.camera, resolution);
+    render_particles(scene.particle_clouds,
+                     scene.lights,
+                     scene.environment_lights,
+                     scene.camera,
+                     resolution);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
@@ -1205,6 +1226,18 @@ Renderer::Particle_program::Particle_program() {
     lights.at(i).direction =
         glGetUniformLocation(program, std::string("lights[" + std::to_string(i) + "].direction").c_str());
 
+  }
+  for (size_t i = 0; i < environment_maps.size(); i++) {
+    environment_maps.at(i).map =
+        glGetUniformLocation(program, std::string("environment_samplers[" + std::to_string(i) + "]").c_str());
+    environment_maps.at(i).position =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].position").c_str());
+    environment_maps.at(i).extent =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].extent").c_str());
+    environment_maps.at(i).strength =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].strength").c_str());
+    environment_maps.at(i).falloff =
+        glGetUniformLocation(program, std::string("environments[" + std::to_string(i) + "].falloff").c_str());
   }
 }
 

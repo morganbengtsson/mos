@@ -17,6 +17,13 @@ struct Camera {
     ivec2 resolution;
 };
 
+struct Environment {
+    vec3 position;
+    vec3 extent;
+    float strength;
+    float falloff;
+};
+
 in vec3 fragment_position;
 in vec4 fragment_color;
 in float fragment_opacity;
@@ -25,6 +32,19 @@ layout(location = 0) out vec4 color;
 uniform sampler2D tex;
 uniform Light[4] lights;
 uniform Camera camera;
+uniform Environment[2] environments;
+uniform samplerCube[2] environment_samplers;
+
+bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
+  vec3 mi = position - extent;
+  vec3 ma = position + extent;
+  return (mi.x <= point.x
+      && point.x <= ma.x
+      && mi.y <= point.y
+      && point.y <= ma.y
+      && mi.z <= point.z
+      && point.z <= ma.z);
+}
 
 void main() {
     vec3 Lo = vec3(0.0, 0.0, 0.0);
@@ -54,8 +74,27 @@ void main() {
         Lo += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
       }
     }
-    if (Lo.x < 0.9){
-      discard;
+    vec3 ambient = vec3(0.0, 0.0, 0.0);
+    float attenuation = 0.0f;
+
+    for (int i = 0; i < environments.length(); i++) {
+      if (environments[i].strength > 0.0 && inside_box(fragment_position, environments[i].position, environments[i].extent)) {
+
+        const float num_levels = textureQueryLevels(environment_samplers[i]);
+        vec3 irradiance = textureLod(environment_samplers[i], vec3(1.0, 0.0, 0.0), num_levels).rgb;
+        irradiance += textureLod(environment_samplers[i], vec3(-1.0, 0.0, 0.0), num_levels).rgb;
+        irradiance += textureLod(environment_samplers[i], vec3(0.0, 1.0, 0.0), num_levels).rgb;
+        irradiance += textureLod(environment_samplers[i], vec3(0.0, -1.0, 0.0), num_levels).rgb;
+        irradiance += textureLod(environment_samplers[i], vec3(0.0, 0.0, 1.0), num_levels).rgb;
+        irradiance += textureLod(environment_samplers[i], vec3(0.0, 0.0, -1.0), num_levels).rgb;
+        irradiance /= 6.0;
+
+        const vec3 diffuse_environment = irradiance * albedo.rgb * environments[i].strength;
+        ambient += clamp(diffuse_environment, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+      }
     }
-    color = vec4(Lo, albedo.a * fragment_opacity);
+    if (Lo.x < 0.9){
+      //discard;
+    }
+    color = vec4(Lo + ambient, albedo.a * fragment_opacity);
 }

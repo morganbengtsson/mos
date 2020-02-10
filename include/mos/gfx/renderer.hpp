@@ -204,6 +204,15 @@ private:
     GLint camera_position;
     GLint camera_far{};
     GLint camera_near{};
+
+    struct Environment_uniforms {
+      GLint map;
+      GLint position;
+      GLint extent;
+      GLint strength;
+      GLint falloff;
+    };
+    std::array<Environment_uniforms, 2> environment_maps {};
     std::array<Light_uniforms, 4> lights{};
   };
 
@@ -459,6 +468,7 @@ private:
 
   void render_particles(const Particle_clouds &clouds,
                         const Lights &lights,
+                        const Environment_lights &environment_lights,
                         const mos::gfx::Camera &camera,
                         const glm::ivec2 &resolution);
 
@@ -540,7 +550,7 @@ private:
 
   /** Environment map targets. */
   const Render_buffer environment_render_buffer_;
-  const std::array<Environment_map_target, 2> environment_maps_targets;
+  const std::array<Environment_map_target, 2> environment_maps_targets_;
   const Environment_map_target propagate_target_;
 };
 }
