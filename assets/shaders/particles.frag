@@ -47,7 +47,7 @@ bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
 }
 
 void main() {
-    vec3 Lo = vec3(0.0, 0.0, 0.0);
+    vec3 direct = vec3(0.0, 0.0, 0.0);
     vec3 N = normalize(-fragment_position);
 
     vec3 V = normalize(camera.position - fragment_position);
@@ -71,7 +71,7 @@ void main() {
         float cos_dir = dot(L, -light.direction);
         float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-        Lo += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
+       direct += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
       }
     }
     vec3 ambient = vec3(0.0, 0.0, 0.0);
@@ -93,8 +93,5 @@ void main() {
         ambient += clamp(diffuse_environment, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    if (Lo.x < 0.9){
-      //discard;
-    }
-    color = vec4(Lo + ambient, albedo.a * fragment_opacity);
+    color = vec4(direct + ambient, albedo.a * fragment_opacity);
 }
