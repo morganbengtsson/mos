@@ -32,7 +32,9 @@ void main() {
 
     vec3 V = normalize(camera.position - fragment_position);
 
-    vec4 albedo = texture(tex, gl_PointCoord);
+    bool has_albedo_map = textureSize(tex, 0).x != 1;
+    vec4 albedo_from_map = texture(tex, gl_PointCoord);
+    vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
@@ -55,5 +57,5 @@ void main() {
     if (Lo.x < 0.9){
       discard;
     }
-    color = vec4(Lo, albedo.a * fragment_color.a * fragment_opacity);
+    color = vec4(Lo, albedo.a * fragment_opacity);
 }
