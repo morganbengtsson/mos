@@ -10,11 +10,13 @@ layout(location = 2) in float size;
 layout(location = 3) in float alpha;
 out vec3 fragment_position;
 out vec3 fragment_color;
+out vec2 fragment_uv;
 out float fragment_alpha;
 
 void main() {
     vec4 eye_pos = model_view * vec4(position, 1.0);
 
+    fragment_uv = vec2(0.5, float(gl_VertexID % 2 == 0));
     fragment_color = color;
     fragment_alpha = alpha;
     fragment_position = position;
