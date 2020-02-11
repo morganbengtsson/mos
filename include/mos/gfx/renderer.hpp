@@ -315,7 +315,7 @@ private:
   /** Uniforms for the standard shader. */
   class Standard_program : public Program {
   public:
-    Standard_program();
+    Standard_program(const Shader & functions_shader);
     GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
@@ -507,6 +507,7 @@ private:
 
   const bool context_;
 
+  const Shader functions_shader_;
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;
   const Environment_program environment_program_;
