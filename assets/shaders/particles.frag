@@ -25,8 +25,8 @@ struct Environment {
 };
 
 in vec3 fragment_position;
-in vec4 fragment_color;
-in float fragment_opacity;
+in vec3 fragment_color;
+in float fragment_alpha;
 layout(location = 0) out vec4 color;
 
 uniform sampler2D texture_sampler;
@@ -58,9 +58,9 @@ void main() {
 
     bool has_albedo_map = textureSize(texture_sampler, 0).x != 1;
     vec4 albedo_from_map = texture(texture_sampler, gl_PointCoord);
-    vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
+    vec3 albedo = has_albedo_map ? albedo_from_map.rgb : fragment_color.rgb;
 
-    float alpha = fragment_opacity * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
+    float alpha = fragment_alpha * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
