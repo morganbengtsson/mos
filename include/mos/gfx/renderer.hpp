@@ -9,7 +9,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/text.hpp>
-#include <mos/gfx/particle_cloud.hpp>
+#include <mos/gfx/particles.hpp>
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/camera.hpp>
@@ -101,7 +101,7 @@ private:
 
   class Vertex_array {
   public:
-    explicit Vertex_array(const Particle_cloud &particle_cloud,
+    explicit Vertex_array(const Particles &particle_cloud,
                           std::unordered_map<unsigned int, Buffer> &array_buffers);
     explicit Vertex_array(const Mesh & mesh,
                           std::unordered_map<unsigned int, Buffer> &array_buffers,
