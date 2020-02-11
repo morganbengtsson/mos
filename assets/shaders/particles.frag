@@ -73,7 +73,7 @@ void main() {
 
         vec3 kD = vec3(1.0);
 
-        float NdotL = 1.0;
+        float NdotL = 0.05; // Magic?
         float cos_dir = dot(L, -light.direction);
         float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
