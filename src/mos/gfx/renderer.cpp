@@ -82,7 +82,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
     : context_(gladLoadGL()),
       functions_shader_(text("assets/shaders/functions.frag"), GL_FRAGMENT_SHADER, "functions"),
       standard_program_(functions_shader_),
-      point_cloud_program_(functions_shader_),
+      point_cloud_program_("points", functions_shader_),
       standard_target_(resolution, samples),
       temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
@@ -1194,8 +1194,7 @@ Renderer::Standard_program::Standard_program(const Shader & functions_shader) {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 
-Renderer::Point_cloud_program::Point_cloud_program(const Shader &functions_shader) {
-  std::string name = "particles";
+Renderer::Point_cloud_program::Point_cloud_program(const std::string & name, const Shader &functions_shader) {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);

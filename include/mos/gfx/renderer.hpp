@@ -193,7 +193,7 @@ private:
 
   /** Uniforms for the particle shader program. */
   struct Point_cloud_program : public Program {
-    explicit Point_cloud_program(const Shader &functions_shader);
+    explicit Point_cloud_program(const std::string &name, const Shader &functions_shader);
     GLint model_view_projection;
     GLint model_view;
     GLint model{};
