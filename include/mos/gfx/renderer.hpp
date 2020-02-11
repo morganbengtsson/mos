@@ -9,7 +9,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/text.hpp>
-#include <mos/gfx/particles.hpp>
+#include <mos/gfx/point_cloud.hpp>
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/camera.hpp>
@@ -101,7 +101,7 @@ private:
 
   class Vertex_array {
   public:
-    explicit Vertex_array(const Particles &particle_cloud,
+    explicit Vertex_array(const Point_cloud &point_cloud,
                           std::unordered_map<unsigned int, Buffer> &array_buffers);
     explicit Vertex_array(const Mesh & mesh,
                           std::unordered_map<unsigned int, Buffer> &array_buffers,
@@ -466,7 +466,7 @@ private:
   void render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera);
 
-  void render_particles(const Particle_clouds &clouds,
+  void render_particles(const Point_clouds &clouds,
                         const Lights &lights,
                         const Environment_lights &environment_lights,
                         const mos::gfx::Camera &camera,

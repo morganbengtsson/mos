@@ -328,7 +328,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
   glBindVertexArray(0);
 }
 
-void Renderer::render_particles(const Particle_clouds &clouds,
+void Renderer::render_particles(const Point_clouds &clouds,
                                 const Lights &lights,
                                 const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
@@ -917,7 +917,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-    render_particles(scene.particle_clouds,
+    render_particles(scene.point_clouds,
                      scene.lights,
                      scene.environment_lights,
                      scene.camera,
@@ -1754,17 +1754,17 @@ Renderer::Box::~Box(){
 }
 
 
-mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Particles &particle_cloud, std::unordered_map<unsigned int, Buffer> &array_buffers) {
+mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Point_cloud &point_cloud, std::unordered_map<unsigned int, Buffer> &array_buffers) {
   glGenVertexArrays(1, &id);
   glBindVertexArray(id);
-  if (array_buffers.find(particle_cloud.id()) == array_buffers.end()) {
-    array_buffers.insert({particle_cloud.id(), Buffer(GL_ARRAY_BUFFER,
-                                                  particle_cloud.points.size() * sizeof(Point),
-                                                  particle_cloud.points.data(),
+  if (array_buffers.find(point_cloud.id()) == array_buffers.end()) {
+    array_buffers.insert({point_cloud.id(), Buffer(GL_ARRAY_BUFFER,
+                                                  point_cloud.points.size() * sizeof(Point),
+                                                  point_cloud.points.data(),
                                                   GL_STREAM_DRAW,
-                                                  particle_cloud.points.modified())});
+                                                  point_cloud.points.modified())});
   }
-  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(particle_cloud.id()).id);
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(point_cloud.id()).id);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point),
                         reinterpret_cast<const void *>(sizeof(glm::vec3)));
