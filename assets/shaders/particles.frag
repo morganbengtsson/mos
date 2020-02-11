@@ -60,7 +60,7 @@ void main() {
     vec4 albedo_from_map = texture(tex, gl_PointCoord);
     vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
 
-    float alpha = fragment_opacity * (albedo_from_map.a + float(!has_albedo_map)) * (0.5 - length(temp));
+    float alpha = fragment_opacity * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];
