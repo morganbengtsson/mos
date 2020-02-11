@@ -45,13 +45,14 @@ void main() {
 
     vec2 temp = gl_PointCoord - vec2(0.5);
     float f = dot(temp, temp);
-    if (f>0.25) discard;
+    //if (f>0.25) discard;
 
     bool has_albedo_map = textureSize(texture_sampler, 0).x != 1;
     vec4 albedo_from_map = texture(texture_sampler, gl_PointCoord); //TODO: fix UV
     vec3 albedo = has_albedo_map ? albedo_from_map.rgb : fragment_color.rgb;
 
-    float alpha = fragment_alpha * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
+    //float alpha = fragment_alpha * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
+    float alpha = fragment_alpha;
 
     for(int i = 0; i < lights.length(); i++) {
       Light light = lights[i];

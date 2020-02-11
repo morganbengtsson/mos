@@ -192,8 +192,8 @@ private:
   };
 
   /** Uniforms for the particle shader program. */
-  struct Point_cloud_program : public Program {
-    explicit Point_cloud_program(const std::string &name, const Shader &functions_shader);
+  struct Cloud_program : public Program {
+    explicit Cloud_program(const std::string &name, const Shader &functions_shader);
     GLint model_view_projection;
     GLint model_view;
     GLint model{};
@@ -471,7 +471,7 @@ private:
                     const Environment_lights &environment_lights,
                     const mos::gfx::Camera &camera,
                     const glm::ivec2 &resolution,
-                    const Point_cloud_program &program,
+                    const Cloud_program &program,
                     const GLenum &draw_mode);
 
   void render_model(const Model &model,
@@ -513,7 +513,8 @@ private:
   const Propagate_program propagate_program_;
   const Standard_program standard_program_;
   const Environment_program environment_program_;
-  const Point_cloud_program point_cloud_program_;
+  const Cloud_program point_cloud_program_;
+  const Cloud_program line_cloud_program_;
   const Box_program box_program_;
   const Depth_program depth_program_;
   const Bloom_program bloom_program_;

@@ -31,6 +31,7 @@ public:
 
   Models models;
   Point_clouds point_clouds;
+  Point_clouds line_clouds;
   Boxes boxes;
   Lights lights;
   Camera camera;

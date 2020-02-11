@@ -83,6 +83,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
       functions_shader_(text("assets/shaders/functions.frag"), GL_FRAGMENT_SHADER, "functions"),
       standard_program_(functions_shader_),
       point_cloud_program_("points", functions_shader_),
+      line_cloud_program_("lines", functions_shader_),
       standard_target_(resolution, samples),
       temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
@@ -333,7 +334,7 @@ void Renderer::render_clouds(const Point_clouds &clouds,
                                 const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
                                 const glm::ivec2 &resolution,
-                                const Point_cloud_program &program,
+                                const Cloud_program &program,
                              const GLenum &draw_mode) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   glDepthMask(GL_FALSE);
@@ -927,6 +928,14 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
                      point_cloud_program_,
                      GL_POINTS);
 
+    render_clouds(scene.line_clouds,
+                  scene.lights,
+                  scene.environment_lights,
+                  scene.camera,
+                  resolution,
+                  line_cloud_program_,
+                  GL_LINES);
+
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
@@ -1194,7 +1203,7 @@ Renderer::Standard_program::Standard_program(const Shader & functions_shader) {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 
-Renderer::Point_cloud_program::Point_cloud_program(const std::string & name, const Shader &functions_shader) {
+Renderer::Cloud_program::Cloud_program(const std::string & name, const Shader &functions_shader) {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
