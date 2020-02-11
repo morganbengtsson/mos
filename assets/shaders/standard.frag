@@ -89,6 +89,7 @@ float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 fresnel_schlick(float cosTheta, vec3 F0);
 vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
 float fog_attenuation(const float dist, const float factor);
+bool inside_box(const vec3 point, const vec3 position, const vec3 extent);
 
 vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_level, const float angle, const float step){
   int num_samples = 0;
@@ -106,16 +107,6 @@ vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_lev
   return filtered;
 }
 
-bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
-  vec3 mi = position - extent;
-  vec3 ma = position + extent;
-  return (mi.x <= point.x
-      && point.x <= ma.x
-      && mi.y <= point.y
-      && point.y <= ma.y
-      && mi.z <= point.z
-      && point.z <= ma.z);
-}
 
 float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent, const float falloff) {
   const float distance_x = 1.0 - smoothstep(position.x + extent.x - falloff, position.x + extent.x, abs(point.x));

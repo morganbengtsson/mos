@@ -35,16 +35,7 @@ uniform Camera camera;
 uniform Environment[2] environments;
 uniform samplerCube[2] environment_samplers;
 
-bool inside_box(const vec3 point, const vec3 position, const vec3 extent) {
-  vec3 mi = position - extent;
-  vec3 ma = position + extent;
-  return (mi.x <= point.x
-      && point.x <= ma.x
-      && mi.y <= point.y
-      && point.y <= ma.y
-      && mi.z <= point.z
-      && point.z <= ma.z);
-}
+bool inside_box(const vec3 point, const vec3 position, const vec3 extent);
 
 void main() {
     vec3 direct = vec3(0.0, 0.0, 0.0);
