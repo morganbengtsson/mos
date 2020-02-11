@@ -193,7 +193,7 @@ private:
 
   /** Uniforms for the particle shader program. */
   struct Particle_program : public Program {
-    Particle_program(const Shader &functions_shader);
+    explicit Particle_program(const Shader &functions_shader);
     GLint model_view_projection;
     GLint model_view;
     GLint model{};
@@ -315,7 +315,7 @@ private:
   /** Uniforms for the standard shader. */
   class Standard_program : public Program {
   public:
-    Standard_program(const Shader & functions_shader);
+    explicit Standard_program(const Shader & functions_shader);
     GLint model_view_projection;
     GLint model_matrix;
     GLint normal_matrix;
