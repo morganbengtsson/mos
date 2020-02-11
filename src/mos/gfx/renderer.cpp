@@ -372,10 +372,10 @@ void Renderer::render_particles(const Particle_clouds &clouds,
 
     glBindVertexArray(vertex_arrays_.at(particles.id()).id);
 
-    load(particles.emission_map);
+    load(particles.texture);
     glActiveTexture(GL_TEXTURE10);
-    glBindTexture(GL_TEXTURE_2D, particles.emission_map
-                                 ? textures_.at(particles.emission_map->id()).texture
+    glBindTexture(GL_TEXTURE_2D, particles.texture
+                                 ? textures_.at(particles.texture->id()).texture
                                      : black_texture_.texture);
     glUniform1i(particle_program_.texture, 10);
 
@@ -1210,7 +1210,7 @@ Renderer::Particle_program::Particle_program() {
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
   model_view = glGetUniformLocation(program, "model_view");
   projection = glGetUniformLocation(program, "projection");
-  texture = glGetUniformLocation(program, "tex");
+  texture = glGetUniformLocation(program, "texture_sampler");
   resolution = glGetUniformLocation(program, "resolution");
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");

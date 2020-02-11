@@ -6,7 +6,7 @@ namespace gfx {
 
 Particle_cloud::Particle_cloud(Shared_texture_2D emission_map,
                                Particles particles) :
-  emission_map(std::move(emission_map)),
+  texture(std::move(emission_map)),
   particles(std::move(particles)) {}
 
 void Particle_cloud::sort(const glm::vec3 &position) {

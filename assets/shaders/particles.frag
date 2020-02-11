@@ -29,7 +29,7 @@ in vec4 fragment_color;
 in float fragment_opacity;
 layout(location = 0) out vec4 color;
 
-uniform sampler2D tex;
+uniform sampler2D texture_sampler;
 uniform Light[4] lights;
 uniform Camera camera;
 uniform Environment[2] environments;
@@ -56,8 +56,8 @@ void main() {
     float f = dot(temp, temp);
     if (f>0.25) discard;
 
-    bool has_albedo_map = textureSize(tex, 0).x != 1;
-    vec4 albedo_from_map = texture(tex, gl_PointCoord);
+    bool has_albedo_map = textureSize(texture_sampler, 0).x != 1;
+    vec4 albedo_from_map = texture(texture_sampler, gl_PointCoord);
     vec4 albedo = has_albedo_map ? albedo_from_map.rgba : fragment_color.rgba;
 
     float alpha = fragment_opacity * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
