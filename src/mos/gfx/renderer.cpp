@@ -329,7 +329,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
   glBindVertexArray(0);
 }
 
-void Renderer::render_clouds(const Point_clouds &clouds,
+void Renderer::render_clouds(const Clouds &clouds,
                                 const Lights &lights,
                                 const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
@@ -1766,17 +1766,17 @@ Renderer::Box::~Box(){
 }
 
 
-mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Point_cloud &point_cloud, std::unordered_map<unsigned int, Buffer> &array_buffers) {
+mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Cloud &cloud, std::unordered_map<unsigned int, Buffer> &array_buffers) {
   glGenVertexArrays(1, &id);
   glBindVertexArray(id);
-  if (array_buffers.find(point_cloud.id()) == array_buffers.end()) {
-    array_buffers.insert({point_cloud.id(), Buffer(GL_ARRAY_BUFFER,
-                                                  point_cloud.points.size() * sizeof(Point),
-                                                  point_cloud.points.data(),
+  if (array_buffers.find(cloud.id()) == array_buffers.end()) {
+    array_buffers.insert({cloud.id(), Buffer(GL_ARRAY_BUFFER,
+                                                  cloud.points.size() * sizeof(Point),
+                                                  cloud.points.data(),
                                                   GL_STREAM_DRAW,
-                                                  point_cloud.points.modified())});
+                                                  cloud.points.modified())});
   }
-  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(point_cloud.id()).id);
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(cloud.id()).id);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
   glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point),
                         reinterpret_cast<const void *>(sizeof(glm::vec3)));

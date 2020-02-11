@@ -7,7 +7,7 @@
 #include <mos/gfx/fog.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/boxes.hpp>
-#include <mos/gfx/point_clouds.hpp>
+#include <mos/gfx/clouds.hpp>
 #include <mos/gfx/cube_camera.hpp>
 #include <mos/gfx/environment_lights.hpp>
 #include <mos/gfx/texture_targets.hpp>
@@ -30,8 +30,8 @@ public:
         Boxes boxes = Boxes());
 
   Models models;
-  Point_clouds point_clouds;
-  Point_clouds line_clouds;
+  Clouds point_clouds;
+  Clouds line_clouds;
   Boxes boxes;
   Lights lights;
   Camera camera;
