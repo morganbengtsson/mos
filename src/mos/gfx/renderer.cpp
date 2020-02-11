@@ -82,7 +82,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
     : context_(gladLoadGL()),
       functions_shader_(text("assets/shaders/functions.frag"), GL_FRAGMENT_SHADER, "functions"),
       standard_program_(functions_shader_),
-      particle_program_(functions_shader_),
+      point_cloud_program_(functions_shader_),
       standard_target_(resolution, samples),
       temp_target_(resolution / 4, GL_RGBA16F),
       multisample_target_(resolution, GL_RGBA16F),
@@ -332,7 +332,9 @@ void Renderer::render_clouds(const Point_clouds &clouds,
                                 const Lights &lights,
                                 const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
-                                const glm::ivec2 &resolution) {
+                                const glm::ivec2 &resolution,
+                                const Point_cloud_program &program,
+                             const GLenum &draw_mode) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   glDepthMask(GL_FALSE);
   for (auto &particles : clouds) {
@@ -373,7 +375,7 @@ void Renderer::render_clouds(const Point_clouds &clouds,
     glm::mat4 mv = camera.view();
     glm::mat4 mvp = camera.projection() * camera.view();
 
-    glUseProgram(particle_program_.program);
+    glUseProgram(program.program);
 
     glBindVertexArray(vertex_arrays_.at(particles.id()).id);
 
@@ -382,20 +384,20 @@ void Renderer::render_clouds(const Point_clouds &clouds,
     glBindTexture(GL_TEXTURE_2D, particles.texture
                                  ? textures_.at(particles.texture->id()).texture
                                      : black_texture_.texture);
-    glUniform1i(particle_program_.texture, 10);
+    glUniform1i(program.texture, 10);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
-    glUniform1i(particle_program_.environment_maps[0].map, 5);
+    glUniform1i(program.environment_maps[0].map, 5);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
-    glUniform1i(particle_program_.environment_maps[1].map, 6);
+    glUniform1i(program.environment_maps[1].map, 6);
 
-    glUniformMatrix4fv(particle_program_.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
-    glUniformMatrix4fv(particle_program_.model_view, 1, GL_FALSE, &mv[0][0]);
+    glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(program.model_view, 1, GL_FALSE, &mv[0][0]);
     auto projection = camera.projection();
-    glUniformMatrix4fv(particle_program_.projection, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(program.projection, 1, GL_FALSE, glm::value_ptr(projection));
     auto r = glm::vec2(resolution); // TODO: Remove.
-    glUniform2fv(particle_program_.resolution, 1, glm::value_ptr(r));
+    glUniform2fv(program.resolution, 1, glm::value_ptr(r));
 
     for (size_t i = 0; i < environment_lights.size(); i++) {
       glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
@@ -408,29 +410,29 @@ void Renderer::render_clouds(const Point_clouds &clouds,
                    &environment_lights.at(i).falloff);
     }
     for (size_t i = 0; i < lights.size(); i++) {
-      glUniform3fv(particle_program_.lights.at(i).position, 1,
+      glUniform3fv(program.lights.at(i).position, 1,
                    glm::value_ptr(glm::vec3(glm::vec4(lights.at(i).position(), 1.0f))));
 
-      glUniform3fv(particle_program_.lights.at(i).color, 1, glm::value_ptr(lights.at(i).color));
-      glUniform1fv(particle_program_.lights.at(i).strength, 1, &lights.at(i).strength);
+      glUniform3fv(program.lights.at(i).color, 1, glm::value_ptr(lights.at(i).color));
+      glUniform1fv(program.lights.at(i).strength, 1, &lights.at(i).strength);
 
       auto view = lights.at(i).camera.view();
-      glUniformMatrix4fv(particle_program_.lights.at(i).view, 1, GL_FALSE,
+      glUniformMatrix4fv(program.lights.at(i).view, 1, GL_FALSE,
                          glm::value_ptr(view));
       auto projection = lights.at(i).camera.projection();
-      glUniformMatrix4fv(particle_program_.lights.at(i).projection, 1, GL_FALSE,
+      glUniformMatrix4fv(program.lights.at(i).projection, 1, GL_FALSE,
                          glm::value_ptr(projection));
 
       auto light_angle = lights.at(i).angle();
-      glUniform1fv(particle_program_.lights.at(i).angle, 1, &light_angle);
-      glUniform3fv(particle_program_.lights.at(i).direction, 1, glm::value_ptr(lights.at(i).direction()));
+      glUniform1fv(program.lights.at(i).angle, 1, &light_angle);
+      glUniform3fv(program.lights.at(i).direction, 1, glm::value_ptr(lights.at(i).direction()));
     }
 
     auto position = camera.position();
-    glUniform3fv(particle_program_.camera_position, 1, glm::value_ptr(position));
-    glUniform2iv(particle_program_.camera_resolution, 1, glm::value_ptr(resolution));
+    glUniform3fv(program.camera_position, 1, glm::value_ptr(position));
+    glUniform2iv(program.camera_resolution, 1, glm::value_ptr(resolution));
 
-    glDrawArrays(GL_POINTS, 0, particles.points.size());
+    glDrawArrays(draw_mode, 0, particles.points.size());
   }
   glDepthMask(GL_TRUE);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -921,7 +923,9 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
                      scene.lights,
                      scene.environment_lights,
                      scene.camera,
-                     resolution);
+                     resolution,
+                     point_cloud_program_,
+                     GL_POINTS);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
@@ -1190,7 +1194,7 @@ Renderer::Standard_program::Standard_program(const Shader & functions_shader) {
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 
-Renderer::Particle_program::Particle_program(const Shader &functions_shader) {
+Renderer::Point_cloud_program::Point_cloud_program(const Shader &functions_shader) {
   std::string name = "particles";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
