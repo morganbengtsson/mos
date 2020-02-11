@@ -328,7 +328,7 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
   glBindVertexArray(0);
 }
 
-void Renderer::render_particles(const Point_clouds &clouds,
+void Renderer::render_clouds(const Point_clouds &clouds,
                                 const Lights &lights,
                                 const Environment_lights &environment_lights,
                                 const mos::gfx::Camera &camera,
@@ -917,7 +917,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-    render_particles(scene.point_clouds,
+    render_clouds(scene.point_clouds,
                      scene.lights,
                      scene.environment_lights,
                      scene.camera,

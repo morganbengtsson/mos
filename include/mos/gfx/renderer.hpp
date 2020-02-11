@@ -466,7 +466,7 @@ private:
   void render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera);
 
-  void render_particles(const Point_clouds &clouds,
+  void render_clouds(const Point_clouds &clouds,
                         const Lights &lights,
                         const Environment_lights &environment_lights,
                         const mos::gfx::Camera &camera,
