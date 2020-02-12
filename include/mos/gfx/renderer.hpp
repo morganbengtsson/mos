@@ -227,19 +227,6 @@ private:
     GLint color_sampler;
   };
 
-  //TODO: rename
-  struct Depth_of_field_program : public Program {
-    Depth_of_field_program();
-    GLint color_sampler;
-    GLint blurred_color_sampler;
-    GLint depth_sampler;
-    GLint camera_far;
-    GLint camera_near;
-    GLint camera_focus_distance;
-    GLint camera_fstop;
-  };
-
-
   struct Compositing_program : public Program {
     Compositing_program();
     GLint color_sampler;
@@ -520,7 +507,6 @@ private:
   const Bloom_program bloom_program_;
   const Compositing_program compositing_program_;
   const Blur_program blur_program_;
-  const Depth_of_field_program depth_of_field_program_;
 
   Frame_buffers frame_buffers_;
   Render_buffers render_buffers_;

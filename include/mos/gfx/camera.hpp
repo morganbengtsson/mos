@@ -14,14 +14,12 @@ public:
   Camera(const glm::vec3 &position = glm::vec3(0.0f),
                const glm::vec3 &center = glm::vec3(0.0f),
                const glm::mat4 &projection = glm::mat4(1.0f),
-               const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
-               float fstop = 1.0f);
+               const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
   Camera(const glm::vec3 &position,
          const glm::mat4 &projection,
          const float &focus_distance,
-         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f),
-         float fstop = 1.0f);
+         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
   Camera(const std::string &directory,
         const std::string &path,
@@ -68,9 +66,6 @@ public:
 
   /** Get view matrix */
   glm::mat4 view() const;
-
-  /** Camera fstop for depth of field. */
-  float fstop;
 
 private:
   void calculate_view();

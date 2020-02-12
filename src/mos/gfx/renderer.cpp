@@ -1230,34 +1230,6 @@ Renderer::Box_program::Box_program() {
   model_view_projection = glGetUniformLocation(program, "model_view_projection");
 }
 
-Renderer::Depth_of_field_program::Depth_of_field_program() {
-  std::string name = "depth_of_field";
-  auto vert_source = text("assets/shaders/" + name + ".vert");
-  auto frag_source = text("assets/shaders/" + name + ".frag");
-
-  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
-  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
-
-  glAttachShader(program, vertex_shader.id);
-  glAttachShader(program, fragment_shader.id);
-  glBindAttribLocation(program, 0, "position");
-  glBindAttribLocation(program, 1, "uv");
-  link(name);
-  check(name);
-
-  glDetachShader(program, vertex_shader.id);
-  glDetachShader(program, fragment_shader.id);
-
-  color_sampler = glGetUniformLocation(program, "color_sampler");
-  blurred_color_sampler = glGetUniformLocation(program, "blurred_color_sampler");
-  depth_sampler = glGetUniformLocation(program, "depth_sampler");
-
-  camera_far = glGetUniformLocation(program, "camera_far");
-  camera_near = glGetUniformLocation(program, "camera_near");
-  camera_focus_distance = glGetUniformLocation(program, "camera_focus_distance");
-  camera_fstop = glGetUniformLocation(program, "camera_fstop");
-}
-
 Renderer::Bloom_program::Bloom_program() {
   std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");

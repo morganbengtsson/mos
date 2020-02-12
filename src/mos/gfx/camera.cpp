@@ -11,9 +11,8 @@ namespace mos {
 namespace gfx {
 
 Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
-               const glm::mat4 &projection, const glm::vec3 &up,
-               const float fstop)
-    : fstop(fstop), projection_(projection),
+               const glm::mat4 &projection, const glm::vec3 &up)
+    : projection_(projection),
       view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f)},
@@ -24,8 +23,8 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
 }
 
 Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
-               const float &focus_distance, const glm::vec3 &up, float fstop)
-    : fstop(fstop), projection_(projection),
+               const float &focus_distance, const glm::vec3 &up)
+    : projection_(projection),
       view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f)},
@@ -37,8 +36,7 @@ Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
 
 Camera::Camera(const std::string &directory, const std::string &path,
                const glm::mat4 &parent_transform)
-    : fstop(100.0f),
-      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
+    : view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f)},
       up_(glm::vec3(0.0f, 0.0f, 1.0f)) {
