@@ -531,9 +531,8 @@ private:
 
   const Standard_target standard_target_;
   const Blit_target multisample_target_;
-  const Post_target bloom_target_;
-  const Post_target post_target_;
-  const Post_target temp_target_;
+  const Post_target post_target0_;
+  const Post_target post_target1_;
 
   const Quad quad_;
   const Box box;

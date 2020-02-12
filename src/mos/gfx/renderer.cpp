@@ -86,9 +86,8 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
       line_cloud_program_("lines", functions_shader_),
       standard_target_(resolution, samples),
       multisample_target_(resolution, GL_RGBA16F),
-      bloom_target_(resolution / 4, GL_R11F_G11F_B10F),
-      post_target_(resolution / 4, GL_RGBA16F),
-      temp_target_(resolution / 4, GL_RGBA16F),
+      post_target0_(resolution / 4, GL_R11F_G11F_B10F),
+      post_target1_(resolution / 4, GL_R11F_G11F_B10F),
       quad_(),
       black_texture_(Texture_buffer_2D(GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
                                              std::array<unsigned char, 4>{0, 0, 0, 0}.data())),
@@ -935,8 +934,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
  }
 
   // Bloom
-  glViewport(0, 0, bloom_target_.resolution.x, bloom_target_.resolution.y);
-  glBindFramebuffer(GL_FRAMEBUFFER, bloom_target_.frame_buffer);
+  glViewport(0, 0, post_target0_.resolution.x, post_target0_.resolution.y);
+  glBindFramebuffer(GL_FRAMEBUFFER, post_target0_.frame_buffer);
 
   glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
@@ -946,7 +945,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  blur(bloom_target_.texture, post_target_, bloom_target_);
+  blur(post_target0_.texture, post_target1_, post_target0_);
 
   // Render to screen
   glViewport(0, 0, resolution.x, resolution.y);
@@ -962,7 +961,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, bloom_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, post_target0_.texture);
   glUniform1i(compositing_program_.bloom_sampler, 1);
 
   float strength = 0.1f;
