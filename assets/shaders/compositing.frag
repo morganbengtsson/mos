@@ -16,7 +16,7 @@ void main() {
   vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
 
   float r = rand(frag_uv);
-  color.rgb *= (1.0 - r * 0.1);
+  color.rgb *= (1.0 - r * 0.15);
 
   float exposure = 1.0;
   out_color = vec4(vec3(1.0) - exp(-color * exposure), 1.0);
