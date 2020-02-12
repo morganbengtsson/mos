@@ -350,14 +350,14 @@ void Renderer::render_clouds(const Clouds &clouds,
       }
       glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
-      glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point),
+      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point),
                             reinterpret_cast<const void *>(sizeof(glm::vec3)));
       glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
                             reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                sizeof(glm::vec4)));
+                                sizeof(glm::vec3)));
       glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
                             reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                sizeof(glm::vec4) + sizeof(float)));
+                                sizeof(glm::vec3) + sizeof(float)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableVertexAttribArray(0);
       glEnableVertexAttribArray(1);
@@ -1729,14 +1729,14 @@ mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Cloud &cloud, std
   }
   glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(cloud.id()).id);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point),
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point),
                         reinterpret_cast<const void *>(sizeof(glm::vec3)));
   glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
                         reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                                       sizeof(glm::vec4)));
+                                                       sizeof(glm::vec3)));
   glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
                         reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                                       sizeof(glm::vec4) + sizeof(float)));
+                                                       sizeof(glm::vec3) + sizeof(float)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
