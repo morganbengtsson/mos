@@ -910,10 +910,12 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
   clear(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 
+  glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
+  clear(glm::vec4(0.0f));
+
   //for (auto &scene : scenes) {
   for (auto & scene : scenes) {
-    glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-    clear(glm::vec4(0.0f));
+
     render_scene(scene.camera, scene, resolution);
     render_clouds(scene.point_clouds,
                   scene.lights,
@@ -935,45 +937,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
     glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-     //TODO: Include clear in blur
-    glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
-    clear(glm::vec4(0.0f));
-
-    glBindFramebuffer(GL_FRAMEBUFFER, post_target_.frame_buffer);
-    clear(glm::vec4(0.0f));
-    blur(multisample_target_.texture, post_target_, temp_target_);
-
-    glViewport(0, 0, screen_target_.resolution.x, screen_target_.resolution.y);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, screen_target_.frame_buffer);
-
-    glUseProgram(depth_of_field_program_.program);
-    glBindVertexArray(quad_.vertex_array);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
-    glUniform1i(depth_of_field_program_.color_sampler, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, temp_target_.texture);
-    glUniform1i(depth_of_field_program_.blurred_color_sampler, 1);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, multisample_target_.depth_texture);
-    glUniform1i(depth_of_field_program_.depth_sampler, 2);
-
-    float camera_near = scene.camera.near_plane();
-    glUniform1fv(depth_of_field_program_.camera_near, 1, &camera_near);
-
-    float camera_far = scene.camera.far_plane();
-    glUniform1fv(depth_of_field_program_.camera_far, 1, &camera_far);
-
-    float camera_focus_distance = glm::distance(scene.camera.position(), scene.camera.center());
-    glUniform1fv(depth_of_field_program_.camera_focus_distance, 1, &camera_focus_distance);
-
-    glUniform1fv(depth_of_field_program_.camera_fstop, 1, &scene.camera.fstop);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
  }
 
   // Bloom
@@ -983,7 +946,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(bloom_program_.color_sampler, 0);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -1000,8 +963,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindVertexArray(quad_.vertex_array);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, screen_target_.texture);
-  //glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
+  glBindTexture(GL_TEXTURE_2D, multisample_target_.texture);
   glUniform1i(compositing_program_.color_sampler, 0);
 
   glActiveTexture(GL_TEXTURE1);
