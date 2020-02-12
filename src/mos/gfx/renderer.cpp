@@ -915,18 +915,13 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
     glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
     clear(glm::vec4(0.0f));
     render_scene(scene.camera, scene, resolution);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
-    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
     render_clouds(scene.point_clouds,
-                     scene.lights,
-                     scene.environment_lights,
-                     scene.camera,
-                     resolution,
-                     point_cloud_program_,
-                     GL_POINTS);
+                  scene.lights,
+                  scene.environment_lights,
+                  scene.camera,
+                  resolution,
+                  point_cloud_program_,
+                  GL_POINTS);
 
     render_clouds(scene.line_clouds,
                   scene.lights,
@@ -938,7 +933,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);
-    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
      //TODO: Include clear in blur
     glBindFramebuffer(GL_FRAMEBUFFER, temp_target_.frame_buffer);
