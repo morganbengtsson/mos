@@ -399,13 +399,13 @@ void Renderer::render_clouds(const Clouds &clouds,
     glUniform2fv(program.resolution, 1, glm::value_ptr(r));
 
     for (size_t i = 0; i < environment_lights.size(); i++) {
-      glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
+      glUniform3fv(program.environment_maps.at(i).position, 1,
                    glm::value_ptr(environment_lights.at(i).position()));
-      glUniform3fv(standard_program_.environment_maps.at(i).extent, 1,
+      glUniform3fv(program.environment_maps.at(i).extent, 1,
                    glm::value_ptr(environment_lights.at(i).extent()));
-      glUniform1fv(standard_program_.environment_maps.at(i).strength, 1,
+      glUniform1fv(program.environment_maps.at(i).strength, 1,
                    &environment_lights.at(i).strength);
-      glUniform1fv(standard_program_.environment_maps.at(i).falloff, 1,
+      glUniform1fv(program.environment_maps.at(i).falloff, 1,
                    &environment_lights.at(i).falloff);
     }
     for (size_t i = 0; i < lights.size(); i++) {
