@@ -349,17 +349,6 @@ void Renderer::render_clouds(const Clouds &clouds,
                                                             GL_STREAM_DRAW,
                                                             particles.points.modified())});
       }
-      glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
-      glVertexAttribPointer(0, decltype(Point::position)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, position)));
-      glVertexAttribPointer(1, decltype(Point::color)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, color)));
-      glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, size)));
-      glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, alpha)));
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glEnableVertexAttribArray(0);
-      glEnableVertexAttribArray(1);
-      glEnableVertexAttribArray(2);
-      glEnableVertexAttribArray(3);
-      glBindVertexArray(0);
       vertex_arrays_.insert({particles.id(), Vertex_array(particles, array_buffers_)});
     }
     glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
@@ -1690,15 +1679,10 @@ mos::gfx::Renderer::Vertex_array::Vertex_array(const mos::gfx::Cloud &cloud, std
                                                   cloud.points.modified())});
   }
   glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(cloud.id()).id);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point),
-                        reinterpret_cast<const void *>(sizeof(glm::vec3)));
-  glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
-                        reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                                       sizeof(glm::vec3)));
-  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
-                        reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                                       sizeof(glm::vec3) + sizeof(float)));
+  glVertexAttribPointer(0, decltype(Point::position)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, position)));
+  glVertexAttribPointer(1, decltype(Point::color)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, color)));
+  glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, size)));
+  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, alpha)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
