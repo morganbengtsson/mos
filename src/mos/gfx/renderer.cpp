@@ -1712,28 +1712,17 @@ Renderer::Vertex_array::Vertex_array(const Mesh &mesh,
                                                      GL_STATIC_DRAW,
                                                      mesh.triangles.modified())});
   }
-  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(mesh.id()).id);
-  // Position
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-
-  // Normal
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        reinterpret_cast<const void *>(sizeof(glm::vec3)));
-
-  // Tangent
-  glVertexAttribPointer(
-      2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-      reinterpret_cast<const void *>(sizeof(glm::vec3) * 2));
-
-  // UV
-  glVertexAttribPointer(
-      3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-      reinterpret_cast<const void *>(sizeof(glm::vec3) * 3));
-
-  // Weight
+  glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(mesh.id()).id);  
+  glVertexAttribPointer(0, decltype(Vertex::position)::length(), GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        reinterpret_cast<const void *>(offsetof(Vertex, position)));
+  glVertexAttribPointer(1, decltype(Vertex::normal)::length(), GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        reinterpret_cast<const void *>(offsetof(Vertex, normal)));
+  glVertexAttribPointer(2, decltype(Vertex::tangent)::length(), GL_FLOAT, GL_FALSE, sizeof(Vertex),
+      reinterpret_cast<const void *>(offsetof(Vertex, tangent)));
+  glVertexAttribPointer(3, decltype(Vertex::uv)::length(), GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        reinterpret_cast<const void *>(offsetof(Vertex, uv)));
   glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        reinterpret_cast<const void *>(sizeof(glm::vec3) * 3 +
-                                                       sizeof(glm::vec2)));
+                        reinterpret_cast<const void *>(offsetof(Vertex, weight)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                element_array_buffers.at(mesh.id()).id);
