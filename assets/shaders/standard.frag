@@ -56,7 +56,6 @@ struct Fragment {
     mat3 tbn;
     vec4[4] proj_shadow;
     vec3 camera_to_surface;
-    float weight;
 };
 
 uniform Material material;

@@ -6,7 +6,6 @@ struct Fragment {
     vec2 uv;
     vec4[4] proj_shadow;
     vec3 camera_to_surface;
-    float weight;
 };
 
 struct Camera {
@@ -44,7 +43,6 @@ void main() {
         fragment.proj_shadow[i] = depth_bias_model_view_projections[i] * vec4(position, 1.0);
     }
 
-    fragment.weight = weight;
     fragment.uv = uv;
     fragment.position = (model * vec4(position, 1.0)).xyz;
     fragment.normal = normalize(normal_matrix * normal);
