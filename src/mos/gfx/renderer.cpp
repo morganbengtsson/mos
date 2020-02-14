@@ -16,6 +16,7 @@
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
 #include <functional>
+#include <cstdlib>
 
 namespace mos {
 namespace gfx {
@@ -349,15 +350,10 @@ void Renderer::render_clouds(const Clouds &clouds,
                                                             particles.points.modified())});
       }
       glBindBuffer(GL_ARRAY_BUFFER, array_buffers_.at(particles.id()).id);
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point), nullptr);
-      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point),
-                            reinterpret_cast<const void *>(sizeof(glm::vec3)));
-      glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
-                            reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                sizeof(glm::vec3)));
-      glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point),
-                            reinterpret_cast<const void *>(sizeof(glm::vec3) +
-                                sizeof(glm::vec3) + sizeof(float)));
+      glVertexAttribPointer(0, decltype(Point::position)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, position)));
+      glVertexAttribPointer(1, decltype(Point::color)::length(), GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, color)));
+      glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, size)));
+      glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Point), reinterpret_cast<const void *>(offsetof(Point, alpha)));
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glEnableVertexAttribArray(0);
       glEnableVertexAttribArray(1);
@@ -1670,13 +1666,7 @@ Renderer::Box::Box()
   glBindVertexArray(vertex_array);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, // attribute
-                        4, // number of elements per vertex, here (x,y,z,w)
-                        GL_FLOAT, // the type of each element
-                        GL_FALSE, // take our values as-is
-                        0,        // no extra data between each position
-                        nullptr         // offset of first element
-  );
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
   glBindVertexArray(0);
