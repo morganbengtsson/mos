@@ -436,7 +436,7 @@ void Renderer::render_model(const Model &model,
 
     const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
-    if (model.mesh) {
+    if (model.mesh && model.material.alpha > 0) {
       glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
 
       const auto &uniforms = program;
@@ -485,7 +485,6 @@ void Renderer::render_model(const Model &model,
       glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3, GL_UNSIGNED_INT, nullptr);
     }
   }
-
   for (const auto &child : model.models) {
     render_model(child, parent_transform * model.transform, camera, lights,
                  environment_lights, fog, resolution, program);
