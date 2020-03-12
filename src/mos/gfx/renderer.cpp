@@ -696,8 +696,8 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
       //TODO: Loop through all lights?
       for (size_t i = 0; i < 2; i++) {
-        glUniform3fv(environment_program_.lights.at(i).position, 1,
-                     glm::value_ptr(glm::vec3(glm::vec4(scene.lights.at(i).position(), 1.0f))));
+        auto light_position = scene.lights.at(i).position();
+        glUniform3fv(environment_program_.lights.at(i).position, 1, glm::value_ptr(light_position));
 
         glUniform3fv(environment_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
         glUniform1fv(environment_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
@@ -711,15 +711,15 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
 
         auto light_angle = scene.lights.at(i).angle();
         glUniform1fv(environment_program_.lights.at(i).angle, 1, &light_angle);
-        glUniform3fv(environment_program_.lights.at(i).direction, 1, glm::value_ptr(scene.lights.at(i).direction()));
+        auto light_direction = scene.lights.at(i).direction();
+        glUniform3fv(environment_program_.lights.at(i).direction, 1, glm::value_ptr(light_direction));
       }
 
       glUniform2iv(environment_program_.camera_resolution, 1, glm::value_ptr(resolution));
 
       glUniform3fv(environment_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
       glUniform3fv(environment_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
-      glUniform1fv(environment_program_.fog_attenuation_factor, 1,
-                   &scene.fog.attenuation_factor);
+      glUniform1fv(environment_program_.fog_attenuation_factor, 1, &scene.fog.attenuation_factor);
 
       for (auto &model : scene.models) {
         render_model(model, glm::mat4(1.0f), cube_camera,
