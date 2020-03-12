@@ -108,9 +108,9 @@ vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_lev
 
 
 float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent, const float falloff) {
-  const float distance_x = 1.0 - smoothstep(position.x + extent.x - falloff, position.x + extent.x, abs(point.x));
-  const float distance_y = 1.0 - smoothstep(position.y + extent.y - falloff, position.y + extent.y, abs(point.y));
-  const float distance_z = 1.0 - smoothstep(position.z + extent.z - falloff, position.z + extent.z, abs(point.z));
+  const float distance_x = 1.0 - smoothstep(abs(position.x) + extent.x - falloff, position.x + extent.x, abs(point.x));
+  const float distance_y = 1.0 - smoothstep(abs(position.y) + extent.y - falloff, position.y + extent.y, abs(point.y));
+  const float distance_z = 1.0 - smoothstep(abs(position.z) + extent.z - falloff, position.z + extent.z, abs(point.z));
 
   return min(distance_x, min(distance_y, distance_z));
 }
