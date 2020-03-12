@@ -51,10 +51,20 @@ glm::vec3 Cube_camera::position() const {
 }
 
 void Cube_camera::position(const glm::vec3 &position) {
-  for (auto &camera : cameras) {
-    camera.position(position);
-  }
+  cameras[0].position(position);
+  cameras[0].direction(glm::vec3(1.0f, 0.0f, 0.0f));
+  cameras[1].position(position);
+  cameras[1].direction(glm::vec3(-1.0f, 0.0f, 0.0f));
+  cameras[2].position(position);
+  cameras[2].direction(glm::vec3(0.0f, 1.0f, 0.0f));
+  cameras[3].position(position);
+  cameras[3].direction(glm::vec3(0.0f, -1.0f, 0.0f));
+  cameras[4].position(position);
+  cameras[4].direction(glm::vec3(0.0f, 0.0f, 1.0f));
+  cameras[5].position(position);
+  cameras[5].direction(glm::vec3(0.0f, 0.0f, -1.0f));
 }
+
 void Cube_camera::near_far(const float near, const float far) {
   for (auto &camera : cameras) {
     camera.projection(glm::perspective(glm::half_pi<float>(),
