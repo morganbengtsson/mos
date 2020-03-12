@@ -254,10 +254,12 @@ void Renderer::render_scene(const Camera &camera,
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
 
   for (size_t i = 0; i < scene.environment_lights.size(); i++) {
+    auto position = scene.environment_lights.at(i).position();
     glUniform3fv(standard_program_.environment_maps.at(i).position, 1,
-                 glm::value_ptr(scene.environment_lights.at(i).position()));
+                 glm::value_ptr(position));
+    auto extent = scene.environment_lights.at(i).extent();
     glUniform3fv(standard_program_.environment_maps.at(i).extent, 1,
-                 glm::value_ptr(scene.environment_lights.at(i).extent()));
+                 glm::value_ptr(extent));
     glUniform1fv(standard_program_.environment_maps.at(i).strength, 1,
                  &scene.environment_lights.at(i).strength);
     glUniform1fv(standard_program_.environment_maps.at(i).falloff, 1,
@@ -269,8 +271,9 @@ void Renderer::render_scene(const Camera &camera,
   glUniform3fv(standard_program_.camera_position, 1, glm::value_ptr(position));
 
   for (size_t i = 0; i < scene.lights.size(); i++) {
+    auto light_position = scene.lights.at(i).position();
     glUniform3fv(standard_program_.lights.at(i).position, 1,
-                 glm::value_ptr(glm::vec3(glm::vec4(scene.lights.at(i).position(), 1.0f))));
+                 glm::value_ptr(light_position));
 
     glUniform3fv(standard_program_.lights.at(i).color, 1, glm::value_ptr(scene.lights.at(i).color));
     glUniform1fv(standard_program_.lights.at(i).strength, 1, &scene.lights.at(i).strength);
@@ -285,7 +288,8 @@ void Renderer::render_scene(const Camera &camera,
 
     auto light_angle = scene.lights.at(i).angle();
     glUniform1fv(standard_program_.lights.at(i).angle, 1, &light_angle);
-    glUniform3fv(standard_program_.lights.at(i).direction, 1, glm::value_ptr(scene.lights.at(i).direction()));
+    auto light_direction = scene.lights.at(i).direction();
+    glUniform3fv(standard_program_.lights.at(i).direction, 1, glm::value_ptr(light_direction));
   }
 
   glUniform2iv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));
@@ -384,18 +388,21 @@ void Renderer::render_clouds(const Clouds &clouds,
     glUniform2fv(program.resolution, 1, glm::value_ptr(r));
 
     for (size_t i = 0; i < environment_lights.size(); i++) {
+      auto position = environment_lights.at(i).position();
       glUniform3fv(program.environment_maps.at(i).position, 1,
-                   glm::value_ptr(environment_lights.at(i).position()));
+                   glm::value_ptr(position));
+      auto extent = environment_lights.at(i).extent();
       glUniform3fv(program.environment_maps.at(i).extent, 1,
-                   glm::value_ptr(environment_lights.at(i).extent()));
+                   glm::value_ptr(extent));
       glUniform1fv(program.environment_maps.at(i).strength, 1,
                    &environment_lights.at(i).strength);
       glUniform1fv(program.environment_maps.at(i).falloff, 1,
                    &environment_lights.at(i).falloff);
     }
     for (size_t i = 0; i < lights.size(); i++) {
+      auto light_position = lights.at(i).position();
       glUniform3fv(program.lights.at(i).position, 1,
-                   glm::value_ptr(glm::vec3(glm::vec4(lights.at(i).position(), 1.0f))));
+                   glm::value_ptr(light_position));
 
       glUniform3fv(program.lights.at(i).color, 1, glm::value_ptr(lights.at(i).color));
       glUniform1fv(program.lights.at(i).strength, 1, &lights.at(i).strength);
@@ -409,7 +416,8 @@ void Renderer::render_clouds(const Clouds &clouds,
 
       auto light_angle = lights.at(i).angle();
       glUniform1fv(program.lights.at(i).angle, 1, &light_angle);
-      glUniform3fv(program.lights.at(i).direction, 1, glm::value_ptr(lights.at(i).direction()));
+      auto light_direction = lights.at(i).direction();
+      glUniform3fv(program.lights.at(i).direction, 1, glm::value_ptr(light_direction));
     }
 
     auto position = camera.position();
