@@ -83,8 +83,9 @@ void main() {
     vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
     vec3 albedo = has_albedo_map ? albedo_from_map.rgb : material.albedo.rgb;
 
+    bool has_emission_map = textureSize(material.emission_sampler, 0).x != 1;
     vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
+    vec3 emission = has_emission_map ? emission_from_map.rgb : material.emission.rgb;
 
     float metallic = material.metallic;
 
@@ -134,8 +135,8 @@ void main() {
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);
 
-    color.rgb = (direct + ambient) + material.emission;
-    color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map)), 0.0, 1.0);
+    color.rgb = (direct + ambient) + emission;
+    color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map) + float(!has_emission_map)), 0.0, 1.0);
 
     //Fog
     float distance = distance(fragment.position, camera.position);
