@@ -57,12 +57,8 @@ void Light::near_far(const float near_plane, const float far_plane) {
 }
 Light::Light(const std::string &directory,
              const std::string &path,
-             const float near_plane,
-             const float far_plane,
-    const glm::mat4 &parent_transform) :
-  color(glm::vec3{0.0f}),
-  near_(near_plane),
-  far_(far_plane) {
+             const glm::mat4 &parent_transform) :
+  color(glm::vec3{0.0f}) {
   using json = nlohmann::json;
   if (!path.empty()) {
     filesystem::path fpath = path;
@@ -81,9 +77,11 @@ Light::Light(const std::string &directory,
                              data_value["color"][2]);
       strength = data_value["strength"];
       angle_ = data_value["size"];
+      near_ = data_value["near"];
+      far_ = data_value["far"];
       auto blend = value["blend"];
 
-      camera = mos::gfx::Camera(position, center, glm::perspective(angle_, 1.0f, near_plane, far_plane),
+      camera = mos::gfx::Camera(position, center, glm::perspective(angle_, 1.0f, near_, far_),
              glm::vec3(0.0f, 0.0001f, 1.0f));
 
     } else {
