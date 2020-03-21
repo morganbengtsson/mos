@@ -942,6 +942,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   // Render to screen
   glViewport(0, 0, resolution.x, resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  clear(glm::vec4(0.0f));
 
   //Compositing
   glUseProgram(compositing_program_.program);
