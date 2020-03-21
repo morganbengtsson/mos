@@ -89,6 +89,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${GLFW_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC stb)
 target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
+target_compile_definitions(${PROJECT_NAME} PUBLIC NOMINMAX) #Windows min/max header problem
+
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 #Copy shader files to assets and brdfLUT to assets
