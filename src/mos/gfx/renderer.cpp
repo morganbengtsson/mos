@@ -341,7 +341,12 @@ void Renderer::render_clouds(const Clouds &clouds,
                              const GLenum &draw_mode) {
   glDepthMask(GL_FALSE);
   for (auto &particles : clouds) {
-    glBlendFunc(GL_SRC_ALPHA, particles.blending == Cloud::Blending::Additive ? GL_ONE : GL_ONE_MINUS_SRC_ALPHA);
+    if (particles.blending == Cloud::Blending::Additive) {
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    }
+    else {
+      glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    }
     if (vertex_arrays_.find(particles.id()) == vertex_arrays_.end()) {
       unsigned int vertex_array;
       glGenVertexArrays(1, &vertex_array);
