@@ -14,6 +14,7 @@ namespace gfx {
 /** Collection of particles for rendering, uses same texture. */
 class Cloud final : public Shape {
 public:
+  enum class Blending{Additive, Transparent};
   using Points = Tracked_container<Point>;
   Cloud(Shared_texture_2D texture, Points particles);
   Cloud() = default;
@@ -26,6 +27,8 @@ public:
 
   /** Particles. */
   Points points;
+
+  Blending blending = Blending::Additive;
 };
 }
 }
