@@ -9,6 +9,8 @@
 #include <glm/gtx/io.hpp>
 #include <mos/sim/intersection.hpp>
 #include <mos/gfx/mesh.hpp>
+#include <mos/gfx/assets.hpp>
+#include <json.hpp>
 
 //TODO: shared_ptr mesh
 //TODO: save transform
@@ -19,25 +21,15 @@ namespace sim {
 /** Navigation mesh. */
 class Navmesh {
 public:
-  using OptionalIntersection = std::optional<gfx::Vertex>;
-  Navmesh();
-  Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform);
+  using Optional_vertex = std::optional<gfx::Vertex>;
 
-  template<class Tv, class Te>
-  Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
-           Te elements_end, const glm::mat4 &transform)
-      : mesh(std::make_shared<gfx::Mesh>(vertices_begin, vertices_end, elements_begin, elements_end)) {
+  Navmesh(const nlohmann::json &json, gfx::Assets &assets = *std::make_unique<gfx::Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-    for (auto &vertex : mesh->vertices) {
-      vertex.position = glm::vec3(transform *
-          glm::vec4(vertex.position, 1.0f));
-    }
-  }
-  std::optional<gfx::Vertex>
-  intersects(const glm::vec3 &origin, const glm::vec3 &direction);
+  Optional_vertex intersects(const glm::vec3 &origin,
+                             const glm::vec3 &direction);
 
-  std::optional<gfx::Vertex>
-  closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
+  Optional_vertex closest_intersection(const glm::vec3 &origin,
+                                       const glm::vec3 &direction);
   void calculate_normals();
 
   gfx::Shared_mesh mesh;

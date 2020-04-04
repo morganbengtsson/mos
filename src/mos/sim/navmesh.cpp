@@ -1,15 +1,29 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/normal.hpp>
 #include <mos/sim/navmesh.hpp>
+#include <mos/util.hpp>
 
 namespace mos {
 namespace sim {
 
-Navmesh::Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform)
-    : Navmesh(mesh.vertices.begin(), mesh.vertices.end(), mesh.triangles.begin(),
-               mesh.triangles.end(), transform) {}
+Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat4 &parent_transform) {
+  auto parsed = json;
+  if (parsed.is_string()) {
+    std::cout << "Loading Nav_model: " << parsed << std::endl;
+        std::string path = parsed;
+    parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
+  }
+  auto mesh_path = std::string("");
+  if (!parsed["mesh"].is_null()) {
+    mesh_path = parsed.value("mesh", "");
+  }
+  mesh = assets.mesh(mesh_path);
 
-std::optional<gfx::Vertex>
+  //TODO:
+  //transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
+}
+
+Navmesh::Optional_vertex
 Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   for (size_t i = 0; i < mesh->triangles.size(); i++) {
     Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
@@ -21,10 +35,10 @@ Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   return std::optional<gfx::Vertex>();
 }
 
-Navmesh::OptionalIntersection
+Navmesh::Optional_vertex
 Navmesh::closest_intersection(const glm::vec3 &origin,
                                const glm::vec3 &direction) {
-  OptionalIntersection closest;
+  Optional_vertex closest;
   for (size_t i = 0; i < mesh->triangles.size(); i++) {
     Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
@@ -56,7 +70,7 @@ void Navmesh::calculate_normals() {
 Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
-std::optional<gfx::Vertex>
+Navmesh::Optional_vertex
 Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   glm::vec2 bary;
   float distance;
