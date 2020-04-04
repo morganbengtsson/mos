@@ -20,6 +20,9 @@ public:
 
   /** Texture coordinate. */
   glm::vec2 uv;
+
+  /** Apply a transformation matrix to the vertex */
+  void apply_transform(const glm::mat4 &transform);
 };
 }
 }

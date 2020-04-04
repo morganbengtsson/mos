@@ -91,7 +91,7 @@ void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
 
 void Mesh::apply_transform(const glm::mat4 &transform) {
   for (auto &vertex : vertices) {
-    vertex.position = glm::vec3(transform * glm::vec4(vertex.position, 1.0f));
+    vertex.apply_transform(transform);
   }
 }
 
