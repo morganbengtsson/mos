@@ -33,7 +33,7 @@ public:
   void calculate_normals();
 
   gfx::Shared_mesh mesh;
-
+  glm::mat4 transform;
 private:
   class Face {
   public:

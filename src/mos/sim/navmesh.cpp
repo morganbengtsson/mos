@@ -20,10 +20,7 @@ Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat
   mesh = assets.mesh(mesh_path);
 
   //TODO:
-  auto transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
-  for(auto & v : mesh->vertices){
-      v.apply_transform(transform);
-  }
+  transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
 }
 
 Navmesh::Optional_vertex
