@@ -12,7 +12,7 @@
 
 //TODO: shared_ptr mesh
 //TODO: save transform
-//TODO: Rename to navmodel
+//TODO: Rename to navmodel/simmodel
 namespace mos {
 namespace sim {
 
@@ -26,9 +26,9 @@ public:
   template<class Tv, class Te>
   Navmesh(Tv vertices_begin, Tv vertices_end, Te elements_begin,
            Te elements_end, const glm::mat4 &transform)
-      : triangles(elements_begin, elements_end), vertices(vertices_begin, vertices_end) {
+      : mesh(std::make_shared<gfx::Mesh>(vertices_begin, vertices_end, elements_begin, elements_end)) {
 
-    for (auto &vertex : vertices) {
+    for (auto &vertex : mesh->vertices) {
       vertex.position = glm::vec3(transform *
           glm::vec4(vertex.position, 1.0f));
     }
@@ -40,8 +40,8 @@ public:
   closest_intersection(const glm::vec3 &origin, const glm::vec3 &direction);
   void calculate_normals();
 
-  std::vector<gfx::Vertex> vertices;
-  std::vector<std::array<int, 3>> triangles;
+  gfx::Shared_mesh mesh;
+
 private:
   class Face {
   public:

@@ -11,9 +11,8 @@ Navmesh::Navmesh(const gfx::Mesh &mesh, const glm::mat4 &transform)
 
 std::optional<gfx::Vertex>
 Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
-  //for (auto &face : faces_) {
-  for (size_t i = 0; i < triangles.size(); i++) {
-    Face face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
+  for (size_t i = 0; i < mesh->triangles.size(); i++) {
+    Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       return intersection;
@@ -26,9 +25,8 @@ Navmesh::OptionalIntersection
 Navmesh::closest_intersection(const glm::vec3 &origin,
                                const glm::vec3 &direction) {
   OptionalIntersection closest;
-  //for (auto &face : faces_) {
-  for (size_t i = 0; i < triangles.size(); i++) {
-    Face face(vertices[triangles[i][0]], vertices[triangles[i][1]], vertices[triangles[i][2]]);
+  for (size_t i = 0; i < mesh->triangles.size(); i++) {
+    Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
     auto intersection = face.intersects(origin, direction);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
@@ -42,11 +40,11 @@ Navmesh::closest_intersection(const glm::vec3 &origin,
 }
 
 void Navmesh::calculate_normals() {
-  for (size_t i = 0; i < triangles.size(); i++) {
+  for (size_t i = 0; i < mesh->triangles.size(); i++) {
     //TODO: Generalize
-    auto &v0 = vertices[triangles[i][0]];
-    auto &v1 = vertices[triangles[i][1]];
-    auto &v2 = vertices[triangles[i][2]];
+    auto &v0 = mesh->vertices[mesh->triangles[i][0]];
+    auto &v1 = mesh->vertices[mesh->triangles[i][1]];
+    auto &v2 = mesh->vertices[mesh->triangles[i][2]];
 
     auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
     v0.normal = normal;
