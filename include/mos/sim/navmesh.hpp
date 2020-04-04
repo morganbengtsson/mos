@@ -13,7 +13,6 @@
 #include <json.hpp>
 
 //TODO: shared_ptr mesh
-//TODO: save transform
 //TODO: Rename to navmodel/simmodel
 namespace mos {
 namespace sim {
@@ -30,8 +29,6 @@ public:
 
   Optional_vertex closest_intersection(const glm::vec3 &origin,
                                        const glm::vec3 &direction);
-  void calculate_normals();
-
   gfx::Shared_mesh mesh;
   glm::mat4 transform;
 private:

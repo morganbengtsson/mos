@@ -2,6 +2,7 @@
 #include <glm/gtx/normal.hpp>
 #include <mos/sim/navmesh.hpp>
 #include <mos/util.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 namespace mos {
 namespace sim {
@@ -25,10 +26,14 @@ Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat
 
 Navmesh::Optional_vertex
 Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
+  glm::vec3 origin_local = glm::inverse(transform) * glm::vec4(origin, 1.0f);
+  glm::vec3 direction_local = glm::mat3(glm::inverseTranspose(transform)) * direction;
+
   for (size_t i = 0; i < mesh->triangles.size(); i++) {
     Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
-    auto intersection = face.intersects(origin, direction);
+    auto intersection = face.intersects(origin_local, direction_local);
     if (intersection) {
+      intersection->apply_transform(transform);
       return intersection;
     }
   }
@@ -38,10 +43,14 @@ Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
 Navmesh::Optional_vertex
 Navmesh::closest_intersection(const glm::vec3 &origin,
                                const glm::vec3 &direction) {
+  glm::vec3 origin_local = glm::inverse(transform) * glm::vec4(origin, 1.0f);
+  glm::vec3 direction_local = glm::mat3(glm::inverseTranspose(transform)) * direction;
+
   Optional_vertex closest;
   for (size_t i = 0; i < mesh->triangles.size(); i++) {
     Face face(mesh->vertices[mesh->triangles[i][0]], mesh->vertices[mesh->triangles[i][1]], mesh->vertices[mesh->triangles[i][2]]);
-    auto intersection = face.intersects(origin, direction);
+    auto intersection = face.intersects(origin_local, direction_local);
+    intersection->apply_transform(transform);
     if (intersection) {
       auto distance = glm::distance(origin, intersection->position);
       if (!closest ||
@@ -51,20 +60,6 @@ Navmesh::closest_intersection(const glm::vec3 &origin,
     }
   }
   return closest;
-}
-
-void Navmesh::calculate_normals() {
-  for (size_t i = 0; i < mesh->triangles.size(); i++) {
-    //TODO: Generalize
-    auto &v0 = mesh->vertices[mesh->triangles[i][0]];
-    auto &v1 = mesh->vertices[mesh->triangles[i][1]];
-    auto &v2 = mesh->vertices[mesh->triangles[i][2]];
-
-    auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
-    v0.normal = normal;
-    v1.normal = normal;
-    v2.normal = normal;
-  }
 }
 
 Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
