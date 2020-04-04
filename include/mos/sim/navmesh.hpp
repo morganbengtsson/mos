@@ -10,6 +10,9 @@
 #include <mos/sim/intersection.hpp>
 #include <mos/gfx/mesh.hpp>
 
+//TODO: shared_ptr mesh
+//TODO: save transform
+//TODO: Rename to navmodel
 namespace mos {
 namespace sim {
 
