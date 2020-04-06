@@ -22,4 +22,4 @@ Renderer::Blur_program::Blur_program() {
   color_sampler = glGetUniformLocation(program, "color_sampler");
   horizontal = glGetUniformLocation(program, "horizontal");
 }
-}
+} // namespace mos::gfx

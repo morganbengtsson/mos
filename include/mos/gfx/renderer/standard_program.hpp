@@ -5,7 +5,7 @@
 /** Uniforms for the standard shader. */
 class Standard_program : public Program {
 public:
-  explicit Standard_program(const Shader & functions_shader);
+  explicit Standard_program(const Shader &functions_shader);
   GLint model_view_projection;
   GLint model_matrix;
   GLint normal_matrix;
@@ -18,7 +18,7 @@ public:
     GLint strength;
     GLint falloff;
   };
-  std::array<Environment_uniforms, 2> environment_maps {};
+  std::array<Environment_uniforms, 2> environment_maps{};
 
   GLint material_albedo_sampler;
   GLint material_normal_sampler;
@@ -48,7 +48,7 @@ public:
     GLint direction;
   };
 
-  std::array<GLuint, 4> shadow_maps {};
+  std::array<GLuint, 4> shadow_maps{};
   std::array<Light_uniforms, 4> lights{};
 
   GLint fog_color_near;

@@ -8,9 +8,11 @@ Renderer::Propagate_program::Propagate_program() {
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
   std::string functions_name = "functions";
-  std::string functions_frag_source = text("assets/shaders/" + functions_name + ".frag");
+  std::string functions_frag_source =
+      text("assets/shaders/" + functions_name + ".frag");
 
-  const auto functions_fragment_shader = Shader(functions_frag_source, GL_FRAGMENT_SHADER, functions_name);
+  const auto functions_fragment_shader =
+      Shader(functions_frag_source, GL_FRAGMENT_SHADER, functions_name);
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
   const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
 
@@ -27,7 +29,8 @@ Renderer::Propagate_program::Propagate_program() {
   glDetachShader(program, functions_fragment_shader.id);
 
   environment_sampler = glGetUniformLocation(program, "environment_map");
-  environment_albedo_sampler = glGetUniformLocation(program, "environment_albedo_map");
+  environment_albedo_sampler =
+      glGetUniformLocation(program, "environment_albedo_map");
   side = glGetUniformLocation(program, "side");
 }
-}
+} // namespace mos::gfx

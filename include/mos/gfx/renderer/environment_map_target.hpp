@@ -7,8 +7,9 @@ struct Environment_map_target {
   ~Environment_map_target();
   Environment_map_target(const Environment_map_target &target) = delete;
   Environment_map_target(Environment_map_target &&target) = delete;
-  Environment_map_target & operator=(const Environment_map_target &target) = delete;
-  Environment_map_target & operator=(Environment_map_target &&target) = delete;
+  Environment_map_target &
+  operator=(const Environment_map_target &target) = delete;
+  Environment_map_target &operator=(Environment_map_target &&target) = delete;
   const GLuint texture{};
   const GLuint albedo{};
   const GLuint frame_buffer{};

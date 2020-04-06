@@ -9,26 +9,24 @@ Renderer::Environment_map_target::Environment_map_target(
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                  GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                  GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                  GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
+    for (int i = 0;
+         i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 GL_RGB16F,
-                 render_buffer.resolution().x, render_buffer.resolution().y, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
+                 render_buffer.resolution().x, render_buffer.resolution().y, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -36,28 +34,26 @@ Renderer::Environment_map_target::Environment_map_target(
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                          GL_TEXTURE_CUBE_MAP_POSITIVE_X, texture, 0);
 
-  //Albedo target
+  // Albedo target
   glBindTexture(GL_TEXTURE_CUBE_MAP, albedo);
-  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
-                  GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
-                  GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
-                  GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
   for (int i = 0; i < 6; i++) {
     std::vector<unsigned char> data;
-    for (int i = 0; i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
+    for (int i = 0;
+         i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
       data.push_back(0);
       data.push_back(0);
       data.push_back(0);
     }
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-                 GL_RGB,
-                 render_buffer.resolution().x, render_buffer.resolution().y, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+                 render_buffer.resolution().x, render_buffer.resolution().y, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, data.data());
   }
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -80,4 +76,4 @@ Renderer::Environment_map_target::~Environment_map_target() {
   glDeleteTextures(1, &texture);
   glDeleteFramebuffers(1, &frame_buffer);
 }
-}
+} // namespace mos::gfx

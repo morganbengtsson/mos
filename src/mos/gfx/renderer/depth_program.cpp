@@ -19,9 +19,10 @@ Renderer::Depth_program::Depth_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  model_view_projection = glGetUniformLocation(program, "model_view_projection");
+  model_view_projection =
+      glGetUniformLocation(program, "model_view_projection");
   albedo_sampler = glGetUniformLocation(program, "albedo_sampler");
   albedo = glGetUniformLocation(program, "albedo");
   emission = glGetUniformLocation(program, "emission");
 }
-}
+} // namespace mos::gfx

@@ -1,7 +1,7 @@
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace  mos::gfx {
+namespace mos::gfx {
 Renderer::Box_program::Box_program() {
   std::string name = "box";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
@@ -20,6 +20,7 @@ Renderer::Box_program::Box_program() {
   glDetachShader(program, vertex_shader.id);
   glDetachShader(program, fragment_shader.id);
 
-  model_view_projection = glGetUniformLocation(program, "model_view_projection");
+  model_view_projection =
+      glGetUniformLocation(program, "model_view_projection");
 }
-}
+} // namespace mos::gfx

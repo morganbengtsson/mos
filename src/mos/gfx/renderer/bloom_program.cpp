@@ -22,4 +22,4 @@ Renderer::Bloom_program::Bloom_program() {
 
   color_sampler = glGetUniformLocation(program, "color_sampler");
 }
-}
+} // namespace mos::gfx

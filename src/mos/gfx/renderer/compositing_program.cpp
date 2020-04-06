@@ -24,4 +24,4 @@ Renderer::Compositing_program::Compositing_program() {
   bloom_sampler = glGetUniformLocation(program, "bloom_sampler");
   bloom_strength = glGetUniformLocation(program, "strength");
 }
-}
+} // namespace mos::gfx

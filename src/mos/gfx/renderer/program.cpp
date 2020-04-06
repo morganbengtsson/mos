@@ -1,14 +1,10 @@
-#include <mos/gfx/renderer.hpp>
 #include <iostream>
+#include <mos/gfx/renderer.hpp>
 
 namespace mos::gfx {
 
-Renderer::Program::Program() : program(glCreateProgram()) {
-  assert(program);
-}
-Renderer::Program::~Program() {
-  glDeleteProgram(program);
-}
+Renderer::Program::Program() : program(glCreateProgram()) { assert(program); }
+Renderer::Program::~Program() { glDeleteProgram(program); }
 void Renderer::Program::check(const std::string &name) {
   GLint status = 0;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
@@ -27,4 +23,4 @@ void Renderer::Program::link(const std::string &name) {
   glLinkProgram(program);
 }
 
-}
+} // namespace mos::gfx
