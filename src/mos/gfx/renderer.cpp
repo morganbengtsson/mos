@@ -21,39 +21,34 @@
 namespace mos {
 namespace gfx {
 
-auto generate(const std::function<void(GLsizei, GLuint*)> & f){
+GLuint Renderer::generate(const std::function<void(GLsizei, GLuint*)> & f){
   GLuint id;
   f(1, &id);
   return id;
 }
 
-auto wrap_convert(const Texture::Wrap& w) {
+GLuint Renderer::wrap_convert(const Texture::Wrap& w) {
   static const std::map<Texture::Wrap, GLint> wrap_map{
       {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::Repeat, GL_REPEAT}};
   return wrap_map.at(w);
 }
 
-auto filter_convert(const Texture::Filter &f) {
+GLuint Renderer::filter_convert(const Texture::Filter &f) {
   static const std::map<Texture::Filter, GLint> filter_map{
       {Texture::Filter::Linear, GL_LINEAR},
       {Texture::Filter::Closest, GL_NEAREST}};
   return filter_map.at(f);
 }
 
-auto filter_convert_mip(const Texture::Filter &f) {
+GLuint Renderer::filter_convert_mip(const Texture::Filter &f) {
   static const std::map<Texture::Filter, GLint> filter_map_mip{
       {Texture::Filter::Linear, GL_LINEAR_MIPMAP_LINEAR},
       {Texture::Filter::Closest, GL_NEAREST_MIPMAP_LINEAR}};
   return filter_map_mip.at(f);
 }
 
-struct FormatPair {
-  GLint internal_format;
-  GLenum format;
-};
-
-auto format_convert(const Texture::Format &f){
+Renderer::FormatPair Renderer::format_convert(const Texture::Format &f){
   static const std::map<Texture::Format, FormatPair> format_map{
       {Texture::Format::R, {GL_RED, GL_RED}},
       {Texture::Format::RG, {GL_RG, GL_RG}},

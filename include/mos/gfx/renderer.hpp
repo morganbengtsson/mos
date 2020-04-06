@@ -69,20 +69,19 @@ public:
 private:
   using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
-  class Buffer {
-  public:
-    Buffer(GLenum type, GLsizeiptr size, const void *data, GLenum hint, Time_point modified);
-    Buffer(const Buffer &buffer) = delete;
-    Buffer(Buffer &&buffer) noexcept;
-    Buffer & operator=(const Buffer &buffer) = delete;
-    Buffer & operator=(Buffer &&buffer) noexcept;
-    ~Buffer();
+  static GLuint generate(const std::function<void(GLsizei, GLuint*)> & f);
+  static GLuint wrap_convert(const Texture::Wrap& w);
+  static GLuint filter_convert(const Texture::Filter &f);
+  static GLuint filter_convert_mip(const Texture::Filter &f);
 
-    GLuint id{0};
-    Time_point modified;
-  private:
-    void release();
+  struct FormatPair {
+    GLint internal_format;
+    GLenum format;
   };
+
+  static FormatPair format_convert(const Texture::Format &f);
+
+  #include <mos/gfx/renderer/buffer.hpp>
 
   class Render_buffer {
   public:

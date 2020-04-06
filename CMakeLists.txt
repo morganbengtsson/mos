@@ -44,14 +44,14 @@ add_subdirectory(externals/utfcpp)
 
 # mos
 file(GLOB ROOT_SOURCE src/mos/*.cpp)
-file(GLOB GFX_SOURCE src/mos/gfx/*.cpp)
+file(GLOB GFX_SOURCE src/mos/gfx/*.cpp src/mos/gfx/renderer/*.cpp)
 file(GLOB AUD_SOURCE src/mos/aud/*.cpp)
 file(GLOB SIM_SOURCE src/mos/sim/*.cpp)
 file(GLOB IO_SOURCE src/mos/io/*.cpp)
 file(GLOB CORE_SOURCE src/mos/core/*.cpp)
 
 file(GLOB ROOT_HEADER include/mos/*.hpp)
-file(GLOB GFX_HEADER include/mos/gfx/*.hpp)
+file(GLOB GFX_HEADER include/mos/gfx/*.hpp include/mos/gfx/renderer/*.hpp)
 file(GLOB AUD_HEADER include/mos/aud/*.hpp)
 file(GLOB SIM_HEADER include/mos/sim/*.hpp)
 file(GLOB IO_HEADER include/mos/io/*.hpp)
