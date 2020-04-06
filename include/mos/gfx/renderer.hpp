@@ -110,28 +110,8 @@ private:
   #include <mos/gfx/renderer/shadow_map_target.hpp>
   #include <mos/gfx/renderer/environment_map_target.hpp>
 
-  struct Quad {
-    Quad();
-    ~Quad();
-    Quad(const Quad &target) = delete;
-    Quad(const Quad &&target) = delete;
-    Quad & operator=(const Quad &target) = delete;
-    Quad & operator=(const Quad &&target) = delete;
-    const GLuint vertex_array{};
-    const GLuint buffer{};
-  };
-
-  struct Box {
-    Box();
-    ~Box();
-    Box(const Box &target) = delete;
-    Box(const Box &&target) = delete;
-    Box & operator=(const Box &target) = delete;
-    Box & operator=(const Box &&target) = delete;
-    const GLuint buffer{};
-    const GLuint element_buffer{};
-    const GLuint vertex_array{};
-  };
+  #include <mos/gfx/renderer/box.hpp>
+  #include <mos/gfx/renderer/quad.hpp>
 
   void render_texture_targets(const Scene &scene);
 

@@ -963,65 +963,8 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-Renderer::Quad::Quad()
-    : vertex_array(generate(glGenVertexArrays)),
-      buffer(generate(glGenBuffers)) {
-  static const float quad_vertices[] = {
-      -1.0f, 1.0f, 0.0f, 1.0f,
-      -1.0f, -1.0f, 0.0f, 0.0f,
-      1.0f, -1.0f, 1.0f, 0.0f,
-      -1.0f, 1.0f, 0.0f, 1.0f,
-      1.0f, -1.0f, 1.0f, 0.0f,
-      1.0f, 1.0f, 1.0f, 1.0f
-  };
-  glBindVertexArray(vertex_array);
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), &quad_vertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) nullptr);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) (2 * sizeof(float)));
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-Renderer::Quad::~Quad() {
-  glDeleteBuffers(1, &buffer);
-  glDeleteVertexArrays(1, &vertex_array);
-}
-Renderer::Box::Box()
-    : buffer(generate(glGenBuffers)), element_buffer(generate(glGenBuffers)),
-      vertex_array(generate(glGenVertexArrays)) {
-  // Render boxes
-  float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0, 0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0, -0.5, 0.5, -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5, 1.0, 0.5, 0.5, 0.5, 1.0, -0.5, 0.5, 0.5, 1.0,
-  };
 
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  unsigned int elements[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 4, 1, 5, 2, 6, 3, 7};
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
-               GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glBindVertexArray(vertex_array);
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr );
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-  glBindVertexArray(0);
-}
-
-Renderer::Box::~Box(){
-  glDeleteBuffers(1, &buffer);
-  glDeleteVertexArrays(1, &vertex_array);
-  glDeleteBuffers(1, &element_buffer);
-}
 
 }
 }
