@@ -104,65 +104,11 @@ private:
   #include <mos/gfx/renderer/environment_program.hpp>
   #include <mos/gfx/renderer/standard_program.hpp>
 
-  struct Standard_target {
-    Standard_target(const glm::ivec2 &resolution, const int samples);
-    ~Standard_target();
-    Standard_target(const Standard_target &target) = delete;
-    Standard_target(Standard_target &&target) = delete;
-    Standard_target & operator=(const Standard_target &target) = delete;
-    Standard_target & operator=(Standard_target &&target) = delete;
-    const GLuint frame_buffer{};
-    const GLuint color_texture{};
-    const GLuint depth_texture{};
-  };
-
-  struct Blit_target {
-    explicit Blit_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
-    ~Blit_target();
-    Blit_target(const Blit_target &target) = delete;
-    Blit_target(Blit_target &&target) = delete;
-    Blit_target & operator=(const Blit_target &target) = delete;
-    Blit_target & operator=(Blit_target &&target) = delete;
-    const GLuint frame_buffer{};
-    const GLuint texture{};
-    const GLuint depth_texture{};
-    const glm::ivec2 resolution;
-  };
-
-  struct Post_target {
-    explicit Post_target(const glm::ivec2 &resolution, GLint precision = GL_RGB16F);
-    ~Post_target();
-    Post_target(const Post_target &target) = delete;
-    Post_target(Post_target &&target) = delete;
-    Post_target & operator=(const Post_target &target) = delete;
-    Post_target & operator=(Post_target &&target) = delete;
-    const GLuint frame_buffer{};
-    const GLuint texture{};
-    const glm::ivec2 resolution;
-  };
-
-  struct Shadow_map_target {
-    explicit Shadow_map_target(const Render_buffer &render_buffer);
-    ~Shadow_map_target();
-    Shadow_map_target(const Shadow_map_target &target) = delete;
-    Shadow_map_target(Shadow_map_target &&target) = delete;
-    Shadow_map_target & operator=(const Shadow_map_target &target) = delete;
-    Shadow_map_target & operator=(Shadow_map_target &&target) = delete;
-    const GLuint texture{};
-    const GLuint frame_buffer{};
-  };
-
-  struct Environment_map_target {
-    explicit Environment_map_target(const Render_buffer &render_buffer);
-    ~Environment_map_target();
-    Environment_map_target(const Environment_map_target &target) = delete;
-    Environment_map_target(Environment_map_target &&target) = delete;
-    Environment_map_target & operator=(const Environment_map_target &target) = delete;
-    Environment_map_target & operator=(Environment_map_target &&target) = delete;
-    const GLuint texture{};
-    const GLuint albedo{};
-    const GLuint frame_buffer{};
-  };
+  #include <mos/gfx/renderer/standard_target.hpp>
+  #include <mos/gfx/renderer/blit_target.hpp>
+  #include <mos/gfx/renderer/post_target.hpp>
+  #include <mos/gfx/renderer/shadow_map_target.hpp>
+  #include <mos/gfx/renderer/environment_map_target.hpp>
 
   struct Quad {
     Quad();
