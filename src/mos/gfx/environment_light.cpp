@@ -42,10 +42,10 @@ Environment_light::Environment_light(const std::string &directory, const std::st
     box_ = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
     strength = value.value("intensity", 1.0f);
     falloff = value.value("falloff", 0.1f);
-    auto near = value.value("near", 0.01f);
-    auto far = value.value("far", glm::length(extent));
+    auto near_plane = value.value("near", 0.01f);
+    auto far_plane = value.value("far", glm::length(extent));
 
-    cube_camera_ = mos::gfx::Cube_camera(position, near, far);
+    cube_camera_ = mos::gfx::Cube_camera(position, near_plane, far_plane);
   } else {
     throw std::runtime_error(path.substr(path.find_last_of('.')) +
         " file format is not supported.");
