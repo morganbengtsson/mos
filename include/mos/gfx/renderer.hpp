@@ -82,21 +82,8 @@ private:
   static FormatPair format_convert(const Texture::Format &f);
 
   #include <mos/gfx/renderer/buffer.hpp>
+  #include <mos/gfx/renderer/render_buffer.hpp>
 
-  class Render_buffer {
-  public:
-    explicit Render_buffer(int resolution);
-    explicit Render_buffer(const glm::ivec2 &resolution);
-    ~Render_buffer();
-    Render_buffer(Render_buffer &&target) noexcept;
-    Render_buffer(const Render_buffer &target) = delete;
-    Render_buffer & operator=(const Render_buffer &target) = delete;
-    Render_buffer & operator=(Render_buffer &&target) noexcept;
-    GLuint id{0};
-    glm::ivec2 resolution() const;
-  private:
-    void release();
-  };
 
   class Vertex_array {
   public:
