@@ -86,26 +86,12 @@ private:
   #include <mos/gfx/renderer/vertex_array.hpp>
   #include <mos/gfx/renderer/texture_buffer_2d.hpp>
 
-  using Render_buffers = std::unordered_map<unsigned int, Render_buffer>;
-  using Texture_buffers = std::unordered_map<unsigned int, Texture_buffer_2D>;
+  #include <mos/gfx/renderer/frame_buffer.hpp>
+
   using Array_buffers = std::unordered_map<unsigned int, Buffer>;
   using Element_array_buffers = std::unordered_map<unsigned int, Buffer>;
   using Vertex_arrays = std::unordered_map<unsigned int, Vertex_array>;
 
-  class Frame_buffer {
-  public:
-    explicit Frame_buffer(const Texture_target & target,
-                          Texture_buffers &texture_buffers,
-                          Render_buffers &render_buffers);
-    ~Frame_buffer();
-    Frame_buffer(Frame_buffer &&buffer) noexcept;
-    Frame_buffer(const Frame_buffer &buffer) = delete;
-    Frame_buffer & operator=(const Frame_buffer &buffer) = delete;
-    Frame_buffer & operator=(Frame_buffer &&buffer) noexcept;
-    GLuint id{0};
-  private:
-    void release();
-  };
 
   using Frame_buffers = std::unordered_map<unsigned int, Frame_buffer>;
 
