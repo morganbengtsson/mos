@@ -82,18 +82,12 @@ private:
   static FormatPair format_convert(const Texture::Format &f);
 
   #include <mos/gfx/renderer/buffer.hpp>
-  #include <mos/gfx/renderer/render_buffer.hpp>
-  #include <mos/gfx/renderer/vertex_array.hpp>
-  #include <mos/gfx/renderer/texture_buffer_2d.hpp>
-
-  #include <mos/gfx/renderer/frame_buffer.hpp>
-
-  using Array_buffers = std::unordered_map<unsigned int, Buffer>;
-  using Element_array_buffers = std::unordered_map<unsigned int, Buffer>;
-  using Vertex_arrays = std::unordered_map<unsigned int, Vertex_array>;
-
-
-  using Frame_buffers = std::unordered_map<unsigned int, Frame_buffer>;
+  #include <mos/gfx/renderer/render_buffers.hpp>
+  #include <mos/gfx/renderer/vertex_arrays.hpp>
+  #include <mos/gfx/renderer/texture_buffers.hpp>
+  #include <mos/gfx/renderer/frame_buffers.hpp>
+  #include <mos/gfx/renderer/array_buffers.hpp>
+  #include <mos/gfx/renderer/element_array_buffers.hpp>
 
   class Shader {
   public:
