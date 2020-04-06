@@ -90,18 +90,8 @@ private:
   #include <mos/gfx/renderer/element_array_buffers.hpp>
 
   #include <mos/gfx/renderer/shader.hpp>
+  #include <mos/gfx/renderer/program.hpp>
 
-  struct Program {
-    Program();
-    ~Program();
-    Program(const Program &program) = delete;
-    Program(const Program &&program) = delete;
-    Program & operator=(const Program &program) = delete;
-    Program & operator=(const Program &&program) = delete;
-    const GLuint program;
-    void check(const std::string &name);
-    void link(const std::string &name);
-  };
 
   struct Light_uniforms {
     GLint position;
