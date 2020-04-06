@@ -84,26 +84,7 @@ private:
   #include <mos/gfx/renderer/buffer.hpp>
   #include <mos/gfx/renderer/render_buffer.hpp>
   #include <mos/gfx/renderer/vertex_array.hpp>
-
-
-  class Texture_buffer_2D {
-  public:
-    explicit Texture_buffer_2D(const Texture_2D &texture_2d);
-    Texture_buffer_2D(
-        GLint internal_format, GLenum external_format, int width, int height,
-        GLint filter_min, GLint filter_mag, GLint wrap, const void *data,
-        const Time_point &modified = std::chrono::system_clock::now());
-
-   ~Texture_buffer_2D();
-    Texture_buffer_2D(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D(Texture_buffer_2D &&buffer) noexcept;
-    Texture_buffer_2D & operator=(const Texture_buffer_2D &buffer) = delete;
-    Texture_buffer_2D & operator=(Texture_buffer_2D &&buffer) noexcept;
-    GLuint texture{0};
-    Time_point modified;
-  private:
-    void release();
-  };
+  #include <mos/gfx/renderer/texture_buffer_2d.hpp>
 
   using Render_buffers = std::unordered_map<unsigned int, Render_buffer>;
   using Texture_buffers = std::unordered_map<unsigned int, Texture_buffer_2D>;
