@@ -89,9 +89,6 @@ private:
   #include <mos/gfx/renderer/array_buffers.hpp>
   #include <mos/gfx/renderer/element_array_buffers.hpp>
 
-  #include <mos/gfx/renderer/shader.hpp> //TODO: remove
-  #include <mos/gfx/renderer/program.hpp> // TODO: remove
-
   #include <mos/gfx/renderer/light_uniforms.hpp> //TODO: remove
 
   #include <mos/gfx/renderer/cloud_program.hpp>
