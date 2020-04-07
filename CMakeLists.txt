@@ -31,9 +31,6 @@ add_subdirectory(externals/glad)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 add_subdirectory(externals/glm)
 
-# Filesystem
-add_subdirectory(externals/filesystem)
-
 # stb
 add_subdirectory(externals/stb)
 
@@ -79,7 +76,6 @@ target_include_directories(${PROJECT_NAME}
         externals/glm
         externals/nlohmann_json_release
         externals/stb
-        externals/filesystem
         externals/utfcpp/source
         )
 

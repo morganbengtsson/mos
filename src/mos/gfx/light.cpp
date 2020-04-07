@@ -1,6 +1,6 @@
 #include <mos/gfx/light.hpp>
 #include <glm/gtx/transform.hpp>
-#include <filesystem/path.h>
+#include <filesystem>
 #include <json.hpp>
 #include <mos/util.hpp>
 
@@ -61,9 +61,9 @@ Light::Light(const std::string &directory,
   color(glm::vec3{0.0f}) {
   using json = nlohmann::json;
   if (!path.empty()) {
-    filesystem::path fpath = path;
-    if (fpath.extension() == "light") {
-      auto value = json::parse(mos::text(directory + fpath.str()));
+    std::filesystem::path fpath = path;
+    if (fpath.extension() == ".light") {
+      auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
       auto position = glm::vec3(transform[3]);

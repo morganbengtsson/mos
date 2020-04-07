@@ -1,6 +1,6 @@
 #include <mos/gfx/assets.hpp>
 #include <cstring>
-#include <filesystem/path.h>
+#include <filesystem>
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -31,9 +31,9 @@ std::shared_ptr<Texture_2D> Assets::texture(const std::string &path,
                                             const Texture_2D::Filter &filter,
                                             const Texture_2D::Wrap &wrap) {
   if (!path.empty()) {
-    filesystem::path fpath = path;
+    std::filesystem::path fpath = path;
     if (textures_.find(path) == textures_.end()) {
-      if (fpath.extension() == "texture") {
+      if (fpath.extension() == ".texture") {
           auto texture_json = json::parse(mos::text(directory() + path));
           std::string image_path = texture_json["image"];
           std::string filter_key = texture_json["filter"];

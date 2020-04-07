@@ -1,4 +1,4 @@
-#include <filesystem/path.h>
+#include <filesystem>
 #include <iostream>
 #include <mos/gfx/model.hpp>
 #include <mos/util.hpp>
@@ -43,9 +43,9 @@ Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &paren
 
   for (auto &m : parsed["children"]) {
     const std::string str_path = m;
-    filesystem::path path = str_path;
-    if (path.extension() == "model") {
-      models.push_back(Model(path.str(), assets));
+    std::filesystem::path path = str_path;
+    if (path.extension() == ".model") {
+      models.push_back(Model(path.generic_string(), assets));
     }
   }
 }

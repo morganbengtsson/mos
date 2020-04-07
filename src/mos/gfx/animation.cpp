@@ -3,7 +3,7 @@
 #include <json.hpp>
 #include <mos/util.hpp>
 #include <mos/gfx/animation.hpp>
-#include <filesystem/path.h>
+#include <filesystem>
 
 namespace mos {
 namespace gfx {
@@ -30,13 +30,13 @@ Animation::Animation(
       keyframes_(keyframes.begin(), keyframes.end()) {}
 
 Animation::Animation(const std::string &path) {
-  filesystem::path fpath = path;
-  auto doc = json::parse(mos::text(fpath.str()));
+  std::filesystem::path fpath = path;
+  auto doc = json::parse(mos::text(fpath.generic_string()));
   frame_rate_ = doc["frame_rate"];
   for (auto &keyframe : doc["keyframes"]) {
     auto key = keyframe["key"];
     std::string mesh_file = keyframe["mesh"];
-    keyframes_.insert({key, Mesh::load(fpath.parent_path().str() + "/" + mesh_file)});
+    keyframes_.insert({key, Mesh::load(fpath.parent_path().generic_string() + "/" + mesh_file)});
   }
 }
 

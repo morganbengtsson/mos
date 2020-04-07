@@ -4,7 +4,7 @@
 #include <glm/gtx/io.hpp>
 #include <json.hpp>
 #include <iostream>
-#include <filesystem/path.h>
+#include <filesystem>
 #include <mos/util.hpp>
 
 namespace mos {
@@ -42,9 +42,9 @@ Camera::Camera(const std::string &directory, const std::string &path,
       up_(glm::vec3(0.0f, 0.0f, 1.0f)) {
   using json = nlohmann::json;
   if (!path.empty()) {
-    filesystem::path fpath = path;
-    if (fpath.extension() == "camera") {
-      auto value = json::parse(mos::text(directory + fpath.str()));
+    std::filesystem::path fpath = path;
+    if (fpath.extension() == ".camera") {
+      auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
       float focus_distance = value["focus_distance"];
 

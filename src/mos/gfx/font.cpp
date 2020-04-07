@@ -1,7 +1,7 @@
 #include <json.hpp>
 #include <mos/gfx/font.hpp>
 #include <mos/util.hpp>
-#include <filesystem/path.h>
+#include <filesystem>
 
 namespace mos {
 namespace gfx {
@@ -18,8 +18,8 @@ Font::Font(Font::Char_map characters,
 }
 
 Font::Font(const std::string &path) {
-  filesystem::path fpath = path;
-  auto doc = json::parse(text(fpath.str()));
+  std::filesystem::path fpath = path;
+  auto doc = json::parse(text(fpath.generic_string()));
   for (auto &c : doc["symbols"]) {
     Character character{};
     character.x_offset = c["xoffset"];
@@ -35,7 +35,7 @@ Font::Font(const std::string &path) {
   base_ = doc["config"]["base"];
   height_ = doc["config"]["charHeight"];
   std::string texture_name = doc["config"]["textureFile"];
-  texture = Texture_2D::load(fpath.parent_path().str() + "/" + texture_name);
+  texture = Texture_2D::load(fpath.parent_path().generic_string() + "/" + texture_name);
 }
 
 float Font::height() const { return height_; }

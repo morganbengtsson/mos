@@ -1,5 +1,5 @@
 #include <json.hpp>
-#include <filesystem/path.h>
+#include <filesystem>
 #include <mos/gfx/material.hpp>
 #include <mos/util.hpp>
 #include <mos/gfx/assets.hpp>
@@ -53,9 +53,9 @@ Material::Material(const glm::vec3 &albedo,
 
 Material::Material(Assets &assets, std::string &path) : Material() {
   if (!path.empty()) {
-    filesystem::path fpath = path;
-    if (fpath.extension() == "material") {
-      auto value = json::parse(mos::text(assets.directory() + fpath.str()));
+    std::filesystem::path fpath = path;
+    if (fpath.extension() == ".material") {
+      auto value = json::parse(mos::text(assets.directory() + fpath.generic_string()));
 
       auto read_texture = [&](const std::string &name, const bool color_data = true) {
         std::string file_name{};

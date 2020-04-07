@@ -1,7 +1,7 @@
 #include <mos/gfx/environment_light.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <mos/util.hpp>
-#include <filesystem/path.h>
+#include <filesystem>
 #include <json.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
@@ -22,10 +22,10 @@ Environment_light::Environment_light(const glm::vec3 &position,
 Environment_light::Environment_light(const std::string &directory, const std::string &path,
     const glm::mat4 &parent_transform) {
   using json = nlohmann::json;
-  filesystem::path fpath = path;
+  std::filesystem::path fpath = path;
 
-  if (fpath.extension() == "environment_light") {
-    auto value = json::parse(mos::text(directory + fpath.str()));
+  if (fpath.extension() == ".environment_light") {
+    auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
     auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
 
