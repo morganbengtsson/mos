@@ -7,8 +7,8 @@ addons:
     sources: &default_sources
       - sourceline: "ppa:ubuntu-toolchain-r/test"
     packages: &default_packages
-      -xorg-dev
-      -libglu1-mesa-dev
+      - xorg-dev
+      - libglu1-mesa-dev
 
 compiler:
   - gcc
