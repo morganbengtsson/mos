@@ -7,21 +7,16 @@ addons:
     sources: &default_sources
       - sourceline: "ppa:ubuntu-toolchain-r/test"
     packages: &default_packages
-      - ninja-build
-      - re2c
+      -xorg-dev
+      -libglu1-mesa-dev
 
 compiler:
   - gcc
 
-before_script:
-  - sudo apt-get install xorg-dev libglu1-mesa-dev
-
 script:
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
-             -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER
-             -DCMAKE_CXX_FLAGS=$CMAKE_CXX_FLAGS
+  - cmake .. 
   - make
 
 matrix:
@@ -36,16 +31,9 @@ matrix:
             - *default_packages
             - g++-9
 
-    - env: CMAKE_CXX_COMPILER=clang++-10 CMAKE_BUILD_TYPE=Debug CMAKE_CXX_FLAGS=-fsanitize=address,undefined
+    - env: CMAKE_CXX_COMPILER=g++-9 CMAKE_BUILD_TYPE=Release
       os: linux
       dist: bionic
-      addons: &clang10
-        apt:
-          sources:
-            - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
-              key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
-          packages:
-            - *default_packages
-            - clang-10
+      addons: *gcc9
 
 
