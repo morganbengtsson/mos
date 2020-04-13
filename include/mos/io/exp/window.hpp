@@ -19,8 +19,11 @@ public:
         const glm::ivec2 &resolution = {1920, 1080},
          int swap_interval = 0);
   ~Window();
-  Output poll_events();
+  static Output poll_events();
   void swap_buffers();
+  float dpi() const;
+  bool close() const;
+  void close(const bool close);
 private:
   GLFWwindow *window_;
   static Keyboard keyboard_;

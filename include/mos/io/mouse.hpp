@@ -24,7 +24,7 @@ public:
   //TODO: set automaticly
   glm::dvec2 old_position{};
   Events events;
-  std::array<bool, 3> buttons;
+  std::array<bool, 3> buttons{false, false, false};
 };
 
 }

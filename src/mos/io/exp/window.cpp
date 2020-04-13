@@ -2,13 +2,15 @@
 
 namespace mos::io::exp {
 
+Keyboard Window::keyboard_ = Keyboard();
+Mouse Window::mouse_ = Mouse();
+
 Window::Window(const std::string &title,
                const glm::ivec2 &resolution,
                int swap_interval){
   if (!glfwInit()) {
     exit(EXIT_FAILURE);
   }
-
 
   glfwWindowHint(GLFW_SRGB_CAPABLE, true);
   glfwWindowHint(GLFW_RESIZABLE, false);
@@ -45,6 +47,10 @@ Window::~Window(){
   glfwDestroyWindow(window_);
 }
 
+void Window::swap_buffers() {
+  glfwSwapBuffers(window_);
+}
+
 Window::Output Window::poll_events() {
   keyboard_.events.clear();
   keyboard_.codepoints.clear();
@@ -52,8 +58,24 @@ Window::Output Window::poll_events() {
 
   glfwPollEvents();
 
-  Output output{keyboard_, mouse_};
-  return output;
+  return Output{keyboard_, mouse_};
+}
+
+float Window::dpi() const {
+  GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+  int widthMM, heightMM;
+  glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
+  const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+  const double dpi = mode->width / (widthMM / 25.4);
+  return dpi;
+}
+
+bool Window::close() const {
+  return glfwWindowShouldClose(window_);
+}
+
+void Window::close(const bool close) {
+  glfwSetWindowShouldClose(window_, close);
 }
 
 void Window::error_callback(int error, const char *description) {
