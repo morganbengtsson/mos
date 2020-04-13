@@ -1,6 +1,5 @@
-#include "window.hpp"
+#include <mos/gfx/exp/window.hpp>
 
-Window::Window()
-{
-
+namespace mos::io::exp {
+Window::Window() {}
 }
