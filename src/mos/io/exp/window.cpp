@@ -1,5 +1,4 @@
-#include <mos/gfx/exp/window.hpp>
-#include <glad/glad.h>
+#include <mos/io/exp/window.hpp>
 
 namespace mos::io::exp {
 
@@ -33,14 +32,6 @@ Window::Window(const std::string &title,
 
   gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
-  glfwSetKeyCallback(window_, key_callback);
-  glfwSetWindowSizeCallback(window_, size_callback);
-  glfwSetMouseButtonCallback(window_, click_callback);
-  glfwSetCursorPosCallback(window_, mouse_callback);
-  glfwSetScrollCallback(window_, scroll_callback);
-  glfwSetWindowPosCallback(window_, position_callback);
-  glfwSetCharCallback(window_, char_callback);
-
   glfwSwapInterval(swap_interval);
 
   glfwSetErrorCallback(error_callback);
@@ -69,7 +60,7 @@ void Window::error_callback(int error, const char *description) {
   fprintf(stderr, "Error: %s\n", description);
 }
 
-void Window::key_callback(int key, int scancode, int action, int mods)
+void Window::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
   if (key == GLFW_KEY_ENTER) {
     if (action == GLFW_PRESS) {
@@ -90,16 +81,16 @@ void Window::key_callback(int key, int scancode, int action, int mods)
     }
 }
 
-void Window::char_callback(const unsigned int codepoint) {
+void Window::char_callback(GLFWwindow * window, const unsigned int codepoint) {
   keyboard_.codepoints.push_back(codepoint);
 }
 
-void Window::cursor_position_callback(double xpos, double ypos) {
+void Window::cursor_position_callback(GLFWwindow * window, double xpos, double ypos) {
   mouse_.old_position = mouse_.position;
   mouse_.position = glm::dvec2(xpos, ypos);
 }
 
-void Window::mouse_button_callback(int button, int action, int mods) {
+void Window::mouse_button_callback(GLFWwindow * window, int button, int action, int mods) {
   if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
     mouse_.buttons[0] = true;
     mouse_.events.insert(mos::io::Mouse::Event::Button_press_0);
