@@ -82,25 +82,8 @@ void Window::error_callback(int error, const char *description) {
   fprintf(stderr, "Error: %s\n", description);
 }
 
-void Window::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
-{
-  if (key == GLFW_KEY_ENTER) {
-    if (action == GLFW_PRESS) {
-      keyboard_.events.insert(mos::io::Keyboard::Event::Button_enter_press);
-    }
-    else if (action == GLFW_RELEASE){
-      keyboard_.events.insert(mos::io::Keyboard::Event::Button_enter_release);
-    }
-  }
-
-  if (key == GLFW_KEY_BACKSPACE) {
-    if (action == GLFW_PRESS) {
-      keyboard_.events.insert(mos::io::Keyboard::Event::Button_backspace_press);
-    }
-    else if (action == GLFW_RELEASE){
-      keyboard_.events.insert(mos::io::Keyboard::Event::Button_backspace_release);
-    }
-    }
+void Window::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
+  keyboard_.events.insert({static_cast<Keyboard::Key>(key), static_cast<Keyboard::Action>(action)});
 }
 
 void Window::char_callback(GLFWwindow * window, const unsigned int codepoint) {
