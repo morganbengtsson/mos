@@ -113,29 +113,8 @@ void Window::cursor_position_callback(GLFWwindow * window, double xpos, double y
 }
 
 void Window::mouse_button_callback(GLFWwindow * window, int button, int action, int mods) {
-  if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
-    mouse_.buttons[0] = true;
-    mouse_.events.insert(mos::io::Mouse::Event::Button_press_0);
-  }
-  if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
-    mouse_.buttons[0] = false;
-    mouse_.events.insert(mos::io::Mouse::Event::Button_release_0);
-  }
-  if (button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS) {
-    mouse_.buttons[1] = true;
-    mouse_.events.insert(mos::io::Mouse::Event::Button_press_1);
-  }
-  if (button == GLFW_MOUSE_BUTTON_2 && action == GLFW_RELEASE) {
-    mouse_.buttons[1] = false;
-    mouse_.events.insert(mos::io::Mouse::Event::Button_release_1);
-  }
-
-  if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
-    mouse_.buttons[2] = true;
-  }
-  if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
-    mouse_.buttons[2] = false;
-  }
+  mouse_.buttons[button] = static_cast<bool>(action);
+  mouse_.events.insert({static_cast<Mouse::Button>(button), static_cast<Mouse::Action>(action)});
 }
 }
 
