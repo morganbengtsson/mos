@@ -285,6 +285,9 @@ void Renderer::render_scene(const Camera &camera,
     glUniform1fv(standard_program_.lights.at(i).angle, 1, &light_angle);
     auto light_direction = scene.lights.at(i).direction();
     glUniform3fv(standard_program_.lights.at(i).direction, 1, glm::value_ptr(light_direction));
+
+    auto light_blend = scene.lights.at(i).blend();
+    glUniform1fv(standard_program_.lights.at(i).blend, 1, &light_blend);
   }
 
   glUniform2iv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));

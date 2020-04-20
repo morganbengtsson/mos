@@ -17,11 +17,17 @@ public:
                  const glm::vec3 &color = glm::vec3(0.0f),
                  float strength = 0.0f,
                  float near = 0.1f,
-                 float far = 10.0f);
+                 float far = 10.0f,
+                 float blend = 0.15);
 
   Light(const std::string &directory,
         const std::string &path,
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
+
+  /** Set blend factor. */
+  void blend(float blend);
+
+  float blend() const;
 
   /** Set spot angle, in radans. */
   void angle(float angle);
@@ -55,6 +61,8 @@ private:
   float angle_;
   float near_;
   float far_;
+  float blend_ = 0.15;
+
 };
 }
 }

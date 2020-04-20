@@ -46,6 +46,7 @@ public:
     GLint projection;
     GLint angle;
     GLint direction;
+    GLint blend;
   };
 
   std::array<GLuint, 4> shadow_maps{};

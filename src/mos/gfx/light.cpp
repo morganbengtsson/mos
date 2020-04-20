@@ -12,14 +12,16 @@ Light::Light(const glm::vec3 &position,
              const glm::vec3 &color,
              const float strength,
              const float near_plane,
-             const float far_plane)
+             const float far_plane,
+             const float blend)
     : color(color),
       strength(strength),
       camera(position, center, glm::perspective(angle, 1.0f, near_plane, far_plane),
              glm::vec3(0.0f, 0.0001f, 1.0f)),
       angle_(angle),
       near_(near_plane),
-      far_(far_plane) {}
+      far_(far_plane),
+      blend_(blend) {}
 
 void Light::position(const glm::vec3 &position) {
   camera.position(position);
@@ -79,7 +81,7 @@ Light::Light(const std::string &directory,
       angle_ = data_value["size"];
       near_ = data_value["near"];
       far_ = data_value["far"];
-      auto blend = value["blend"];
+      blend_ = data_value["blend"];
 
       camera = mos::gfx::Camera(position, center, glm::perspective(angle_, 1.0f, near_, far_),
              glm::vec3(0.0f, 0.0001f, 1.0f));
@@ -88,7 +90,15 @@ Light::Light(const std::string &directory,
       throw std::runtime_error(path.substr(path.find_last_of('.')) +
           " file format is not supported.");
     }
-  }
+    }
+}
+
+void Light::blend(float blend) {
+  blend_ = blend;
+}
+
+float Light::blend() const {
+  return blend_;
 }
 }
 }

@@ -101,6 +101,9 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
     lights.at(i).angle = glGetUniformLocation(
         program,
         std::string("lights[" + std::to_string(i) + "].angle").c_str());
+    lights.at(i).blend = glGetUniformLocation(
+        program,
+        std::string("lights[" + std::to_string(i) + "].blend").c_str());
     lights.at(i).direction = glGetUniformLocation(
         program,
         std::string("lights[" + std::to_string(i) + "].direction").c_str());
