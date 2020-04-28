@@ -928,6 +928,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   // Bloom
   glViewport(0, 0, post_target0_.resolution.x, post_target0_.resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, post_target0_.frame_buffer);
+  clear(glm::vec4(0.0f));
 
   glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
