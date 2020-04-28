@@ -71,7 +71,7 @@ Camera::Camera(const std::string &directory, const std::string &path,
 }
 }
 
-glm::vec3 Camera::up() const { return up_; }
+auto Camera::up() const -> glm::vec3 { return up_; }
 
 void Camera::up(const glm::vec3 &up) {
   up_ = up;
@@ -80,7 +80,7 @@ void Camera::up(const glm::vec3 &up) {
   calculate_near_far();
 }
 
-glm::vec3 Camera::position() const { return position_; }
+auto Camera::position() const -> glm::vec3 { return position_; }
 
 void Camera::position(const glm::vec3 &position) {
   position_ = position;
@@ -89,7 +89,7 @@ void Camera::position(const glm::vec3 &position) {
   calculate_near_far();
 }
 
-glm::vec3 Camera::center() const { return center_; }
+auto Camera::center() const -> glm::vec3 { return center_; }
 
 void Camera::center(const glm::vec3 &center) {
   center_ = center;
@@ -98,11 +98,11 @@ void Camera::center(const glm::vec3 &center) {
   calculate_near_far();
 }
 
-glm::vec3 Camera::direction() const {
+auto Camera::direction() const -> glm::vec3 {
   return glm::normalize(center_ - position_);
 }
 
-glm::vec3 Camera::right() const {
+auto Camera::right() const -> glm::vec3 {
   return glm::normalize(glm::cross(up(), direction()));
 }
 
@@ -114,7 +114,7 @@ void Camera::calculate_view() {
   view_ = glm::lookAt(position_, center_, up_);
 }
 
-float Camera::aspect_ratio() const {
+auto Camera::aspect_ratio() const -> float {
   return projection_[1][1] / projection_[0][0];
 }
 
@@ -147,7 +147,7 @@ void Camera::calculate_near_far() {
   far_ = f0.z * f0.w;
 }
 
-bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
+auto Camera::in_frustum(const glm::vec3 &point, const float radius) const -> bool {
   bool result = true;
   for (Planes::size_type i = 0; i < 6; i++)
   {
@@ -158,15 +158,15 @@ bool Camera::in_frustum(const glm::vec3 &point, const float radius) const {
   return result;
 }
 
-float Camera::near_plane() const {
+auto Camera::near_plane() const -> float {
   return near_;
 }
 
-float Camera::far_plane() const {
+auto Camera::far_plane() const -> float {
   return far_;
 }
 
-glm::mat4 Camera::projection() const {
+auto Camera::projection() const -> glm::mat4 {
   return projection_;
 }
 
@@ -177,7 +177,7 @@ void Camera::projection(const glm::mat4 &proj) {
   calculate_near_far();
 }
 
-glm::mat4 Camera::view() const {
+auto Camera::view() const -> glm::mat4 {
   return view_;
 }
 }

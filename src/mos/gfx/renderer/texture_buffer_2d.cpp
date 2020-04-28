@@ -31,8 +31,8 @@ Renderer::Texture_buffer_2D::Texture_buffer_2D(
   buffer.texture = 0;
 }
 
-Renderer::Texture_buffer_2D &Renderer::Texture_buffer_2D::operator=(
-    Renderer::Texture_buffer_2D &&buffer) noexcept {
+auto Renderer::Texture_buffer_2D::operator=(
+    Renderer::Texture_buffer_2D &&buffer) noexcept -> Texture_buffer_2D & {
   if (this != &buffer) {
     release();
     std::swap(texture, buffer.texture);

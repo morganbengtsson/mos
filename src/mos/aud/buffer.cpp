@@ -28,31 +28,31 @@ Buffer::Buffer(const std::string &path) : id_(current_id_++), channels_(0), samp
   samples_.assign(decoded, decoded + length);
 }
 
-Shared_buffer Buffer::load(const std::string &path) {
+auto Buffer::load(const std::string &path) -> Shared_buffer {
   return std::make_shared<Buffer>(path);
 }
 
-Buffer::Samples::const_iterator Buffer::begin() const {
+auto Buffer::begin() const -> Samples::const_iterator {
   return samples_.begin();
 }
 
-Buffer::Samples::const_iterator Buffer::end() const {
+auto Buffer::end() const -> Samples::const_iterator {
   return samples_.end();
 }
 
-unsigned int Buffer::id() const { return id_; }
+auto Buffer::id() const -> unsigned int { return id_; }
 
-int Buffer::channels() const { return channels_; }
+auto Buffer::channels() const -> int { return channels_; }
 
-int Buffer::sample_rate() const { return sample_rate_; }
+auto Buffer::sample_rate() const -> int { return sample_rate_; }
 
-float Buffer::duration() const {
+auto Buffer::duration() const -> float {
   return float(samples_.size()) / float(sample_rate() * channels());
 }
 
-const short *Buffer::data() const { return samples_.data(); }
+auto Buffer::data() const -> const short * { return samples_.data(); }
 
-size_t Buffer::size() const {
+auto Buffer::size() const -> size_t {
   return samples_.size();
 }
 

@@ -30,7 +30,7 @@ Text::Text(const std::string &txt,
   text(txt);
 }
 
-std::string Text::text() const { return text_; }
+auto Text::text() const -> std::string { return text_; }
 
 void Text::text(const std::string &text) {
   if (text_.compare(text) != 0) {
@@ -92,7 +92,7 @@ void Text::text(const std::string &text) {
   }
 }
 
-float Text::width() const {
+auto Text::width() const -> float {
   if (model_.mesh->vertices.size() > 2) {
     auto result = std::minmax_element(model_.mesh->vertices.begin(),
                                       model_.mesh->vertices.end(),
@@ -103,7 +103,7 @@ float Text::width() const {
   return 0.0f;
 }
 
-float Text::height() const {
+auto Text::height() const -> float {
   if (model_.mesh->vertices.size() > 2) {
     auto result = std::minmax_element(model_.mesh->vertices.begin(),
                                       model_.mesh->vertices.end(),
@@ -123,7 +123,7 @@ void Text::position(const glm::vec3 &position) {
   model_.transform = glm::translate(glm::mat4(1.0f), position);
 }
 
-glm::vec2 Text::position() const { return glm::vec2(model_.position()); }
+auto Text::position() const -> glm::vec2 { return glm::vec2(model_.position()); }
 
 void Text::scale(const float scale) {
   model_.transform =
@@ -134,22 +134,22 @@ void Text::transform(const glm::mat4 &transform) {
   model_.transform = transform;
 }
 
-glm::mat4 Text::transform() const {
+auto Text::transform() const -> glm::mat4 {
   return model_.transform;
 }
 
-Model Text::model() const { return model_; }
+auto Text::model() const -> Model { return model_; }
 
 void Text::opacity(const float op) {
   model_.material.transmission = 1.0f - op;
 }
 
-Text &Text::operator=(const std::string &input) {
+auto Text::operator=(const std::string &input) -> Text & {
   text(input);
   return *this;
 }
 
-Text &Text::operator+=(const std::string &input) {
+auto Text::operator+=(const std::string &input) -> Text & {
   text(text() + input);
   return *this;
 }
@@ -158,7 +158,7 @@ void Text::emission(const glm::vec3 & emiss) {
  model_.material.emission.value = emiss;
 }
 
-Font Text::font() const {
+auto Text::font() const -> Font {
   return font_;
 }
 }

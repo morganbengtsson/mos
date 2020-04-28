@@ -1,4 +1,4 @@
-#include <glm/glm.hpp>
+﻿#include <glm/glm.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
@@ -21,34 +21,34 @@
 namespace mos {
 namespace gfx {
 
-GLuint Renderer::generate(const std::function<void(GLsizei, GLuint*)> & f){
+auto Renderer::generate(const std::function<void(GLsizei, GLuint*)> & f) -> GLuint{
   GLuint id;
   f(1, &id);
   return id;
 }
 
-GLuint Renderer::wrap_convert(const Texture::Wrap& w) {
+auto Renderer::wrap_convert(const Texture::Wrap& w) -> GLuint {
   static const std::map<Texture::Wrap, GLint> wrap_map{
       {Texture::Wrap::Clamp, GL_CLAMP_TO_EDGE},
       {Texture::Wrap::Repeat, GL_REPEAT}};
   return wrap_map.at(w);
 }
 
-GLuint Renderer::filter_convert(const Texture::Filter &f) {
+auto Renderer::filter_convert(const Texture::Filter &f) -> GLuint {
   static const std::map<Texture::Filter, GLint> filter_map{
       {Texture::Filter::Linear, GL_LINEAR},
       {Texture::Filter::Closest, GL_NEAREST}};
   return filter_map.at(f);
 }
 
-GLuint Renderer::filter_convert_mip(const Texture::Filter &f) {
+auto Renderer::filter_convert_mip(const Texture::Filter &f) -> GLuint {
   static const std::map<Texture::Filter, GLint> filter_map_mip{
       {Texture::Filter::Linear, GL_LINEAR_MIPMAP_LINEAR},
       {Texture::Filter::Closest, GL_NEAREST_MIPMAP_LINEAR}};
   return filter_map_mip.at(f);
 }
 
-Renderer::FormatPair Renderer::format_convert(const Texture::Format &f){
+auto Renderer::format_convert(const Texture::Format &f) -> FormatPair{
   static const std::map<Texture::Format, FormatPair> format_map{
       {Texture::Format::R, {GL_RED, GL_RED}},
       {Texture::Format::RG, {GL_RG, GL_RG}},

@@ -24,8 +24,8 @@ Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat
   transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
 }
 
-Navmesh::Optional_vertex
-Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
+auto
+Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) -> Optional_vertex {
   glm::vec3 origin_local = glm::inverse(transform) * glm::vec4(origin, 1.0f);
   glm::vec3 direction_local = glm::mat3(glm::inverseTranspose(transform)) * direction;
 
@@ -40,9 +40,9 @@ Navmesh::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
   return std::optional<gfx::Vertex>();
 }
 
-Navmesh::Optional_vertex
+auto
 Navmesh::closest_intersection(const glm::vec3 &origin,
-                               const glm::vec3 &direction) {
+                               const glm::vec3 &direction) -> Optional_vertex {
   glm::vec3 origin_local = glm::inverse(transform) * glm::vec4(origin, 1.0f);
   glm::vec3 direction_local = glm::mat3(glm::inverseTranspose(transform)) * direction;
 
@@ -65,8 +65,8 @@ Navmesh::closest_intersection(const glm::vec3 &origin,
 Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
-Navmesh::Optional_vertex
-Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) {
+auto
+Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) -> Optional_vertex {
   glm::vec2 bary;
   float distance;
   auto intersects =

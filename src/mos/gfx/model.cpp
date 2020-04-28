@@ -50,9 +50,9 @@ Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &paren
   }
 }
 
-std::string Model::name() const { return name_; }
+auto Model::name() const -> std::string { return name_; }
 
-glm::vec3 Model::position() const {
+auto Model::position() const -> glm::vec3 {
   return glm::vec3(transform[3]);
 }
 
@@ -61,13 +61,13 @@ void Model::position(const glm::vec3 &position) {
   transform[3][1] = position[1];
   transform[3][2] = position[2];
 }
-glm::vec3 Model::centroid() const {
+auto Model::centroid() const -> glm::vec3 {
   if (mesh){
     return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid))[3];
   }
   return transform[3];
 }
-float Model::radius() const {
+auto Model::radius() const -> float {
   if (mesh){
     glm::vec3 scale;
     glm::quat rotation;

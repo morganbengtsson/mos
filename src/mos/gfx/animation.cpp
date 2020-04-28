@@ -50,7 +50,7 @@ Animation::Animation(Assets &assets, const std::string &path) {
   }
 }
 
-int Animation::frame() const {
+auto Animation::frame() const -> int {
   return int(glm::floor(time_ * frame_rate_));
 }
 
@@ -60,7 +60,7 @@ void Animation::frame_rate(const unsigned int frame_rate) {
   frame_rate_ = frame_rate;
 }
 
-unsigned int Animation::frame_rate() const { return frame_rate_; }
+auto Animation::frame_rate() const -> unsigned int { return frame_rate_; }
 
 void Animation::update(const float dt) {
   time_ += dt;
@@ -76,7 +76,7 @@ void Animation::update(const float dt) {
   mesh_->mix(*previous_frame->second, *next_frame->second, amount);
 }
 
-std::shared_ptr<Mesh> Animation::mesh() { return mesh_; }
+auto Animation::mesh() -> Shared_mesh { return mesh_; }
 
 
 }

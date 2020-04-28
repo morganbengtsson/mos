@@ -38,8 +38,8 @@ Font::Font(const std::string &path) {
   texture = Texture_2D::load(fpath.parent_path().generic_string() + "/" + texture_name);
 }
 
-float Font::height() const { return height_; }
+auto Font::height() const -> float { return height_; }
 
-float Font::base() const { return base_; }
+auto Font::base() const -> float { return base_; }
 }
 }

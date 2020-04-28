@@ -51,7 +51,7 @@ void Window::swap_buffers() {
   glfwSwapBuffers(window_);
 }
 
-Window::Output Window::poll_events() {
+auto Window::poll_events() -> Output {
   keyboard_.events.clear();
   keyboard_.codepoints.clear();
   mouse_.events.clear();
@@ -61,7 +61,7 @@ Window::Output Window::poll_events() {
   return Output{keyboard_, mouse_};
 }
 
-float Window::dpi() const {
+auto Window::dpi() const -> float {
   GLFWmonitor *monitor = glfwGetPrimaryMonitor();
   int widthMM, heightMM;
   glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
@@ -70,7 +70,7 @@ float Window::dpi() const {
   return dpi;
 }
 
-bool Window::close() const {
+auto Window::close() const -> bool {
   return glfwWindowShouldClose(window_);
 }
 

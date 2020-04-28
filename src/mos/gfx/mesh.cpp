@@ -53,7 +53,7 @@ Mesh::Mesh() {
   calculate_sphere();
 }
 
-Shared_mesh Mesh::load(const std::string &path) {
+auto Mesh::load(const std::string &path) -> Shared_mesh {
   if (path.empty() || (path.back() == '/')) {
     return std::make_shared<Mesh>(Mesh());
   }
@@ -65,7 +65,7 @@ void Mesh::clear() {
   triangles.clear();
 }
 
-Mesh::Positions Mesh::positions() const {
+auto Mesh::positions() const -> Positions {
   Positions pos;
   std::transform(vertices.begin(), vertices.end(), std::back_inserter(pos), [](const Vertex &vertex) {
     return vertex.position;
@@ -229,7 +229,7 @@ void Mesh::calculate_sphere() {
   }
 
 }
-glm::vec3 Mesh::Face::normal() const {
+auto Mesh::Face::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);
 }
 }

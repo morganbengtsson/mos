@@ -15,13 +15,13 @@ Stream::Stream(const std::string &path)
 
 Stream::~Stream() { stb_vorbis_close(vorbis_stream_); }
 
-std::array<short, Stream::buffer_size> Stream::read() {
-  auto samples = std::array<short, Stream::buffer_size>();
+auto Stream::read() -> std::array<short, buffer_size> {
+  auto samples = std::array<short, buffer_size>();
 
   int size = 0;
   int result = 0;
 
-  while (size < Stream::buffer_size) {
+  while (size < buffer_size) {
     result = stb_vorbis_get_samples_short_interleaved(
         vorbis_stream_, vorbis_info_.channels, samples.data() + size,
         buffer_size - size);
@@ -34,23 +34,23 @@ std::array<short, Stream::buffer_size> Stream::read() {
   return samples;
 }
 
-bool Stream::done() const { return samples_left_ <= 0; }
+auto Stream::done() const -> bool { return samples_left_ <= 0; }
 
-int Stream::sample_rate() const { return vorbis_info_.sample_rate; }
+auto Stream::sample_rate() const -> int { return vorbis_info_.sample_rate; }
 
-int Stream::channels() const { return vorbis_info_.channels; }
+auto Stream::channels() const -> int { return vorbis_info_.channels; }
 
 void Stream::seek_start() {
   stb_vorbis_seek_start(vorbis_stream_);
   samples_left_ = size() * channels();
 }
 
-unsigned int Stream::id() const { return id_; }
+auto Stream::id() const -> unsigned int { return id_; }
 
-float Stream::duration() const {
+auto Stream::duration() const -> float {
   return stb_vorbis_stream_length_in_seconds(vorbis_stream_);
 }
-size_t Stream::size() const {
+auto Stream::size() const -> size_t {
   return stb_vorbis_stream_length_in_samples(vorbis_stream_);
 }
 }

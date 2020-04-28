@@ -368,7 +368,7 @@ void Renderer::stream_source(const Sound_stream &stream_source) {
   }
 }
 
-Listener Renderer::listener() const {
+auto Renderer::listener() const -> Listener {
   Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);

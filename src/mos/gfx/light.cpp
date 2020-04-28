@@ -27,7 +27,7 @@ void Light::position(const glm::vec3 &position) {
   camera.position(position);
 }
 
-glm::vec3 Light::position() const {
+auto Light::position() const -> glm::vec3 {
   return camera.position();
 }
 
@@ -36,7 +36,7 @@ void Light::angle(const float angle) {
   camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
 
-float Light::angle() const {
+auto Light::angle() const -> float {
   return angle_;
 }
 
@@ -44,11 +44,11 @@ void Light::center(const glm::vec3 &center) {
   camera.center(center);
 }
 
-glm::vec3 Light::center() const {
+auto Light::center() const -> glm::vec3 {
   return camera.center();
 }
 
-glm::vec3 Light::direction() const {
+auto Light::direction() const -> glm::vec3 {
   return camera.direction();
 }
 
@@ -97,7 +97,7 @@ void Light::blend(float blend) {
   blend_ = blend;
 }
 
-float Light::blend() const {
+auto Light::blend() const -> float {
   return blend_;
 }
 }

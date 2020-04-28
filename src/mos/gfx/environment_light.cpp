@@ -56,7 +56,7 @@ void Environment_light::position(const glm::vec3 &position) {
   box_.transform[3] = glm::vec4(position, 0.0f);
   cube_camera_.position(position);
 }
-glm::vec3 Environment_light::position() const {
+auto Environment_light::position() const -> glm::vec3 {
   return glm::vec3(box_.transform[3]);
 }
 void Environment_light::extent(const glm::vec3 &extent) {
@@ -64,13 +64,13 @@ void Environment_light::extent(const glm::vec3 &extent) {
   cube_camera_.near_far(glm::length(extent) / 2.0f, glm::length(extent));
   cube_camera_.near_far(0.1f, 10.0f);
 }
-glm::vec3 Environment_light::extent() const {
+auto Environment_light::extent() const -> glm::vec3 {
   return box_.extent;
 }
-bool Environment_light::inside(const glm::vec3 &point) const {
+auto Environment_light::inside(const glm::vec3 &point) const -> bool {
   return box_.inside(point);
 }
-mos::gfx::Camera Environment_light::camera(const size_t index) const {
+auto Environment_light::camera(const size_t index) const -> Camera {
   return cube_camera_.cameras.at(index);
 }
 

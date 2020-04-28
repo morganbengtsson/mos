@@ -10,12 +10,12 @@ Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
   glBindBuffer(type, 0);
 }
 
-Renderer::Buffer::Buffer(Renderer::Buffer &&buffer) noexcept : id(buffer.id) {
+Renderer::Buffer::Buffer(Buffer &&buffer) noexcept : id(buffer.id) {
   buffer.id = 0;
 }
 
-Renderer::Buffer &
-Renderer::Buffer::operator=(Renderer::Buffer &&buffer) noexcept {
+auto
+Renderer::Buffer::operator=(Buffer &&buffer) noexcept -> Buffer & {
   if (this != &buffer) {
     release();
     std::swap(id, buffer.id);

@@ -36,8 +36,8 @@ Renderer::Frame_buffer::Frame_buffer(
   frame_buffer.id = 0;
 }
 
-Renderer::Frame_buffer &Renderer::Frame_buffer::operator=(
-    Renderer::Frame_buffer &&frame_buffer) noexcept {
+auto Renderer::Frame_buffer::operator=(
+    Frame_buffer &&frame_buffer) noexcept -> Frame_buffer & {
   if (this != &frame_buffer) {
     release();
     std::swap(id, frame_buffer.id);

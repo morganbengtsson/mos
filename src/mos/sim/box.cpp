@@ -9,7 +9,7 @@ namespace sim {
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
     : extent(extent), position(position) {}
 
-Box Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) {
+auto Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) -> Box {
   std::vector<gfx::Vertex> all_vertices;
 
   std::function<void(const gfx::Model &, const glm::mat4 &, std::vector<gfx::Vertex> &)>
@@ -29,16 +29,16 @@ Box Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform) 
   return Box(all_vertices.begin(), all_vertices.end(), glm::mat4(1.0f));
 }
 
-Box Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max) {
+auto Box::create_from_min_max(const glm::vec3 &min, const glm::vec3 &max) -> Box {
   auto extent = (max - min) / 2.0f;
   auto position = min + extent;
   return Box(extent, position);
 }
 
-glm::vec3 Box::min() const { return position - extent; }
-glm::vec3 Box::max() const { return position + extent; }
+auto Box::min() const -> glm::vec3 { return position - extent; }
+auto Box::max() const -> glm::vec3 { return position + extent; }
 
-bool Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const {
+auto Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const -> bool {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
   glm::vec3 bounds[2];
@@ -77,7 +77,7 @@ bool Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const 
   return true;
 }
 
-bool Box::intersects(const Ray &ray) const {
+auto Box::intersects(const Ray &ray) const -> bool {
   return intersects(ray.origin, ray.direction());
 }
 
@@ -87,13 +87,13 @@ void Box::transform(const glm::mat4 &transform) {
   position.z = transform[3][2];
 }
 
-float Box::volume() const { return glm::abs(glm::compMul(max() - min())); }
+auto Box::volume() const -> float { return glm::abs(glm::compMul(max() - min())); }
 
-glm::vec3 Box::size() const {
+auto Box::size() const -> glm::vec3 {
   return glm::vec3(glm::abs(max().x - min().x), glm::abs(max().y - min().y),
                    glm::abs(max().z - min().z));
 }
-std::ostream &operator<<(std::ostream &os, const Box &box) {
+auto operator<<(std::ostream &os, const Box &box) -> std::ostream & {
   os << "Box object " << " extent: " << box.extent << " position: " << box.position << std::endl;
   return os;
 }

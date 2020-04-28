@@ -12,7 +12,7 @@ Texture_2D::Texture_2D(const int width,
                        const bool mipmaps)
     : Texture(width, height, format, filter, wrap, mipmaps) {}
 
-Shared_texture_2D Texture_2D::load(const std::string &path, const bool color_data, const bool mipmaps, const Filter &filter, const Wrap &wrap) {
+auto Texture_2D::load(const std::string &path, const bool color_data, const bool mipmaps, const Filter &filter, const Wrap &wrap) -> Shared_texture_2D {
   if (path.empty() || path.back() == '/') {
     return Shared_texture_2D();
   }

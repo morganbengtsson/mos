@@ -15,7 +15,7 @@ using namespace nlohmann;
 
 Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
 
-std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
+auto Assets::mesh(const std::string &path) -> Shared_mesh {
   if (path.empty()){
     return Shared_mesh(nullptr);
   }
@@ -25,11 +25,11 @@ std::shared_ptr<Mesh> Assets::mesh(const std::string &path) {
   return meshes_.at(path);
 }
 
-std::shared_ptr<Texture_2D> Assets::texture(const std::string &path,
+auto Assets::texture(const std::string &path,
                                             const bool color_data,
                                             const bool mipmaps,
                                             const Texture_2D::Filter &filter,
-                                            const Texture_2D::Wrap &wrap) {
+                                            const Texture_2D::Wrap &wrap) -> Shared_texture_2D {
   if (!path.empty()) {
     std::filesystem::path fpath = path;
     if (textures_.find(path) == textures_.end()) {
@@ -70,7 +70,7 @@ void Assets::clear_unused() {
   }
 }
 
-std::string Assets::directory() const {
+auto Assets::directory() const -> std::string {
   return directory_;
 }
 

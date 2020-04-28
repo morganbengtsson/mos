@@ -83,8 +83,8 @@ Renderer::Vertex_array::Vertex_array(Renderer::Vertex_array &&array) noexcept
   array.id = 0;
 }
 
-Renderer::Vertex_array &
-Renderer::Vertex_array::operator=(Renderer::Vertex_array &&array) noexcept {
+auto
+Renderer::Vertex_array::operator=(Renderer::Vertex_array &&array) noexcept -> Vertex_array & {
   if (this != &array) {
     release();
     std::swap(id, array.id);

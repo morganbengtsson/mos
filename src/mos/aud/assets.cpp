@@ -5,7 +5,7 @@ namespace aud {
 
 Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
 
-Shared_buffer Assets::audio_buffer(const std::string &path) {
+auto Assets::audio_buffer(const std::string &path) -> Shared_buffer {
   if (buffers_.find(path) == buffers_.end()) {
     buffers_.insert(Buffer_pair(path, Buffer::load(directory_ + path)));
   }
@@ -25,7 +25,7 @@ void Assets::clear() {
   buffers_.clear();
 }
 
-std::string Assets::directory() const{
+auto Assets::directory() const -> std::string {
   return directory_;
 }
 }

@@ -46,7 +46,7 @@ Cube_camera::Cube_camera(const glm::vec3 &position, const float near, const floa
                     glm::vec3(0.0f,
                               -1.0f,
                               0.0f))}} {}
-glm::vec3 Cube_camera::position() const {
+auto Cube_camera::position() const -> glm::vec3 {
   return cameras[0].position();
 }
 
