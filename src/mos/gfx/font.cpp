@@ -3,8 +3,7 @@
 #include <mos/util.hpp>
 #include <filesystem>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 using namespace nlohmann;
 Font::Font(Font::Char_map characters,
            Shared_texture_2D texture,
@@ -41,5 +40,4 @@ Font::Font(const std::string &path) {
 auto Font::height() const -> float { return height_; }
 
 auto Font::base() const -> float { return base_; }
-}
 }

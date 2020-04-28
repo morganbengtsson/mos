@@ -89,8 +89,7 @@ void init_efx() {
 }
 
 #endif // MOS_EFX
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 Renderer::Renderer()
     : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM){
@@ -424,5 +423,4 @@ void Renderer::clear() {
   buffers_.clear();
 }
 
-}
 }

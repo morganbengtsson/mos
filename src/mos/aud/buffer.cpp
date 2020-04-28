@@ -3,8 +3,7 @@
 #include <stb_vorbis.h>
 #include <fstream>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 std::atomic_uint Buffer::current_id_;
 
@@ -56,5 +55,4 @@ auto Buffer::size() const -> size_t {
   return samples_.size();
 }
 
-}
 }

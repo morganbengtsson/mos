@@ -1,8 +1,7 @@
 #include <iostream>
 #include <mos/gfx/texture_2d.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Texture_2D::Texture_2D(const int width,
                        const int height,
@@ -25,5 +24,4 @@ Texture_2D::Texture_2D(const std::string &path,
                        const Texture_2D::Filter &filter,
                        const Texture_2D::Wrap &wrap)
     : Texture({path}, color_data, filter, wrap, mipmaps) {}
-}
 }

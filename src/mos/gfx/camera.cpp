@@ -7,8 +7,7 @@
 #include <filesystem>
 #include <mos/util.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
                const glm::mat4 &projection, const glm::vec3 &up)
@@ -179,7 +178,6 @@ void Camera::projection(const glm::mat4 &proj) {
 
 auto Camera::view() const -> glm::mat4 {
   return view_;
-}
 }
 }
 

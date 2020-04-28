@@ -5,8 +5,7 @@
 #include <mos/gfx/animation.hpp>
 #include <filesystem>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 using namespace nlohmann;
 Animation::Animation(
     const std::map<unsigned int, std::shared_ptr<Mesh const>> &keyframes,
@@ -79,5 +78,4 @@ void Animation::update(const float dt) {
 auto Animation::mesh() -> Shared_mesh { return mesh_; }
 
 
-}
 }

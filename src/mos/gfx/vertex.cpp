@@ -1,8 +1,7 @@
 #include <mos/gfx/vertex.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Vertex::Vertex(const glm::vec3 &position,
                const glm::vec3 &normal,
@@ -18,6 +17,5 @@ void Vertex::apply_transform(const glm::mat4 &transform) {
   const auto inv_transpose = glm::mat3(glm::inverseTranspose(transform));
   normal =  inv_transpose * normal;
   tangent = inv_transpose * tangent;
-}
 }
 }

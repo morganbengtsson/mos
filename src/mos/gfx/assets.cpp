@@ -9,8 +9,7 @@
 #include <mos/util.hpp>
 #include <iostream>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 using namespace nlohmann;
 
 Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
@@ -79,5 +78,4 @@ void Assets::clear() {
   meshes_.clear();
 }
 
-}
 }

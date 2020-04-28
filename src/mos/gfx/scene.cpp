@@ -1,6 +1,5 @@
 #include <mos/gfx/scene.hpp>
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Scene::Scene(Models models,
              const Camera &camera,
@@ -14,5 +13,4 @@ Scene::Scene(Models models,
       camera(camera),
       fog(fog),
       environment_lights(environment_lights) {}
-}
 }

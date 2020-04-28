@@ -1,8 +1,7 @@
 #include <mos/gfx/cube_camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Cube_camera::Cube_camera(const glm::vec3 &position, const float near, const float far) :
     cameras{{Camera(position,
@@ -72,6 +71,5 @@ void Cube_camera::near_far(const float near, const float far) {
                                          near,
                                          far));
   }
-}
 }
 }

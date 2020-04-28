@@ -5,8 +5,7 @@
 #include <mos/gfx/assets.hpp>
 #include <iostream>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 using namespace nlohmann;
 
@@ -98,6 +97,5 @@ Material::Material(Assets &assets, std::string &path) : Material() {
           " file format is not supported.");
     }
   }
-}
 }
 }

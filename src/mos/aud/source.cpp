@@ -1,7 +1,6 @@
 #include <mos/aud/source.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 std::atomic_uint Source::current_id_;
 
@@ -14,5 +13,4 @@ Source::Source(const glm::vec3 &position,
 }
 
 auto Source::id() const -> unsigned int { return id_; }
-}
 }

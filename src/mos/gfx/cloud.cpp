@@ -1,8 +1,7 @@
 #include <mos/gfx/cloud.hpp>
 #include <algorithm>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Cloud::Cloud(Shared_texture_2D emission_map,
                               Points points) :
@@ -18,5 +17,4 @@ void Cloud::sort(const glm::vec3 &position) {
             });
 }
 
-}
 }

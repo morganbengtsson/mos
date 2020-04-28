@@ -5,8 +5,7 @@
 #include <json.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Environment_light::Environment_light(const glm::vec3 &position,
                                    const glm::vec3 &extent,
@@ -74,5 +73,4 @@ auto Environment_light::camera(const size_t index) const -> Camera {
   return cube_camera_.cameras.at(index);
 }
 
-}
 }

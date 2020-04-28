@@ -1,6 +1,5 @@
 #include <mos/gfx/box.hpp>
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 Box::Box(const glm::mat4 &transform, const glm::vec3 &extent)
     : transform(transform), extent(extent) {}
 
@@ -28,6 +27,5 @@ auto Box::position() const -> glm::vec3 {
 Box::Box() :
     transform(glm::mat4(1.0f)),
     extent(0.0f) {
-}
 }
 }

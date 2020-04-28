@@ -4,8 +4,7 @@
 #include <mos/util.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-namespace mos {
-namespace sim {
+namespace mos::sim {
 
 Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat4 &parent_transform) {
   auto parsed = json;
@@ -94,6 +93,5 @@ Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) -
     return std::optional<gfx::Vertex>(v);
   }
   return std::optional<gfx::Vertex>();
-}
 }
 }

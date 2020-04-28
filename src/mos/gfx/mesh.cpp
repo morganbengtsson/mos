@@ -8,8 +8,7 @@
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/io.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
            const std::initializer_list<Triangle> &triangles)
@@ -231,6 +230,5 @@ void Mesh::calculate_sphere() {
 }
 auto Mesh::Face::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);
-}
 }
 }

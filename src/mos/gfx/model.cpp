@@ -7,8 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 Model::Model(std::string name,
              Shared_mesh mesh,
@@ -135,5 +134,4 @@ void Model::metallic(const float metallic)
   }
 }
 
-}
 }

@@ -1,7 +1,6 @@
 #include <mos/aud/stream.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 std::atomic_uint Stream::current_id_;
 
@@ -52,6 +51,5 @@ auto Stream::duration() const -> float {
 }
 auto Stream::size() const -> size_t {
   return stb_vorbis_stream_length_in_samples(vorbis_stream_);
-}
 }
 }

@@ -2,8 +2,7 @@
 #include <iostream>
 #include <mos/util.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 Sound::Sound(const nlohmann::json &json, Assets &assets,
                              const glm::mat4 &parent_transform) {
@@ -33,5 +32,4 @@ Sound::Sound(const nlohmann::json &json, Assets &assets,
 Sound::Sound(Shared_buffer buffer,
                              Source source)
     : buffer(std::move(buffer)), source(source) {}
-}
 }

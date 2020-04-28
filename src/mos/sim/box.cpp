@@ -3,8 +3,7 @@
 #include <mos/gfx/model.hpp>
 #include <mos/sim/ray.hpp>
 
-namespace mos {
-namespace sim {
+namespace mos::sim {
 
 Box::Box(const glm::vec3 &extent, const glm::vec3 &position)
     : extent(extent), position(position) {}
@@ -96,6 +95,5 @@ auto Box::size() const -> glm::vec3 {
 auto operator<<(std::ostream &os, const Box &box) -> std::ostream & {
   os << "Box object " << " extent: " << box.extent << " position: " << box.position << std::endl;
   return os;
-}
 }
 }

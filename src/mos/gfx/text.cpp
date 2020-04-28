@@ -7,8 +7,7 @@
 #include <algorithm>
 #include <utf8.h>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 Text::Text(const std::string &txt,
            Font font,
            const glm::mat4 &transform,
@@ -160,6 +159,5 @@ void Text::emission(const glm::vec3 & emiss) {
 
 auto Text::font() const -> Font {
   return font_;
-}
 }
 }

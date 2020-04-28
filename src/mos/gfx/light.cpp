@@ -4,8 +4,7 @@
 #include <json.hpp>
 #include <mos/util.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 Light::Light(const glm::vec3 &position,
              const glm::vec3 &center,
              const float angle,
@@ -99,6 +98,5 @@ void Light::blend(float blend) {
 
 auto Light::blend() const -> float {
   return blend_;
-}
 }
 }

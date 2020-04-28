@@ -1,7 +1,6 @@
 #include <mos/aud/assets.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
 
@@ -27,6 +26,5 @@ void Assets::clear() {
 
 auto Assets::directory() const -> std::string {
   return directory_;
-}
 }
 }

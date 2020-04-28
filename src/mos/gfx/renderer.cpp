@@ -18,8 +18,7 @@
 #include <functional>
 #include <cstdlib>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 auto Renderer::generate(const std::function<void(GLsizei, GLuint*)> & f) -> GLuint{
   GLuint id;
@@ -967,5 +966,4 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
 
 
 
-}
 }
