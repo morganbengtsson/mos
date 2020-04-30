@@ -616,6 +616,7 @@ void Renderer::blur(const GLuint input_texture,
     GLint horizontal = (i % 2 == 1);
     glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? output_target.frame_buffer : buffer_target.frame_buffer);
     glUseProgram(blur_program_.program);
+    clear(glm::vec4(0.0f));
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture : horizontal ? buffer_target.texture : output_target.texture);
