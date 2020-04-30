@@ -5,8 +5,8 @@
 #include <glm/glm.hpp>
 #include <mos/gfx/texture_2d.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
+
 class Target;
 using Optional_target = std::optional<Target>;
 
@@ -16,10 +16,10 @@ public:
   Target();
 
   /** Unique id */
-  unsigned int id() const;
+  auto id() const -> unsigned int;
 private:
   unsigned int id_;
   static std::atomic_uint current_id_;
 };
 }
-}
+

@@ -7,8 +7,7 @@
 #include <memory>
 #include <string>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Text for rendering. */
 class Text final {
@@ -23,57 +22,56 @@ public:
        const glm::vec3 & emission = glm::vec3(0.0f));
 
   /** Set text. */
-  void text(const std::string &text);
+  auto text(const std::string &text) -> void;
 
   /** Get text. */
-  std::string text() const;
+  auto text() const -> std::string;
 
   /** Approximate width. */
-  float width() const;
+  auto width() const -> float;
 
   /** Approximate height. */
-  float height() const;
+  auto height() const -> float;
 
   /** Set position */
-  void position(const glm::vec2 &position);
+  auto position(const glm::vec2 &position) -> void;
 
   /** Set position */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
   /** Get position. */
-  glm::vec2 position() const;
+  auto position() const -> glm::vec2;
 
   /** Set scale. */
-  void scale(float scale);
+  auto scale(float scale) -> void;
 
   /** Set transform */
-  void transform(const glm::mat4 &transform);
+  auto transform(const glm::mat4 &transform) -> void;
 
   /** Get transform */
-  glm::mat4 transform() const;
+  auto transform() const -> glm::mat4;
 
   /** Get model. */
-  Model model() const;
+  auto model() const -> Model;
 
   /** Set opacity. */
-  void opacity(float opacity);
+  auto opacity(float opacity) -> void;
 
   /** Set if the text is emissive. */
-  void emission(const glm::vec3 & emission);
+  auto emission(const glm::vec3 & emission) -> void;
 
   /** Get the font. */
-  Font font() const;
+  auto font() const -> Font;
 
   float spacing;
 
-  Text &operator=(const std::string &input);
+  auto operator=(const std::string &input) -> Text &;
 
-  Text &operator+=(const std::string &input);
+  auto operator+=(const std::string &input) -> Text &;
 
 private:
   Model model_;
   std::string text_;
   Font font_;
 };
-}
 }

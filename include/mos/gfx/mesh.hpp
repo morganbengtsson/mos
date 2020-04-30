@@ -10,8 +10,7 @@
 #include <mos/gfx/shape.hpp>
 #include <mos/core/tracked_container.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Mesh;
 using Shared_mesh = std::shared_ptr<Mesh>;
@@ -39,25 +38,25 @@ public:
 
   Mesh();
 
-  static Shared_mesh load(const std::string &path);
+  static auto load(const std::string &path) -> Shared_mesh;
 
   /** Erease all vertices and indices. */
-  void clear();
+  auto clear() -> void;
 
   /** Get only positions from vertices */
-  Positions positions() const;
+  auto positions() const -> Positions;
 
-  void mix(const Mesh &mesh1, const Mesh &mesh2, float amount);
+  auto mix(const Mesh &mesh1, const Mesh &mesh2, float amount) -> void;
 
-  void apply_transform(const glm::mat4 &transform);
+  auto apply_transform(const glm::mat4 &transform) -> void;
 
-  void calculate_normals();
+  auto calculate_normals() -> void;
 
-  void calculate_flat_normals();
+  auto calculate_flat_normals() -> void;
 
-  void calculate_tangents();
+  auto calculate_tangents() -> void;
 
-  void calculate_sphere();
+  auto calculate_sphere() -> void;
 
   glm::vec3 centroid{0.0f};
   float radius{0.0f};
@@ -65,14 +64,14 @@ public:
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle> triangles;
 private:
-  void calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2);
+  auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
 
   struct Face {
     Vertex &v0;
     Vertex &v1;
     Vertex &v2;
-    glm::vec3 normal() const;
+    auto normal() const -> glm::vec3;
   };
 };
 }
-}
+

@@ -10,6 +10,6 @@ struct Program {
   Program &operator=(const Program &program) = delete;
   Program &operator=(const Program &&program) = delete;
   const GLuint program;
-  void check(const std::string &name);
-  void link(const std::string &name);
+  auto check(const std::string &name) -> void;
+  auto link(const std::string &name) -> void;
 };

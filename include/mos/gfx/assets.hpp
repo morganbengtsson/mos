@@ -12,8 +12,7 @@
 #include <mos/gfx/light.hpp>
 #include <mos/gfx/environment_light.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Cache for faster loading of textures and meshes. */
 class Assets final {
@@ -33,25 +32,24 @@ public:
   ~Assets() = default;
 
   /** Loads a Mesh from a *.mesh file and caches it internally. */
-  Shared_mesh mesh(const std::string &path);
+  auto mesh(const std::string &path) -> Shared_mesh;
 
   /** Loads Texture2D from a *.png file or *.texture and caches it internally. */
-  Shared_texture_2D
-  texture(const std::string &path, bool color_data = true, bool mipmaps = true,
+  auto texture(const std::string &path, bool color_data = true, bool mipmaps = true,
           const Texture_2D::Filter &filter = Texture_2D::Filter::Linear,
-          const Texture_2D::Wrap &wrap = Texture_2D::Wrap::Repeat);
+          const Texture_2D::Wrap &wrap = Texture_2D::Wrap::Repeat) -> Shared_texture_2D;
 
   /** Remove all unused assets. */
-  void clear_unused();
+  auto clear_unused() -> void;
 
   /** Clear all assets. */
-  void clear();
+  auto clear() -> void;
 
-  std::string directory() const;
+  /** Parent directory of the cache. */
+  auto directory() const -> std::string;
 private:
   const std::string directory_;
   Mesh_map meshes_;
   Texture_map textures_;
 };
-}
 }

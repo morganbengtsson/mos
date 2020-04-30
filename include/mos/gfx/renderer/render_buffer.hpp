@@ -12,7 +12,7 @@ public:
   Render_buffer &operator=(const Render_buffer &target) = delete;
   Render_buffer &operator=(Render_buffer &&target) noexcept;
   GLuint id{0};
-  glm::ivec2 resolution() const;
+  auto resolution() const -> glm::ivec2;
 
 private:
   void release();

@@ -5,8 +5,7 @@
 #include <mos/gfx/camera.hpp>
 #include <mos/gfx/target.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Spotlight. */
 class Light final {
@@ -25,29 +24,29 @@ public:
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Set blend factor. */
-  void blend(float blend);
+  auto blend(float blend) -> void;
 
-  float blend() const;
+  auto blend() const -> float;
 
   /** Set spot angle, in radans. */
-  void angle(float angle);
+  auto angle(float angle) -> void;
 
-  float angle() const;
+  auto angle() const -> float;
 
   /** Set position. */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
-  glm::vec3 position() const;
+  auto position() const -> glm::vec3;
 
   /** Set center/focus point. */
-  void center(const glm::vec3 &center);
+  auto center(const glm::vec3 &center) -> void;
 
-  glm::vec3 center() const;
+  auto center() const -> glm::vec3;
 
-  glm::vec3 direction() const;
+  auto direction() const -> glm::vec3;
 
   /** Set near and far plane. **/
-  void near_far(float near, float far);
+  auto near_far(float near, float far) -> void;
 
   glm::vec3 color;
 
@@ -64,6 +63,5 @@ private:
   float blend_ = 0.15;
 
 };
-}
 }
 

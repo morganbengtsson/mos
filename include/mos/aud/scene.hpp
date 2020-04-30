@@ -8,8 +8,7 @@
 #include <mos/aud/sounds.hpp>
 #include <mos/aud/sound_streams.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 /** Audio scene with listener and audio sources. */
 class Scene final {
@@ -23,5 +22,4 @@ public:
   Sound_streams sound_streams;
   Listener listener;
 };
-}
 }

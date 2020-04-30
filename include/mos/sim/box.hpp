@@ -14,13 +14,13 @@
 #include <mos/sim/ray.hpp>
 #include <mos/gfx/model.hpp>
 
-namespace mos {
-namespace sim {
+namespace mos::sim {
 
 /** Axis aligned bounding box. Used for colission detection and sound obstruction. */
 class Box {
 public:
-  template<class T> Box(const T &positions, const glm::mat4 &transform) {
+  template<class T>
+  Box(const T &positions, const glm::mat4 &transform) {
     std::vector<glm::vec3> transformed;
 
     position = glm::vec3(transform[3][0], transform[3][1], transform[3][2]);
@@ -58,18 +58,18 @@ public:
   Box(const glm::vec3 &extent, const glm::vec3 &position);
   Box() = default;
 
-  static Box create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f));
-  static Box create_from_min_max(const glm::vec3 &min, const glm::vec3 &max);
+  static auto create_from_model(const gfx::Model &model, const glm::mat4 &transform = glm::mat4(1.0f)) -> Box;
+  static auto create_from_min_max(const glm::vec3 &min, const glm::vec3 &max) -> Box;
 
-  glm::vec3 min() const;
+  auto min() const -> glm::vec3;
 
-  glm::vec3 max() const;
+  auto max() const -> glm::vec3;
 
-  bool intersects(const glm::vec3 &origin, const glm::vec3 &direction) const;
+  auto intersects(const glm::vec3 &origin, const glm::vec3 &direction) const -> bool;
 
-  bool intersects(const Ray &ray) const;
+  auto intersects(const Ray &ray) const -> bool;
 
-  bool intersect2(const Box &other) const {
+  auto intersect2(const Box &other) const -> bool{
     auto mmax = max();
     auto mmin = min();
     auto other_min = other.min();
@@ -89,12 +89,12 @@ public:
     return true; // boxes overlap
   }
 
-  void transform(const glm::mat4 &transform);
+  auto transform(const glm::mat4 &transform) -> void;
 
   /** Get box volume. */
-  float volume() const;
+  auto volume() const -> float;
 
-  glm::vec3 size() const;
+  auto size() const -> glm::vec3;
 
   friend std::ostream &operator<<(std::ostream &os, const Box &box);
 
@@ -111,7 +111,7 @@ public:
 
 private:
   template<class T>
-  std::pair<glm::vec3, glm::vec3> min_max_positions(T begin, T end) const {
+  auto min_max_positions(T begin, T end) const -> std::pair<glm::vec3, glm::vec3> {
     std::pair<glm::vec3, glm::vec3> m;
     auto x_extremes = std::minmax_element(
         begin, end, [](const glm::vec3 &left, const glm::vec3 &right) {
@@ -136,4 +136,4 @@ private:
   }
 };
 }
-}
+

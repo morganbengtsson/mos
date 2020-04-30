@@ -2,11 +2,9 @@
 
 #include <mos/gfx/scene.hpp>
 
-namespace mos{
-namespace gfx{
+namespace mos::gfx {
 
 /** Collection of scenes. */
 using Scenes = Container<Scene>;
 
-}
 }

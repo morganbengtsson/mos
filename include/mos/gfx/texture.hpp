@@ -6,8 +6,7 @@
 #include <string>
 #include <mos/core/tracked_container.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Texture;
 using Shared_texture = std::shared_ptr<Texture>;
@@ -48,10 +47,10 @@ public:
           const Wrap &wrap,
           bool mipmaps);
 
-  int id() const;
-  int width() const;
-  int height() const;
-  Tracked_container<Data>::size_type depth() const;
+  auto id() const -> int;
+  auto width() const -> int;
+  auto height() const -> int;
+  auto depth() const -> Tracked_container<Data>::size_type;
 
   bool mipmaps; // TODO: const
   Filter filter;
@@ -63,7 +62,5 @@ private:
   int id_;
   int width_;
   int height_;
-
 };
-}
 }

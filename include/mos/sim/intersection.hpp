@@ -1,8 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace mos {
-namespace sim {
+namespace mos::sim {
 
 /** Intersection from a ray test. */
 class Intersection {
@@ -12,4 +11,4 @@ public:
   glm::vec3 normal;
 };
 }
-}
+

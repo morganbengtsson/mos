@@ -5,8 +5,8 @@
 #include <stb_vorbis.h>
 #include <memory>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
+
 class Stream;
 using Shared_stream = std::shared_ptr<Stream>;
 
@@ -22,26 +22,26 @@ public:
 
   static const int buffer_size = 4096 * 8;
 
-  std::array<short, buffer_size> read();
+  auto read() -> std::array<short, buffer_size>;
 
-  bool done() const;
+  auto done() const -> bool;
 
-  int sample_rate() const;
+  auto sample_rate() const -> int;
 
   /** Get number of channels. */
-  int channels() const;
+  auto channels() const -> int;
 
   /** Duration in seconds. */
-  float duration() const;
+  auto duration() const -> float;
 
   /** Size of stream in samples. */
-  size_t size() const;
+  auto size() const -> size_t;
 
   /** Restart streaming. */
-  void seek_start();
+  auto seek_start() -> void;
 
   /** Unique id. */
-  unsigned int id() const;
+  auto id() const -> unsigned int;
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;
@@ -50,5 +50,4 @@ private:
   stb_vorbis *vorbis_stream_;
   stb_vorbis_info vorbis_info_;
 };
-}
 }

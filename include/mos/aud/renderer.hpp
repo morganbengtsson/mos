@@ -8,13 +8,11 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <mos/aud/sound_stream.hpp>
-#include <mos/aud/sound.hpp>
-#include <mos/aud/listener.hpp>
-#include <mos/aud/scene.hpp>
-
-namespace mos {
-namespace aud {
+namespace mos::aud {
+  class Sound_stream;
+  class Sound;
+  class Listener;
+  class Scene;
 
 /** OpenAL audio system. */
 class Renderer final {
@@ -27,23 +25,23 @@ public:
   ~Renderer();
 
   /** Get listener data. */
-  Listener listener() const;
+  auto listener() const -> Listener;
 
   /** Render and play audio scene. */
-  void render(const Scene &scene);
+  auto render(const Scene &scene) -> void;
 
   /** Clear buffers */
-  void clear();
+  auto clear() -> void;
 
 private:
   /** Set listener data */
-  void listener(const Listener &listener);
+  auto listener(const Listener &listener) -> void;
 
   /** Update internal stream source representation. */
-  void stream_source(const Sound_stream &stream_source);
+  auto stream_source(const Sound_stream &stream_source) -> void;
 
   /** Update internal buffer source representation. */
-  void buffer_source(const Sound &buffer_source);
+  auto buffer_source(const Sound &buffer_source) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;
@@ -65,5 +63,4 @@ private:
   Filters filters_;
 
 };
-}
 }

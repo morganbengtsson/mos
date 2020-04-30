@@ -16,5 +16,4 @@ void Cloud::sort(const glm::vec3 &position) {
               return a_distance1 > b_distance1;
             });
 }
-
 }

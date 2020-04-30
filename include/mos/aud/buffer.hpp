@@ -37,22 +37,22 @@ public:
   Samples::const_iterator end() const;
 
   /** Raw data. */
-  const short *data() const;
+  auto data() const -> const short *;
 
   /** Unique id. */
-  unsigned int id() const;
+  auto id() const -> unsigned int;
 
   /** Get number of channels. */
-  int channels() const;
+  auto channels() const -> int;
 
   /** Get sample rate */
-  int sample_rate() const;
+  auto sample_rate() const -> int;
 
   /** Duration in seconds. */
-  float duration() const;
+  auto duration() const -> float;
 
   /** Size of samples container. */
-  size_t size() const;
+  auto size() const -> size_t;
 
 private:
   static std::atomic_uint current_id_;

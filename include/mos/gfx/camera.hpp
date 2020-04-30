@@ -25,56 +25,57 @@ public:
         const std::string &path,
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-  glm::vec3 up() const;
+  auto up() const -> glm::vec3;
 
   /** Set up vector. */
-  void up(const glm::vec3 &up);
+  auto up(const glm::vec3 &up) -> void;
 
-  glm::vec3 position() const;
+  auto position() const -> glm::vec3;
 
   /** Set position. */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
-  glm::vec3 center() const;
+  auto center() const -> glm::vec3;
 
   /** Set center/focus point. */
-  void center(const glm::vec3 &center);
+  auto center(const glm::vec3 &center) -> void;
 
-  glm::vec3 direction() const;
+  /** Forward direction. **/
+  auto direction() const -> glm::vec3;
 
-  glm::vec3 right() const;
+  auto right() const -> glm::vec3;
 
   /** Set direction. */
-  void direction(const glm::vec3 &direction);
+  auto direction(const glm::vec3 &direction) -> void;
 
-  float aspect_ratio() const;
+  auto aspect_ratio() const -> float;
 
   /** Check if sphere with a radius is within camera frustum. */
-  bool in_frustum(const glm::vec3 & point, float radius) const;
+  auto in_frustum(const glm::vec3 & point, float radius) const -> bool;
   
   /** Get near clip plane. */
-  float near_plane() const;
+  auto near_plane() const -> float;
 
   /** Get far clip plane. */
-  float far_plane() const;
+  auto far_plane() const -> float;
 
   /** Get projection matrix. */
-  glm::mat4 projection() const;
+  auto projection() const -> glm::mat4;
 
   /** Set projection matrix. */
-  void projection(const glm::mat4 &proj);
+  auto projection(const glm::mat4 &proj) -> void;
 
   /** Get view matrix */
-  glm::mat4 view() const;
+  auto view() const -> glm::mat4;
 
 private:
-  void calculate_view();
-  void calculate_frustum();
-  void calculate_near_far();
+  auto calculate_view() -> void;
+  auto calculate_frustum() -> void;
+  auto calculate_near_far() -> void;
   glm::mat4 projection_{};
-  glm::mat4 view_;
+  glm::mat4 view_{};
   Planes frustum_planes_;
-  glm::vec3 up_;
+  glm::vec3 up_{};
   glm::vec3 center_{};
   glm::vec3 position_{};
   float near_{0.1f};

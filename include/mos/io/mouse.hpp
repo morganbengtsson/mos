@@ -4,15 +4,9 @@
 #include <unordered_set>
 #include <array>
 
-
-
-
-namespace mos {
-namespace io {
+namespace mos::io {
 
 class Mouse {
-
-
 public:
   Mouse();
   enum class Button : int {
@@ -49,7 +43,6 @@ private:
     }
   };
 public:
-
   using Events = std::unordered_set<Event, EventHash>;
 
   glm::dvec2 position{};
@@ -57,7 +50,6 @@ public:
   Events events;
   std::array<bool, 3> buttons{false, false, false};
 };
-}
 }
 
 

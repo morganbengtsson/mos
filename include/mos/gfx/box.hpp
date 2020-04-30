@@ -2,8 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Visual bounding box. */
 class Box final {
@@ -13,11 +12,11 @@ public:
       const glm::vec3 &extent);
   glm::mat4 transform;
   glm::vec3 extent;
-  glm::vec3 position() const;
-  glm::vec3 size() const;
-  glm::vec3 min() const;
-  glm::vec3 max() const;
-  bool inside(const glm::vec3 &point) const;
+  auto position() const -> glm::vec3;
+  auto size() const -> glm::vec3;
+  auto min() const -> glm::vec3;
+  auto max() const -> glm::vec3;
+  auto inside(const glm::vec3 &point) const -> bool;
 };
 }
-}
+

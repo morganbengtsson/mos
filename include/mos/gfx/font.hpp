@@ -4,8 +4,7 @@
 #include <mos/gfx/character.hpp>
 #include <mos/gfx/texture_2d.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Bitmap font. */
 class Font final {
@@ -20,10 +19,10 @@ public:
   explicit Font(const std::string &path);
 
   /** Height. */
-  float height() const;
+  auto height() const -> float;
 
   /** Base line. */
-  float base() const;
+  auto base() const -> float;
 
   /** Texture with characters. */
   Shared_texture_2D texture;
@@ -36,5 +35,5 @@ private:
   float base_;
 };
 }
-}
+
 

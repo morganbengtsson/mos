@@ -2,13 +2,11 @@
 
 #include <mos/core/container.hpp>
 
-namespace mos{
-namespace gfx{
+namespace mos::gfx {
 
 class Model;
 
 /** Collection of models */
 using Models = Container<Model>;
 
-}
 }

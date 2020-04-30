@@ -1,7 +1,6 @@
 #pragma once
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Measurements of a character glyph, for text rendering. */
 struct Character final {
@@ -16,4 +15,4 @@ struct Character final {
   unsigned int id;
 };
 }
-}
+

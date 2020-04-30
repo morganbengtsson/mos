@@ -7,8 +7,7 @@
 #include <glm/glm.hpp>
 #include <mos/gfx/texture.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Texture_2D;
 using Shared_texture_2D = std::shared_ptr<Texture_2D>;
@@ -39,5 +38,4 @@ public:
               bool mipmaps = true, const Filter &filter = Filter::Linear,
               const Wrap &wrap = Wrap::Repeat);
 };
-}
 }

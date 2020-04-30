@@ -1,8 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Vertex structure, supported by the renderer. */
 class Vertex final {
@@ -25,5 +24,3 @@ public:
   void apply_transform(const glm::mat4 &transform);
 };
 }
-}
-

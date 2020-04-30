@@ -4,6 +4,10 @@
 #include <thread>
 
 #include <mos/aud/renderer.hpp>
+#include <mos/aud/sound_stream.hpp>
+#include <mos/aud/sound.hpp>
+#include <mos/aud/listener.hpp>
+#include <mos/aud/scene.hpp>
 
 #ifdef MOS_EFX
 
@@ -401,7 +405,7 @@ void Renderer::listener(const Listener &listener) {
   alListenerf(AL_GAIN, listener.gain);
 }
 
-void Renderer::render(const Scene &scene) {
+auto Renderer::render(const Scene &scene) -> void {
   listener(scene.listener);
   for (const auto &bs : scene.sounds) {
     buffer_source(bs);

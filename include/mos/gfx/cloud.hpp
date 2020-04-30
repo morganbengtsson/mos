@@ -8,8 +8,7 @@
 #include <mos/gfx/shape.hpp>
 #include <mos/gfx/point.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Collection of particles for rendering, uses same texture. */
 class Cloud final : public Shape {
@@ -19,16 +18,16 @@ public:
   Cloud(Shared_texture_2D texture, Points particles);
   Cloud() = default;
 
-  /** Sort particles relative to a position. */
-  void sort(const glm::vec3 &position);
+  /** Sort points relative to a position. */
+  auto sort(const glm::vec3 &position) -> void;
 
   /** Texture for all particles. */
   Shared_texture_2D texture;
 
-  /** Particles. */
+  /** Points. */
   Points points;
 
   Blending blending = Blending::Additive;
 };
 }
-}
+

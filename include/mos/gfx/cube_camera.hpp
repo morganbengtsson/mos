@@ -4,8 +4,7 @@
 #include <glm/glm.hpp>
 #include <mos/gfx/camera.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Camera for environment rendering. */
 class Cube_camera final {
@@ -14,16 +13,15 @@ public:
              float near = 0.1f,
              float far = 100.0f);
 
-  glm::vec3 position() const;
+  auto position() const -> glm::vec3;
 
   /** Set position. */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
   /** Set near and far planes. */
-  void near_far(float near, float far);
+  auto near_far(float near, float far) -> void;
 
   /** Cameras for eac axis. */
   std::array<Camera, 6> cameras;
 };
-}
 }

@@ -11,8 +11,21 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <mos/gfx/mesh.hpp>
+#include <mos/gfx/scene.hpp>
+#include <mos/gfx/texture_2d.hpp>
+#include <mos/gfx/models.hpp>
 #include <mos/gfx/model.hpp>
+#include <mos/gfx/text.hpp>
+#include <mos/gfx/cloud.hpp>
+#include <mos/gfx/light.hpp>
+#include <mos/gfx/target.hpp>
+#include <mos/gfx/camera.hpp>
+#include <mos/gfx/environment_light.hpp>
+#include <mos/gfx/fog.hpp>
+#include <mos/gfx/box.hpp>
+#include <mos/gfx/scenes.hpp>
+#include <mos/gfx/lights.hpp>
+#include <mos/gfx/mesh.hpp>
 #include <mos/gfx/renderer.hpp>
 #include <mos/util.hpp>
 #include <functional>
@@ -901,7 +914,6 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color, const glm::i
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
   clear(glm::vec4(0.0f));
 
-  //for (auto &scene : scenes) {
   for (auto & scene : scenes) {
 
     render_scene(scene.camera, scene, resolution);

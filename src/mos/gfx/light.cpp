@@ -30,7 +30,7 @@ auto Light::position() const -> glm::vec3 {
   return camera.position();
 }
 
-void Light::angle(const float angle) {
+auto Light::angle(const float angle) -> void {
   angle_ = angle;
   camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
@@ -39,7 +39,7 @@ auto Light::angle() const -> float {
   return angle_;
 }
 
-void Light::center(const glm::vec3 &center) {
+auto Light::center(const glm::vec3 &center) -> void {
   camera.center(center);
 }
 

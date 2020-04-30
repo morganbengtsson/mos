@@ -8,8 +8,7 @@
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/assets.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Assets;
 class Material;
@@ -26,39 +25,39 @@ public:
 
   Model() = default;
 
-  std::string name() const;
+  auto name() const -> std::string;
 
-  glm::vec3 position() const;
+  auto position() const -> glm::vec3;
 
   /** Set position. */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
   /** Get centroid position. */
-  glm::vec3 centroid() const;
+  auto centroid() const -> glm::vec3;
 
   /** Get radious of bounding sphere */
-  float radius() const;
+  auto radius() const -> float;
 
   /** Set emission of material recursively. */
-  void emission(const glm::vec3 & emission);
+  auto emission(const glm::vec3 & emission) -> void;
 
   /** Set alpha of material recursively. */
-  void alpha(float alpha);
+  auto alpha(float alpha) -> void;
 
   /** Set ambient occlusion of material recursively. */
-  void ambient_occlusion(float ambient_occlusion);
+  auto ambient_occlusion(float ambient_occlusion) -> void;
 
   /** set index of refraction of material recursively. */
-  void index_of_refraction(float index_of_refraction);
+  auto index_of_refraction(float index_of_refraction) -> void;
 
   /** set transmission of material recursively. */
-  void transmission(float transmission);
+  auto transmission(float transmission) -> void;
 
   /** set roughness of material recursively. */
-  void roughness(float roughness);
+  auto roughness(float roughness) -> void;
 
   /** set metallic of material recursively. */
-  void metallic(float metallic);
+  auto metallic(float metallic) -> void;
 
   /** Mesh shape. */
   Shared_mesh mesh;
@@ -74,5 +73,4 @@ public:
 private:
   std::string name_;
 };
-}
 }

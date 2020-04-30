@@ -4,6 +4,7 @@
 #include <vector>
 
 namespace mos::io {
+
 class Keyboard {
 public:
   Keyboard() = default;

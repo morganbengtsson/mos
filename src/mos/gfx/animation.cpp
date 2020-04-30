@@ -61,7 +61,7 @@ void Animation::frame_rate(const unsigned int frame_rate) {
 
 auto Animation::frame_rate() const -> unsigned int { return frame_rate_; }
 
-void Animation::update(const float dt) {
+auto Animation::step(const float dt) -> void {
   time_ += dt;
   if (frame() >= keyframes_.rbegin()->first) {
     time_ = 0;

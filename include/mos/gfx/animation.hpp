@@ -7,8 +7,7 @@
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/assets.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Keyframe animation, interpolation between meshes. */
 class Animation final {
@@ -24,19 +23,20 @@ public:
 
   Animation(Assets &assets, const std::string &path);
 
-  void update(float dt);
+  /** Step the animation forward. */
+  auto step(float dt) -> void;
 
   /** Current frame */
-  int frame() const;
+  auto frame() const -> int;
 
   /** Restart the animation. */
-  void reset();
+  auto reset() -> void;
 
   /** Set frame rate. */
-  void frame_rate(unsigned int frame_rate);
+  auto frame_rate(unsigned int frame_rate) -> void;
 
   /** Frames per second. */
-  unsigned int frame_rate() const;
+  auto frame_rate() const -> unsigned int;
 
   /** The mesh being animated. */
   std::shared_ptr<Mesh> mesh();
@@ -48,4 +48,4 @@ private:
   std::map<int, std::shared_ptr<const Mesh>> keyframes_;
   };
 }
-}
+

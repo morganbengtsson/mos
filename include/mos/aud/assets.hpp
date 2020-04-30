@@ -5,8 +5,7 @@
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/stream.hpp>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 /** Cache for heavy audio assets. */
 class Assets final {
@@ -23,20 +22,20 @@ public:
   ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */
-  Shared_buffer audio_buffer(const std::string &path);
+  auto audio_buffer(const std::string &path) -> Shared_buffer;
 
   /** Remove unused buffers. */
-  void clear_unused();
+  auto clear_unused() -> void;
 
   /** Remove all buffers */
-  void clear();
+  auto clear() -> void;
 
   /** Directory of assets */
-  std::string directory() const;
+  auto directory() const -> std::string;
 
 private:
   const std::string directory_;
   Buffer_map buffers_;
 };
 }
-}
+

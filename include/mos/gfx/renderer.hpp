@@ -5,22 +5,16 @@
 #include <unordered_map>
 #include <array>
 #include <future>
-#include <mos/gfx/scene.hpp>
-#include <mos/gfx/texture_2d.hpp>
-#include <mos/gfx/model.hpp>
-#include <mos/gfx/text.hpp>
-#include <mos/gfx/cloud.hpp>
-#include <mos/gfx/light.hpp>
-#include <mos/gfx/target.hpp>
-#include <mos/gfx/camera.hpp>
-#include <mos/gfx/environment_light.hpp>
-#include <mos/gfx/fog.hpp>
-#include <mos/gfx/box.hpp>
+#include <glm/glm.hpp>
+#include <mos/gfx/models.hpp>
 #include <mos/gfx/scenes.hpp>
-#include <mos/gfx/lights.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
+  class Model;
+  class Mesh;
+  using Shared_mesh = std::shared_ptr<Mesh>;
+  class Texture_2D;
+  using Shared_texture_2D = std::shared_ptr<Texture_2D>;
 
 /** Render geometry shapes with OpenGL. */
 class Renderer final {
@@ -33,38 +27,43 @@ public:
   Renderer & operator=(const Renderer && renderer) = delete;
   ~Renderer() = default;
 
-  /** Loads a model into renderers own memory. */
-  void load(const Model &model);
+  /** Loads a model into GPU memory. */
+  auto load(const Model &model) -> void;
 
-  void load(const Models & models);
+  /** Load multiple models into GPU memory. */
+  auto load(const Models & models) -> void;
 
-  /** Unloads a model from renderers own memory. */
-  void unload(const Model &model);
+  /** Unloads a model from GPU memory. */
+  auto unload(const Model &model) -> void;
 
-  /** Load a mesh in to memory. */
-  void load(const Mesh &mesh);
-  void load(const Shared_mesh &mesh);
+  /** Load a mesh into GPU memory. */
+  auto load(const Mesh &mesh) -> void;
 
-  /** Unloads a mesh from memory. */
-  void unload(const Mesh &mesh);
-  void unload(const Shared_mesh &mesh);
+  /** Load a shared mesh into GPU memory.*/
+  auto load(const Shared_mesh &mesh) -> void;
 
-  /** Loads a shared texture into renderer memory. */
-  void load(const Shared_texture_2D &texture);
+  /** Unloads a mesh from GPU memory. */
+  auto unload(const Mesh &mesh) -> void;
 
-  /** Loads a texture into renderer memory. */
-  void load_or_update(const Texture_2D &texture);
+  /** Unloads a shared mesh from GPU memory. */
+  auto unload(const Shared_mesh &mesh) -> void;
 
-  /** Unloads a shared texture from renderer memory. */
-  void unload(const Shared_texture_2D &texture);
+  /** Loads a shared texture into GPU memory. */
+  auto load(const Shared_texture_2D &texture) -> void;
+
+  /** Loads a texture into GPU memory. */
+  auto load_or_update(const Texture_2D &texture) -> void;
+
+  /** Unloads a shared texture from GPU memory. */
+  auto unload(const Shared_texture_2D &texture) -> void;
 
   /** Render multiple scenes. */
-  void render(const Scenes &scenes,
-              const glm::vec4 &color = {.0f, .0f, .0f, 1.0f},
-              const glm::ivec2 &resolution = glm::ivec2(128, 128));
+  auto render(const Scenes &scenes,
+              const glm::vec4 &color = {0.0f, 0.0f, 0.0f, 1.0f},
+              const glm::ivec2 &resolution = glm::ivec2(128, 128)) -> void;
 
-  /** Clear all internal buffers/memory. */
-  void clear_buffers();
+  /** Clear all GPU buffers/memory. */
+  auto clear_buffers() -> void;
 
 private:
   using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
@@ -110,61 +109,61 @@ private:
   #include <mos/gfx/renderer/box.hpp>
   #include <mos/gfx/renderer/quad.hpp>
 
-  void render_texture_targets(const Scene &scene);
+  auto render_texture_targets(const Scene &scene) -> void;
 
-  void render_scene(const Camera &camera,
+  auto render_scene(const Camera &camera,
                     const Scene &scene,
-                    const glm::ivec2 &resolution);
+                    const glm::ivec2 &resolution) -> void;
 
-  void render_shadow_maps(const Models &models,
-                          const Lights &lights);
+  auto render_shadow_maps(const Models &models,
+                          const Lights &lights) -> void;
 
-  void render_environment(const Scene &scene,
-                          const glm::vec4 &clear_color);
+  auto render_environment(const Scene &scene,
+                          const glm::vec4 &clear_color) -> void;
 
-  void render_boxes(const Boxes & boxes,
-                    const mos::gfx::Camera &camera);
+  auto render_boxes(const Boxes & boxes,
+                    const mos::gfx::Camera &camera) -> void;
 
-  void render_clouds(const Clouds &clouds,
+  auto render_clouds(const Clouds &clouds,
                     const Lights &lights,
                     const Environment_lights &environment_lights,
                     const mos::gfx::Camera &camera,
                     const glm::ivec2 &resolution,
                     const Cloud_program &program,
-                    const GLenum &draw_mode);
+                    const GLenum &draw_mode) -> void;
 
-  void render_model(const Model &model,
+  auto render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Lights &lights,
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const Standard_program& program);
+                    const Standard_program& program) -> void;
 
-  void render_model(const Model &model,
+  auto render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Lights &lights,
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const Environment_program& program);
+                    const Environment_program& program) -> void;
 
-  void render_model_depth(const Model &model,
+  auto render_model_depth(const Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,
-                          const Depth_program& program);
+                          const Depth_program& program) -> void;
 
   /** Clear color and depth. */
-  void clear(const glm::vec4 &color);
-  void clear_depth();
-  void clear_color(const glm::vec4 &color);
-  void blur(GLuint input_texture,
+  auto clear(const glm::vec4 &color) -> void;
+  auto clear_depth() -> void;
+  auto clear_color(const glm::vec4 &color) -> void;
+  auto blur(GLuint input_texture,
             const Post_target &buffer_target,
             const Post_target &output_target,
-            float iterations = 6);
+            float iterations = 6) -> void;
 
   const bool context_;
 
@@ -213,4 +212,4 @@ private:
   const Environment_map_target propagate_target_;
 };
 }
-}
+

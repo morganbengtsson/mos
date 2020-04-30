@@ -3,8 +3,7 @@
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/cube_camera.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Environment_light;
 using Optional_environment_light = std::optional<Environment_light>;
@@ -22,25 +21,25 @@ public:
       const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
   /** Set position. */
-  void position(const glm::vec3 &position);
+  auto position(const glm::vec3 &position) -> void;
 
   /** Get position. */
-  glm::vec3 position() const;
+  auto position() const -> glm::vec3;
 
   /** Set extent and recalculate cube camera projections.*/
-  void extent(const glm::vec3 &extent);
+  auto extent(const glm::vec3 &extent) -> void;
 
   /** Get extent. */
-  glm::vec3 extent() const;
+  auto extent() const -> glm::vec3;
 
   /** Check if a point is inside the environment light box. */
-  bool inside(const glm::vec3 &point) const;
+  auto inside(const glm::vec3 &point) const -> bool;
 
   /** Get one of the six cube cameras, for rendering. */
-  mos::gfx::Camera camera(size_t index) const;
+  auto camera(size_t index) const -> Camera;
 
   /** Strength. */
-  float strength;
+  float strength{0.0f};
 
   /** Falloff. */
   float falloff{0.1f};
@@ -49,4 +48,4 @@ private:
   Cube_camera cube_camera_;
 };
 }
-}
+

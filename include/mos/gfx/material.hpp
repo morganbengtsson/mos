@@ -4,8 +4,7 @@
 #include <memory>
 #include <mos/gfx/texture_2d.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 class Assets;
 
@@ -66,5 +65,3 @@ public:
   float transmission{0.0f};
 };
 }
-}
-

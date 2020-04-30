@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include <initializer_list>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/camera.hpp>
 #include <mos/gfx/light.hpp>
@@ -15,8 +13,7 @@
 #include <mos/gfx/lights.hpp>
 #include <mos/core/container.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Scene for rendering. */
 class Scene {
@@ -40,4 +37,4 @@ public:
   Texture_targets texture_targets;
 };
 }
-}
+

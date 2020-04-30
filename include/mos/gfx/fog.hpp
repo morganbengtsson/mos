@@ -1,8 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace mos {
-namespace gfx {
+namespace mos::gfx {
 
 /** Fog with exponential falloff and near/far color blending. */
 class Fog final {
@@ -19,10 +18,10 @@ public:
       const glm::vec3 &color_far = glm::vec3(1.0f),
       float attenuation_factor = 0.0f);
 
-  glm::vec3 color_near;
-  glm::vec3 color_far;
+  glm::vec3 color_near{1.0f};
+  glm::vec3 color_far{1.0f};
   float attenuation_factor;
 };
 }
-}
+
 
