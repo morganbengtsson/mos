@@ -3,9 +3,9 @@
 
 namespace mos::gfx {
 
-Cloud::Cloud(Shared_texture_2D emission_map,
-                              Points points) :
-  texture(std::move(emission_map)),
+Cloud::Cloud(Shared_texture_2D texture,
+             Points points) :
+  texture(std::move(texture)),
   points(std::move(points)) {}
 
 void Cloud::sort(const glm::vec3 &position) {

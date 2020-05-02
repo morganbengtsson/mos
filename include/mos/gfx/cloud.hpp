@@ -15,7 +15,7 @@ class Cloud final : public Shape {
 public:
   enum class Blending{Additive, Transparent};
   using Points = Tracked_container<Point>;
-  Cloud(Shared_texture_2D texture, Points particles);
+  Cloud(Shared_texture_2D texture, Points points);
   Cloud() = default;
 
   /** Sort points relative to a position. */
@@ -27,6 +27,7 @@ public:
   /** Points. */
   Points points;
 
+  /** Blending for renderinge. */
   Blending blending = Blending::Additive;
 };
 }
