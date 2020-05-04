@@ -26,10 +26,11 @@ public:
 
   auto done() const -> bool;
 
-  auto sample_rate() const -> int;
+  /** Sample rate, eg 44100 */
+  auto sample_rate() const -> unsigned int;
 
   /** Get number of channels. */
-  auto channels() const -> int;
+  auto channels() const -> unsigned int;
 
   /** Duration in seconds. */
   auto duration() const -> float;
@@ -45,7 +46,7 @@ public:
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;
-  int samples_left_;
+  unsigned int samples_left_;
   std::string file_name_;
   stb_vorbis *vorbis_stream_;
   stb_vorbis_info vorbis_info_;

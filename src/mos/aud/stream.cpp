@@ -35,9 +35,9 @@ auto Stream::read() -> std::array<short, buffer_size> {
 
 auto Stream::done() const -> bool { return samples_left_ <= 0; }
 
-auto Stream::sample_rate() const -> int { return vorbis_info_.sample_rate; }
+auto Stream::sample_rate() const -> unsigned int { return vorbis_info_.sample_rate; }
 
-auto Stream::channels() const -> int { return vorbis_info_.channels; }
+auto Stream::channels() const -> unsigned int { return vorbis_info_.channels; }
 
 void Stream::seek_start() {
   stb_vorbis_seek_start(vorbis_stream_);
