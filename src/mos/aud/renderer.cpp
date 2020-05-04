@@ -9,90 +9,6 @@
 #include <mos/aud/listener.hpp>
 #include <mos/aud/scene.hpp>
 
-#ifdef MOS_EFX
-
-/* Effect object functions */
-static LPALGENEFFECTS alGenEffects;
-static LPALDELETEEFFECTS alDeleteEffects;
-static LPALISEFFECT alIsEffect;
-static LPALEFFECTI alEffecti;
-static LPALEFFECTIV alEffectiv;
-static LPALEFFECTF alEffectf;
-static LPALEFFECTFV alEffectfv;
-static LPALGETEFFECTI alGetEffecti;
-static LPALGETEFFECTIV alGetEffectiv;
-static LPALGETEFFECTF alGetEffectf;
-static LPALGETEFFECTFV alGetEffectfv;
-
-// Filter object functions
-static LPALGENFILTERS alGenFilters;
-static LPALDELETEFILTERS alDeleteFilters;
-static LPALFILTERI alFilteri;
-static LPALFILTERF alFilterf;
-static LPALGETFILTERI alGetFilteri;
-static LPALGETFILTERF alGetFilterf;
-
-/* Auxiliary Effect Slot object functions */
-static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
-static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
-static LPALISAUXILIARYEFFECTSLOT alIsAuxiliaryEffectSlot;
-static LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
-static LPALAUXILIARYEFFECTSLOTIV alAuxiliaryEffectSlotiv;
-static LPALAUXILIARYEFFECTSLOTF alAuxiliaryEffectSlotf;
-static LPALAUXILIARYEFFECTSLOTFV alAuxiliaryEffectSlotfv;
-static LPALGETAUXILIARYEFFECTSLOTI alGetAuxiliaryEffectSloti;
-static LPALGETAUXILIARYEFFECTSLOTIV alGetAuxiliaryEffectSlotiv;
-static LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
-static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
-
-void init_efx() {
-
-  alGenEffects = (LPALGENEFFECTS)alGetProcAddress("alGenEffects");
-  alDeleteEffects = (LPALDELETEEFFECTS)alGetProcAddress("alDeleteEffects");
-  alIsEffect = (LPALISEFFECT)alGetProcAddress("alIsEffect");
-  alEffecti = (LPALEFFECTI)alGetProcAddress("alEffecti");
-  alEffectiv = (LPALEFFECTIV)alGetProcAddress("alEffectiv");
-  alEffectf = (LPALEFFECTF)alGetProcAddress("alEffectf");
-  alEffectfv = (LPALEFFECTFV)alGetProcAddress("alEffectfv");
-  alGetEffecti = (LPALGETEFFECTI)alGetProcAddress("alGetEffecti");
-  alGetEffectiv = (LPALGETEFFECTIV)alGetProcAddress("alGetEffectiv");
-  alGetEffectf = (LPALGETEFFECTF)alGetProcAddress("alGetEffectf");
-  alGetEffectfv = (LPALGETEFFECTFV)alGetProcAddress("alGetEffectfv");
-
-  alGenFilters = (LPALGENFILTERS)alGetProcAddress("alGenFilters");
-  alDeleteFilters = (LPALDELETEFILTERS)alGetProcAddress("alDeleteFilters");
-  alFilteri = (LPALFILTERI)alGetProcAddress("alFilteri");
-  alFilterf = (LPALFILTERF)alGetProcAddress("alFilterf");
-  alGetFilteri = (LPALGETFILTERI)alGetProcAddress("alGetFilteri");
-  alGetFilterf = (LPALGETFILTERF)alGetProcAddress("alGetFilterf");
-
-  /* Auxiliary Effect Slot object functions */
-  alGenAuxiliaryEffectSlots = (LPALGENAUXILIARYEFFECTSLOTS)alGetProcAddress(
-      "alGenAuxiliaryEffectSlots");
-  alDeleteAuxiliaryEffectSlots =
-      (LPALDELETEAUXILIARYEFFECTSLOTS)alGetProcAddress(
-          "alDeleteAuxiliaryEffectSlots");
-  alIsAuxiliaryEffectSlot =
-      (LPALISAUXILIARYEFFECTSLOT)alGetProcAddress("alIsAuxiliaryEffectSlot");
-  alAuxiliaryEffectSloti =
-      (LPALAUXILIARYEFFECTSLOTI)alGetProcAddress("alAuxiliaryEffectSloti");
-  alAuxiliaryEffectSlotiv =
-      (LPALAUXILIARYEFFECTSLOTIV)alGetProcAddress("alAuxiliaryEffectSlotiv");
-  alAuxiliaryEffectSlotf =
-      (LPALAUXILIARYEFFECTSLOTF)alGetProcAddress("alAuxiliaryEffectSlotf");
-  alAuxiliaryEffectSlotfv =
-      (LPALAUXILIARYEFFECTSLOTFV)alGetProcAddress("alAuxiliaryEffectSlotfv");
-  alGetAuxiliaryEffectSloti = (LPALGETAUXILIARYEFFECTSLOTI)alGetProcAddress(
-      "alGetAuxiliaryEffectSloti");
-  alGetAuxiliaryEffectSlotiv = (LPALGETAUXILIARYEFFECTSLOTIV)alGetProcAddress(
-      "alGetAuxiliaryEffectSlotiv");
-  alGetAuxiliaryEffectSlotf = (LPALGETAUXILIARYEFFECTSLOTF)alGetProcAddress(
-      "alGetAuxiliaryEffectSlotf");
-  alGetAuxiliaryEffectSlotfv = (LPALGETAUXILIARYEFFECTSLOTFV)alGetProcAddress(
-      "alGetAuxiliaryEffectSlotfv");
-}
-
-#endif // MOS_EFX
 namespace mos::aud {
 
 Renderer::Renderer()
@@ -107,8 +23,6 @@ Renderer::Renderer()
                              "ALC_EXT_EFX")) {
     throw std::runtime_error("OpenAL EFX not supported.");
   }
-
-  init_efx();
 
   ALuint reverb_effect = 0;
   alGenEffects(1, &reverb_effect);
