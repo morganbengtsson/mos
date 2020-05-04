@@ -7,7 +7,7 @@ namespace mos::aud {
 
 std::atomic_uint Buffer::current_id_;
 
-Buffer::Buffer(const int channels, const int sample_rate) : channels_(channels), id_(current_id_++), sample_rate_(sample_rate) {}
+Buffer::Buffer(const int channels, const int sample_rate) : id_(current_id_++), channels_(channels), sample_rate_(sample_rate) {}
 
 Buffer::Buffer(const std::string &path) : id_(current_id_++), channels_(0), sample_rate_(0) {
   short *decoded{};
@@ -16,12 +16,8 @@ Buffer::Buffer(const std::string &path) : id_(current_id_++), channels_(0), samp
   if (!file.good()) {
     throw std::runtime_error(path + " does not exist.");
   }
-  std::vector<unsigned char> data;
+  std::vector<unsigned char> data(std::istreambuf_iterator<char>(file), {});
 
-  unsigned char sample{0};
-  while (file.read(reinterpret_cast<char *>(&sample), sizeof(sample))) {
-    data.push_back(sample);
-  }
   auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels_,
                                          &sample_rate_, &decoded);
   samples_.assign(decoded, decoded + length);
