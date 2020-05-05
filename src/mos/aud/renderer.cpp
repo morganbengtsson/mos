@@ -12,8 +12,9 @@
 namespace mos::aud {
 
 Renderer::Renderer()
-    : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM){
-  std::array<ALCint, 5> context_attributes{ALC_FREQUENCY, 44100, ALC_HRTF_SOFT, ALC_TRUE, 0};
+    : reverb_properties(EFX_REVERB_PRESET_LIVINGROOM) {
+  static constexpr ALint sampling_frequency{44100};
+  std::array context_attributes{ALC_FREQUENCY, sampling_frequency, ALC_HRTF_SOFT, ALC_TRUE, 0};
   device_ = alcOpenDevice(nullptr);
   context_ = alcCreateContext(device_, context_attributes.data());
   alcMakeContextCurrent(context_);

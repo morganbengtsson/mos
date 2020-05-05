@@ -61,6 +61,5 @@ private:
   Sources sources_;
   Buffers buffers_;
   Filters filters_;
-
 };
 }
