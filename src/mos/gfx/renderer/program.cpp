@@ -5,11 +5,12 @@ namespace mos::gfx {
 
 Renderer::Program::Program() : program(glCreateProgram()) { assert(program); }
 Renderer::Program::~Program() { glDeleteProgram(program); }
-void Renderer::Program::check(const std::string &name) {
+
+auto Renderer::Program::check(const std::string &name) const -> void {
   GLint status = 0;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
-    GLint length;
+    GLint length{1};
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);
     glGetProgramInfoLog(program, length, nullptr, &buffer[0]);
@@ -18,7 +19,8 @@ void Renderer::Program::check(const std::string &name) {
   }
   assert(status);
 }
-void Renderer::Program::link(const std::string &name) {
+
+auto Renderer::Program::link(const std::string &name) const -> void {
   std::cout << "Linking: " + name + " program." << std::endl;
   glLinkProgram(program);
 }

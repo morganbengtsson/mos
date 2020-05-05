@@ -82,8 +82,9 @@ Light::Light(const std::string &directory,
       far_ = data_value["far"];
       blend_ = data_value["blend"];
 
-      camera = mos::gfx::Camera(position, center, glm::perspective(angle_, 1.0f, near_, far_),
-             glm::vec3(0.0f, 0.0001f, 1.0f));
+      static constexpr float aspect_ratio{1.0f};
+      static constexpr glm::vec3 up{0.0f, 0.0001f, 1.0f};
+      camera = mos::gfx::Camera(position, center, glm::perspective(angle_, aspect_ratio, near_, far_), up);
 
     } else {
       throw std::runtime_error(path.substr(path.find_last_of('.')) +

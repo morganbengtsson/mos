@@ -16,7 +16,8 @@ Renderer::Environment_map_target::Environment_map_target(
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  for (int i = 0; i < 6; i++) {
+  static constexpr int num_textures = 6;
+  for (int i = 0; i < num_textures; i++) {
     std::vector<unsigned char> data;
     for (int i = 0;
          i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {
@@ -43,7 +44,7 @@ Renderer::Environment_map_target::Environment_map_target(
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < num_textures; i++) {
     std::vector<unsigned char> data;
     for (int i = 0;
          i < render_buffer.resolution().x * render_buffer.resolution().y; i++) {

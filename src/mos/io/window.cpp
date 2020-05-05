@@ -63,10 +63,11 @@ auto Window::poll_events() -> Output {
 
 auto Window::dpi() const -> float {
   GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-  int widthMM, heightMM;
+  int widthMM{0};
+  int heightMM{0};
   glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
   const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-  const double dpi = mode->width / (widthMM / 25.4);
+  const float dpi = mode->width / (widthMM / 25.4f);
   return dpi;
 }
 

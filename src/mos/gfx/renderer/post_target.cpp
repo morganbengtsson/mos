@@ -4,8 +4,9 @@ namespace mos::gfx {
 
 Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
                                    const GLint precision)
-    : resolution(resolution), frame_buffer(generate(glGenFramebuffers)),
-      texture(generate(glGenTextures)) {
+    : frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)),
+      resolution(resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D, texture);

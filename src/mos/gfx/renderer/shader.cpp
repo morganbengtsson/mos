@@ -20,11 +20,11 @@ Renderer::Shader::Shader(const std::string &source, const GLuint type,
 
   assert(id);
 
-  GLint status;
+  GLint status{0};
   glGetShaderiv(id, GL_COMPILE_STATUS, &status);
 
   if (status == GL_FALSE) {
-    int length;
+    int length{0};
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);
     glGetShaderInfoLog(id, length, nullptr, &buffer[0]);

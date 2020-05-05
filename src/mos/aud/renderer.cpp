@@ -66,16 +66,16 @@ Renderer::Renderer()
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6f);    // 0.5f
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05f); // 0.01f
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6f);
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05f);
 
   alGenFilters(1, &lowpass_filter2);
   if (!lowpass_filter2) {
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3f);    // 0.5f
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f); // 0.01f
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3f);
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f);
 #endif
 
   listener(Listener());
@@ -96,14 +96,14 @@ Renderer::~Renderer() {
 
 void Renderer::render_sound(const Sound &sound, const float dt) {
   if (sources_.find(sound.source.id()) == sources_.end()) {
-    ALuint al_source;
+      ALuint al_source{0u};
     alGenSources(1, &al_source);
     sources_.insert(SourcePair(sound.source.id(), al_source));
 
 #ifdef MOS_EFX
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
-    ALuint al_filter;
+    ALuint al_filter{0u};
     alGenFilters(1, &al_filter);
     filters_.insert(SourcePair(sound.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -118,7 +118,7 @@ void Renderer::render_sound(const Sound &sound, const float dt) {
     auto format =
         buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
     if (buffers_.find(buffer->id()) == buffers_.end()) {
-      ALuint al_buffer;
+        ALuint al_buffer{0u};
       alGenBuffers(1, &al_buffer);
       {
         long data_size = std::distance(buffer->begin(), buffer->end());
@@ -131,7 +131,7 @@ void Renderer::render_sound(const Sound &sound, const float dt) {
 
     ALuint al_buffer = buffers_.at(sound.buffer->id());
 
-    int v;
+    int v{0u};
     alGetSourcei(al_source, AL_BUFFER, &v);
     if (v == 0) {
       alSourcei(al_source, AL_BUFFER, al_buffer);
@@ -148,12 +148,12 @@ void Renderer::render_sound(const Sound &sound, const float dt) {
 
 #ifdef MOS_EFX
   auto al_filter = filters_[sound.source.id()];
-  ALfloat al_gain;
+  ALfloat al_gain{0.0f};
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
   auto error = glm::clamp((1.0f - sound.source.obstructed), 0.0f, 1.0f) - al_gain;
   float gain = al_gain + error * dt;
 
-  ALfloat al_gain_hf;
+  ALfloat al_gain_hf{0.0f};
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
   auto error_hf = glm::clamp((1.0f - sound.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
@@ -166,15 +166,12 @@ void Renderer::render_sound(const Sound &sound, const float dt) {
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
 
-  ALenum state;
+  ALenum state{AL_STOPPED};
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
   if (sound.source.playing && (state != AL_PLAYING)) {
     alSourcePlay(al_source);
   }
-
-  ALint type;
-  alGetSourcei(al_source, AL_SOURCE_TYPE, &type);
 
   if (!sound.source.playing && (state == AL_PLAYING)) {
     alSourceStop(al_source);
@@ -187,14 +184,14 @@ void Renderer::render_sound(const Sound &sound, const float dt) {
 
 void Renderer::render_sound_stream(const Sound_stream &sound_stream, const float dt) {
   if (sources_.find(sound_stream.source.id()) == sources_.end()) {
-    ALuint al_source;
+    ALuint al_source{0u};
     alGenSources(1, &al_source);
     sources_.insert(SourcePair(sound_stream.source.id(), al_source));
 
 #ifdef MOS_EFX
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
-    ALuint al_filter;
+    ALuint al_filter{0u};
     alGenFilters(1, &al_filter);
     filters_.insert(SourcePair(sound_stream.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -213,12 +210,12 @@ void Renderer::render_sound_stream(const Sound_stream &sound_stream, const float
 
 #ifdef MOS_EFX
   auto al_filter = filters_[sound_stream.source.id()];
-  ALfloat al_gain;
+  ALfloat al_gain{0.0f};
   alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
   auto error = glm::clamp((1.0f - sound_stream.source.obstructed), 0.0f, 1.0f) - al_gain;
   float gain = al_gain + error * dt;
 
-  ALfloat al_gain_hf;
+  ALfloat al_gain_hf{0.0f};
   alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
   auto error_hf = glm::clamp((1.0f - sound_stream.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
@@ -231,7 +228,7 @@ void Renderer::render_sound_stream(const Sound_stream &sound_stream, const float
   alSourcei(al_source, AL_DIRECT_FILTER, al_filter);
 #endif
 
-  ALenum state;
+  ALenum state{AL_STOPPED};
   alGetSourcei(al_source, AL_SOURCE_STATE, &state);
 
   ALint processed = 0;
@@ -271,7 +268,7 @@ void Renderer::render_sound_stream(const Sound_stream &sound_stream, const float
     }
     if (!sound_stream.source.playing && (state == AL_PLAYING)) {
       alSourceStop(al_source);
-      ALint count;
+      ALint count{0};
       alGetSourcei(al_source, AL_BUFFERS_QUEUED, &count);
       alSourceUnqueueBuffers(al_source, count, &buffer);
       alDeleteBuffers(4, buffers.data());
@@ -318,7 +315,7 @@ auto Renderer::render(const Scene &scene, const float dt) -> void {
   for (const auto &sound : scene.sounds) {
     render_sound(sound, dt);
   }
-  for (auto &sound_stream : scene.sound_streams) {
+  for (const auto &sound_stream : scene.sound_streams) {
     render_sound_stream(sound_stream, dt);
   }
 }

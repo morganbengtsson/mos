@@ -64,7 +64,7 @@ public:
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle> triangles;
 private:
-  auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
+  static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
 
   struct Face {
     Vertex &v0;

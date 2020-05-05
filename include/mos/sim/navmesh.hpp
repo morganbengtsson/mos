@@ -28,13 +28,13 @@ public:
 
   auto closest_intersection(const glm::vec3 &origin,
                             const glm::vec3 &direction) -> Optional_vertex;
-  gfx::Shared_mesh mesh;
-  glm::mat4 transform;
+  gfx::Shared_mesh mesh{};
+  glm::mat4 transform{0.0f};
 private:
   class Face {
   public:
     Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2);
-    auto intersects(const glm::vec3 &origin, const glm::vec3 &direction) -> Optional_vertex;
+    auto intersects(const glm::vec3 &origin, const glm::vec3 &direction) const -> Optional_vertex;
   public :
     gfx::Vertex v0_;
     gfx::Vertex v1_;

@@ -3,12 +3,14 @@
 namespace mos::gfx {
 Renderer::Blit_target::Blit_target(const glm::ivec2 &resolution,
                                    const GLint precision)
-    : resolution(resolution), frame_buffer(generate(glGenFramebuffers)),
-      texture(generate(glGenTextures)), depth_texture(generate(glGenTextures)) {
+    : frame_buffer(generate(glGenFramebuffers)),
+      texture(generate(glGenTextures)),
+      depth_texture(generate(glGenTextures)),
+      resolution(resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, resolution.x, resolution.y, 0,
+  glTexImage2D(GL_TEXTURE_2D, 0, precision, resolution.x, resolution.y, 0,
                GL_RGBA, GL_FLOAT, nullptr);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -1,25 +1,25 @@
 #include <mos/gfx/renderer.hpp>
+#include <array>
 
 namespace mos::gfx {
 
 Renderer::Box::Box()
     : buffer(generate(glGenBuffers)), element_buffer(generate(glGenBuffers)),
       vertex_array(generate(glGenVertexArrays)) {
-  // Render boxes
-  float vertices[] = {
-      -0.5, -0.5, -0.5, 1.0,  0.5, -0.5, -0.5, 1.0, 0.5, 0.5, -0.5,
-      1.0,  -0.5, 0.5,  -0.5, 1.0, -0.5, -0.5, 0.5, 1.0, 0.5, -0.5,
-      0.5,  1.0,  0.5,  0.5,  0.5, 1.0,  -0.5, 0.5, 0.5, 1.0,
+  std::array vertices{
+      -0.5f, -0.5f, -0.5f, 1.0f,  0.5f, -0.5f, -0.5f, 1.0f, 0.5f, 0.5f, -0.5f,
+      1.0f,  -0.5f, 0.5f,  -0.5f, 1.0f, -0.5f, -0.5f, 0.5f, 1.0f, 0.5f, -0.5f,
+      0.5f,  1.0f,  0.5f,  0.5f,  0.5f, 1.0f,  -0.5f, 0.5f, 0.5f, 1.0f,
   };
 
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  unsigned int elements[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 4, 1, 5, 2, 6, 3, 7};
+  std::array elements{0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u, 0u, 4u, 1u, 5u, 2u, 6u, 3u, 7u};
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements,
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * elements.size(), elements.data(),
                GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

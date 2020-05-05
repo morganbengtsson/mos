@@ -65,9 +65,9 @@ Navmesh::Face::Face(gfx::Vertex &v0, gfx::Vertex &v1, gfx::Vertex &v2)
     : v0_(v0), v1_(v1), v2_(v2) {}
 
 auto
-Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) -> Optional_vertex {
+Navmesh::Face::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const -> Optional_vertex {
   glm::vec2 bary;
-  float distance;
+  float distance{0.0f};
   auto intersects =
       glm::intersectRayTriangle(origin, direction, v0_.position, v1_.position, v2_.position, bary, distance);
 

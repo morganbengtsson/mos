@@ -22,8 +22,8 @@ Mesh::Mesh(const std::string &path) {
     if (!is.good()) {
       throw std::runtime_error(path + " does not exist.");
     }
-    int num_vertices;
-    int num_indices;
+    int num_vertices{0};
+    int num_indices{0};
     is.read(reinterpret_cast<char *>(&num_vertices), sizeof(int));
     is.read(reinterpret_cast<char *>(&num_indices), sizeof(int));
 
@@ -72,7 +72,7 @@ auto Mesh::positions() const -> Positions {
   return pos;
 }
 
-void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
+auto Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) -> void {
   auto it = vertices.begin();
   auto it1 = mesh1.vertices.begin();
   auto it2 = mesh2.vertices.begin();
@@ -88,15 +88,15 @@ void Mesh::mix(const Mesh &mesh1, const Mesh &mesh2, const float amount) {
   }
 }
 
-void Mesh::apply_transform(const glm::mat4 &transform) {
+auto Mesh::apply_transform(const glm::mat4 &transform) -> void {
   for (auto &vertex : vertices) {
     vertex.apply_transform(transform);
   }
 }
 
-void Mesh::calculate_tangents(Vertex &v0,
+auto Mesh::calculate_tangents(Vertex &v0,
                               Vertex &v1,
-                              Vertex &v2) {
+                              Vertex &v2) -> void {
   auto pos1 = v0.position;
   auto pos2 = v1.position;
   auto pos3 = v2.position;
@@ -124,7 +124,7 @@ void Mesh::calculate_tangents(Vertex &v0,
 }
 
 
-void Mesh::calculate_normals() {
+auto Mesh::calculate_normals() -> void {
   if (triangles.size() == 0) {
     for (size_t i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
@@ -163,7 +163,7 @@ void Mesh::calculate_normals() {
   }
 }
 
-void Mesh::calculate_tangents() {
+auto Mesh::calculate_tangents() -> void {
   if (triangles.size() == 0) {
     for (size_t i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
@@ -184,7 +184,7 @@ void Mesh::calculate_tangents() {
   }
 }
 
-void Mesh::calculate_flat_normals() {
+auto Mesh::calculate_flat_normals() -> void {
   if (triangles.size() == 0) {
     for (size_t i = 0; i < vertices.size(); i += 3) {
       auto &v0 = vertices[i];
@@ -210,7 +210,7 @@ void Mesh::calculate_flat_normals() {
   }
 }
 
-void Mesh::calculate_sphere() {
+auto Mesh::calculate_sphere() -> void {
   const auto & all_positions = positions();
 
   centroid = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));

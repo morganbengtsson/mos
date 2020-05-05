@@ -20,7 +20,7 @@ auto Box::create_from_model(const gfx::Model &model, const glm::mat4 &transform)
         v.push_back(vt0);
       }
     }
-    for (auto &child : m.models) {
+    for (const auto &child : m.models) {
       create(child, t * m.transform, v);
     }
   };
@@ -38,7 +38,12 @@ auto Box::min() const -> glm::vec3 { return position - extent; }
 auto Box::max() const -> glm::vec3 { return position + extent; }
 
 auto Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const -> bool {
-  float tmin, tmax, tymin, tymax, tzmin, tzmax;
+  float tmin{0.0f};
+  float tmax{0.0f};
+  float tymin{0.0f};
+  float tymax{0.0f};
+  float tzmin{0.0f};
+  float tzmax{0.0f};
 
   glm::vec3 bounds[2];
   bounds[0] = min();
