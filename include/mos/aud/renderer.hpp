@@ -28,7 +28,7 @@ public:
   auto listener() const -> Listener;
 
   /** Render and play audio scene. */
-  auto render(const Scene &scene) -> void;
+  auto render(const Scene &scene, const float dt) -> void;
 
   /** Clear buffers */
   auto clear() -> void;
@@ -37,11 +37,11 @@ private:
   /** Set listener data */
   auto listener(const Listener &listener) -> void;
 
-  /** Update internal stream source representation. */
-  auto stream_source(const Sound_stream &stream_source) -> void;
+  /** Render/play a sound stream. */
+  auto render_sound_stream(const Sound_stream &sound_stream, const float dt) -> void;
 
-  /** Update internal buffer source representation. */
-  auto buffer_source(const Sound &buffer_source) -> void;
+  /** Render/play a sound. */
+  auto render_sound(const Sound &sound, const float dt) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;
