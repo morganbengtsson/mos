@@ -464,12 +464,12 @@ void Renderer::render_model(const Model &model,
 
       const auto &uniforms = program;
 
-      glActiveTexture(GL_TEXTURE3);
+      glActiveTexture(GL_TEXTURE7);
       glBindTexture(GL_TEXTURE_2D, model.material.albedo.texture
                                    ? textures_.at(model.material.albedo.texture->id()).texture
                                        : black_texture_.texture);
 
-      glActiveTexture(GL_TEXTURE4);
+      glActiveTexture(GL_TEXTURE8);
       glBindTexture(GL_TEXTURE_2D, model.material.emission.texture
                                        ? textures_.at(model.material.emission.texture->id()).texture
                                        : black_texture_.texture);
@@ -693,9 +693,11 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUniform1i(environment_program_.brdf_lut, 0);
       glUniform1i(environment_program_.shadow_samplers[0], 1);
       glUniform1i(environment_program_.shadow_samplers[1], 2);
+      glUniform1i(environment_program_.shadow_samplers[2], 3);
+      glUniform1i(environment_program_.shadow_samplers[3], 4);
 
-      glUniform1i(environment_program_.material_albedo_sampler, 3);
-      glUniform1i(environment_program_.material_emission_sampler, 4);
+      glUniform1i(environment_program_.material_albedo_sampler, 7);
+      glUniform1i(environment_program_.material_emission_sampler, 8);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
@@ -716,8 +718,7 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto far_plane = cube_camera.far_plane();
       glUniform1fv(environment_program_.camera_far, 1, &far_plane);
 
-      //TODO: Loop through all lights?
-      for (size_t i = 0; i < 2; i++) {
+      for (size_t i = 0; i < scene.lights.size(); i++) {
         auto light_position = scene.lights.at(i).position();
         glUniform3fv(environment_program_.lights.at(i).position, 1, glm::value_ptr(light_position));
 
