@@ -63,7 +63,6 @@ Light::Light(const std::string &directory,
   using json = nlohmann::json;
   if (!path.empty()) {
     std::filesystem::path fpath = path;
-    if (fpath.extension() == ".light") {
       auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
@@ -86,10 +85,6 @@ Light::Light(const std::string &directory,
       static constexpr glm::vec3 up{0.0f, 0.0001f, 1.0f};
       camera = mos::gfx::Camera(position, center, glm::perspective(angle_, aspect_ratio, near_, far_), up);
 
-    } else {
-      throw std::runtime_error(path.substr(path.find_last_of('.')) +
-          " file format is not supported.");
-    }
     }
 }
 
