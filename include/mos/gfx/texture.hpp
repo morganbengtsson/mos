@@ -9,7 +9,6 @@
 namespace mos::gfx {
 
 class Texture;
-using Shared_texture = std::shared_ptr<Texture>;
 
 /** Texture base */
 class Texture {
