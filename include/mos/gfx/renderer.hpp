@@ -124,6 +124,14 @@ private:
   auto render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera) -> void;
 
+  auto render_sky(const Model &model,
+                    const Camera &camera,
+                    const Lights &lights,
+                    const Environment_lights &environment_lights,
+                    const Fog &fog,
+                    const glm::vec2 &resolution,
+                    const Standard_program& program) -> void;
+
   auto render_clouds(const Clouds &clouds,
                     const Lights &lights,
                     const Environment_lights &environment_lights,
@@ -139,7 +147,9 @@ private:
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const Standard_program& program) -> void;
+                    const Standard_program& program,
+                    const bool depth_test = true,
+                    const bool culling = true) -> void;
 
   auto render_model(const Model &model,
                     const glm::mat4 &transform,

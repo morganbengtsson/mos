@@ -309,6 +309,13 @@ void Renderer::render_scene(const Camera &camera,
   glUniform1fv(standard_program_.fog_attenuation_factor, 1,
                &scene.fog.attenuation_factor);
 
+  render_sky(scene.sky, camera,
+               scene.lights,
+               scene.environment_lights,
+               scene.fog,
+               resolution,
+               standard_program_);
+
   for (auto &model : scene.models) {
     render_model(model, glm::mat4(1.0f), camera,
                  scene.lights,
@@ -340,6 +347,23 @@ void Renderer::render_boxes(const Boxes &boxes, const mos::gfx::Camera &camera) 
                    (GLvoid *) (8 * sizeof(GLuint)));
   }
   glBindVertexArray(0);
+}
+
+void Renderer::render_sky(const Model &model,
+                          const Camera &camera,
+                          const Lights &lights,
+                          const Environment_lights &environment_lights,
+                          const Fog &fog,
+                          const glm::vec2 &resolution,
+                          const Standard_program &program) {
+  auto sky_camera = camera;
+  auto view = sky_camera.view();
+  view[3] = glm::vec4(0.0f, 0.0, 0.0f, 1.0f);
+  sky_camera.view(view);
+  load(model);
+  render_model(model, glm::mat4(1.0f), sky_camera,
+               lights, environment_lights,
+               fog, resolution, program, false, false);
 }
 
 void Renderer::render_clouds(const Clouds &clouds,
@@ -520,9 +544,20 @@ void Renderer::render_model(const Model &model,
                             const Environment_lights &environment_lights,
                             const Fog &fog,
                             const glm::vec2 &resolution,
-                            const Standard_program &program) {
+                            const Standard_program &program,
+                            const bool depth_test,
+                            const bool culling) {
 
-   if (camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
+  if (depth_test) {
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(true);
+  }
+  else {
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(false);
+  }
+
+  if (!culling || camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
     const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {

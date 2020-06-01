@@ -25,7 +25,7 @@ public:
         const Fog &fog = Fog(),
         const Environment_lights &environment_lights = Environment_lights(),
         Boxes boxes = Boxes());
-
+  Model sky;
   Models models;
   Clouds point_clouds;
   Clouds line_clouds;

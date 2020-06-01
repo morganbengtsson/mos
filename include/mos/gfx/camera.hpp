@@ -68,6 +68,9 @@ public:
   /** Get view matrix */
   auto view() const -> glm::mat4;
 
+  /** Set view matrix */
+  auto view(const glm::mat4 mat) -> void;
+
 private:
   auto calculate_view() -> void;
   auto calculate_frustum() -> void;

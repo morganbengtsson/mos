@@ -76,7 +76,6 @@ void Camera::up(const glm::vec3 &up) {
   up_ = up;
   calculate_view();
   calculate_frustum();
-  calculate_near_far();
 }
 
 auto Camera::position() const -> glm::vec3 { return position_; }
@@ -85,7 +84,6 @@ void Camera::position(const glm::vec3 &position) {
   position_ = position;
   calculate_view();
   calculate_frustum();
-  calculate_near_far();
 }
 
 auto Camera::center() const -> glm::vec3 { return center_; }
@@ -94,7 +92,6 @@ void Camera::center(const glm::vec3 &center) {
   center_ = center;
   calculate_view();
   calculate_frustum();
-  calculate_near_far();
 }
 
 auto Camera::direction() const -> glm::vec3 {
@@ -171,13 +168,18 @@ auto Camera::projection() const -> glm::mat4 {
 
 void Camera::projection(const glm::mat4 &proj) {
   projection_ = proj;
-  calculate_view();
   calculate_frustum();
   calculate_near_far();
 }
 
 auto Camera::view() const -> glm::mat4 {
   return view_;
+}
+
+//TODO: Discards position_, up_ and center_ states...
+void Camera::view(const glm::mat4 mat) {
+  view_ = mat;
+  calculate_frustum();
 }
 }
 
