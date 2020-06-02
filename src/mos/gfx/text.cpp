@@ -31,7 +31,7 @@ Text::Text(const std::string &txt,
 
 auto Text::text() const -> std::string { return text_; }
 
-void Text::text(const std::string &text) {
+auto Text::text(const std::string &text) -> void {
   if (text_.compare(text) != 0) {
     text_ = text;
     std::vector<std::string> lines = mos::split(text_, '\n');
@@ -113,23 +113,23 @@ auto Text::height() const -> float {
   return 0.0f;
 }
 
-void Text::position(const glm::vec2 &position) {
+auto Text::position(const glm::vec2 &position) -> void {
   model_.transform =
       glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
 }
 
-void Text::position(const glm::vec3 &position) {
+auto Text::position(const glm::vec3 &position) -> void {
   model_.transform = glm::translate(glm::mat4(1.0f), position);
 }
 
 auto Text::position() const -> glm::vec2 { return glm::vec2(model_.position()); }
 
-void Text::scale(const float scale) {
+auto Text::scale(const float scale) -> void {
   model_.transform =
       glm::scale(model_.transform, glm::vec3(scale, scale, scale));
 }
 
-void Text::transform(const glm::mat4 &transform) {
+auto Text::transform(const glm::mat4 &transform) -> void {
   model_.transform = transform;
 }
 
@@ -139,7 +139,7 @@ auto Text::transform() const -> glm::mat4 {
 
 auto Text::model() const -> Model { return model_; }
 
-void Text::opacity(const float op) {
+auto Text::opacity(const float op) -> void {
   model_.material.transmission = 1.0f - op;
 }
 
@@ -153,7 +153,7 @@ auto Text::operator+=(const std::string &input) -> Text & {
   return *this;
 }
 
-void Text::emission(const glm::vec3 & emiss) {
+auto Text::emission(const glm::vec3 & emiss) -> void {
  model_.material.emission.value = emiss;
 }
 
