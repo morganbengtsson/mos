@@ -12,7 +12,19 @@ public:
   enum class Key : int {
     Enter = 257,
     Escape = 256,
-    Backspace = 259
+    Backspace = 259,
+    F1 = 290,
+    F2 = 291,
+    F3 = 292,
+    F4 = 293,
+    F5 = 294,
+    F6 = 295,
+    F7 = 296,
+    F8 = 297,
+    F9 = 298,
+    F10 = 299,
+    F11 = 300,
+    F12 = 301
   };
 
   enum class Action : int {
