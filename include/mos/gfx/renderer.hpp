@@ -147,9 +147,7 @@ private:
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
-                    const Standard_program& program,
-                    const bool depth_test = true,
-                    const bool culling = true) -> void;
+                    const Standard_program& program) -> void;
 
   auto render_model(const Model &model,
                     const glm::mat4 &transform,

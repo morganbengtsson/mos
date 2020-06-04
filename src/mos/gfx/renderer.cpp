@@ -364,7 +364,7 @@ void Renderer::render_sky(const Model &model,
   load(model);
   render_model(model, glm::mat4(1.0f), sky_camera,
                lights, environment_lights,
-               fog, resolution, program, false, false);
+               fog, resolution, program);
 
   glEnable(GL_DEPTH_TEST);
   glDepthMask(true);
@@ -548,20 +548,8 @@ void Renderer::render_model(const Model &model,
                             const Environment_lights &environment_lights,
                             const Fog &fog,
                             const glm::vec2 &resolution,
-                            const Standard_program &program,
-                            const bool depth_test,
-                            const bool culling) {
-
-  if (depth_test) {
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(true);
-  }
-  else {
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(false);
-  }
-
-  if (!culling || camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
+                            const Standard_program &program) {
+  if (camera.in_frustum(glm::vec3(parent_transform[3]) + model.centroid(), model.radius())) {
     const glm::mat4 mvp = camera.projection() * camera.view() * parent_transform * model.transform;
 
     if (model.mesh) {
