@@ -356,6 +356,7 @@ void Renderer::render_sky(const Model &model,
                           const Fog &fog,
                           const glm::vec2 &resolution,
                           const Standard_program &program) {
+  glUseProgram(program.program);
   auto sky_camera = camera;
   auto view = sky_camera.view();
   view[3] = glm::vec4(0.0f, 0.0, 0.0f, 1.0f);
@@ -364,6 +365,9 @@ void Renderer::render_sky(const Model &model,
   render_model(model, glm::mat4(1.0f), sky_camera,
                lights, environment_lights,
                fog, resolution, program, false, false);
+
+  glEnable(GL_DEPTH_TEST);
+  glDepthMask(true);
 }
 
 void Renderer::render_clouds(const Clouds &clouds,
@@ -722,6 +726,14 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       auto cube_camera = scene.environment_lights.at(i).camera(cube_camera_index_.at(i));
 
       glViewport(0, 0, resolution.x, resolution.y);
+
+      //Render the sky infinite
+      render_sky(scene.sky, cube_camera,
+                 scene.lights,
+                 scene.environment_lights,
+                 scene.fog,
+                 resolution,
+                 standard_program_);
 
       glUseProgram(environment_program_.program);
 
