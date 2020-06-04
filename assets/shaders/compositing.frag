@@ -11,6 +11,24 @@ float rand(vec2 co) {
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
+vec3 uncharted2_tonemap(vec3 x) {
+  float A = 0.15;
+  float B = 0.50;
+  float C = 0.10;
+  float D = 0.20;
+  float E = 0.02;
+  float F = 0.30;
+  return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
+}
+
+vec3 uncharted2(vec3 color) {
+  const float W = 11.2;
+  float exposure_bias = 5.0; //TODO: Somewhat magic number
+  vec3 curr = uncharted2_tonemap(exposure_bias * color);
+  vec3 white_scale = 1.0 / uncharted2_tonemap(vec3(W));
+  return curr * white_scale;
+}
+
 void main() {
   const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
   vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
@@ -30,7 +48,7 @@ void main() {
   float r = rand(frag_uv);
   color.rgb *= (1.0 - r * 0.15);
 
-  float exposure = 1.0;
-  out_color = vec4(vec3(1.0) - exp(-color * exposure), 1.0);
+  float exposure = 0.0;
+  out_color = vec4(uncharted2(color * pow(2.0, exposure)), 1.0);
   out_color.rgb *= vig;
 }
