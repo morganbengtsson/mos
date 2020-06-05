@@ -5,8 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace mos {
-namespace aud {
+namespace mos::aud {
 
 class Buffer;
 using Shared_buffer = std::shared_ptr<Buffer>;
@@ -16,12 +15,12 @@ class Buffer final {
 public:
   using Samples = std::vector<short>;
 
-  template<class T>
+  template <class T>
   /** Construct buffer from a container of shorts. */
   Buffer(const T begin, const T end, const int channels = 1,
-              const unsigned int sample_rate = 44100u)
-      : channels_(channels), sample_rate_(sample_rate),
-        samples_(begin, end), id_(current_id_++) {}
+         const int sample_rate = 44100)
+      : channels_(channels), sample_rate_(sample_rate), samples_(begin, end),
+        id_(current_id_++) {}
 
   /** Empty buffer constructor. */
   explicit Buffer(int channels = 1, int sample_rate = 44100);
@@ -61,5 +60,4 @@ private:
   int channels_;
   int sample_rate_;
 };
-}
-}
+} // namespace mos::aud

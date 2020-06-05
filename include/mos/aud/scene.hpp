@@ -18,8 +18,13 @@ public:
         Listener listener);
   Scene();
 
+  /** Sound streams in the scene.*/
   Sounds sounds;
+
+  /** Streaming sounds in the scene. */
   Sound_streams sound_streams;
+
+  /** The listener. */
   Listener listener;
 };
 }

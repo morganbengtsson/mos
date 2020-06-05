@@ -22,8 +22,10 @@ public:
 
   static const int buffer_size = 4096 * 8;
 
+  /** Read a chunk of data from the stream. */
   auto read() -> std::array<short, buffer_size>;
 
+  /** Check if stream reached the end. */
   auto done() const -> bool;
 
   /** Sample rate, eg 44100 */

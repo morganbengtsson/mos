@@ -1,15 +1,17 @@
-#include <stdexcept>
+#include <fstream>
 #include <mos/aud/buffer.hpp>
 #include <stb_vorbis.h>
-#include <fstream>
+#include <stdexcept>
 
 namespace mos::aud {
 
 std::atomic_uint Buffer::current_id_;
 
-Buffer::Buffer(const int channels, const int sample_rate) : id_(current_id_++), channels_(channels), sample_rate_(sample_rate) {}
+Buffer::Buffer(const int channels, const int sample_rate)
+    : id_(current_id_++), channels_(channels), sample_rate_(sample_rate) {}
 
-Buffer::Buffer(const std::string &path) : id_(current_id_++), channels_(0), sample_rate_(0) {
+Buffer::Buffer(const std::string &path)
+    : id_(current_id_++), channels_(0), sample_rate_(0) {
   short *decoded{};
 
   std::ifstream file(path, std::ios::binary);
@@ -31,9 +33,7 @@ auto Buffer::begin() const -> Samples::const_iterator {
   return samples_.begin();
 }
 
-auto Buffer::end() const -> Samples::const_iterator {
-  return samples_.end();
-}
+auto Buffer::end() const -> Samples::const_iterator { return samples_.end(); }
 
 auto Buffer::id() const -> unsigned int { return id_; }
 
@@ -47,8 +47,6 @@ auto Buffer::duration() const -> float {
 
 auto Buffer::data() const -> const short * { return samples_.data(); }
 
-auto Buffer::size() const -> size_t {
-  return samples_.size();
-}
+auto Buffer::size() const -> size_t { return samples_.size(); }
 
-}
+} // namespace mos::aud
