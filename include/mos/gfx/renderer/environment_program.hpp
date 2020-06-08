@@ -40,6 +40,8 @@ public:
   GLint fog_color_near;
   GLint fog_color_far;
   GLint fog_attenuation_factor;
+  GLint fog_min;
+  GLint fog_max;
 
   GLint brdf_lut;
 };

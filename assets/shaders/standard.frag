@@ -48,6 +48,8 @@ struct Fog {
     vec3 color_near;
     vec3 color_far;
     float attenuation_factor;
+    float min;
+    float max;
 };
 
 struct Fragment {
@@ -261,5 +263,5 @@ void main() {
     float fog_distance = distance(fragment.position, camera.position);
     float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
     vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, 0.7, 1.0));
+    out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, fog.min, fog.max));
 }

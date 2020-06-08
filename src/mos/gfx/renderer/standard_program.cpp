@@ -116,6 +116,8 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
   fog_color_far = glGetUniformLocation(program, "fog.color_far");
   fog_attenuation_factor =
       glGetUniformLocation(program, "fog.attenuation_factor");
+  fog_min = glGetUniformLocation(program, "fog.min");
+  fog_max = glGetUniformLocation(program, "fog.max");
   brdf_lut = glGetUniformLocation(program, "brdf_lut");
 }
 } // namespace mos::gfx

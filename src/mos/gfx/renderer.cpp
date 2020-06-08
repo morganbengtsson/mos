@@ -308,6 +308,8 @@ void Renderer::render_scene(const Camera &camera,
   glUniform3fv(standard_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
   glUniform1fv(standard_program_.fog_attenuation_factor, 1,
                &scene.fog.attenuation_factor);
+  glUniform1fv(standard_program_.fog_min, 1, &scene.fog.min);
+  glUniform1fv(standard_program_.fog_max, 1, &scene.fog.max);
 
   render_sky(scene.sky, camera,
                scene.lights,
@@ -778,6 +780,8 @@ void Renderer::render_environment(const Scene &scene, const glm::vec4 &clear_col
       glUniform3fv(environment_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
       glUniform3fv(environment_program_.fog_color_far, 1, glm::value_ptr(scene.fog.color_far));
       glUniform1fv(environment_program_.fog_attenuation_factor, 1, &scene.fog.attenuation_factor);
+      glUniform1fv(environment_program_.fog_min, 1, &scene.fog.min);
+      glUniform1fv(environment_program_.fog_max, 1, &scene.fog.max);
 
       for (auto &model : scene.models) {
         render_model(model, glm::mat4(1.0f), cube_camera,
