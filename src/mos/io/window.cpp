@@ -4,6 +4,7 @@ namespace mos::io {
 
 Keyboard Window::keyboard_ = Keyboard();
 Mouse Window::mouse_ = Mouse();
+Gamepad Window::gamepad_ = Gamepad();
 
 Window::Window(const std::string &title,
                const glm::ivec2 &resolution,
@@ -58,7 +59,19 @@ auto Window::poll_events() -> Output {
 
   glfwPollEvents();
 
-  return Output{keyboard_, mouse_};
+  GLFWgamepadstate state;
+  if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state)) {
+    gamepad_.button_a = bool(state.buttons[GLFW_GAMEPAD_BUTTON_A]);
+    gamepad_.button_b = bool(state.buttons[GLFW_GAMEPAD_BUTTON_B]);
+
+    gamepad_.left_axis.x = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+    gamepad_.left_axis.y = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+
+    gamepad_.right_axis.x = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+    gamepad_.right_axis.y = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+  }
+
+  return Output{keyboard_, mouse_, gamepad_};
 }
 
 auto Window::dpi() const -> float {
