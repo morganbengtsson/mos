@@ -20,7 +20,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'MOS'
-copyright = '2015, Morgan Bengtsson'
+copyright = '2020, Morgan Bengtsson'
 
 version = '1.0.0'
 # The full version, including alpha/beta/rc tags.
