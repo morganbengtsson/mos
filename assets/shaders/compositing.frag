@@ -23,7 +23,7 @@ vec3 uncharted2_tonemap(vec3 x) {
 
 vec3 uncharted2(vec3 color) {
   const float W = 11.2;
-  float exposure_bias = 5.0; //TODO: Somewhat magic number
+  float exposure_bias = 2.0;
   vec3 curr = uncharted2_tonemap(exposure_bias * color);
   vec3 white_scale = 1.0 / uncharted2_tonemap(vec3(W));
   return curr * white_scale;
