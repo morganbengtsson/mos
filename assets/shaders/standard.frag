@@ -196,7 +196,7 @@ void main() {
             const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
             const float cos_dir = dot(L, -light.direction);
-            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - light.blend), cos_dir);
+            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos((light.angle / 2.0) * (1.0 - light.blend)), cos_dir);
             const vec3 spot_color = vec3(1.0, 1.0, clamp(spot_effect, 0.7, 1.0));
 
             direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission) * spot_color;
