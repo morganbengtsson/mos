@@ -24,6 +24,9 @@ public:
   /** Texture for all particles. */
   Shared_texture_2D texture;
 
+  /** If the particles are emissive or diffuse.*/
+  bool emissive{false};
+
   /** Points. */
   Points points;
 

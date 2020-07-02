@@ -15,6 +15,8 @@ Renderer::Cloud_program::Cloud_program(const std::string &name,
   glAttachShader(program, functions_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "color");
+  glBindAttribLocation(program, 2, "size");
+  glBindAttribLocation(program, 3, "alpha");
 
   link(name);
   check(name);
