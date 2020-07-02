@@ -12,6 +12,7 @@ struct Cloud_program : public Program {
   GLint model{};
   GLint projection;
   GLint texture;
+  GLint emissive;
   GLint resolution;
   GLint camera_resolution;
   GLint camera_position;

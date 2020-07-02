@@ -419,9 +419,11 @@ void Renderer::render_clouds(const Clouds &clouds,
                                      : black_texture_.texture);
     glUniform1i(program.texture, 10);
 
+    //TODO: Check
     glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
     glUniform1i(program.environment_maps[0].map, 5);
 
+    //TODO: Check
     glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
     glUniform1i(program.environment_maps[1].map, 6);
 
@@ -431,6 +433,13 @@ void Renderer::render_clouds(const Clouds &clouds,
     glUniformMatrix4fv(program.projection, 1, GL_FALSE, glm::value_ptr(projection));
     auto r = glm::vec2(resolution); // TODO: Remove.
     glUniform2fv(program.resolution, 1, glm::value_ptr(r));
+
+    auto emissive = static_cast<int>(particles.emissive);
+    glUniform1iv(program.emissive, 1, &emissive);
+
+    auto position = camera.position();
+    glUniform3fv(program.camera_position, 1, glm::value_ptr(position));
+    glUniform2iv(program.camera_resolution, 1, glm::value_ptr(resolution));
 
     for (size_t i = 0; i < environment_lights.size(); i++) {
       auto position = environment_lights.at(i).position();
@@ -464,10 +473,6 @@ void Renderer::render_clouds(const Clouds &clouds,
       auto light_direction = lights.at(i).direction();
       glUniform3fv(program.lights.at(i).direction, 1, glm::value_ptr(light_direction));
     }
-
-    auto position = camera.position();
-    glUniform3fv(program.camera_position, 1, glm::value_ptr(position));
-    glUniform2iv(program.camera_resolution, 1, glm::value_ptr(resolution));
 
     glDrawArrays(draw_mode, 0, particles.points.size());
   }

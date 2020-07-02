@@ -30,6 +30,7 @@ Renderer::Cloud_program::Cloud_program(const std::string &name,
   model_view = glGetUniformLocation(program, "model_view");
   projection = glGetUniformLocation(program, "projection");
   texture = glGetUniformLocation(program, "texture_sampler");
+  emissive = glGetUniformLocation(program, "emissive");
   resolution = glGetUniformLocation(program, "resolution");
   camera_position = glGetUniformLocation(program, "camera.position");
   camera_resolution = glGetUniformLocation(program, "camera.resolution");

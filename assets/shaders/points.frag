@@ -30,6 +30,7 @@ in float fragment_alpha;
 layout(location = 0) out vec4 color;
 
 uniform sampler2D texture_sampler;
+uniform bool emissive;
 uniform Light[4] lights;
 uniform Camera camera;
 uniform Environment[2] environments;
@@ -53,23 +54,26 @@ void main() {
 
     float alpha = fragment_alpha * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
 
-    for(int i = 0; i < lights.length(); i++) {
-      Light light = lights[i];
-      if (light.strength > 0.0) {
-        float light_fragment_distance = distance(light.position, fragment_position);
-        float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-        vec3 radiance = light.strength * 0.09 * light.color * attenuation;
+    if (!emissive){
+      for(int i = 0; i < lights.length(); i++) {
+          //TODO: Make shade_direct method
+          Light light = lights[i];
+          if (light.strength > 0.0) {
+            float light_fragment_distance = distance(light.position, fragment_position);
+            float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+            vec3 radiance = light.strength * 0.2 * light.color * attenuation;
 
-        vec3 L = normalize(light.position - fragment_position);
+            vec3 L = normalize(light.position - fragment_position);
 
-        vec3 kD = vec3(1.0);
+            vec3 kD = vec3(1.0);
 
-        float NdotL = 0.05; // Magic?
-        float cos_dir = dot(L, -light.direction);
-        float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
+            float NdotL = 0.05; // Magic?
+            float cos_dir = dot(L, -light.direction);
+            float spot_effect = smoothstep(cos(light.angle / 2.0), cos(light.angle / 2.0 - 0.1), cos_dir);
 
-       direct += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
-      }
+            direct += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
+          }
+       }
     }
     vec3 ambient = vec3(0.0, 0.0, 0.0);
     float attenuation = 0.0f;
@@ -90,5 +94,5 @@ void main() {
         ambient += clamp(diffuse_environment, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
       }
     }
-    color = vec4(alpha * (direct + ambient), alpha);
+    color = vec4(alpha * (direct + ambient + albedo * float(emissive)), alpha);
 }
