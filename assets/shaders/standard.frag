@@ -120,16 +120,14 @@ float environment_attenuation(const vec3 point, const vec3 position, const vec3 
 
 void main() {
     vec3 N = fragment.normal;
-
-    vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
-    N_from_map = normalize(fragment.tbn * N_from_map);
-
-    float amount = texture(material.normal_sampler, fragment.uv).a;
-
-    if (amount > 0.0f){
-        N = normalize(mix(N, N_from_map, amount));
+    bool has_normal_map = textureSize(material.normal_sampler, 0).x != 1;
+    if (has_normal_map){
+      vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
+      N_from_map = normalize(fragment.tbn * N_from_map);
+      N = N_from_map;
     }
-    if (!gl_FrontFacing){
+
+    if (!gl_FrontFacing) {
       N = -N;
     }
 
