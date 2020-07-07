@@ -80,34 +80,34 @@ private:
 
   static FormatPair format_convert(const Texture::Format &f);
 
-  #include <mos/gfx/renderer/buffer.hpp>
-  #include <mos/gfx/renderer/render_buffers.hpp>
-  #include <mos/gfx/renderer/vertex_arrays.hpp>
-  #include <mos/gfx/renderer/texture_buffers.hpp>
-  #include <mos/gfx/renderer/frame_buffers.hpp>
-  #include <mos/gfx/renderer/array_buffers.hpp>
-  #include <mos/gfx/renderer/element_array_buffers.hpp>
+  #include "../../src/mos/gfx/renderer/buffer.hpp"
+  #include "../../src/mos/gfx/renderer/render_buffers.hpp"
+  #include "../../src/mos/gfx/renderer/vertex_arrays.hpp"
+  #include "../../src/mos/gfx/renderer/texture_buffers.hpp"
+  #include "../../src/mos/gfx/renderer/frame_buffers.hpp"
+  #include "../../src/mos/gfx/renderer/array_buffers.hpp"
+  #include "../../src/mos/gfx/renderer/element_array_buffers.hpp"
 
-  #include <mos/gfx/renderer/light_uniforms.hpp> //TODO: remove
+  #include "../../src/mos/gfx/renderer/light_uniforms.hpp" //TODO: remove
 
-  #include <mos/gfx/renderer/cloud_program.hpp>
-  #include <mos/gfx/renderer/box_program.hpp>
-  #include <mos/gfx/renderer/bloom_program.hpp>
-  #include <mos/gfx/renderer/compositing_program.hpp>
-  #include <mos/gfx/renderer/blur_program.hpp>
-  #include <mos/gfx/renderer/depth_program.hpp>
-  #include <mos/gfx/renderer/propagate_program.hpp>
-  #include <mos/gfx/renderer/environment_program.hpp>
-  #include <mos/gfx/renderer/standard_program.hpp>
+  #include "../../src/mos/gfx/renderer/cloud_program.hpp"
+  #include "../../src/mos/gfx/renderer/box_program.hpp"
+  #include "../../src/mos/gfx/renderer/bloom_program.hpp"
+  #include "../../src/mos/gfx/renderer/compositing_program.hpp"
+  #include "../../src/mos/gfx/renderer/blur_program.hpp"
+  #include "../../src/mos/gfx/renderer/depth_program.hpp"
+  #include "../../src/mos/gfx/renderer/propagate_program.hpp"
+  #include "../../src/mos/gfx/renderer/environment_program.hpp"
+  #include "../../src/mos/gfx/renderer/standard_program.hpp"
 
-  #include <mos/gfx/renderer/standard_target.hpp>
-  #include <mos/gfx/renderer/blit_target.hpp>
-  #include <mos/gfx/renderer/post_target.hpp>
-  #include <mos/gfx/renderer/shadow_map_target.hpp>
-  #include <mos/gfx/renderer/environment_map_target.hpp>
+  #include "../../src/mos/gfx/renderer/standard_target.hpp"
+  #include "../../src/mos/gfx/renderer/blit_target.hpp"
+  #include "../../src/mos/gfx/renderer/post_target.hpp"
+  #include "../../src/mos/gfx/renderer/shadow_map_target.hpp"
+  #include "../../src/mos/gfx/renderer/environment_map_target.hpp"
 
-  #include <mos/gfx/renderer/box.hpp>
-  #include <mos/gfx/renderer/quad.hpp>
+  #include "../../src/mos/gfx/renderer/box.hpp"
+  #include "../../src/mos/gfx/renderer/quad.hpp"
 
   auto render_texture_targets(const Scene &scene) -> void;
 

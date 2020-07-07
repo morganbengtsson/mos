@@ -2,7 +2,7 @@
 
 #include <mos/gfx/cloud.hpp>
 #include <mos/gfx/mesh.hpp>
-#include <mos/gfx/renderer/buffer.hpp>
+#include "../../src/mos/gfx/renderer/buffer.hpp"
 
 class Vertex_array {
 public:

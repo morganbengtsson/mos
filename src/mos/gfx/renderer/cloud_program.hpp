@@ -1,7 +1,7 @@
 #pragma once
 
-#include <mos/gfx/renderer/program.hpp>
-#include <mos/gfx/renderer/shader.hpp>
+#include "../../src/mos/gfx/renderer/program.hpp"
+#include "../../src/mos/gfx/renderer/shader.hpp"
 
 /** Uniforms for the particle shader program. */
 struct Cloud_program : public Program {

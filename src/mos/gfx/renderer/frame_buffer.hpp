@@ -1,7 +1,7 @@
 #pragma once
 
-#include <mos/gfx/renderer/render_buffer.hpp>
-#include <mos/gfx/renderer/texture_buffer_2d.hpp>
+#include "../../src/mos/gfx/renderer/render_buffer.hpp"
+#include "../../src/mos/gfx/renderer/texture_buffer_2d.hpp"
 #include <mos/gfx/texture_target.hpp>
 
 class Frame_buffer {
