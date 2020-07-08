@@ -112,6 +112,20 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
         program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
   }
 
+  //Directional light
+  directional_light.position = glGetUniformLocation(
+      program,
+      std::string("directional_light.position").c_str());
+  directional_light.direction = glGetUniformLocation(
+      program,
+      std::string("directional_light.direction").c_str());
+  directional_light.color = glGetUniformLocation(
+      program,
+      std::string("directional_light.color").c_str());
+  directional_light.strength = glGetUniformLocation(
+      program, std::string("directional_light.strength").c_str());
+
+
   fog_color_near = glGetUniformLocation(program, "fog.color_near");
   fog_color_far = glGetUniformLocation(program, "fog.color_far");
   fog_attenuation_factor =

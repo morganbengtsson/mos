@@ -11,6 +11,7 @@
 #include <mos/gfx/texture_targets.hpp>
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/lights.hpp>
+#include <mos/gfx/directional_light.hpp>
 #include <mos/core/container.hpp>
 
 namespace mos::gfx {
@@ -31,6 +32,7 @@ public:
   Clouds line_clouds;
   Boxes boxes;
   Lights lights;
+  Directional_light directional_light;
   Camera camera;
   Fog fog;
   Environment_lights environment_lights;

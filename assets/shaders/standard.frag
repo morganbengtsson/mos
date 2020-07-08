@@ -19,6 +19,13 @@ struct Material {
     sampler2D ambient_occlusion_sampler;
 };
 
+struct Directional_light{
+  vec3 position;
+  vec3 direction;
+  vec3 color;
+  float strength;
+};
+
 struct Light {
     vec3 position;
     vec3 color;
@@ -63,6 +70,7 @@ struct Fragment {
 
 uniform Material material;
 uniform Light[4] lights;
+uniform Directional_light directional_light;
 uniform sampler2D[4] shadow_maps;
 
 uniform Environment[2] environments;
@@ -199,6 +207,28 @@ void main() {
 
             direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission) * spot_color;
         }
+    }
+
+    //Directional light
+    if (directional_light.strength > 0.0) {
+        const vec3 L = normalize(directional_light.position - fragment.position);
+        const vec3 H = normalize(V + L);
+
+        const float NdotL = max(dot(N, L), 0.0);
+
+        const vec3 radiance = directional_light.strength * directional_light.color;
+
+        const float NDF = distribution_GGX(N, H, roughness);
+        const float G = geometry_smith(N, V, L, roughness);
+        const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+
+        const vec3 nominator = NDF * G * F;
+        const float denominator = 4 * NdotV * NdotL + 0.001;
+        const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
+
+        const vec3 kS = F;
+        const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+        direct += (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission);
     }
 
     vec3 ambient = vec3(0.0, 0.0, 0.0);

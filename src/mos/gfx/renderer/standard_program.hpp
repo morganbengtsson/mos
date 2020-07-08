@@ -49,8 +49,17 @@ public:
     GLint blend;
   };
 
+  struct Directional_light_uniforms {
+    GLint position;
+    GLint direction;
+    GLint color;
+    GLint strength;
+  };
+
   std::array<GLuint, 4> shadow_maps{};
   std::array<Light_uniforms, 4> lights{};
+
+  Directional_light_uniforms directional_light;
 
   GLint fog_color_near;
   GLint fog_color_far;

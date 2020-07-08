@@ -277,6 +277,8 @@ void Renderer::render_scene(const Camera &camera,
   auto position = camera.position();
   glUniform3fv(standard_program_.camera_position, 1, glm::value_ptr(position));
 
+
+  //Spotlights
   for (size_t i = 0; i < scene.lights.size(); i++) {
     auto light_position = scene.lights.at(i).position();
     glUniform3fv(standard_program_.lights.at(i).position, 1,
@@ -302,6 +304,20 @@ void Renderer::render_scene(const Camera &camera,
     glUniform1fv(standard_program_.lights.at(i).blend, 1, &light_blend);
   }
 
+  //Directional light
+  glUniform3fv(standard_program_.directional_light.position, 1,
+               glm::value_ptr(scene.directional_light.position));
+
+  glUniform3fv(standard_program_.directional_light.direction, 1,
+               glm::value_ptr(scene.directional_light.direction));
+
+  glUniform3fv(standard_program_.directional_light.color, 1,
+               glm::value_ptr(scene.directional_light.color));
+
+  glUniform1fv(standard_program_.directional_light.strength, 1,
+               &scene.directional_light.strength);
+
+  // ---
   glUniform2iv(standard_program_.camera_resolution, 1, glm::value_ptr(resolution));
 
   glUniform3fv(standard_program_.fog_color_near, 1, glm::value_ptr(scene.fog.color_near));
