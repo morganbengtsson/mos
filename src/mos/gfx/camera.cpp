@@ -177,9 +177,18 @@ auto Camera::view() const -> glm::mat4 {
 }
 
 //TODO: Discards position_, up_ and center_ states...
-void Camera::view(const glm::mat4 mat) {
+auto Camera::view(const glm::mat4 mat) -> void{
   view_ = mat;
   calculate_frustum();
 }
+
+auto Camera::field_of_view_vertical() const -> float {
+  return 2.0 * glm::atan(1.0f / projection()[1][1]);
+}
+
+auto Camera::field_of_view_horizontal() const -> float {
+  return aspect_ratio() * field_of_view_vertical();
+}
+
 }
 

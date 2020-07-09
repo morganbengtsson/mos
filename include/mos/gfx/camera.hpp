@@ -48,6 +48,7 @@ public:
   /** Set direction. */
   auto direction(const glm::vec3 &direction) -> void;
 
+  /** Get the aspect ratio. */
   auto aspect_ratio() const -> float;
 
   /** Check if sphere with a radius is within camera frustum. */
@@ -70,6 +71,12 @@ public:
 
   /** Set view matrix */
   auto view(const glm::mat4 mat) -> void;
+
+  /** Get the vertical field of view. */
+  auto field_of_view_vertical() const -> float;
+
+  /** Get the horizonal field of view. */
+  auto field_of_view_horizontal() const -> float;
 
 private:
   auto calculate_view() -> void;
