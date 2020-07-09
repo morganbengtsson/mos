@@ -2,7 +2,7 @@
 
 const float PI = 3.14159265359;
 
-struct Light {
+struct Spot_light {
     vec3 position;
     vec3 color;
     float strength;
@@ -12,9 +12,16 @@ struct Light {
     vec3 direction;
 };
 
+struct Directional_light{
+  vec3 position;
+  vec3 direction;
+  vec3 color;
+  float strength;
+};
+
+
 struct Camera {
     vec3 position;
-    ivec2 resolution;
 };
 
 struct Environment {
@@ -27,11 +34,13 @@ struct Environment {
 in vec3 fragment_position;
 in vec3 fragment_color;
 in float fragment_alpha;
+
 layout(location = 0) out vec4 color;
 
 uniform sampler2D texture_sampler;
 uniform bool emissive;
-uniform Light[4] lights;
+uniform Spot_light[4] spot_lights;
+uniform Directional_light directional_light;
 uniform Camera camera;
 uniform Environment[2] environments;
 uniform samplerCube[2] environment_samplers;
@@ -55,9 +64,10 @@ void main() {
     float alpha = fragment_alpha * (has_albedo_map ? albedo_from_map.a : (0.5 - length(temp)));
 
     if (!emissive){
-      for(int i = 0; i < lights.length(); i++) {
+      //Spot light simplified
+      for(int i = 0; i < spot_lights.length(); i++) {
           //TODO: Make shade_direct method
-          Light light = lights[i];
+          Spot_light light = spot_lights[i];
           if (light.strength > 0.0) {
             float light_fragment_distance = distance(light.position, fragment_position);
             float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
@@ -74,6 +84,21 @@ void main() {
             direct += (kD * albedo.rgb / PI) * radiance * NdotL * spot_effect;
           }
        }
+
+      //Directional light, simplified
+      if (directional_light.strength > 0.0) {
+        const vec3 L = normalize(-directional_light.direction);
+        const vec3 H = normalize(V + L);
+
+        const vec3 radiance = directional_light.strength * directional_light.color;
+
+        vec3 kD = vec3(1.0);
+
+        float NdotL = 0.05; // Magic?
+        float cos_dir = dot(L, -directional_light.direction);
+
+        direct += (kD * albedo.rgb / PI) * radiance * NdotL;
+      }
     }
     vec3 ambient = vec3(0.0, 0.0, 0.0);
     float attenuation = 0.0f;

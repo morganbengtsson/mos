@@ -3,20 +3,20 @@
 const float PI = 3.14159265359;
 
 struct Material {
-    vec3 albedo;
-    vec3 emission;
-    float roughness;
-    float metallic;
-    float index_of_refraction;
-    float transmission;
-    float alpha;
-    float ambient_occlusion;
-    sampler2D albedo_sampler;
-    sampler2D emission_sampler;
-    sampler2D normal_sampler;
-    sampler2D metallic_sampler;
-    sampler2D roughness_sampler;
-    sampler2D ambient_occlusion_sampler;
+  vec3 albedo;
+  vec3 emission;
+  float roughness;
+  float metallic;
+  float index_of_refraction;
+  float transmission;
+  float alpha;
+  float ambient_occlusion;
+  sampler2D albedo_sampler;
+  sampler2D emission_sampler;
+  sampler2D normal_sampler;
+  sampler2D metallic_sampler;
+  sampler2D roughness_sampler;
+  sampler2D ambient_occlusion_sampler;
 };
 
 struct Directional_light{
@@ -26,62 +26,67 @@ struct Directional_light{
   float strength;
 };
 
-struct Light {
-    vec3 position;
-    vec3 color;
-    float strength;
-    mat4 view;
-    mat4 projection;
-    float angle;
-    float blend;
-    vec3 direction;
+struct Spot_light {
+  vec3 position;
+  vec3 color;
+  float strength;
+  mat4 view;
+  mat4 projection;
+  float angle;
+  float blend;
+  vec3 direction;
 };
 
 struct Camera {
-    vec3 position;
-    ivec2 resolution;
-    //float far;
-    //float near;
+  vec3 position;
+  ivec2 resolution;
+  //float far;
+  //float near;
 };
 
 struct Environment {
-    vec3 position;
-    vec3 extent;
-    float strength;
-    float falloff;
+  vec3 position;
+  vec3 extent;
+  float strength;
+  float falloff;
 };
 
 struct Fog {
-    vec3 color_near;
-    vec3 color_far;
-    float attenuation_factor;
-    float min;
-    float max;
+  vec3 color_near;
+  vec3 color_far;
+  float attenuation_factor;
+  float min;
+  float max;
 };
 
 struct Fragment {
-    vec3 position;
-    vec3 normal;
-    vec2 uv;
-    mat3 tbn;
-    vec4[4] proj_shadow;
-    vec3 camera_to_surface;
+  vec3 position;
+  vec3 normal;
+  vec2 uv;
+  mat3 tbn;
+  vec4[4] proj_shadow; //TODO: Rename
+  vec4[4] cascaded_proj_shadow; // TODO: Rename
+  vec3 camera_to_surface;
 };
 
+uniform mat4 model;
+uniform mat4 model_view;
+uniform mat4 view; // TODO: Move to camera
+
+uniform Camera camera;
+uniform Fog fog;
 uniform Material material;
-uniform Light[4] lights;
+uniform Spot_light[4] spot_lights;
 uniform Directional_light directional_light;
-uniform sampler2D[4] shadow_maps;
+
+uniform sampler2D[4] shadow_samplers;
+uniform sampler2D[4] cascaded_shadow_samplers;
+uniform vec4 cascade_splits;
 
 uniform Environment[2] environments;
 uniform samplerCube[2] environment_samplers;
 
-uniform Camera camera;
-uniform Fog fog;
-uniform mat4 model;
-uniform mat4 model_view;
-uniform mat4 view;
-uniform sampler2D brdf_lut;
+uniform sampler2D brdf_lut_sampler;
 
 in Fragment fragment;
 
@@ -105,13 +110,13 @@ vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_lev
   int num_samples = 0;
   vec3 filtered = vec3(0.0);
   for(float x = -angle; x <= angle; x += step) {
-      for(float y = -angle; y <= angle; y += step ) {
-        const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-        const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-        const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), y);
-        filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
-        num_samples += 1;
-      }
+    for(float y = -angle; y <= angle; y += step ) {
+      const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
+      const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
+      const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), y);
+      filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
+      num_samples += 1;
+    }
   }
   filtered /= num_samples;
   return filtered;
@@ -127,169 +132,187 @@ float environment_attenuation(const vec3 point, const vec3 position, const vec3 
 
 
 void main() {
-    vec3 N = fragment.normal;
-    bool has_normal_map = textureSize(material.normal_sampler, 0).x != 1;
-    if (has_normal_map){
-      vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
-      N_from_map = normalize(fragment.tbn * N_from_map);
-      N = N_from_map;
-    }
+  vec3 N = fragment.normal;
+  bool has_normal_map = textureSize(material.normal_sampler, 0).x != 1;
+  if (has_normal_map){
+    vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
+    N_from_map = normalize(fragment.tbn * N_from_map);
+    N = N_from_map;
+  }
 
-    if (!gl_FrontFacing) {
-      N = -N;
-    }
+  if (!gl_FrontFacing) {
+    N = -N;
+  }
 
-    bool has_albedo_map = textureSize(material.albedo_sampler, 0).x != 1;
-    vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
-    vec3 albedo = has_albedo_map ? albedo_from_map.rgb : material.albedo.rgb;
+  bool has_albedo_map = textureSize(material.albedo_sampler, 0).x != 1;
+  vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
+  vec3 albedo = has_albedo_map ? albedo_from_map.rgb : material.albedo.rgb;
 
-    vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
-    vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
+  vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
+  vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
 
-    vec4 metallic_from_map = texture(material.metallic_sampler, fragment.uv);
-    float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
+  vec4 metallic_from_map = texture(material.metallic_sampler, fragment.uv);
+  float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
 
-    vec4 roughnesss_from_map = texture(material.roughness_sampler, fragment.uv);
-    float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
+  vec4 roughnesss_from_map = texture(material.roughness_sampler, fragment.uv);
+  float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
 
-    float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
-    float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
+  float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
+  float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-    if (material.alpha == 0.0) {
+  if (material.alpha == 0.0) {
+    discard;
+  }
+  else if (material.alpha == 1.0) {
+    if (albedo_from_map.a + float(!has_albedo_map) < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
       discard;
     }
-    else if (material.alpha == 1.0) {
-      if (albedo_from_map.a + float(!has_albedo_map) < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
-          discard;
+  }
+
+  const vec3 V = normalize(camera.position - fragment.position);
+  const vec3 R = -reflect(fragment.camera_to_surface, N);
+
+  const float NdotV = max(dot(N, V), 0.0);
+
+  vec3 F0 = vec3(0.02);
+  F0 = mix(F0, albedo, metallic);
+
+  vec3 direct = vec3(0.0, 0.0, 0.0);
+
+  for(int i = 0; i < spot_lights.length(); i++) {
+    Spot_light light = spot_lights[i];
+    if (light.strength > 0.0) {
+      const vec3 L = normalize(light.position - fragment.position);
+      const vec3 H = normalize(V + L);
+
+      const float NdotL = max(dot(N, L), 0.0);
+
+      const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
+      const vec2 texel_size = 1.0 / textureSize(shadow_samplers[i], 0);
+      const float shadow = sample_variance_shadow_map(shadow_samplers[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z);
+
+      const float light_fragment_distance = distance(light.position, fragment.position);
+      const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
+      const vec3 radiance = light.strength * 0.20 * light.color * attenuation;
+
+      const float NDF = distribution_GGX(N, H, roughness);
+      const float G = geometry_smith(N, V, L, roughness);
+      const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+
+      const vec3 nominator = NDF * G * F;
+      const float denominator = 4 * NdotV * NdotL + 0.001;
+      const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
+
+      const vec3 kS = F;
+      const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+
+      const float cos_dir = dot(L, -light.direction);
+      const float spot_effect = smoothstep(cos(light.angle / 2.0), cos((light.angle / 2.0) * (1.0 - light.blend)), cos_dir);
+      const vec3 spot_color = vec3(1.0, 1.0, clamp(spot_effect, 0.7, 1.0));
+
+      direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission) * spot_color;
+    }
+  }
+
+  //Directional light
+  if (directional_light.strength > 0.0) {
+    const vec3 L = normalize(-directional_light.direction);
+    const vec3 H = normalize(V + L);
+
+    const float NdotL = max(dot(N, L), 0.0);
+
+    int cascade_index = 0;
+
+    //Debug color
+    //vec3 colors[4] = {vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 1.0)};
+
+    for (int i = 0; i < 4; i++) {
+      const vec3 shadow_map_uv = fragment.cascaded_proj_shadow[i].xyz / fragment.cascaded_proj_shadow[i].w;
+      if (shadow_map_uv.x < 1.0 && shadow_map_uv.x > 0.0 && shadow_map_uv.y < 1.0 && shadow_map_uv.y > 0.0){
+        //direct += colors[i]; Debug color
+        cascade_index = i;
+        break;
       }
     }
 
-    const vec3 V = normalize(camera.position - fragment.position);
-    const vec3 R = -reflect(fragment.camera_to_surface, N);
+    //TODO: Select correct shadowmap
+    const vec3 shadow_map_uv = fragment.cascaded_proj_shadow[cascade_index].xyz / fragment.cascaded_proj_shadow[cascade_index].w;
+    const float shadow = sample_variance_shadow_map(cascaded_shadow_samplers[cascade_index], shadow_map_uv.xy, shadow_map_uv.z);
 
-    const float NdotV = max(dot(N, V), 0.0);
+    const vec3 radiance = directional_light.strength * directional_light.color;
 
-    vec3 F0 = vec3(0.02);
-    F0 = mix(F0, albedo, metallic);
+    const float NDF = distribution_GGX(N, H, roughness);
+    const float G = geometry_smith(N, V, L, roughness);
+    const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
-    vec3 direct = vec3(0.0, 0.0, 0.0);
+    const vec3 nominator = NDF * G * F;
+    const float denominator = 4 * NdotV * NdotL + 0.001;
+    const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
 
-    for(int i = 0; i < lights.length(); i++) {
-        Light light = lights[i];
-        if (light.strength > 0.0) {
-            const vec3 L = normalize(light.position - fragment.position);
-            const vec3 H = normalize(V + L);
+    const vec3 kS = F;
+    const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+    direct += (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
+  }
 
-            const float NdotL = max(dot(N, L), 0.0);
+  vec3 ambient = vec3(0.0, 0.0, 0.0);
+  float attenuation = 0.0f;
 
-            const vec3 shadow_map_uv = fragment.proj_shadow[i].xyz / fragment.proj_shadow[i].w;
-            const vec2 texel_size = 1.0 / textureSize(shadow_maps[i], 0);
-            const float shadow = sample_variance_shadow_map(shadow_maps[i], shadow_map_uv.xy + texel_size, shadow_map_uv.z);
+  for (int i = 0; i < environments.length(); i++) {
+    if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
+      const vec3 corrected_N = box_correct(environments[i].extent, environments[i].position, N, fragment.position);
+      const vec3 corrected_R = box_correct(environments[i].extent, environments[i].position, R, fragment.position);
 
-            const float light_fragment_distance = distance(light.position, fragment.position);
-            const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-            const vec3 radiance = light.strength * 0.20 * light.color * attenuation;
+      const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
+      const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
+      const float num_levels = textureQueryLevels(environment_samplers[i]);
+      const float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
 
-            const float NDF = distribution_GGX(N, H, roughness);
-            const float G = geometry_smith(N, V, L, roughness);
-            const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+      const vec3 F_env = fresnel_schlick_roughness(NdotV, F0, roughness);
+      const vec3 kS_env = F_env;
+      const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
 
-            const vec3 nominator = NDF * G * F;
-            const float denominator = 4 * NdotV * NdotL + 0.001;
-            const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
+      vec3 filtered = vec3(0,0,0);
+      if (roughness > 0.4) {
+        filtered = sample_environment(environment_samplers[i], corrected_R, mip_level, 0.5 * roughness, 1.0 * roughness);
+      } else {
+        filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
+      }
 
-            const vec3 kS = F;
-            const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+      const vec2 brdf  = texture(brdf_lut_sampler, vec2(NdotV, roughness)).rg;
 
-            const float cos_dir = dot(L, -light.direction);
-            const float spot_effect = smoothstep(cos(light.angle / 2.0), cos((light.angle / 2.0) * (1.0 - light.blend)), cos_dir);
-            const vec3 spot_color = vec3(1.0, 1.0, clamp(spot_effect, 0.7, 1.0));
+      vec3 refraction = vec3(0,0,0);
+      if (material.transmission > 0.0) {
+        const float refractive_index = material.index_of_refraction;
+        const vec3 RF = refract(V, N, 1.0 / refractive_index);
+        const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
+        const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
+      }
 
-            direct += (kD * albedo / PI + specular) * radiance * NdotL * spot_effect * shadow * (1.0 - material.transmission) * spot_color;
-        }
-    }
+      float horiz = dot(corrected_R,N);
+      const float horiz_fade_power = 1.0 - roughness;
+      horiz = clamp( 1.0 + horiz_fade_power * horiz, 0.0, 1.0 );
+      horiz *= horiz;
 
-    //Directional light
-    if (directional_light.strength > 0.0) {
-        const vec3 L = normalize(directional_light.position - fragment.position);
-        const vec3 H = normalize(V + L);
+      vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * horiz * environments[i].strength;
 
-        const float NdotL = max(dot(N, L), 0.0);
+      vec3 irradiance = sample_environment(environment_samplers[i], corrected_N, num_levels - 1.5, 0.5, 1.0);
 
-        const vec3 radiance = directional_light.strength * directional_light.color;
+      const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
 
-        const float NDF = distribution_GGX(N, H, roughness);
-        const float G = geometry_smith(N, V, L, roughness);
-        const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
+      attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent, environments[i].falloff) : 1.0 - attenuation;
 
-        const vec3 nominator = NDF * G * F;
-        const float denominator = 4 * NdotV * NdotL + 0.001;
-        const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
-
-        const vec3 kS = F;
-        const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
-        direct += (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission);
-    }
-
-    vec3 ambient = vec3(0.0, 0.0, 0.0);
-    float attenuation = 0.0f;
-
-    for (int i = 0; i < environments.length(); i++) {
-      if (environments[i].strength > 0.0 && inside_box(fragment.position, environments[i].position, environments[i].extent)) {
-        const vec3 corrected_N = box_correct(environments[i].extent, environments[i].position, N, fragment.position);
-        const vec3 corrected_R = box_correct(environments[i].extent, environments[i].position, R, fragment.position);
-
-        const vec2 environment_texture_size = textureSize(environment_samplers[i], 0);
-        const float maxsize = max(environment_texture_size.x, environment_texture_size.x);
-        const float num_levels = textureQueryLevels(environment_samplers[i]);
-        const float mip_level = clamp(pow(roughness, 0.25) * num_levels, 0.0, 10.0);
-
-        const vec3 F_env = fresnel_schlick_roughness(NdotV, F0, roughness);
-        const vec3 kS_env = F_env;
-        const vec3 kD_env = (1.0 - kS_env) * (1.0 - metallic);
-
-        vec3 filtered = vec3(0,0,0);
-        if (roughness > 0.4) {
-          filtered = sample_environment(environment_samplers[i], corrected_R, mip_level, 0.5 * roughness, 1.0 * roughness);
-        } else {
-          filtered = textureLod(environment_samplers[i], corrected_R, mip_level).rgb;
-        }
-
-        const vec2 brdf  = texture(brdf_lut, vec2(NdotV, roughness)).rg;
-
-        vec3 refraction = vec3(0,0,0);
-        if (material.transmission > 0.0) {
-          const float refractive_index = material.index_of_refraction;
-          const vec3 RF = refract(V, N, 1.0 / refractive_index);
-          const vec3 corrected_RF = box_correct(environments[i].extent, environments[i].position, RF, fragment.position);
-          const vec3 refraction = textureLod(environment_samplers[i], corrected_RF, mip_level).rgb * material.transmission;
-        }
-
-        float horiz = dot(corrected_R,N);
-        const float horiz_fade_power = 1.0 - roughness;
-        horiz = clamp( 1.0 + horiz_fade_power * horiz, 0.0, 1.0 );
-        horiz *= horiz;
-
-        vec3 specular_environment = mix(refraction, filtered, F_env * brdf.x + brdf.y) * horiz * environments[i].strength;
-
-        vec3 irradiance = sample_environment(environment_samplers[i], corrected_N, num_levels - 1.5, 0.5, 1.0);
-
-        const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
-
-        attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent, environments[i].falloff) : 1.0 - attenuation;
-
-        ambient += attenuation * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
-        if (attenuation == 1.0) {
-          break;
-        }
+      ambient += attenuation * clamp((kD_env * diffuse_environment * (1.0 - material.transmission) + specular_environment) * ambient_occlusion, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
+      if (attenuation == 1.0) {
+        break;
       }
     }
-    out_color.rgb = (direct + ambient) + emission;
-    out_color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map)), 0.0, 1.0);
+  }
+  out_color.rgb = (direct + ambient) + emission;
+  out_color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map)), 0.0, 1.0);
 
-    //Fog
-    float fog_distance = distance(fragment.position, camera.position);
-    float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
-    vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-    out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, fog.min, fog.max));
+  //Fog
+  float fog_distance = distance(fragment.position, camera.position);
+  float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
+  vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
+  out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, fog.min, fog.max));
 }

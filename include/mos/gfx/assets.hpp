@@ -9,7 +9,7 @@
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/texture_2d.hpp>
-#include <mos/gfx/light.hpp>
+#include <mos/gfx/spot_light.hpp>
 #include <mos/gfx/environment_light.hpp>
 
 namespace mos::gfx {

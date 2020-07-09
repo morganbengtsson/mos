@@ -116,7 +116,11 @@ private:
                     const glm::ivec2 &resolution) -> void;
 
   auto render_shadow_maps(const Models &models,
-                          const Lights &lights) -> void;
+                          const Spot_lights &spot_lights) -> void;
+
+  auto render_cascaded_shadow_maps(const Models &models,
+                                   const Directional_light &light,
+                                   const Camera &camera) -> void;
 
   auto render_environment(const Scene &scene,
                           const glm::vec4 &clear_color) -> void;
@@ -126,14 +130,15 @@ private:
 
   auto render_sky(const Model &model,
                     const Camera &camera,
-                    const Lights &lights,
+                    const Spot_lights &spot_lights,
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
   auto render_clouds(const Clouds &clouds,
-                    const Lights &lights,
+                    const Directional_light &directional_light,
+                    const Spot_lights &spot_lights,
                     const Environment_lights &environment_lights,
                     const mos::gfx::Camera &camera,
                     const glm::ivec2 &resolution,
@@ -143,7 +148,7 @@ private:
   auto render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
-                    const Lights &lights,
+                    const Spot_lights &spot_lights,
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
@@ -152,7 +157,7 @@ private:
   auto render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
-                    const Lights &lights,
+                    const Spot_lights &spot_lights,
                     const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
@@ -218,6 +223,15 @@ private:
   const Render_buffer environment_render_buffer_;
   const std::array<Environment_map_target, 2> environment_maps_targets_;
   const Environment_map_target propagate_target_;
+
+
+  static constexpr const int cascade_count{4};
+  //TODO: return all theese from the render method
+  const std::array<Shadow_map_target, cascade_count> cascaded_shadow_maps_;
+  glm::vec4 cascade_splits; //TODO: Generalize number of splits
+  std::array<glm::mat4, cascade_count> directional_light_ortho_matrices;
+  std::array<glm::mat4, cascade_count> light_view_matrix;
+
 };
 }
 

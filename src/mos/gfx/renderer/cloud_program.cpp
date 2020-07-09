@@ -29,50 +29,64 @@ Renderer::Cloud_program::Cloud_program(const std::string &name,
       glGetUniformLocation(program, "model_view_projection");
   model_view = glGetUniformLocation(program, "model_view");
   projection = glGetUniformLocation(program, "projection");
-  texture = glGetUniformLocation(program, "texture_sampler");
-  emissive = glGetUniformLocation(program, "emissive");
+  albedo_sampler = glGetUniformLocation(program, "texture_sampler");
+  emissive_sampler = glGetUniformLocation(program, "emissive");
   resolution = glGetUniformLocation(program, "resolution");
-  camera_position = glGetUniformLocation(program, "camera.position");
-  camera_resolution = glGetUniformLocation(program, "camera.resolution");
 
-  for (size_t i = 0; i < lights.size(); i++) {
-    lights.at(i).position = glGetUniformLocation(
+  camera.position = glGetUniformLocation(program, "camera.position");
+
+  for (size_t i = 0; i < spot_lights.size(); i++) {
+    spot_lights.at(i).position = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].position").c_str());
-    lights.at(i).color = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].position").c_str());
+    spot_lights.at(i).color = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights.at(i).strength = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].color").c_str());
+    spot_lights.at(i).strength = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].strength").c_str());
-    lights.at(i).view = glGetUniformLocation(
-        program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights.at(i).projection = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].strength").c_str());
+    spot_lights.at(i).view = glGetUniformLocation(
+        program, std::string("spot_lights[" + std::to_string(i) + "].view").c_str());
+    spot_lights.at(i).projection = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].projection").c_str());
-    lights.at(i).angle = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].projection").c_str());
+    spot_lights.at(i).angle = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights.at(i).direction = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].angle").c_str());
+    spot_lights.at(i).direction = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].direction").c_str());
+        std::string("spot_lights[" + std::to_string(i) + "].direction").c_str());
   }
-  for (size_t i = 0; i < environment_maps.size(); i++) {
-    environment_maps.at(i).map = glGetUniformLocation(
+  for (size_t i = 0; i < environment_samplers.size(); i++) {
+    environment_samplers.at(i).map = glGetUniformLocation(
         program,
         std::string("environment_samplers[" + std::to_string(i) + "]").c_str());
-    environment_maps.at(i).position = glGetUniformLocation(
+    environment_samplers.at(i).position = glGetUniformLocation(
         program, std::string("environments[" + std::to_string(i) + "].position")
                      .c_str());
-    environment_maps.at(i).extent = glGetUniformLocation(
+    environment_samplers.at(i).extent = glGetUniformLocation(
         program,
         std::string("environments[" + std::to_string(i) + "].extent").c_str());
-    environment_maps.at(i).strength = glGetUniformLocation(
+    environment_samplers.at(i).strength = glGetUniformLocation(
         program, std::string("environments[" + std::to_string(i) + "].strength")
                      .c_str());
-    environment_maps.at(i).falloff = glGetUniformLocation(
+    environment_samplers.at(i).falloff = glGetUniformLocation(
         program,
         std::string("environments[" + std::to_string(i) + "].falloff").c_str());
   }
+
+  //Directional light
+  directional_light.position = glGetUniformLocation(
+      program,
+      std::string("directional_light.position").c_str());
+  directional_light.direction = glGetUniformLocation(
+      program,
+      std::string("directional_light.direction").c_str());
+  directional_light.color = glGetUniformLocation(
+      program,
+      std::string("directional_light.color").c_str());
+  directional_light.strength = glGetUniformLocation(
+      program, std::string("directional_light.strength").c_str());
+
 }
 } // namespace mos::gfx

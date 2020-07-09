@@ -1,11 +1,11 @@
-#include <mos/gfx/light.hpp>
+#include <mos/gfx/spot_light.hpp>
 #include <glm/gtx/transform.hpp>
 #include <filesystem>
 #include <json.hpp>
 #include <mos/util.hpp>
 
 namespace mos::gfx {
-Light::Light(const glm::vec3 &position,
+Spot_light::Spot_light(const glm::vec3 &position,
              const glm::vec3 &center,
              const float angle,
              const glm::vec3 &color,
@@ -22,41 +22,41 @@ Light::Light(const glm::vec3 &position,
       far_(far_plane),
       blend_(blend) {}
 
-void Light::position(const glm::vec3 &position) {
+void Spot_light::position(const glm::vec3 &position) {
   camera.position(position);
 }
 
-auto Light::position() const -> glm::vec3 {
+auto Spot_light::position() const -> glm::vec3 {
   return camera.position();
 }
 
-auto Light::angle(const float angle) -> void {
+auto Spot_light::angle(const float angle) -> void {
   angle_ = angle;
   camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
 
-auto Light::angle() const -> float {
+auto Spot_light::angle() const -> float {
   return angle_;
 }
 
-auto Light::center(const glm::vec3 &center) -> void {
+auto Spot_light::center(const glm::vec3 &center) -> void {
   camera.center(center);
 }
 
-auto Light::center() const -> glm::vec3 {
+auto Spot_light::center() const -> glm::vec3 {
   return camera.center();
 }
 
-auto Light::direction() const -> glm::vec3 {
+auto Spot_light::direction() const -> glm::vec3 {
   return camera.direction();
 }
 
-void Light::near_far(const float near_plane, const float far_plane) {
+void Spot_light::near_far(const float near_plane, const float far_plane) {
   near_ = near_plane;
   far_ = far_plane;
   camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
-Light::Light(const std::string &directory,
+Spot_light::Spot_light(const std::string &directory,
              const std::string &path,
              const glm::mat4 &parent_transform) :
   color(glm::vec3{0.0f}) {
@@ -88,11 +88,11 @@ Light::Light(const std::string &directory,
     }
 }
 
-void Light::blend(float blend) {
+void Spot_light::blend(float blend) {
   blend_ = blend;
 }
 
-auto Light::blend() const -> float {
+auto Spot_light::blend() const -> float {
   return blend_;
 }
 }

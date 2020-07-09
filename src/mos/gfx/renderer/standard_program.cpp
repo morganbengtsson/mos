@@ -39,7 +39,7 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
   }
 
   for (size_t i = 0; i < environment_maps.size(); i++) {
-    environment_maps.at(i).map = glGetUniformLocation(
+    environment_maps.at(i).sampler = glGetUniformLocation(
         program,
         std::string("environment_samplers[" + std::to_string(i) + "]").c_str());
     environment_maps.at(i).position = glGetUniformLocation(
@@ -56,61 +56,74 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
         std::string("environments[" + std::to_string(i) + "].falloff").c_str());
   }
 
-  material_albedo_sampler =
+  material.albedo_sampler =
       glGetUniformLocation(program, "material.albedo_sampler");
-  material_normal_sampler =
+  material.normal_sampler =
       glGetUniformLocation(program, "material.normal_sampler");
-  material_metallic_sampler =
+  material.metallic_sampler =
       glGetUniformLocation(program, "material.metallic_sampler");
-  material_roughness_sampler =
+  material.roughness_sampler =
       glGetUniformLocation(program, "material.roughness_sampler");
-  material_emission_sampler =
+  material.emission_sampler =
       glGetUniformLocation(program, "material.emission_sampler");
-  material_ambient_occlusion_sampler =
+  material.ambient_occlusion_sampler =
       glGetUniformLocation(program, "material.ambient_occlusion_sampler");
-  material_albedo = glGetUniformLocation(program, "material.albedo");
-  material_roughness = glGetUniformLocation(program, "material.roughness");
-  material_metallic = glGetUniformLocation(program, "material.metallic");
-  material_index_of_refraction =
+  material.albedo = glGetUniformLocation(program, "material.albedo");
+  material.roughness = glGetUniformLocation(program, "material.roughness");
+  material.metallic = glGetUniformLocation(program, "material.metallic");
+  material.index_of_refraction =
       glGetUniformLocation(program, "material.index_of_refraction");
-  material_alpha = glGetUniformLocation(program, "material.alpha");
-  material_transmission =
+  material.alpha = glGetUniformLocation(program, "material.alpha");
+  material.transmission =
       glGetUniformLocation(program, "material.transmission");
-  material_emission = glGetUniformLocation(program, "material.emission");
-  material_ambient_occlusion =
+  material.emission = glGetUniformLocation(program, "material.emission");
+  material.ambient_occlusion =
       glGetUniformLocation(program, "material.ambient_occlusion");
 
-  camera_position = glGetUniformLocation(program, "camera.position");
-  camera_resolution = glGetUniformLocation(program, "camera.resolution");
+  camera.position = glGetUniformLocation(program, "camera.position");
+  camera.resolution = glGetUniformLocation(program, "camera.resolution");
 
-  for (size_t i = 0; i < lights.size(); i++) {
-    lights.at(i).position = glGetUniformLocation(
+  for (size_t i = 0; i < spot_lights.size(); i++) {
+    spot_lights.at(i).position = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].position").c_str());
-    lights.at(i).color = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].position").c_str());
+    spot_lights.at(i).color = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].color").c_str());
-    lights.at(i).strength = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].color").c_str());
+    spot_lights.at(i).strength = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].strength").c_str());
-    lights.at(i).view = glGetUniformLocation(
-        program, std::string("lights[" + std::to_string(i) + "].view").c_str());
-    lights.at(i).projection = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].strength").c_str());
+    spot_lights.at(i).view = glGetUniformLocation(
+        program, std::string("spot_lights[" + std::to_string(i) + "].view").c_str());
+    spot_lights.at(i).projection = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].projection").c_str());
-    lights.at(i).angle = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].projection").c_str());
+    spot_lights.at(i).angle = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].angle").c_str());
-    lights.at(i).blend = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].angle").c_str());
+    spot_lights.at(i).blend = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].blend").c_str());
-    lights.at(i).direction = glGetUniformLocation(
+        std::string("spot_lights[" + std::to_string(i) + "].blend").c_str());
+    spot_lights.at(i).direction = glGetUniformLocation(
         program,
-        std::string("lights[" + std::to_string(i) + "].direction").c_str());
+        std::string("spot_lights[" + std::to_string(i) + "].direction").c_str());
 
-    shadow_maps.at(i) = glGetUniformLocation(
-        program, std::string("shadow_maps[" + std::to_string(i) + "]").c_str());
+    shadow_samplers.at(i) = glGetUniformLocation(
+        program, std::string("shadow_samplers[" + std::to_string(i) + "]").c_str());
   }
+
+  //Cascaded
+  for (int i = 0; i < 4; i++){
+    cascaded_shadow_samplers.at(i) = glGetUniformLocation(
+        program, std::string("cascaded_shadow_samplers[" + std::to_string(i) + "]").c_str());
+    cascaded_depth_bias_mvps.at(i) = glGetUniformLocation(
+        program, std::string("cascaded_depth_bias_model_view_projections[" +
+                             std::to_string(i) + "]")
+                     .c_str());
+  }
+  cascade_splits = glGetUniformLocation(
+      program,
+      std::string("cascade_splits").c_str());
 
   //Directional light
   directional_light.position = glGetUniformLocation(
@@ -126,12 +139,12 @@ Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
       program, std::string("directional_light.strength").c_str());
 
 
-  fog_color_near = glGetUniformLocation(program, "fog.color_near");
-  fog_color_far = glGetUniformLocation(program, "fog.color_far");
-  fog_attenuation_factor =
+  fog.color_near = glGetUniformLocation(program, "fog.color_near");
+  fog.color_far = glGetUniformLocation(program, "fog.color_far");
+  fog.attenuation_factor =
       glGetUniformLocation(program, "fog.attenuation_factor");
-  fog_min = glGetUniformLocation(program, "fog.min");
-  fog_max = glGetUniformLocation(program, "fog.max");
-  brdf_lut = glGetUniformLocation(program, "brdf_lut");
+  fog.min = glGetUniformLocation(program, "fog.min");
+  fog.max = glGetUniformLocation(program, "fog.max");
+  brdf_lut_sampler = glGetUniformLocation(program, "brdf_lut_sampler");
 }
 } // namespace mos::gfx

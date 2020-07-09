@@ -3,13 +3,13 @@ namespace mos::gfx {
 
 Scene::Scene(Models models,
              const Camera &camera,
-             const Lights &lights,
+             const Spot_lights &lights,
              const Fog &fog,
              const Environment_lights &environment_lights,
              Boxes boxes)
     : models(std::move(models)),
       boxes(std::move(boxes)),
-      lights(lights),
+      spot_lights(lights),
       camera(camera),
       fog(fog),
       environment_lights(environment_lights) {}
