@@ -120,6 +120,10 @@ void main() {
   color.rgb *= (1.0 - r * 0.15);
 #endif
 
+#ifdef VIGNETTE
+  color.rgb *= vignette;
+#endif
+
 #ifdef DITHER
   // Dithering
   float spread = 1.0 / (0.299 * (red_count - 1.0) + 0.587 * (green_count - 1.0) + 0.114 * (blue_count - 1.0));  // this spread value is optimised one -- try your own values for various effects!
@@ -130,7 +134,5 @@ void main() {
   // Tonemap
   float exposure = 0.0;
   out_color = vec4(uncharted2(color * pow(2.0, exposure)), 1.0);
-#ifdef VIGNETTE
-  out_color.rgb *= vignette;
-#endif
+
 }
