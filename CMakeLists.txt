@@ -65,13 +65,17 @@ add_library(${PROJECT_NAME} STATIC
   ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
 #Available effects are : MOS_EFFECT_VIGNETTE, MOS_EFFECT_VHS, MOS_EFFECT_NOISE and MOS_EFFECT_DITHER
+# NMINMAX fixes windows build
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE
   MOS_EFX
   MOS_EFFECT_VIGNETTE
   MOS_EFFECT_NOISE
-  AL_ALEXT_PROTOTYPES)
-target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
+  AL_ALEXT_PROTOTYPES
+  PUBLIC
+  GLM_ENABLE_EXPERIMENTAL
+  NOMINMAX
+  STB_IMAGE_IMPLEMENTATION)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -85,14 +89,15 @@ target_include_directories(${PROJECT_NAME}
   externals/utfcpp/source
   )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC OpenAL)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${GLFW_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PUBLIC stb)
-target_link_libraries(${PROJECT_NAME} PUBLIC glad)
-
-#Windows min/max header problem
-target_compile_definitions(${PROJECT_NAME} PUBLIC NOMINMAX STB_IMAGE_IMPLEMENTATION)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+  OpenAL
+  ${GL_LIBRARY}
+  ${PLATFORM_SPECIFIC_LIBRARIES}
+  glfw
+  ${GLFW_LIBRARIES}
+  stb
+  glad)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
