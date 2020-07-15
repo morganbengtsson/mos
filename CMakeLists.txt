@@ -60,24 +60,30 @@ file(GLOB GEOMETRY_SHADERS assets/shaders/*.geom)
 file(GLOB BRDF_LUT assets/brdfLUT.png)
 
 add_library(${PROJECT_NAME} STATIC
-${ROOT_HEADER} ${GFX_HEADER} ${AUD_HEADER} ${SIM_HEADER} ${IO_HEADER} ${CORE_HEADER}
-${ROOT_SOURCE} ${GFX_SOURCE} ${AUD_SOURCE} ${SIM_SOURCE} ${IO_SOURCE} ${CORE_SOURCE}
-${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
+  ${ROOT_HEADER} ${GFX_HEADER} ${AUD_HEADER} ${SIM_HEADER} ${IO_HEADER} ${CORE_HEADER}
+  ${ROOT_SOURCE} ${GFX_SOURCE} ${AUD_SOURCE} ${SIM_SOURCE} ${IO_SOURCE} ${CORE_SOURCE}
+  ${VERTEX_SHADERS} ${FRAGMENT_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE MOS_EFX AL_ALEXT_PROTOTYPES)
+#Available effects are : MOS_EFFECT_VIGNETTE, MOS_EFFECT_VHS, MOS_EFFECT_NOISE and MOS_EFFECT_DITHER
+target_compile_definitions(${PROJECT_NAME}
+  PRIVATE
+  MOS_EFX
+  MOS_EFFECT_VIGNETTE
+  MOS_EFFECT_NOISE
+  AL_ALEXT_PROTOTYPES)
 target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
 
 target_include_directories(${PROJECT_NAME}
-        PUBLIC
-        include
-        externals/glfw/include
-        externals/openal-soft/include
-        externals/glad/include
-        externals/glm
-        externals/nlohmann_json_release
-        externals/stb
-        externals/utfcpp/source
-        )
+  PUBLIC
+  include
+  externals/glfw/include
+  externals/openal-soft/include
+  externals/glad/include
+  externals/glm
+  externals/nlohmann_json_release
+  externals/stb
+  externals/utfcpp/source
+  )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenAL)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GL_LIBRARY} ${PLATFORM_SPECIFIC_LIBRARIES})
@@ -92,19 +98,18 @@ add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} $
 
 #Copy shader files to assets and brdfLUT to assets
 add_custom_command(TARGET copy_resources POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
-		
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+
 # Copy OpenAL dll on Windows
 if(WIN32)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-							COMMAND ${CMAKE_COMMAND} -E copy
-							"$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/")
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    "$<TARGET_FILE:OpenAL>" "${CMAKE_BINARY_DIR}/")
 endif()
-		
+
 # Copy shaders on each build
 add_dependencies(${PROJECT_NAME} copy_resources)
-
 
 file(GLOB ASSETS assets/*)
 
@@ -112,8 +117,8 @@ add_custom_target(copy_assets DEPENDS ${ASSETS})
 
 #Copy assets
 add_custom_command(TARGET copy_assets POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 
 # Copy shaders on each build
 add_dependencies(${PROJECT_NAME} copy_assets)

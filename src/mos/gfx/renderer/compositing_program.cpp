@@ -3,12 +3,27 @@
 
 namespace mos::gfx {
 Renderer::Compositing_program::Compositing_program() {
+  std::string defines = "#version 430 core\n";
+
+#ifdef MOS_EFFECT_VIGNETTE
+  defines += "#define VIGNETTE\n";
+#endif
+#ifdef MOS_EFFECT_VHS
+  defines += "#define VHS\n";
+#endif
+#ifdef MOS_EFFECT_DITHER
+  defines += "#define DITHER\n";
+#endif
+#ifdef MOS_EFFECT_NOISE
+  defines += "#define NOISE\n";
+#endif
+
   std::string name = "compositing";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");
 
   const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
-  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+  const auto fragment_shader = Shader(defines + frag_source, GL_FRAGMENT_SHADER, name);
 
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);

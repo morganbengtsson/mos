@@ -1,5 +1,3 @@
-#version 430 core
-
 layout(location = 0) out vec4 out_color;
 in vec2 frag_uv;
 
@@ -29,10 +27,11 @@ vec3 uncharted2(vec3 color) {
   return curr * white_scale;
 }
 
-const float rcount = 50.0;
-const float gcount = 50.0;
-const float bcount = 50.0;
-const float acount = 1.0;
+#ifdef DITHER
+const float red_count = 50.0;
+const float green_count = 50.0;
+const float blue_count = 50.0;
+const float alpha_count = 1.0;
 
 int bayer[8 * 8] = int[](
     0,32, 8,40, 2,34,10,42,
@@ -44,7 +43,7 @@ int bayer[8 * 8] = int[](
      15,47, 7,39,13,45, 5,37,
      63,31,55,23,61,29,53,21
      );
-float bayerSize = 8.0;
+float bayer_size = 8.0;
 
 /*
 int bayer[12 * 12] = int[](
@@ -61,7 +60,7 @@ int bayer[12 * 12] = int[](
 127,95 ,31 ,119,87 ,23 ,125,93 ,29 ,117,85 ,21 ,
 63 ,47 ,143,55 ,39 ,135,61 ,45 ,141,53 ,37 ,133
 );
-float bayerSize = 12.0;
+float bayer_size = 12.0;
 */
 
 /*int bayer[7 * 7] = int[](
@@ -74,57 +73,64 @@ float bayerSize = 12.0;
 7,24,41,2,19,29,46
 );
 
-float bayerSize = 7.0;*/
+float bayer_size = 7.0;*/
 
+float bayer_divider = bayer_size * bayer_size;
 
-float bayerDivider = bayerSize * bayerSize;
-
-vec4 nearestColour(vec4 incolor) {
-  vec4 rgbaCounts = vec4(rcount, gcount, bcount, acount);
-
-
+vec4 closest_color(vec4 incolor) {
   vec4 color = incolor;
-
-  color.r = floor((rgbaCounts.r - 1.0) * color.r + 0.5) / (rgbaCounts.r - 1.0);
-  color.g = floor((rgbaCounts.g - 1.0) * color.g + 0.5) / (rgbaCounts.g - 1.0);
-  color.b = floor((rgbaCounts.b - 1.0) * color.b + 0.5) / (rgbaCounts.b - 1.0);
-
-  if (rgbaCounts.a >= 2.0) {
-    color.a = floor((rgbaCounts.a - 1.0) * color.a + 0.5) / (rgbaCounts.a - 1.0);
+  color.r = floor((red_count - 1.0) * color.r + 0.5) / (red_count- 1.0);
+  color.g = floor((green_count - 1.0) * color.g + 0.5) / (green_count - 1.0);
+  color.b = floor((blue_count - 1.0) * color.b + 0.5) / (blue_count - 1.0);
+  if (alpha_count >= 2.0) {
+    color.a = floor((alpha_count - 1.0) * color.a + 0.5) / (alpha_count - 1.0);
   }
   else {
     color.a = 1.0;
   }
-
   return color;
 }
 
+#endif
+
 void main() {
+  // Bloom
   const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
   vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
 
+#ifdef VIGNETTE
+  // Vignette effect
   vec2 uv = frag_uv;
   uv *=  1.0 - uv.yx;
-  float vig = uv.x*uv.y * 15.0;
-  vig = pow(vig, 0.25);
+  float vignette = uv.x*uv.y * 15.0;
+  vignette = pow(vignette, 0.25);
+#endif
 
-  float offset = 0.004 * (1.0 - vig);
+#ifdef VHS
+  // VHS effect
+  float offset = 0.004 * (1.0 - vignette);
   color.r = texture(color_sampler, frag_uv + vec2(offset, offset)).r;
   color.g = texture(color_sampler, frag_uv + vec2(-offset, -offset)).g;
   color.b = texture(color_sampler, frag_uv + vec2(offset, -offset)).b;
+#endif
 
+#ifdef NOISE
+  // Noise
   float r = rand(frag_uv);
   color.rgb *= (1.0 - r * 0.15);
+#endif
 
-  float spread = 1.0 / (0.299 * (rcount - 1.0) + 0.587 * (gcount - 1.0) + 0.114 * (bcount - 1.0));  // this spread value is optimised one -- try your own values for various effects!
+#ifdef DITHER
+  // Dithering
+  float spread = 1.0 / (0.299 * (red_count - 1.0) + 0.587 * (green_count - 1.0) + 0.114 * (blue_count - 1.0));  // this spread value is optimised one -- try your own values for various effects!
+  vec2 entry = mod(gl_FragCoord.xy, vec2(bayer_size, bayer_size));
+  color.rgb = closest_color(vec4(color.rgb + spread * (bayer[int(entry.y) * int(bayer_size) + int(entry.x)] / bayer_divider - 0.5), 1.0)).xyz;
+#endif
 
-  vec2 entry = mod(gl_FragCoord.xy, vec2(bayerSize, bayerSize));
-
-  color.rgb = nearestColour(vec4(color.rgb + spread * (bayer[int(entry.y) * int(bayerSize) + int(entry.x)] / bayerDivider - 0.5), 1.0)).xyz;
-
+  // Tonemap
   float exposure = 0.0;
   out_color = vec4(uncharted2(color * pow(2.0, exposure)), 1.0);
-  out_color.rgb *= vig;
-
-
+#ifdef VIGNETTE
+  out_color.rgb *= vignette;
+#endif
 }
