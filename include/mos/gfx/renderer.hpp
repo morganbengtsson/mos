@@ -217,6 +217,7 @@ private:
   const Render_buffer shadow_maps_render_buffer_;
   const std::array<Shadow_map_target, 4> shadow_maps_;
   const Post_target shadow_map_blur_target_;
+  //TODO: blur directly into the shadowmaps, to save memory.
   const std::array<Post_target, 4> shadow_map_blur_targets_;
 
   /** Environment map targets. */
@@ -228,6 +229,9 @@ private:
   static constexpr const int cascade_count{4};
   //TODO: return all theese from the render method
   const std::array<Shadow_map_target, cascade_count> cascaded_shadow_maps_;
+  //TODO: Blur directly into the cascaded shadowmaps to save memory.
+  const std::array<Post_target, 4> cascaded_shadow_map_blur_targets_;
+
   glm::vec4 cascade_splits; //TODO: Generalize number of splits
   std::array<glm::mat4, cascade_count> directional_light_ortho_matrices;
   std::array<glm::mat4, cascade_count> light_view_matrix;
