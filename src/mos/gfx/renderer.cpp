@@ -816,6 +816,8 @@ void Renderer::render_shadow_maps(const Models &models, const Spot_lights &light
 void Renderer::render_cascaded_shadow_maps(const Models &models,
                                            const Directional_light &light,
                                            const Camera &camera) {
+  std::vector<mos::gfx::Model> models_to_render(models.begin(), models.end());
+
   const float lambda = .7f;
   const float min_distance = 0.0f;
   const float max_distance = 1.0f;
@@ -850,6 +852,7 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
         cascade_idx == 0 ? min_distance : cascade_splits[cascade_idx - 1];
     const float split_distance = cascade_splits[cascade_idx];
 
+    //TODO: Incorporate into camera
     glm::vec3 frustum_corners_world[8] = {
         glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(1.0f, 1.0f, -1.0f),
         glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, -1.0f, -1.0f),
@@ -936,9 +939,22 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
                                directional_light_ortho_matrices[cascade_idx],
                                glm::vec3(0.0f, 1.0f, 0.0f));
 
-    for (auto &model : models) {
-      render_model_depth(model, glm::mat4(1.0f), light_camera, resolution,
-                         depth_program_);
+    //for (auto &model : models) {
+    auto it = models_to_render.begin();
+    while(it != models_to_render.end()) {
+      if (light_camera.in_frustum(it->position(), it->radius())){
+        render_model_depth(*it, glm::mat4(1.0f), light_camera, resolution,
+                           depth_program_);
+        if (it->radius() > radius){
+          it++;
+        }
+        else {
+          it = models_to_render.erase(it);
+        }
+      }
+      else {
+        it++;
+      }
     }
 
     blur(cascaded_shadow_maps_.at(cascade_idx).texture, shadow_map_blur_target_,
