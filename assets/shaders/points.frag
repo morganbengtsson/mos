@@ -19,7 +19,6 @@ struct Directional_light{
   float strength;
 };
 
-
 struct Camera {
     vec3 position;
 };
@@ -86,6 +85,7 @@ void main() {
        }
 
       //Directional light, simplified
+      //TODO: Make method shared between lines/points
       if (directional_light.strength > 0.0) {
         const vec3 L = normalize(-directional_light.direction);
         const vec3 H = normalize(V + L);
