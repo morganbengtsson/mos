@@ -39,9 +39,7 @@ public:
   auto position() const -> glm::vec3;
 
   /** Set center/focus point. */
-  auto center(const glm::vec3 &center) -> void;
-
-  auto center() const -> glm::vec3;
+  auto direction(const glm::vec3 &direction) -> void;
 
   auto direction() const -> glm::vec3;
 

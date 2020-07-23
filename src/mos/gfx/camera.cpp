@@ -14,21 +14,8 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
     : projection_(projection),
       view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f)},
-      up_(up), center_(center), position_(position) {
-  calculate_view();
-  calculate_frustum();
-  calculate_near_far();
-}
-
-Camera::Camera(const glm::vec3 &position, const glm::mat4 &projection,
-               const float &focus_distance, const glm::vec3 &up)
-    : projection_(projection),
-      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f)},
-      up_(up), center_(focus_distance * direction()), position_(position) {
-  calculate_view();
+                                   glm::vec4(0.0f), glm::vec4(0.0f)} {
+  calculate_view(position, center, up);
   calculate_frustum();
   calculate_near_far();
 }
@@ -37,8 +24,7 @@ Camera::Camera(const std::string &directory, const std::string &path,
                const glm::mat4 &parent_transform)
     : view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
                                    glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f)},
-      up_(glm::vec3(0.0f, 0.0f, 1.0f)) {
+                                   glm::vec4(0.0f), glm::vec4(0.0f)} {
   using json = nlohmann::json;
   if (!path.empty()) {
     std::filesystem::path fpath = path;
@@ -49,17 +35,16 @@ Camera::Camera(const std::string &directory, const std::string &path,
 
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
       auto position = glm::vec3(transform[3]);
-      center_ = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -focus_distance, 0.0f));
+      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -focus_distance, 0.0f));
 
       auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
-      position_ = position;
       projection_ = proj;
 
       near_ = value["near"];
       far_ = value["far"];
 
-      calculate_view();
+      calculate_view(position, center, glm::vec3(0.0f, 0.0f, 1.0f));
       calculate_frustum();
       calculate_near_far();
 
@@ -70,44 +55,28 @@ Camera::Camera(const std::string &directory, const std::string &path,
 }
 }
 
-auto Camera::up() const -> glm::vec3 { return up_; }
+auto Camera::position() const -> glm::vec3 { return glm::vec3(-view_[3]) * glm::mat3(view_); }
 
-void Camera::up(const glm::vec3 &up) {
-  up_ = up;
-  calculate_view();
+void Camera::position(const glm::vec3 &position, const glm::vec3 &up) {
+  calculate_view(position, position + direction(), up);
   calculate_frustum();
 }
 
-auto Camera::position() const -> glm::vec3 { return position_; }
-
-void Camera::position(const glm::vec3 &position) {
-  position_ = position;
-  calculate_view();
-  calculate_frustum();
-}
-
-auto Camera::center() const -> glm::vec3 { return center_; }
-
-void Camera::center(const glm::vec3 &center) {
-  center_ = center;
-  calculate_view();
+void Camera::center(const glm::vec3 &center, const glm::vec3 &up) {
+  calculate_view(position(), center, up);
   calculate_frustum();
 }
 
 auto Camera::direction() const -> glm::vec3 {
-  return glm::normalize(center_ - position_);
+  return glm::vec3(0.0f, 0.0f, -1.0f) * glm::mat3(view_);
 }
 
-auto Camera::right() const -> glm::vec3 {
-  return glm::normalize(glm::cross(up(), direction()));
+void Camera::direction(const glm::vec3 &direction, const glm::vec3 &up) {
+  center(position() + direction);
 }
 
-void Camera::direction(const glm::vec3 &direction) {
-  center(position_ + direction);
-}
-
-void Camera::calculate_view() {
-  view_ = glm::lookAt(position_, center_, up_);
+void Camera::calculate_view(const glm::vec3 &position, const glm::vec3 &center, const glm::vec3 &up) {
+  view_ = glm::lookAt(position, center, up);
 }
 
 auto Camera::aspect_ratio() const -> float {

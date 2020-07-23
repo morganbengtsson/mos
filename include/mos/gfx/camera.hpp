@@ -16,29 +16,17 @@ public:
                const glm::mat4 &projection = glm::mat4(1.0f),
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
-  Camera(const glm::vec3 &position,
-         const glm::mat4 &projection,
-         const float &focus_distance,
-         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
-
   Camera(const std::string &directory,
         const std::string &path,
         const glm::mat4 &parent_transform = glm::mat4(1.0f));
 
-  auto up() const -> glm::vec3;
-
-  /** Set up vector. */
-  auto up(const glm::vec3 &up) -> void;
-
   auto position() const -> glm::vec3;
 
   /** Set position. */
-  auto position(const glm::vec3 &position) -> void;
-
-  auto center() const -> glm::vec3;
+  auto position(const glm::vec3 &position, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Set center/focus point. */
-  auto center(const glm::vec3 &center) -> void;
+  auto center(const glm::vec3 &center, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Forward direction. **/
   auto direction() const -> glm::vec3;
@@ -46,7 +34,7 @@ public:
   auto right() const -> glm::vec3;
 
   /** Set direction. */
-  auto direction(const glm::vec3 &direction) -> void;
+  auto direction(const glm::vec3 &direction, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Get the aspect ratio. */
   auto aspect_ratio() const -> float;
@@ -79,15 +67,12 @@ public:
   auto field_of_view_horizontal() const -> float;
 
 private:
-  auto calculate_view() -> void;
+  auto calculate_view(const glm::vec3 &position, const glm::vec3 &center, const glm::vec3 &up) -> void;
   auto calculate_frustum() -> void;
   auto calculate_near_far() -> void;
   glm::mat4 projection_{};
   glm::mat4 view_{};
   Planes frustum_planes_;
-  glm::vec3 up_{};
-  glm::vec3 center_{};
-  glm::vec3 position_{};
   float near_{0.1f};
   float far_{100.0f};
 };

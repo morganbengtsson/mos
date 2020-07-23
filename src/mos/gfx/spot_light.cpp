@@ -39,12 +39,8 @@ auto Spot_light::angle() const -> float {
   return angle_;
 }
 
-auto Spot_light::center(const glm::vec3 &center) -> void {
-  camera.center(center);
-}
-
-auto Spot_light::center() const -> glm::vec3 {
-  return camera.center();
+auto Spot_light::direction(const glm::vec3 &direction) -> void {
+  camera.direction(direction);
 }
 
 auto Spot_light::direction() const -> glm::vec3 {
