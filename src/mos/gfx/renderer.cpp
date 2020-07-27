@@ -902,7 +902,7 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
 
     directional_light_ortho_matrices[cascade_idx] =
         glm::ortho(min_extents.x, max_extents.x, min_extents.y, max_extents.y,
-                   0.0f, cascade_extents.z);
+                   0.0f, cascade_extents.z * 2); //TODO: hack times two?
 
     // TOOD: Do Same thing on standard shadow maps
     const auto shadow_matrix = directional_light_ortho_matrices[cascade_idx] *
