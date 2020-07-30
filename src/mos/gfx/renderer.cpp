@@ -18,14 +18,14 @@
 #include <mos/gfx/cloud.hpp>
 #include <mos/gfx/environment_light.hpp>
 #include <mos/gfx/fog.hpp>
-#include <mos/gfx/spot_light.hpp>
-#include <mos/gfx/spot_lights.hpp>
 #include <mos/gfx/mesh.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/renderer.hpp>
 #include <mos/gfx/scene.hpp>
 #include <mos/gfx/scenes.hpp>
+#include <mos/gfx/spot_light.hpp>
+#include <mos/gfx/spot_lights.hpp>
 #include <mos/gfx/target.hpp>
 #include <mos/gfx/text.hpp>
 #include <mos/gfx/texture_2d.hpp>
@@ -249,19 +249,19 @@ void Renderer::render_scene(const Camera &camera, const Scene &scene,
   // Cascaded
 
   glActiveTexture(GL_TEXTURE13);
-  //glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[0].texture);
+  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[0].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[0].texture);
 
   glActiveTexture(GL_TEXTURE14);
-  //glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[1].texture);
+  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[1].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[1].texture);
 
   glActiveTexture(GL_TEXTURE15);
-  //glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[2].texture);
+  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[2].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[2].texture);
 
   glActiveTexture(GL_TEXTURE16);
-  //glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[3].texture);
+  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[3].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[3].texture);
 
   // Cascaded Splits
@@ -326,8 +326,8 @@ void Renderer::render_scene(const Camera &camera, const Scene &scene,
                        glm::value_ptr(view));
 
     auto projection = scene.spot_lights.at(i).camera.projection();
-    glUniformMatrix4fv(standard_program_.spot_lights.at(i).projection, 1, GL_FALSE,
-                       glm::value_ptr(projection));
+    glUniformMatrix4fv(standard_program_.spot_lights.at(i).projection, 1,
+                       GL_FALSE, glm::value_ptr(projection));
 
     auto light_angle = scene.spot_lights.at(i).angle();
     glUniform1fv(standard_program_.spot_lights.at(i).angle, 1, &light_angle);
@@ -365,8 +365,7 @@ void Renderer::render_scene(const Camera &camera, const Scene &scene,
   glUniform1fv(standard_program_.fog.min, 1, &scene.fog.min);
   glUniform1fv(standard_program_.fog.max, 1, &scene.fog.max);
 
-  render_sky(scene.sky, camera, scene.spot_lights, scene.environment_lights,
-             scene.fog, resolution, standard_program_);
+  render_sky(scene.sky, camera, scene.fog, resolution, standard_program_);
 
   for (auto &model : scene.models) {
     render_model(model, glm::mat4(1.0f), camera, scene.spot_lights,
@@ -403,18 +402,26 @@ void Renderer::render_boxes(const Boxes &boxes,
 }
 
 void Renderer::render_sky(const Model &model, const Camera &camera,
-                          const Spot_lights &lights,
-                          const Environment_lights &environment_lights,
                           const Fog &fog, const glm::vec2 &resolution,
                           const Standard_program &program) {
   glUseProgram(program.program);
+
+  auto res = glm::ivec2(resolution);
+  glUniform2iv(program.camera.resolution, 1, glm::value_ptr(res));
+
+  glUniform3fv(program.fog.color_near, 1, glm::value_ptr(fog.color_near));
+  glUniform3fv(program.fog.color_far, 1, glm::value_ptr(fog.color_far));
+  glUniform1fv(program.fog.attenuation_factor, 1, &fog.attenuation_factor);
+  glUniform1fv(program.fog.min, 1, &fog.min);
+  glUniform1fv(program.fog.max, 1, &fog.max);
+
   auto sky_camera = camera;
   auto view = sky_camera.view();
   view[3] = glm::vec4(0.0f, 0.0, 0.0f, 1.0f);
   sky_camera.view(view);
   load(model);
-  render_model(model, glm::mat4(1.0f), sky_camera, lights, environment_lights,
-               fog, resolution, program);
+  render_model(model, glm::mat4(1.0f), sky_camera, Spot_lights(),
+               Environment_lights(), fog, resolution, program);
 
   glEnable(GL_DEPTH_TEST);
   glDepthMask(true);
@@ -510,7 +517,8 @@ void Renderer::render_clouds(const Clouds &clouds,
 
       glUniform3fv(program.spot_lights.at(i).color, 1,
                    glm::value_ptr(spot_lights.at(i).color));
-      glUniform1fv(program.spot_lights.at(i).strength, 1, &spot_lights.at(i).strength);
+      glUniform1fv(program.spot_lights.at(i).strength, 1,
+                   &spot_lights.at(i).strength);
 
       auto view = spot_lights.at(i).camera.view();
       glUniformMatrix4fv(program.spot_lights.at(i).view, 1, GL_FALSE,
@@ -786,7 +794,8 @@ void Renderer::blur(const GLuint input_texture,
   }
 }
 
-void Renderer::render_shadow_maps(const Models &models, const Spot_lights &lights) {
+void Renderer::render_shadow_maps(const Models &models,
+                                  const Spot_lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
     if (lights.at(i).strength > 0.0f) {
       auto frame_buffer = shadow_maps_.at(i).frame_buffer;
@@ -852,7 +861,7 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
         cascade_idx == 0 ? min_distance : cascade_splits[cascade_idx - 1];
     const float split_distance = cascade_splits[cascade_idx];
 
-    //TODO: Incorporate into camera
+    // TODO: Incorporate into camera
     glm::vec3 frustum_corners_world[8] = {
         glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(1.0f, 1.0f, -1.0f),
         glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, -1.0f, -1.0f),
@@ -902,7 +911,7 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
 
     directional_light_ortho_matrices[cascade_idx] =
         glm::ortho(min_extents.x, max_extents.x, min_extents.y, max_extents.y,
-                   0.0f, cascade_extents.z * 2); //TODO: hack times two?
+                   0.0f, cascade_extents.z * 2); // TODO: hack times two?
 
     // TOOD: Do Same thing on standard shadow maps
     const auto shadow_matrix = directional_light_ortho_matrices[cascade_idx] *
@@ -939,20 +948,18 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
                                directional_light_ortho_matrices[cascade_idx],
                                glm::vec3(0.0f, 1.0f, 0.0f));
 
-    //for (auto &model : models) {
+    // for (auto &model : models) {
     auto it = models_to_render.begin();
-    while(it != models_to_render.end()) {
-      if (light_camera.in_frustum(it->position(), it->radius())){
+    while (it != models_to_render.end()) {
+      if (light_camera.in_frustum(it->position(), it->radius())) {
         render_model_depth(*it, glm::mat4(1.0f), light_camera, resolution,
                            depth_program_);
-        if (it->radius() > radius){
+        if (it->radius() > radius) {
           it++;
-        }
-        else {
+        } else {
           it = models_to_render.erase(it);
         }
-      }
-      else {
+      } else {
         it++;
       }
     }
@@ -961,7 +968,6 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
          cascaded_shadow_map_blur_targets_.at(cascade_idx), 2);
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void Renderer::render_environment(const Scene &scene,
@@ -991,8 +997,8 @@ void Renderer::render_environment(const Scene &scene,
       glViewport(0, 0, resolution.x, resolution.y);
 
       // Render the sky infinite
-      render_sky(scene.sky, cube_camera, scene.spot_lights, scene.environment_lights,
-                 scene.fog, resolution, standard_program_);
+      render_sky(scene.sky, cube_camera, scene.fog, resolution,
+                 standard_program_);
 
       glUseProgram(environment_program_.program);
 
@@ -1036,14 +1042,15 @@ void Renderer::render_environment(const Scene &scene,
                      &scene.spot_lights.at(i).strength);
 
         auto view = scene.spot_lights.at(i).camera.view();
-        glUniformMatrix4fv(environment_program_.spot_lights.at(i).view, 1, GL_FALSE,
-                           glm::value_ptr(view));
+        glUniformMatrix4fv(environment_program_.spot_lights.at(i).view, 1,
+                           GL_FALSE, glm::value_ptr(view));
         auto projection = scene.spot_lights.at(i).camera.projection();
         glUniformMatrix4fv(environment_program_.spot_lights.at(i).projection, 1,
                            GL_FALSE, glm::value_ptr(projection));
 
         auto light_angle = scene.spot_lights.at(i).angle();
-        glUniform1fv(environment_program_.spot_lights.at(i).angle, 1, &light_angle);
+        glUniform1fv(environment_program_.spot_lights.at(i).angle, 1,
+                     &light_angle);
         auto light_direction = scene.spot_lights.at(i).direction();
         glUniform3fv(environment_program_.spot_lights.at(i).direction, 1,
                      glm::value_ptr(light_direction));
@@ -1261,11 +1268,13 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color,
   for (auto &scene : scenes) {
 
     render_scene(scene.camera, scene, resolution);
-    render_clouds(scene.point_clouds, scene.directional_light, scene.spot_lights, scene.environment_lights,
-                  scene.camera, resolution, point_cloud_program_, GL_POINTS);
+    render_clouds(scene.point_clouds, scene.directional_light,
+                  scene.spot_lights, scene.environment_lights, scene.camera,
+                  resolution, point_cloud_program_, GL_POINTS);
 
-    render_clouds(scene.line_clouds, scene.directional_light, scene.spot_lights, scene.environment_lights,
-                  scene.camera, resolution, line_cloud_program_, GL_LINES);
+    render_clouds(scene.line_clouds, scene.directional_light, scene.spot_lights,
+                  scene.environment_lights, scene.camera, resolution,
+                  line_cloud_program_, GL_LINES);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, standard_target_.frame_buffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, multisample_target_.frame_buffer);

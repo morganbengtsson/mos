@@ -130,8 +130,6 @@ private:
 
   auto render_sky(const Model &model,
                     const Camera &camera,
-                    const Spot_lights &spot_lights,
-                    const Environment_lights &environment_lights,
                     const Fog &fog,
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
