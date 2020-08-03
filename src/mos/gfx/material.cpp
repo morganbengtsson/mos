@@ -66,14 +66,14 @@ Material::Material(Assets &assets, std::string &path) : Material() {
         return assets.texture(path, color_data, true);
       };
 
-      auto albedo_map = read_texture("albedo");
+      auto albedo_map = read_texture("albedo", true);
       auto albedo_value =  glm::vec3(value["albedo"]["value"][0], value["albedo"]["value"][1], value["albedo"]["value"][2]);
       albedo = {albedo_value, albedo_map};
 
       auto normal_map = read_texture("normal", false);
       normal = {normal_map};
 
-      auto emission_map = read_texture("emission", false);
+      auto emission_map = read_texture("emission", true);
       auto emission_value = glm::vec3(value["emission"]["value"][0], value["emission"]["value"][1], value["emission"]["value"][2]);
       emission = {emission_value, emission_map};
 

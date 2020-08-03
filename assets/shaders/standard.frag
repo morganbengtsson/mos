@@ -193,7 +193,9 @@ void main() {
 
       const float light_fragment_distance = distance(light.position, fragment.position);
       const float attenuation = 1.0 / (light_fragment_distance * light_fragment_distance);
-      const vec3 radiance = light.strength * 0.20 * light.color * attenuation;
+
+      const float spot_light_intensity_factor = 0.085; // TODO: move ?
+      const vec3 radiance = light.strength * spot_light_intensity_factor * light.color * attenuation;
 
       const float NDF = distribution_GGX(N, H, roughness);
       const float G = geometry_smith(N, V, L, roughness);
