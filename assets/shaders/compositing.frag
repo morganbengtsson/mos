@@ -94,13 +94,12 @@ void main() {
   const vec3 bloom = texture(bloom_sampler, frag_uv).rgb;
   vec3 color = texture(color_sampler, frag_uv).rgb + bloom * strength;
 
-#ifdef VIGNETTE
+
   // Vignette effect
   vec2 uv = frag_uv;
   uv *=  1.0 - uv.yx;
   float vignette = uv.x*uv.y * 15.0;
   vignette = pow(vignette, 0.25);
-#endif
 
 #ifdef VHS
   // VHS effect
