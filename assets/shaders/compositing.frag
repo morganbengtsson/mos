@@ -17,20 +17,10 @@ vec3 uncharted2_tonemap(vec3 x) {
 
 vec3 uncharted2(vec3 color) {
   const float W = 11.2;
-  float exposure_bias = 2.0;
-  vec3 curr = uncharted2_tonemap(exposure_bias * color);
-  vec3 white_scale = 1.0 / uncharted2_tonemap(vec3(W));
-  return curr * white_scale;
-}
-
-
-vec3 aces_film(const vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d ) + e), 0.0, 1.0);
+  float exposureBias = 2.0;
+  vec3 curr = uncharted2_tonemap(exposureBias * color);
+  vec3 whiteScale = 1.0 / uncharted2_tonemap(vec3(W));
+  return curr * whiteScale;
 }
 
 #ifdef DITHER
@@ -132,8 +122,6 @@ void main() {
 #endif
 
   // Tonemap
-  float exposure = 0.0;
-  //out_color = vec4(uncharted2(color * pow(2.0, exposure)), 1.0);
-  out_color = vec4(aces_film(color * 0.8), 1.0);
-
+  // TODO: Check the tonemapping, compare to blender
+  out_color = vec4(uncharted2(color * 1.6), 1.0);
 }
