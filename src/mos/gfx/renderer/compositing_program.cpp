@@ -14,9 +14,6 @@ Renderer::Compositing_program::Compositing_program() {
 #ifdef MOS_EFFECT_DITHER
   defines += "#define DITHER\n";
 #endif
-#ifdef MOS_EFFECT_NOISE
-  defines += "#define NOISE\n";
-#endif
 
   std::string name = "compositing";
   auto vert_source = text("assets/shaders/" + name + ".vert");

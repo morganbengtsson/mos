@@ -5,10 +5,6 @@ uniform sampler2D color_sampler;
 uniform sampler2D bloom_sampler;
 uniform float strength;
 
-float rand(vec2 co) {
-  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}
-
 vec3 uncharted2_tonemap(vec3 x) {
   float A = 0.15;
   float B = 0.50;
@@ -122,12 +118,6 @@ void main() {
   color.r = texture(color_sampler, frag_uv + vec2(offset, offset)).r;
   color.g = texture(color_sampler, frag_uv + vec2(-offset, -offset)).g;
   color.b = texture(color_sampler, frag_uv + vec2(offset, -offset)).b;
-#endif
-
-#ifdef NOISE
-  // Noise
-  float r = rand(frag_uv);
-  color.rgb *= (1.0 - r * 0.15);
 #endif
 
 #ifdef VIGNETTE
