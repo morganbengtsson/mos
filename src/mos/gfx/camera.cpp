@@ -31,11 +31,9 @@ Camera::Camera(const std::string &directory, const std::string &path,
     if (fpath.extension() == ".camera") {
       auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
-      float focus_distance = value["focus_distance"];
-
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
       auto position = glm::vec3(transform[3]);
-      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -focus_distance, 0.0f));
+      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 
       auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
