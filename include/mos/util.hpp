@@ -38,6 +38,6 @@ mos::sim::Ray un_project(const glm::vec2 &position,
                          const glm::mat4 &projection,
                          const glm::uvec2 &resolution);
 
-glm::vec3 hex_color(const int hex);
+auto hex_color(const int hex) -> glm::vec4;
 
 }

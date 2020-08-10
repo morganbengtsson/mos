@@ -80,10 +80,10 @@ auto mos::jsonarray_to_vec3(const nlohmann::json &array) -> glm::vec3 {
   return glm::vec3(array[0], array[1], array[2]);
 }
 
-auto mos::hex_color(const int hex) -> glm::vec3 {
+auto mos::hex_color(const int hex) -> glm::vec4 {
   glm::vec3 color;
   color.r = ((hex >> 16) & 0xFF) / 255.0;
   color.g = ((hex >> 8) & 0xFF) / 255.0;
   color.b = ((hex) & 0xFF) / 255.0;
-  return color;
+  return glm::vec4(color, 1.0f);
 }
