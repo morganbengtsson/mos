@@ -9,6 +9,7 @@
 #include <glm/gtx/io.hpp>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/color_space.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <iostream>
 #include <map>
@@ -1172,7 +1173,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color,
   render_texture_targets(scenes[0]);
 
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-  clear(color);
+  clear(glm::convertSRGBToLinear(color));
 
   for (auto &scene : scenes) {
 
