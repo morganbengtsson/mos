@@ -24,9 +24,9 @@ vec3 uncharted2(vec3 color) {
 }
 
 #ifdef DITHER
-const float red_count = 50.0;
-const float green_count = 50.0;
-const float blue_count = 50.0;
+const float red_count = 10.0;
+const float green_count = 10.0;
+const float blue_count = 10.0;
 const float alpha_count = 1.0;
 
 int bayer[8 * 8] = int[](
