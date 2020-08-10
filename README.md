@@ -13,12 +13,14 @@ MOS is a lightweight cross-platform game engine/library, written in modern C++.
 # Features
 
 - Minimal and [documented](http://mos.readthedocs.io/en/latest/) codebase.
-- Integration with [Blender-2.80](https://github.com/morganbengtsson/mos-blender-export)
+- Integration with [Blender-2.8x](https://github.com/morganbengtsson/mos-blender-export)
 - 3D mesh rendering
+- Spot and directional lighting
 - Physically based material model
-- Global illumination
+- Global illumination approximation
 - Particle rendering
 - Text rendering
+- Post processing effects
 - Collision detection
 - 3D audio playback, with obstruction model
 - Asset management
