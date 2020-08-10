@@ -96,8 +96,6 @@ private:
   #include "../../src/mos/gfx/renderer/compositing_program.hpp"
   #include "../../src/mos/gfx/renderer/blur_program.hpp"
   #include "../../src/mos/gfx/renderer/depth_program.hpp"
-  #include "../../src/mos/gfx/renderer/propagate_program.hpp"
-  #include "../../src/mos/gfx/renderer/environment_program.hpp"
   #include "../../src/mos/gfx/renderer/standard_program.hpp"
 
   #include "../../src/mos/gfx/renderer/standard_target.hpp"
@@ -152,15 +150,6 @@ private:
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
-  auto render_model(const Model &model,
-                    const glm::mat4 &transform,
-                    const Camera &camera,
-                    const Spot_lights &spot_lights,
-                    const Environment_lights &environment_lights,
-                    const Fog &fog,
-                    const glm::vec2 &resolution,
-                    const Environment_program& program) -> void;
-
   auto render_model_depth(const Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
@@ -179,9 +168,7 @@ private:
   const bool context_;
 
   const Shader functions_shader_;
-  const Propagate_program propagate_program_;
   const Standard_program standard_program_;
-  const Environment_program environment_program_;
   const Cloud_program point_cloud_program_;
   const Cloud_program line_cloud_program_;
   const Box_program box_program_;
