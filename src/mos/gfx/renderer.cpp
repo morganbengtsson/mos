@@ -289,7 +289,7 @@ void Renderer::render_scene(const Camera &camera, const Scene &scene,
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[3].texture);
 
   glActiveTexture(GL_TEXTURE5);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].texture);
 
   glActiveTexture(GL_TEXTURE6);
   glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[1].texture);
@@ -478,7 +478,7 @@ void Renderer::render_clouds(const Clouds &clouds,
     glUniform1i(program.albedo_sampler, 10);
 
     // TODO: Check
-    glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].texture);
     glUniform1i(program.environment_samplers[0].map, 5);
 
     // TODO: Check
@@ -1010,38 +1010,6 @@ void Renderer::render_environment(const Scene &scene,
       glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
   }
-
-  int i = cube_camera_index_[0];
-
-  glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
-  glUseProgram(propagate_program_.program);
-
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                         propagate_target_.texture, 0);
-
-  clear(glm::vec4(0.0, 1.0, 0.0, 1.0));
-  auto resolution = environment_render_buffer_.resolution();
-
-  glViewport(0, 0, resolution.x, resolution.y);
-
-  glBindVertexArray(quad_.vertex_array);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].texture);
-  glUniform1i(propagate_program_.environment_sampler, 0);
-
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, environment_maps_targets_[0].albedo);
-  glUniform1i(propagate_program_.environment_albedo_sampler, 1);
-
-  glUniform1iv(propagate_program_.side, 1, &i);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, propagate_target_.texture);
-  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 void Renderer::load(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
