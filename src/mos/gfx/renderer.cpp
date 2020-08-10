@@ -994,96 +994,7 @@ void Renderer::render_environment(const Scene &scene,
       auto cube_camera =
           scene.environment_lights.at(i).camera(cube_camera_index_.at(i));
 
-      glViewport(0, 0, resolution.x, resolution.y);
-
-      // Render the sky infinite
-      render_sky(scene.sky, cube_camera, scene.fog, resolution,
-                 standard_program_);
-
-      glUseProgram(environment_program_.program);
-
-      glUniform1i(environment_program_.brdf_lut_sampler, 0);
-      glUniform1i(environment_program_.shadow_samplers[0], 1);
-      glUniform1i(environment_program_.shadow_samplers[1], 2);
-      glUniform1i(environment_program_.shadow_samplers[2], 3);
-      glUniform1i(environment_program_.shadow_samplers[3], 4);
-
-      glUniform1i(environment_program_.material.albedo_sampler, 7);
-      glUniform1i(environment_program_.material.emission_sampler, 8);
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
-
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
-
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[1].texture);
-
-      // Camera in world space
-      auto position = cube_camera.position();
-      glUniform3fv(environment_program_.camera.position, 1,
-                   glm::value_ptr(position));
-
-      auto near_plane = cube_camera.near_plane();
-      glUniform1fv(environment_program_.camera.near, 1, &near_plane);
-
-      auto far_plane = cube_camera.far_plane();
-      glUniform1fv(environment_program_.camera.far, 1, &far_plane);
-
-      for (size_t i = 0; i < scene.spot_lights.size(); i++) {
-        auto light_position = scene.spot_lights.at(i).position();
-        glUniform3fv(environment_program_.spot_lights.at(i).position, 1,
-                     glm::value_ptr(light_position));
-
-        glUniform3fv(environment_program_.spot_lights.at(i).color, 1,
-                     glm::value_ptr(scene.spot_lights.at(i).color));
-        glUniform1fv(environment_program_.spot_lights.at(i).strength, 1,
-                     &scene.spot_lights.at(i).strength);
-
-        auto view = scene.spot_lights.at(i).camera.view();
-        glUniformMatrix4fv(environment_program_.spot_lights.at(i).view, 1,
-                           GL_FALSE, glm::value_ptr(view));
-        auto projection = scene.spot_lights.at(i).camera.projection();
-        glUniformMatrix4fv(environment_program_.spot_lights.at(i).projection, 1,
-                           GL_FALSE, glm::value_ptr(projection));
-
-        auto light_angle = scene.spot_lights.at(i).angle();
-        glUniform1fv(environment_program_.spot_lights.at(i).angle, 1,
-                     &light_angle);
-        auto light_direction = scene.spot_lights.at(i).direction();
-        glUniform3fv(environment_program_.spot_lights.at(i).direction, 1,
-                     glm::value_ptr(light_direction));
-      }
-
-      // Directional light
-      glUniform3fv(environment_program_.directional_light.position, 1,
-                   glm::value_ptr(scene.directional_light.position));
-
-      glUniform3fv(environment_program_.directional_light.direction, 1,
-                   glm::value_ptr(scene.directional_light.direction));
-
-      glUniform3fv(environment_program_.directional_light.color, 1,
-                   glm::value_ptr(scene.directional_light.color));
-
-      glUniform1fv(environment_program_.directional_light.strength, 1,
-                   &scene.directional_light.strength);
-
-      // Fog
-      glUniform3fv(environment_program_.fog.color_near, 1,
-                   glm::value_ptr(scene.fog.color_near));
-      glUniform3fv(environment_program_.fog.color_far, 1,
-                   glm::value_ptr(scene.fog.color_far));
-      glUniform1fv(environment_program_.fog.attenuation_factor, 1,
-                   &scene.fog.attenuation_factor);
-      glUniform1fv(environment_program_.fog.min, 1, &scene.fog.min);
-      glUniform1fv(environment_program_.fog.max, 1, &scene.fog.max);
-
-      for (auto &model : scene.models) {
-        render_model(model, glm::mat4(1.0f), cube_camera, scene.spot_lights,
-                     scene.environment_lights, scene.fog, resolution,
-                     environment_program_);
-      }
+      render_scene(cube_camera, scene, resolution);
 
       cube_camera_index_.at(i) =
           cube_camera_index_.at(i) >= 5
@@ -1100,8 +1011,6 @@ void Renderer::render_environment(const Scene &scene,
   }
 
   int i = cube_camera_index_[0];
-
-  auto cube_camera = scene.environment_lights[0].camera(i);
 
   glBindFramebuffer(GL_FRAMEBUFFER, propagate_target_.frame_buffer);
   glUseProgram(propagate_program_.program);
