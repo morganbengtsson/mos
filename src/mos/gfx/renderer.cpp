@@ -1172,7 +1172,7 @@ void Renderer::render(const Scenes &scenes, const glm::vec4 &color,
   render_texture_targets(scenes[0]);
 
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
-  clear(glm::vec4(0.0f));
+  clear(color);
 
   for (auto &scene : scenes) {
 
