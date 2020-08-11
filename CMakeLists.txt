@@ -4,6 +4,7 @@ project(mos)
 set(CMAKE_CXX_STANDARD 17)
 
 # Testing
+add_subdirectory(externals/Catch2)
 add_subdirectory(tests)
 enable_testing()
 
