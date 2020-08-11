@@ -110,15 +110,14 @@ void Camera::calculate_near_far() {
   far_ = f0.z * f0.w;
 }
 
-auto Camera::in_frustum(const glm::vec3 &point, const float radius) const -> bool {
-  bool result = true;
-  for (Planes::size_type i = 0; i < 6; i++)
-  {
-    if (frustum_planes_[i].x * point.x + frustum_planes_[i].y * point.y + frustum_planes_[i].z * point.z + frustum_planes_[i].w <= -radius) {
-      result = false;
-    }
-  }
-  return result;
+auto Camera::in_frustum(const glm::vec3 &point, const float radius) const
+    -> bool {
+  return std::none_of(frustum_planes_.begin(), frustum_planes_.end(),
+                      [&](const auto &plane) {
+                        return (plane.x * point.x + plane.y * point.y +
+                                    plane.z * point.z + plane.w <=
+                                -radius);
+                      });
 }
 
 auto Camera::near_plane() const -> float {
