@@ -4,9 +4,9 @@ project(mos)
 set(CMAKE_CXX_STANDARD 17)
 
 # Testing
+enable_testing()
 add_subdirectory(externals/Catch2)
 add_subdirectory(tests)
-enable_testing()
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
