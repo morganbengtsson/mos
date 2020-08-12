@@ -4,9 +4,9 @@ project(mos)
 set(CMAKE_CXX_STANDARD 17)
 
 # Testing
+enable_testing()
 add_subdirectory(externals/Catch2)
 add_subdirectory(tests)
-enable_testing()
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -100,7 +100,9 @@ target_link_libraries(${PROJECT_NAME}
   glfw
   ${GLFW_LIBRARIES}
   stb
-  glad)
+  glad
+  INTERFACE
+  tests)
 
 add_custom_target(copy_resources DEPENDS ${FRAGMENT_SHADERS} ${VERTEX_SHADERS} ${GEOMETRY_SHADERS} ${BRDF_LUT})
 
