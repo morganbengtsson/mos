@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/morganbengtsson/mos.svg?branch=master)](https://travis-ci.org/morganbengtsson/mos)
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/addd182810be433096c04cc13a3a6ea9)](https://www.codacy.com/manual/morganbengtsson/mos?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=morganbengtsson/mos&amp;utm_campaign=Badge_Grade)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
 
 *:warning: Note that MOS is in development and slightly experimental*
