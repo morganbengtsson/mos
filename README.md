@@ -1,5 +1,6 @@
 # ![Logo](doc/logo.svg)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e5ade54c659041eda6c260239a79b7cd)](https://app.codacy.com/manual/morganbengtsson/mos?utm_source=github.com&utm_medium=referral&utm_content=morganbengtsson/mos&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/morganbengtsson/mos.svg?branch=master)](https://travis-ci.org/morganbengtsson/mos)
 [![Documentation status](https://readthedocs.org/projects/mos/badge/?version=latest)](http://mos.readthedocs.io/en/latest/)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
