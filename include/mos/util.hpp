@@ -11,32 +11,29 @@
 
 namespace mos {
 
-/**
- * @brief Load text from file.
- * @param path Full path.
- * @return String with all content.
- */
-std::string text(const std::string &path);
+// Load full string from text file
+auto text(const std::string &path) -> std::string;
 
-std::vector<std::string> &split(const std::string &s, char delim,
-                                std::vector<std::string> &elems);
+[[deprecated]]
+auto split(const std::string &s, char delim,
+      std::vector<std::string> &elems) -> std::vector<std::string> &;
+[[deprecated]]
+auto split(const std::string &s, char delim) -> std::vector<std::string>;
 
-std::vector<std::string> split(const std::string &s, char delim);
+auto jsonarray_to_mat4(const nlohmann::json &array) -> glm::mat4;
+auto jsonarray_to_vec3(const nlohmann::json &array) -> glm::vec3;
+auto jsonarray_to_quat(const nlohmann::json &array) -> glm::quat;
+auto jsonarray_to_vec4(const nlohmann::json &array) -> glm::vec4;
 
-glm::mat4 jsonarray_to_mat4(const nlohmann::json &array);
-glm::vec3 jsonarray_to_vec3(const nlohmann::json &array);
-glm::quat jsonarray_to_quat(const nlohmann::json &array);
-glm::vec4 jsonarray_to_vec4(const nlohmann::json &array);
-
-
-glm::vec3 position(const glm::mat4 &mat);
+[[deprecated]]
+auto position(const glm::mat4 &mat) -> glm::vec3;
 
 int now_ms();
 
-mos::sim::Ray un_project(const glm::vec2 &position,
+auto un_project(const glm::vec2 &position,
                          const glm::mat4 &view,
                          const glm::mat4 &projection,
-                         const glm::uvec2 &resolution);
+                const glm::uvec2 &resolution) -> mos::sim::Ray;
 
 auto hex_color(const int hex) -> glm::vec4;
 
