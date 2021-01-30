@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <array>
 #include <map>
+#include <string>
 
 namespace mos {
 namespace gfx {
