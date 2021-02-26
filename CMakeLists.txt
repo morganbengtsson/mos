@@ -108,6 +108,7 @@ target_link_libraries(${PROJECT_NAME}
   glfw
   ${GLFW_LIBRARIES}
   stb
+  vulkan
   glad
   )
 
