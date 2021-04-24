@@ -11,6 +11,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/color_space.hpp>
 #include <glm/gtx/transform2.hpp>
+#include <gli/gli.hpp>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -31,6 +32,8 @@
 #include <mos/gfx/text.hpp>
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/util.hpp>
+
+#include "../../src/mos/gfx/gl/gli_converter.hpp"
 
 namespace mos::gfx {
 
@@ -60,17 +63,6 @@ auto Renderer::filter_convert_mip(const Texture::Filter &f) -> GLuint {
       {Texture::Filter::Linear, GL_LINEAR_MIPMAP_LINEAR},
       {Texture::Filter::Closest, GL_NEAREST_MIPMAP_LINEAR}};
   return filter_map_mip.at(f);
-}
-
-auto Renderer::format_convert(const Texture::Format &f) -> FormatPair {
-  static const std::map<Texture::Format, FormatPair> format_map{
-      {Texture::Format::R, {GL_RED, GL_RED}},
-      {Texture::Format::RG, {GL_RG, GL_RG}},
-      {Texture::Format::SRGB, {GL_SRGB, GL_RGB}},
-      {Texture::Format::SRGBA, {GL_SRGB_ALPHA, GL_RGBA}},
-      {Texture::Format::RGB, {GL_RGB, GL_RGB}},
-      {Texture::Format::RGBA, {GL_RGBA, GL_RGBA}}};
-  return format_map.at(f);
 }
 
 void APIENTRY message_callback(GLenum source, GLenum type, GLuint id,
@@ -185,18 +177,21 @@ void Renderer::load_or_update(const Texture_2D &texture) {
     textures_.insert({texture.id(), Texture_buffer_2D(texture)});
   } else {
     auto &buffer = textures_.at(texture.id());
-    if (texture.layers.modified() > buffer.modified) {
+    if (texture.modified > buffer.modified) {
       glBindTexture(GL_TEXTURE_2D, buffer.texture);
+
+      gli::gl::format const format = gli_converter.translate(texture.format(), texture.swizzles());
+
       glTexImage2D(GL_TEXTURE_2D, 0,
-                   format_convert(texture.format).internal_format,
+                   format.Internal,
                    texture.width(), texture.height(), 0,
-                   format_convert(texture.format).format, GL_UNSIGNED_BYTE,
-                   texture.layers[0].data());
-      if (texture.mipmaps) {
+                   format.External, GL_UNSIGNED_BYTE,
+                   texture.data());
+      if (texture.generate_mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
       }
       glBindTexture(GL_TEXTURE_2D, 0);
-      buffer.modified = texture.layers.modified();
+      buffer.modified = texture.modified;
     }
   }
 }

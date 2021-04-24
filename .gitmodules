@@ -19,3 +19,6 @@
 [submodule "externals/Catch2"]
 	path = externals/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "externals/gli"]
+	path = externals/gli
+	url = https://github.com/g-truc/gli.git

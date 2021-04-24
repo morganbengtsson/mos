@@ -17,13 +17,14 @@ class Texture_2D final : public Texture {
 public:
   template <class T>
   Texture_2D(T begin, T end, int width, int height,
-             const Format &format = Format::SRGBA,
+             const gli::format &format = gli::format::FORMAT_RGBA8_SRGB_PACK8,
              const Filter &filter = Filter::Linear,
-             const Wrap &wrap = Wrap::Repeat, const bool mipmaps = true)
-      : Texture({Data(begin, end)}, width, height, format, filter, wrap,
-                mipmaps) {}
+             const Wrap &wrap = Wrap::Repeat, const bool mipmaps = true) : Texture(filter, wrap, mipmaps) {
+    std::memcpy(texture_.data(), begin, std::distance(begin, end));
+    modified = std::chrono::system_clock::now();
+  }
 
-  Texture_2D(int width, int height, const Format &format = Format::SRGBA,
+  Texture_2D(int width, int height, const gli::format &format = gli::format::FORMAT_RGBA8_SRGB_PACK8,
              const Filter &filter = Filter::Linear,
              const Wrap &wrap = Wrap::Repeat, bool mipmaps = true);
 
@@ -37,5 +38,14 @@ public:
    Texture_2D(const std::string &path, bool color_data = true,
               bool mipmaps = true, const Filter &filter = Filter::Linear,
               const Wrap &wrap = Wrap::Repeat);
+
+   auto width() const -> int;
+   auto height() const -> int;
+   const void *data() const;
+   gli::format format() const;
+   gli::swizzles swizzles() const;
+
+ private:
+   gli::texture2d texture_;
 };
 }

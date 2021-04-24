@@ -78,8 +78,6 @@ private:
     GLenum format;
   };
 
-  static FormatPair format_convert(const Texture::Format &f);
-
   #include "../../src/mos/gfx/gl/buffer.hpp"
   #include "../../src/mos/gfx/gl/render_buffers.hpp"
   #include "../../src/mos/gfx/gl/vertex_arrays.hpp"

@@ -1,5 +1,7 @@
 #include <mos/gfx/gl/renderer.hpp>
 
+#include "../../src/mos/gfx/gl/gli_converter.hpp"
+
 namespace mos::gfx {
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(
@@ -45,13 +47,14 @@ void Renderer::Texture_buffer_2D::release() {
   texture = 0;
 }
 
+
 Renderer::Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d)
     : Texture_buffer_2D(
-          format_convert(texture_2d.format).internal_format,
-          format_convert(texture_2d.format).format, texture_2d.width(),
+          gli_converter.translate(texture_2d.format(), texture_2d.swizzles()).Internal,
+          gli_converter.translate(texture_2d.format(), texture_2d.swizzles()).External, texture_2d.width(),
           texture_2d.height(),
-          texture_2d.mipmaps ? filter_convert_mip(texture_2d.filter)
+          texture_2d.generate_mipmaps ? filter_convert_mip(texture_2d.filter)
                              : filter_convert(texture_2d.filter),
           filter_convert(texture_2d.filter), wrap_convert(texture_2d.wrap),
-          texture_2d.layers[0].data()) {}
+          texture_2d.data()) {}
 } // namespace mos::gfx

@@ -1,10 +1,13 @@
 #pragma once
-#include <vector>
 #include <atomic>
+#include <chrono>
+#include <gli/format.hpp>
+#include <gli/gli.hpp>
 #include <initializer_list>
 #include <memory>
-#include <string>
 #include <mos/core/tracked_container.hpp>
+#include <string>
+#include <vector>
 
 namespace mos::gfx {
 
@@ -13,53 +16,23 @@ class Texture;
 /** Texture base */
 class Texture {
 public:
-  using Data = std::vector<unsigned char>;
+  using TimePoint = std::chrono::time_point<std::chrono::system_clock,
+                                            std::chrono::nanoseconds>;
   enum class Wrap { Repeat, Clamp };
   enum class Filter { Linear, Closest };
-  enum class Format { R, RG, RGB, RGBA, SRGB, SRGBA };
 
-  template <class T>
-  Texture(T begin, T end, const int width, const int height,
-          const Format &format = Format::SRGBA, const Filter &filter = Filter::Linear, const Wrap &wrap = Wrap::Repeat,
-          const bool mipmaps = true)
-      : mipmaps(mipmaps), filter(filter), wrap(wrap), format(format), layers(begin, end),
-        id_(current_id_++), width_(width), height_(height) {}
-
-  Texture(const std::initializer_list<Data> &layers,
-          int width,
-          int height,
-          const Format &format = Format::SRGBA,
-          const Filter &filter = Filter::Linear,
-          const Wrap &wrap = Wrap::Repeat,
-          bool mipmaps = true);
-
-  Texture(int width,
-          int height,
-          const Format &format = Format::SRGBA,
-          const Filter &filter = Filter::Linear,
-          const Wrap &wrap = Wrap::Repeat,
-          bool mipmaps = true);
-
-  Texture(const std::initializer_list<std::string> &paths,
-          bool color_data,
-          const Filter &filter,
-          const Wrap &wrap,
-          bool mipmaps);
+  Texture(const Filter &filter = Filter::Linear,
+          const Wrap &wrap = Wrap::Repeat, bool generate_mipmaps = true);
 
   auto id() const -> int;
-  auto width() const -> int;
-  auto height() const -> int;
-  auto depth() const -> Tracked_container<Data>::size_type;
 
-  bool mipmaps; // TODO: const
+  bool generate_mipmaps;
   Filter filter;
-  Wrap wrap; // TODO: const
-  Format format; // TODO: const
-  Tracked_container<Data> layers;
+  Wrap wrap;
+  TimePoint modified;
+
 private:
   static std::atomic_int current_id_;
   int id_;
-  int width_;
-  int height_;
 };
-}
+} // namespace mos::gfx
