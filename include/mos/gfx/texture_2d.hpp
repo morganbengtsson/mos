@@ -21,7 +21,6 @@ public:
              const Filter &filter = Filter::Linear,
              const Wrap &wrap = Wrap::Repeat, const bool mipmaps = true) : Texture(filter, wrap, mipmaps) {
     std::memcpy(texture_.data(), begin, std::distance(begin, end));
-    modified = std::chrono::system_clock::now();
   }
 
   Texture_2D(int width, int height, const gli::format &format = gli::format::FORMAT_RGBA8_SRGB_PACK8,
@@ -36,7 +35,7 @@ public:
 
    /** Create from file. */
    Texture_2D(const std::string &path, bool color_data = true,
-              bool mipmaps = true, const Filter &filter = Filter::Linear,
+              bool generate_mipmaps = true, const Filter &filter = Filter::Linear,
               const Wrap &wrap = Wrap::Repeat);
 
    auto width() const -> int;
