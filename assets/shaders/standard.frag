@@ -130,7 +130,7 @@ float environment_attenuation(const vec3 point, const vec3 position, const vec3 
   return min(distance_x, min(distance_y, distance_z));
 }
 
-vec3 shade_direct(const in Spot_light[4] lights,
+vec3 shade_spotlights(const in Spot_light[4] lights,
                   const in vec4[4] shadow_projs,
                   const in sampler2D[4] shadow_samplers,
                   const in vec3 position,
@@ -240,7 +240,7 @@ void main() {
   vec3 F0 = vec3(0.02);
   F0 = mix(F0, albedo_alpha.rgb, metallic);
 
-  vec3 direct = shade_direct(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
+  vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
 
   //Directional light
   if (directional_light.strength > 0.0) {
