@@ -182,19 +182,24 @@ vec3 shade_direct(const in Spot_light[4] lights,
   return direct;
 }
 
-
-void main() {
-  vec3 N = fragment.normal;
-  bool has_normal_map = textureSize(material.normal_sampler, 0).x != 1;
+vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler, const in mat3 tbn, const in vec2 uv) {
+  vec3 out_normal = normal;
+  bool has_normal_map = textureSize(normal_sampler, 0).x != 1;
   if (has_normal_map){
-    vec3 N_from_map = texture(material.normal_sampler, fragment.uv).rgb * 2.0 - vec3(1.0);
-    N_from_map = normalize(fragment.tbn * N_from_map);
-    N = N_from_map;
+    vec3 normal_from_map = texture(normal_sampler, uv).rgb * 2.0 - vec3(1.0);
+    normal_from_map = normalize(tbn * normal_from_map);
+    out_normal = normal_from_map;
   }
 
   if (!gl_FrontFacing) {
-    N = -N;
+    out_normal = -out_normal;
   }
+  return out_normal;
+}
+
+
+void main() {
+  vec3 N = sample_normal(fragment.normal, material.normal_sampler, fragment.tbn, fragment.uv);
 
   bool has_albedo_map = textureSize(material.albedo_sampler, 0).x != 1;
   vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
