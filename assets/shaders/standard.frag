@@ -139,7 +139,8 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
                   const in float normal_dot_view_vector,
                   const in vec3 albedo,
                   const in float metallic,
-                  const in float roughness)
+                  const in float roughness,
+                  const in float transmission)
 {
   const vec3 F0 = mix(vec3(0.02), albedo, metallic); // Move outside
   vec3 direct = vec3(0.0, 0.0, 0.0);
@@ -176,7 +177,7 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
         const float spot_effect = smoothstep(cos(light.angle / 2.0), cos((light.angle / 2.0) * (1.0 - light.blend)), cos_dir);
         const vec3 spot_color = vec3(1.0, 1.0, clamp(spot_effect, 0.7, 1.0));
 
-        direct += (kD * albedo / PI + specular) * radiance * normal_dot_light_vector * spot_effect * shadow * (1.0 - material.transmission) * spot_color;
+        direct += (kD * albedo / PI + specular) * radiance * normal_dot_light_vector * spot_effect * shadow * (1.0 - transmission) * spot_color;
     }
   }
   return direct;
@@ -190,7 +191,8 @@ vec3 shade_directional_light(const in Directional_light light,
                              const in float normal_dot_view_vector,
                              const in vec3 albedo,
                              const in float metallic,
-                             const in float roughness)
+                             const in float roughness,
+                             const in float transmission)
 {
   if (directional_light.strength > 0.0) {
     vec3 F0 = vec3(0.02);
@@ -227,7 +229,7 @@ vec3 shade_directional_light(const in Directional_light light,
     const vec3 kS = F;
     const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
-    return (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
+    return (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - transmission) * shadow;
   } else {
     return vec3(0, 0, 0);
   }
@@ -291,8 +293,8 @@ void main() {
   vec3 F0 = vec3(0.02);
   F0 = mix(F0, albedo_alpha.rgb, metallic);
 
-  vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
-  direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow, cascaded_shadow_samplers, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
+  vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission);
+  direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow, cascaded_shadow_samplers, N, V, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission);
 
   vec3 ambient = vec3(0.0, 0.0, 0.0);
   float attenuation = 0.0f;
