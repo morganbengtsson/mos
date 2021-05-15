@@ -306,6 +306,12 @@ const in float ambient_occlusion) {
   return ambient;
 }
 
+vec3 calculate_fog(const in Fog fog, const in vec3 color, const in vec3 position, const in vec3 view_position) {
+  float fog_distance = distance(position, view_position);
+  float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
+  vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
+  return mix(fog_color, color, clamp(fog_att, fog.min, fog.max));
+}
 
 vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler, const in mat3 tbn, const in vec2 uv) {
   vec3 out_normal = normal;
@@ -369,12 +375,6 @@ void main() {
   direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow, cascaded_shadow_samplers, N, V, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission);
   vec3 ambient = shade_indirect(environments, environment_samplers, R, N, V, fragment.position, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission, ambient_occlusion);
 
-  out_color.rgb = direct + ambient + emission;
+  out_color.rgb = calculate_fog(fog, direct + ambient + emission, fragment.position, camera.position);
   out_color.a = clamp(albedo_alpha.a, 0.0, 1.0);
-
-  //Fog
-  float fog_distance = distance(fragment.position, camera.position);
-  float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
-  vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
-  out_color.rgb = mix(fog_color, out_color.rgb, clamp(fog_att, fog.min, fog.max));
 }
