@@ -135,7 +135,7 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
                   const in sampler2D[4] shadow_samplers,
                   const in vec3 position,
                   const in vec3 normal,
-                  const in vec3 view_direction,
+                  const in vec3 view_vector,
                   const in float normal_dot_view_vector,
                   const in vec3 albedo,
                   const in float metallic,
@@ -147,7 +147,7 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
     Spot_light light = spot_lights[i];
     if (light.strength > 0.0) {
         const vec3 light_vector = normalize(light.position - position);
-        const vec3 half_vector = normalize(view_direction + light_vector);
+        const vec3 half_vector = normalize(view_vector + light_vector);
 
         const float normal_dot_light_vector = max(dot(normal, light_vector), 0.0);
 
@@ -162,8 +162,8 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
         const vec3 radiance = light.strength * spot_light_intensity_factor * light.color * attenuation;
 
         const float NDF = distribution_GGX(normal, half_vector, roughness);
-        const float G = geometry_smith(normal, view_direction, light_vector, roughness);
-        const vec3 F = fresnel_schlick(clamp(dot(half_vector, view_direction), 0.0, 1.0), F0);
+        const float G = geometry_smith(normal, view_vector, light_vector, roughness);
+        const vec3 F = fresnel_schlick(clamp(dot(half_vector, view_vector), 0.0, 1.0), F0);
 
         const vec3 nominator = NDF * G * F;
         const float denominator = 4 * normal_dot_view_vector * normal_dot_light_vector + 0.001;
@@ -180,6 +180,57 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
     }
   }
   return direct;
+}
+
+vec3 shade_directional_light(const in Directional_light light,
+                             const in vec4[4] shadow_projs,
+                             const in sampler2D[4] shadow_samplers,
+                             const in vec3 normal,
+                             const in vec3 view_vector,
+                             const in float normal_dot_view_vector,
+                             const in vec3 albedo,
+                             const in float metallic,
+                             const in float roughness)
+{
+  if (directional_light.strength > 0.0) {
+    vec3 F0 = vec3(0.02);
+    F0 = mix(F0, albedo, metallic);
+
+    const vec3 L = normalize(-light.direction);
+    const vec3 H = normalize(view_vector + L);
+
+    const float NdotL = max(dot(normal, L), 0.0);
+
+    int cascade_index = 0;
+
+    for (int i = 0; i < 4; i++) {
+      const vec3 shadow_map_uv = shadow_projs[i].xyz / shadow_projs[i].w;
+      if (shadow_map_uv.x < 1.0 && shadow_map_uv.x > 0.0 && shadow_map_uv.y < 1.0 && shadow_map_uv.y > 0.0){
+        cascade_index = i;
+        break;
+      }
+    }
+
+    const vec3 shadow_map_uv = shadow_projs[cascade_index].xyz / shadow_projs[cascade_index].w;
+    const float shadow = sample_variance_shadow_map(shadow_samplers[cascade_index], shadow_map_uv.xy, shadow_map_uv.z);
+
+    const vec3 radiance = directional_light.strength * directional_light.color;
+
+    const float NDF = distribution_GGX(normal, H, roughness);
+    const float G = geometry_smith(normal, view_vector, L, roughness);
+    const vec3 F = fresnel_schlick(clamp(dot(H, view_vector), 0.0, 1.0), F0);
+
+    const vec3 nominator = NDF * G * F;
+    const float denominator = 4 * normal_dot_view_vector * NdotL + 0.001;
+    const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
+
+    const vec3 kS = F;
+    const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+
+    return (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
+  } else {
+    return vec3(0, 0, 0);
+  }
 }
 
 vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler, const in mat3 tbn, const in vec2 uv) {
@@ -241,46 +292,7 @@ void main() {
   F0 = mix(F0, albedo_alpha.rgb, metallic);
 
   vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
-
-  //Directional light
-  if (directional_light.strength > 0.0) {
-    const vec3 L = normalize(-directional_light.direction);
-    const vec3 H = normalize(V + L);
-
-    const float NdotL = max(dot(N, L), 0.0);
-
-    int cascade_index = 0;
-
-    //Debug color
-    //vec3 colors[4] = {vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 1.0)};
-
-    for (int i = 0; i < 4; i++) {
-      const vec3 shadow_map_uv = fragment.cascaded_proj_shadow[i].xyz / fragment.cascaded_proj_shadow[i].w;
-      if (shadow_map_uv.x < 1.0 && shadow_map_uv.x > 0.0 && shadow_map_uv.y < 1.0 && shadow_map_uv.y > 0.0){
-        //direct += colors[i]; Debug color
-        cascade_index = i;
-        break;
-      }
-    }
-
-    //TODO: Select correct shadowmap
-    const vec3 shadow_map_uv = fragment.cascaded_proj_shadow[cascade_index].xyz / fragment.cascaded_proj_shadow[cascade_index].w;
-    const float shadow = sample_variance_shadow_map(cascaded_shadow_samplers[cascade_index], shadow_map_uv.xy, shadow_map_uv.z);
-
-    const vec3 radiance = directional_light.strength * directional_light.color;
-
-    const float NDF = distribution_GGX(N, H, roughness);
-    const float G = geometry_smith(N, V, L, roughness);
-    const vec3 F = fresnel_schlick(clamp(dot(H, V), 0.0, 1.0), F0);
-
-    const vec3 nominator = NDF * G * F;
-    const float denominator = 4 * NdotV * NdotL + 0.001;
-    const vec3 specular = clamp(nominator / denominator, vec3(0), vec3(0.2));
-
-    const vec3 kS = F;
-    const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
-    direct += (kD * albedo_alpha.rgb / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
-  }
+  direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow, cascaded_shadow_samplers, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
 
   vec3 ambient = vec3(0.0, 0.0, 0.0);
   float attenuation = 0.0f;
