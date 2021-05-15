@@ -197,13 +197,24 @@ vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler, cons
   return out_normal;
 }
 
+vec4 sample_albedo_alpha(const in vec3 albedo, const in float alpha, const in sampler2D sampler, const in vec2 uv) {
+  bool has_albedo_map = textureSize(sampler, 0).x != 1;
+  vec4 albedo_from_map = texture(sampler, fragment.uv);
+
+  if (alpha == 0.0) {
+    discard;
+  }
+  else if (albedo_from_map.a + float(!has_albedo_map) < 0.9) {
+      discard;
+  }
+
+  return has_albedo_map ? albedo_from_map.rgba : vec4(albedo.rgb, alpha);
+}
 
 void main() {
   vec3 N = sample_normal(fragment.normal, material.normal_sampler, fragment.tbn, fragment.uv);
 
-  bool has_albedo_map = textureSize(material.albedo_sampler, 0).x != 1;
-  vec4 albedo_from_map = texture(material.albedo_sampler, fragment.uv);
-  vec3 albedo = has_albedo_map ? albedo_from_map.rgb : material.albedo.rgb;
+  vec4 albedo_alpha = sample_albedo_alpha(material.albedo, material.alpha, material.albedo_sampler, fragment.uv);
 
   vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
   vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
@@ -217,24 +228,15 @@ void main() {
   float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
   float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
 
-  if (material.alpha == 0.0) {
-    discard;
-  }
-  else if (material.alpha == 1.0) {
-    if (albedo_from_map.a + float(!has_albedo_map) < 0.9 && material.emission == vec3(0.0, 0.0, 0.0)) {
-      discard;
-    }
-  }
-
   const vec3 V = normalize(camera.position - fragment.position);
   const vec3 R = -reflect(fragment.camera_to_surface, N);
 
   const float NdotV = max(dot(N, V), 0.0);
 
   vec3 F0 = vec3(0.02);
-  F0 = mix(F0, albedo, metallic);
+  F0 = mix(F0, albedo_alpha.rgb, metallic);
 
-  vec3 direct = shade_direct(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo, metallic, roughness);
+  vec3 direct = shade_direct(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness);
 
   //Directional light
   if (directional_light.strength > 0.0) {
@@ -273,7 +275,7 @@ void main() {
 
     const vec3 kS = F;
     const vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
-    direct += (kD * albedo / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
+    direct += (kD * albedo_alpha.rgb / PI + specular) * radiance * NdotL  * (1.0 - material.transmission) * shadow;
   }
 
   vec3 ambient = vec3(0.0, 0.0, 0.0);
@@ -319,7 +321,7 @@ void main() {
 
       vec3 irradiance = sample_environment(environment_samplers[i], corrected_N, num_levels - 1.5, 0.5, 1.0);
 
-      const vec3 diffuse_environment = irradiance * albedo * environments[i].strength;
+      const vec3 diffuse_environment = irradiance * albedo_alpha.rgb * environments[i].strength;
 
       attenuation = (attenuation == 0.0) ? environment_attenuation(fragment.position, environments[i].position, environments[i].extent, environments[i].falloff) : 1.0 - attenuation;
 
@@ -330,7 +332,7 @@ void main() {
     }
   }
   out_color.rgb = (direct + ambient) + emission;
-  out_color.a = clamp(material.alpha * (albedo_from_map.a + float(!has_albedo_map)), 0.0, 1.0);
+  out_color.a = clamp(albedo_alpha.a, 0.0, 1.0);
 
   //Fog
   float fog_distance = distance(fragment.position, camera.position);
