@@ -211,22 +211,26 @@ vec4 sample_albedo_alpha(const in vec3 albedo, const in float alpha, const in sa
   return has_albedo_map ? albedo_from_map.rgba : vec4(albedo.rgb, alpha);
 }
 
+vec3 sample_replace(const in vec3 color, const in sampler2D sampler, const in vec2 uv) {
+  bool has_map = textureSize(sampler, 0).x != 1;
+  vec4 from_map = texture(sampler, uv);
+  return has_map ? from_map.rgb : color;
+}
+
+float sample_replace(const in float value, const in sampler2D sampler, const in vec2 uv) {
+  bool has_map = textureSize(sampler, 0).x != 1;
+  vec4 from_map = texture(sampler, uv);
+  return has_map ? from_map.r : value;
+}
+
 void main() {
   vec3 N = sample_normal(fragment.normal, material.normal_sampler, fragment.tbn, fragment.uv);
 
   vec4 albedo_alpha = sample_albedo_alpha(material.albedo, material.alpha, material.albedo_sampler, fragment.uv);
-
-  vec4 emission_from_map = texture(material.emission_sampler, fragment.uv);
-  vec3 emission = mix(material.emission.rgb, emission_from_map.rgb, emission_from_map.a);
-
-  vec4 metallic_from_map = texture(material.metallic_sampler, fragment.uv);
-  float metallic = mix(material.metallic, metallic_from_map.r, metallic_from_map.a);
-
-  vec4 roughnesss_from_map = texture(material.roughness_sampler, fragment.uv);
-  float roughness = mix(material.roughness, roughnesss_from_map.r, roughnesss_from_map.a);
-
-  float ambient_occlusion_from_map = texture(material.ambient_occlusion_sampler, fragment.uv).r;
-  float ambient_occlusion = material.ambient_occlusion * ambient_occlusion_from_map;
+  vec3 emission = sample_replace(material.emission, material.emission_sampler, fragment.uv);
+  float metallic = sample_replace(material.metallic, material.metallic_sampler, fragment.uv);
+  float roughness = sample_replace(material.roughness, material.roughness_sampler, fragment.uv);
+  float ambient_occlusion = sample_replace(material.ambient_occlusion, material.ambient_occlusion_sampler, fragment.uv);
 
   const vec3 V = normalize(camera.position - fragment.position);
   const vec3 R = -reflect(fragment.camera_to_surface, N);
