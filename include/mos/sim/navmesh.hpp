@@ -12,12 +12,10 @@
 #include <mos/gfx/assets.hpp>
 #include <json.hpp>
 
-//TODO: shared_ptr mesh
-//TODO: Rename to navmodel/simmodel
 namespace mos::sim {
 
 /** Navigation mesh. */
-class Navmesh {
+class [[deprecated("To be removed, use physics lib")]] Navmesh {
 public:
   using Optional_vertex = std::optional<gfx::Vertex>;
 

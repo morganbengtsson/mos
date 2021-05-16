@@ -10,7 +10,7 @@
 namespace mos::gfx {
 
 /** Keyframe animation, interpolation between meshes. */
-class Animation final {
+class [[deprecated("To be replaced by skinning")]] Animation final {
 public:
   Animation(const std::map<unsigned int, std::shared_ptr<Mesh const>> &keyframes,
             unsigned int frame_rate = 30);
