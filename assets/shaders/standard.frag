@@ -92,57 +92,52 @@ in Fragment fragment;
 
 layout(location = 0) out vec4 out_color;
 
-// Defined in functions.frag
-float rand(vec2 co);
-mat3 rotate(const vec3 axis, const float a);
-vec3 box_correct(const vec3 box_extent, const vec3 box_pos, const vec3 dir, const vec3 fragment_position);
-float sample_variance_shadow_map(sampler2D shadow_map, vec2 uv, float compare);
-float sample_shadow_map(sampler2D shadow_map, const vec2 uv, const float compare);
-float distribution_GGX(vec3 N, vec3 H, float roughness);
-float geometry_schlick_GGX(float NdotV, float roughness);
-float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness);
-vec3 fresnel_schlick(float cosTheta, vec3 F0);
-vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness);
+// Util
+float rand(const in vec2 co);
+mat3 rotate(const in vec3 axis, const in float a);
+vec3 box_correct(const in vec3 box_extent, const in vec3 box_pos,
+                 const vec3 dir, const in vec3 fragment_position);
+bool inside_box(const in vec3 point, const in vec3 position, const in vec3 extent);
+
+// Shadiows
+float sample_variance_shadow_map(const in sampler2D shadow_map, const in vec2 uv,
+                                 const in float compare);
+float sample_shadow_map(const in sampler2D shadow_map, const in vec2 uv,
+                        const in float compare);
+
+// Lighting
+float distribution_GGX(const in vec3 normal, const in vec3 half_vector,
+                       const in float roughness);
+float geometry_schlick_GGX(const in float NdotV, const in float roughness);
+float geometry_smith(const in vec3 normal, const in vec3 view_vector,
+                     const in vec3 light_vector, const in float roughness);
+vec3 fresnel_schlick(const in float cos_theta, const in vec3 F0);
+vec3 fresnel_schlick_roughness(const in float cos_theta, const in vec3 F0,
+                               const in float roughness);
+
+// Environment
+vec3 sample_environment(const in samplerCube sampler, const in vec3 direction, const in float mip_level, const in float angle, const in float step);
+float environment_attenuation(const in vec3 point, const in vec3 position, const in vec3 extent, const in float falloff);
+
+// Textures
+vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler,
+                   const in mat3 tbn, const in vec2 uv);
+vec4 sample_albedo_alpha(const in vec3 albedo, const in float alpha,
+                         const in sampler2D sampler, const in vec2 uv);
+vec3 sample_replace(const in vec3 color, const in sampler2D sampler,
+                    const in vec2 uv);
+float sample_replace(const in float value, const in sampler2D sampler,
+                     const in vec2 uv);
+
 float fog_attenuation(const float dist, const float factor);
-bool inside_box(const vec3 point, const vec3 position, const vec3 extent);
 
-vec3 sample_environment(samplerCube sampler, const vec3 direction, float mip_level, const float angle, const float step){
-  int num_samples = 0;
-  vec3 filtered = vec3(0.0);
-  for(float x = -angle; x <= angle; x += step) {
-    for(float y = -angle; y <= angle; y += step ) {
-      const mat3 rotx = rotate(vec3(1.0, 0.0, 0.0), x);
-      const mat3 roty = rotate(vec3(0.0, 1.0, 0.0), y);
-      const mat3 rotz = rotate(vec3(0.0, 0.0, 1.0), y);
-      filtered += textureLod(sampler, rotx * roty * rotz * direction, mip_level).rgb;
-      num_samples += 1;
-    }
-  }
-  filtered /= num_samples;
-  return filtered;
-}
-
-
-float environment_attenuation(const vec3 point, const vec3 position, const vec3 extent, const float falloff) {
-  const float distance_x = smoothstep(abs(position.x) + extent.x,abs(position.x) + extent.x * (1.0 - falloff), abs(point.x));
-  const float distance_y = smoothstep(abs(position.y) + extent.y,abs(position.y) + extent.y * (1.0 - falloff), abs(point.y));
-  const float distance_z = smoothstep(abs(position.z) + extent.z,abs(position.z) + extent.z * (1.0 - falloff), abs(point.z));
-  return min(distance_x, min(distance_y, distance_z));
-}
-
-vec3 shade_spotlights(const in Spot_light[4] lights,
-                  const in vec4[4] shadow_projs,
-                  const in sampler2D[4] shadow_samplers,
-                  const in vec3 position,
-                  const in vec3 normal,
-                  const in vec3 view_vector,
-                  const in float normal_dot_view_vector,
-                  const in vec3 albedo,
-                  const in float metallic,
-                  const in float roughness,
-                  const in float transmission)
+vec3 shade_spotlights(const in Spot_light[4] lights, const in vec4[4] shadow_projs,
+                  const in sampler2D[4] shadow_samplers, const in vec3 position,
+                  const in vec3 normal, const in vec3 view_vector,
+                  const in float normal_dot_view_vector, const in vec3 albedo,
+                  const in float metallic, const in float roughness,
+                  const in float transmission, const in vec3 F0)
 {
-  const vec3 F0 = mix(vec3(0.02), albedo, metallic); // Move outside
   vec3 direct = vec3(0.0, 0.0, 0.0);
   for(int i = 0; i < spot_lights.length(); i++) {
     Spot_light light = spot_lights[i];
@@ -183,21 +178,13 @@ vec3 shade_spotlights(const in Spot_light[4] lights,
   return direct;
 }
 
-vec3 shade_directional_light(const in Directional_light light,
-                             const in vec4[4] shadow_projs,
-                             const in sampler2D[4] shadow_samplers,
-                             const in vec3 normal,
-                             const in vec3 view_vector,
-                             const in float normal_dot_view_vector,
-                             const in vec3 albedo,
-                             const in float metallic,
-                             const in float roughness,
-                             const in float transmission)
+vec3 shade_directional_light(const in Directional_light light, const in vec4[4] shadow_projs,
+                             const in sampler2D[4] shadow_samplers,  const in vec3 normal,
+                             const in vec3 view_vector, const in float normal_dot_view_vector,
+                             const in vec3 albedo, const in float metallic,
+                             const in float roughness, const in float transmission, const vec3 F0)
 {
   if (directional_light.strength > 0.0) {
-    vec3 F0 = vec3(0.02);
-    F0 = mix(F0, albedo, metallic);
-
     const vec3 L = normalize(-light.direction);
     const vec3 H = normalize(view_vector + L);
 
@@ -235,23 +222,15 @@ vec3 shade_directional_light(const in Directional_light light,
   }
 }
 
-vec3 shade_indirect(const in Environment[2] environments,
-const in samplerCube[2] environment_samplers,
-const in vec3 R,
-const in vec3 N,
-const in vec3 V,
-const in vec3 position,
-const in float NdotV,
-const in vec3 albedo,
-const in float metallic,
-const in float roughness,
-const in float transmission,
-const in float ambient_occlusion) {
+vec3 shade_indirect(const in Environment[2] environments, const in samplerCube[2] environment_samplers,
+                    const in vec3 R, const in vec3 N,
+                    const in vec3 V, const in vec3 position,
+                    const in float NdotV, const in vec3 albedo,
+                    const in float metallic, const in float roughness,
+                    const in float transmission, const in float ambient_occlusion,
+                    const in vec3 F0) {
   vec3 ambient = vec3(0.0, 0.0, 0.0);
   float attenuation = 0.0f;
-
-  vec3 F0 = vec3(0.02);
-  F0 = mix(F0, albedo, metallic);
 
   for (int i = 0; i < environments.length(); i++) {
     if (environments[i].strength > 0.0 && inside_box(position, environments[i].position, environments[i].extent)) {
@@ -306,74 +285,42 @@ const in float ambient_occlusion) {
   return ambient;
 }
 
-vec3 calculate_fog(const in Fog fog, const in vec3 color, const in vec3 position, const in vec3 view_position) {
+vec3 calculate_fog(const in Fog fog, const in vec3 color,
+                   const in vec3 position, const in vec3 view_position) {
   float fog_distance = distance(position, view_position);
   float fog_att = fog_attenuation(fog_distance, fog.attenuation_factor);
   vec3 fog_color = mix(fog.color_far, fog.color_near, fog_att);
   return mix(fog_color, color, clamp(fog_att, fog.min, fog.max));
 }
 
-vec3 sample_normal(const in vec3 normal, const in sampler2D normal_sampler, const in mat3 tbn, const in vec2 uv) {
-  vec3 out_normal = normal;
-  bool has_normal_map = textureSize(normal_sampler, 0).x != 1;
-  if (has_normal_map){
-    vec3 normal_from_map = texture(normal_sampler, uv).rgb * 2.0 - vec3(1.0);
-    normal_from_map = normalize(tbn * normal_from_map);
-    out_normal = normal_from_map;
-  }
-
-  if (!gl_FrontFacing) {
-    out_normal = -out_normal;
-  }
-  return out_normal;
-}
-
-vec4 sample_albedo_alpha(const in vec3 albedo, const in float alpha, const in sampler2D sampler, const in vec2 uv) {
-  bool has_albedo_map = textureSize(sampler, 0).x != 1;
-  vec4 albedo_from_map = texture(sampler, fragment.uv);
-
-  if (alpha == 0.0) {
-    discard;
-  }
-  else if (albedo_from_map.a + float(!has_albedo_map) < 0.9) {
-      discard;
-  }
-
-  return has_albedo_map ? albedo_from_map.rgba : vec4(albedo.rgb, alpha);
-}
-
-vec3 sample_replace(const in vec3 color, const in sampler2D sampler, const in vec2 uv) {
-  bool has_map = textureSize(sampler, 0).x != 1;
-  vec4 from_map = texture(sampler, uv);
-  return has_map ? from_map.rgb : color;
-}
-
-float sample_replace(const in float value, const in sampler2D sampler, const in vec2 uv) {
-  bool has_map = textureSize(sampler, 0).x != 1;
-  vec4 from_map = texture(sampler, uv);
-  return has_map ? from_map.r : value;
-}
-
 void main() {
-  vec3 N = sample_normal(fragment.normal, material.normal_sampler, fragment.tbn, fragment.uv);
+  const vec3 normal = sample_normal(fragment.normal, material.normal_sampler, fragment.tbn, fragment.uv);
 
-  vec4 albedo_alpha = sample_albedo_alpha(material.albedo, material.alpha, material.albedo_sampler, fragment.uv);
-  vec3 emission = sample_replace(material.emission, material.emission_sampler, fragment.uv);
-  float metallic = sample_replace(material.metallic, material.metallic_sampler, fragment.uv);
-  float roughness = sample_replace(material.roughness, material.roughness_sampler, fragment.uv);
-  float ambient_occlusion = sample_replace(material.ambient_occlusion, material.ambient_occlusion_sampler, fragment.uv);
+  const vec4 albedo_alpha = sample_albedo_alpha(material.albedo, material.alpha, material.albedo_sampler, fragment.uv);
+  const vec3 emission = sample_replace(material.emission, material.emission_sampler, fragment.uv);
+  const float metallic = sample_replace(material.metallic, material.metallic_sampler, fragment.uv);
+  const float roughness = sample_replace(material.roughness, material.roughness_sampler, fragment.uv);
+  const float ambient_occlusion = sample_replace(material.ambient_occlusion, material.ambient_occlusion_sampler, fragment.uv);
 
-  const vec3 V = normalize(camera.position - fragment.position);
-  const vec3 R = -reflect(fragment.camera_to_surface, N);
+  const vec3 view_vector = normalize(camera.position - fragment.position);
+  const vec3 reflect_vector = -reflect(fragment.camera_to_surface, normal);
 
-  const float NdotV = max(dot(N, V), 0.0);
+  const float normal_dot_view_vector = max(dot(normal, view_vector), 0.0);
 
-  vec3 F0 = vec3(0.02);
-  F0 = mix(F0, albedo_alpha.rgb, metallic);
+  const vec3 F0 = mix(vec3(0.02), albedo_alpha.rgb, metallic);
 
-  vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers, fragment.position, N, V, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission);
-  direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow, cascaded_shadow_samplers, N, V, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission);
-  vec3 ambient = shade_indirect(environments, environment_samplers, R, N, V, fragment.position, NdotV, albedo_alpha.rgb, metallic, roughness, material.transmission, ambient_occlusion);
+  vec3 direct = shade_spotlights(spot_lights, fragment.proj_shadow, shadow_samplers,
+                                 fragment.position, normal, view_vector,
+                                 normal_dot_view_vector, albedo_alpha.rgb, metallic,
+                                 roughness, material.transmission, F0);
+  direct += shade_directional_light(directional_light, fragment.cascaded_proj_shadow,
+                                    cascaded_shadow_samplers, normal, view_vector,
+                                    normal_dot_view_vector, albedo_alpha.rgb,
+                                    metallic, roughness, material.transmission, F0);
+  vec3 ambient = shade_indirect(environments, environment_samplers, reflect_vector, normal,
+                                view_vector, fragment.position, normal_dot_view_vector,
+                                albedo_alpha.rgb, metallic, roughness,
+                                material.transmission, ambient_occlusion, F0);
 
   out_color.rgb = calculate_fog(fog, direct + ambient + emission, fragment.position, camera.position);
   out_color.a = clamp(albedo_alpha.a, 0.0, 1.0);
