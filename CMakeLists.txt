@@ -42,6 +42,9 @@ add_subdirectory(externals/gli)
 # stb
 add_subdirectory(externals/stb)
 
+# spdlog
+add_subdirectory(externals/spdlog)
+
 # unicode
 set(UTF8_TESTS OFF CACHE BOOL "" FORCE)
 set(UTF8_SAMPLES OFF CACHE BOOL "" FORCE)
@@ -94,6 +97,7 @@ target_include_directories(${PROJECT_NAME}
   externals/stb
   externals/utfcpp/source
   externals/gli
+  externals/spdlog/include
   )
 
 target_link_libraries(${PROJECT_NAME}

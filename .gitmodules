@@ -22,3 +22,6 @@
 [submodule "externals/gli"]
 	path = externals/gli
 	url = https://github.com/g-truc/gli.git
+[submodule "externals/spdlog"]
+	path = externals/spdlog
+	url = https://github.com/gabime/spdlog.git
