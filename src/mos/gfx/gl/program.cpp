@@ -1,5 +1,6 @@
 #include <iostream>
 #include <mos/gfx/gl/renderer.hpp>
+#include <spdlog/spdlog.h>
 
 namespace mos::gfx {
 
@@ -14,14 +15,13 @@ auto Renderer::Program::check(const std::string &name) const -> void {
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);
     glGetProgramInfoLog(program, length, nullptr, &buffer[0]);
-    std::cout << "Link failure in: " << name << std::endl;
-    std::cout << std::string(buffer.begin(), buffer.end()) << std::endl;
+    spdlog::error("Link failure in: {} \n {}", name, std::string(buffer.begin(), buffer.end()));
   }
   assert(status);
 }
 
 auto Renderer::Program::link(const std::string &name) const -> void {
-  std::cout << "Linking: " + name + " program." << std::endl;
+  spdlog::info("Linking: {} program", name);
   glLinkProgram(program);
 }
 

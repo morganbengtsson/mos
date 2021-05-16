@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include <mos/gfx/model.hpp>
 #include <mos/util.hpp>
 #include <mos/gfx/material.hpp>
@@ -21,8 +22,8 @@ Model::Model(std::string name,
 Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &parent_transform) : transform(1.0f) {
   auto parsed = json;
   if (parsed.is_string()) {
-    std::cout << "Loading: " << parsed << std::endl;
-	std::string path = parsed;
+    spdlog::info("Loading: {}", parsed);
+    std::string path = parsed;
     parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
   }
   auto name = parsed.value("name", "");

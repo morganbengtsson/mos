@@ -2,6 +2,7 @@
 #include <glm/gtx/normal.hpp>
 #include <mos/sim/navmesh.hpp>
 #include <mos/util.hpp>
+#include <spdlog/spdlog.h>
 #include <glm/gtc/matrix_inverse.hpp>
 
 namespace mos::sim {
@@ -9,7 +10,7 @@ namespace mos::sim {
 Navmesh::Navmesh(const nlohmann::json &json, gfx::Assets &assets, const glm::mat4 &parent_transform) {
   auto parsed = json;
   if (parsed.is_string()) {
-    std::cout << "Loading Nav_model: " << parsed << std::endl;
+    spdlog::info("Loading Nav_model: {}", parsed);
         std::string path = parsed;
     parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
   }

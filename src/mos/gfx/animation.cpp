@@ -4,6 +4,7 @@
 #include <mos/util.hpp>
 #include <mos/gfx/animation.hpp>
 #include <filesystem>
+#include <spdlog/spdlog.h>
 
 namespace mos::gfx {
 using namespace nlohmann;
@@ -13,11 +14,11 @@ Animation::Animation(
     : frame_rate_(frame_rate),
       mesh_(std::make_shared<Mesh>(*keyframes_.begin()->second)),
       keyframes_(keyframes.begin(), keyframes.end()) {
-  std::cout << keyframes_.size() << std::endl;
+  spdlog::info("Keyframe size: {}", keyframes_.size());
   for (auto &p : keyframes_) {
-    std::cout << p.first << " " << p.second->vertices.size() << std::endl;
+    spdlog::info("{} {}", p.first, p.second->vertices.size());
   }
-  std::cout << mesh_->vertices.size() << std::endl << "----\n";
+  spdlog::info(mesh_->vertices.size());
 }
 
 Animation::Animation(

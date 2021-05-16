@@ -1,5 +1,6 @@
 #include <iostream>
 #include <mos/gfx/gl/renderer.hpp>
+#include <spdlog/spdlog.h>
 
 namespace mos::gfx {
 
@@ -13,8 +14,7 @@ Renderer::Shader::Shader(const std::string &source, const GLuint type,
       {GL_GEOMETRY_SHADER, "geometry shader"}};
 
   auto const *chars = source.c_str();
-  std::cout << "Compiling: " << (!name.empty() ? name + " " : "")
-            << shader_types.at(type) << std::endl;
+  spdlog::info("Compiling: {} {}", name, shader_types.at(type));
   glShaderSource(id, 1, &chars, nullptr);
   glCompileShader(id);
 
@@ -28,9 +28,7 @@ Renderer::Shader::Shader(const std::string &source, const GLuint type,
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
     std::vector<char> buffer(length);
     glGetShaderInfoLog(id, length, nullptr, &buffer[0]);
-    std::cerr << "Compile failure in:  " << (!name.empty() ? name + " " : "")
-              << shader_types.at(type) << std::endl;
-    std::cerr << std::string(buffer.begin(), buffer.end()) << std::endl;
+    spdlog::error("Compile failure in: {} {} \n {}", name, shader_types.at(type), std::string(buffer.begin(), buffer.end()));
   }
   assert(status);
 }

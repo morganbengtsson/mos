@@ -1,6 +1,7 @@
 #include <mos/aud/sound.hpp>
 #include <iostream>
 #include <mos/util.hpp>
+#include <spdlog/spdlog.h>
 
 namespace mos::aud {
 
@@ -8,7 +9,7 @@ Sound::Sound(const nlohmann::json &json, Assets &assets,
                              const glm::mat4 &parent_transform) {
   auto parsed = json;
   if (parsed.is_string()) {
-    std::cout << "Loading: " << parsed << std::endl;
+    spdlog::info("Loading: {}", parsed);
     std::string path = parsed;
     parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
   }
