@@ -777,7 +777,7 @@ void Renderer::render_cascaded_shadow_maps(const Models &models,
     const float split_distance = cascade_splits[cascade_idx];
 
     // TODO: Incorporate into camera
-    glm::vec3 frustum_corners_world[8] = {
+    std::array<glm::vec3, 8> frustum_corners_world = {
         glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(1.0f, 1.0f, -1.0f),
         glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, -1.0f, -1.0f),
         glm::vec3(-1.0f, 1.0f, 1.0f),  glm::vec3(1.0f, 1.0f, 1.0f),

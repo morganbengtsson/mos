@@ -45,9 +45,7 @@ auto Box::intersects(const glm::vec3 &origin, const glm::vec3 &direction) const 
   float tzmin{0.0f};
   float tzmax{0.0f};
 
-  glm::vec3 bounds[2];
-  bounds[0] = min();
-  bounds[1] = max();
+  std::array<glm::vec3, 2> bounds{min(), max()};
 
   glm::vec3 invdir = 1.f / direction;
   glm::i8vec3 sign;

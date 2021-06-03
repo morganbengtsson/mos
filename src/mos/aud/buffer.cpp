@@ -2,6 +2,7 @@
 #include <mos/aud/buffer.hpp>
 #include <stb_vorbis.h>
 #include <stdexcept>
+#include <span>
 
 namespace mos::aud {
 
@@ -12,7 +13,6 @@ Buffer::Buffer(const int channels, const int sample_rate)
 
 Buffer::Buffer(const std::string &path)
     : id_(current_id_++), channels_(0), sample_rate_(0) {
-  short *decoded{};
 
   std::ifstream file(path, std::ios::binary);
   if (!file.good()) {
@@ -20,9 +20,11 @@ Buffer::Buffer(const std::string &path)
   }
   std::vector<unsigned char> data(std::istreambuf_iterator<char>(file), {});
 
-  auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels_,
+  short *decoded{};
+  const auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels_,
                                          &sample_rate_, &decoded);
-  samples_.assign(decoded, decoded + length);
+  const auto span = std::span(decoded, length);
+  samples_.assign(span.begin(), span.end());
 }
 
 auto Buffer::load(const std::string &path) -> Shared_buffer {

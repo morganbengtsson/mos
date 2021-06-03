@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.1.0)
 project(tests)
 
+set(CMAKE_CXX_STANDARD 20)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC mos Catch2::Catch2)
