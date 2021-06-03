@@ -34,6 +34,9 @@ Texture_2D::Texture_2D(const std::string &path,
   int bpp;
   int width, height;
   unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &bpp, 0);
+  if (pixels == nullptr) {
+    throw std::runtime_error("Could not read texture: " + path);
+  }
   texture_ = gli::texture2d(gli_map[bpp], gli::extent2d(width, height));
   std::memcpy(texture_.data(), pixels, width * height * bpp);
 }
