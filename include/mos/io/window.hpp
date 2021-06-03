@@ -10,7 +10,7 @@
 
 namespace mos::io {
 
-class Window {
+class [[deprecated("Use glfw or similar directly")]] Window {
 public:
   struct Output {
     Keyboard keyboard;

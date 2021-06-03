@@ -6,7 +6,7 @@
 
 namespace mos::io {
 
-class Mouse {
+class [[deprecated("Use glfw or similar directly")]] Mouse {
 public:
   Mouse();
   enum class Button : int {

@@ -5,7 +5,7 @@
 
 namespace mos::io {
 
-class Keyboard {
+class [[deprecated("Use glfw or similar directly")]] Keyboard {
 public:
   Keyboard() = default;
 
