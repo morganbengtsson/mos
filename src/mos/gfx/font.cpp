@@ -20,16 +20,15 @@ Font::Font(const std::string &path) {
   std::filesystem::path fpath = path;
   auto doc = json::parse(text(fpath.generic_string()));
   for (auto &c : doc["symbols"]) {
-    Character character{};
-    character.x_offset = c["xoffset"];
-    character.y_offset = c["yoffset"];
-    character.x_advance = c["xadvance"];
-    character.width = c["width"];
-    character.id = c["id"];
-    character.x = c["x"];
-    character.y = c["y"];
-    character.height = c["height"];
-    characters.insert(std::pair<unsigned int, Character>(character.id, character));
+    Character character{
+        .id = c["id"],
+        .position = {c["x"], c["y"]},
+        .offset = {c["xoffset"], c["yoffset"]},
+        .advance = c["xadvance"],
+        .width = c["width"],
+        .height = c["height"],
+    };
+    characters.insert(Char_pair(character.id, character));
   }
   base_ = doc["config"]["base"];
   height_ = doc["config"]["charHeight"];

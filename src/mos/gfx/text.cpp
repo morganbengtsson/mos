@@ -34,33 +34,36 @@ auto Text::text() const -> std::string { return text_; }
 auto Text::text(const std::string &text) -> void {
   if (text_.compare(text) != 0) {
     text_ = text;
-    std::vector<std::string> lines = mos::split(text_, '\n');
+
     model_.mesh->clear();
 
     float line_index = 0.0f;
     const float line_height = -1.0f;
     int triangle_index = 0;
-    for (auto &line : lines) {
+
+    std::istringstream stream(text_);
+    std::string line;
+    while (std::getline(stream, line)) {
       float index = 0.0f;
 
       auto it = line.begin();
       while(it != line.end()) {
         auto cp = utf8::next(it, line.end());
         auto character = font_.characters.at(cp);
-        float u1 = character.x / static_cast<float>(font_.texture->width());
-        float u2 = (character.x + character.width) /
+        const float u1 = character.position.x / static_cast<float>(font_.texture->width());
+        const float u2 = (character.position.x + character.width) /
             static_cast<float>(font_.texture->width());
-        float v1 = character.y / static_cast<float>(font_.texture->height());
-        float v2 = ((character.y + character.height) /
+        const float v1 = character.position.y / static_cast<float>(font_.texture->height());
+        const float v2 = ((character.position.y + character.height) /
             static_cast<float>(font_.texture->height()));
 
-        float offset_y = -(character.y_offset - font_.base()) / font_.height();
-        float offset_x = character.x_offset / font_.height();
-        float rect_h = -character.height / font_.height();
-        float rect_w = character.width / font_.height();
-        float advance = character.x_advance / font_.height();
+        const float offset_y = -(character.offset.y - font_.base()) / font_.height();
+        const float offset_x = character.offset.x / font_.height();
+        const float rect_h = -character.height / font_.height();
+        const float rect_w = character.width / font_.height();
+        const float advance = character.advance / font_.height();
 
-        float z = index / 2000.0f;
+        const float z = index / 2000.0f;
 
         const glm::vec3 normal = glm::vec3(0.0f, 0.0f, 1.0f);
         const glm::vec3 tangent = glm::vec3(0.0f, 1.0f, 0.0f);

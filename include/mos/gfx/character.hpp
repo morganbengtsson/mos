@@ -1,18 +1,18 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 namespace mos::gfx {
 
 /** Measurements of a character glyph, for text rendering. */
 struct Character final {
-  float x_offset;
-  float y_offset;
-  float x_advance;
-  float width;
-  float x;
-  float y;
-  float height;
   /** Unicode character point id. **/
-  unsigned int id;
+  const unsigned int id;
+  const glm::vec2 position;
+  const glm::vec2 offset;
+  const float advance;
+  const float width;
+  const float height;
 };
 }
 

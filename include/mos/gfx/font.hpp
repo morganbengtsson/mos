@@ -10,6 +10,7 @@ namespace mos::gfx {
 class Font final {
 public:
   using Char_map = std::map<unsigned int, Character>;
+  using Char_pair = std::pair<unsigned int, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
   Font(Char_map characters,
