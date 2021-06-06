@@ -30,18 +30,6 @@ public:
   using Emission = Slot<glm::vec3>;
   using Ambient_occlusion = Slot<float>;
 
-  explicit Material(Albedo albedo = glm::vec3(0.0f),
-                    Metallic metallic = 0.0f,
-                    Roughness roughness = 1.0f,
-                    Emission emission = glm::vec3(0.0f),
-                    Ambient_occlusion ao = 1.0f,
-                    Normal normal = Normal(),
-                    float alpha = 1.0f,
-                    float index_of_refraction = 1.5f,
-                    float transmission = 0.0f);
-
-  explicit Material(Assets &assets, std::string &path);
-
   Albedo albedo{glm::vec3(0.0f)};
   Metallic metallic{0.0f};
   Roughness roughness{1.0f};
@@ -52,5 +40,7 @@ public:
   float alpha{1.0f};
   float index_of_refraction{1.5f};
   float transmission{0.0f};
+
+  static Material load(Assets &assets, const std::string &path);
 };
 }

@@ -39,7 +39,7 @@ Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &paren
   name_ = name;
   mesh = assets.mesh(mesh_path);
   transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
-  material = Material(assets, material_path);
+  material = Material::load(assets, material_path);
 
   for (auto &m : parsed["children"]) {
     const std::string str_path = m;
