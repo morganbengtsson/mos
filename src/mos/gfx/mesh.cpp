@@ -16,8 +16,15 @@ Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
   calculate_sphere();
 }
 
-Mesh::Mesh(const std::string &path) {
+Mesh::Mesh() {
+  calculate_sphere();
+}
+
+auto Mesh::load(const std::string &path) -> Mesh {
   if (path.substr(path.find_last_of('.') + 1) == "mesh") {
+
+    Mesh mesh;
+
     std::ifstream is(path, std::ios::binary);
     if (!is.good()) {
       throw std::runtime_error(path + " does not exist.");
@@ -37,26 +44,16 @@ Mesh::Mesh(const std::string &path) {
     if (!input_indices.empty()) {
       is.read(reinterpret_cast<char *>(&input_indices[0]), std::streamsize(input_indices.size() * sizeof(int)));
     }
-    vertices.assign(input_vertices.begin(), input_vertices.end());
+    mesh.vertices.assign(input_vertices.begin(), input_vertices.end());
     for (size_t i = 0; i < input_indices.size(); i += 3) {
-      triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
+      mesh.triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
     }
-    calculate_tangents();
-    calculate_sphere();
+    mesh.calculate_tangents();
+    mesh.calculate_sphere();
+    return mesh;
   } else {
     throw std::runtime_error("File extension not supported.");
   }
-}
-
-Mesh::Mesh() {
-  calculate_sphere();
-}
-
-auto Mesh::load(const std::string &path) -> Shared_mesh {
-  if (path.empty() || (path.back() == '/')) {
-    return std::make_shared<Mesh>(Mesh());
-  }
-  return std::make_shared<Mesh>(path);
 }
 
 void Mesh::clear() {

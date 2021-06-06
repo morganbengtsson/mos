@@ -10,16 +10,19 @@ namespace mos::gfx {
 Environment_light::Environment_light(const glm::vec3 &position,
                                    const glm::vec3 &extent,
                                    const float strength,
-                                   const float falloff)
+                                   const float falloff,
+                                   const float near)
     :
       strength(strength),
       falloff(falloff),
       box_(glm::translate(glm::mat4(1.0f), position), extent),
-      cube_camera_(position, 1.0f, glm::length(extent)) {
+      cube_camera_(position, near, glm::length(extent)) {
 }
 
-Environment_light::Environment_light(const std::string &directory, const std::string &path,
-    const glm::mat4 &parent_transform) {
+auto Environment_light::load(const std::string &directory,
+                             const std::string &path,
+                             const glm::mat4 &parent_transform)
+    -> Environment_light {
   using json = nlohmann::json;
   std::filesystem::path fpath = path;
 
@@ -38,16 +41,15 @@ Environment_light::Environment_light(const std::string &directory, const std::st
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
 
     auto extent = float(value["size"]) * scale;
-    box_ = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
-    strength = value.value("intensity", 1.0f);
-    falloff = value.value("falloff", 0.1f);
+    auto box = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
+    auto strength = value.value("intensity", 1.0f);
+    auto falloff = value.value("falloff", 0.1f);
     auto near_plane = value.value("near", 0.01f);
-    auto far_plane = value.value("far", glm::length(extent));
 
-    cube_camera_ = mos::gfx::Cube_camera(position, near_plane, far_plane);
+    return Environment_light(position, extent, strength, falloff, near_plane);
   } else {
     throw std::runtime_error(path.substr(path.find_last_of('.')) +
-        " file format is not supported.");
+                             " file format is not supported.");
   }
 }
 

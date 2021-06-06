@@ -52,13 +52,11 @@ void Spot_light::near_far(const float near_plane, const float far_plane) {
   far_ = far_plane;
   camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
 }
-Spot_light::Spot_light(const std::string &directory,
-             const std::string &path,
-             const glm::mat4 &parent_transform) :
-  color(glm::vec3{0.0f}) {
-  using json = nlohmann::json;
-  if (!path.empty()) {
-    std::filesystem::path fpath = path;
+
+auto Spot_light::load(const std::string &directory, const std::string &path, const glm::mat4 &parent_transform) -> Spot_light {
+    using json = nlohmann::json;
+    if (!path.empty()) {
+      std::filesystem::path fpath = path;
       auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
@@ -68,19 +66,18 @@ Spot_light::Spot_light(const std::string &directory,
       std::string t = value["light"];
       auto data_value = json::parse(mos::text(directory + t));
 
-      color = glm::vec3(data_value["color"][0],
-                             data_value["color"][1],
-                             data_value["color"][2]);
-      strength = data_value["strength"];
-      angle_ = data_value["size"];
-      near_ = data_value["near"];
-      far_ = data_value["far"];
-      blend_ = data_value["blend"];
+      auto color = glm::vec3(data_value["color"][0],
+                        data_value["color"][1],
+                        data_value["color"][2]);
+      auto strength = data_value["strength"];
+      auto angle = data_value["size"];
+      auto near = data_value["near"];
+      auto far = data_value["far"];
+      auto blend = data_value["blend"];
 
-      static constexpr float aspect_ratio{1.0f};
-      static constexpr glm::vec3 up{0.0f, 0.0001f, 1.0f};
-      camera = mos::gfx::Camera(position, center, glm::perspective(angle_, aspect_ratio, near_, far_), up);
-
+      return Spot_light(position, center, angle, color, strength, near, far, blend);
+    } else {
+      throw std::runtime_error("Invalid path");
     }
 }
 

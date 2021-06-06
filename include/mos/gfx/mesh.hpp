@@ -33,12 +33,10 @@ public:
   Mesh(const std::initializer_list<Vertex> &vertices,
        const std::initializer_list<Triangle> &triangles);
 
-  /** Load from *.mesh file. @param path Full path*/
-  explicit Mesh(const std::string &path);
-
   Mesh();
 
-  static auto load(const std::string &path) -> Shared_mesh;
+  /** Load from *.mesh file. @param path Full path*/
+  static auto load(const std::string &path) -> Mesh;
 
   /** Erease all vertices and indices. */
   auto clear() -> void;

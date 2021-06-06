@@ -24,6 +24,8 @@ public:
     Shared_texture_2D texture;
   };
 
+  static auto load(Assets &assets, const std::string &path) -> Material;
+
   using Albedo = Slot<glm::vec3>;
   using Roughness = Slot<float>;
   using Metallic = Slot<float>;
@@ -40,7 +42,5 @@ public:
   float alpha{1.0f};
   float index_of_refraction{1.5f};
   float transmission{0.0f};
-
-  static Material load(Assets &assets, const std::string &path);
 };
 }

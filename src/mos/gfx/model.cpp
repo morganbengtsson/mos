@@ -19,7 +19,7 @@ Model::Model(std::string name,
       transform(transform),
       name_(std::move(name)) {}
 
-Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &parent_transform) : transform(1.0f) {
+auto Model::load(const nlohmann::json &json, Assets &assets,  const glm::mat4 &parent_transform) -> Model {
   auto parsed = json;
   if (parsed.is_string()) {
     spdlog::info("Loading: {}", parsed);
@@ -36,18 +36,19 @@ Model::Model(const nlohmann::json &json, Assets &assets,  const glm::mat4 &paren
     material_path = parsed.value("material", "");
   }
 
-  name_ = name;
-  mesh = assets.mesh(mesh_path);
-  transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
-  material = Material::load(assets, material_path);
+  auto mesh = assets.mesh(mesh_path);
+  auto transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
+  auto material = Material::load(assets, material_path);
 
+  auto model = Model(name, mesh, transform, material);
   for (auto &m : parsed["children"]) {
     const std::string str_path = m;
     std::filesystem::path path = str_path;
     if (path.extension() == ".model") {
-      models.push_back(Model(path.generic_string(), assets));
+      model.models.push_back(load(path.generic_string(), assets));
     }
   }
+  return model;
 }
 
 auto Model::name() const -> std::string { return name_; }

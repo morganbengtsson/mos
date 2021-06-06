@@ -6,10 +6,9 @@
 namespace mos::gfx {
 
 struct Directional_light {
-  Directional_light() = default;
-  Directional_light(const std::string &directory,
-                    const std::string &path,
-                    const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  static auto load(const std::string &directory, const std::string &path,
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Directional_light;
+
   glm::vec3 position{0.0f};
   glm::vec3 direction{0.0f, 0.0f, 1.0f};
   glm::vec3 color{1.0f};

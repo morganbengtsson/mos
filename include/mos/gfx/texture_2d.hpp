@@ -19,7 +19,7 @@ public:
   Texture_2D(T begin, T end, int width, int height,
              const gli::format &format = gli::format::FORMAT_RGBA8_SRGB_PACK8,
              const Filter &filter = Filter::Linear,
-             const Wrap &wrap = Wrap::Repeat, const bool mipmaps = true) : Texture(filter, wrap, mipmaps) {
+             const Wrap &wrap = Wrap::Repeat, const bool mipmaps = true) : Texture(filter, wrap, mipmaps), texture_(format, gli::extent2d(width, height)) {
     std::memcpy(texture_.data(), begin, std::distance(begin, end));
   }
 
@@ -27,16 +27,10 @@ public:
              const Filter &filter = Filter::Linear,
              const Wrap &wrap = Wrap::Repeat, bool mipmaps = true);
 
-  /** Load from file */
-   static Shared_texture_2D load(const std::string &path,
-                                 bool color_data = true, bool mipmaps = true,
-                                 const Filter &filter = Filter::Linear,
-                                 const Wrap &wrap = Wrap::Repeat);
-
    /** Create from file. */
-   Texture_2D(const std::string &path, bool color_data = true,
+   static auto load(const std::string &path, bool color_data = true,
               bool generate_mipmaps = true, const Filter &filter = Filter::Linear,
-              const Wrap &wrap = Wrap::Repeat);
+                   const Wrap &wrap = Wrap::Repeat) -> Texture_2D;
 
    auto width() const -> int;
    auto height() const -> int;

@@ -9,7 +9,7 @@ namespace mos::gfx {
 
 using namespace nlohmann;
 
-Material Material::load(Assets &assets, const std::string &path)
+auto Material::load(Assets &assets, const std::string &path) -> Material
 {
   Material material;
   if (!path.empty()) {

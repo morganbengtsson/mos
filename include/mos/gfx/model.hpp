@@ -16,7 +16,7 @@ class Material;
 /** Collection of properties for a renderable object. */
 class Model final {
 public:
-  Model(const nlohmann::json &json, Assets &assets = *std::make_unique<Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  static auto load(const nlohmann::json &json, Assets &assets = *std::make_unique<Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Model;
 
   Model(std::string name,
         Shared_mesh mesh,

@@ -19,9 +19,8 @@ public:
                  float far = 10.0f,
                  float blend = 0.15);
 
-  Spot_light(const std::string &directory,
-        const std::string &path,
-        const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  static auto load(const std::string &directory, const std::string &path,
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Spot_light;
 
   /** Set blend factor. */
   auto blend(float blend) -> void;
@@ -46,7 +45,7 @@ public:
   /** Set near and far plane. **/
   auto near_far(float near, float far) -> void;
 
-  glm::vec3 color;
+  glm::vec3 color = glm::vec3(0.0f);
 
   /** Strength of the lamp in watts. */
   float strength;

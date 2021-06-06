@@ -13,11 +13,12 @@ public:
   using Char_pair = std::pair<unsigned int, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
-  Font(Char_map characters,
-       Shared_texture_2D texture,
+  Font(const Char_map &characters,
+       const Shared_texture_2D &texture,
        float height,
        float base);
-  explicit Font(const std::string &path);
+
+  static auto load(const std::string &path) -> Font;
 
   /** Height. */
   auto height() const -> float;

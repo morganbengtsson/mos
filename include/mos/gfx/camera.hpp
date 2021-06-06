@@ -17,9 +17,9 @@ public:
                const glm::mat4 &projection = glm::mat4(1.0f),
                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
-  Camera(const std::string &directory,
-        const std::string &path,
-        const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  static auto load(const std::string &directory, const std::string &path,
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+      -> Camera;
 
   auto position() const -> glm::vec3;
 

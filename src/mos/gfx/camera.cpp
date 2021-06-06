@@ -20,37 +20,25 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
   calculate_near_far();
 }
 
-Camera::Camera(const std::string &directory, const std::string &path,
-               const glm::mat4 &parent_transform)
-    : view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f)} {
+auto Camera::load(const std::string &directory, const std::string &path,
+                  const glm::mat4 &parent_transform) -> Camera {
   using json = nlohmann::json;
-  if (!path.empty()) {
-    std::filesystem::path fpath = path;
-    if (fpath.extension() == ".camera") {
-      auto value = json::parse(mos::text(directory + fpath.generic_string()));
+  std::filesystem::path fpath = path;
+  if (!path.empty() && fpath.extension() == ".camera") {
+    auto value = json::parse(mos::text(directory + fpath.generic_string()));
 
-      auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
-      auto position = glm::vec3(transform[3]);
-      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+    auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
+    auto position = glm::vec3(transform[3]);
+    auto center =
+        position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 
-      auto proj = mos::jsonarray_to_mat4(value["projection"]);
+    auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
-      projection_ = proj;
-
-      near_ = value["near"];
-      far_ = value["far"];
-
-      calculate_view(position, center, glm::vec3(0.0f, 0.0f, 1.0f));
-      calculate_frustum();
-      calculate_near_far();
-
-    } else {
-      throw std::runtime_error(path.substr(path.find_last_of('.')) +
-                               " file format is not supported.");
-    }
-}
+    return Camera(position, center, proj);
+  } else {
+    throw std::runtime_error(path.substr(path.find_last_of('.')) +
+                             " file format is not supported.");
+  }
 }
 
 auto Camera::position() const -> glm::vec3 { return glm::vec3(-view_[3]) * glm::mat3(view_); }

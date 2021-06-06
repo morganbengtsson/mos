@@ -11,21 +11,10 @@ Texture_2D::Texture_2D(const int width,
                        const Filter &filter,
                        const Wrap &wrap,
                        const bool generate_mipmaps)
-    :  Texture(filter, wrap, generate_mipmaps), texture_(format, gli::extent2d(width, height)) {}
+  :  Texture(filter, wrap, generate_mipmaps), texture_(format, gli::extent2d(width, height)) {}
 
-auto Texture_2D::load(const std::string &path, const bool color_data, const bool generate_mipmaps, const Filter &filter, const Wrap &wrap) -> Shared_texture_2D {
-  if (path.empty() || path.back() == '/') {
-    return Shared_texture_2D();
-  }
-  return std::make_shared<Texture_2D>(path, color_data, generate_mipmaps, filter, wrap);
-}
-
-Texture_2D::Texture_2D(const std::string &path,
-                       const bool color_data,
-                       const bool generate_mipmaps,
-                       const Texture_2D::Filter &filter,
-                       const Texture_2D::Wrap &wrap)
-    : Texture(filter, wrap, generate_mipmaps) {
+auto Texture_2D::load(const std::string &path, bool color_data, bool generate_mipmaps, const Texture::Filter &filter, const Texture::Wrap &wrap) -> Texture_2D
+{
 
   std::map<int, gli::format> gli_map{{1, gli::FORMAT_R8_UNORM_PACK8},
                                      {2, gli::FORMAT_RG8_UNORM_PACK8},
@@ -37,8 +26,13 @@ Texture_2D::Texture_2D(const std::string &path,
   if (pixels == nullptr) {
     throw std::runtime_error("Could not read texture: " + path);
   }
-  texture_ = gli::texture2d(gli_map[bpp], gli::extent2d(width, height));
-  std::memcpy(texture_.data(), pixels, width * height * bpp);
+
+  return Texture_2D(pixels, pixels + width * height * bpp,
+                    width, height,
+                    gli_map[bpp],
+                    filter,
+                    wrap,
+                    generate_mipmaps);
 }
 
 auto Texture_2D::width() const -> int {
