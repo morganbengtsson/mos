@@ -9,46 +9,26 @@ namespace mos::gfx {
 
 using namespace nlohmann;
 
-Material::Material(Shared_texture_2D albedo_map,
-                   Shared_texture_2D emission_map,
-                   Shared_texture_2D normal_map,
-                   Shared_texture_2D metallic_map,
-                   Shared_texture_2D roughness_map,
-                   Shared_texture_2D ambient_occlusion_map,
-                   const glm::vec3 albedo,
-                   const float alpha,
-                   const float index_of_refraction,
-                   const float transmission,
-                   const float roughness,
-                   const float metallic,
-                   const glm::vec3 emission,
-                   const float ambient_occlusion)
-    : albedo{albedo, std::move(albedo_map)},
-      metallic{metallic, std::move(metallic_map)},
-      roughness{roughness, std::move(roughness_map)},
-      emission{emission, std::move(emission_map)},
-      ambient_occlusion{ambient_occlusion, std::move(ambient_occlusion_map)},
-      normal{std::move(normal_map)},
-      alpha(alpha),
-      index_of_refraction(index_of_refraction),
-      transmission(transmission){}
+Material::Material(Material::Albedo albedo,
+                   Material::Metallic metallic,
+                   Material::Roughness roughness,
+                   Material::Emission emission,
+                   Material::Ambient_occlusion ao,
+                   Material::Normal normal,
+                   float alpha,
+                   float index_of_refraction,
+                   float transmission) : albedo(albedo),
+                                         metallic(metallic),
+                                         roughness(roughness),
+                                         emission(emission),
+                                         ambient_occlusion(ao),
+                                         normal(normal),
+                                         alpha(alpha),
+                                         index_of_refraction(index_of_refraction),
+                                         transmission(transmission)
+{
 
-Material::Material(const glm::vec3 &albedo,
-                   const float alpha,
-                   const float index_of_refraction,
-                   const float transmission,
-                   const float roughness,
-                   const float metallic,
-                   const glm::vec3 emission,
-                   const float ambient_occlusion)
-    : albedo{albedo, Shared_texture_2D()},
-      metallic{metallic, Shared_texture_2D()},
-      roughness{roughness, Shared_texture_2D()},
-      emission{emission, Shared_texture_2D()},
-      ambient_occlusion{ambient_occlusion, Shared_texture_2D()},
-      alpha(alpha),
-      index_of_refraction(index_of_refraction),
-      transmission(transmission){}
+}
 
 Material::Material(Assets &assets, std::string &path) : Material() {
   if (!path.empty()) {
