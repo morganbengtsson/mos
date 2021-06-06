@@ -6,7 +6,7 @@ Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
 
 auto Assets::audio_buffer(const std::string &path) -> Shared_buffer {
   if (buffers_.find(path) == buffers_.end()) {
-    buffers_.insert(Buffer_pair(path, Buffer::load(directory_ + path)));
+    buffers_.insert(Buffer_pair(path, std::make_shared<Buffer>(Buffer::load(directory_ + path))));
   }
   return buffers_.at(path);
 }

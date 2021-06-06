@@ -25,11 +25,8 @@ public:
   /** Empty buffer constructor. */
   explicit Buffer(int channels = 1, int sample_rate = 44100);
 
-  /** Construct from *.ogg file. */
-  explicit Buffer(const std::string &path);
-
   /** Load shared buffer. */
-  static Shared_buffer load(const std::string &path);
+  static auto load(const std::string &path) -> Buffer;
 
   Samples::const_iterator begin() const;
 
