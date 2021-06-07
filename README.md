@@ -5,13 +5,13 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/addd182810be433096c04cc13a3a6ea9)](https://www.codacy.com/manual/morganbengtsson/mos?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=morganbengtsson/mos&amp;utm_campaign=Badge_Grade)
 [![GitHub license](https://img.shields.io/github/license/morganbengtsson/mos.svg)](https://github.com/morganbengtsson/mos/blob/master/LICENCE.rst)
 
-*:warning: Note that MOS is in development and slightly experimental*
+*:warning: Note that MOS is in development and slightly experimental :warning:*
 
-# Introduction
+## Introduction
 
 MOS is a lightweight cross-platform game engine/library, written in modern C++.
 
-# Features
+## Features
 
 - Minimal and [documented](http://mos.readthedocs.io/en/latest/) codebase.
 - Integration with [Blender-2.8x](https://github.com/morganbengtsson/mos-blender-export)
@@ -31,13 +31,13 @@ MOS is a lightweight cross-platform game engine/library, written in modern C++.
 ![Screenshot2](doc/screenshot.jpg)
 ![Screenshot3](doc/screenshot2.jpg)
 
-# Companion projects
+## Companion projects
 
 - [MOS Skeleton](https://github.com/morganbengtsson/mos-skeleton): An example project to quickly get up and running.
 - [MOS Blender export](https://github.com/morganbengtsson/mos-blender-export): Export scripts/addon for Blender 2.80, to export
 models, levels and other entities.
 
-# Source code
+## Source code
 
 A convenient way to get and use the project, is to add it as a [git submodule](https://git-scm.com/docs/git-submodule):
 
@@ -45,7 +45,7 @@ A convenient way to get and use the project, is to add it as a [git submodule](h
 git submodule add https://github.com/morganbengtsson/mos.git
 git submodule update --init --recursive
 ```
-# Building
+## Building
 
 The project is preferably used as a sub project with [CMake](https://cmake.org) as so, in your CMakeLists.txt:
 
@@ -54,7 +54,7 @@ add_subdirectory(externals/mos)
 target_link_libraries(${PROJECT_NAME} PUBLIC mos)
 ```
 
-# Dependencies
+## Dependencies
 
 MOS is dependent on the following projects:
 
