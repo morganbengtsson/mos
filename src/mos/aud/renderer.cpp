@@ -25,7 +25,7 @@ Renderer::Renderer()
     throw std::runtime_error("OpenAL EFX not supported.");
   }
 
-  ALuint reverb_effect = 0;
+  ALuint reverb_effect = AL_NONE;
   alGenEffects(1, &reverb_effect);
   alEffecti(reverb_effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
   alEffectf(reverb_effect, AL_REVERB_DENSITY, reverb_properties.flDensity);
@@ -50,19 +50,19 @@ Renderer::Renderer()
   alEffecti(reverb_effect, AL_REVERB_DECAY_HFLIMIT,
             reverb_properties.iDecayHFLimit);
 
-  if (!reverb_effect) {
+  if (reverb_effect == AL_NONE) {
     throw std::runtime_error("Could not create reverb effect.");
   }
 
   alGenAuxiliaryEffectSlots(1, &reverb_slot);
-  if (!reverb_slot) {
+  if (reverb_slot == AL_NONE) {
     throw std::runtime_error("Could not create reverb effect slot.");
   }
 
   alAuxiliaryEffectSloti(reverb_slot, AL_EFFECTSLOT_EFFECT, reverb_effect);
 
   alGenFilters(1, &lowpass_filter1);
-  if (!lowpass_filter1) {
+  if (lowpass_filter1 == AL_NONE) {
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -70,7 +70,7 @@ Renderer::Renderer()
   alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05f);
 
   alGenFilters(1, &lowpass_filter2);
-  if (!lowpass_filter2) {
+  if (lowpass_filter2 == AL_NONE) {
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
@@ -96,14 +96,14 @@ Renderer::~Renderer() {
 
 void Renderer::render_sound(const Sound &sound, const float dt) {
   if (sources_.find(sound.source.id()) == sources_.end()) {
-      ALuint al_source{0u};
+    ALuint al_source{AL_NONE};
     alGenSources(1, &al_source);
     sources_.insert(SourcePair(sound.source.id(), al_source));
 
 #ifdef MOS_EFX
     alSource3i(al_source, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
-    ALuint al_filter{0u};
+    ALuint al_filter{AL_NONE};
     alGenFilters(1, &al_filter);
     filters_.insert(SourcePair(sound.source.id(), al_filter));
     alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);

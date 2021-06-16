@@ -19,7 +19,8 @@ auto Buffer::load(const std::string &path) -> Buffer {
   std::vector<unsigned char> data(std::istreambuf_iterator<char>(file), {});
 
   short *decoded{};
-  int channels, sample_rate;
+  int channels = 0;
+  int sample_rate = 0;
   const auto length = stb_vorbis_decode_memory(data.data(), data.size(), &channels,
                                                &sample_rate, &decoded);
   const auto span = std::span(decoded, length);

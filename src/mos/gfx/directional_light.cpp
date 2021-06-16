@@ -23,7 +23,6 @@ auto mos::gfx::Directional_light::load(const std::string &directory,
                       data_value["color"][2]);
     auto strength = data_value["strength"];
     return Directional_light{position, direction, color, strength};
-  } else {
-    throw std::runtime_error("Invalid path for Directional light");
   }
+  throw std::runtime_error("Invalid path for Directional light");
 }

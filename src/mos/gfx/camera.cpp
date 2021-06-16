@@ -35,10 +35,10 @@ auto Camera::load(const std::string &directory, const std::string &path,
     auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
     return Camera(position, center, proj);
-  } else {
-    throw std::runtime_error(path.substr(path.find_last_of('.')) +
-                             " file format is not supported.");
   }
+  throw std::runtime_error(path.substr(path.find_last_of('.')) +
+                             " file format is not supported.");
+
 }
 
 auto Camera::position() const -> glm::vec3 { return glm::vec3(-view_[3]) * glm::mat3(view_); }
