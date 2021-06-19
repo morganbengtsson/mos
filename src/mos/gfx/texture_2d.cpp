@@ -20,8 +20,9 @@ auto Texture_2D::load(const std::string &path, bool color_data, bool generate_mi
                                      {2, gli::FORMAT_RG8_UNORM_PACK8},
                                      {3, color_data ? gli::FORMAT_RGB8_SRGB_PACK8 : gli::FORMAT_RGB8_UNORM_PACK8},
                                      {4, color_data ? gli::FORMAT_RGBA8_SRGB_PACK8 : gli::FORMAT_RGBA8_UNORM_PACK8}};
-  int bpp;
-  int width, height;
+  int bpp = 0;
+  int width = 0;
+  int height = 0;
   unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &bpp, 0);
   if (pixels == nullptr) {
     throw std::runtime_error("Could not read texture: " + path);
@@ -43,15 +44,15 @@ auto Texture_2D::height() const -> int {
   return texture_.extent().y;
 }
 
-const void *Texture_2D::data() const {
+auto Texture_2D::data() const -> const void* {
   return texture_.data();
 }
 
-gli::format Texture_2D::format() const {
+auto Texture_2D::format() const -> gli::format {
   return texture_.format();
 }
 
-gli::swizzles Texture_2D::swizzles() const {
+auto Texture_2D::swizzles() const -> gli::swizzles {
   return texture_.swizzles();
 }
 }

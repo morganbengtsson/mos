@@ -32,7 +32,7 @@ Text::Text(const std::string &txt,
 auto Text::text() const -> std::string { return text_; }
 
 auto Text::text(const std::string &text) -> void {
-  if (text_.compare(text) != 0) {
+  if (text_ != text) {
     text_ = text;
 
     model_.mesh->clear();

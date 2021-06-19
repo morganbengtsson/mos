@@ -1,4 +1,5 @@
 #include <mos/io/window.hpp>
+#include <spdlog/spdlog.h>
 
 namespace mos::io {
 
@@ -26,7 +27,7 @@ Window::Window(const std::string &title,
                              nullptr);
   glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
-  if (!window_) {
+  if (window_ == nullptr) {
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
@@ -93,7 +94,7 @@ void Window::close(const bool close) {
 }
 
 void Window::error_callback(int error, const char *description) {
-  fprintf(stderr, "Error: %s\n", description);
+  spdlog::error("Error: {}", description);
 }
 
 void Window::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {

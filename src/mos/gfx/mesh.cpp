@@ -150,7 +150,7 @@ auto Mesh::calculate_normals() -> void {
     for (const auto & p : triangle_map) {
       auto &v = vertices[p.first];
       auto normal = glm::vec3(0.0f);
-      for (auto &neighbour : p.second) {
+      for (const auto &neighbour : p.second) {
         normal += neighbour.normal();
       }
       v.normal = glm::normalize(normal);
@@ -169,10 +169,10 @@ auto Mesh::calculate_tangents() -> void {
       calculate_tangents(v0, v1, v2);
     }
   } else {
-    for (size_t i = 0; i < triangles.size(); i++) {
-      auto &v0 = vertices[triangles[i][0]];
-      auto &v1 = vertices[triangles[i][1]];
-      auto &v2 = vertices[triangles[i][2]];
+    for (const auto triangle: triangles) {
+      auto &v0 = vertices[triangle[0]];
+      auto &v1 = vertices[triangle[1]];
+      auto &v2 = vertices[triangle[2]];
 
       calculate_tangents(v0, v1, v2);
     }
@@ -192,10 +192,10 @@ auto Mesh::calculate_flat_normals() -> void {
       v2.normal = normal;
     }
   } else {
-    for (size_t i = 0; i < triangles.size(); i++) {
-      auto &v0 = vertices[triangles[i][0]];
-      auto &v1 = vertices[triangles[i][1]];
-      auto &v2 = vertices[triangles[i][2]];
+    for (const auto triangle : triangles) {
+      auto &v0 = vertices[triangle[0]];
+      auto &v1 = vertices[triangle[1]];
+      auto &v2 = vertices[triangle[2]];
 
       auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
       v0.normal = normal;
@@ -215,10 +215,10 @@ auto Mesh::calculate_sphere() -> void {
 
   radius = 0.0f;
 
-  for (auto & p : all_positions) {
-    auto d = glm::distance(centroid, p);
-    if (d > radius) {
-      radius = d;
+  for (const auto & position : all_positions) {
+    auto distance = glm::distance(centroid, position);
+    if (distance > radius) {
+      radius = distance;
     }
   }
 

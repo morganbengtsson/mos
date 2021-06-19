@@ -76,9 +76,8 @@ auto Spot_light::load(const std::string &directory, const std::string &path, con
       auto blend = data_value["blend"];
 
       return Spot_light(position, center, angle, color, strength, near, far, blend);
-    } else {
-      throw std::runtime_error("Invalid path");
     }
+    throw std::runtime_error("Invalid path");
 }
 
 void Spot_light::blend(float blend) {
