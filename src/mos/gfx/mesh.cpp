@@ -51,9 +51,8 @@ auto Mesh::load(const std::string &path) -> Mesh {
     mesh.calculate_tangents();
     mesh.calculate_sphere();
     return mesh;
-  } else {
-    throw std::runtime_error("File extension not supported.");
   }
+  throw std::runtime_error("File extension not supported.");
 }
 
 void Mesh::clear() {
@@ -138,8 +137,7 @@ auto Mesh::calculate_normals() -> void {
     //TODO: Slow brute force, improve?
     using P = std::pair<int, std::vector<Face>>;
     std::map<int, std::vector<Face>> triangle_map;
-    for (size_t i = 0; i < triangles.size(); i++) {
-      std::array<int, 3> tri{triangles[i][0], triangles[i][1], triangles[i][2]};
+    for (const auto tri : triangles) {
       Face t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
       for (auto i0 : tri) {
         if (triangle_map.find(i0) == triangle_map.end()) {
