@@ -73,12 +73,10 @@ void Camera::calculate_frustum() {
   auto m = projection_ * view_;
   auto t = glm::transpose(m);
 
-  frustum_planes_[0] = t[3] + t[0]; /* left   */
-  frustum_planes_[1] = t[3] - t[0]; /* right  */
-  frustum_planes_[2] = t[3] + t[1]; /* bottom */
-  frustum_planes_[3] = t[3] - t[1]; /* top    */
-  frustum_planes_[4] = t[3] + t[2]; /* near   */
-  frustum_planes_[5] = t[3] - t[2]; /* far    */
+  for (int i = 0; i < 3; i++) {
+    frustum_planes_[i * 2] = t[3] + t[i];
+    frustum_planes_[i * 2 + 1] = t[3] - t[i];
+  }
 
   for (auto & plane : frustum_planes_){
     auto magnitude = glm::length(glm::vec3(plane));
