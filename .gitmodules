@@ -1,27 +1,3 @@
-[submodule "externals/glm"]
-	path = externals/glm
-	url = git://github.com/g-truc/glm.git
-[submodule "externals/openal-soft"]
-	path = externals/openal-soft
-	url = http://repo.or.cz/openal-soft.git
-[submodule "externals/glfw"]
-	path = externals/glfw
-	url = https://github.com/glfw/glfw.git
 [submodule "externals/filesystem"]
 	path = externals/filesystem
 	url = https://github.com/wjakob/filesystem.git
-[submodule "externals/nlohmann_json_release"]
-	path = externals/nlohmann_json_release
-	url = https://github.com/azadkuh/nlohmann_json_release.git
-[submodule "externals/utfcpp"]
-	path = externals/utfcpp
-	url = https://github.com/nemtrif/utfcpp.git
-[submodule "externals/Catch2"]
-	path = externals/Catch2
-	url = https://github.com/catchorg/Catch2.git
-[submodule "externals/gli"]
-	path = externals/gli
-	url = https://github.com/g-truc/gli.git
-[submodule "externals/spdlog"]
-	path = externals/spdlog
-	url = https://github.com/gabime/spdlog.git
