@@ -38,11 +38,11 @@ auto Mesh::load(const std::string &path) -> Mesh {
     auto input_indices = std::vector<int>(num_indices);
 
     if (!input_vertices.empty()) {
-      is.read(reinterpret_cast<char *>(&input_vertices[0]), std::streamsize(input_vertices.size() * sizeof(Vertex)));
+      is.read(reinterpret_cast<char *>(&input_vertices.at(0)), std::streamsize(input_vertices.size() * sizeof(Vertex)));
     }
 
     if (!input_indices.empty()) {
-      is.read(reinterpret_cast<char *>(&input_indices[0]), std::streamsize(input_indices.size() * sizeof(int)));
+      is.read(reinterpret_cast<char *>(&input_indices.at(0)), std::streamsize(input_indices.size() * sizeof(int)));
     }
     mesh.vertices.assign(input_vertices.begin(), input_vertices.end());
     for (size_t i = 0; i < input_indices.size(); i += 3) {

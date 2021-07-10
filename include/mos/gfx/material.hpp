@@ -13,10 +13,10 @@ class Material final {
 public:
   template<class T>
   struct Slot {
-    Slot(const T &value) : value(value){}
-    Slot(const Shared_texture_2D &texture) : texture(texture) {}
+    explicit Slot(const T &value) : value(value) {}
+    explicit Slot(const Shared_texture_2D &texture) : texture(texture) {}
     Slot(const T &value, const Shared_texture_2D &texture) : value(value), texture(texture) {}
-    T value;
+    T value = T();
     Shared_texture_2D texture = Shared_texture_2D();
   };
 

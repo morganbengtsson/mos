@@ -238,24 +238,24 @@ void Renderer::render_sound_stream(const Sound_stream &sound_stream, const float
   if(sound_stream.stream) {
     auto format = sound_stream.stream->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 
-    std::array<ALuint,4> buffers{0,0,0,0}; // TODO std array
+    std::array<ALuint,4> buffers{0,0,0,0};
     if (sound_stream.source.playing && (state != AL_PLAYING)) {
       alGenBuffers(4, buffers.data());
-      int size = sound_stream.stream->buffer_size;
+      const auto samples = sound_stream.stream->read();
+      const int size = sound_stream.stream->buffer_size;
       for (const auto & buffer : buffers) {
         alBufferData(
-            buffer, format, sound_stream.stream->read().data(),
+            buffer, format, samples.data(),
             size * sizeof(ALshort), sound_stream.stream->sample_rate());
         alSourceQueueBuffers(al_source, 1, &buffer);
       }
       alSourcePlay(al_source);
     }
 
-    while (processed--) {
-		
+    while (processed--) {		
 		  alSourceUnqueueBuffers(al_source, 1, &buffer);
-		  auto samples = sound_stream.stream->read();
-		  int size = sound_stream.stream->buffer_size;
+                  const auto samples = sound_stream.stream->read();
+                  const int size = sound_stream.stream->buffer_size;
 			if (buffer != 0) {
 	  			alBufferData(buffer, format, samples.data(),
 					size * sizeof(ALshort),

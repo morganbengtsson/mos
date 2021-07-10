@@ -17,15 +17,14 @@ public:
 
   Container() = default;
 
-  template<class It>
-  Container(const std::initializer_list<It> list): Container(list.begin(), list.end()){}
+  template <class It>
+  explicit Container(const std::initializer_list<It> list)
+      : Container(list.begin(), list.end()) {}
 
-  template<class It>
-  Container(It begin, It end) {
-    assign(begin, end);
-  }
+  template <class It> Container(It begin, It end) { assign(begin, end); }
 
-  Container(const Tracked_container<T> & container) : Container(container.begin(), container.end()){}
+  explicit Container(const Tracked_container<T> &container)
+      : Container(container.begin(), container.end()) {}
 
   template<class It>
   void assign(It begin, It end){
