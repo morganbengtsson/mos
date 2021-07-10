@@ -20,15 +20,16 @@ public:
     invalidate();
   }
 
-  template<class It>
-  Tracked_container(const std::initializer_list<It> list): Tracked_container(list.begin(), list.end()){}
+  template <class It>
+  explicit Tracked_container(const std::initializer_list<It> list)
+      : Tracked_container(list.begin(), list.end()) {}
 
-  template<class It>
-  Tracked_container(It begin, It end) {
+  template <class It> Tracked_container(It begin, It end) {
     assign(begin, end);
   }
 
-  Tracked_container(const Container<T> &container): Tracked_container(container.begin(), container.end()){}
+  explicit Tracked_container(const Container<T> &container)
+      : Tracked_container(container.begin(), container.end()) {}
 
   template<class It>
   void assign(It begin, It end){
@@ -36,6 +37,7 @@ public:
     invalidate();
   }
   typename Items::iterator begin() {
+    invalidate();
     return items_.begin();
   }
   typename Items::iterator end() {
@@ -48,7 +50,7 @@ public:
   typename Items::const_iterator end() const {
     return items_.end();
   }
-  typename Items::reference operator[](typename Items::size_type pos){
+  typename Items::reference operator[](typename Items::size_type pos) {
     invalidate();
     return items_[pos];
   }
