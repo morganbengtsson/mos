@@ -41,7 +41,6 @@ auto Environment_light::load(const std::string &directory,
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
 
     auto extent = float(value["size"]) * scale;
-    auto box = mos::gfx::Box(glm::translate(glm::mat4(1.0f), position), extent);
     auto strength = value.value("intensity", 1.0f);
     auto falloff = value.value("falloff", 0.1f);
     auto near_plane = value.value("near", 0.01f);

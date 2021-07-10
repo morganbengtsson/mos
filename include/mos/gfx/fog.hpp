@@ -8,7 +8,7 @@ class Fog final {
 public:
   /** @param color Color of the fog.
    * @param attenuation_factor Fog density. */
-  Fog(const glm::vec3 &color, float attenuation_factor = 0.0f,
+  explicit Fog(const glm::vec3 &color, float attenuation_factor = 0.0f,
       const float min = 0.0f, const float max = 1.0f);
 
   /** @param color_near Close fog color.

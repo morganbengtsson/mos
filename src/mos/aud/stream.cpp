@@ -18,10 +18,8 @@ auto Stream::read() -> std::array<short, buffer_size> {
   auto samples = std::array<short, buffer_size>();
 
   int size = 0;
-  int result = 0;
-
   while (size < buffer_size) {
-    result = stb_vorbis_get_samples_short_interleaved(
+    const auto result = stb_vorbis_get_samples_short_interleaved(
         vorbis_stream_, vorbis_info_.channels, samples.data() + size,
         buffer_size - size);
     if (result > 0) {
