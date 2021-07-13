@@ -69,21 +69,21 @@ auto Text::text(const std::string &text) -> void {
         const glm::vec3 tangent = glm::vec3(0.0f, 1.0f, 0.0f);
 
         model_.mesh->vertices.push_back(
-            Vertex(glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
-                   normal, tangent, glm::vec2(u1, v2)));
+            Vertex{glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
+                   normal, tangent, glm::vec2(u1, v2)});
 
-        model_.mesh->vertices.push_back(Vertex(
+        model_.mesh->vertices.push_back(Vertex{
             glm::vec3(index + rect_w + offset_x, offset_y + line_index, z),
-            normal, tangent, glm::vec2(u2, v1)));
+            normal, tangent, glm::vec2(u2, v1)});
 
-        model_.mesh->vertices.push_back(Vertex(glm::vec3(index + offset_x, offset_y + line_index, z),
-                                               normal, tangent, glm::vec2(u1, v1)));
+        model_.mesh->vertices.push_back(Vertex{glm::vec3(index + offset_x, offset_y + line_index, z),
+                                               normal, tangent, glm::vec2(u1, v1)});
 
         model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
 
-        model_.mesh->vertices.push_back(Vertex(glm::vec3(index + rect_w + offset_x,
+        model_.mesh->vertices.push_back(Vertex{glm::vec3(index + rect_w + offset_x,
                                                          rect_h + offset_y + line_index, z),
-                                               normal, tangent, glm::vec2(u2, v2)));
+                                               normal, tangent, glm::vec2(u2, v2)});
 
         model_.mesh->triangles.push_back({triangle_index - 3, triangle_index++, triangle_index - 3});
 
