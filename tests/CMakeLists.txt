@@ -3,7 +3,7 @@ project(tests)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(${PROJECT_NAME} main.cpp mesh_tests.cpp)
+add_executable(${PROJECT_NAME} main.cpp mesh_tests.cpp camera_tests.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC mos Catch2::Catch2)
 
