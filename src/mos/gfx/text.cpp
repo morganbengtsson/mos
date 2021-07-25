@@ -79,13 +79,13 @@ auto Text::text(const std::string &text) -> void {
         model_.mesh->vertices.push_back(Vertex{glm::vec3(index + offset_x, offset_y + line_index, z),
                                                normal, tangent, glm::vec2(u1, v1)});
 
-        model_.mesh->triangles.push_back({triangle_index++, triangle_index++, triangle_index++});
+        model_.mesh->indices.push_back({triangle_index++, triangle_index++, triangle_index++});
 
         model_.mesh->vertices.push_back(Vertex{glm::vec3(index + rect_w + offset_x,
                                                          rect_h + offset_y + line_index, z),
                                                normal, tangent, glm::vec2(u2, v2)});
 
-        model_.mesh->triangles.push_back({triangle_index - 3, triangle_index++, triangle_index - 3});
+        model_.mesh->indices.push_back({triangle_index - 3, triangle_index++, triangle_index - 3});
 
         index += advance + spacing;
       }

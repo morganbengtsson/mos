@@ -11,8 +11,8 @@
 namespace mos::gfx {
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
-           const std::initializer_list<Triangle> &triangles)
-    : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
+           const std::initializer_list<Triangle_indices> &indices)
+    : Mesh(vertices.begin(), vertices.end(), indices.begin(), indices.end()) {
   calculate_sphere();
 }
 
@@ -46,7 +46,7 @@ auto Mesh::load(const std::string &path) -> Mesh {
     }
     mesh.vertices.assign(input_vertices.begin(), input_vertices.end());
     for (size_t i = 0; i < input_indices.size(); i += 3) {
-      mesh.triangles.push_back(std::array<int, 3>{input_indices[i], input_indices[i+1], input_indices[i+2]});
+      mesh.indices.push_back(Triangle_indices{input_indices[i], input_indices[i+1], input_indices[i+2]});
     }
     mesh.calculate_tangents();
     mesh.calculate_sphere();
@@ -57,7 +57,7 @@ auto Mesh::load(const std::string &path) -> Mesh {
 
 void Mesh::clear() {
   vertices.clear();
-  triangles.clear();
+  indices.clear();
 }
 
 auto Mesh::positions() const -> Positions {
@@ -119,9 +119,23 @@ auto Mesh::calculate_tangents(Vertex &v0,
   v2.tangent = tangent;
 }
 
+void Mesh::for_each_triangle(const std::function<void (const Mesh::Triangle &)> &callback)
+{
+  if (indices.size() == 0) {
+    for (size_t i = 0; i < vertices.size(); i += 3) {
+      Triangle triangle{vertices[i], vertices[i + 1], vertices[i + 2]};
+      callback(triangle);
+    }
+  } else {
+    for (const auto triangle_indices: indices) {
+      Triangle triangle{vertices[triangle_indices[0]], vertices[triangle_indices[1]], vertices[triangle_indices[2]]};
+      callback(triangle);
+    }
+  }
+}
 
 auto Mesh::calculate_normals() -> void {
-  if (triangles.size() == 0) {
+  if (indices.size() == 0) {
     for (size_t i = 0; i < vertices.size(); i += 3) {
       //TODO: Generalize
       auto &v0 = vertices[i];
@@ -135,13 +149,13 @@ auto Mesh::calculate_normals() -> void {
     }
   } else {
     //TODO: Slow brute force, improve?
-    using P = std::pair<int, std::vector<Face>>;
-    std::map<int, std::vector<Face>> triangle_map;
-    for (const auto tri : triangles) {
-      Face t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
+    using P = std::pair<int, std::vector<Triangle>>;
+    std::map<int, std::vector<Triangle>> triangle_map;
+    for (const auto tri : indices) {
+      Triangle t{vertices[tri[0]], vertices[tri[1]], vertices[tri[2]]};
       for (auto i0 : tri) {
         if (triangle_map.find(i0) == triangle_map.end()) {
-          triangle_map.insert(P(i0, std::vector<Face>{t}));
+          triangle_map.insert(P(i0, std::vector<Triangle>{t}));
         } else {
           triangle_map[i0].push_back(t);
         }
@@ -159,50 +173,18 @@ auto Mesh::calculate_normals() -> void {
 }
 
 auto Mesh::calculate_tangents() -> void {
-  if (triangles.size() == 0) {
-    for (size_t i = 0; i < vertices.size(); i += 3) {
-      //TODO: Generalize
-      auto &v0 = vertices[i];
-      auto &v1 = vertices[i + 1];
-      auto &v2 = vertices[i + 2];
-
-      calculate_tangents(v0, v1, v2);
-    }
-  } else {
-    for (const auto triangle: triangles) {
-      auto &v0 = vertices[triangle[0]];
-      auto &v1 = vertices[triangle[1]];
-      auto &v2 = vertices[triangle[2]];
-
-      calculate_tangents(v0, v1, v2);
-    }
-  }
+  for_each_triangle([](const Triangle& triangle) {
+    calculate_tangents(triangle.v0, triangle.v1, triangle.v2);
+  });
 }
 
 auto Mesh::calculate_flat_normals() -> void {
-  if (triangles.size() == 0) {
-    for (size_t i = 0; i < vertices.size(); i += 3) {
-      auto &v0 = vertices[i];
-      auto &v1 = vertices[i + 1];
-      auto &v2 = vertices[i + 2];
-
-      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
-      v0.normal = normal;
-      v1.normal = normal;
-      v2.normal = normal;
-    }
-  } else {
-    for (const auto triangle : triangles) {
-      auto &v0 = vertices[triangle[0]];
-      auto &v1 = vertices[triangle[1]];
-      auto &v2 = vertices[triangle[2]];
-
-      auto normal = glm::triangleNormal(v0.position, v1.position, v2.position);
-      v0.normal = normal;
-      v1.normal = normal;
-      v2.normal = normal;
-    }
-  }
+  for_each_triangle([](const Triangle& triangle) {
+    auto normal = glm::triangleNormal(triangle.v0.position, triangle.v1.position, triangle.v2.position);
+    triangle.v0.normal = normal;
+    triangle.v1.normal = normal;
+    triangle.v2.normal = normal;
+  });
 }
 
 auto Mesh::calculate_sphere() -> void {
@@ -223,7 +205,7 @@ auto Mesh::calculate_sphere() -> void {
   }
 
 }
-auto Mesh::Face::normal() const -> glm::vec3 {
+auto Mesh::Triangle::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);
 }
 }

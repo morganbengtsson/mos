@@ -660,7 +660,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material.ambient_occlusion, 1,
                    &model.material.ambient_occlusion.value);
 
-      glDrawElements(GL_TRIANGLES, model.mesh->triangles.size() * 3,
+      glDrawElements(GL_TRIANGLES, model.mesh->indices.size() * 3,
                      GL_UNSIGNED_INT, nullptr);
     }
   }
@@ -939,16 +939,16 @@ void Renderer::load(const Mesh &mesh) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     array_buffers_.at(mesh.id()).modified = mesh.vertices.modified();
   }
-  if (mesh.triangles.size() > 0 &&
-      mesh.triangles.modified() >
+  if (mesh.indices.size() > 0 &&
+      mesh.indices.modified() >
           element_array_buffers_.at(mesh.id()).modified) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
                  element_array_buffers_.at(mesh.id()).id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh.triangles.size() * 3 * sizeof(unsigned int),
-                 mesh.triangles.data(), GL_DYNAMIC_DRAW);
+                 mesh.indices.size() * 3 * sizeof(unsigned int),
+                 mesh.indices.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    element_array_buffers_.at(mesh.id()).modified = mesh.triangles.modified();
+    element_array_buffers_.at(mesh.id()).modified = mesh.indices.modified();
   }
 }
 
@@ -1033,7 +1033,7 @@ void Renderer::render_model_depth(const Model &model,
       glUniform3fv(program.emission, 1,
                    glm::value_ptr(model.material.emission.value));
       const int num_elements =
-          model.mesh ? model.mesh->triangles.size() * 3 : 0;
+          model.mesh ? model.mesh->indices.size() * 3 : 0;
       glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
     }
   }

@@ -6,6 +6,7 @@
 #include <atomic>
 #include <memory>
 #include <chrono>
+#include <functional>
 #include <mos/gfx/vertex.hpp>
 #include <mos/gfx/shape.hpp>
 #include <mos/core/tracked_container.hpp>
@@ -14,7 +15,7 @@ namespace mos::gfx {
 
 class Mesh;
 using Shared_mesh = std::shared_ptr<Mesh>;
-using Triangle = std::array<int, 3>;
+using Triangle_indices = std::array<int, 3>;
 
 /** Geometric data description, vertices and indices. */
 class Mesh final : public Shape {
@@ -24,14 +25,14 @@ public:
 
   template<class Tv, class Te>
   Mesh(const Tv vertices_begin, const Tv vertices_end,
-       Te triangles_begin, Te triangles_end)
+       Te indices_begin, Te indices_end)
       : vertices(vertices_begin, vertices_end),
-        triangles(triangles_begin, triangles_end) {
+        indices(indices_begin, indices_end) {
     calculate_sphere();
   }
 
   Mesh(const std::initializer_list<Vertex> &vertices,
-       const std::initializer_list<Triangle> &triangles);
+       const std::initializer_list<Triangle_indices> &triangles);
 
   Mesh();
 
@@ -60,16 +61,17 @@ public:
   float radius{0.0f};
 
   Tracked_container<Vertex> vertices;
-  Tracked_container<Triangle> triangles;
+  Tracked_container<Triangle_indices> indices;
 private:
-  static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
-
-  struct Face {
+  struct Triangle {
     Vertex &v0;
     Vertex &v1;
     Vertex &v2;
     auto normal() const -> glm::vec3;
   };
+
+  static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
+  void for_each_triangle(const std::function<void(const Triangle &triangle)> &callback);
 };
 }
 

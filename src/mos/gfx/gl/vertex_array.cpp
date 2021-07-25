@@ -48,9 +48,9 @@ Renderer::Vertex_array::Vertex_array(
   if (element_array_buffers.find(mesh.id()) == element_array_buffers.end()) {
     element_array_buffers.insert(
         {mesh.id(), Buffer(GL_ELEMENT_ARRAY_BUFFER,
-                           mesh.triangles.size() * 3 * sizeof(unsigned int),
-                           mesh.triangles.data(), GL_STATIC_DRAW,
-                           mesh.triangles.modified())});
+                           mesh.indices.size() * 3 * sizeof(unsigned int),
+                           mesh.indices.data(), GL_STATIC_DRAW,
+                           mesh.indices.modified())});
   }
   glBindBuffer(GL_ARRAY_BUFFER, array_buffers.at(mesh.id()).id);
   glVertexAttribPointer(
