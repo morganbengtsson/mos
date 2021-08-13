@@ -13,6 +13,8 @@ namespace mos::gfx {
 class Assets;
 class Material;
 
+
+
 /** Collection of properties for a renderable object. */
 class Model final {
 public:
@@ -73,4 +75,37 @@ public:
 private:
   std::string name_;
 };
+
+class Model_loaded {
+private:
+  Model_loaded(Model model): mesh(model.mesh ? Mesh_loaded(*model.mesh) : Mesh_loaded()), material(model.material), transform(model.transform) {
+    for (auto model: model.models) {
+      models.push_back(Model_loaded(model));
+    }
+  }
+  friend class Renderer;
+
+public:
+  Model_loaded() = default;
+  /** Loaded mesh **/
+  Mesh_loaded mesh = Mesh_loaded();
+
+  /** Material. */
+  Material material{};
+
+  /** Transform. */
+  glm::mat4 transform{0.0f};
+
+  /** Children models. */
+  std::vector<Model_loaded> models{};
+
+  /** Get centroid position. */
+  auto centroid() const -> glm::vec3;
+
+  /** Get radious of bounding sphere */
+  auto radius() const -> float;
+
+  auto position() const -> glm::vec3;
+};
+
 }

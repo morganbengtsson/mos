@@ -20,14 +20,14 @@ namespace mos::gfx {
 class Scene {
 public:
   Scene() = default;
-  Scene(Models models,
+  Scene(std::vector<Model_loaded> models,
         const Camera &camera,
         const Spot_lights &spot_lights = Spot_lights(),
         const Fog &fog = Fog(),
         const Environment_lights &environment_lights = Environment_lights(),
         Boxes boxes = Boxes());
-  Model sky;
-  Models models;
+  Model_loaded sky = Model_loaded();
+  std::vector<Model_loaded> models;
   Clouds point_clouds;
   Clouds line_clouds;
   Boxes boxes;

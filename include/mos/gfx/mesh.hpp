@@ -24,17 +24,17 @@ public:
   using Time_point = std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
 
   template<class Tv, class Te>
-  Mesh(const Tv vertices_begin, const Tv vertices_end,
+  explicit Mesh(const Tv vertices_begin, const Tv vertices_end,
        Te indices_begin, Te indices_end)
       : vertices(vertices_begin, vertices_end),
         indices(indices_begin, indices_end) {
     calculate_sphere();
   }
 
-  Mesh(const std::initializer_list<Vertex> &vertices,
+  explicit Mesh(const std::initializer_list<Vertex> &vertices,
        const std::initializer_list<Triangle_indices> &triangles);
 
-  Mesh();
+  explicit Mesh();
 
   /** Load from *.mesh file. @param path Full path*/
   static auto load(const std::string &path) -> Mesh;
@@ -73,5 +73,16 @@ private:
   static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
   void for_each_triangle(const std::function<void(const Triangle &triangle)> &callback);
 };
+
+class Mesh_loaded final {
+public:
+  Mesh_loaded(Mesh mesh) : centroid(mesh.centroid), radius(mesh.radius), indices_size(mesh.indices.size()), id(mesh.id()) {}
+  Mesh_loaded() = default;
+  glm::vec3 centroid{0.0f};
+  float radius{0.0f};
+  int indices_size = 0;
+  int id = -1;
+};
+
 }
 
