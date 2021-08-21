@@ -31,25 +31,19 @@ public:
   ~Renderer() = default;
 
   /** Loads a model into GPU memory. */
-  auto load(const Model &model) -> Model_loaded;
+  auto load(const mos::gfx::Model &model) -> Model;
 
   /** Load multiple models into GPU memory. */
-  auto load(const Models & models) -> std::vector<Model_loaded>;
-
-  /** Unloads a model from GPU memory. */
-  auto unload(const Model_loaded &model) -> void;
+  auto load(const Models & models) -> std::vector<Model>;
 
   /** Load a mesh into GPU memory. */
-  auto load(const Mesh &mesh) -> Mesh_loaded;
+  auto load(const mos::gfx::Mesh &mesh) -> Mesh;
 
   /** Load a shared mesh into GPU memory.*/
   auto load(const Shared_mesh &mesh) -> void;
 
   /** Unloads a mesh from GPU memory. */
-  auto unload(const Mesh_loaded &mesh) -> void;
-
-  /** Unloads a shared mesh from GPU memory. */
-  auto unload(const Shared_mesh &mesh) -> void;
+  auto unload(const Mesh &mesh) -> void;
 
   /** Loads a shared texture into GPU memory. */
   auto load(const Shared_texture_2D &texture) -> void;
@@ -114,10 +108,10 @@ private:
                     const Scene &scene,
                     const glm::ivec2 &resolution) -> void;
 
-  auto render_shadow_maps(const std::vector<Model_loaded> &models,
+  auto render_shadow_maps(const std::vector<Model> &models,
                           const Spot_lights &spot_lights) -> void;
 
-  auto render_cascaded_shadow_maps(const std::vector<Model_loaded> &models,
+  auto render_cascaded_shadow_maps(const std::vector<Model> &models,
                                    const Directional_light &light,
                                    const Camera &camera) -> void;
 
@@ -127,7 +121,7 @@ private:
   auto render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera) -> void;
 
-  auto render_sky(const Model_loaded &model,
+  auto render_sky(const Model &model,
                     const Camera &camera,
                     const Fog &fog,
                     const glm::vec2 &resolution,
@@ -142,7 +136,7 @@ private:
                     const Cloud_program &program,
                     const GLenum &draw_mode) -> void;
 
-  auto render_model(const Model_loaded &model,
+  auto render_model(const Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Spot_lights &spot_lights,
@@ -151,7 +145,7 @@ private:
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
-  auto render_model_depth(const Model_loaded &model,
+  auto render_model_depth(const Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,

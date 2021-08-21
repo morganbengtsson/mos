@@ -73,16 +73,5 @@ private:
   static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
   void for_each_triangle(const std::function<void(const Triangle &triangle)> &callback);
 };
-
-class Mesh_loaded final {
-public:
-  Mesh_loaded(Mesh mesh) : centroid(mesh.centroid), radius(mesh.radius), indices_size(mesh.indices.size()), id(mesh.id()) {}
-  Mesh_loaded() = default;
-  glm::vec3 centroid{0.0f};
-  float radius{0.0f};
-  int indices_size = 0;
-  int id = -1;
-};
-
 }
 

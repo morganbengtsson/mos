@@ -129,7 +129,7 @@ add_subdirectory(tests)
 
 # mos
 file(GLOB ROOT_SOURCE src/mos/*.cpp)
-file(GLOB GFX_SOURCE src/mos/gfx/*.cpp src/mos/gfx/gl/*.cpp)
+file(GLOB GFX_SOURCE src/mos/gfx/*.cpp src/mos/gfx/gl/*.cpp src/mos/gfx/renderer/*.cpp)
 file(GLOB AUD_SOURCE src/mos/aud/*.cpp)
 file(GLOB SIM_SOURCE src/mos/sim/*.cpp)
 file(GLOB IO_SOURCE src/mos/io/*.cpp)

@@ -146,7 +146,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-Model_loaded Renderer::load(const Model &model) {
+Renderer::Model Renderer::load(const mos::gfx::Model &model) {
   load(model.mesh);
   load(model.material.albedo.texture);
   load(model.material.normal.texture);
@@ -157,20 +157,7 @@ Model_loaded Renderer::load(const Model &model) {
   for (auto &m : model.models) {
     load(m);
   }
-  return Model_loaded(model);
-}
-
-void Renderer::unload(const Model_loaded &model) {
-  unload(model.mesh);
-  unload(model.material.albedo.texture);
-  unload(model.material.normal.texture);
-  unload(model.material.emission.texture);
-  unload(model.material.metallic.texture);
-  unload(model.material.roughness.texture);
-  unload(model.material.ambient_occlusion.texture);
-  for (auto &m : model.models) {
-    unload(m);
-  }
+  return convert_model(model);
 }
 
 void Renderer::load_or_update(const Texture_2D &texture) {
@@ -398,7 +385,7 @@ void Renderer::render_boxes(const Boxes &boxes,
   glBindVertexArray(0);
 }
 
-void Renderer::render_sky(const Model_loaded &model, const Camera &camera,
+void Renderer::render_sky(const Model &model, const Camera &camera,
                           const Fog &fog, const glm::vec2 &resolution,
                           const Standard_program &program) {
   glUseProgram(program.program);
@@ -551,7 +538,7 @@ void Renderer::render_clouds(const Clouds &clouds,
 }
 
 
-void Renderer::render_model(const Model_loaded &model,
+void Renderer::render_model(const Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera, const Spot_lights &lights,
                             const Environment_lights &environment_lights,
@@ -710,7 +697,7 @@ void Renderer::blur(const GLuint input_texture,
   }
 }
 
-void Renderer::render_shadow_maps(const std::vector<Model_loaded> &models,
+void Renderer::render_shadow_maps(const std::vector<Model> &models,
                                   const Spot_lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
     if (lights.at(i).strength > 0.0f) {
@@ -738,10 +725,10 @@ void Renderer::render_shadow_maps(const std::vector<Model_loaded> &models,
   }
 }
 
-void Renderer::render_cascaded_shadow_maps(const std::vector<Model_loaded> &models,
+void Renderer::render_cascaded_shadow_maps(const std::vector<Model> &models,
                                            const Directional_light &light,
                                            const Camera &camera) {
-  std::vector<mos::gfx::Model_loaded> models_to_render(models.begin(), models.end());
+  std::vector<Renderer::Model> models_to_render(models.begin(), models.end());
 
   const float lambda = .7f;
   const float min_distance = 0.0f;
@@ -926,7 +913,7 @@ void Renderer::render_environment(const Scene &scene,
     }
   }
 }
-Mesh_loaded Renderer::load(const Mesh &mesh) {
+Renderer::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
     vertex_arrays_.insert({mesh.id(), Vertex_array(mesh, array_buffers_,
                                                    element_array_buffers_)});
@@ -951,10 +938,10 @@ Mesh_loaded Renderer::load(const Mesh &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     element_array_buffers_.at(mesh.id()).modified = mesh.indices.modified();
   }
-  return Mesh_loaded(mesh);
+  return convert_mesh(mesh);
 }
 
-void Renderer::unload(const Mesh_loaded &mesh) {
+void Renderer::unload(const Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id) != vertex_arrays_.end()) {
     vertex_arrays_.erase(mesh.id);
 
@@ -974,13 +961,8 @@ void Renderer::load(const Shared_mesh &mesh) {
   }
 }
 
-void Renderer::unload(const Shared_mesh &mesh) {
-  if (mesh) {
-    unload(*mesh);
-  }
-}
-std::vector<Model_loaded> Renderer::load(const Models &models) {
-  std::vector<Model_loaded> loaded;
+std::vector<Renderer::Model> Renderer::load(const Models &models) {
+  std::vector<Model> loaded;
   for (auto &model : models) {
     loaded.push_back(load(model));
   }
@@ -1009,7 +991,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
   }
 }
 
-void Renderer::render_model_depth(const Model_loaded &model,
+void Renderer::render_model_depth(const Model &model,
                                   const glm::mat4 &transform,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
