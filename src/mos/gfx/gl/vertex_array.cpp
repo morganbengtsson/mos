@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Vertex_array::Vertex_array(
     const mos::gfx::Cloud &cloud,

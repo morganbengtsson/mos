@@ -16,6 +16,8 @@ namespace mos::gfx {
   class Texture_2D;
   using Shared_texture_2D = std::shared_ptr<Texture_2D>;
 
+namespace gl {
+
 /** Render geometry shapes with OpenGL. */
 class Renderer final {
 public:
@@ -220,5 +222,6 @@ private:
   std::array<glm::mat4, cascade_count> light_view_matrix;
 
 };
+}
 }
 

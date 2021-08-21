@@ -13,7 +13,9 @@ namespace mos::gfx {
 class Assets;
 class Material;
 
-
+namespace gl {
+class Renderer;
+}
 
 /** Collection of properties for a renderable object. */
 class Model final {
@@ -83,7 +85,7 @@ private:
       models.push_back(Model_loaded(model));
     }
   }
-  friend class Renderer;
+  friend class gl::Renderer;
 
 public:
   Model_loaded() = default;

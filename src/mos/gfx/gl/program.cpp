@@ -2,7 +2,7 @@
 #include <mos/gfx/gl/renderer.hpp>
 #include <spdlog/spdlog.h>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Program::Program() : program(glCreateProgram()) { assert(program); }
 Renderer::Program::~Program() { glDeleteProgram(program); }

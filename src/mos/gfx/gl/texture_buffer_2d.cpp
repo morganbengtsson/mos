@@ -2,7 +2,7 @@
 
 #include "../../src/mos/gfx/gl/gli_converter.hpp"
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Texture_buffer_2D::Texture_buffer_2D(
     const GLint internal_format, const GLenum external_format, const int width,

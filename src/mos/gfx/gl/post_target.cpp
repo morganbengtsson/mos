@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
                                    const GLint precision)

@@ -35,7 +35,7 @@
 
 #include "../../src/mos/gfx/gl/gli_converter.hpp"
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 auto Renderer::generate(const std::function<void(GLsizei, GLuint *)> &f)
     -> GLuint {
