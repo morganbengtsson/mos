@@ -6,7 +6,7 @@ class Mesh final {
   friend class Model;
   friend class Renderer;
 private:
-  Mesh(mos::gfx::Mesh mesh) : centroid(mesh.centroid), radius(mesh.radius), indices_size(mesh.indices.size()), id(mesh.id()) {}
+  Mesh(const mos::gfx::Mesh& mesh);
 public:
   Mesh() = default;
   glm::vec3 centroid{0.0f};
