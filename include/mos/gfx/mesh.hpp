@@ -57,8 +57,9 @@ public:
 
   auto calculate_sphere() -> void;
 
-  glm::vec3 centroid{0.0f};
-  float radius{0.0f};
+  auto centroid() const -> glm::vec3;
+
+  auto radius() const -> float;
 
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle_indices> indices;
@@ -72,6 +73,9 @@ private:
 
   static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
   void for_each_triangle(const std::function<void(const Triangle &triangle)> &callback);
+
+  glm::vec3 centroid_{0.0f};
+  float radius_{0.0f};
 };
 }
 

@@ -32,7 +32,7 @@ public:
 
   /** Get centroid position. */
   auto centroid() const -> glm::vec3 {
-    return (transform * glm::translate(glm::mat4(1.0f), mesh.centroid))[3];
+    return (transform * glm::translate(glm::mat4(1.0f), mesh.centroid()))[3];
   }
 
   /** Get radious of bounding sphere */
@@ -43,7 +43,7 @@ public:
     glm::vec3 skew;
     glm::vec4 perspective;
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
-    return mesh.radius * glm::max(glm::max(scale.x, scale.y), scale.z);
+    return mesh.radius() * glm::max(glm::max(scale.x, scale.y), scale.z);
   }
 
   auto position() const -> glm::vec3 {

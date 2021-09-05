@@ -62,21 +62,23 @@ void Model::position(const glm::vec3 &position) {
   transform[3][1] = position[1];
   transform[3][2] = position[2];
 }
+
 auto Model::centroid() const -> glm::vec3 {
-  if (mesh){
-    return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid))[3];
+  if (mesh) {
+    return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid()))[3];
   }
   return transform[3];
 }
+
 auto Model::radius() const -> float {
-  if (mesh){
+  if (mesh) {
     glm::vec3 scale;
     glm::quat rotation;
     glm::vec3 translation;
     glm::vec3 skew;
     glm::vec4 perspective;
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
-    return mesh->radius * glm::max(glm::max(scale.x, scale.y), scale.z);
+    return mesh->radius() * glm::max(glm::max(scale.x, scale.y), scale.z);
   }
   return 0.0f;
 }

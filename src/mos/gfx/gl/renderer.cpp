@@ -549,8 +549,8 @@ void Renderer::render_model(const Model &model,
     const glm::mat4 mvp = camera.projection() * camera.view() *
                           parent_transform * model.transform;
 
-    if (model.mesh.id != -1) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh.id).id);
+    if (model.mesh.id() != -1) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh.id()).id);
 
       const auto &uniforms = program;
 
@@ -648,7 +648,7 @@ void Renderer::render_model(const Model &model,
       glUniform1fv(uniforms.material.ambient_occlusion, 1,
                    &model.material.ambient_occlusion.value);
 
-      glDrawElements(GL_TRIANGLES, model.mesh.indices_size * 3,
+      glDrawElements(GL_TRIANGLES, model.mesh.num_indices() * 3,
                      GL_UNSIGNED_INT, nullptr);
     }
   }
@@ -942,15 +942,15 @@ Renderer::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
 }
 
 void Renderer::unload(const Mesh &mesh) {
-  if (vertex_arrays_.find(mesh.id) != vertex_arrays_.end()) {
-    vertex_arrays_.erase(mesh.id);
+  if (vertex_arrays_.find(mesh.id()) != vertex_arrays_.end()) {
+    vertex_arrays_.erase(mesh.id());
 
-    if (array_buffers_.find(mesh.id) != array_buffers_.end()) {
-      array_buffers_.erase(mesh.id);
+    if (array_buffers_.find(mesh.id()) != array_buffers_.end()) {
+      array_buffers_.erase(mesh.id());
     }
-    if (element_array_buffers_.find(mesh.id) !=
+    if (element_array_buffers_.find(mesh.id()) !=
         element_array_buffers_.end()) {
-      element_array_buffers_.erase(mesh.id);
+      element_array_buffers_.erase(mesh.id());
     }
   }
 }
@@ -1001,8 +1001,8 @@ void Renderer::render_model_depth(const Model &model,
     const glm::mat4 mvp =
         camera.projection() * camera.view() * transform * model.transform;
 
-    if (model.mesh.id != -1) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh.id).id);
+    if (model.mesh.id() != -1) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh.id()).id);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(
@@ -1019,7 +1019,7 @@ void Renderer::render_model_depth(const Model &model,
       glUniform3fv(program.emission, 1,
                    glm::value_ptr(model.material.emission.value));
       const int num_elements =
-          model.mesh.indices_size * 3;
+          model.mesh.num_indices() * 3;
       glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
     }
   }

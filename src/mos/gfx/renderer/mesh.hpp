@@ -5,13 +5,19 @@
 class Mesh final {
   friend class Model;
   friend class Renderer;
-private:
-  Mesh(const mos::gfx::Mesh& mesh);
+
 public:
   Mesh() = default;
-  glm::vec3 centroid{0.0f};
-  float radius{0.0f};
-  int indices_size = 0;
-  int id = -1;
+  auto centroid() const -> glm::vec3;
+  auto radius() const -> float;
+  auto num_indices() const -> int;
+  auto id() const -> int;
 
+private:
+  Mesh(const mos::gfx::Mesh& mesh);
+
+  glm::vec3 centroid_{0.0f};
+  float radius_{0.0f};
+  int num_indices_{0};
+  int id_{-1};
 };
