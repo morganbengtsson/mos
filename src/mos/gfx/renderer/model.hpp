@@ -11,7 +11,7 @@ class Model final {
   friend class Renderer;
   friend class Mesh;
 private:
-  Model(mos::gfx::Model model): mesh(model.mesh ? Mesh(*model.mesh) : Mesh()), material(model.material), transform(model.transform) {
+  explicit Model(mos::gfx::Model model): mesh(model.mesh ? Mesh(*model.mesh) : Mesh()), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
       models.push_back(Model(model));
     }
