@@ -4,12 +4,13 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/material.hpp>
+#include <mos/gfx/renderer.hpp>
 
 #include "mesh.hpp"
 
 class Model final {
   friend class Renderer;
-  friend class Mesh;
+  friend class Renderer::Mesh;
 private:
   explicit Model(mos::gfx::Model model): mesh(model.mesh ? Mesh(*model.mesh) : Mesh()), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
@@ -19,7 +20,7 @@ private:
 public:
   Model() = default;
   /** Loaded mesh **/
-  Mesh mesh = Mesh();
+  Renderer::Mesh mesh = Renderer::Mesh();
 
   /** Material. */
   Material material{};
