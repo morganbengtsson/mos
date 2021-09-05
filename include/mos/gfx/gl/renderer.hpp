@@ -10,14 +10,7 @@
 #include <mos/gfx/scenes.hpp>
 #include <mos/gfx/renderer.hpp>
 
-namespace mos::gfx {
-  class Model;
-  class Mesh;
-  using Shared_mesh = std::shared_ptr<Mesh>;
-  class Texture_2D;
-  using Shared_texture_2D = std::shared_ptr<Texture_2D>;
-
-namespace gl {
+namespace mos::gfx::gl {
 
 /** Render geometry shapes with OpenGL. */
 class Renderer final : public mos::gfx::Renderer {
@@ -31,13 +24,13 @@ public:
   ~Renderer() = default;
 
   /** Loads a model into GPU memory. */
-  auto load(const mos::gfx::Model &model) -> gpu::Model;
+  auto load(const Model &model) -> gpu::Model;
 
   /** Load multiple models into GPU memory. */
   auto load(const Models & models) -> gpu::Models;
 
   /** Load a mesh into GPU memory. */
-  auto load(const mos::gfx::Mesh &mesh) -> gpu::Mesh;
+  auto load(const Mesh &mesh) -> gpu::Mesh;
 
   /** Load a shared mesh into GPU memory.*/
   auto load(const Shared_mesh &mesh) -> void;
@@ -218,5 +211,3 @@ private:
 
 };
 }
-}
-
