@@ -31,13 +31,13 @@ public:
   ~Renderer() = default;
 
   /** Loads a model into GPU memory. */
-  auto load(const mos::gfx::Model &model) -> Model;
+  auto load(const mos::gfx::Model &model) -> gpu::Model;
 
   /** Load multiple models into GPU memory. */
-  auto load(const Models & models) -> std::vector<Model>;
+  auto load(const Models & models) -> gpu::Models;
 
   /** Load a mesh into GPU memory. */
-  auto load(const mos::gfx::Mesh &mesh) -> Mesh;
+  auto load(const mos::gfx::Mesh &mesh) -> gpu::Mesh;
 
   /** Load a shared mesh into GPU memory.*/
   auto load(const Shared_mesh &mesh) -> void;
@@ -108,10 +108,10 @@ private:
                     const Scene &scene,
                     const glm::ivec2 &resolution) -> void;
 
-  auto render_shadow_maps(const std::vector<Model> &models,
+  auto render_shadow_maps(const std::vector<gpu::Model> &models,
                           const Spot_lights &spot_lights) -> void;
 
-  auto render_cascaded_shadow_maps(const std::vector<Model> &models,
+  auto render_cascaded_shadow_maps(const std::vector<gpu::Model> &models,
                                    const Directional_light &light,
                                    const Camera &camera) -> void;
 
@@ -121,7 +121,7 @@ private:
   auto render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera) -> void;
 
-  auto render_sky(const Model &model,
+  auto render_sky(const gpu::Model &model,
                     const Camera &camera,
                     const Fog &fog,
                     const glm::vec2 &resolution,
@@ -136,7 +136,7 @@ private:
                     const Cloud_program &program,
                     const GLenum &draw_mode) -> void;
 
-  auto render_model(const Model &model,
+  auto render_model(const gpu::Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Spot_lights &spot_lights,
@@ -145,7 +145,7 @@ private:
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
-  auto render_model_depth(const Model &model,
+  auto render_model_depth(const gpu::Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,

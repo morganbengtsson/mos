@@ -8,9 +8,19 @@
 
 #include "mesh.hpp"
 
+namespace mos::gfx {
+class Renderer;
+}
+
+namespace mos::gfx::gpu {
+
+class Model;
+
+using Models = std::vector<mos::gfx::gpu::Model>;
+
 class Model final {
-  friend class Renderer;
-  friend class Renderer::Mesh;
+  friend class mos::gfx::Renderer;
+  friend class Mesh;
 private:
   explicit Model(mos::gfx::Model model): mesh(model.mesh ? Mesh(*model.mesh) : Mesh()), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
@@ -20,7 +30,7 @@ private:
 public:
   Model() = default;
   /** Loaded mesh **/
-  Renderer::Mesh mesh = Renderer::Mesh();
+  Mesh mesh = Mesh();
 
   /** Material. */
   Material material{};
@@ -29,7 +39,7 @@ public:
   glm::mat4 transform{0.0f};
 
   /** Children models. */
-  std::vector<Model> models{};
+  Models models{};
 
   /** Get centroid position. */
   auto centroid() const -> glm::vec3 {
@@ -51,3 +61,4 @@ public:
     return glm::vec3(transform[3]);
   }
 };
+}

@@ -4,19 +4,18 @@
 #include <mos/gfx/model.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <mos/gfx/gpu/mesh.hpp>
+#include <mos/gfx/gpu/model.hpp>
 
 namespace mos::gfx {
 
 class Renderer {
-public:
-  #include "../../src/mos/gfx/renderer/mesh.hpp"
-  #include "../../src/mos/gfx/renderer/model.hpp"
 protected:
-  Mesh convert_mesh(const mos::gfx::Mesh &mesh) const {
-    return Mesh(mesh);
+  gpu::Mesh convert_mesh(const mos::gfx::Mesh &mesh) const {
+    return gpu::Mesh(mesh);
   }
-  Model convert_model(const mos::gfx::Model &model) const {
-    return Model(model);
+  gpu::Model convert_model(const mos::gfx::Model &model) const {
+    return gpu::Model(model);
   }
 };
 }

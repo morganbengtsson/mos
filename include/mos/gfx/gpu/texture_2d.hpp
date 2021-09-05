@@ -2,6 +2,8 @@
 
 #include <mos/gfx/texture_2d.hpp>
 
+namespace mos::gfx::gpu {
+
 class Texture_2D final {
   friend class Renderer;
 
@@ -10,3 +12,4 @@ private:
 
   const int id;
 };
+}

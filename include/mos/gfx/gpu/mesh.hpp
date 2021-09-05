@@ -1,10 +1,17 @@
 #pragma once
 
 #include <mos/gfx/mesh.hpp>
+#include <mos/gfx/renderer.hpp>
+
+namespace mos::gfx {
+class Renderer;
+}
+
+namespace mos::gfx::gpu {
 
 class Mesh final {
   friend class Model;
-  friend class Renderer;
+  friend class mos::gfx::Renderer;
 
 public:
   Mesh() = default;
@@ -21,3 +28,4 @@ private:
   int num_indices_{0};
   int id_{-1};
 };
+}
