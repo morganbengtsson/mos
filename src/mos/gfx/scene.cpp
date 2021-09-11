@@ -1,7 +1,7 @@
 #include <mos/gfx/scene.hpp>
 namespace mos::gfx {
 
-Scene::Scene(std::vector<gpu::Model> models,
+Scene::Scene(const gpu::Models models,
              const Camera &camera,
              const Spot_lights &lights,
              const Fog &fog,
