@@ -557,43 +557,43 @@ void Renderer::render_model(const gpu::Model &model,
       glActiveTexture(GL_TEXTURE7);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.albedo.texture
-              ? textures_.at(model.material.albedo.texture->id()).texture
+          model.material.albedo().texture.valid()
+              ? textures_.at(model.material.albedo().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE8);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.emission.texture
-              ? textures_.at(model.material.emission.texture->id()).texture
+          model.material.emission().texture.valid()
+              ? textures_.at(model.material.emission().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE9);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.normal.texture
-              ? textures_.at(model.material.normal.texture->id()).texture
+          model.material.normal().texture.valid()
+              ? textures_.at(model.material.normal().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE10);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.metallic.texture
-              ? textures_.at(model.material.metallic.texture->id()).texture
+          model.material.metallic().texture.valid()
+              ? textures_.at(model.material.metallic().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE11);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.roughness.texture
-              ? textures_.at(model.material.roughness.texture->id()).texture
+          model.material.roughness().texture.valid()
+              ? textures_.at(model.material.roughness().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE12);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.ambient_occlusion.texture
-              ? textures_.at(model.material.ambient_occlusion.texture->id())
+          model.material.ambient_occlusion().texture.valid()
+              ? textures_.at(model.material.ambient_occlusion().texture.id())
                     .texture
               : white_texture_.texture);
 
@@ -633,20 +633,20 @@ void Renderer::render_model(const gpu::Model &model,
                          &normal_matrix[0][0]);
 
       glUniform3fv(uniforms.material.albedo, 1,
-                   glm::value_ptr(model.material.albedo.value));
+                   glm::value_ptr(model.material.albedo().value));
       glUniform3fv(uniforms.material.emission, 1,
-                   glm::value_ptr(model.material.emission.value));
+                   glm::value_ptr(model.material.emission().value));
       glUniform1fv(uniforms.material.roughness, 1,
-                   &model.material.roughness.value);
+                   &model.material.roughness().value);
       glUniform1fv(uniforms.material.metallic, 1,
-                   &model.material.metallic.value);
+                   &model.material.metallic().value);
       glUniform1fv(uniforms.material.index_of_refraction, 1,
-                   &model.material.index_of_refraction);
-      glUniform1fv(uniforms.material.alpha, 1, &model.material.alpha);
+                   &model.material.index_of_refraction());
+      glUniform1fv(uniforms.material.alpha, 1, &model.material.alpha());
       glUniform1fv(uniforms.material.transmission, 1,
-                   &model.material.transmission);
+                   &model.material.transmission());
       glUniform1fv(uniforms.material.ambient_occlusion, 1,
-                   &model.material.ambient_occlusion.value);
+                   &model.material.ambient_occlusion().value);
 
       glDrawElements(GL_TRIANGLES, model.mesh.num_indices() * 3,
                      GL_UNSIGNED_INT, nullptr);
@@ -1008,17 +1008,17 @@ void Renderer::render_model_depth(const gpu::Model &model,
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.albedo.texture
-              ? textures_.at(model.material.albedo.texture->id()).texture
+          model.material.albedo().texture.valid()
+              ? textures_.at(model.material.albedo().texture.id()).texture
               : black_texture_.texture);
 
       glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
 
       glUniform3fv(program.albedo, 1,
-                   glm::value_ptr(model.material.albedo.value));
+                   glm::value_ptr(model.material.albedo().value));
       glUniform3fv(program.emission, 1,
-                   glm::value_ptr(model.material.emission.value));
+                   glm::value_ptr(model.material.emission().value));
       const int num_elements =
           model.mesh.num_indices() * 3;
       glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);

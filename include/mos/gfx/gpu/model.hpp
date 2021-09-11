@@ -3,10 +3,10 @@
 #include <vector>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <mos/gfx/model.hpp>
-#include <mos/gfx/material.hpp>
 #include <mos/gfx/renderer.hpp>
 
-#include "mesh.hpp"
+#include <mos/gfx/gpu/mesh.hpp>
+#include <mos/gfx/gpu/material.hpp>
 
 namespace mos::gfx {
 class Renderer;
@@ -21,8 +21,8 @@ using Models = std::vector<mos::gfx::gpu::Model>;
 class Model final {
   friend class mos::gfx::Renderer;
   friend class Mesh;
-private:
-  explicit Model(mos::gfx::Model model): mesh(model.mesh ? Mesh(*model.mesh) : Mesh()), material(model.material), transform(model.transform) {
+ private:
+  explicit Model(mos::gfx::Model model): mesh(model.mesh), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
       models.push_back(Model(model));
     }
@@ -33,7 +33,7 @@ public:
   Mesh mesh = Mesh();
 
   /** Material. */
-  Material material{};
+  Material material;
 
   /** Transform. */
   glm::mat4 transform{0.0f};
