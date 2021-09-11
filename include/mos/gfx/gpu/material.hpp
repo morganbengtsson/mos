@@ -13,9 +13,9 @@ class Material {
 public:
   template<class T>
   struct Pair {
-    Pair(const mos::gfx::Material::Slot<T> slot): value(slot.value) , texture(slot.texture){}
-    Pair(const T &value) : value(value) {}
-    Pair(const Texture_2D &texture) : texture(texture) {}
+    explicit Pair(const mos::gfx::Material::Slot<T> slot): value(slot.value) , texture(slot.texture){}
+    explicit Pair(const T &value) : value(value) {}
+    explicit Pair(const Texture_2D &texture) : texture(texture) {}
     Pair(const T &value, const Texture_2D &texture) : value(value), texture(texture) {}
     T value = T();
     Texture_2D texture = Texture_2D();
