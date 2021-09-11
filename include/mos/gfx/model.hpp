@@ -13,6 +13,10 @@ namespace mos::gfx {
 class Assets;
 class Material;
 
+namespace gl {
+class Renderer;
+}
+
 /** Collection of properties for a renderable object. */
 class Model final {
 public:

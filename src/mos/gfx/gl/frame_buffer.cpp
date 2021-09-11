@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Frame_buffer::Frame_buffer(
     const Texture_target &target,

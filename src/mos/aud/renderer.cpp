@@ -331,5 +331,4 @@ void Renderer::clear() {
   sources_.clear();
   buffers_.clear();
 }
-
 }

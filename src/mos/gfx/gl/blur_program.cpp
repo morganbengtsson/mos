@@ -1,7 +1,7 @@
 #include <mos/gfx/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 Renderer::Blur_program::Blur_program() {
   std::string name = "blur";
   auto vert_source = text("assets/shaders/" + name + ".vert");

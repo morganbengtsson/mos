@@ -39,6 +39,6 @@ TEST_CASE( "Bounding sphere", "[Mesh]" ) {
   const auto expected_radius = glm::sqrt(glm::pow(half_width, 2.0f) + glm::pow(half_width, 2.0f));
   const auto expected_centroid = glm::vec3(half_width, half_width, 0.0f);
 
-  REQUIRE(mesh.radius == expected_radius);
-  REQUIRE(mesh.centroid == expected_centroid);
+  REQUIRE(mesh.radius() == expected_radius);
+  REQUIRE(mesh.centroid() == expected_centroid);
 }

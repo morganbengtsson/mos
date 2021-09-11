@@ -1,7 +1,7 @@
 #include <mos/gfx/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 Renderer::Bloom_program::Bloom_program() {
   std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");

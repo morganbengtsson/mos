@@ -10,7 +10,7 @@ public:
       const Cloud &cloud,
       std::unordered_map<unsigned int, Buffer> &array_buffers);
   explicit Vertex_array(
-      const Mesh &mesh, std::unordered_map<unsigned int, Buffer> &array_buffers,
+      const mos::gfx::Mesh &mesh, std::unordered_map<unsigned int, Buffer> &array_buffers,
       std::unordered_map<unsigned int, Buffer> &element_array_buffers);
   ~Vertex_array();
   Vertex_array(Vertex_array &&array) noexcept;

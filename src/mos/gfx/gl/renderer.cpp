@@ -35,7 +35,7 @@
 
 #include "../../src/mos/gfx/gl/gli_converter.hpp"
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 auto Renderer::generate(const std::function<void(GLsizei, GLuint *)> &f)
     -> GLuint {
@@ -146,7 +146,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void Renderer::load(const Model &model) {
+gpu::Model Renderer::load(const mos::gfx::Model &model) {
   load(model.mesh);
   load(model.material.albedo.texture);
   load(model.material.normal.texture);
@@ -157,19 +157,7 @@ void Renderer::load(const Model &model) {
   for (auto &m : model.models) {
     load(m);
   }
-}
-
-void Renderer::unload(const Model &model) {
-  unload(model.mesh);
-  unload(model.material.albedo.texture);
-  unload(model.material.normal.texture);
-  unload(model.material.emission.texture);
-  unload(model.material.metallic.texture);
-  unload(model.material.roughness.texture);
-  unload(model.material.ambient_occlusion.texture);
-  for (auto &m : model.models) {
-    unload(m);
-  }
+  return convert_model(model);
 }
 
 void Renderer::load_or_update(const Texture_2D &texture) {
@@ -397,7 +385,7 @@ void Renderer::render_boxes(const Boxes &boxes,
   glBindVertexArray(0);
 }
 
-void Renderer::render_sky(const Model &model, const Camera &camera,
+void Renderer::render_sky(const gpu::Model &model, const Camera &camera,
                           const Fog &fog, const glm::vec2 &resolution,
                           const Standard_program &program) {
   glUseProgram(program.program);
@@ -415,7 +403,7 @@ void Renderer::render_sky(const Model &model, const Camera &camera,
   auto view = sky_camera.view();
   view[3] = glm::vec4(0.0f, 0.0, 0.0f, 1.0f);
   sky_camera.view(view);
-  load(model);
+  //load(model);
   render_model(model, glm::mat4(1.0f), sky_camera, Spot_lights(),
                Environment_lights(), fog, resolution, program);
 
@@ -550,7 +538,7 @@ void Renderer::render_clouds(const Clouds &clouds,
 }
 
 
-void Renderer::render_model(const Model &model,
+void Renderer::render_model(const gpu::Model &model,
                             const glm::mat4 &parent_transform,
                             const Camera &camera, const Spot_lights &lights,
                             const Environment_lights &environment_lights,
@@ -561,51 +549,51 @@ void Renderer::render_model(const Model &model,
     const glm::mat4 mvp = camera.projection() * camera.view() *
                           parent_transform * model.transform;
 
-    if (model.mesh) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
+    if (model.mesh.id() != -1) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh.id()).id);
 
       const auto &uniforms = program;
 
       glActiveTexture(GL_TEXTURE7);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.albedo.texture
-              ? textures_.at(model.material.albedo.texture->id()).texture
+          model.material.albedo().texture.valid()
+              ? textures_.at(model.material.albedo().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE8);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.emission.texture
-              ? textures_.at(model.material.emission.texture->id()).texture
+          model.material.emission().texture.valid()
+              ? textures_.at(model.material.emission().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE9);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.normal.texture
-              ? textures_.at(model.material.normal.texture->id()).texture
+          model.material.normal().texture.valid()
+              ? textures_.at(model.material.normal().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE10);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.metallic.texture
-              ? textures_.at(model.material.metallic.texture->id()).texture
+          model.material.metallic().texture.valid()
+              ? textures_.at(model.material.metallic().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE11);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.roughness.texture
-              ? textures_.at(model.material.roughness.texture->id()).texture
+          model.material.roughness().texture.valid()
+              ? textures_.at(model.material.roughness().texture.id()).texture
               : black_texture_.texture);
 
       glActiveTexture(GL_TEXTURE12);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.ambient_occlusion.texture
-              ? textures_.at(model.material.ambient_occlusion.texture->id())
+          model.material.ambient_occlusion().texture.valid()
+              ? textures_.at(model.material.ambient_occlusion().texture.id())
                     .texture
               : white_texture_.texture);
 
@@ -645,22 +633,22 @@ void Renderer::render_model(const Model &model,
                          &normal_matrix[0][0]);
 
       glUniform3fv(uniforms.material.albedo, 1,
-                   glm::value_ptr(model.material.albedo.value));
+                   glm::value_ptr(model.material.albedo().value));
       glUniform3fv(uniforms.material.emission, 1,
-                   glm::value_ptr(model.material.emission.value));
+                   glm::value_ptr(model.material.emission().value));
       glUniform1fv(uniforms.material.roughness, 1,
-                   &model.material.roughness.value);
+                   &model.material.roughness().value);
       glUniform1fv(uniforms.material.metallic, 1,
-                   &model.material.metallic.value);
+                   &model.material.metallic().value);
       glUniform1fv(uniforms.material.index_of_refraction, 1,
-                   &model.material.index_of_refraction);
-      glUniform1fv(uniforms.material.alpha, 1, &model.material.alpha);
+                   &model.material.index_of_refraction());
+      glUniform1fv(uniforms.material.alpha, 1, &model.material.alpha());
       glUniform1fv(uniforms.material.transmission, 1,
-                   &model.material.transmission);
+                   &model.material.transmission());
       glUniform1fv(uniforms.material.ambient_occlusion, 1,
-                   &model.material.ambient_occlusion.value);
+                   &model.material.ambient_occlusion().value);
 
-      glDrawElements(GL_TRIANGLES, model.mesh->indices.size() * 3,
+      glDrawElements(GL_TRIANGLES, model.mesh.num_indices() * 3,
                      GL_UNSIGNED_INT, nullptr);
     }
   }
@@ -709,7 +697,7 @@ void Renderer::blur(const GLuint input_texture,
   }
 }
 
-void Renderer::render_shadow_maps(const Models &models,
+void Renderer::render_shadow_maps(const std::vector<gpu::Model> &models,
                                   const Spot_lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
     if (lights.at(i).strength > 0.0f) {
@@ -737,10 +725,10 @@ void Renderer::render_shadow_maps(const Models &models,
   }
 }
 
-void Renderer::render_cascaded_shadow_maps(const Models &models,
+void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models,
                                            const Directional_light &light,
                                            const Camera &camera) {
-  std::vector<mos::gfx::Model> models_to_render(models.begin(), models.end());
+  std::vector<gpu::Model> models_to_render(models.begin(), models.end());
 
   const float lambda = .7f;
   const float min_distance = 0.0f;
@@ -925,7 +913,8 @@ void Renderer::render_environment(const Scene &scene,
     }
   }
 }
-void Renderer::load(const Mesh &mesh) {
+
+gpu::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
     vertex_arrays_.insert({mesh.id(), Vertex_array(mesh, array_buffers_,
                                                    element_array_buffers_)});
@@ -950,6 +939,7 @@ void Renderer::load(const Mesh &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     element_array_buffers_.at(mesh.id()).modified = mesh.indices.modified();
   }
+  return convert_mesh(mesh);
 }
 
 void Renderer::unload(const Mesh &mesh) {
@@ -972,15 +962,12 @@ void Renderer::load(const Shared_mesh &mesh) {
   }
 }
 
-void Renderer::unload(const Shared_mesh &mesh) {
-  if (mesh) {
-    unload(*mesh);
-  }
-}
-void Renderer::load(const Models &models) {
+gpu::Models Renderer::load(const Models &models) {
+  gpu::Models loaded;
   for (auto &model : models) {
-    load(model);
+    loaded.push_back(load(model));
   }
+  return loaded;
 }
 
 void Renderer::render_texture_targets(const Scene &scene) {
@@ -1005,7 +992,7 @@ void Renderer::render_texture_targets(const Scene &scene) {
   }
 }
 
-void Renderer::render_model_depth(const Model &model,
+void Renderer::render_model_depth(const gpu::Model &model,
                                   const glm::mat4 &transform,
                                   const Camera &camera,
                                   const glm::vec2 &resolution,
@@ -1015,25 +1002,25 @@ void Renderer::render_model_depth(const Model &model,
     const glm::mat4 mvp =
         camera.projection() * camera.view() * transform * model.transform;
 
-    if (model.mesh) {
-      glBindVertexArray(vertex_arrays_.at(model.mesh->id()).id);
+    if (model.mesh.id() != -1) {
+      glBindVertexArray(vertex_arrays_.at(model.mesh.id()).id);
 
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(
           GL_TEXTURE_2D,
-          model.material.albedo.texture
-              ? textures_.at(model.material.albedo.texture->id()).texture
+          model.material.albedo().texture.valid()
+              ? textures_.at(model.material.albedo().texture.id()).texture
               : black_texture_.texture);
 
       glUniformMatrix4fv(program.model_view_projection, 1, GL_FALSE,
                          &mvp[0][0]);
 
       glUniform3fv(program.albedo, 1,
-                   glm::value_ptr(model.material.albedo.value));
+                   glm::value_ptr(model.material.albedo().value));
       glUniform3fv(program.emission, 1,
-                   glm::value_ptr(model.material.emission.value));
+                   glm::value_ptr(model.material.emission().value));
       const int num_elements =
-          model.mesh ? model.mesh->indices.size() * 3 : 0;
+          model.mesh.num_indices() * 3;
       glDrawElements(GL_TRIANGLES, num_elements, GL_UNSIGNED_INT, nullptr);
     }
   }
@@ -1046,7 +1033,7 @@ void Renderer::render_model_depth(const Model &model,
 void Renderer::render(const Scenes &scenes, const glm::vec4 &color,
                       const glm::ivec2 &resolution) {
   for (auto &scene : scenes) {
-    load(scene.models);
+    //load(scene.models);
   }
   render_shadow_maps(scenes[0].models, scenes[0].spot_lights);
   render_cascaded_shadow_maps(scenes[0].models, scenes[0].directional_light,

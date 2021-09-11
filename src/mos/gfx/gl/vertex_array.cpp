@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Vertex_array::Vertex_array(
     const mos::gfx::Cloud &cloud,
@@ -33,7 +33,7 @@ Renderer::Vertex_array::Vertex_array(
 }
 
 Renderer::Vertex_array::Vertex_array(
-    const Mesh &mesh,
+    const mos::gfx::Mesh &mesh,
     std::unordered_map<unsigned int, Renderer::Buffer> &array_buffers,
     std::unordered_map<unsigned int, Renderer::Buffer> &element_array_buffers) {
   glGenVertexArrays(1, &id);

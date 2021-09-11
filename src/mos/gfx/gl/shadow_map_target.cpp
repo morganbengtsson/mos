@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 Renderer::Shadow_map_target::Shadow_map_target(
     const Render_buffer &render_buffer)
     : frame_buffer(generate(glGenFramebuffers)),

@@ -12,6 +12,7 @@
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/spot_lights.hpp>
 #include <mos/gfx/directional_light.hpp>
+#include <mos/gfx/renderer.hpp>
 #include <mos/core/container.hpp>
 
 namespace mos::gfx {
@@ -20,14 +21,14 @@ namespace mos::gfx {
 class Scene {
 public:
   Scene() = default;
-  Scene(Models models,
+  Scene(std::vector<gpu::Model> models,
         const Camera &camera,
         const Spot_lights &spot_lights = Spot_lights(),
         const Fog &fog = Fog(),
         const Environment_lights &environment_lights = Environment_lights(),
         Boxes boxes = Boxes());
-  Model sky;
-  Models models;
+  gpu::Model sky = gpu::Model();
+  std::vector<gpu::Model> models;
   Clouds point_clouds;
   Clouds line_clouds;
   Boxes boxes;

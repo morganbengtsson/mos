@@ -190,20 +190,27 @@ auto Mesh::calculate_flat_normals() -> void {
 auto Mesh::calculate_sphere() -> void {
   const auto & all_positions = positions();
 
-  centroid = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
-  centroid.x /= all_positions.size();
-  centroid.y /= all_positions.size();
-  centroid.z /= all_positions.size();
+  centroid_ = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
+  centroid_ /= all_positions.size();
 
-  radius = 0.0f;
+  radius_ = 0.0f;
 
   for (const auto & position : all_positions) {
-    auto distance = glm::distance(centroid, position);
-    if (distance > radius) {
-      radius = distance;
+    auto distance = glm::distance(centroid_, position);
+    if (distance > radius_) {
+      radius_ = distance;
     }
   }
+}
 
+glm::vec3 Mesh::centroid() const
+{
+  return centroid_;
+}
+
+float Mesh::radius() const
+{
+  return radius_;
 }
 auto Mesh::Triangle::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);

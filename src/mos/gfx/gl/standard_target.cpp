@@ -1,6 +1,6 @@
 #include <mos/gfx/gl/renderer.hpp>
 
-namespace mos::gfx {
+namespace mos::gfx::gl {
 
 Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution,
                                            const int samples)

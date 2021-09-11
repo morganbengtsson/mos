@@ -8,16 +8,12 @@
 #include <glm/glm.hpp>
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/scenes.hpp>
+#include <mos/gfx/renderer.hpp>
 
-namespace mos::gfx {
-  class Model;
-  class Mesh;
-  using Shared_mesh = std::shared_ptr<Mesh>;
-  class Texture_2D;
-  using Shared_texture_2D = std::shared_ptr<Texture_2D>;
+namespace mos::gfx::gl {
 
 /** Render geometry shapes with OpenGL. */
-class Renderer final {
+class Renderer final : public mos::gfx::Renderer {
 public:
   /** Inits the renderer, creates an OpenGL context with GLAD. */
   explicit Renderer(const glm::ivec2 &resolution, const int samples = 1);
@@ -28,25 +24,19 @@ public:
   ~Renderer() = default;
 
   /** Loads a model into GPU memory. */
-  auto load(const Model &model) -> void;
+  auto load(const Model &model) -> gpu::Model;
 
   /** Load multiple models into GPU memory. */
-  auto load(const Models & models) -> void;
-
-  /** Unloads a model from GPU memory. */
-  auto unload(const Model &model) -> void;
+  auto load(const Models & models) -> gpu::Models;
 
   /** Load a mesh into GPU memory. */
-  auto load(const Mesh &mesh) -> void;
+  auto load(const Mesh &mesh) -> gpu::Mesh;
 
   /** Load a shared mesh into GPU memory.*/
   auto load(const Shared_mesh &mesh) -> void;
 
   /** Unloads a mesh from GPU memory. */
   auto unload(const Mesh &mesh) -> void;
-
-  /** Unloads a shared mesh from GPU memory. */
-  auto unload(const Shared_mesh &mesh) -> void;
 
   /** Loads a shared texture into GPU memory. */
   auto load(const Shared_texture_2D &texture) -> void;
@@ -111,10 +101,10 @@ private:
                     const Scene &scene,
                     const glm::ivec2 &resolution) -> void;
 
-  auto render_shadow_maps(const Models &models,
+  auto render_shadow_maps(const std::vector<gpu::Model> &models,
                           const Spot_lights &spot_lights) -> void;
 
-  auto render_cascaded_shadow_maps(const Models &models,
+  auto render_cascaded_shadow_maps(const std::vector<gpu::Model> &models,
                                    const Directional_light &light,
                                    const Camera &camera) -> void;
 
@@ -124,7 +114,7 @@ private:
   auto render_boxes(const Boxes & boxes,
                     const mos::gfx::Camera &camera) -> void;
 
-  auto render_sky(const Model &model,
+  auto render_sky(const gpu::Model &model,
                     const Camera &camera,
                     const Fog &fog,
                     const glm::vec2 &resolution,
@@ -139,7 +129,7 @@ private:
                     const Cloud_program &program,
                     const GLenum &draw_mode) -> void;
 
-  auto render_model(const Model &model,
+  auto render_model(const gpu::Model &model,
                     const glm::mat4 &transform,
                     const Camera &camera,
                     const Spot_lights &spot_lights,
@@ -148,7 +138,7 @@ private:
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
-  auto render_model_depth(const Model &model,
+  auto render_model_depth(const gpu::Model &model,
                           const glm::mat4 &transform,
                           const Camera &camera,
                           const glm::vec2 &resolution,
@@ -221,4 +211,3 @@ private:
 
 };
 }
-
