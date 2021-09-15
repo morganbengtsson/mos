@@ -3,7 +3,6 @@
 #include <vector>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <mos/gfx/model.hpp>
-#include <mos/gfx/renderer.hpp>
 
 #include <mos/gfx/gpu/mesh.hpp>
 #include <mos/gfx/gpu/material.hpp>
@@ -16,7 +15,7 @@ using Models = std::vector<mos::gfx::gpu::Model>;
 
 class Model final {
   friend class mos::gfx::Renderer;
- private:
+ public:
   explicit Model(mos::gfx::Model model): mesh(model.mesh), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
       models.push_back(Model(model));
@@ -52,8 +51,6 @@ public:
     return mesh.radius() * glm::max(glm::max(scale.x, scale.y), scale.z);
   }
 
-  auto position() const -> glm::vec3 {
-    return glm::vec3(transform[3]);
-  }
+  auto position() const -> glm::vec3;
 };
 }

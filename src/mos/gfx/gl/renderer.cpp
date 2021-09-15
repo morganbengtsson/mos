@@ -157,7 +157,7 @@ gpu::Model Renderer::load(const mos::gfx::Model &model) {
   for (auto &m : model.models) {
     load(m);
   }
-  return convert_model(model);
+  return mos::gfx::gpu::Model(model);
 }
 
 void Renderer::load_or_update(const Texture_2D &texture) {
@@ -939,7 +939,7 @@ gpu::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     element_array_buffers_.at(mesh.id()).modified = mesh.indices.modified();
   }
-  return convert_mesh(mesh);
+  return mos::gfx::gpu::Mesh(mesh);
 }
 
 void Renderer::unload(const Mesh &mesh) {
