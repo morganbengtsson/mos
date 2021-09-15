@@ -8,10 +8,6 @@
 #include <mos/gfx/gpu/mesh.hpp>
 #include <mos/gfx/gpu/material.hpp>
 
-namespace mos::gfx {
-class Renderer;
-}
-
 namespace mos::gfx::gpu {
 
 class Model;
@@ -20,7 +16,6 @@ using Models = std::vector<mos::gfx::gpu::Model>;
 
 class Model final {
   friend class mos::gfx::Renderer;
-  friend class Mesh;
  private:
   explicit Model(mos::gfx::Model model): mesh(model.mesh), material(model.material), transform(model.transform) {
     for (auto model: model.models) {
