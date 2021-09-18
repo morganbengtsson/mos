@@ -7,18 +7,18 @@
 #include <mos/gpu/material.hpp>
 #include <mos/gpu/mesh.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 class Renderer;
 }
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 class Model;
 
-using Models = std::vector<mos::gfx::gpu::Model>;
+using Models = std::vector<mos::gpu::Model>;
 
 class Model final {
-  friend class mos::gfx::gl::Renderer;
+  friend class mos::gl::Renderer;
 
 private:
   explicit Model(mos::gfx::Model model);
@@ -45,4 +45,4 @@ public:
 
   auto position() const -> glm::vec3;
 };
-} // namespace mos::gfx::gpu
+} // namespace mos::gpu

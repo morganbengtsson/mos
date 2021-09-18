@@ -1,9 +1,9 @@
 #include <mos/gl/renderer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Frame_buffer::Frame_buffer(
-    const Texture_target &target,
+    const gfx::Texture_target &target,
     std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
     std::unordered_map<unsigned int, Render_buffer> &render_buffers) {
   glGenFramebuffers(1, &id);

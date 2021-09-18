@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 struct Environment_map_target {
   explicit Environment_map_target(const Render_buffer &render_buffer);

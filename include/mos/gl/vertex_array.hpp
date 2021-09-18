@@ -5,15 +5,15 @@
 
 #include <mos/gl/buffer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 class Vertex_array {
 public:
   explicit Vertex_array(
-      const Cloud &cloud,
+      const gfx::Cloud &cloud,
       std::unordered_map<unsigned int, Buffer> &array_buffers);
   explicit Vertex_array(
-      const mos::gfx::Mesh &mesh, std::unordered_map<unsigned int, Buffer> &array_buffers,
+      const gfx::Mesh &mesh, std::unordered_map<unsigned int, Buffer> &array_buffers,
       std::unordered_map<unsigned int, Buffer> &element_array_buffers);
   ~Vertex_array();
   Vertex_array(Vertex_array &&array) noexcept;

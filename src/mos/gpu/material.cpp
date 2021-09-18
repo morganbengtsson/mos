@@ -1,6 +1,6 @@
 #include <mos/gpu/material.hpp>
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 Material::Material(const mos::gfx::Material &material)
     : albedo_(material.albedo), metallic_(material.metallic),
@@ -44,4 +44,4 @@ const float& Material::index_of_refraction() const {
 const float& Material::transmission() const {
   return transmission_;
 }
-} // namespace mos::gfx::gpu
+} // namespace mos::gpu

@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Cloud_program::Cloud_program(const std::string &name,
                                        const Shader &functions_shader) {

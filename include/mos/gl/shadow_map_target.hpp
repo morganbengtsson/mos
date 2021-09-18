@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 struct Shadow_map_target {
   explicit Shadow_map_target(const Render_buffer &render_buffer);

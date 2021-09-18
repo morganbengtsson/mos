@@ -36,7 +36,7 @@
 #include <mos/gl/box.hpp>
 #include <mos/gl/quad.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 /** Render geometry shapes with OpenGL. */
 class Renderer final {
@@ -50,31 +50,31 @@ public:
   ~Renderer() = default;
 
   /** Loads a model into GPU memory. */
-  auto load(const Model &model) -> gpu::Model;
+  auto load(const gfx::Model &model) -> gpu::Model;
 
   /** Load multiple models into GPU memory. */
-  auto load(const Models & models) -> gpu::Models;
+  auto load(const gfx::Models & models) -> gpu::Models;
 
   /** Load a mesh into GPU memory. */
-  auto load(const Mesh &mesh) -> gpu::Mesh;
+  auto load(const gfx::Mesh &mesh) -> gpu::Mesh;
 
   /** Load a shared mesh into GPU memory.*/
-  auto load(const Shared_mesh &mesh) -> void;
+  auto load(const gfx::Shared_mesh &mesh) -> void;
 
   /** Unloads a mesh from GPU memory. */
-  auto unload(const Mesh &mesh) -> void;
+  auto unload(const gfx::Mesh &mesh) -> void;
 
   /** Loads a shared texture into GPU memory. */
-  auto load(const Shared_texture_2D &texture) -> void;
+  auto load(const gfx::Shared_texture_2D &texture) -> void;
 
   /** Loads a texture into GPU memory. */
-  auto load_or_update(const Texture_2D &texture) -> void;
+  auto load_or_update(const gfx::Texture_2D &texture) -> void;
 
   /** Unloads a shared texture from GPU memory. */
-  auto unload(const Shared_texture_2D &texture) -> void;
+  auto unload(const gfx::Shared_texture_2D &texture) -> void;
 
   /** Render multiple scenes. */
-  auto render(const Scenes &scenes,
+  auto render(const gfx::Scenes &scenes,
               const glm::vec4 &color = {0.0f, 0.0f, 0.0f, 1.0f},
               const glm::ivec2 &resolution = glm::ivec2(128, 128)) -> void;
 
@@ -83,9 +83,9 @@ public:
 
   // TODO: MOVE
   static GLuint generate(const std::function<void(GLsizei, GLuint*)> & f);
-  static GLuint wrap_convert(const Texture::Wrap& w);
-  static GLuint filter_convert(const Texture::Filter &f);
-  static GLuint filter_convert_mip(const Texture::Filter &f);
+  static GLuint wrap_convert(const gfx::Texture::Wrap& w);
+  static GLuint filter_convert(const gfx::Texture::Filter &f);
+  static GLuint filter_convert_mip(const gfx::Texture::Filter &f);
 
 private:
   using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
@@ -97,35 +97,35 @@ private:
     GLenum format;
   };
 
-  auto render_texture_targets(const Scene &scene) -> void;
+  auto render_texture_targets(const gfx::Scene &scene) -> void;
 
-  auto render_scene(const Camera &camera,
-                    const Scene &scene,
+  auto render_scene(const gfx::Camera &camera,
+                    const gfx::Scene &scene,
                     const glm::ivec2 &resolution) -> void;
 
   auto render_shadow_maps(const std::vector<gpu::Model> &models,
-                          const Spot_lights &spot_lights) -> void;
+                          const gfx::Spot_lights &spot_lights) -> void;
 
   auto render_cascaded_shadow_maps(const std::vector<gpu::Model> &models,
-                                   const Directional_light &light,
-                                   const Camera &camera) -> void;
+                                   const gfx::Directional_light &light,
+                                   const gfx::Camera &camera) -> void;
 
-  auto render_environment(const Scene &scene,
+  auto render_environment(const gfx::Scene &scene,
                           const glm::vec4 &clear_color) -> void;
 
-  auto render_boxes(const Boxes & boxes,
-                    const mos::gfx::Camera &camera) -> void;
+  auto render_boxes(const gfx::Boxes & boxes,
+                    const gfx::Camera &camera) -> void;
 
   auto render_sky(const gpu::Model &model,
-                    const Camera &camera,
-                    const Fog &fog,
+                  const gfx::Camera &camera,
+                  const gfx::Fog &fog,
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
-  auto render_clouds(const Clouds &clouds,
-                    const Directional_light &directional_light,
-                    const Spot_lights &spot_lights,
-                    const Environment_lights &environment_lights,
+  auto render_clouds(const gfx::Clouds &clouds,
+                     const gfx::Directional_light &directional_light,
+                     const gfx::Spot_lights &spot_lights,
+                     const gfx::Environment_lights &environment_lights,
                     const mos::gfx::Camera &camera,
                     const glm::ivec2 &resolution,
                     const Cloud_program &program,
@@ -133,16 +133,16 @@ private:
 
   auto render_model(const gpu::Model &model,
                     const glm::mat4 &transform,
-                    const Camera &camera,
-                    const Spot_lights &spot_lights,
-                    const Environment_lights &environment_lights,
-                    const Fog &fog,
+                    const gfx::Camera &camera,
+                    const gfx::Spot_lights &spot_lights,
+                    const gfx::Environment_lights &environment_lights,
+                    const gfx::Fog &fog,
                     const glm::vec2 &resolution,
                     const Standard_program& program) -> void;
 
   auto render_model_depth(const gpu::Model &model,
                           const glm::mat4 &transform,
-                          const Camera &camera,
+                          const gfx::Camera &camera,
                           const glm::vec2 &resolution,
                           const Depth_program& program) -> void;
 

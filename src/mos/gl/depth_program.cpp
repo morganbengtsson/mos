@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Depth_program::Depth_program() {
   std::string name = "depth";

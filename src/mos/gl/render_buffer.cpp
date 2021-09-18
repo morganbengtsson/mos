@@ -1,6 +1,6 @@
 #include <mos/gl/renderer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Render_buffer::Render_buffer(const glm::ivec2 &resolution)
     : id(Renderer::generate(glGenRenderbuffers)) {

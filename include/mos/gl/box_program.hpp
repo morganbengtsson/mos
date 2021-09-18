@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 /** Uniforms for the bounding box shader program. */
 struct Box_program : public Program {

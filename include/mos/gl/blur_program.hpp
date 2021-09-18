@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 struct Blur_program : public Program {
   Blur_program();

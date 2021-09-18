@@ -3,15 +3,15 @@
 #include <mos/gfx/mesh.hpp>
 #include <mos/gpu/resource.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 class Renderer;
 }
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 class Mesh final : public Resource {
   friend class Model;
-  friend class mos::gfx::gl::Renderer;
+  friend class mos::gl::Renderer;
 public:
   Mesh();
   auto centroid() const -> glm::vec3;

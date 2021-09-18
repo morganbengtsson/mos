@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/gl/gli_converter.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Texture_buffer_2D::Texture_buffer_2D(
     const GLint internal_format, const GLenum external_format, const int width,
@@ -47,7 +47,7 @@ void Texture_buffer_2D::release() {
 }
 
 
-Texture_buffer_2D::Texture_buffer_2D(const Texture_2D &texture_2d)
+Texture_buffer_2D::Texture_buffer_2D(const gfx::Texture_2D &texture_2d)
     : Texture_buffer_2D(
           gli_converter.translate(texture_2d.format(), texture_2d.swizzles()).Internal,
           gli_converter.translate(texture_2d.format(), texture_2d.swizzles()).External, texture_2d.width(),

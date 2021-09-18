@@ -4,7 +4,7 @@
 #include <array>
 #include "../gl/shader.hpp"
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 /** Uniforms for the standard shader. */
 class Standard_program : public Program {

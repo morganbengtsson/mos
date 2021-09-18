@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <array>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Quad::Quad()
     : vertex_array(Renderer::generate(glGenVertexArrays)),

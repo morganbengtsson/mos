@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <array>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Box::Box()
     : buffer(Renderer::generate(glGenBuffers)), element_buffer(Renderer::generate(glGenBuffers)),

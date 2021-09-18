@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 struct Post_target {
   explicit Post_target(const glm::ivec2 &resolution,

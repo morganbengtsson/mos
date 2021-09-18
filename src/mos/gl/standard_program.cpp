@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Standard_program::Standard_program(const Shader &functions_shader) {
   std::string name = "standard";

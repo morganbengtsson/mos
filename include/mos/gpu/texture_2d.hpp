@@ -3,7 +3,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/gpu/resource.hpp>
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 class Texture_2D final : public Resource {
   friend class Model;

@@ -4,7 +4,7 @@
 #include <mos/gpu/resource.hpp>
 #include <mos/gpu/texture_2d.hpp>
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 /* Material living on the GPU */
 class Material {

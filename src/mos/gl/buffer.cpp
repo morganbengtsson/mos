@@ -1,6 +1,6 @@
 #include <mos/gl/renderer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
                          GLenum hint, Time_point modified)

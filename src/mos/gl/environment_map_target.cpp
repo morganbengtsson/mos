@@ -1,6 +1,6 @@
 #include <mos/gl/renderer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Environment_map_target::Environment_map_target(
     const Render_buffer &render_buffer)

@@ -1,6 +1,6 @@
 #include <mos/gpu/model.hpp>
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 Model::Model(mos::gfx::Model model)
     : mesh(model.mesh), material(model.material), transform(model.transform) {

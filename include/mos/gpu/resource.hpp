@@ -4,7 +4,7 @@ namespace mos::gfx {
 class Renderer;
 }
 
-namespace mos::gfx::gpu {
+namespace mos::gpu {
 
 class Resource {
 public:

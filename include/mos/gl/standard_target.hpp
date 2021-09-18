@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 struct Standard_target {
   Standard_target(const glm::ivec2 &resolution, const int samples);

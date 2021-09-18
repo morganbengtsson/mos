@@ -4,7 +4,7 @@
 #include <mos/gl/program.hpp>
 #include <mos/gl/shader.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 /** Uniforms for the particle shader program. */
 struct Cloud_program : public Program {

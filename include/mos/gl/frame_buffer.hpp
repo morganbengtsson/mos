@@ -4,11 +4,11 @@
 #include <mos/gl/texture_buffer_2d.hpp>
 #include <mos/gfx/texture_target.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 class Frame_buffer {
 public:
-  explicit Frame_buffer(const Texture_target &target,
+  explicit Frame_buffer(const gfx::Texture_target &target,
                         Texture_buffers &texture_buffers,
                         Render_buffers &render_buffers);
   ~Frame_buffer();

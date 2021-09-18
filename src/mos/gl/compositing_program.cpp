@@ -1,7 +1,7 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/util.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 Compositing_program::Compositing_program() {
   std::string defines = "#version 430 core\n";
 

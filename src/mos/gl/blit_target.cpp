@@ -1,6 +1,6 @@
 #include <mos/gl/renderer.hpp>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 Blit_target::Blit_target(const glm::ivec2 &resolution,
                                    const GLint precision)
     : frame_buffer(Renderer::generate(glGenFramebuffers)),

@@ -2,7 +2,7 @@
 #include <mos/gl/renderer.hpp>
 #include <spdlog/spdlog.h>
 
-namespace mos::gfx::gl {
+namespace mos::gl {
 
 Shader::Shader(const std::string &source, const GLuint type,
                          const std::string &name)
