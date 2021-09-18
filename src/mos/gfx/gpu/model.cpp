@@ -4,7 +4,7 @@ namespace mos::gfx::gpu {
 
 Model::Model(mos::gfx::Model model)
     : mesh(model.mesh), material(model.material), transform(model.transform) {
-  for (auto model : model.models) {
+  for (auto& model : model.models) {
     models.push_back(Model(model));
   }
 }
