@@ -14,7 +14,7 @@
 #include <mos/gfx/directional_light.hpp>
 #include <mos/core/container.hpp>
 
-#include <mos/gfx/gpu/model.hpp>
+#include <mos/gpu/model.hpp>
 
 namespace mos::gfx {
 
