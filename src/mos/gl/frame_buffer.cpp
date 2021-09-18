@@ -2,7 +2,7 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Frame_buffer::Frame_buffer(
+Frame_buffer::Frame_buffer(
     const Texture_target &target,
     std::unordered_map<unsigned int, Texture_buffer_2D> &texture_buffers,
     std::unordered_map<unsigned int, Render_buffer> &render_buffers) {
@@ -28,15 +28,15 @@ Renderer::Frame_buffer::Frame_buffer(
   }
 }
 
-Renderer::Frame_buffer::~Frame_buffer() { release(); }
+Frame_buffer::~Frame_buffer() { release(); }
 
-Renderer::Frame_buffer::Frame_buffer(
-    Renderer::Frame_buffer &&frame_buffer) noexcept
+Frame_buffer::Frame_buffer(
+    Frame_buffer &&frame_buffer) noexcept
     : id(frame_buffer.id) {
   frame_buffer.id = 0;
 }
 
-auto Renderer::Frame_buffer::operator=(
+auto Frame_buffer::operator=(
     Frame_buffer &&frame_buffer) noexcept -> Frame_buffer & {
   if (this != &frame_buffer) {
     release();
@@ -45,7 +45,7 @@ auto Renderer::Frame_buffer::operator=(
   return *this;
 }
 
-void Renderer::Frame_buffer::release() {
+void Frame_buffer::release() {
   glDeleteFramebuffers(1, &id);
   id = 0;
 }

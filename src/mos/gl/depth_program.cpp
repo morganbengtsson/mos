@@ -2,7 +2,8 @@
 #include <mos/util.hpp>
 
 namespace mos::gfx::gl {
-Renderer::Depth_program::Depth_program() {
+
+Depth_program::Depth_program() {
   std::string name = "depth";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");

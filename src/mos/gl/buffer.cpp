@@ -2,20 +2,20 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
+Buffer::Buffer(GLenum type, GLsizeiptr size, const void *data,
                          GLenum hint, Time_point modified)
-    : id(generate(glGenBuffers)), modified(modified) {
+    : id(Renderer::generate(glGenBuffers)), modified(modified) {
   glBindBuffer(type, id);
   glBufferData(type, size, data, hint);
   glBindBuffer(type, 0);
 }
 
-Renderer::Buffer::Buffer(Buffer &&buffer) noexcept : id(buffer.id) {
+Buffer::Buffer(Buffer &&buffer) noexcept : id(buffer.id) {
   buffer.id = 0;
 }
 
 auto
-Renderer::Buffer::operator=(Buffer &&buffer) noexcept -> Buffer & {
+Buffer::operator=(Buffer &&buffer) noexcept -> Buffer & {
   if (this != &buffer) {
     release();
     std::swap(id, buffer.id);
@@ -23,9 +23,9 @@ Renderer::Buffer::operator=(Buffer &&buffer) noexcept -> Buffer & {
   return *this;
 }
 
-Renderer::Buffer::~Buffer() { release(); }
+Buffer::~Buffer() { release(); }
 
-void Renderer::Buffer::release() {
+void Buffer::release() {
   glDeleteBuffers(1, &id);
   id = 0;
 }

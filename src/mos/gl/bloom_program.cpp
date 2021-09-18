@@ -2,7 +2,8 @@
 #include <mos/util.hpp>
 
 namespace mos::gfx::gl {
-Renderer::Bloom_program::Bloom_program() {
+
+Bloom_program::Bloom_program() {
   std::string name = "bloom";
   auto vert_source = text("assets/shaders/" + name + ".vert");
   auto frag_source = text("assets/shaders/" + name + ".frag");

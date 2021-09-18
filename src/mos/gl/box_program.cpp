@@ -2,7 +2,7 @@
 #include <mos/util.hpp>
 
 namespace mos::gfx::gl {
-Renderer::Box_program::Box_program() {
+Box_program::Box_program() {
   std::string name = "box";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");

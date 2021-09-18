@@ -2,11 +2,11 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution,
+Standard_target::Standard_target(const glm::ivec2 &resolution,
                                            const int samples)
-    : frame_buffer(generate(glGenFramebuffers)),
-      color_texture(generate(glGenTextures)),
-      depth_texture(generate(glGenTextures)) {
+    : frame_buffer(Renderer::generate(glGenFramebuffers)),
+      color_texture(Renderer::generate(glGenTextures)),
+      depth_texture(Renderer::generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_texture);
@@ -29,7 +29,7 @@ Renderer::Standard_target::Standard_target(const glm::ivec2 &resolution,
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::Standard_target::~Standard_target() {
+Standard_target::~Standard_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &color_texture);
   glDeleteTextures(1, &depth_texture);

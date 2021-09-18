@@ -2,7 +2,7 @@
 #include <mos/util.hpp>
 
 namespace mos::gfx::gl {
-Renderer::Compositing_program::Compositing_program() {
+Compositing_program::Compositing_program() {
   std::string defines = "#version 430 core\n";
 
 #ifdef MOS_EFFECT_VIGNETTE

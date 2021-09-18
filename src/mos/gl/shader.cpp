@@ -4,7 +4,7 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Shader::Shader(const std::string &source, const GLuint type,
+Shader::Shader(const std::string &source, const GLuint type,
                          const std::string &name)
     : id(glCreateShader(type)) {
 
@@ -32,6 +32,6 @@ Renderer::Shader::Shader(const std::string &source, const GLuint type,
   }
   assert(status);
 }
-Renderer::Shader::~Shader() { glDeleteShader(id); }
+Shader::~Shader() { glDeleteShader(id); }
 
 } // namespace mos::gfx

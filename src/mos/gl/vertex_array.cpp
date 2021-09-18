@@ -1,8 +1,9 @@
 #include <mos/gl/renderer.hpp>
+#include <mos/gl/vertex_array.hpp>
 
 namespace mos::gfx::gl {
 
-Renderer::Vertex_array::Vertex_array(
+Vertex_array::Vertex_array(
     const mos::gfx::Cloud &cloud,
     std::unordered_map<unsigned int, Buffer> &array_buffers) {
   glGenVertexArrays(1, &id);
@@ -32,10 +33,10 @@ Renderer::Vertex_array::Vertex_array(
   glBindVertexArray(0);
 }
 
-Renderer::Vertex_array::Vertex_array(
+Vertex_array::Vertex_array(
     const mos::gfx::Mesh &mesh,
-    std::unordered_map<unsigned int, Renderer::Buffer> &array_buffers,
-    std::unordered_map<unsigned int, Renderer::Buffer> &element_array_buffers) {
+    std::unordered_map<unsigned int, Buffer> &array_buffers,
+    std::unordered_map<unsigned int, Buffer> &element_array_buffers) {
   glGenVertexArrays(1, &id);
   glBindVertexArray(id);
   if (array_buffers.find(mesh.id()) == array_buffers.end()) {
@@ -76,15 +77,15 @@ Renderer::Vertex_array::Vertex_array(
   glBindVertexArray(0);
 }
 
-Renderer::Vertex_array::~Vertex_array() { release(); }
+Vertex_array::~Vertex_array() { release(); }
 
-Renderer::Vertex_array::Vertex_array(Renderer::Vertex_array &&array) noexcept
+Vertex_array::Vertex_array(Vertex_array &&array) noexcept
     : id(array.id) {
   array.id = 0;
 }
 
 auto
-Renderer::Vertex_array::operator=(Renderer::Vertex_array &&array) noexcept -> Vertex_array & {
+Vertex_array::operator=(Vertex_array &&array) noexcept -> Vertex_array & {
   if (this != &array) {
     release();
     std::swap(id, array.id);
@@ -92,7 +93,7 @@ Renderer::Vertex_array::operator=(Renderer::Vertex_array &&array) noexcept -> Ve
   return *this;
 }
 
-void Renderer::Vertex_array::release() {
+void Vertex_array::release() {
   glDeleteVertexArrays(1, &id);
   id = 0;
 }

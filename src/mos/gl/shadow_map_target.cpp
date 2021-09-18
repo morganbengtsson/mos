@@ -1,10 +1,11 @@
 #include <mos/gl/renderer.hpp>
 
 namespace mos::gfx::gl {
-Renderer::Shadow_map_target::Shadow_map_target(
+
+Shadow_map_target::Shadow_map_target(
     const Render_buffer &render_buffer)
-    : frame_buffer(generate(glGenFramebuffers)),
-      texture(generate(glGenTextures)) {
+    : frame_buffer(Renderer::generate(glGenFramebuffers)),
+      texture(Renderer::generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
   glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -31,7 +32,7 @@ Renderer::Shadow_map_target::Shadow_map_target(
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::Shadow_map_target::~Shadow_map_target() {
+Shadow_map_target::~Shadow_map_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }

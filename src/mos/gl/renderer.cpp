@@ -33,7 +33,7 @@
 #include <mos/gfx/texture_2d.hpp>
 #include <mos/util.hpp>
 
-#include "../../src/mos/gl/gli_converter.hpp"
+#include <mos/gl/gli_converter.hpp>
 
 namespace mos::gfx::gl {
 

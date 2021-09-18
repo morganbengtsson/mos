@@ -4,10 +4,10 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Program::Program() : program(glCreateProgram()) { assert(program); }
-Renderer::Program::~Program() { glDeleteProgram(program); }
+Program::Program() : program(glCreateProgram()) { assert(program); }
+Program::~Program() { glDeleteProgram(program); }
 
-auto Renderer::Program::check(const std::string &name) const -> void {
+auto Program::check(const std::string &name) const -> void {
   GLint status = 0;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
@@ -20,7 +20,7 @@ auto Renderer::Program::check(const std::string &name) const -> void {
   assert(status);
 }
 
-auto Renderer::Program::link(const std::string &name) const -> void {
+auto Program::link(const std::string &name) const -> void {
   spdlog::info("Linking: {} program", name);
   glLinkProgram(program);
 }

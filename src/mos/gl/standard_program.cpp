@@ -3,7 +3,7 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Standard_program::Standard_program(const Shader &functions_shader) {
+Standard_program::Standard_program(const Shader &functions_shader) {
   std::string name = "standard";
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");

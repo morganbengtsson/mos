@@ -3,9 +3,9 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Quad::Quad()
-    : vertex_array(generate(glGenVertexArrays)),
-      buffer(generate(glGenBuffers)) {
+Quad::Quad()
+    : vertex_array(Renderer::generate(glGenVertexArrays)),
+      buffer(Renderer::generate(glGenBuffers)) {
   static const std::array quad_vertices{-1.0f, 1.0f, 0.0f, 1.0f,  -1.0f, -1.0f,
                                         0.0f,  0.0f, 1.0f, -1.0f, 1.0f,  0.0f,
                                         -1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  -1.0f,
@@ -22,7 +22,7 @@ Renderer::Quad::Quad()
                         (void *)(2 * sizeof(float)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-Renderer::Quad::~Quad() {
+Quad::~Quad() {
   glDeleteBuffers(1, &buffer);
   glDeleteVertexArrays(1, &vertex_array);
 }

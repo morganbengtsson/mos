@@ -9,6 +9,33 @@
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/scenes.hpp>
 
+#include <mos/gl/buffer.hpp>
+#include <mos/gl/render_buffers.hpp>
+#include <mos/gl/vertex_arrays.hpp>
+#include <mos/gl/texture_buffers.hpp>
+#include <mos/gl/frame_buffers.hpp>
+#include <mos/gl/array_buffers.hpp>
+#include <mos/gl/element_array_buffers.hpp>
+
+#include <mos/gl/light_uniforms.hpp> //TODO: remove
+
+#include <mos/gl/cloud_program.hpp>
+#include <mos/gl/box_program.hpp>
+#include <mos/gl/bloom_program.hpp>
+#include <mos/gl/compositing_program.hpp>
+#include <mos/gl/blur_program.hpp>
+#include <mos/gl/depth_program.hpp>
+#include <mos/gl/standard_program.hpp>
+
+#include <mos/gl/standard_target.hpp>
+#include <mos/gl/blit_target.hpp>
+#include <mos/gl/post_target.hpp>
+#include <mos/gl/shadow_map_target.hpp>
+#include <mos/gl/environment_map_target.hpp>
+
+#include <mos/gl/box.hpp>
+#include <mos/gl/quad.hpp>
+
 namespace mos::gfx::gl {
 
 /** Render geometry shapes with OpenGL. */
@@ -54,45 +81,21 @@ public:
   /** Clear all GPU buffers/memory. */
   auto clear_buffers() -> void;
 
-private:
-  using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
-
+  // TODO: MOVE
   static GLuint generate(const std::function<void(GLsizei, GLuint*)> & f);
   static GLuint wrap_convert(const Texture::Wrap& w);
   static GLuint filter_convert(const Texture::Filter &f);
   static GLuint filter_convert_mip(const Texture::Filter &f);
 
+private:
+  using Time_point =  std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>;
+
+ 
+
   struct FormatPair {
     GLint internal_format;
     GLenum format;
   };
-
-  #include "../../src/mos/gl/buffer.hpp"
-  #include "../../src/mos/gl/render_buffers.hpp"
-  #include "../../src/mos/gl/vertex_arrays.hpp"
-  #include "../../src/mos/gl/texture_buffers.hpp"
-  #include "../../src/mos/gl/frame_buffers.hpp"
-  #include "../../src/mos/gl/array_buffers.hpp"
-  #include "../../src/mos/gl/element_array_buffers.hpp"
-
-  #include "../../src/mos/gl/light_uniforms.hpp" //TODO: remove
-
-  #include "../../src/mos/gl/cloud_program.hpp"
-  #include "../../src/mos/gl/box_program.hpp"
-  #include "../../src/mos/gl/bloom_program.hpp"
-  #include "../../src/mos/gl/compositing_program.hpp"
-  #include "../../src/mos/gl/blur_program.hpp"
-  #include "../../src/mos/gl/depth_program.hpp"
-  #include "../../src/mos/gl/standard_program.hpp"
-
-  #include "../../src/mos/gl/standard_target.hpp"
-  #include "../../src/mos/gl/blit_target.hpp"
-  #include "../../src/mos/gl/post_target.hpp"
-  #include "../../src/mos/gl/shadow_map_target.hpp"
-  #include "../../src/mos/gl/environment_map_target.hpp"
-
-  #include "../../src/mos/gl/box.hpp"
-  #include "../../src/mos/gl/quad.hpp"
 
   auto render_texture_targets(const Scene &scene) -> void;
 

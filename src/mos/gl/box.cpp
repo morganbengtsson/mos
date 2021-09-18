@@ -3,9 +3,9 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Box::Box()
-    : buffer(generate(glGenBuffers)), element_buffer(generate(glGenBuffers)),
-      vertex_array(generate(glGenVertexArrays)) {
+Box::Box()
+    : buffer(Renderer::generate(glGenBuffers)), element_buffer(Renderer::generate(glGenBuffers)),
+      vertex_array(Renderer::generate(glGenVertexArrays)) {
   std::array vertices{
       -0.5f, -0.5f, -0.5f, 1.0f,  0.5f, -0.5f, -0.5f, 1.0f, 0.5f, 0.5f, -0.5f,
       1.0f,  -0.5f, 0.5f,  -0.5f, 1.0f, -0.5f, -0.5f, 0.5f, 1.0f, 0.5f, -0.5f,
@@ -32,7 +32,7 @@ Renderer::Box::Box()
   glBindVertexArray(0);
 }
 
-Renderer::Box::~Box() {
+Box::~Box() {
   glDeleteBuffers(1, &buffer);
   glDeleteVertexArrays(1, &vertex_array);
   glDeleteBuffers(1, &element_buffer);

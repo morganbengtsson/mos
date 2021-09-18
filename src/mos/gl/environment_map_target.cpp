@@ -2,10 +2,10 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Environment_map_target::Environment_map_target(
-    const Renderer::Render_buffer &render_buffer)
-    : frame_buffer(generate(glGenFramebuffers)),
-      texture(generate(glGenTextures)), albedo(generate(glGenTextures)) {
+Environment_map_target::Environment_map_target(
+    const Render_buffer &render_buffer)
+    : frame_buffer(Renderer::generate(glGenFramebuffers)),
+      texture(Renderer::generate(glGenTextures)), albedo(Renderer::generate(glGenTextures)) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
@@ -73,7 +73,7 @@ Renderer::Environment_map_target::Environment_map_target(
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::Environment_map_target::~Environment_map_target() {
+Environment_map_target::~Environment_map_target() {
   glDeleteTextures(1, &texture);
   glDeleteFramebuffers(1, &frame_buffer);
 }

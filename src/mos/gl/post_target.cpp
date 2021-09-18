@@ -2,10 +2,10 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
+Post_target::Post_target(const glm::ivec2 &resolution,
                                    const GLint precision)
-    : frame_buffer(generate(glGenFramebuffers)),
-      texture(generate(glGenTextures)),
+    : frame_buffer(Renderer::generate(glGenFramebuffers)),
+      texture(Renderer::generate(glGenTextures)),
       resolution(resolution) {
   glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
@@ -25,7 +25,7 @@ Renderer::Post_target::Post_target(const glm::ivec2 &resolution,
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-Renderer::Post_target::~Post_target() {
+Post_target::~Post_target() {
   glDeleteFramebuffers(1, &frame_buffer);
   glDeleteTextures(1, &texture);
 }

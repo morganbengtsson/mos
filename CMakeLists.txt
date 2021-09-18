@@ -136,7 +136,7 @@ file(GLOB IO_SOURCE src/mos/io/*.cpp)
 file(GLOB CORE_SOURCE src/mos/core/*.cpp)
 
 file(GLOB ROOT_HEADER include/mos/*.hpp)
-file(GLOB GFX_HEADER include/mos/gfx/*.hpp src/mos/gl/*.cpp include/mos/gfx/gpu/*.hpp)
+file(GLOB GFX_HEADER include/mos/gfx/*.hpp include/mos/gl/*.hpp include/mos/gpu/*.hpp)
 file(GLOB AUD_HEADER include/mos/aud/*.hpp)
 file(GLOB SIM_HEADER include/mos/sim/*.hpp)
 file(GLOB IO_HEADER include/mos/io/*.hpp)

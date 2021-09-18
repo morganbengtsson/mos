@@ -3,7 +3,7 @@
 
 namespace mos::gfx::gl {
 
-Renderer::Cloud_program::Cloud_program(const std::string &name,
+Cloud_program::Cloud_program(const std::string &name,
                                        const Shader &functions_shader) {
   std::string vert_source = text("assets/shaders/" + name + ".vert");
   std::string frag_source = text("assets/shaders/" + name + ".frag");
