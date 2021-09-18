@@ -7,6 +7,6 @@ namespace mos::gfx {
 class Model;
 
 /** Collection of models */
-using Models = Container<Model>;
+using Models = std::vector<Model>;
 
 }

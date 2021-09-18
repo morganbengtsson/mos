@@ -8,12 +8,11 @@
 #include <glm/glm.hpp>
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/scenes.hpp>
-#include <mos/gfx/renderer.hpp>
 
 namespace mos::gfx::gl {
 
 /** Render geometry shapes with OpenGL. */
-class Renderer final : public mos::gfx::Renderer {
+class Renderer final {
 public:
   /** Inits the renderer, creates an OpenGL context with GLAD. */
   explicit Renderer(const glm::ivec2 &resolution, const int samples = 1);

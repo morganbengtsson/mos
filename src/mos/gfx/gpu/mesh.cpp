@@ -1,4 +1,3 @@
-#include <mos/gfx/renderer.hpp>
 #include <mos/gfx/gpu/mesh.hpp>
 
 mos::gfx::gpu::Mesh::Mesh(const mos::gfx::Mesh& mesh)

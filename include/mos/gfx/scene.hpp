@@ -12,8 +12,9 @@
 #include <mos/gfx/models.hpp>
 #include <mos/gfx/spot_lights.hpp>
 #include <mos/gfx/directional_light.hpp>
-#include <mos/gfx/renderer.hpp>
 #include <mos/core/container.hpp>
+
+#include <mos/gfx/gpu/model.hpp>
 
 namespace mos::gfx {
 
