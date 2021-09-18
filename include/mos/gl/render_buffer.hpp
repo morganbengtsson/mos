@@ -5,9 +5,12 @@
 namespace mos::gl {
 
 class Render_buffer {
-public:
+  friend class Renderer;
+  friend class Frame_buffer;
+private:
   explicit Render_buffer(int resolution);
   explicit Render_buffer(const glm::ivec2 &resolution);
+public:
   ~Render_buffer();
   Render_buffer(Render_buffer &&buffer) noexcept;
   Render_buffer(const Render_buffer &buffer) = delete;

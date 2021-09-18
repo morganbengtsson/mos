@@ -4,8 +4,11 @@
 
 namespace mos::gl {
 
-struct Blur_program : public Program {
+class Blur_program : public Program {
+  friend class Renderer;
+private:
   Blur_program();
+public:
   GLint color_sampler;
   GLint horizontal;
 };

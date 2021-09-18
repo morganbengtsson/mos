@@ -4,8 +4,11 @@
 
 namespace mos::gl {
 
-struct Environment_map_target {
+class Environment_map_target {
+  friend class Renderer;
+private:
   explicit Environment_map_target(const Render_buffer &render_buffer);
+public:
   ~Environment_map_target();
   Environment_map_target(const Environment_map_target &target) = delete;
   Environment_map_target(Environment_map_target &&target) = delete;

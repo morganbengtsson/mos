@@ -8,13 +8,15 @@
 namespace mos::gl {
 
 class Vertex_array {
-public:
+  friend class Renderer;
+private:
   explicit Vertex_array(
       const gfx::Cloud &cloud,
       std::unordered_map<unsigned int, Buffer> &array_buffers);
   explicit Vertex_array(
       const gfx::Mesh &mesh, std::unordered_map<unsigned int, Buffer> &array_buffers,
       std::unordered_map<unsigned int, Buffer> &element_array_buffers);
+public:
   ~Vertex_array();
   Vertex_array(Vertex_array &&array) noexcept;
   Vertex_array(const Vertex_array &array) = delete;

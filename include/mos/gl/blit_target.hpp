@@ -5,9 +5,12 @@
 
 namespace mos::gl {
 
-struct Blit_target {
+class Blit_target {
+  friend class Renderer;
+private:
   explicit Blit_target(const glm::ivec2 &resolution,
                        GLint precision = GL_RGB16F);
+public:
   ~Blit_target();
   Blit_target(const Blit_target &target) = delete;
   Blit_target(Blit_target &&target) = delete;

@@ -8,6 +8,7 @@ namespace mos::gl {
 
 /** Uniforms for the standard shader. */
 class Standard_program : public Program {
+  friend class Renderer;
 public:
   struct Material_uniforms {
     GLint albedo_sampler;
@@ -64,9 +65,10 @@ public:
     GLint min;
     GLint max;
   };
-
+private:
   explicit Standard_program(const Shader &functions_shader);
 
+public:
   GLint model_view_projection;
   GLint model_matrix;
   GLint normal_matrix;

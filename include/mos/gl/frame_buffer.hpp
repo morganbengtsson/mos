@@ -7,10 +7,12 @@
 namespace mos::gl {
 
 class Frame_buffer {
-public:
+  friend class Renderer;
+private:
   explicit Frame_buffer(const gfx::Texture_target &target,
                         Texture_buffers &texture_buffers,
                         Render_buffers &render_buffers);
+public:
   ~Frame_buffer();
   Frame_buffer(Frame_buffer &&buffer) noexcept;
   Frame_buffer(const Frame_buffer &buffer) = delete;

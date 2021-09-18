@@ -4,9 +4,12 @@
 
 namespace mos::gl {
 
-struct Quad {
+class Quad {
+  friend class Renderer;
+private:
   Quad();
   ~Quad();
+public:
   Quad(const Quad &target) = delete;
   Quad(const Quad &&target) = delete;
   Quad &operator=(const Quad &target) = delete;

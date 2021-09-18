@@ -5,9 +5,12 @@
 
 namespace mos::gl {
 
-struct Post_target {
+class Post_target {
+  friend class Renderer;
+private:
   explicit Post_target(const glm::ivec2 &resolution,
                        GLint precision = GL_RGB16F);
+public:
   ~Post_target();
   Post_target(const Post_target &target) = delete;
   Post_target(Post_target &&target) = delete;

@@ -4,9 +4,12 @@
 
 namespace mos::gl {
 
-struct Program {
+class Program {
+  friend class Renderer;
+protected:
   Program();
   ~Program();
+public:
   Program(const Program &program) = delete;
   Program(const Program &&program) = delete;
   Program &operator=(const Program &program) = delete;

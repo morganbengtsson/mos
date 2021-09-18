@@ -7,8 +7,9 @@
 namespace mos::gl {
 
 /** Uniforms for the particle shader program. */
-struct Cloud_program : public Program {
-
+class Cloud_program : public Program {
+  friend class Renderer;
+public:
   struct Environment_uniforms {
     GLint map;
     GLint position;
@@ -41,11 +42,11 @@ struct Cloud_program : public Program {
     GLint strength;
   };
 
-
-
+private:
   explicit Cloud_program(const std::string &name,
                          const Shader &functions_shader);
 
+public:
   GLint model_view_projection;
   GLint model_view;
   GLint model{};

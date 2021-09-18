@@ -4,9 +4,12 @@
 
 namespace mos::gl {
 
-struct Box {
+class Box {
+  friend class Renderer;
+private:
   Box();
   ~Box();
+public:
   Box(const Box &target) = delete;
   Box(const Box &&target) = delete;
   Box &operator=(const Box &target) = delete;

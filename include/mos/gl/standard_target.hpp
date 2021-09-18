@@ -4,8 +4,11 @@
 
 namespace mos::gl {
 
-struct Standard_target {
+class Standard_target {
+  friend class Renderer;
+private:
   Standard_target(const glm::ivec2 &resolution, const int samples);
+public:
   ~Standard_target();
   Standard_target(const Standard_target &target) = delete;
   Standard_target(Standard_target &&target) = delete;

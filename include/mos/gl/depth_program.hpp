@@ -4,8 +4,11 @@
 
 namespace mos::gl {
 
-struct Depth_program : public Program {
+class Depth_program : public Program {
+  friend class Renderer;
+private:
   Depth_program();
+public:
   GLint model_view_projection;
   GLint albedo_sampler;
   GLint albedo;
