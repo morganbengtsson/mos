@@ -1,20 +1,20 @@
 #include <mos/gl/renderer.hpp>
 #include <mos/util.hpp>
+#include <spdlog/fmt/fmt.h>
 
 namespace mos::gl {
 
 Bloom_program::Bloom_program() {
-  std::string name = "bloom";
-  auto vert_source = text("assets/shaders/" + name + ".vert");
-  auto frag_source = text("assets/shaders/" + name + ".frag");
+  const std::string name = "bloom";
 
-  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
-  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+  const auto vertex_shader = Shader(name, GL_VERTEX_SHADER);
+  const auto fragment_shader = Shader(name, GL_FRAGMENT_SHADER);
 
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
   glBindAttribLocation(program, 0, "position");
   glBindAttribLocation(program, 1, "uv");
+
   link(name);
   check(name);
 

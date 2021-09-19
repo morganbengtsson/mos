@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <string>
 
 namespace mos::gl {
 
@@ -15,6 +16,7 @@ class Shader {
   friend class Standard_program;
 private:
   Shader(const std::string &source, GLuint type, const std::string &name);
+  Shader(const std::string &name, GLuint type);
 public:
   ~Shader();
   const GLuint id;

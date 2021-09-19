@@ -5,10 +5,9 @@ namespace mos::gl {
 
 Cloud_program::Cloud_program(const std::string &name,
                                        const Shader &functions_shader) {
-  std::string vert_source = text("assets/shaders/" + name + ".vert");
-  std::string frag_source = text("assets/shaders/" + name + ".frag");
-  const auto vertex_shader = Shader(vert_source, GL_VERTEX_SHADER, name);
-  const auto fragment_shader = Shader(frag_source, GL_FRAGMENT_SHADER, name);
+
+  const auto vertex_shader = Shader(name, GL_VERTEX_SHADER);
+  const auto fragment_shader = Shader(name, GL_FRAGMENT_SHADER);
 
   glAttachShader(program, vertex_shader.id);
   glAttachShader(program, fragment_shader.id);
