@@ -13,6 +13,9 @@ namespace mos::aud {
   class Sound;
   class Listener;
   class Scene;
+}
+
+namespace mos::al {
 
 /** OpenAL audio system. */
 class Renderer final {
@@ -25,23 +28,23 @@ public:
   ~Renderer();
 
   /** Get listener data. */
-  auto listener() const -> Listener;
+  auto listener() const -> aud::Listener;
 
   /** Render and play audio scene. */
-  auto render(const Scene &scene, const float dt) -> void;
+  auto render(const aud::Scene &scene, const float dt) -> void;
 
   /** Clear buffers */
   auto clear() -> void;
 
 private:
   /** Set listener data */
-  auto listener(const Listener &listener) -> void;
+  auto listener(const aud::Listener &listener) -> void;
 
   /** Render/play a sound stream. */
-  auto render_sound_stream(const Sound_stream &sound_stream, const float dt) -> void;
+  auto render_sound_stream(const aud::Sound_stream &sound_stream, const float dt) -> void;
 
   /** Render/play a sound. */
-  auto render_sound(const Sound &sound, const float dt) -> void;
+  auto render_sound(const aud::Sound &sound, const float dt) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;

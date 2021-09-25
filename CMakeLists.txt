@@ -130,14 +130,14 @@ add_subdirectory(tests)
 # mos
 file(GLOB ROOT_SOURCE src/mos/*.cpp)
 file(GLOB GFX_SOURCE src/mos/gfx/*.cpp src/mos/gl/*.cpp src/mos/gpu/*.cpp)
-file(GLOB AUD_SOURCE src/mos/aud/*.cpp)
+file(GLOB AUD_SOURCE src/mos/aud/*.cpp src/mos/al/*.cpp)
 file(GLOB SIM_SOURCE src/mos/sim/*.cpp)
 file(GLOB IO_SOURCE src/mos/io/*.cpp)
 file(GLOB CORE_SOURCE src/mos/core/*.cpp)
 
 file(GLOB ROOT_HEADER include/mos/*.hpp)
 file(GLOB GFX_HEADER include/mos/gfx/*.hpp include/mos/gl/*.hpp include/mos/gpu/*.hpp)
-file(GLOB AUD_HEADER include/mos/aud/*.hpp)
+file(GLOB AUD_HEADER include/mos/aud/*.hpp include/mos/al/*.hpp)
 file(GLOB SIM_HEADER include/mos/sim/*.hpp)
 file(GLOB IO_HEADER include/mos/io/*.hpp)
 file(GLOB CORE_HEADER include/mos/core/*.hpp)
@@ -156,7 +156,6 @@ add_library(${PROJECT_NAME} STATIC
 # NMINMAX fixes windows build
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE
-  MOS_EFX
   AL_ALEXT_PROTOTYPES
   PUBLIC
   GLM_ENABLE_EXPERIMENTAL
