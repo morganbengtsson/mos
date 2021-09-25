@@ -1,7 +1,12 @@
 #pragma  once
+
 #include <unordered_map>
 #include <memory>
 #include <thread>
+
+#include <mos/al/buffer.hpp>
+#include <mos/al/source.hpp>
+#include <mos/al/filter.hpp>
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -13,35 +18,40 @@ namespace mos::aud {
   class Sound;
   class Listener;
   class Scene;
+}
 
-/** OpenAL audio system. */
+namespace mos::al {
+
+/** OpenAL audio renderer. */
 class Renderer final {
 public:
   Renderer();
-  Renderer(const Renderer &renderer) = delete;
-  Renderer(const Renderer &&renderer) = delete;
-  Renderer & operator=(const Renderer & renderer) = delete;
-  Renderer & operator=(const Renderer && renderer) = delete;
   ~Renderer();
 
+  Renderer(const Renderer &renderer) = delete;
+  Renderer(const Renderer &&renderer) = delete;
+
+  Renderer & operator=(const Renderer & renderer) = delete;
+  Renderer & operator=(const Renderer && renderer) = delete;
+
   /** Get listener data. */
-  auto listener() const -> Listener;
+  auto listener() const -> aud::Listener;
 
   /** Render and play audio scene. */
-  auto render(const Scene &scene, const float dt) -> void;
+  auto render(const aud::Scene &scene, const float dt) -> void;
 
   /** Clear buffers */
   auto clear() -> void;
 
 private:
   /** Set listener data */
-  auto listener(const Listener &listener) -> void;
+  auto listener(const aud::Listener &listener) -> void;
 
   /** Render/play a sound stream. */
-  auto render_sound_stream(const Sound_stream &sound_stream, const float dt) -> void;
+  auto render_sound_stream(const aud::Sound_stream &sound_stream, const float dt) -> void;
 
   /** Render/play a sound. */
-  auto render_sound(const Sound &sound, const float dt) -> void;
+  auto render_sound(const aud::Sound &sound, const float dt) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;
@@ -54,9 +64,9 @@ private:
 
   using SourcePair = std::pair<unsigned int, ALuint>;
   using BufferPair = std::pair<unsigned int, ALuint>;
-  using Sources = std::unordered_map<unsigned int, ALuint>;
-  using Buffers = std::unordered_map<unsigned int, ALuint>;
-  using Filters = std::unordered_map<unsigned int, ALuint>;
+  using Sources = std::unordered_map<unsigned int, Source>;
+  using Buffers = std::unordered_map<unsigned int, Buffer>;
+  using Filters = std::unordered_map<unsigned int, Filter>;
 
   Sources sources_;
   Buffers buffers_;

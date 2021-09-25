@@ -1,4 +1,5 @@
 #pragma once
+
 #include <map>
 #include <memory>
 #include <unordered_map>
@@ -15,11 +16,13 @@ public:
   using Buffer_pair = std::pair<std::string, Shared_buffer>;
 
   explicit Assets(std::string directory = "assets/");
+  ~Assets() = default;
+
   Assets(const Assets &assets) = delete;
   Assets(const Assets &&assets) = delete;
+
   Assets & operator=(const Assets & assets) = delete;
   Assets & operator=(const Assets && assets) = delete;
-  ~Assets() = default;
 
   /** Loads an *.ogg file into a buffer and caches it. */
   auto audio_buffer(const std::string &path) -> Shared_buffer;
