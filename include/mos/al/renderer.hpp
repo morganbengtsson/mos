@@ -4,6 +4,8 @@
 #include <memory>
 #include <thread>
 
+#include <mos/al/buffer.hpp>
+
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
