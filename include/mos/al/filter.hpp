@@ -7,7 +7,13 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
+namespace mos::aud {
+class Source;
+}
+
 namespace mos::al {
+
+class Source;
 
 class Filter {
   friend class Renderer;
@@ -20,9 +26,11 @@ public:
   Filter &operator=(Filter &&filter) noexcept;
   ~Filter();
 
+  void update(const aud::Source &source, const float dt);
+
   ALuint id{0};
 private:
-  Filter();
+  Filter(const Source &source);
   void release();
 };
 }

@@ -101,12 +101,7 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
     alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
 
-    filters_.insert({sound.source.id(), Filter()});
-
-    auto & filter = filters_.at(sound.source.id());
-
-    alFilteri(filter.id, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alSourcei(source.id, AL_DIRECT_FILTER, filter.id);
+    filters_.insert({sound.source.id(), Filter(source)});
   }
 
   auto &source = sources_.at(sound.source.id());
@@ -128,23 +123,13 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
 
   source.update(sound.source);
 
-  auto al_filter = filters_.at(sound.source.id()).id;
-  ALfloat al_gain{0.0f};
-  alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = glm::clamp((1.0f - sound.source.obstructed), 0.0f, 1.0f) - al_gain;
-  float gain = al_gain + error * dt;
+  auto & filter = filters_.at(sound.source.id());
 
-  ALfloat al_gain_hf{0.0f};
-  alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = glm::clamp((1.0f - sound.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
-  float gain_hf = al_gain_hf + error_hf * dt;
+  filter.update(sound.source, dt);
 
-  alSourcef(source.id, AL_GAIN, gain * sound.source.gain);
-
-  alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(al_filter, AL_LOWPASS_GAIN, gain);      // 0.5f
-  alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
-  alSourcei(source.id, AL_DIRECT_FILTER, al_filter);
+  // TODO: Check if needed
+  //alSourcef(source.id, AL_GAIN, gain * sound.source.gain);
+  //alSourcei(source.id, AL_DIRECT_FILTER, al_filter);
 
   ALenum state{AL_STOPPED};
   alGetSourcei(source.id, AL_SOURCE_STATE, &state);
@@ -171,7 +156,7 @@ void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const 
     alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
                AL_FILTER_NULL);
 
-    filters_.insert({sound_stream.source.id(), Filter()});
+    filters_.insert({sound_stream.source.id(), Filter(sound_stream.source)});
 
     auto &filter = filters_.at(sound_stream.source.id());
 
@@ -182,23 +167,12 @@ void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const 
   auto &source = sources_.at(sound_stream.source.id());
   source.update(sound_stream.source);
 
-  auto al_filter = filters_.at(sound_stream.source.id()).id;
-  ALfloat al_gain{0.0f};
-  alGetFilterf(al_filter, AL_LOWPASS_GAIN, &al_gain);
-  auto error = glm::clamp((1.0f - sound_stream.source.obstructed), 0.0f, 1.0f) - al_gain;
-  float gain = al_gain + error * dt;
+  auto & filter = filters_.at(sound_stream.source.id());
+  filter.update(sound_stream.source, dt);
 
-  ALfloat al_gain_hf{0.0f};
-  alGetFilterf(al_filter, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = glm::clamp((1.0f - sound_stream.source.obstructed), 0.0f, 1.0f) - al_gain_hf;
-  float gain_hf = al_gain_hf + error_hf * dt;
-
-  alSourcef(source.id, AL_GAIN, gain * sound_stream.source.gain);
-
-  alFilteri(al_filter, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(al_filter, AL_LOWPASS_GAIN , gain);      // 0.5f
-  alFilterf(al_filter, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
-  alSourcei(source.id, AL_DIRECT_FILTER, al_filter);
+  // TODO: Check if needed
+  //alSourcef(source.id, AL_GAIN, gain * sound.source.gain);
+  //alSourcei(source.id, AL_DIRECT_FILTER, al_filter);
 
   ALenum state{AL_STOPPED};
   alGetSourcei(source.id, AL_SOURCE_STATE, &state);
