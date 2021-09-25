@@ -1,4 +1,5 @@
 #pragma once
+
 #include <atomic>
 #include <glm/vec3.hpp>
 

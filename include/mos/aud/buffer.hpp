@@ -19,8 +19,8 @@ public:
   /** Construct buffer from a container of shorts. */
   Buffer(const T begin, const T end, const int channels = 1,
          const int sample_rate = 44100)
-      : channels_(channels), sample_rate_(sample_rate), samples_(begin, end),
-        id_(current_id_++) {}
+      : id_(current_id_++), samples_(begin, end), channels_(channels),
+        sample_rate_(sample_rate), {}
 
   /** Empty buffer constructor. */
   explicit Buffer(int channels = 1, int sample_rate = 44100);

@@ -1,4 +1,5 @@
 #pragma  once
+
 #include <unordered_map>
 #include <memory>
 #include <thread>
@@ -17,15 +18,17 @@ namespace mos::aud {
 
 namespace mos::al {
 
-/** OpenAL audio system. */
+/** OpenAL audio renderer. */
 class Renderer final {
 public:
   Renderer();
+  ~Renderer();
+
   Renderer(const Renderer &renderer) = delete;
   Renderer(const Renderer &&renderer) = delete;
+
   Renderer & operator=(const Renderer & renderer) = delete;
   Renderer & operator=(const Renderer && renderer) = delete;
-  ~Renderer();
 
   /** Get listener data. */
   auto listener() const -> aud::Listener;
