@@ -63,7 +63,7 @@ private:
   using SourcePair = std::pair<unsigned int, ALuint>;
   using BufferPair = std::pair<unsigned int, ALuint>;
   using Sources = std::unordered_map<unsigned int, ALuint>;
-  using Buffers = std::unordered_map<unsigned int, ALuint>;
+  using Buffers = std::unordered_map<unsigned int, Buffer>;
   using Filters = std::unordered_map<unsigned int, ALuint>;
 
   Sources sources_;

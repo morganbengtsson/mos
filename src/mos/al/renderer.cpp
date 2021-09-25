@@ -88,9 +88,10 @@ Renderer::~Renderer() {
     alSourceStop(source.second);
     alDeleteSources(1, &source.second);
   }
+  /*
   for (auto buffer : buffers_) {
     alDeleteBuffers(1, &buffer.second);
-  }
+  }*/
   alcMakeContextCurrent(nullptr);
   alcDestroyContext(context_);
   alcCloseDevice(device_);
@@ -115,21 +116,11 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
 
   auto buffer = sound.buffer;
   if (buffer) {
-    auto format =
-        buffer->channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
     if (buffers_.find(buffer->id()) == buffers_.end()) {
-        ALuint al_buffer{0u};
-      alGenBuffers(1, &al_buffer);
-      {
-        long data_size = std::distance(buffer->begin(), buffer->end());
-        const ALvoid *data = buffer->data();
-        alBufferData(al_buffer, format, data, data_size * sizeof(short),
-                     buffer->sample_rate());
-      }
-      buffers_.insert(BufferPair(buffer->id(), al_buffer));
+      buffers_.insert({buffer->id(), Buffer(*buffer)});
     }
 
-    ALuint al_buffer = buffers_.at(sound.buffer->id());
+    ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
 
     int v{0u};
     alGetSourcei(al_source, AL_BUFFER, &v);
@@ -319,9 +310,11 @@ void Renderer::clear() {
     alSourceStop(source.second);
     alDeleteSources(1, &source.second);
   }
+  /*
   for (auto buffer : buffers_) {
     alDeleteBuffers(1, &buffer.second);
-  }
+  }*/
+
   sources_.clear();
   buffers_.clear();
 }
