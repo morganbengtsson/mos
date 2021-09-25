@@ -16,6 +16,9 @@ Renderer::Renderer()
   static constexpr ALint sampling_frequency{44100};
   std::array context_attributes{ALC_FREQUENCY, sampling_frequency, ALC_HRTF_SOFT, ALC_TRUE, 0};
   device_ = alcOpenDevice(nullptr);
+  if (device_ == AL_NONE) {
+    throw std::runtime_error("No valid audio device");
+  }
   context_ = alcCreateContext(device_, context_attributes.data());
   alcMakeContextCurrent(context_);
 
