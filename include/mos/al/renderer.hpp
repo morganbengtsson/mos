@@ -6,6 +6,7 @@
 
 #include <mos/al/buffer.hpp>
 #include <mos/al/source.hpp>
+#include <mos/al/filter.hpp>
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -65,7 +66,7 @@ private:
   using BufferPair = std::pair<unsigned int, ALuint>;
   using Sources = std::unordered_map<unsigned int, Source>;
   using Buffers = std::unordered_map<unsigned int, Buffer>;
-  using Filters = std::unordered_map<unsigned int, ALuint>;
+  using Filters = std::unordered_map<unsigned int, Filter>;
 
   Sources sources_;
   Buffers buffers_;
