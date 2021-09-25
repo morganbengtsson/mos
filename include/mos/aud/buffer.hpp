@@ -20,7 +20,7 @@ public:
   Buffer(const T begin, const T end, const int channels = 1,
          const int sample_rate = 44100)
       : id_(current_id_++), samples_(begin, end), channels_(channels),
-        sample_rate_(sample_rate), {}
+        sample_rate_(sample_rate) {}
 
   /** Empty buffer constructor. */
   explicit Buffer(int channels = 1, int sample_rate = 44100);
