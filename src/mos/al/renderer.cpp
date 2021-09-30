@@ -112,7 +112,7 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
       buffers_.insert({buffer->id(), al::Buffer(*buffer)});
     }
 
-    ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
+    ALuint al_buffer = buffers_.at(sound.buffer->id()).resource.id;
 
     int v{0u};
     alGetSourcei(source.id, AL_BUFFER, &v);
