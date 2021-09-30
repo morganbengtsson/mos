@@ -109,7 +109,7 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
   auto buffer = sound.buffer;
   if (buffer) {
     if (buffers_.find(buffer->id()) == buffers_.end()) {
-      buffers_.insert({buffer->id(), Buffer(*buffer)});
+      buffers_.insert({buffer->id(), al::Buffer(*buffer)});
     }
 
     ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
