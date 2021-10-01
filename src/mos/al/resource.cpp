@@ -13,7 +13,7 @@ Resource::Resource(Resource &&resource) noexcept : id(resource.id) {
 
 Resource::~Resource() { release(); }
 
-Resource &Resource::operator=(Resource &&resource) noexcept {
+auto Resource::operator=(Resource &&resource) noexcept -> Resource & {
   if (this != &resource) {
     release();
     std::swap(id, resource.id);
