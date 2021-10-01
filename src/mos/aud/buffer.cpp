@@ -11,10 +11,10 @@ std::atomic_uint Buffer::current_id_;
 Buffer::Buffer(const int channels, const int sample_rate)
     : id_(current_id_++), channels_(channels), sample_rate_(sample_rate) {}
 
-auto Buffer::load(const std::string &path) -> Buffer {
+auto Buffer::load(const std::filesystem::path &path) -> Buffer {
   std::ifstream file(path, std::ios::binary);
   if (!file.good()) {
-    throw std::runtime_error(path + " does not exist.");
+    throw std::runtime_error(path.string() + " does not exist.");
   }
   std::vector<unsigned char> data(std::istreambuf_iterator<char>(file), {});
 

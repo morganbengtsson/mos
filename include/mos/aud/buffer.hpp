@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <filesystem>
 
 namespace mos::aud {
 
@@ -26,7 +27,7 @@ public:
   explicit Buffer(int channels = 1, int sample_rate = 44100);
 
   /** Load shared buffer. */
-  static auto load(const std::string &path) -> Buffer;
+  static auto load(const std::filesystem::path &path) -> Buffer;
 
   Samples::const_iterator begin() const;
 

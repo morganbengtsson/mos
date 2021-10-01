@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/stream.hpp>
+#include <filesystem>
 
 namespace mos::aud {
 
@@ -15,7 +16,7 @@ public:
   std::unordered_map<std::string, Shared_buffer>;
   using Buffer_pair = std::pair<std::string, Shared_buffer>;
 
-  explicit Assets(std::string directory = "assets/");
+  explicit Assets(std::filesystem::path directory = "assets/");
   ~Assets() = default;
 
   Assets(const Assets &assets) = delete;
@@ -25,7 +26,7 @@ public:
   Assets & operator=(const Assets && assets) = delete;
 
   /** Loads an *.ogg file into a buffer and caches it. */
-  auto audio_buffer(const std::string &path) -> Shared_buffer;
+  auto audio_buffer(const std::filesystem::path &path) -> Shared_buffer;
 
   /** Remove unused buffers. */
   auto clear_unused() -> void;
@@ -34,7 +35,7 @@ public:
   auto clear() -> void;
 
   /** Directory of assets */
-  auto directory() const -> std::string;
+  auto directory() const -> std::filesystem::path;
 
 private:
   const std::string directory_;
