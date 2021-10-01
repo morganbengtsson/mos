@@ -1,18 +1,17 @@
 #pragma once
 
-
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <functional>
 #include <chrono>
+#include <functional>
 
 namespace mos::al {
 
-class Resource
-{
+/** General resource living on the APU */
+class Resource {
 public:
   using Gen_function = std::function<void(ALsizei, ALuint *)>;
   using Delete_function = std::function<void(ALsizei, const ALuint *)>;
@@ -37,4 +36,4 @@ public:
 private:
   void release();
 };
-}
+} // namespace mos::al

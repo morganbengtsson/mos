@@ -17,6 +17,7 @@ namespace mos::al {
 
 class Source;
 
+/** Filter living on the APU */
 class Filter final : public Resource {
   friend class Renderer;
 
@@ -26,4 +27,4 @@ public:
 private:
   Filter(const Source &source);
 };
-}
+} // namespace mos::al

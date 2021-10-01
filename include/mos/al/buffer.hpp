@@ -7,8 +7,8 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <mos/aud/buffer.hpp>
 #include <mos/al/resource.hpp>
+#include <mos/aud/buffer.hpp>
 
 namespace mos::al {
 
@@ -19,4 +19,4 @@ class Buffer final : public Resource {
 private:
   Buffer(const mos::aud::Buffer &buffer);
 };
-}
+} // namespace mos::al

@@ -12,6 +12,7 @@
 
 namespace mos::al {
 
+/** Source living on the APU */
 class Source final : public Resource {
   friend class Renderer;
 public:
