@@ -2,24 +2,7 @@
 
 namespace mos::al {
 
-Buffer::Buffer(Buffer &&buffer) noexcept : id(buffer.id) {
-  buffer.id = 0;
-}
-
-Buffer &Buffer::operator=(Buffer &&buffer) noexcept {
-  if (this != &buffer) {
-    release();
-    std::swap(id, buffer.id);
-  }
-  return *this;
-}
-
-Buffer::~Buffer() {
-  release();
-}
-
-Buffer::Buffer(const aud::Buffer &buffer) {
-  alGenBuffers(1, &id);
+Buffer::Buffer(const aud::Buffer &buffer) : Resource(alGenBuffers, alDeleteBuffers) {
   auto format =
       buffer.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
   long data_size = std::distance(buffer.begin(), buffer.end());
@@ -28,8 +11,4 @@ Buffer::Buffer(const aud::Buffer &buffer) {
                buffer.sample_rate());
 }
 
-void Buffer::release() {
-  alDeleteBuffers(1, &id);
-  id = 0;
-}
 }

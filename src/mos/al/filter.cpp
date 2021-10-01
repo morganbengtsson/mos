@@ -4,22 +4,6 @@
 
 namespace mos::al {
 
-Filter::Filter(Filter &&filter) noexcept : id(filter.id) {
-  filter.id = 0;
-}
-
-Filter &Filter::operator=(Filter &&filter) noexcept {
-  if (this != &filter) {
-    release();
-    std::swap(id, filter.id);
-  }
-  return *this;
-}
-
-Filter::~Filter() {
-  release();
-}
-
 void Filter::update(const aud::Source &source, const float dt) {
   ALfloat al_gain{0.0f};
   alGetFilterf(id, AL_LOWPASS_GAIN, &al_gain);
@@ -36,14 +20,9 @@ void Filter::update(const aud::Source &source, const float dt) {
   alFilterf(id, AL_LOWPASS_GAINHF, gain_hf); // 0.01f
 }
 
-Filter::Filter(const Source& source) {
+Filter::Filter(const Source& source) : Resource(alGenFilters, alDeleteFilters){
   alGenFilters(1, &id);
   alFilteri(id, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
   alSourcei(source.id, AL_DIRECT_FILTER, id);
-}
-
-void Filter::release() {
-  alDeleteFilters(1, &id);
-  id = 0;
 }
 }

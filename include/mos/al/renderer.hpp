@@ -1,12 +1,12 @@
-#pragma  once
+#pragma once
 
-#include <unordered_map>
 #include <memory>
 #include <thread>
+#include <unordered_map>
 
 #include <mos/al/buffer.hpp>
-#include <mos/al/source.hpp>
 #include <mos/al/filter.hpp>
+#include <mos/al/source.hpp>
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -14,11 +14,11 @@
 #include <AL/efx-presets.h>
 
 namespace mos::aud {
-  class Sound_stream;
-  class Sound;
-  class Listener;
-  class Scene;
-}
+class Sound_stream;
+class Sound;
+class Listener;
+class Scene;
+} // namespace mos::aud
 
 namespace mos::al {
 
@@ -31,11 +31,11 @@ public:
   Renderer(const Renderer &renderer) = delete;
   Renderer(const Renderer &&renderer) = delete;
 
-  Renderer & operator=(const Renderer & renderer) = delete;
-  Renderer & operator=(const Renderer && renderer) = delete;
+  Renderer &operator=(const Renderer &renderer) = delete;
+  Renderer &operator=(const Renderer &&renderer) = delete;
 
   /** Get listener data. */
-  auto listener() const -> aud::Listener;
+  static auto listener() -> aud::Listener;
 
   /** Render and play audio scene. */
   auto render(const aud::Scene &scene, const float dt) -> void;
@@ -45,10 +45,11 @@ public:
 
 private:
   /** Set listener data */
-  auto listener(const aud::Listener &listener) -> void;
+  static auto listener(const aud::Listener &listener) -> void;
 
   /** Render/play a sound stream. */
-  auto render_sound_stream(const aud::Sound_stream &sound_stream, const float dt) -> void;
+  auto render_sound_stream(const aud::Sound_stream &sound_stream,
+                           const float dt) -> void;
 
   /** Render/play a sound. */
   auto render_sound(const aud::Sound &sound, const float dt) -> void;
@@ -72,4 +73,4 @@ private:
   Buffers buffers_;
   Filters filters_;
 };
-}
+} // namespace mos::al
