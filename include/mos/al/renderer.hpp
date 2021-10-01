@@ -35,7 +35,7 @@ public:
   Renderer &operator=(const Renderer &&renderer) = delete;
 
   /** Get listener data. */
-  auto listener() const -> aud::Listener;
+  static auto listener() -> aud::Listener;
 
   /** Render and play audio scene. */
   auto render(const aud::Scene &scene, const float dt) -> void;
@@ -45,7 +45,7 @@ public:
 
 private:
   /** Set listener data */
-  auto listener(const aud::Listener &listener) -> void;
+  static auto listener(const aud::Listener &listener) -> void;
 
   /** Render/play a sound stream. */
   auto render_sound_stream(const aud::Sound_stream &sound_stream,

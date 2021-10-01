@@ -23,8 +23,8 @@ Renderer::Renderer()
   context_ = alcCreateContext(device_, context_attributes.data());
   alcMakeContextCurrent(context_);
 
-  if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()),
-                             "ALC_EXT_EFX")) {
+  if (alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()),
+                            "ALC_EXT_EFX") == AL_NONE) {
     throw std::runtime_error("OpenAL EFX not supported.");
   }
 
@@ -222,7 +222,7 @@ void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const 
   }
 }
 
-auto Renderer::listener() const -> aud::Listener {
+auto Renderer::listener() -> aud::Listener {
   aud::Listener listener;
   alGetListener3f(AL_POSITION, &listener.position.x, &listener.position.y,
                   &listener.position.z);
@@ -242,7 +242,7 @@ auto Renderer::listener() const -> aud::Listener {
   return listener;
 }
 
-void Renderer::listener(const aud::Listener &listener) {
+auto Renderer::listener(const aud::Listener &listener) -> void {
   alListener3f(AL_POSITION, listener.position.x, listener.position.y,
                listener.position.z);
 

@@ -24,8 +24,8 @@ public:
   Resource(Resource &&Resource) noexcept;
   ~Resource();
 
-  Resource &operator=(const Resource &buffer) = delete;
-  Resource &operator=(Resource &&buffer) noexcept;
+  Resource &operator=(const Resource resource) = delete;
+  Resource &operator=(Resource &&resource) noexcept;
 
   Gen_function gen_function;
   Delete_function delete_function;

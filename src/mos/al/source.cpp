@@ -4,7 +4,7 @@ namespace mos::al {
 
 void Source::update(const mos::aud::Source &source)
 {
-  alSourcei(id, AL_LOOPING, source.loop);
+  alSourcei(id, AL_LOOPING, static_cast<ALint>(source.loop));
   alSourcef(id, AL_PITCH, source.pitch);
   //alSourcef(id, AL_GAIN, buffer_source.source.gain);
   alSource3f(id, AL_POSITION, source.position.x,
