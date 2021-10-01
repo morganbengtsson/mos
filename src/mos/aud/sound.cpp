@@ -11,13 +11,17 @@ Sound::Sound(const nlohmann::json &json, Assets &assets,
   if (parsed.is_string()) {
     spdlog::info("Loading: {}", parsed);
     std::string path = parsed;
-    parsed = nlohmann::json::parse(mos::text(assets.directory() + path));
+    auto full_path = assets.directory();
+    full_path += path;
+    parsed = nlohmann::json::parse(mos::text(full_path));
   }
   std::string sound_data_path;
   if (!parsed["sound"].is_null()) {
     sound_data_path = parsed.value("sound", "");
   }
-  auto sound_data = nlohmann::json::parse(mos::text(assets.directory() + sound_data_path));
+  auto full_path = assets.directory();
+  full_path += sound_data_path;
+  auto sound_data = nlohmann::json::parse(mos::text(full_path));
 
   std::string buffer_path = sound_data["sound"];
   buffer = assets.audio_buffer(buffer_path);

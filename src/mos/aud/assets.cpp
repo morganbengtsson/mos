@@ -2,11 +2,13 @@
 
 namespace mos::aud {
 
-Assets::Assets(std::string directory) : directory_(std::move(directory)) {}
+Assets::Assets(std::filesystem::path directory) : directory_(std::move(directory)) {}
 
-auto Assets::audio_buffer(const std::string &path) -> Shared_buffer {
+auto Assets::audio_buffer(const std::filesystem::path &path) -> Shared_buffer {
   if (buffers_.find(path) == buffers_.end()) {
-    buffers_.insert(Buffer_pair(path, std::make_shared<Buffer>(Buffer::load(directory_ + path))));
+    auto full_path = directory_;
+    full_path += path;
+    buffers_.insert(Buffer_pair(path, std::make_shared<Buffer>(Buffer::load(full_path))));
   }
   return buffers_.at(path);
 }
@@ -24,7 +26,7 @@ void Assets::clear() {
   buffers_.clear();
 }
 
-auto Assets::directory() const -> std::string {
+auto Assets::directory() const -> std::filesystem::path {
   return directory_;
 }
 }
