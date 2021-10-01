@@ -22,7 +22,9 @@ Resource &Resource::operator=(Resource &&resource) noexcept {
 }
 
 void Resource::release() {
-  delete_function(1, &id);
+  if (delete_function) {
+    delete_function(1, &id);
+  }
   id = 0;
 }
 } // namespace mos::al

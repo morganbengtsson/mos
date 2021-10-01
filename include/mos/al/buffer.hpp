@@ -13,9 +13,9 @@
 namespace mos::al {
 
 /* Audio buffer living on the APU */
-class Buffer final {
+class Buffer final : public Resource {
   friend class Renderer;
-  Resource resource;
+
 private:
   Buffer(const mos::aud::Buffer &buffer);
 };
