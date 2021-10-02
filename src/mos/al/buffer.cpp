@@ -10,5 +10,4 @@ Buffer::Buffer(const aud::Buffer &buffer) : Resource(alGenBuffers, alDeleteBuffe
   alBufferData(id, format, data, data_size * sizeof(short),
                buffer.sample_rate());
 }
-
 }

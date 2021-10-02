@@ -4,7 +4,7 @@
 
 namespace mos::al {
 
-void Filter::update(const aud::Source &source, const float dt) {
+void Filter::update(const apu::Source &source, const float dt) {
   ALfloat al_gain{0.0f};
   alGetFilterf(id, AL_LOWPASS_GAIN, &al_gain);
   auto error = glm::clamp((1.0f - source.obstructed), 0.0f, 1.0f) - al_gain;

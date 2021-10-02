@@ -13,12 +13,20 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
+#include <mos/aud/sounds.hpp>
+#include <mos/apu/sound.hpp>
+#include <mos/apu/scene.hpp>
+
 namespace mos::aud {
 class Sound_stream;
 class Sound;
 class Listener;
 class Scene;
 } // namespace mos::aud
+
+namespace mos::apu {
+class Scene;
+}
 
 namespace mos::al {
 
@@ -37,8 +45,10 @@ public:
   /** Get listener data. */
   static auto listener() -> aud::Listener;
 
+  auto load(const aud::Sounds &sounds) -> std::vector<mos::apu::Sound>;
+
   /** Render and play audio scene. */
-  auto render(const aud::Scene &scene, const float dt) -> void;
+  auto render(const apu::Scene &scene, const float dt) -> void;
 
   /** Clear buffers */
   auto clear() -> void;
@@ -52,7 +62,7 @@ private:
                            const float dt) -> void;
 
   /** Render/play a sound. */
-  auto render_sound(const aud::Sound &sound, const float dt) -> void;
+  auto render_sound(const apu::Sound &sound, const float dt) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;

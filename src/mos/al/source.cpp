@@ -2,7 +2,7 @@
 
 namespace mos::al {
 
-void Source::update(const mos::aud::Source &source)
+void Source::update(const mos::apu::Source &source)
 {
   alSourcei(id, AL_LOOPING, static_cast<ALint>(source.loop));
   alSourcef(id, AL_PITCH, source.pitch);
@@ -18,7 +18,7 @@ void Source::stop()
   alSourceStop(id);
 }
 
-Source::Source(const aud::Source &source) : Resource(alGenSources, alDeleteSources) {
+Source::Source(const apu::Source &source) : Resource(alGenSources, alDeleteSources) {
   alGenSources(1, &id);
   update(source);
 }
