@@ -5,8 +5,8 @@
 
 namespace mos::aud {
 
-Sound::Sound(const nlohmann::json &json, Assets &assets,
-                             const glm::mat4 &parent_transform) {
+auto Sound::load(const nlohmann::json &json, Assets &assets,
+                 const glm::mat4 &parent_transform) -> Sound {
   auto parsed = json;
   if (parsed.is_string()) {
     spdlog::info("Loading: {}", parsed);
@@ -24,14 +24,15 @@ Sound::Sound(const nlohmann::json &json, Assets &assets,
   auto sound_data = nlohmann::json::parse(mos::text(full_path));
 
   std::string buffer_path = sound_data["sound"];
-  buffer = assets.audio_buffer(buffer_path);
+  const auto buffer = assets.audio_buffer(buffer_path);
 
   auto transform = parent_transform * jsonarray_to_mat4(parsed["transform"]);
 
   float gain = sound_data["volume"];
   float pitch = sound_data["pitch"];
 
-  source = Source(glm::vec3(transform[3]), glm::vec3(0.0f), pitch, gain);
+  const auto source = Source(glm::vec3(transform[3]), glm::vec3(0.0f), pitch, gain);
+  return Sound(buffer, source);
 }
 
 Sound::Sound(Shared_buffer buffer,
