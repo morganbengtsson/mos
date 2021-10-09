@@ -14,6 +14,7 @@ namespace mos::apu {
 class Source final {
   friend class mos::al::Renderer;
   friend class Sound;
+  friend class Sound_stream;
 private:
   explicit Source(const aud::Source &source);
 
