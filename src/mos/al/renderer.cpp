@@ -92,34 +92,9 @@ Renderer::~Renderer() {
   alcCloseDevice(device_);
 }
 
-void Renderer::render_sound(const aud::Sound &sound, const float dt) {
-  if (sources_.find(sound.source.id()) == sources_.end()) {
-    sources_.insert({sound.source.id(), Source(sound.source)});
-
-    const auto &source = sources_.at(sound.source.id());
-
-    alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
-               AL_FILTER_NULL);
-
-    filters_.insert({sound.source.id(), Filter(source)});
-  }
+void Renderer::render_sound(const apu::Sound &sound, const float dt) {
 
   auto &source = sources_.at(sound.source.id());
-
-  auto buffer = sound.buffer;
-  if (buffer) {
-    if (buffers_.find(buffer->id()) == buffers_.end()) {
-      buffers_.insert({buffer->id(), al::Buffer(*buffer)});
-    }
-
-    ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
-
-    int v{0u};
-    alGetSourcei(source.id, AL_BUFFER, &v);
-    if (v == 0) {
-      alSourcei(source.id, AL_BUFFER, al_buffer);
-    }
-  }
 
   source.update(sound.source);
 
@@ -147,6 +122,7 @@ void Renderer::render_sound(const aud::Sound &sound, const float dt) {
   }
 }
 
+/*
 void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const float dt) {
   if (sources_.find(sound_stream.source.id()) == sources_.end()) {
     sources_.insert({sound_stream.source.id(), Source(sound_stream.source)});
@@ -221,6 +197,7 @@ void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const 
     }
   }
 }
+*/
 
 auto Renderer::listener() -> aud::Listener {
   aud::Listener listener;
@@ -242,6 +219,42 @@ auto Renderer::listener() -> aud::Listener {
   return listener;
 }
 
+std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
+  std::vector<apu::Sound> out_sounds;
+  for (const auto &sound : sounds) {
+    auto apu_sound = apu::Sound(sound);
+    if (sources_.find(sound.source.id()) == sources_.end()) {
+      sources_.insert({sound.source.id(), mos::al::Source(apu_sound.source)});
+
+      const auto &source = sources_.at(sound.source.id());
+
+      alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
+                 AL_FILTER_NULL);
+
+      filters_.insert({sound.source.id(), Filter(source)});
+    }
+
+    auto &source = sources_.at(sound.source.id());
+
+    auto buffer = sound.buffer;
+    if (buffer) {
+      if (buffers_.find(buffer->id()) == buffers_.end()) {
+        buffers_.insert({buffer->id(), al::Buffer(*buffer)});
+      }
+
+      ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
+
+      int v{0u};
+      alGetSourcei(source.id, AL_BUFFER, &v);
+      if (v == 0) {
+        alSourcei(source.id, AL_BUFFER, al_buffer);
+      }
+    }
+    out_sounds.push_back(apu_sound);
+  }
+  return out_sounds;
+}
+
 auto Renderer::listener(const aud::Listener &listener) -> void {
   alListener3f(AL_POSITION, listener.position.x, listener.position.y,
                listener.position.z);
@@ -256,14 +269,15 @@ auto Renderer::listener(const aud::Listener &listener) -> void {
   alListenerf(AL_GAIN, listener.gain);
 }
 
-auto Renderer::render(const aud::Scene &scene, const float dt) -> void {
+auto Renderer::render(const apu::Scene &scene, const float dt) -> void {
   listener(scene.listener);
   for (const auto &sound : scene.sounds) {
     render_sound(sound, dt);
   }
+  /*
   for (const auto &sound_stream : scene.sound_streams) {
     render_sound_stream(sound_stream, dt);
-  }
+  }*/
 }
 
 void Renderer::clear() {

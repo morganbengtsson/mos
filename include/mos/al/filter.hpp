@@ -8,6 +8,7 @@
 #include <AL/efx-presets.h>
 
 #include <mos/al/resource.hpp>
+#include <mos/apu/source.hpp>
 
 namespace mos::aud {
 class Source;
@@ -22,7 +23,7 @@ class Filter final : public Resource {
   friend class Renderer;
 
 public:
-  void update(const aud::Source &source, const float dt);
+  void update(const apu::Source &source, const float dt);
 
 private:
   Filter(const Source &source);

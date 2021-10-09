@@ -8,6 +8,7 @@
 #include <AL/efx-presets.h>
 
 #include <mos/aud/source.hpp>
+#include <mos/apu/source.hpp>
 #include <mos/al/resource.hpp>
 
 namespace mos::al {
@@ -20,10 +21,10 @@ public:
                                              std::chrono::nanoseconds>;
 
 public:
-  void update(const mos::aud::Source &Source);
+  void update(const mos::apu::Source &Source);
   void stop();
 
 private:
-  Source(const mos::aud::Source &Source);
+  Source(const mos::apu::Source &Source);
 };
 }

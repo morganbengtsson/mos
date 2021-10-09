@@ -13,8 +13,9 @@ namespace mos::aud {
 /** Audio buffer and audio source combined. */
 class Sound final {
 public:
-  Sound(const nlohmann::json &json, Assets &assets,
-        const glm::mat4 &parent_transform = glm::mat4(1.0f));
+  static auto load(const nlohmann::json &json, Assets &assets,
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Sound;
+
   explicit Sound(Shared_buffer buffer = nullptr,
                  Source source = Source());
   Shared_buffer buffer;
