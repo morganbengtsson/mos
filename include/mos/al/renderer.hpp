@@ -14,6 +14,7 @@
 #include <AL/efx-presets.h>
 
 #include <mos/aud/sounds.hpp>
+#include <mos/aud/sound_streams.hpp>
 #include <mos/apu/sound.hpp>
 #include <mos/apu/scene.hpp>
 
@@ -47,6 +48,8 @@ public:
 
   auto load(const aud::Sounds &sounds) -> std::vector<mos::apu::Sound>;
 
+  auto load(const aud::Sound_streams &sound_streams) -> std::vector<mos::apu::Sound_stream>;
+
   /** Render and play audio scene. */
   auto render(const apu::Scene &scene, const float dt) -> void;
 
@@ -58,7 +61,7 @@ private:
   static auto listener(const aud::Listener &listener) -> void;
 
   /** Render/play a sound stream. */
-  auto render_sound_stream(const aud::Sound_stream &sound_stream,
+  auto render_sound_stream(const apu::Sound_stream &sound_stream,
                            const float dt) -> void;
 
   /** Render/play a sound. */

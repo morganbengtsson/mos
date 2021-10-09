@@ -8,6 +8,7 @@ namespace mos::apu {
 
 /** Streamed audio from file, combined with a source living on the APU */
 class Sound_stream final {
+  friend class mos::al::Renderer;
 public:
   /** Stream data */
   aud::Shared_stream stream;

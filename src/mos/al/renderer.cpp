@@ -122,24 +122,7 @@ void Renderer::render_sound(const apu::Sound &sound, const float dt) {
   }
 }
 
-/*
-void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const float dt) {
-  if (sources_.find(sound_stream.source.id()) == sources_.end()) {
-    sources_.insert({sound_stream.source.id(), Source(sound_stream.source)});
-
-    const auto &source = sources_.at(sound_stream.source.id());
-
-    alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
-               AL_FILTER_NULL);
-
-    filters_.insert({sound_stream.source.id(), Filter(sound_stream.source)});
-
-    auto &filter = filters_.at(sound_stream.source.id());
-
-    alFilteri(filter.id, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-    alSourcei(source.id, AL_DIRECT_FILTER, filter.id);
-  };
-
+void Renderer::render_sound_stream(const apu::Sound_stream &sound_stream, const float dt) {
   auto &source = sources_.at(sound_stream.source.id());
   source.update(sound_stream.source);
 
@@ -197,7 +180,6 @@ void Renderer::render_sound_stream(const aud::Sound_stream &sound_stream, const 
     }
   }
 }
-*/
 
 auto Renderer::listener() -> aud::Listener {
   aud::Listener listener;
@@ -255,6 +237,31 @@ std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
   return out_sounds;
 }
 
+std::vector<apu::Sound_stream> Renderer::load(const aud::Sound_streams &sound_streams)
+{
+  std::vector<apu::Sound_stream> out_sound_streams;
+  for (auto & sound_stream : sound_streams) {
+    auto apu_stream = apu::Sound_stream(sound_stream);
+    if (sources_.find(sound_stream.source.id()) == sources_.end()) {
+      sources_.insert({sound_stream.source.id(), Source(apu_stream.source)});
+
+      const auto &source = sources_.at(sound_stream.source.id());
+
+      alSource3i(source.id, AL_AUXILIARY_SEND_FILTER, reverb_slot, 0,
+                 AL_FILTER_NULL);
+
+      filters_.insert({sound_stream.source.id(), Filter(apu_stream.source)});
+
+      auto &filter = filters_.at(sound_stream.source.id());
+
+      alFilteri(filter.id, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+      alSourcei(source.id, AL_DIRECT_FILTER, filter.id);
+    };
+    out_sound_streams.push_back(apu_stream);
+  }
+  return out_sound_streams;
+}
+
 auto Renderer::listener(const aud::Listener &listener) -> void {
   alListener3f(AL_POSITION, listener.position.x, listener.position.y,
                listener.position.z);
@@ -274,10 +281,10 @@ auto Renderer::render(const apu::Scene &scene, const float dt) -> void {
   for (const auto &sound : scene.sounds) {
     render_sound(sound, dt);
   }
-  /*
+
   for (const auto &sound_stream : scene.sound_streams) {
     render_sound_stream(sound_stream, dt);
-  }*/
+  }
 }
 
 void Renderer::clear() {
