@@ -1,12 +1,14 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
+
 #include <glm/glm.hpp>
+#include <json.hpp>
+
+#include <mos/aud/assets.hpp>
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/source.hpp>
-#include <mos/aud/assets.hpp>
-#include <json.hpp>
 
 namespace mos::aud {
 
@@ -14,11 +16,11 @@ namespace mos::aud {
 class Sound final {
 public:
   static auto load(const nlohmann::json &json, Assets &assets,
-                   const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Sound;
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+      -> Sound;
 
-  explicit Sound(Shared_buffer buffer = nullptr,
-                 Source source = Source());
+  explicit Sound(Shared_buffer buffer = nullptr, Source source = Source());
   Shared_buffer buffer;
   Source source;
 };
-}
+} // namespace mos::aud

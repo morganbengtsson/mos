@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <string>
 #include <memory>
 #include <mos/gfx/texture_2d.hpp>
+#include <string>
 
 namespace mos::gfx {
 
@@ -11,11 +11,11 @@ class Assets;
 /** Physically based material. */
 class Material final {
 public:
-  template<class T>
-  struct Slot {
+  template <class T> struct Slot {
     Slot(const T &value) : value(value) {}
     Slot(const Shared_texture_2D &texture) : texture(texture) {}
-    Slot(const T &value, const Shared_texture_2D &texture) : value(value), texture(texture) {}
+    Slot(const T &value, const Shared_texture_2D &texture)
+        : value(value), texture(texture) {}
     T value = T();
     Shared_texture_2D texture = Shared_texture_2D();
   };
@@ -43,4 +43,4 @@ public:
   float index_of_refraction{1.5f};
   float transmission{0.0f};
 };
-}
+} // namespace mos::gfx

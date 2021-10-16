@@ -8,5 +8,4 @@ namespace mos::gfx {
 /** Collection of boxes. */
 using Boxes = Container<Box>;
 
-}
-
+} // namespace mos::gfx

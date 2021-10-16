@@ -1,12 +1,15 @@
 #pragma once
+
 #include <memory>
-#include <json.hpp>
 #include <optional>
+
+#include <json.hpp>
+
+#include <mos/gfx/assets.hpp>
 #include <mos/gfx/material.hpp>
 #include <mos/gfx/mesh.hpp>
-#include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/models.hpp>
-#include <mos/gfx/assets.hpp>
+#include <mos/gfx/texture_2d.hpp>
 
 namespace mos::gfx {
 
@@ -20,10 +23,12 @@ class Renderer;
 /** Collection of properties for a renderable object. */
 class Model final {
 public:
-  static auto load(const nlohmann::json &json, Assets &assets = *std::make_unique<Assets>(), const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Model;
+  static auto load(const nlohmann::json &json,
+                   Assets &assets = *std::make_unique<Assets>(),
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+      -> Model;
 
-  Model(std::string name,
-        Shared_mesh mesh,
+  Model(std::string name, Shared_mesh mesh,
         glm::mat4 transform = glm::mat4(1.0f),
         Material material = Material{glm::vec3(1.0f)});
 
@@ -43,7 +48,7 @@ public:
   auto radius() const -> float;
 
   /** Set emission of material recursively. */
-  auto emission(const glm::vec3 & emission) -> void;
+  auto emission(const glm::vec3 &emission) -> void;
 
   /** Set alpha of material recursively. */
   auto alpha(float alpha) -> void;
@@ -74,7 +79,8 @@ public:
 
   /** Children models. */
   Models models;
+
 private:
   std::string name_;
 };
-}
+} // namespace mos::gfx

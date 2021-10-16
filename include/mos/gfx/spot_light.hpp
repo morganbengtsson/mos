@@ -1,9 +1,10 @@
 #pragma once
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-#include <mos/gfx/texture_2d.hpp>
 #include <mos/gfx/camera.hpp>
 #include <mos/gfx/target.hpp>
+#include <mos/gfx/texture_2d.hpp>
 
 namespace mos::gfx {
 
@@ -11,16 +12,15 @@ namespace mos::gfx {
 class Spot_light final {
 public:
   explicit Spot_light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 2.0f),
-                 const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
-                 float angle = glm::half_pi<float>(),
-                 const glm::vec3 &color = glm::vec3(0.0f),
-                 float strength = 0.0f,
-                 float near = 0.1f,
-                 float far = 10.0f,
-                 float blend = 0.15);
+                      const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
+                      float angle = glm::half_pi<float>(),
+                      const glm::vec3 &color = glm::vec3(0.0f),
+                      float strength = 0.0f, float near = 0.1f,
+                      float far = 10.0f, float blend = 0.15);
 
   static auto load(const std::string &directory, const std::string &path,
-                   const glm::mat4 &parent_transform = glm::mat4(1.0f)) -> Spot_light;
+                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+      -> Spot_light;
 
   /** Set blend factor. */
   auto blend(float blend) -> void;
@@ -58,7 +58,5 @@ private:
   float near_;
   float far_;
   float blend_ = 0.15;
-
 };
-}
-
+} // namespace mos::gfx

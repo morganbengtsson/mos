@@ -8,4 +8,4 @@ namespace mos::gfx {
 /** Collection of render targets. */
 using Texture_targets = Container<Texture_target>;
 
-}
+} // namespace mos::gfx

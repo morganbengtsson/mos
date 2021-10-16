@@ -3,9 +3,8 @@
 #include <mos/aud/buffer.hpp>
 
 namespace mos::al {
-  class Renderer;
+class Renderer;
 }
-
 
 namespace mos::apu {
 
@@ -38,4 +37,4 @@ private:
   size_t size_ = 0;
 };
 
-}
+} // namespace mos::apu

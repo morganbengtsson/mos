@@ -10,8 +10,9 @@ public:
   Shape();
   /** Unique id. */
   auto id() const -> unsigned int;
+
 private:
   static unsigned int current_id_;
   unsigned int id_;
 };
-}
+} // namespace mos::gfx

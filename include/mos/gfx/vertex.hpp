@@ -18,4 +18,4 @@ public:
   /** Apply a transformation matrix to the vertex */
   void apply_transform(const glm::mat4 &transform);
 };
-}
+} // namespace mos::gfx

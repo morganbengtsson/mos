@@ -6,5 +6,4 @@ namespace mos::gfx {
 /** Collection of lights. */
 using Spot_lights = std::array<Spot_light, 4>;
 
-}
-
+} // namespace mos::gfx

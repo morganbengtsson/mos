@@ -1,13 +1,16 @@
 #pragma once
+
 #include <atomic>
 #include <chrono>
-#include <gli/format.hpp>
-#include <gli/gli.hpp>
 #include <initializer_list>
 #include <memory>
-#include <mos/core/tracked_container.hpp>
 #include <string>
 #include <vector>
+
+#include <gli/format.hpp>
+#include <gli/gli.hpp>
+
+#include <mos/core/tracked_container.hpp>
 
 namespace mos::gfx {
 

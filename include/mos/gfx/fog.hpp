@@ -9,7 +9,7 @@ public:
   /** @param color Color of the fog.
    * @param attenuation_factor Fog density. */
   explicit Fog(const glm::vec3 &color, float attenuation_factor = 0.0f,
-      const float min = 0.0f, const float max = 1.0f);
+               const float min = 0.0f, const float max = 1.0f);
 
   /** @param color_near Close fog color.
    * @param color_far Far fog color.
@@ -34,6 +34,4 @@ public:
   /** Maximum clamp value. */
   float max{1.0f};
 };
-}
-
-
+} // namespace mos::gfx

@@ -8,8 +8,7 @@ namespace mos::gfx {
 class Box final {
 public:
   Box();
-  Box(const glm::mat4 &transform,
-      const glm::vec3 &extent);
+  Box(const glm::mat4 &transform, const glm::vec3 &extent);
   glm::mat4 transform;
   glm::vec3 extent;
   auto position() const -> glm::vec3;
@@ -18,5 +17,4 @@ public:
   auto max() const -> glm::vec3;
   auto inside(const glm::vec3 &point) const -> bool;
 };
-}
-
+} // namespace mos::gfx

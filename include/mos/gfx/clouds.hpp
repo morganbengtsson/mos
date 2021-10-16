@@ -8,4 +8,4 @@ namespace mos::gfx {
 /** Collection of particle clouds.*/
 using Clouds = Container<Cloud>;
 
-}
+} // namespace mos::gfx

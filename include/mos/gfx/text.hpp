@@ -1,25 +1,23 @@
 #pragma once
-#include <mos/gfx/model.hpp>
-#include <mos/gfx/mesh.hpp>
-#include <mos/gfx/character.hpp>
-#include <mos/gfx/font.hpp>
+
 #include <map>
 #include <memory>
 #include <string>
+
+#include <mos/gfx/character.hpp>
+#include <mos/gfx/font.hpp>
+#include <mos/gfx/mesh.hpp>
+#include <mos/gfx/model.hpp>
 
 namespace mos::gfx {
 
 /** Text for rendering. */
 class Text final {
 public:
-  Text(const std::string &txt,
-       Font font,
-       const glm::mat4 &transform = glm::mat4(1.0f),
-       float spacing = 0.0f,
-       float opacity = 1.0f,
-       float roughness = 1.0f,
-       float metallic = 0.0f,
-       const glm::vec3 & emission = glm::vec3(0.0f));
+  Text(const std::string &txt, Font font,
+       const glm::mat4 &transform = glm::mat4(1.0f), float spacing = 0.0f,
+       float opacity = 1.0f, float roughness = 1.0f, float metallic = 0.0f,
+       const glm::vec3 &emission = glm::vec3(0.0f));
 
   /** Set text. */
   auto text(const std::string &text) -> void;
@@ -58,7 +56,7 @@ public:
   auto opacity(float opacity) -> void;
 
   /** Set if the text is emissive. */
-  auto emission(const glm::vec3 & emission) -> void;
+  auto emission(const glm::vec3 &emission) -> void;
 
   /** Get the font. */
   auto font() const -> Font;
@@ -74,4 +72,4 @@ private:
   std::string text_;
   Font font_;
 };
-}
+} // namespace mos::gfx

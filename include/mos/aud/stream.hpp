@@ -1,10 +1,10 @@
 #pragma once
 
 #include <array>
-#include <string>
 #include <atomic>
-#include <stb_vorbis.h>
 #include <memory>
+#include <stb_vorbis.h>
+#include <string>
 
 namespace mos::aud {
 
@@ -18,8 +18,8 @@ public:
   ~Stream();
   Stream(const Stream &stream) = default;
   Stream(Stream &&stream) = default;
-  Stream & operator=(const Stream &stream) = default;
-  Stream & operator=(Stream &&stream) = default;
+  Stream &operator=(const Stream &stream) = default;
+  Stream &operator=(Stream &&stream) = default;
 
   static const int buffer_size = 4096 * 8;
 
@@ -46,6 +46,7 @@ public:
 
   /** Unique id. */
   auto id() const -> unsigned int;
+
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;
@@ -54,4 +55,4 @@ private:
   stb_vorbis *vorbis_stream_;
   stb_vorbis_info vorbis_info_;
 };
-}
+} // namespace mos::aud

@@ -13,10 +13,8 @@ public:
   using Char_pair = std::pair<unsigned int, Character>;
   /** @param characters Chars supported.
    * @param texture Image with glyphs. */
-  Font(const Char_map &characters,
-       const Shared_texture_2D &texture,
-       float height,
-       float base);
+  Font(const Char_map &characters, const Shared_texture_2D &texture,
+       float height, float base);
 
   static auto load(const std::string &path) -> Font;
 
@@ -36,6 +34,4 @@ private:
   float height_;
   float base_;
 };
-}
-
-
+} // namespace mos::gfx

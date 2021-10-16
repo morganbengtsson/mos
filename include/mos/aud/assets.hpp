@@ -1,19 +1,18 @@
 #pragma once
 
+#include <filesystem>
 #include <map>
 #include <memory>
-#include <unordered_map>
 #include <mos/aud/buffer.hpp>
 #include <mos/aud/stream.hpp>
-#include <filesystem>
+#include <unordered_map>
 
 namespace mos::aud {
 
 /** Cache for heavy audio assets. */
 class Assets final {
 public:
-  using Buffer_map =
-  std::unordered_map<std::string, Shared_buffer>;
+  using Buffer_map = std::unordered_map<std::string, Shared_buffer>;
   using Buffer_pair = std::pair<std::string, Shared_buffer>;
 
   explicit Assets(std::filesystem::path directory = "assets/");
@@ -22,8 +21,8 @@ public:
   Assets(const Assets &assets) = delete;
   Assets(const Assets &&assets) = delete;
 
-  Assets & operator=(const Assets & assets) = delete;
-  Assets & operator=(const Assets && assets) = delete;
+  Assets &operator=(const Assets &assets) = delete;
+  Assets &operator=(const Assets &&assets) = delete;
 
   /** Loads an *.ogg file into a buffer and caches it. */
   auto audio_buffer(const std::filesystem::path &path) -> Shared_buffer;
@@ -41,5 +40,4 @@ private:
   const std::string directory_;
   Buffer_map buffers_;
 };
-}
-
+} // namespace mos::aud

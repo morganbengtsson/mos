@@ -14,5 +14,4 @@ struct Character final {
   const float width;
   const float height;
 };
-}
-
+} // namespace mos::gfx

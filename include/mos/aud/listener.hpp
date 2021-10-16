@@ -27,5 +27,4 @@ public:
   /** Global audio gain. */
   float gain{1.0f};
 };
-}
-
+} // namespace mos::aud

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <array>
+#include <glm/glm.hpp>
 #include <map>
 #include <string>
 
@@ -13,9 +13,9 @@ class Camera final {
 public:
   using Planes = std::array<glm::vec4, 6>;
   Camera(const glm::vec3 &position = glm::vec3(0.0f),
-               const glm::vec3 &center = glm::vec3(0.0f),
-               const glm::mat4 &projection = glm::mat4(1.0f),
-               const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
+         const glm::vec3 &center = glm::vec3(0.0f),
+         const glm::mat4 &projection = glm::mat4(1.0f),
+         const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f));
 
   static auto load(const std::string &directory, const std::string &path,
                    const glm::mat4 &parent_transform = glm::mat4(1.0f))
@@ -24,10 +24,12 @@ public:
   auto position() const -> glm::vec3;
 
   /** Set position. */
-  auto position(const glm::vec3 &position, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
+  auto position(const glm::vec3 &position,
+                const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Set center/focus point. */
-  auto center(const glm::vec3 &center, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
+  auto center(const glm::vec3 &center,
+              const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Forward direction. **/
   auto direction() const -> glm::vec3;
@@ -35,14 +37,15 @@ public:
   auto right() const -> glm::vec3;
 
   /** Set direction. */
-  auto direction(const glm::vec3 &direction, const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
+  auto direction(const glm::vec3 &direction,
+                 const glm::vec3 &up = glm::vec3(0.0f, 0.0f, 1.0f)) -> void;
 
   /** Get the aspect ratio. */
   auto aspect_ratio() const -> float;
 
   /** Check if sphere with a radius is within camera frustum. */
-  auto in_frustum(const glm::vec3 & point, float radius) const -> bool;
-  
+  auto in_frustum(const glm::vec3 &point, float radius) const -> bool;
+
   /** Get near clip plane. */
   auto near_plane() const -> float;
 
@@ -68,7 +71,8 @@ public:
   auto field_of_view_horizontal() const -> float;
 
 private:
-  auto calculate_view(const glm::vec3 &position, const glm::vec3 &center, const glm::vec3 &up) -> void;
+  auto calculate_view(const glm::vec3 &position, const glm::vec3 &center,
+                      const glm::vec3 &up) -> void;
   auto calculate_frustum() -> void;
   auto calculate_near_far() -> void;
   glm::mat4 projection_{};
@@ -77,5 +81,5 @@ private:
   float near_{0.1f};
   float far_{100.0f};
 };
-}
-}
+} // namespace gfx
+} // namespace mos

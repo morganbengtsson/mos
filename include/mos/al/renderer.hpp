@@ -13,10 +13,10 @@
 #include <AL/alext.h>
 #include <AL/efx-presets.h>
 
-#include <mos/aud/sounds.hpp>
-#include <mos/aud/sound_streams.hpp>
-#include <mos/apu/sound.hpp>
 #include <mos/apu/scene.hpp>
+#include <mos/apu/sound.hpp>
+#include <mos/aud/sound_streams.hpp>
+#include <mos/aud/sounds.hpp>
 
 namespace mos::aud {
 class Sound_stream;
@@ -48,7 +48,8 @@ public:
 
   auto load(const aud::Sounds &sounds) -> std::vector<mos::apu::Sound>;
 
-  auto load(const aud::Sound_streams &sound_streams) -> std::vector<mos::apu::Sound_stream>;
+  auto load(const aud::Sound_streams &sound_streams)
+      -> std::vector<mos::apu::Sound_stream>;
 
   /** Render and play audio scene. */
   auto render(const apu::Scene &scene, const float dt) -> void;

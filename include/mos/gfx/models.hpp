@@ -9,4 +9,4 @@ class Model;
 /** Collection of models */
 using Models = std::vector<Model>;
 
-}
+} // namespace mos::gfx

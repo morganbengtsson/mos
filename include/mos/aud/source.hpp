@@ -9,11 +9,8 @@ namespace mos::aud {
 class Source final {
 public:
   Source(const glm::vec3 &position = glm::vec3(0.0f),
-         const glm::vec3 &velocity = glm::vec3(0.0f),
-         float pitch = 1.0f,
-         float gain = 1.0f,
-         bool loop = false,
-         bool playing = false,
+         const glm::vec3 &velocity = glm::vec3(0.0f), float pitch = 1.0f,
+         float gain = 1.0f, bool loop = false, bool playing = false,
          float obstructed = 0.0f);
 
   /** Unique id. */
@@ -39,8 +36,9 @@ public:
 
   /** How much the source is obstructed. 0.0 - 1.0 */
   float obstructed{0.0f};
+
 private:
   static std::atomic_uint current_id_;
   unsigned int id_;
 };
-}
+} // namespace mos::aud
