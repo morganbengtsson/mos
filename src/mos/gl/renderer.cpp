@@ -103,10 +103,6 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
                    Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_)},
-      cascaded_shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
-                            Shadow_map_target(shadow_maps_render_buffer_),
-                            Shadow_map_target(shadow_maps_render_buffer_),
-                            Shadow_map_target(shadow_maps_render_buffer_)},
       shadow_map_blur_target_(
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F)),
       shadow_map_blur_targets_{
@@ -114,15 +110,19 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F),
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F),
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F)},
+      environment_render_buffer_(128),
+      environment_maps_targets_{
+          Environment_map_target(environment_render_buffer_),
+          Environment_map_target(environment_render_buffer_)},
+      cascaded_shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
+                            Shadow_map_target(shadow_maps_render_buffer_),
+                            Shadow_map_target(shadow_maps_render_buffer_),
+                            Shadow_map_target(shadow_maps_render_buffer_)},
       cascaded_shadow_map_blur_targets_{
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F),
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F),
           Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F),
-          Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F)},
-      environment_render_buffer_(128),
-      environment_maps_targets_{
-          Environment_map_target(environment_render_buffer_),
-          Environment_map_target(environment_render_buffer_)} {
+          Post_target(shadow_maps_render_buffer_.resolution(), GL_RG32F)} {
 
   if (!context_) {
     spdlog::error("No valid OpenGL context");
