@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mos/core/container.hpp>
-#include <mos/gfx/boxes.hpp>
 #include <mos/gfx/camera.hpp>
 #include <mos/gfx/clouds.hpp>
 #include <mos/gfx/cube_camera.hpp>
@@ -24,13 +23,11 @@ public:
   Scene() = default;
   Scene(const gpu::Models &models, const Camera &camera,
         const Spot_lights &spot_lights = Spot_lights(), const Fog &fog = Fog(),
-        const Environment_lights &environment_lights = Environment_lights(),
-        Boxes boxes = Boxes());
+        const Environment_lights &environment_lights = Environment_lights());
   gpu::Model sky = gpu::Model();
   gpu::Models models;
   Clouds point_clouds;
   Clouds line_clouds;
-  Boxes boxes;
   Spot_lights spot_lights;
   Directional_light directional_light;
   Camera camera;

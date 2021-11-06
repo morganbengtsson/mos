@@ -5,10 +5,8 @@ Scene::Scene(const gpu::Models &models,
              const Camera &camera,
              const Spot_lights &lights,
              const Fog &fog,
-             const Environment_lights &environment_lights,
-             Boxes boxes)
+             const Environment_lights &environment_lights)
     : models(std::move(models)),
-      boxes(std::move(boxes)),
       spot_lights(lights),
       camera(camera),
       fog(fog),

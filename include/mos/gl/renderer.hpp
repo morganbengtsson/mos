@@ -20,7 +20,6 @@
 #include <mos/gl/light_uniforms.hpp> //TODO: remove
 
 #include <mos/gl/cloud_program.hpp>
-#include <mos/gl/box_program.hpp>
 #include <mos/gl/bloom_program.hpp>
 #include <mos/gl/compositing_program.hpp>
 #include <mos/gl/blur_program.hpp>
@@ -33,7 +32,6 @@
 #include <mos/gl/shadow_map_target.hpp>
 #include <mos/gl/environment_map_target.hpp>
 
-#include <mos/gl/box.hpp>
 #include <mos/gl/quad.hpp>
 
 namespace mos::gl {
@@ -176,7 +174,6 @@ private:
   const Post_target post_target1_;
 
   const Quad quad_;
-  const Box box;
 
   const Texture_buffer_2D black_texture_;
   const Texture_buffer_2D white_texture_;
