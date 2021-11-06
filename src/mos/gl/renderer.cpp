@@ -232,19 +232,15 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
   // Cascaded
 
   glActiveTexture(GL_TEXTURE13);
-  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[0].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[0].texture);
 
   glActiveTexture(GL_TEXTURE14);
-  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[1].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[1].texture);
 
   glActiveTexture(GL_TEXTURE15);
-  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[2].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[2].texture);
 
   glActiveTexture(GL_TEXTURE16);
-  // glBindTexture(GL_TEXTURE_2D, cascaded_shadow_maps_[3].texture);
   glBindTexture(GL_TEXTURE_2D, cascaded_shadow_map_blur_targets_[3].texture);
 
   // Cascaded Splits
@@ -255,19 +251,15 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
   glBindTexture(GL_TEXTURE_2D, brdf_lut_texture_.texture);
 
   glActiveTexture(GL_TEXTURE1);
-  // glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[0].texture);
 
   glActiveTexture(GL_TEXTURE2);
-  // glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[1].texture);
 
   glActiveTexture(GL_TEXTURE3);
-  // glBindTexture(GL_TEXTURE_2D, shadow_maps_[0].texture);
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[2].texture);
 
   glActiveTexture(GL_TEXTURE4);
-  // glBindTexture(GL_TEXTURE_2D, shadow_maps_[1].texture);
   glBindTexture(GL_TEXTURE_2D, shadow_map_blur_targets_[3].texture);
 
   glActiveTexture(GL_TEXTURE5);
@@ -335,7 +327,6 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
   glUniform1fv(standard_program_.directional_light.strength, 1,
                &scene.directional_light.strength);
 
-  // ---
   glUniform2iv(standard_program_.camera.resolution, 1,
                glm::value_ptr(resolution));
 
@@ -355,33 +346,6 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
                  scene.environment_lights, scene.fog, resolution,
                  standard_program_);
   }
-  render_boxes(scene.boxes, camera);
-}
-
-void Renderer::render_boxes(const gfx::Boxes &boxes,
-                            const mos::gfx::Camera &camera) {
-
-  glUseProgram(box_program_.program);
-  glBindVertexArray(box.vertex_array);
-
-  for (auto &box : boxes) {
-    glm::vec3 size = box.size();
-    glm::mat4 transform = box.transform;
-    glm::mat4 mv =
-        camera.view() * transform * glm::scale(glm::mat4(1.0f), size);
-    glm::mat4 mvp = camera.projection() * camera.view() * transform *
-                    glm::scale(glm::mat4(1.0f), size);
-
-    glUniformMatrix4fv(box_program_.model_view_projection, 1, GL_FALSE,
-                       &mvp[0][0]);
-
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, nullptr);
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                   (GLvoid *)(4 * sizeof(GLuint)));
-    glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,
-                   (GLvoid *)(8 * sizeof(GLuint)));
-  }
-  glBindVertexArray(0);
 }
 
 void Renderer::render_sky(const gpu::Model &model, const gfx::Camera &camera,

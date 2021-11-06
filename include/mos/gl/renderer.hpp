@@ -113,9 +113,6 @@ private:
   auto render_environment(const gfx::Scene &scene,
                           const glm::vec4 &clear_color) -> void;
 
-  auto render_boxes(const gfx::Boxes & boxes,
-                    const gfx::Camera &camera) -> void;
-
   auto render_sky(const gpu::Model &model,
                   const gfx::Camera &camera,
                   const gfx::Fog &fog,
@@ -161,7 +158,6 @@ private:
   const Standard_program standard_program_;
   const Cloud_program point_cloud_program_;
   const Cloud_program line_cloud_program_;
-  const Box_program box_program_;
   const Depth_program depth_program_;
   const Bloom_program bloom_program_;
   const Compositing_program compositing_program_;
