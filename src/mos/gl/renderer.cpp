@@ -1,5 +1,6 @@
 ﻿#include <cstdlib>
 #include <functional>
+#include <spdlog/spdlog.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/color_space.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -125,11 +126,10 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
       propagate_target_(environment_render_buffer_) {
 
   if (!context_) {
-    printf("No valid OpenGL context.\n");
-    exit(-1);
+    spdlog::error("No valid OpenGL context");
+    std::exit(EXIT_FAILURE);
   }
-
-  fprintf(stdout, "Status: OpenGL version: %s\n", glGetString(GL_VERSION));
+  spdlog::info("OpenGL version: {}", glGetString(GL_VERSION));
 
 #ifndef NDEBUG
   glEnable(GL_DEBUG_OUTPUT);
