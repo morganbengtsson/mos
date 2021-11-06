@@ -95,9 +95,9 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
       white_texture_(Texture_buffer_2D(
           GL_RGBA, GL_RGBA, 1, 1, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_REPEAT,
           std::array<unsigned char, 4>{255, 255, 255, 255}.data())),
-      brdf_lut_texture_(gl::Texture_buffer_2D(
-          gfx::Texture_2D::load("assets/brdfLUT.png", false, false,
-                                gfx::Texture_2D::Filter::Linear, gfx::Texture_2D::Wrap::Clamp))),
+      brdf_lut_texture_(gl::Texture_buffer_2D(gfx::Texture_2D::load(
+          "assets/brdfLUT.png", false, false, gfx::Texture_2D::Filter::Linear,
+          gfx::Texture_2D::Wrap::Clamp))),
       cube_camera_index_({0, 0}), shadow_maps_render_buffer_(resolution.y),
       shadow_maps_{Shadow_map_target(shadow_maps_render_buffer_),
                    Shadow_map_target(shadow_maps_render_buffer_),
@@ -122,8 +122,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
       environment_render_buffer_(128),
       environment_maps_targets_{
           Environment_map_target(environment_render_buffer_),
-          Environment_map_target(environment_render_buffer_)},
-      propagate_target_(environment_render_buffer_) {
+          Environment_map_target(environment_render_buffer_)} {
 
   if (!context_) {
     spdlog::error("No valid OpenGL context");
