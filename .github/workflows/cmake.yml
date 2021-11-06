@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Install packages
-      run: sudo apt-get install libxrandr-dev xorg-dev libglu1-mesa-dev
+      run: sudo apt-get update && sudo apt-get install libxrandr-dev xorg-dev libglu1-mesa-dev
 
     - uses: actions/checkout@v2
       
