@@ -46,10 +46,9 @@ auto Environment_light::load(const std::string &directory,
     auto near_plane = value.value("near", 0.01F);
 
     return Environment_light(position, extent, strength, falloff, near_plane);
-  } else {
-    throw std::runtime_error(path.substr(path.find_last_of('.')) +
-                             " file format is not supported.");
   }
+  throw std::runtime_error(path.substr(path.find_last_of('.')) +
+                           " file format is not supported.");
 }
 
 void Environment_light::position(const glm::vec3 &position) {

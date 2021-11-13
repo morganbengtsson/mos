@@ -16,10 +16,11 @@ Font::Font(const Font::Char_map &characters,
   texture->wrap = Texture_2D::Wrap::Clamp;
 }
 
-Font Font::load(const std::string &path) {
+auto Font::load(const std::string &path) -> Font {
   std::filesystem::path fpath = path;
   Char_map characters;
-  float base, height;
+  float base;
+  float height;
   Shared_texture_2D texture;
 
   auto doc = json::parse(text(fpath.generic_string()));

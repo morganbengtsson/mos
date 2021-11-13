@@ -145,7 +145,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-gpu::Model Renderer::load(const mos::gfx::Model &model) {
+auto Renderer::load(const mos::gfx::Model &model) -> gpu::Model {
   load(model.mesh);
   load(model.material.albedo.texture);
   load(model.material.normal.texture);
@@ -877,7 +877,7 @@ void Renderer::render_environment(const gfx::Scene &scene,
   }
 }
 
-gpu::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
+auto Renderer::load(const mos::gfx::Mesh &mesh) -> gpu::Mesh {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
     vertex_arrays_.insert({mesh.id(), Vertex_array(mesh, array_buffers_,
                                                    element_array_buffers_)});
@@ -925,7 +925,7 @@ void Renderer::load(const gfx::Shared_mesh &mesh) {
   }
 }
 
-gpu::Models Renderer::load(const gfx::Models &models) {
+auto Renderer::load(const gfx::Models &models) -> gpu::Models {
   gpu::Models loaded;
   for (auto &model : models) {
     loaded.push_back(load(model));

@@ -9,39 +9,39 @@ Material::Material(const mos::gfx::Material &material)
       alpha_(material.alpha), index_of_refraction_(material.index_of_refraction),
       transmission_(material.transmission) {}
 
-const Material::Albedo& Material::albedo() const {
+auto Material::albedo() const -> const decltype(albedo_)& {
   return albedo_;
 }
 
-const Material::Metallic& Material::metallic() const {
+auto Material::metallic() const -> const decltype (metallic_)& {
   return metallic_;
 }
 
-const Material::Roughness& Material::roughness() const {
+auto Material::roughness() const -> const decltype(roughness_)& {
   return roughness_;
 }
 
-const Material::Emission& Material::emission() const {
+auto Material::emission() const -> const decltype(emission_)& {
   return emission_;
 }
 
-const Material::Ambient_occlusion& Material::ambient_occlusion() const {
+auto Material::ambient_occlusion() const -> const decltype(ambient_occlusion_)& {
   return ambient_occlusion_;
 }
 
-const Material::Normal& Material::normal() const {
+auto Material::normal() const -> const decltype(normal_)& {
   return normal_;
 }
 
-const float& Material::alpha() const {
+auto Material::alpha() const -> const decltype(alpha_)& {
   return alpha_;
 }
 
-const float& Material::index_of_refraction() const {
+auto Material::index_of_refraction() const -> const decltype(index_of_refraction_)& {
   return index_of_refraction_;
 }
 
-const float& Material::transmission() const {
+auto Material::transmission() const -> const decltype(transmission_)& {
   return transmission_;
 }
 } // namespace mos::gpu

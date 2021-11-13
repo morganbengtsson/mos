@@ -201,7 +201,7 @@ auto Renderer::listener() -> aud::Listener {
   return listener;
 }
 
-std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
+auto Renderer::load(const aud::Sounds &sounds) -> std::vector<apu::Sound> {
   std::vector<apu::Sound> out_sounds;
   for (const auto &sound : sounds) {
     auto apu_sound = apu::Sound(sound);
@@ -240,7 +240,7 @@ std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
 std::vector<apu::Sound_stream> Renderer::load(const aud::Sound_streams &sound_streams)
 {
   std::vector<apu::Sound_stream> out_sound_streams;
-  for (auto & sound_stream : sound_streams) {
+  for (const auto & sound_stream : sound_streams) {
     auto apu_stream = apu::Sound_stream(sound_stream);
     if (sources_.find(sound_stream.source.id()) == sources_.end()) {
       sources_.insert({sound_stream.source.id(), Source(apu_stream.source)});

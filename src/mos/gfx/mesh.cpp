@@ -203,15 +203,14 @@ auto Mesh::calculate_sphere() -> void {
   }
 }
 
-glm::vec3 Mesh::centroid() const
-{
+auto Mesh::centroid() const -> glm::vec3 {
   return centroid_;
 }
 
-float Mesh::radius() const
-{
+auto Mesh::radius() const -> float {
   return radius_;
 }
+
 auto Mesh::Triangle::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);
 }
