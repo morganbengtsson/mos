@@ -18,8 +18,8 @@ public:
   using Time_point = std::chrono::time_point<std::chrono::system_clock,
                                              std::chrono::nanoseconds>;
 
-  Resource(Gen_function gen_function,
-           Delete_function delete_function);
+  Resource(const Gen_function& gen_function,
+           const Delete_function& delete_function);
   Resource(const Resource &Resource) = delete;
   Resource(Resource &&Resource) noexcept;
   ~Resource();
