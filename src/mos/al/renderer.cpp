@@ -237,7 +237,7 @@ auto Renderer::load(const aud::Sounds &sounds) -> std::vector<apu::Sound> {
   return out_sounds;
 }
 
-std::vector<apu::Sound_stream> Renderer::load(const aud::Sound_streams &sound_streams)
+auto Renderer::load(const aud::Sound_streams &sound_streams) -> std::vector<apu::Sound_stream>
 {
   std::vector<apu::Sound_stream> out_sound_streams;
   for (const auto & sound_stream : sound_streams) {

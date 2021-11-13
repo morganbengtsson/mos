@@ -73,9 +73,9 @@ public:
   GLint model_matrix;
   GLint normal_matrix;
 
-  Material_uniforms material;
-  Fog_uniforms fog;
-  Camera_uniforms camera;
+  Material_uniforms material{};
+  Fog_uniforms fog{};
+  Camera_uniforms camera{};
 
   std::array<Environment_uniforms, 2> environment_maps{};
 
@@ -83,7 +83,7 @@ public:
   std::array<Light_uniforms, 4> spot_lights{};
   std::array<GLint, 4> depth_bias_mvps{};
 
-  Directional_light_uniforms directional_light;
+  Directional_light_uniforms directional_light{};
   std::array<GLuint, 4> cascaded_shadow_samplers{};
   std::array<GLint, 4> cascaded_depth_bias_mvps{};
   GLint cascade_splits;

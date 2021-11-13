@@ -19,8 +19,8 @@ Font::Font(Font::Char_map characters,
 auto Font::load(const std::string &path) -> Font {
   std::filesystem::path fpath = path;
   Char_map characters;
-  float base;
-  float height;
+  float base{0};
+  float height{0};
   Shared_texture_2D texture;
 
   auto doc = json::parse(text(fpath.generic_string()));
