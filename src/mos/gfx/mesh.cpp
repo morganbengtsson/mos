@@ -11,8 +11,8 @@
 namespace mos::gfx {
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
-           const std::initializer_list<Triangle_indices> &indices)
-    : Mesh(vertices.begin(), vertices.end(), indices.begin(), indices.end()) {
+           const std::initializer_list<Triangle_indices> &triangles)
+    : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
   calculate_sphere();
 }
 
