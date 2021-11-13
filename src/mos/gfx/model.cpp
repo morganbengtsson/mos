@@ -72,11 +72,11 @@ auto Model::centroid() const -> glm::vec3 {
 
 auto Model::radius() const -> float {
   if (mesh) {
-    glm::vec3 scale;
-    glm::quat rotation;
-    glm::vec3 translation;
-    glm::vec3 skew;
-    glm::vec4 perspective;
+    glm::vec3 scale{};
+    glm::quat rotation{};
+    glm::vec3 translation{};
+    glm::vec3 skew{};
+    glm::vec4 perspective{};
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
     return mesh->radius() * glm::max(glm::max(scale.x, scale.y), scale.z);
   }

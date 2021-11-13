@@ -5,12 +5,12 @@
 
 namespace mos::gfx {
 using namespace nlohmann;
-Font::Font(const Font::Char_map &characters,
+Font::Font(Font::Char_map characters,
            const Shared_texture_2D &texture,
            const float height,
            const float base)
     : texture(texture),
-      characters(characters),
+      characters(std::move(characters)),
       height_(height),
       base_(base) {
   texture->wrap = Texture_2D::Wrap::Clamp;

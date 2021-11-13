@@ -198,9 +198,9 @@ private:
   //TODO: Blur directly into the cascaded shadowmaps to save memory.
   const std::array<Post_target, 4> cascaded_shadow_map_blur_targets_;
 
-  glm::vec4 cascade_splits; //TODO: Generalize number of splits
-  std::array<glm::mat4, cascade_count> directional_light_ortho_matrices;
-  std::array<glm::mat4, cascade_count> light_view_matrix;
+  glm::vec4 cascade_splits{}; //TODO: Generalize number of splits
+  std::array<glm::mat4, cascade_count> directional_light_ortho_matrices{};
+  std::array<glm::mat4, cascade_count> light_view_matrix{};
 
 };
 }

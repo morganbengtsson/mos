@@ -15,7 +15,7 @@ public:
   using Buffer_map = std::unordered_map<std::string, Shared_buffer>;
   using Buffer_pair = std::pair<std::string, Shared_buffer>;
 
-  explicit Assets(std::filesystem::path directory = "assets/");
+  explicit Assets(const std::filesystem::path& directory = "assets/");
   ~Assets() = default;
 
   Assets(const Assets &assets) = delete;

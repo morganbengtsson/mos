@@ -40,7 +40,7 @@ namespace mos::gl {
 
 auto Renderer::generate(const std::function<void(GLsizei, GLuint *)> &f)
     -> GLuint {
-  GLuint id;
+  GLuint id{0};
   f(1, &id);
   return id;
 }
@@ -79,7 +79,7 @@ void APIENTRY message_callback(GLenum source, GLenum type, GLuint id,
 }
 
 Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
-    : context_(gladLoadGL()),
+    : context_(gladLoadGL() != 0),
       functions_shader_(text("assets/shaders/functions.frag"),
                         GL_FRAGMENT_SHADER, "functions"),
       standard_program_(functions_shader_),
@@ -153,7 +153,7 @@ auto Renderer::load(const mos::gfx::Model &model) -> gpu::Model {
   load(model.material.emission.texture);
   load(model.material.roughness.texture);
   load(model.material.ambient_occlusion.texture);
-  for (auto &m : model.models) {
+  for (const auto &m : model.models) {
     load(m);
   }
   return mos::gpu::Model(model);
@@ -341,7 +341,7 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
 
   render_sky(scene.sky, camera, scene.fog, resolution, standard_program_);
 
-  for (auto &model : scene.models) {
+  for (const auto &model : scene.models) {
     render_model(model, glm::mat4(1.0F), camera, scene.spot_lights,
                  scene.environment_lights, scene.fog, resolution,
                  standard_program_);
@@ -371,7 +371,7 @@ void Renderer::render_sky(const gpu::Model &model, const gfx::Camera &camera,
                gfx::Environment_lights(), fog, resolution, program);
 
   glEnable(GL_DEPTH_TEST);
-  glDepthMask(true);
+  glDepthMask(GL_TRUE);
 }
 
 void Renderer::render_clouds(const gfx::Clouds &clouds,
@@ -383,7 +383,7 @@ void Renderer::render_clouds(const gfx::Clouds &clouds,
                              const Cloud_program &program,
                              const GLenum &draw_mode) {
   glDepthMask(GL_FALSE);
-  for (auto &particles : clouds) {
+  for (const auto &particles : clouds) {
     if (particles.blending == gfx::Cloud::Blending::Additive) {
       glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     } else {
@@ -574,9 +574,9 @@ void Renderer::render_model(const gpu::Model &model,
 
       // Cascaded
       for (size_t i = 0; i < directional_light_ortho_matrices.size(); i++) {
-        auto light_view = light_view_matrix[i];
+        auto light_view = light_view_matrix.at(i);
         const glm::mat4 cascaded_depth_bias_mvp =
-            bias * directional_light_ortho_matrices[i] * light_view *
+            bias * directional_light_ortho_matrices.at(i) * light_view *
             parent_transform * model.transform;
         glUniformMatrix4fv(uniforms.cascaded_depth_bias_mvps.at(i), 1, GL_FALSE,
                            &cascaded_depth_bias_mvp[0][0]);
@@ -673,7 +673,7 @@ void Renderer::render_shadow_maps(const std::vector<gpu::Model> &models,
 
       glUniform1i(depth_program_.albedo_sampler, 0);
 
-      for (auto &model : models) {
+      for (const auto &model : models) {
         render_model_depth(model, glm::mat4(1.0F), lights.at(i).camera,
                            resolution, depth_program_);
       }
@@ -744,7 +744,7 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
 
     for (int i = 0; i < 4; i++) {
       const glm::vec3 corner_ray =
-          frustum_corners_world[i + 4] - frustum_corners_world[i];
+          frustum_corners_world.at(i + 4) - frustum_corners_world[i];
       const glm::vec3 near_corner_ray = corner_ray * prev_split_distance;
       const glm::vec3 far_corner_ray = corner_ray * split_distance;
       frustum_corners_world[i + 4] = frustum_corners_world[i] + far_corner_ray;
@@ -927,14 +927,14 @@ void Renderer::load(const gfx::Shared_mesh &mesh) {
 
 auto Renderer::load(const gfx::Models &models) -> gpu::Models {
   gpu::Models loaded;
-  for (auto &model : models) {
+  for (const auto &model : models) {
     loaded.push_back(load(model));
   }
   return loaded;
 }
 
 void Renderer::render_texture_targets(const gfx::Scene &scene) {
-  for (auto &target : scene.texture_targets) {
+  for (const auto &target : scene.texture_targets) {
     if (frame_buffers_.find(target.target.id()) == frame_buffers_.end()) {
       frame_buffers_.insert({target.target.id(),
                              Frame_buffer(target, textures_, render_buffers_)});
@@ -995,7 +995,7 @@ void Renderer::render_model_depth(const gpu::Model &model,
 
 void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
                       const glm::ivec2 &resolution) {
-  for (auto &scene : scenes) {
+  for (const auto &scene : scenes) {
     //load(scene.models);
   }
   render_shadow_maps(scenes[0].models, scenes[0].spot_lights);
@@ -1007,7 +1007,7 @@ void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
   clear(glm::convertSRGBToLinear(color));
 
-  for (auto &scene : scenes) {
+  for (const auto &scene : scenes) {
 
     render_scene(scene.camera, scene, resolution);
     render_clouds(scene.point_clouds, scene.directional_light,
