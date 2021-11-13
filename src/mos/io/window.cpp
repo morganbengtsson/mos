@@ -81,7 +81,7 @@ auto Window::dpi() const -> float {
   int heightMM{0};
   glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
   const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-  const float dpi = mode->width / (widthMM / 25.4f);
+  const float dpi = mode->width / (widthMM / 25.4F);
   return dpi;
 }
 

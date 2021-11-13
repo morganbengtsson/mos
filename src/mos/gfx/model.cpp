@@ -65,7 +65,7 @@ void Model::position(const glm::vec3 &position) {
 
 auto Model::centroid() const -> glm::vec3 {
   if (mesh) {
-    return (transform * glm::translate(glm::mat4(1.0f), mesh->centroid()))[3];
+    return (transform * glm::translate(glm::mat4(1.0F), mesh->centroid()))[3];
   }
   return transform[3];
 }
@@ -80,7 +80,7 @@ auto Model::radius() const -> float {
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
     return mesh->radius() * glm::max(glm::max(scale.x, scale.y), scale.z);
   }
-  return 0.0f;
+  return 0.0F;
 }
 
 void Model::emission(const glm::vec3 & emission)

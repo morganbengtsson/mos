@@ -69,16 +69,16 @@ Renderer::Renderer()
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6f);
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05f);
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6F);
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05F);
 
   alGenFilters(1, &lowpass_filter2);
   if (lowpass_filter2 == AL_NONE) {
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3f);
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f);
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3F);
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01F);
 
   listener(aud::Listener());
 }
@@ -226,7 +226,7 @@ std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
 
       ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
 
-      int v{0u};
+      int v{0U};
       alGetSourcei(source.id, AL_BUFFER, &v);
       if (v == 0) {
         alSourcei(source.id, AL_BUFFER, al_buffer);

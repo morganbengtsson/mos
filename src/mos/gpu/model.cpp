@@ -10,7 +10,7 @@ Model::Model(mos::gfx::Model model)
 }
 
 auto Model::centroid() const -> glm::vec3{
-  return (transform * glm::translate(glm::mat4(1.0f), mesh.centroid()))[3];
+  return (transform * glm::translate(glm::mat4(1.0F), mesh.centroid()))[3];
 }
 
 auto Model::radius() const -> float {

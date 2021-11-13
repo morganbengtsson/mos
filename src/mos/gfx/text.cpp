@@ -21,8 +21,8 @@ Text::Text(const std::string &txt,
       font_(std::move(font)) {
   model_.material.roughness.value = roughness;
   model_.material.metallic.value = metallic;
-  model_.material.albedo.value = glm::vec3(1.0f);
-  model_.material.index_of_refraction = 1.0f;
+  model_.material.albedo.value = glm::vec3(1.0F);
+  model_.material.index_of_refraction = 1.0F;
   model_.material.index_of_refraction = opacity;
   model_.material.emission.value = emiss;
   model_.material.albedo.texture = font_.texture;
@@ -37,14 +37,14 @@ auto Text::text(const std::string &text) -> void {
 
     model_.mesh->clear();
 
-    float line_index = 0.0f;
-    const float line_height = -1.0f;
+    float line_index = 0.0F;
+    const float line_height = -1.0F;
     int triangle_index = 0;
 
     std::istringstream stream(text_);
     std::string line;
     while (std::getline(stream, line)) {
-      float index = 0.0f;
+      float index = 0.0F;
 
       auto it = line.begin();
       while(it != line.end()) {
@@ -63,10 +63,10 @@ auto Text::text(const std::string &text) -> void {
         const float rect_w = character.width / font_.height();
         const float advance = character.advance / font_.height();
 
-        const float z = index / 2000.0f;
+        const float z = index / 2000.0F;
 
-        const glm::vec3 normal = glm::vec3(0.0f, 0.0f, 1.0f);
-        const glm::vec3 tangent = glm::vec3(0.0f, 1.0f, 0.0f);
+        const glm::vec3 normal(0.0F, 0.0F, 1.0F);
+        const glm::vec3 tangent(0.0F, 1.0F, 0.0F);
 
         model_.mesh->vertices.push_back(
             Vertex{glm::vec3(index + offset_x, rect_h + offset_y + line_index, z),
@@ -102,7 +102,7 @@ auto Text::width() const -> float {
 
     return glm::distance(result.first->position.x, result.second->position.x);
   }
-  return 0.0f;
+  return 0.0F;
 }
 
 auto Text::height() const -> float {
@@ -113,23 +113,23 @@ auto Text::height() const -> float {
 
     return glm::distance(result.first->position.t, result.second->position.y);
   }
-  return 0.0f;
+  return 0.0F;
 }
 
 auto Text::position(const glm::vec2 &position) -> void {
   model_.transform =
-      glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
+      glm::translate(glm::mat4(1.0F), glm::vec3(position.x, position.y, 0.0F));
 }
 
 auto Text::position(const glm::vec3 &position) -> void {
-  model_.transform = glm::translate(glm::mat4(1.0f), position);
+  model_.transform = glm::translate(glm::mat4(1.0F), position);
 }
 
 auto Text::position() const -> glm::vec2 { return glm::vec2(model_.position()); }
 
 auto Text::scale(const float scale) -> void {
   model_.transform =
-      glm::scale(model_.transform, glm::vec3(scale, scale, scale));
+      glm::scale(model_.transform, glm::vec3(scale));
 }
 
 auto Text::transform(const glm::mat4 &transform) -> void {
@@ -143,7 +143,7 @@ auto Text::transform() const -> glm::mat4 {
 auto Text::model() const -> Model { return model_; }
 
 auto Text::opacity(const float op) -> void {
-  model_.material.transmission = 1.0f - op;
+  model_.material.transmission = 1.0F - op;
 }
 
 auto Text::operator=(const std::string &input) -> Text & {

@@ -31,7 +31,7 @@ auto Sound::load(const nlohmann::json &json, Assets &assets,
   float gain = sound_data["volume"];
   float pitch = sound_data["pitch"];
 
-  const auto source = Source(glm::vec3(transform[3]), glm::vec3(0.0f), pitch, gain);
+  const auto source = Source(glm::vec3(transform[3]), glm::vec3(0.0F), pitch, gain);
   return Sound(buffer, source);
 }
 

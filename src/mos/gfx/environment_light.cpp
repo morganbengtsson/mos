@@ -15,7 +15,7 @@ Environment_light::Environment_light(const glm::vec3 &position,
     :
       strength(strength),
       falloff(falloff),
-      box_(glm::translate(glm::mat4(1.0f), position), extent),
+      box_(glm::translate(glm::mat4(1.0F), position), extent),
       cube_camera_(position, near, glm::length(extent)) {
 }
 
@@ -41,9 +41,9 @@ auto Environment_light::load(const std::string &directory,
     glm::decompose(transform, scale, rotation, translation, skew, perspective);
 
     auto extent = float(value["size"]) * scale;
-    auto strength = value.value("intensity", 1.0f);
-    auto falloff = value.value("falloff", 0.1f);
-    auto near_plane = value.value("near", 0.01f);
+    auto strength = value.value("intensity", 1.0F);
+    auto falloff = value.value("falloff", 0.1F);
+    auto near_plane = value.value("near", 0.01F);
 
     return Environment_light(position, extent, strength, falloff, near_plane);
   } else {
@@ -53,7 +53,7 @@ auto Environment_light::load(const std::string &directory,
 }
 
 void Environment_light::position(const glm::vec3 &position) {
-  box_.transform[3] = glm::vec4(position, 0.0f);
+  box_.transform[3] = glm::vec4(position, 0.0F);
   cube_camera_.position(position);
 }
 auto Environment_light::position() const -> glm::vec3 {
@@ -61,7 +61,7 @@ auto Environment_light::position() const -> glm::vec3 {
 }
 void Environment_light::extent(const glm::vec3 &extent) {
   box_.extent = extent;
-  cube_camera_.near_far(glm::length(extent) / 2.0f, glm::length(extent));
+  cube_camera_.near_far(glm::length(extent) / 2.0F, glm::length(extent));
 }
 auto Environment_light::extent() const -> glm::vec3 {
   return box_.extent;
