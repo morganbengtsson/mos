@@ -157,7 +157,7 @@ void Renderer::render_sound_stream(const apu::Sound_stream &sound_stream, const 
       alSourcePlay(source.id);
     }
 
-    while (processed--) {		
+    while ((processed--) != 0) {		
                   alSourceUnqueueBuffers(source.id, 1, &buffer);
                   const auto samples = sound_stream.stream->read();
                   const int size = sound_stream.stream->buffer_size;
