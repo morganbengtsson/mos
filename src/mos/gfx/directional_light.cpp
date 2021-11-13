@@ -14,7 +14,7 @@ auto mos::gfx::Directional_light::load(const std::string &directory,
     auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
     auto position = glm::vec3(transform[3]);
     auto direction = glm::normalize(
-        glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+        glm::vec3(transform * glm::vec4(0.0F, 0.0F, -1.0F, 0.0F)));
 
     std::string t = value["light"];
     auto data_value = json::parse(mos::text(directory + t));

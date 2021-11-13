@@ -11,8 +11,8 @@
 namespace mos::gfx {
 
 Mesh::Mesh(const std::initializer_list<Vertex> &vertices,
-           const std::initializer_list<Triangle_indices> &indices)
-    : Mesh(vertices.begin(), vertices.end(), indices.begin(), indices.end()) {
+           const std::initializer_list<Triangle_indices> &triangles)
+    : Mesh(vertices.begin(), vertices.end(), triangles.begin(), triangles.end()) {
   calculate_sphere();
 }
 
@@ -106,7 +106,7 @@ auto Mesh::calculate_tangents(Vertex &v0,
   glm::vec2 delta_uv1 = uv2 - uv1;
   glm::vec2 delta_uv2 = uv3 - uv1;
 
-  float f = 1.0f / (delta_uv1.x * delta_uv2.y - delta_uv2.x * delta_uv1.y);
+  float f = 1.0F / (delta_uv1.x * delta_uv2.y - delta_uv2.x * delta_uv1.y);
 
   glm::vec3 tangent;
   tangent.x = f * (delta_uv2.y * edge1.x - delta_uv1.y * edge2.x);
@@ -163,7 +163,7 @@ auto Mesh::calculate_normals() -> void {
     }
     for (const auto & p : triangle_map) {
       auto &v = vertices[p.first];
-      auto normal = glm::vec3(0.0f);
+      auto normal = glm::vec3(0.0F);
       for (const auto &neighbour : p.second) {
         normal += neighbour.normal();
       }
@@ -193,7 +193,7 @@ auto Mesh::calculate_sphere() -> void {
   centroid_ = std::accumulate(all_positions.begin(), all_positions.end(), glm::vec3(0.0));
   centroid_ /= all_positions.size();
 
-  radius_ = 0.0f;
+  radius_ = 0.0F;
 
   for (const auto & position : all_positions) {
     auto distance = glm::distance(centroid_, position);
@@ -203,15 +203,14 @@ auto Mesh::calculate_sphere() -> void {
   }
 }
 
-glm::vec3 Mesh::centroid() const
-{
+auto Mesh::centroid() const -> glm::vec3 {
   return centroid_;
 }
 
-float Mesh::radius() const
-{
+auto Mesh::radius() const -> float {
   return radius_;
 }
+
 auto Mesh::Triangle::normal() const -> glm::vec3 {
   return glm::triangleNormal(v0.position, v1.position, v2.position);
 }

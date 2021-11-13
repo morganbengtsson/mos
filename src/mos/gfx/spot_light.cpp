@@ -15,8 +15,8 @@ Spot_light::Spot_light(const glm::vec3 &position,
              const float blend)
     : color(color),
       strength(strength),
-      camera(position, center, glm::perspective(angle, 1.0f, near_plane, far_plane),
-             glm::vec3(0.0f, 0.0001f, 1.0f)),
+      camera(position, center, glm::perspective(angle, 1.0F, near_plane, far_plane),
+             glm::vec3(0.0F, 0.0001F, 1.0F)),
       angle_(angle),
       near_(near_plane),
       far_(far_plane),
@@ -32,7 +32,7 @@ auto Spot_light::position() const -> glm::vec3 {
 
 auto Spot_light::angle(const float angle) -> void {
   angle_ = angle;
-  camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
+  camera.projection(glm::perspective(angle_, 1.0F, near_, far_));
 }
 
 auto Spot_light::angle() const -> float {
@@ -50,7 +50,7 @@ auto Spot_light::direction() const -> glm::vec3 {
 void Spot_light::near_far(const float near_plane, const float far_plane) {
   near_ = near_plane;
   far_ = far_plane;
-  camera.projection(glm::perspective(angle_, 1.0f, near_, far_));
+  camera.projection(glm::perspective(angle_, 1.0F, near_, far_));
 }
 
 auto Spot_light::load(const std::string &directory, const std::string &path, const glm::mat4 &parent_transform) -> Spot_light {
@@ -61,7 +61,7 @@ auto Spot_light::load(const std::string &directory, const std::string &path, con
 
       auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
       auto position = glm::vec3(transform[3]);
-      auto center = position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+      auto center = position + glm::vec3(transform * glm::vec4(0.0F, 0.0F, -1.0F, 0.0F));
 
       std::string t = value["light"];
       auto data_value = json::parse(mos::text(directory + t));

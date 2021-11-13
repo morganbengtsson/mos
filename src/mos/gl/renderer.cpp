@@ -40,7 +40,7 @@ namespace mos::gl {
 
 auto Renderer::generate(const std::function<void(GLsizei, GLuint *)> &f)
     -> GLuint {
-  GLuint id;
+  GLuint id{0};
   f(1, &id);
   return id;
 }
@@ -79,7 +79,7 @@ void APIENTRY message_callback(GLenum source, GLenum type, GLuint id,
 }
 
 Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
-    : context_(gladLoadGL()),
+    : context_(gladLoadGL() != 0),
       functions_shader_(text("assets/shaders/functions.frag"),
                         GL_FRAGMENT_SHADER, "functions"),
       standard_program_(functions_shader_),
@@ -145,7 +145,7 @@ Renderer::Renderer(const glm::ivec2 &resolution, const int samples)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-gpu::Model Renderer::load(const mos::gfx::Model &model) {
+auto Renderer::load(const mos::gfx::Model &model) -> gpu::Model {
   load(model.mesh);
   load(model.material.albedo.texture);
   load(model.material.normal.texture);
@@ -153,7 +153,7 @@ gpu::Model Renderer::load(const mos::gfx::Model &model) {
   load(model.material.emission.texture);
   load(model.material.roughness.texture);
   load(model.material.ambient_occlusion.texture);
-  for (auto &m : model.models) {
+  for (const auto &m : model.models) {
     load(m);
   }
   return mos::gpu::Model(model);
@@ -341,8 +341,8 @@ void Renderer::render_scene(const gfx::Camera &camera, const gfx::Scene &scene,
 
   render_sky(scene.sky, camera, scene.fog, resolution, standard_program_);
 
-  for (auto &model : scene.models) {
-    render_model(model, glm::mat4(1.0f), camera, scene.spot_lights,
+  for (const auto &model : scene.models) {
+    render_model(model, glm::mat4(1.0F), camera, scene.spot_lights,
                  scene.environment_lights, scene.fog, resolution,
                  standard_program_);
   }
@@ -364,14 +364,14 @@ void Renderer::render_sky(const gpu::Model &model, const gfx::Camera &camera,
 
   auto sky_camera = camera;
   auto view = sky_camera.view();
-  view[3] = glm::vec4(0.0f, 0.0, 0.0f, 1.0f);
+  view[3] = glm::vec4(0.0F, 0.0F, 0.0F, 1.0F);
   sky_camera.view(view);
   //load(model);
-  render_model(model, glm::mat4(1.0f), sky_camera, gfx::Spot_lights(),
+  render_model(model, glm::mat4(1.0F), sky_camera, gfx::Spot_lights(),
                gfx::Environment_lights(), fog, resolution, program);
 
   glEnable(GL_DEPTH_TEST);
-  glDepthMask(true);
+  glDepthMask(GL_TRUE);
 }
 
 void Renderer::render_clouds(const gfx::Clouds &clouds,
@@ -383,7 +383,7 @@ void Renderer::render_clouds(const gfx::Clouds &clouds,
                              const Cloud_program &program,
                              const GLenum &draw_mode) {
   glDepthMask(GL_FALSE);
-  for (auto &particles : clouds) {
+  for (const auto &particles : clouds) {
     if (particles.blending == gfx::Cloud::Blending::Additive) {
       glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     } else {
@@ -574,9 +574,9 @@ void Renderer::render_model(const gpu::Model &model,
 
       // Cascaded
       for (size_t i = 0; i < directional_light_ortho_matrices.size(); i++) {
-        auto light_view = light_view_matrix[i];
+        auto light_view = light_view_matrix.at(i);
         const glm::mat4 cascaded_depth_bias_mvp =
-            bias * directional_light_ortho_matrices[i] * light_view *
+            bias * directional_light_ortho_matrices.at(i) * light_view *
             parent_transform * model.transform;
         glUniformMatrix4fv(uniforms.cascaded_depth_bias_mvps.at(i), 1, GL_FALSE,
                            &cascaded_depth_bias_mvp[0][0]);
@@ -622,13 +622,13 @@ void Renderer::render_model(const gpu::Model &model,
 }
 
 void Renderer::clear(const glm::vec4 &color) {
-  glClearDepthf(1.0f);
+  glClearDepthf(1.0F);
   glClearColor(color.r, color.g, color.b, color.a);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::clear_depth() {
-  glClearDepthf(1.0f);
+  glClearDepthf(1.0F);
   glClear(GL_DEPTH_BUFFER_BIT);
 }
 
@@ -647,7 +647,7 @@ void Renderer::blur(const GLuint input_texture,
     glBindFramebuffer(GL_FRAMEBUFFER, horizontal ? output_target.frame_buffer
                                                  : buffer_target.frame_buffer);
     glUseProgram(blur_program_.program);
-    clear(glm::vec4(0.0f));
+    clear(glm::vec4(0.0F));
     glBindVertexArray(quad_.vertex_array);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, i == 0 ? input_texture
@@ -663,7 +663,7 @@ void Renderer::blur(const GLuint input_texture,
 void Renderer::render_shadow_maps(const std::vector<gpu::Model> &models,
                                   const gfx::Spot_lights &lights) {
   for (size_t i = 0; i < shadow_maps_.size(); i++) {
-    if (lights.at(i).strength > 0.0f) {
+    if (lights.at(i).strength > 0.0F) {
       auto frame_buffer = shadow_maps_.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
       glClear(GL_DEPTH_BUFFER_BIT);
@@ -673,8 +673,8 @@ void Renderer::render_shadow_maps(const std::vector<gpu::Model> &models,
 
       glUniform1i(depth_program_.albedo_sampler, 0);
 
-      for (auto &model : models) {
-        render_model_depth(model, glm::mat4(1.0f), lights.at(i).camera,
+      for (const auto &model : models) {
+        render_model_depth(model, glm::mat4(1.0F), lights.at(i).camera,
                            resolution, depth_program_);
       }
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -693,9 +693,9 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
                                            const gfx::Camera &camera) {
   std::vector<gpu::Model> models_to_render(models.begin(), models.end());
 
-  const float lambda = .7f;
-  const float min_distance = 0.0f;
-  const float max_distance = 1.0f;
+  const float lambda = .7F;
+  const float min_distance = 0.0F;
+  const float max_distance = 1.0F;
 
   const auto camera_projection = camera.projection();
   const auto camera_view = camera.view();
@@ -713,7 +713,7 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
   const float ratio = max_z / min_z;
 
   for (int i = 0; i < cascade_count; i++) {
-    float p = (i + 1.f) / static_cast<float>(cascade_count);
+    float p = (i + 1.0F) / static_cast<float>(cascade_count);
     float log = min_z * std::pow(ratio, p);
     float uniform = min_z + z_range * p;
     float d = lambda * (log - uniform) + uniform;
@@ -729,72 +729,72 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
 
     // TODO: Incorporate into camera
     std::array<glm::vec3, 8> frustum_corners_world = {
-        glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(1.0f, 1.0f, -1.0f),
-        glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(-1.0f, 1.0f, 1.0f),  glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::vec3(1.0f, -1.0f, 1.0f),  glm::vec3(-1.0f, -1.0f, 1.0f),
+        glm::vec3(-1.0F, 1.0F, -1.0F), glm::vec3(1.0F, 1.0F, -1.0F),
+        glm::vec3(1.0F, -1.0F, -1.0F), glm::vec3(-1.0F, -1.0F, -1.0F),
+        glm::vec3(-1.0F, 1.0F, 1.0F),  glm::vec3(1.0F, 1.0F, 1.0F),
+        glm::vec3(1.0F, -1.0F, 1.0F),  glm::vec3(-1.0F, -1.0F, 1.0F),
     };
 
     const glm::mat4 inv_view_proj =
         glm::inverse(camera_projection * camera_view);
     for (auto &corner : frustum_corners_world) {
-      glm::vec4 inverse_point = inv_view_proj * glm::vec4(corner, 1.0f);
+      glm::vec4 inverse_point = inv_view_proj * glm::vec4(corner, 1.0F);
       corner = glm::vec3(inverse_point / inverse_point.w);
     }
 
     for (int i = 0; i < 4; i++) {
       const glm::vec3 corner_ray =
-          frustum_corners_world[i + 4] - frustum_corners_world[i];
+          frustum_corners_world.at(i + 4) - frustum_corners_world[i];
       const glm::vec3 near_corner_ray = corner_ray * prev_split_distance;
       const glm::vec3 far_corner_ray = corner_ray * split_distance;
       frustum_corners_world[i + 4] = frustum_corners_world[i] + far_corner_ray;
       frustum_corners_world[i] = frustum_corners_world[i] + near_corner_ray;
     }
 
-    auto frustum_center = glm::vec3(0.0f);
+    auto frustum_center = glm::vec3(0.0F);
     for (auto corner : frustum_corners_world) {
       frustum_center += corner;
     }
-    frustum_center /= 8.0f;
+    frustum_center /= 8.0F;
 
-    float radius = 0.0f;
+    float radius = 0.0F;
     for (auto corner : frustum_corners_world) {
       float distance = glm::length(corner - frustum_center);
       radius = glm::max(radius, distance);
     }
-    radius = std::ceil(radius * 16.0f) / 16.0f;
+    radius = std::ceil(radius * 16.0F) / 16.0F;
 
     const glm::vec3 max_extents = glm::vec3(radius, radius, radius);
     const glm::vec3 min_extents = -max_extents;
 
     const glm::vec3 light_position =
         frustum_center - glm::normalize(light_dir) * -min_extents.z;
-    light_view_matrix[cascade_idx] = glm::mat4(1.0f);
+    light_view_matrix[cascade_idx] = glm::mat4(1.0F);
     light_view_matrix[cascade_idx] = glm::lookAt(light_position, frustum_center,
-                                                 glm::vec3(0.0f, 1.0f, 0.0f));
+                                                 glm::vec3(0.0F, 1.0F, 0.0F));
 
     const glm::vec3 cascade_extents = max_extents - min_extents;
 
     directional_light_ortho_matrices[cascade_idx] =
         glm::ortho(min_extents.x, max_extents.x, min_extents.y, max_extents.y,
-                   0.0f, cascade_extents.z * 2); // TODO: hack times two?
+                   0.0F, cascade_extents.z * 2); // TODO: hack times two?
 
     // TOOD: Do Same thing on standard shadow maps
     const auto shadow_matrix = directional_light_ortho_matrices[cascade_idx] *
                                light_view_matrix[cascade_idx];
-    auto shadow_origin = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    auto shadow_origin = glm::vec4(0.0F, 0.0, 0.0F, 1.0F);
     shadow_origin = shadow_matrix * shadow_origin;
     shadow_origin =
         shadow_origin *
-        static_cast<float>(shadow_maps_render_buffer_.resolution().x) / 2.0f;
+        static_cast<float>(shadow_maps_render_buffer_.resolution().x) / 2.0F;
 
     const glm::vec4 rounded_origin = glm::round(shadow_origin);
     glm::vec4 round_offset = rounded_origin - shadow_origin;
     round_offset =
-        round_offset * 2.0f /
+        round_offset * 2.0F /
         static_cast<float>(shadow_maps_render_buffer_.resolution().x);
-    round_offset.z = 0.0f;
-    round_offset.w = 0.0f;
+    round_offset.z = 0.0F;
+    round_offset.w = 0.0F;
 
     glm::mat4 shadow_proj = directional_light_ortho_matrices[cascade_idx];
     shadow_proj[3] += round_offset;
@@ -812,13 +812,13 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
 
     auto light_camera = gfx::Camera(light_position, frustum_center,
                                directional_light_ortho_matrices[cascade_idx],
-                               glm::vec3(0.0f, 1.0f, 0.0f));
+                               glm::vec3(0.0F, 1.0F, 0.0F));
 
     // for (auto &model : models) {
     auto it = models_to_render.begin();
     while (it != models_to_render.end()) {
       if (light_camera.in_frustum(it->position(), it->radius())) {
-        render_model_depth(*it, glm::mat4(1.0f), light_camera, resolution,
+        render_model_depth(*it, glm::mat4(1.0F), light_camera, resolution,
                            depth_program_);
         if (it->radius() > radius) {
           it++;
@@ -839,7 +839,7 @@ void Renderer::render_cascaded_shadow_maps(const std::vector<gpu::Model> &models
 void Renderer::render_environment(const gfx::Scene &scene,
                                   const glm::vec4 &clear_color) {
   for (size_t i = 0; i < environment_maps_targets_.size(); i++) {
-    if (scene.environment_lights.at(i).strength > 0.0f) {
+    if (scene.environment_lights.at(i).strength > 0.0F) {
       GLuint frame_buffer_id = environment_maps_targets_.at(i).frame_buffer;
       glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_id);
 
@@ -877,7 +877,7 @@ void Renderer::render_environment(const gfx::Scene &scene,
   }
 }
 
-gpu::Mesh Renderer::load(const mos::gfx::Mesh &mesh) {
+auto Renderer::load(const mos::gfx::Mesh &mesh) -> gpu::Mesh {
   if (vertex_arrays_.find(mesh.id()) == vertex_arrays_.end()) {
     vertex_arrays_.insert({mesh.id(), Vertex_array(mesh, array_buffers_,
                                                    element_array_buffers_)});
@@ -925,16 +925,16 @@ void Renderer::load(const gfx::Shared_mesh &mesh) {
   }
 }
 
-gpu::Models Renderer::load(const gfx::Models &models) {
+auto Renderer::load(const gfx::Models &models) -> gpu::Models {
   gpu::Models loaded;
-  for (auto &model : models) {
+  for (const auto &model : models) {
     loaded.push_back(load(model));
   }
   return loaded;
 }
 
 void Renderer::render_texture_targets(const gfx::Scene &scene) {
-  for (auto &target : scene.texture_targets) {
+  for (const auto &target : scene.texture_targets) {
     if (frame_buffers_.find(target.target.id()) == frame_buffers_.end()) {
       frame_buffers_.insert({target.target.id(),
                              Frame_buffer(target, textures_, render_buffers_)});
@@ -944,7 +944,7 @@ void Renderer::render_texture_targets(const gfx::Scene &scene) {
 
     auto texture_id = textures_.at(target.texture->id()).texture;
 
-    clear(glm::vec4(0.0f));
+    clear(glm::vec4(0.0F));
 
     render_scene(target.camera, scene,
                  glm::ivec2(target.texture->width(), target.texture->height()));
@@ -995,7 +995,7 @@ void Renderer::render_model_depth(const gpu::Model &model,
 
 void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
                       const glm::ivec2 &resolution) {
-  for (auto &scene : scenes) {
+  for (const auto &scene : scenes) {
     //load(scene.models);
   }
   render_shadow_maps(scenes[0].models, scenes[0].spot_lights);
@@ -1007,7 +1007,7 @@ void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
   glBindFramebuffer(GL_FRAMEBUFFER, standard_target_.frame_buffer);
   clear(glm::convertSRGBToLinear(color));
 
-  for (auto &scene : scenes) {
+  for (const auto &scene : scenes) {
 
     render_scene(scene.camera, scene, resolution);
     render_clouds(scene.point_clouds, scene.directional_light,
@@ -1028,7 +1028,7 @@ void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
   // Bloom
   glViewport(0, 0, post_target0_.resolution.x, post_target0_.resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, post_target0_.frame_buffer);
-  clear(glm::vec4(0.0f));
+  clear(glm::vec4(0.0F));
 
   glUseProgram(bloom_program_.program);
   glBindVertexArray(quad_.vertex_array);
@@ -1043,7 +1043,7 @@ void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
   // Render to screen
   glViewport(0, 0, resolution.x, resolution.y);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  clear(glm::vec4(0.0f));
+  clear(glm::vec4(0.0F));
 
   // Compositing
   glUseProgram(compositing_program_.program);
@@ -1058,7 +1058,7 @@ void Renderer::render(const gfx::Scenes &scenes, const glm::vec4 &color,
   glBindTexture(GL_TEXTURE_2D, post_target0_.texture);
   glUniform1i(compositing_program_.bloom_sampler, 1);
 
-  float strength = 0.1f;
+  float strength = 0.1F;
   glUniform1fv(compositing_program_.bloom_strength, 1, &strength);
 
   glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -12,9 +12,9 @@ namespace mos::gfx {
 Camera::Camera(const glm::vec3 &position, const glm::vec3 &center,
                const glm::mat4 &projection, const glm::vec3 &up)
     : projection_(projection),
-      view_(1.0f), frustum_planes_{glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f),
-                                   glm::vec4(0.0f), glm::vec4(0.0f)} {
+      view_(1.0F), frustum_planes_{glm::vec4(0.0F), glm::vec4(0.0F),
+                                   glm::vec4(0.0F), glm::vec4(0.0F),
+                                   glm::vec4(0.0F), glm::vec4(0.0F)} {
   calculate_view(position, center, up);
   calculate_frustum();
   calculate_near_far();
@@ -30,7 +30,7 @@ auto Camera::load(const std::string &directory, const std::string &path,
     auto transform = parent_transform * jsonarray_to_mat4(value["transform"]);
     auto position = glm::vec3(transform[3]);
     auto center =
-        position + glm::vec3(transform * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+        position + glm::vec3(transform * glm::vec4(0.0F, 0.0F, -1.0F, 0.0F));
 
     auto proj = mos::jsonarray_to_mat4(value["projection"]);
 
@@ -54,7 +54,7 @@ void Camera::center(const glm::vec3 &center, const glm::vec3 &up) {
 }
 
 auto Camera::direction() const -> glm::vec3 {
-  return glm::vec3(0.0f, 0.0f, -1.0f) * glm::mat3(view_);
+  return glm::vec3(0.0F, 0.0F, -1.0F) * glm::mat3(view_);
 }
 
 void Camera::direction(const glm::vec3 &direction, const glm::vec3 &up) {
@@ -135,7 +135,7 @@ auto Camera::view(const glm::mat4 mat) -> void{
 }
 
 auto Camera::field_of_view_vertical() const -> float {
-  return 2.0 * glm::atan(1.0f / projection()[1][1]);
+  return 2.0F * glm::atan(1.0F / projection()[1][1]);
 }
 
 auto Camera::field_of_view_horizontal() const -> float {

@@ -69,16 +69,16 @@ Renderer::Renderer()
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter1, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6f);
-  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05f);
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAIN, 0.6F);
+  alFilterf(lowpass_filter1, AL_LOWPASS_GAINHF, 0.05F);
 
   alGenFilters(1, &lowpass_filter2);
   if (lowpass_filter2 == AL_NONE) {
     std::runtime_error("Could not create lowpass filter.");
   }
   alFilteri(lowpass_filter2, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3f);
-  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01f);
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAIN, 0.3F);
+  alFilterf(lowpass_filter2, AL_LOWPASS_GAINHF, 0.01F);
 
   listener(aud::Listener());
 }
@@ -157,7 +157,7 @@ void Renderer::render_sound_stream(const apu::Sound_stream &sound_stream, const 
       alSourcePlay(source.id);
     }
 
-    while (processed--) {		
+    while ((processed--) != 0) {		
                   alSourceUnqueueBuffers(source.id, 1, &buffer);
                   const auto samples = sound_stream.stream->read();
                   const int size = sound_stream.stream->buffer_size;
@@ -201,7 +201,7 @@ auto Renderer::listener() -> aud::Listener {
   return listener;
 }
 
-std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
+auto Renderer::load(const aud::Sounds &sounds) -> std::vector<apu::Sound> {
   std::vector<apu::Sound> out_sounds;
   for (const auto &sound : sounds) {
     auto apu_sound = apu::Sound(sound);
@@ -226,7 +226,7 @@ std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
 
       ALuint al_buffer = buffers_.at(sound.buffer->id()).id;
 
-      int v{0u};
+      int v{0U};
       alGetSourcei(source.id, AL_BUFFER, &v);
       if (v == 0) {
         alSourcei(source.id, AL_BUFFER, al_buffer);
@@ -237,10 +237,10 @@ std::vector<apu::Sound> Renderer::load(const aud::Sounds &sounds) {
   return out_sounds;
 }
 
-std::vector<apu::Sound_stream> Renderer::load(const aud::Sound_streams &sound_streams)
+auto Renderer::load(const aud::Sound_streams &sound_streams) -> std::vector<apu::Sound_stream>
 {
   std::vector<apu::Sound_stream> out_sound_streams;
-  for (auto & sound_stream : sound_streams) {
+  for (const auto & sound_stream : sound_streams) {
     auto apu_stream = apu::Sound_stream(sound_stream);
     if (sources_.find(sound_stream.source.id()) == sources_.end()) {
       sources_.insert({sound_stream.source.id(), Source(apu_stream.source)});

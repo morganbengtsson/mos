@@ -10,12 +10,12 @@ Gamepad Window::gamepad_ = Gamepad();
 Window::Window(const std::string &title,
                const glm::ivec2 &resolution,
                int swap_interval){
-  if (!glfwInit()) {
+  if (glfwInit() == 0) {
     exit(EXIT_FAILURE);
   }
 
-  glfwWindowHint(GLFW_SRGB_CAPABLE, true);
-  glfwWindowHint(GLFW_RESIZABLE, false);
+  glfwWindowHint(GLFW_SRGB_CAPABLE, 1);
+  glfwWindowHint(GLFW_RESIZABLE, 0);
 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
@@ -61,7 +61,7 @@ auto Window::poll_events() -> Output {
   glfwPollEvents();
 
   GLFWgamepadstate state;
-  if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state)) {
+  if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) != 0) {
     gamepad_.button_a = bool(state.buttons[GLFW_GAMEPAD_BUTTON_A]);
     gamepad_.button_b = bool(state.buttons[GLFW_GAMEPAD_BUTTON_B]);
 
@@ -81,16 +81,16 @@ auto Window::dpi() const -> float {
   int heightMM{0};
   glfwGetMonitorPhysicalSize(monitor, &widthMM, &heightMM);
   const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-  const float dpi = mode->width / (widthMM / 25.4f);
+  const float dpi = mode->width / (widthMM / 25.4F);
   return dpi;
 }
 
 auto Window::close() const -> bool {
-  return glfwWindowShouldClose(window_);
+  return glfwWindowShouldClose(window_) != 0;
 }
 
 void Window::close(const bool close) {
-  glfwSetWindowShouldClose(window_, close);
+  glfwSetWindowShouldClose(window_, static_cast<int>(close));
 }
 
 void Window::error_callback(int error, const char *description) {

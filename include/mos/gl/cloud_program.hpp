@@ -57,10 +57,10 @@ public:
 
   GLint resolution;
 
-  Camera_uniforms camera;
+  Camera_uniforms camera{};
 
   std::array<Environment_uniforms, 2> environment_samplers{};
   std::array<Light_uniforms, 4> spot_lights{};
-  Directional_light_uniforms directional_light;
+  Directional_light_uniforms directional_light{};
 };
 }

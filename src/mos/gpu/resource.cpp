@@ -6,11 +6,11 @@ Resource::Resource(const int id) : id_(id) {
 
 }
 
-bool Resource::valid() const {
+auto Resource::valid() const -> bool {
   return id_ != invalid_id;
 }
 
-int Resource::id() const {
+auto Resource::id() const -> decltype(id_){
   return id_;
 }
 }

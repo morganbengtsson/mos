@@ -25,7 +25,7 @@ auto Box::position() const -> glm::vec3 {
 }
 
 Box::Box() :
-    transform(glm::mat4(1.0f)),
-    extent(0.0f) {
+    transform(glm::mat4(1.0F)),
+    extent(0.0F) {
 }
 }

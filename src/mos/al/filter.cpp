@@ -5,14 +5,14 @@
 namespace mos::al {
 
 void Filter::update(const apu::Source &source, const float dt) {
-  ALfloat al_gain{0.0f};
+  ALfloat al_gain{0.0F};
   alGetFilterf(id, AL_LOWPASS_GAIN, &al_gain);
-  auto error = glm::clamp((1.0f - source.obstructed), 0.0f, 1.0f) - al_gain;
+  auto error = glm::clamp((1.0F - source.obstructed), 0.0F, 1.0F) - al_gain;
   float gain = al_gain + error * dt;
 
-  ALfloat al_gain_hf{0.0f};
+  ALfloat al_gain_hf{0.0F};
   alGetFilterf(id, AL_LOWPASS_GAINHF, &al_gain_hf);
-  auto error_hf = glm::clamp((1.0f - source.obstructed), 0.0f, 1.0f) - al_gain_hf;
+  auto error_hf = glm::clamp((1.0F - source.obstructed), 0.0F, 1.0F) - al_gain_hf;
   float gain_hf = al_gain_hf + error_hf * dt;
 
   alFilteri(id, AL_FILTER_TYPE, AL_FILTER_LOWPASS);

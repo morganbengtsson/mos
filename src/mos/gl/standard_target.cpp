@@ -19,7 +19,7 @@ Standard_target::Standard_target(const glm::ivec2 &resolution,
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_texture);
   glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
                             GL_DEPTH_COMPONENT24, resolution.x, resolution.y,
-                            true);
+                            1U);
   glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                          GL_TEXTURE_2D_MULTISAMPLE, depth_texture, 0);

@@ -8,6 +8,6 @@ Source::Source(const aud::Source &source)
       gain(source.gain), loop(source.loop), playing(source.playing),
       obstructed(source.obstructed), id_(source.id()) {}
 
-unsigned int Source::id() const { return id_; }
+auto Source::id() const -> unsigned int { return id_; }
 
 } // namespace mos::apu

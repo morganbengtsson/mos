@@ -6,10 +6,10 @@ namespace mos::gl {
 Quad::Quad()
     : vertex_array(Renderer::generate(glGenVertexArrays)),
       buffer(Renderer::generate(glGenBuffers)) {
-  static const std::array quad_vertices{-1.0f, 1.0f, 0.0f, 1.0f,  -1.0f, -1.0f,
-                                        0.0f,  0.0f, 1.0f, -1.0f, 1.0f,  0.0f,
-                                        -1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  -1.0f,
-                                        1.0f,  0.0f, 1.0f, 1.0f,  1.0f,  1.0f};
+  static const std::array quad_vertices{-1.0F, 1.0F, 0.0F, 1.0F,  -1.0F, -1.0F,
+                                        0.0F,  0.0F, 1.0F, -1.0F, 1.0F,  0.0F,
+                                        -1.0F, 1.0F, 0.0F, 1.0F,  1.0F,  -1.0F,
+                                        1.0F,  0.0F, 1.0F, 1.0F,  1.0F,  1.0F};
   glBindVertexArray(vertex_array);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * quad_vertices.size(), quad_vertices.data(),

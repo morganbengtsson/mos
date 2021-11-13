@@ -37,7 +37,7 @@ auto mos::position(const glm::mat4 &mat) -> glm::vec3 {
 }
 
 auto mos::jsonarray_to_mat4(const nlohmann::json &array) -> glm::mat4 {
-  glm::mat4 transform(1.0f);
+  glm::mat4 transform(1.0F);
   if (!array.is_null()) {
     std::vector<float> nums(array.begin(), array.end());
     transform = glm::make_mat4x4(nums.data());
@@ -55,15 +55,15 @@ auto mos::un_project(const glm::vec2 &position,
                               const glm::uvec2 &resolution) -> sim::Ray {
     const auto position0 =
         glm::unProject(glm::vec3(position.x,
-                                 resolution.y - position.y, 0.0f),
+                                 resolution.y - position.y, 0.0F),
                        view, projection,
-                       glm::vec4(0.0f, 0.0f, resolution.x, resolution.y));
+                       glm::vec4(0.0F, 0.0F, resolution.x, resolution.y));
 
     const auto position1 =
         glm::unProject(glm::vec3(position.x,
-                                 resolution.y - position.y, 1.0f),
+                                 resolution.y - position.y, 1.0F),
                        view, projection,
-                       glm::vec4(0.0f, 0.0f, resolution.x, resolution.y));
+                       glm::vec4(0.0F, 0.0F, resolution.x, resolution.y));
 
     return mos::sim::Ray(position0, glm::normalize(position1 - position0));
 
@@ -85,5 +85,5 @@ auto mos::hex_color(const int hex) -> glm::vec4 {
   color.r = ((hex >> 16) & 0xFF) / 255.0;
   color.g = ((hex >> 8) & 0xFF) / 255.0;
   color.b = ((hex) & 0xFF) / 255.0;
-  return glm::vec4(color, 1.0f);
+  return glm::vec4(color, 1.0F);
 }
