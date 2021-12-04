@@ -35,6 +35,6 @@ auto un_project(const glm::vec2 &position,
                          const glm::mat4 &projection,
                 const glm::uvec2 &resolution) -> mos::sim::Ray;
 
-auto hex_color(const int hex) -> glm::vec4;
+auto hex_color(const int hex) -> glm::vec3;
 
 }
