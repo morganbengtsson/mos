@@ -19,7 +19,7 @@ auto Assets::mesh(const std::string &path) -> Shared_mesh {
     return Shared_mesh(nullptr);
   }
   if (meshes_.find(path) == meshes_.end()) {
-    meshes_.insert(Mesh_pair(path, std::make_shared<Mesh>(Mesh::load(directory_ + path))));
+    meshes_.insert({path, std::make_shared<Mesh>(Mesh::load(directory_ + path))});
   }
   return meshes_.at(path);
 }
@@ -41,10 +41,10 @@ auto Assets::texture(const std::string &path,
           static const std::map<std::string, Texture_2D::Filter> filter_map{{"linear", Texture_2D::Filter::Linear}, {"closest", Texture_2D::Filter::Closest}};
           static const std::map<std::string, Texture_2D::Wrap> wrap_map{{"clamp", Texture_2D::Wrap::Clamp}, {"repeat", Texture_2D::Wrap::Repeat}};
 
-          textures_.insert(Texture_pair(path, std::make_shared<Texture_2D>(Texture_2D::load(directory_ + image_path, color_data, mipmaps, filter_map.at(filter_key), wrap_map.at(wrap_key)))));
+          textures_.insert({path, std::make_shared<Texture_2D>(Texture_2D::load(directory_ + image_path, color_data, mipmaps, filter_map.at(filter_key), wrap_map.at(wrap_key)))});
       }
       else {
-        textures_.insert(Texture_pair(path, std::make_shared<Texture_2D>(Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap))));
+        textures_.insert({path, std::make_shared<Texture_2D>(Texture_2D::load(directory_ + path, color_data, mipmaps, filter, wrap))});
       }
     }
     return textures_.at(path);

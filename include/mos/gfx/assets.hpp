@@ -20,12 +20,6 @@ namespace mos::gfx {
 /** Cache for faster loading of textures and meshes. */
 class Assets final {
 public:
-  using Mesh_map = std::unordered_map<std::string, std::shared_ptr<Mesh>>;
-  using Texture_map =
-      std::unordered_map<std::string, std::shared_ptr<Texture_2D>>;
-  using Mesh_pair = std::pair<std::string, std::shared_ptr<Mesh>>;
-  using Texture_pair = std::pair<std::string, std::shared_ptr<Texture_2D>>;
-
   /** @param directory The directory where the assets exist, relative to the run
    * directory. */
   explicit Assets(std::string directory = "assets/");
@@ -57,8 +51,11 @@ public:
   auto directory() const -> std::string;
 
 private:
+  using Meshes = std::unordered_map<std::string, Shared_mesh>;
+  using Textures = std::unordered_map<std::string, Shared_texture_2D>;
+
   const std::string directory_;
-  Mesh_map meshes_;
-  Texture_map textures_;
+  Meshes meshes_;
+  Textures textures_;
 };
 } // namespace mos::gfx
