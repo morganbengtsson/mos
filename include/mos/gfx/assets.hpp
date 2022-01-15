@@ -1,8 +1,8 @@
 #pragma once
 
-
 #include <map>
 #include <memory>
+#include <unordered_map>
 
 #include <json.hpp>
 
@@ -13,7 +13,6 @@
 #include <mos/gfx/model.hpp>
 #include <mos/gfx/spot_light.hpp>
 #include <mos/gfx/texture_2d.hpp>
-#include <unordered_map>
 
 namespace mos::gfx {
 
