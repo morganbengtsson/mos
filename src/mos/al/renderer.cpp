@@ -188,12 +188,9 @@ auto Renderer::listener() -> aud::Listener {
 
   std::array<float,6> orientation{};
   alGetListenerf(AL_ORIENTATION, orientation.data());
-  listener.direction.x = orientation[0];
-  listener.direction.y = orientation[1];
-  listener.direction.z = orientation[2];
-  listener.up.x = orientation[3];
-  listener.up.y = orientation[4];
-  listener.up.z = orientation[5];
+
+  listener.direction = {orientation[0], orientation[1], orientation[2]};
+  listener.up = {orientation[3], orientation[4], orientation[5]};
 
   alGetListener3f(AL_VELOCITY, &listener.velocity.x, &listener.velocity.y,
                   &listener.velocity.z);
