@@ -6,6 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <mos/gfx/texture_2d.hpp>
+#include <mos/core/id.hpp>
 
 namespace mos::gfx {
 
@@ -15,13 +16,12 @@ using Optional_target = std::optional<Target>;
 /** Off screen rendering target. */
 class Target final {
 public:
-  Target();
+  Target() = default;
 
   /** Unique id */
-  auto id() const -> unsigned int;
+  auto id() const -> int;
 
 private:
-  unsigned int id_;
-  static std::atomic_uint current_id_;
+  Id<Target> id_;
 };
 } // namespace mos::gfx

@@ -11,6 +11,7 @@
 #include <gli/gli.hpp>
 
 #include <mos/core/tracked_container.hpp>
+#include <mos/core/id.hpp>
 
 namespace mos::gfx {
 
@@ -35,7 +36,6 @@ public:
   TimePoint modified;
 
 private:
-  static std::atomic_int current_id_;
-  int id_;
+  Id<Texture> id_;
 };
 } // namespace mos::gfx

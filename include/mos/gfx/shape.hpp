@@ -1,18 +1,17 @@
 #pragma once
 
-#include <atomic>
+#include <mos/core/id.hpp>
 
 namespace mos::gfx {
 
 /** Base class for geometric shapes. */
 class Shape {
 public:
-  Shape();
+  Shape() = default;
   /** Unique id. */
   auto id() const -> unsigned int;
 
 private:
-  static unsigned int current_id_;
-  unsigned int id_;
+  Id<Shape> id_;
 };
 } // namespace mos::gfx

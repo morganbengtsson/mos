@@ -6,6 +6,8 @@
 #include <stb_vorbis.h>
 #include <string>
 
+#include <mos/core/id.hpp>
+
 namespace mos::aud {
 
 class Stream;
@@ -48,8 +50,7 @@ public:
   auto id() const -> unsigned int;
 
 private:
-  static std::atomic_uint current_id_;
-  unsigned int id_;
+  Id<Stream> id_;
   unsigned int samples_left_;
   std::string file_name_;
   stb_vorbis *vorbis_stream_;

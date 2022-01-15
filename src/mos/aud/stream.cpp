@@ -2,10 +2,8 @@
 
 namespace mos::aud {
 
-std::atomic_uint Stream::current_id_;
-
 Stream::Stream(const std::string &path)
-    : id_(current_id_++), file_name_(path), vorbis_info_() {
+    : file_name_(path), vorbis_info_() {
   vorbis_stream_ = stb_vorbis_open_filename(path.c_str(), nullptr, nullptr);
   vorbis_info_ = stb_vorbis_get_info(vorbis_stream_);
   samples_left_ = stb_vorbis_stream_length_in_samples(vorbis_stream_) *
