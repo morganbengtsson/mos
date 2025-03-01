@@ -9,4 +9,4 @@ auto Ray::direction() const -> glm::vec3 { return direction_; }
 void Ray::direction(const glm::vec3 &direction) {
   direction_ = glm::normalize(direction);
 }
-}
+} // namespace mos::sim

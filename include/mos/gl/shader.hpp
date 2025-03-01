@@ -22,7 +22,7 @@ public:
   const GLuint id;
   Shader(const Shader &shader) = delete;
   Shader(Shader &&shader) = delete;
-  Shader &operator=(const Shader &shader) = delete;
-  Shader &operator=(Shader &&shader) = delete;
+  auto operator=(const Shader &shader) -> Shader & = delete;
+  auto operator=(Shader &&shader) -> Shader & = delete;
 };
-}
+} // namespace mos::gl

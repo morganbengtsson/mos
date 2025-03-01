@@ -1,13 +1,11 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-#include <vector>
-#include <json.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <json.hpp>
 #include <mos/sim/ray.hpp>
-#include <chrono>
+#include <string>
+#include <vector>
 
 namespace mos {
 
@@ -28,7 +26,7 @@ auto jsonarray_to_vec4(const nlohmann::json &array) -> glm::vec4;
 [[deprecated]]
 auto position(const glm::mat4 &mat) -> glm::vec3;
 
-int now_ms();
+auto now_ms() -> int;
 
 auto un_project(const glm::vec2 &position,
                          const glm::mat4 &view,
@@ -37,4 +35,4 @@ auto un_project(const glm::vec2 &position,
 
 auto hex_color(const int hex) -> glm::vec4;
 
-}
+} // namespace mos

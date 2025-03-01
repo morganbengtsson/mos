@@ -2,7 +2,7 @@
 
 namespace mos::gfx {
 class Renderer;
-}
+} // namespace mos::gfx
 
 namespace mos::gpu {
 
@@ -13,10 +13,10 @@ public:
 
   Resource(int id = invalid_id);
 
-  auto valid() const -> bool;
+  [[nodiscard]] auto valid() const -> bool;
 
-  auto id() const -> int;
+  [[nodiscard]] auto id() const -> int;
 private:
   int id_{invalid_id};
 };
-}
+} // namespace mos::gpu

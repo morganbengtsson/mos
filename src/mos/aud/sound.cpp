@@ -10,7 +10,7 @@ auto Sound::load(const nlohmann::json &json, Assets &assets,
   auto parsed = json;
   if (parsed.is_string()) {
     spdlog::info("Loading: {}", parsed);
-    std::string path = parsed;
+    std::string const path = parsed;
     auto full_path = assets.directory();
     full_path += path;
     parsed = nlohmann::json::parse(mos::text(full_path));
@@ -38,4 +38,4 @@ auto Sound::load(const nlohmann::json &json, Assets &assets,
 Sound::Sound(Shared_buffer buffer,
                              Source source)
     : buffer(std::move(buffer)), source(source) {}
-}
+} // namespace mos::aud

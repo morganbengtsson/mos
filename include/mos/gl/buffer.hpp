@@ -17,8 +17,8 @@ private:
 public:
   Buffer(const Buffer &buffer) = delete;
   Buffer(Buffer &&buffer) noexcept;
-  Buffer &operator=(const Buffer &buffer) = delete;
-  Buffer &operator=(Buffer &&buffer) noexcept;
+  auto operator=(const Buffer &buffer) -> Buffer & = delete;
+  auto operator=(Buffer &&buffer) noexcept -> Buffer &;
   ~Buffer();
 
   GLuint id{0};
@@ -27,4 +27,4 @@ public:
 private:
   void release();
 };
-}
+} // namespace mos::gl

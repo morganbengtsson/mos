@@ -5,7 +5,7 @@
 
 namespace mos::gl {
 class Renderer;
-}
+} // namespace mos::gl
 
 namespace mos::gpu {
 
@@ -14,16 +14,16 @@ class Mesh final : public Resource {
   friend class mos::gl::Renderer;
 public:
   Mesh();
-  auto centroid() const -> glm::vec3;
-  auto radius() const -> float;
-  auto num_indices() const -> int;
+  [[nodiscard]] auto centroid() const -> glm::vec3;
+  [[nodiscard]] auto radius() const -> float;
+  [[nodiscard]] auto num_indices() const -> int;
 
 private:
 
   Mesh(const mos::gfx::Mesh& mesh);
   Mesh(const mos::gfx::Shared_mesh &shared_mesh);
-  glm::vec3 centroid_{0.0f};
-  float radius_{0.0f};
+  glm::vec3 centroid_{0.0F};
+  float radius_{0.0F};
   int num_indices_{0};
 };
-}
+} // namespace mos::gpu

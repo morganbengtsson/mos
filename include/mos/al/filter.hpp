@@ -1,18 +1,11 @@
 #pragma once
 
-#include <chrono>
-
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
-#include <AL/efx-presets.h>
-
 #include <mos/al/resource.hpp>
 #include <mos/apu/source.hpp>
 
 namespace mos::aud {
 class Source;
-}
+} // namespace mos::aud
 
 namespace mos::al {
 
@@ -23,7 +16,7 @@ class Filter final : public Resource {
   friend class Renderer;
 
 public:
-  void update(const apu::Source &source, const float dt);
+  void update(const apu::Source &source, float delta_time);
 
 private:
   Filter(const Source &source);

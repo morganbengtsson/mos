@@ -6,4 +6,4 @@
 
 namespace mos::apu {
 using Sounds = std::vector<Sound>;
-}
+} // namespace mos::apu

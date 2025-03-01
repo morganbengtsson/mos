@@ -7,7 +7,7 @@
 
 namespace mos::al {
 class Renderer;
-}
+} // namespace mos::al
 
 namespace mos::apu {
 

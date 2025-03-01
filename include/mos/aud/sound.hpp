@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include <glm/glm.hpp>
 #include <json.hpp>
 
@@ -16,7 +13,7 @@ namespace mos::aud {
 class Sound final {
 public:
   static auto load(const nlohmann::json &json, Assets &assets,
-                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+                   const glm::mat4 &parent_transform = glm::mat4(1.0F))
       -> Sound;
 
   explicit Sound(Shared_buffer buffer = nullptr, Source source = Source());

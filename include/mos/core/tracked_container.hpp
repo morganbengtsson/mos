@@ -33,30 +33,30 @@ public:
     items_.assign(begin, end);
     invalidate();
   }
-  typename Items::iterator begin() {
+  auto begin() -> typename Items::iterator {
     invalidate();
     return items_.begin();
   }
-  typename Items::iterator end() {
+  auto end() -> typename Items::iterator {
     invalidate();
     return items_.end();
   }
-  typename Items::const_iterator begin() const { return items_.begin(); }
-  typename Items::const_iterator end() const { return items_.end(); }
-  typename Items::reference operator[](typename Items::size_type pos) {
+  auto begin() const -> typename Items::const_iterator { return items_.begin(); }
+  auto end() const -> typename Items::const_iterator { return items_.end(); }
+  auto operator[](typename Items::size_type pos) -> typename Items::reference {
     invalidate();
     return items_[pos];
   }
-  typename Items::const_reference
-  operator[](typename Items::size_type pos) const {
+  auto
+  operator[](typename Items::size_type pos) const -> typename Items::const_reference {
     return items_[pos];
   }
-  typename Items::size_type size() const { return items_.size(); }
-  typename Items::reference back() {
+  auto size() const -> typename Items::size_type { return items_.size(); }
+  auto back() -> typename Items::reference {
     invalidate();
     return items_.back();
   }
-  const T *data() const noexcept { return items_.data(); }
+  auto data() const noexcept -> const T * { return items_.data(); }
   void clear() {
     items_.clear();
     invalidate();
@@ -66,7 +66,7 @@ public:
     invalidate();
   }
 
-  TimePoint modified() const { return modified_; }
+  [[nodiscard]] auto modified() const -> TimePoint { return modified_; }
 
 private:
   void invalidate() { modified_ = std::chrono::system_clock::now(); }

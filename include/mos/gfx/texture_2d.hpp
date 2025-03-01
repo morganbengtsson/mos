@@ -1,9 +1,7 @@
 #pragma once
 
-#include <atomic>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <glm/glm.hpp>
 #include <mos/gfx/texture.hpp>

@@ -1,11 +1,11 @@
 #pragma once
 
 #include <filesystem>
-#include <map>
-#include <memory>
-#include <mos/aud/buffer.hpp>
-#include <mos/aud/stream.hpp>
+#include <string>
 #include <unordered_map>
+#include <utility>
+
+#include <mos/aud/buffer.hpp>
 
 namespace mos::aud {
 
@@ -21,8 +21,8 @@ public:
   Assets(const Assets &assets) = delete;
   Assets(const Assets &&assets) = delete;
 
-  Assets &operator=(const Assets &assets) = delete;
-  Assets &operator=(const Assets &&assets) = delete;
+  auto operator=(const Assets &assets) -> Assets & = delete;
+  auto operator=(const Assets &&assets) -> Assets & = delete;
 
   /** Loads an *.ogg file into a buffer and caches it. */
   auto audio_buffer(const std::filesystem::path &path) -> Shared_buffer;

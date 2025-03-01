@@ -10,7 +10,7 @@ auto mos::apu::Buffer::duration() const -> float {
   return float(size_) / float(sample_rate() * channels());
 }
 
-auto mos::apu::Buffer::size() const -> size_t { return size_; }
+auto mos::apu::Buffer::size() const -> std::size_t { return size_; }
 
 mos::apu::Buffer::Buffer(const aud::Buffer &buffer)
     : id_(buffer.id()), channels_(buffer.channels()),

@@ -9,4 +9,4 @@ void Vertex::apply_transform(const glm::mat4 &transform) {
   normal =  inv_transpose * normal;
   tangent = inv_transpose * tangent;
 }
-}
+} // namespace mos::gfx

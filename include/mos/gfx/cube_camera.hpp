@@ -9,10 +9,10 @@ namespace mos::gfx {
 /** Camera for environment rendering. */
 class Cube_camera final {
 public:
-  explicit Cube_camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 1.25f),
-                       float near = 0.1f, float far = 100.0f);
+  explicit Cube_camera(const glm::vec3 &position = glm::vec3(0.0F, 0.0F, 1.25F),
+                       float near = 0.1F, float far = 100.0F);
 
-  auto position() const -> glm::vec3;
+  [[nodiscard]] auto position() const -> glm::vec3;
 
   /** Set position. */
   auto position(const glm::vec3 &position) -> void;

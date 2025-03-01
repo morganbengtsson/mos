@@ -14,10 +14,10 @@ public:
   ~Post_target();
   Post_target(const Post_target &target) = delete;
   Post_target(Post_target &&target) = delete;
-  Post_target &operator=(const Post_target &target) = delete;
-  Post_target &operator=(Post_target &&target) = delete;
+  auto operator=(const Post_target &target) -> Post_target & = delete;
+  auto operator=(Post_target &&target) -> Post_target & = delete;
   const GLuint frame_buffer{};
   const GLuint texture{};
   const glm::ivec2 resolution;
 };
-}
+} // namespace mos::gl

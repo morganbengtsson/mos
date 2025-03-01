@@ -13,4 +13,4 @@ auto Resource::valid() const -> bool {
 auto Resource::id() const -> decltype(id_){
   return id_;
 }
-}
+} // namespace mos::gpu

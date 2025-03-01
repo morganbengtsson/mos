@@ -28,4 +28,4 @@ private:
   void release();
 };
 
-}
+} // namespace mos::gl

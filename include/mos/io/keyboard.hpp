@@ -37,14 +37,14 @@ public:
     Key key;
     Action action;
 
-    bool operator==(const Event &event) const{
+    auto operator==(const Event &event) const -> bool {
       return key == event.key && action == event.action;
     }
   };
 
 private:
   struct EventHash {
-    size_t operator()(const Event& e) const {
+    auto operator()(const Event &e) const -> size_t {
       return ((std::hash<int>()(static_cast<int>(e.key)) ^ (std::hash<int>()(static_cast<int>(e.action)) << 1)) >> 1);
     }
   };
@@ -54,4 +54,4 @@ public:
   Events events;
   Codepoints codepoints;
 };
-}
+} // namespace mos::io

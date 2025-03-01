@@ -21,11 +21,12 @@ public:
         const glm::ivec2 &resolution = {1920, 1080},
          int swap_interval = 0);
   ~Window();
-  static Output poll_events();
+  static auto poll_events() -> Output;
   void swap_buffers();
-  float dpi() const;
-  bool close() const;
-  void close(const bool close);
+  [[nodiscard]] auto dpi() const -> float;
+  [[nodiscard]] auto close() const -> bool;
+  void close(bool close);
+
 private:
   GLFWwindow *window_;
   static Keyboard keyboard_;
@@ -33,8 +34,8 @@ private:
   static Gamepad gamepad_;
   static void error_callback(int error, const char* description);
   static void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
-  static void char_callback(GLFWwindow * window, const unsigned int codepoint);
+  static void char_callback(GLFWwindow *window, unsigned int codepoint);
   static void cursor_position_callback(GLFWwindow * window, double xpos, double ypos);
   static void mouse_button_callback(GLFWwindow * window, int button, int action, int mods);
 };
-}
+} // namespace mos::io

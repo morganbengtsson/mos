@@ -9,7 +9,7 @@ class Shape {
 public:
   Shape() = default;
   /** Unique id. */
-  auto id() const -> unsigned int;
+  [[nodiscard]] auto id() const -> unsigned int;
 
 private:
   Id<Shape> id_;

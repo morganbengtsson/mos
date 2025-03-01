@@ -6,4 +6,4 @@ Listener::Listener(const glm::vec3 &position, const glm::vec3 &direction,
                                   const float gain)
     : position(position), direction(direction), up(up), velocity(velocity), gain(gain) {}
 
-}
+} // namespace mos::aud

@@ -93,26 +93,29 @@ void Window::close(const bool close) {
   glfwSetWindowShouldClose(window_, static_cast<int>(close));
 }
 
-void Window::error_callback(int error, const char *description) {
+void Window::error_callback(int /*error*/, const char *description) {
   spdlog::error("Error: {}", description);
 }
 
-void Window::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
+void Window::key_callback(GLFWwindow *window, int key, int /*scancode*/,
+                          int action, int mods) {
   keyboard_.events.insert({static_cast<Keyboard::Key>(key), static_cast<Keyboard::Action>(action)});
 }
 
-void Window::char_callback(GLFWwindow * window, const unsigned int codepoint) {
+void Window::char_callback(GLFWwindow * /*window*/,
+                           const unsigned int codepoint) {
   keyboard_.codepoints.push_back(codepoint);
 }
 
-void Window::cursor_position_callback(GLFWwindow * window, double xpos, double ypos) {
+void Window::cursor_position_callback(GLFWwindow * /*window*/, double xpos,
+                                      double ypos) {
   mouse_.old_position = mouse_.position;
   mouse_.position = glm::dvec2(xpos, ypos);
 }
 
-void Window::mouse_button_callback(GLFWwindow * window, int button, int action, int mods) {
+void Window::mouse_button_callback(GLFWwindow * /*window*/, int button,
+                                   int action, int /*mods*/) {
   mouse_.buttons[button] = static_cast<bool>(action);
   mouse_.events.insert({static_cast<Mouse::Button>(button), static_cast<Mouse::Action>(action)});
 }
-}
-
+} // namespace mos::io

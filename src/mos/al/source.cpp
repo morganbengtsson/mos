@@ -1,5 +1,9 @@
 #include <mos/al/source.hpp>
 
+#include <AL/alc.h>
+#include <AL/alext.h>
+#include <AL/efx-presets.h>
+
 namespace mos::al {
 
 void Source::update(const mos::apu::Source &source)

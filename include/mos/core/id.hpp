@@ -17,4 +17,4 @@ private:
 
 template<class T> std::atomic<int> Id<T>::current_id = 0;
 
-}
+} // namespace mos

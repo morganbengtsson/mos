@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <thread>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include <mos/al/buffer.hpp>
 #include <mos/al/filter.hpp>
@@ -10,11 +10,11 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
-#include <AL/alext.h>
 #include <AL/efx-presets.h>
 
 #include <mos/apu/scene.hpp>
 #include <mos/apu/sound.hpp>
+#include <mos/apu/sound_stream.hpp>
 #include <mos/aud/sound_streams.hpp>
 #include <mos/aud/sounds.hpp>
 
@@ -22,12 +22,11 @@ namespace mos::aud {
 class Sound_stream;
 class Sound;
 class Listener;
-class Scene;
 } // namespace mos::aud
 
 namespace mos::apu {
 class Scene;
-}
+} // namespace mos::apu
 
 namespace mos::al {
 
@@ -40,19 +39,19 @@ public:
   Renderer(const Renderer &renderer) = delete;
   Renderer(const Renderer &&renderer) = delete;
 
-  Renderer &operator=(const Renderer &renderer) = delete;
-  Renderer &operator=(const Renderer &&renderer) = delete;
+  auto operator=(const Renderer &renderer) -> Renderer & = delete;
+  auto operator=(const Renderer &&renderer) -> Renderer & = delete;
 
   /** Get listener data. */
-  static auto listener() -> aud::Listener;
+  [[nodiscard]] static auto listener() -> aud::Listener;
 
-  auto load(const aud::Sounds &sounds) -> std::vector<mos::apu::Sound>;
+  [[nodiscard]] auto load(const aud::Sounds &sounds) -> std::vector<mos::apu::Sound>;
 
-  auto load(const aud::Sound_streams &sound_streams)
+  [[nodiscard]] auto load(const aud::Sound_streams &sound_streams)
       -> std::vector<mos::apu::Sound_stream>;
 
   /** Render and play audio scene. */
-  auto render(const apu::Scene &scene, const float dt) -> void;
+  auto render(const apu::Scene &scene, float delta_time) -> void;
 
   /** Clear buffers */
   auto clear() -> void;
@@ -63,10 +62,10 @@ private:
 
   /** Render/play a sound stream. */
   auto render_sound_stream(const apu::Sound_stream &sound_stream,
-                           const float dt) -> void;
+                           float delta_time) -> void;
 
   /** Render/play a sound. */
-  auto render_sound(const apu::Sound &sound, const float dt) -> void;
+  auto render_sound(const apu::Sound &sound, float delta_time) -> void;
 
   ALCdevice *device_;
   ALCcontext *context_;

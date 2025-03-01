@@ -1,7 +1,8 @@
-#include <chrono>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
+
 #include <glm/gtx/io.hpp>
-#include <iostream>
-#include <thread>
 
 #include <mos/al/renderer.hpp>
 

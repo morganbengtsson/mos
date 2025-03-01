@@ -45,7 +45,7 @@ public:
   auto clear() -> void;
 
   /** Get only positions from vertices */
-  auto positions() const -> Positions;
+  [[nodiscard]] auto positions() const -> Positions;
 
   auto mix(const Mesh &mesh1, const Mesh &mesh2, float amount) -> void;
 
@@ -59,9 +59,9 @@ public:
 
   auto calculate_sphere() -> void;
 
-  auto centroid() const -> glm::vec3;
+  [[nodiscard]] auto centroid() const -> glm::vec3;
 
-  auto radius() const -> float;
+  [[nodiscard]] auto radius() const -> float;
 
   Tracked_container<Vertex> vertices;
   Tracked_container<Triangle_indices> indices;
@@ -71,14 +71,14 @@ private:
     Vertex &v0;
     Vertex &v1;
     Vertex &v2;
-    auto normal() const -> glm::vec3;
+    [[nodiscard]] auto normal() const -> glm::vec3;
   };
 
   static auto calculate_tangents(Vertex &v0, Vertex &v1, Vertex &v2) -> void;
   void for_each_triangle(
       const std::function<void(const Triangle &triangle)> &callback);
 
-  glm::vec3 centroid_{0.0f};
-  float radius_{0.0f};
+  glm::vec3 centroid_{0.0F};
+  float radius_{0.0F};
 };
 } // namespace mos::gfx

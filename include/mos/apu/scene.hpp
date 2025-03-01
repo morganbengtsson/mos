@@ -1,7 +1,7 @@
 #pragma once
 
-#include <mos/apu/sounds.hpp>
 #include <mos/apu/sound_streams.hpp>
+#include <mos/apu/sounds.hpp>
 
 #include <mos/aud/listener.hpp>
 

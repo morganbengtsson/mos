@@ -13,4 +13,4 @@ Source::Source(const glm::vec3 &position,
 }
 
 auto Source::id() const -> unsigned int { return id_; }
-}
+} // namespace mos::aud

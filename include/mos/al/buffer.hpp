@@ -1,12 +1,5 @@
 #pragma once
 
-#include <chrono>
-
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
-#include <AL/efx-presets.h>
-
 #include <mos/al/resource.hpp>
 #include <mos/aud/buffer.hpp>
 

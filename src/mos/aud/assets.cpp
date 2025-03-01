@@ -29,4 +29,4 @@ void Assets::clear() {
 auto Assets::directory() const -> std::filesystem::path {
   return directory_;
 }
-}
+} // namespace mos::aud

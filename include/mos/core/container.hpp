@@ -1,5 +1,4 @@
 #pragma once
-#include <chrono>
 #include <initializer_list>
 #include <mos/core/tracked_container.hpp>
 #include <vector>
@@ -30,26 +29,28 @@ public:
   }
 
   template <class It>
-  typename Items::iterator insert(typename Items::const_iterator pos, It begin,
-                                  It end) {
+  auto insert(typename Items::const_iterator pos, It begin, It end) ->
+      typename Items::iterator {
     return items_.insert(pos, begin, end);
   }
 
-  typename Items::iterator begin() { return items_.begin(); }
-  typename Items::iterator end() { return items_.end(); }
-  typename Items::const_iterator begin() const { return items_.begin(); }
-  typename Items::const_iterator end() const { return items_.end(); }
+  auto begin() -> typename Items::iterator { return items_.begin(); }
+  auto end() -> typename Items::iterator { return items_.end(); }
+  auto begin() const -> typename Items::const_iterator {
+    return items_.begin();
+  }
+  auto end() const -> typename Items::const_iterator { return items_.end(); }
   void assign(const std::initializer_list<T> &list) { items_.assign(list); }
-  typename Items::reference operator[](typename Items::size_type pos) {
+  auto operator[](typename Items::size_type pos) -> typename Items::reference {
     return items_[pos];
   }
-  typename Items::const_reference
-  operator[](typename Items::size_type pos) const {
+  auto operator[](typename Items::size_type pos) const ->
+      typename Items::const_reference {
     return items_[pos];
   }
-  typename Items::size_type size() const { return items_.size(); }
-  typename Items::reference back() { return items_.back(); }
-  const T *data() const noexcept { return items_.data(); }
+  auto size() const -> typename Items::size_type { return items_.size(); }
+  auto back() -> typename Items::reference { return items_.back(); }
+  auto data() const noexcept -> const T * { return items_.data(); }
   void clear() { items_.clear(); }
 
   void push_back(const T &item) { items_.push_back(item); }

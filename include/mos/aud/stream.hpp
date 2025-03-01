@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <atomic>
 #include <memory>
 #include <stb_vorbis.h>
 #include <string>
@@ -20,8 +19,8 @@ public:
   ~Stream();
   Stream(const Stream &stream) = default;
   Stream(Stream &&stream) = default;
-  Stream &operator=(const Stream &stream) = default;
-  Stream &operator=(Stream &&stream) = default;
+  auto operator=(const Stream &stream) -> Stream & = default;
+  auto operator=(Stream &&stream) -> Stream & = default;
 
   static const int buffer_size = 4096 * 8;
 
@@ -29,25 +28,25 @@ public:
   auto read() -> std::array<short, buffer_size>;
 
   /** Check if stream reached the end. */
-  auto done() const -> bool;
+  [[nodiscard]] auto done() const -> bool;
 
   /** Sample rate, eg 44100 */
-  auto sample_rate() const -> unsigned int;
+  [[nodiscard]] auto sample_rate() const -> unsigned int;
 
   /** Get number of channels. */
-  auto channels() const -> unsigned int;
+  [[nodiscard]] auto channels() const -> unsigned int;
 
   /** Duration in seconds. */
-  auto duration() const -> float;
+  [[nodiscard]] auto duration() const -> float;
 
   /** Size of stream in samples. */
-  auto size() const -> size_t;
+  [[nodiscard]] auto size() const -> size_t;
 
   /** Restart streaming. */
   auto seek_start() -> void;
 
   /** Unique id. */
-  auto id() const -> unsigned int;
+  [[nodiscard]] auto id() const -> unsigned int;
 
 private:
   Id<Stream> id_;

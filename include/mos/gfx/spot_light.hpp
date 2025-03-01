@@ -11,15 +11,15 @@ namespace mos::gfx {
 /** Spotlight. */
 class Spot_light final {
 public:
-  explicit Spot_light(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 2.0f),
-                      const glm::vec3 &center = glm::vec3(0.0f, 0.0f, 0.0f),
+  explicit Spot_light(const glm::vec3 &position = glm::vec3(0.0F, 0.0F, 2.0F),
+                      const glm::vec3 &center = glm::vec3(0.0F, 0.0F, 0.0F),
                       float angle = glm::half_pi<float>(),
-                      const glm::vec3 &color = glm::vec3(0.0f),
-                      float strength = 0.0f, float near = 0.1f,
-                      float far = 10.0f, float blend = 0.15);
+                      const glm::vec3 &color = glm::vec3(0.0F),
+                      float strength = 0.0F, float near = 0.1F,
+                      float far = 10.0F, float blend = 0.15F);
 
   static auto load(const std::string &directory, const std::string &path,
-                   const glm::mat4 &parent_transform = glm::mat4(1.0f))
+                   const glm::mat4 &parent_transform = glm::mat4(1.0F))
       -> Spot_light;
 
   /** Set blend factor. */
@@ -45,7 +45,7 @@ public:
   /** Set near and far plane. **/
   auto near_far(float near, float far) -> void;
 
-  glm::vec3 color = glm::vec3(0.0f);
+  glm::vec3 color = glm::vec3(0.0F);
 
   /** Strength of the lamp in watts. */
   float strength;

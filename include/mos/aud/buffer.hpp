@@ -3,7 +3,6 @@
 #include <atomic>
 #include <filesystem>
 #include <memory>
-#include <string>
 #include <vector>
 
 namespace mos::aud {
@@ -16,40 +15,45 @@ class Buffer final {
 public:
   using Samples = std::vector<short>;
 
+  static constexpr int default_num_channels = 1;
+  static constexpr int default_sample_rate = 44100;
+
   template <class T>
   /** Construct buffer from a container of shorts. */
-  Buffer(const T begin, const T end, const int channels = 1,
-         const int sample_rate = 44100)
+  Buffer(const T begin, const T end,
+         int channels = default_num_channels,
+         int sample_rate = default_sample_rate)
       : id_(current_id_++), samples_(begin, end), channels_(channels),
         sample_rate_(sample_rate) {}
 
+
   /** Empty buffer constructor. */
-  explicit Buffer(int channels = 1, int sample_rate = 44100);
+  explicit Buffer(int channels = default_num_channels, int sample_rate = default_sample_rate);
 
   /** Load shared buffer. */
   static auto load(const std::filesystem::path &path) -> Buffer;
 
-  Samples::const_iterator begin() const;
+  [[nodiscard]] auto begin() const -> Samples::const_iterator;
 
-  Samples::const_iterator end() const;
+  [[nodiscard]] auto end() const -> Samples::const_iterator;
 
   /** Raw data. */
-  auto data() const -> const short *;
+  [[nodiscard]] auto data() const -> const short *;
 
   /** Unique id. */
-  auto id() const -> unsigned int;
+  [[nodiscard]] auto id() const -> unsigned int;
 
   /** Get number of channels. */
-  auto channels() const -> int;
+  [[nodiscard]] auto channels() const -> int;
 
   /** Get sample rate */
-  auto sample_rate() const -> int;
+  [[nodiscard]] auto sample_rate() const -> int;
 
   /** Duration in seconds. */
-  auto duration() const -> float;
+  [[nodiscard]] auto duration() const -> float;
 
   /** Size of samples container. */
-  auto size() const -> size_t;
+  [[nodiscard]] auto size() const -> size_t;
 
 private:
   static std::atomic_uint current_id_;

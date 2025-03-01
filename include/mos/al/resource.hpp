@@ -1,9 +1,6 @@
 #pragma once
 
 #include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
-#include <AL/efx-presets.h>
 
 #include <chrono>
 #include <functional>
@@ -18,14 +15,13 @@ public:
   using Time_point = std::chrono::time_point<std::chrono::system_clock,
                                              std::chrono::nanoseconds>;
 
-  Resource(const Gen_function& gen_function,
-           const Delete_function& delete_function);
+  Resource(const Gen_function &gen_function, Delete_function delete_function);
   Resource(const Resource &Resource) = delete;
   Resource(Resource &&Resource) noexcept;
   ~Resource();
 
-  Resource &operator=(const Resource resource) = delete;
-  Resource &operator=(Resource &&resource) noexcept;
+  auto operator=(const Resource resource) -> Resource & = delete;
+  auto operator=(Resource &&resource) noexcept -> Resource &;
 
   Gen_function gen_function;
   Delete_function delete_function;

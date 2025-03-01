@@ -1,9 +1,11 @@
 #include <mos/al/resource.hpp>
+#include <utility>
 
 namespace mos::al {
 
-Resource::Resource(const Gen_function& gen_function, const Delete_function& delete_function)
-    : gen_function(gen_function), delete_function(delete_function) {
+Resource::Resource(const Gen_function &gen_function,
+                   Delete_function delete_function)
+    : gen_function(gen_function), delete_function(std::move(delete_function)) {
   gen_function(1, &id);
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <mos/apu/source.hpp>
-#include <mos/aud/stream.hpp>
 #include <mos/aud/sound_stream.hpp>
+#include <mos/aud/stream.hpp>
 
 namespace mos::apu {
 
@@ -18,4 +18,4 @@ public:
 private:
   explicit Sound_stream(const aud::Sound_stream& sound_stream);
 };
-}
+} // namespace mos::apu

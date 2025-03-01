@@ -30,15 +30,14 @@ public:
     Button button;
     Action action;
 
-    bool operator==(const Event &event) const{
+    auto operator==(const Event &event) const -> bool {
       return button == event.button && action == event.action;
     }
-
   };
 
 private:
   struct EventHash {
-    size_t operator()(const Event& e) const {
+    auto operator()(const Event &e) const -> size_t {
       return ((std::hash<int>()(static_cast<int>(e.button)) ^ (std::hash<int>()(static_cast<int>(e.action)) << 1)) >> 1);
     }
   };
@@ -50,6 +49,4 @@ public:
   Events events;
   std::array<bool, 3> buttons{false, false, false};
 };
-}
-
-
+} // namespace mos::io

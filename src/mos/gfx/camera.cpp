@@ -75,7 +75,7 @@ void Camera::calculate_frustum() {
 
   for (int i = 0; i < 3; i++) {
     frustum_planes_[i * 2] = t[3] + t[i];
-    frustum_planes_[i * 2 + 1] = t[3] - t[i];
+    frustum_planes_[(i * 2) + 1] = t[3] - t[i];
   }
 
   for (auto & plane : frustum_planes_){
@@ -142,5 +142,4 @@ auto Camera::field_of_view_horizontal() const -> float {
   return aspect_ratio() * field_of_view_vertical();
 }
 
-}
-
+} // namespace mos::gfx
